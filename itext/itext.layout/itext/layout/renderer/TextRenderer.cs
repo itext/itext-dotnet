@@ -48,7 +48,6 @@ using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -56,6 +55,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Font;
 using iText.Layout.Hyphenation;
 using iText.Layout.Layout;
@@ -889,7 +889,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_954();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_953();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -951,8 +951,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_954 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_954() {
+        private sealed class _IGlyphLineFilter_953 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_953() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1076,24 +1076,6 @@ namespace iText.Layout.Renderer {
             strToBeConverted = text;
             //strToBeConverted will be null after next method.
             UpdateFontAndText();
-        }
-
-        /// <summary>Manually sets a GlyphLine to be rendered with a specific start and end point.</summary>
-        /// <param name="text">
-        /// a
-        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
-        /// </param>
-        /// <param name="leftPos">the leftmost end of the GlyphLine</param>
-        /// <param name="rightPos">the rightmost end of the GlyphLine</param>
-        [System.ObsoleteAttribute(@"use SetText(iText.IO.Font.Otf.GlyphLine, iText.Kernel.Font.PdfFont) instead")]
-        public virtual void SetText(GlyphLine text, int leftPos, int rightPos) {
-            GlyphLine newText = new GlyphLine(text);
-            newText.start = leftPos;
-            newText.end = rightPos;
-            if (this.font != null) {
-                newText = TextPreprocessingUtil.ReplaceSpecialWhitespaceGlyphs(newText, this.font);
-            }
-            SetProcessedGlyphLineAndFont(newText, this.font);
         }
 
         /// <summary>Manually set a GlyphLine and PdfFont for rendering.</summary>
@@ -1511,18 +1493,12 @@ namespace iText.Layout.Renderer {
                 return false;
             }
             else {
-                if (font is String || font is String[]) {
-                    if (font is String) {
-                        ILog logger = LogManager.GetLogger(typeof(AbstractRenderer));
-                        logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
-                            );
-                        IList<String> splitFontFamily = FontFamilySplitter.SplitFontFamily((String)font);
-                        font = splitFontFamily.ToArray(new String[splitFontFamily.Count]);
-                    }
+                if (font is String[]) {
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     FontSet fontSet = this.GetProperty<FontSet>(Property.FONT_SET);
                     if (provider.GetFontSet().IsEmpty() && (fontSet == null || fontSet.IsEmpty())) {
-                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
+                        throw new InvalidOperationException(LayoutExceptionMessageConstant.FONT_PROVIDER_NOT_SET_FONT_FAMILY_NOT_RESOLVED
+                            );
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList((String[])font
@@ -1546,22 +1522,6 @@ namespace iText.Layout.Renderer {
                     throw new InvalidOperationException("Invalid FONT property value type.");
                 }
             }
-        }
-
-        /// <param name="gl">
-        /// 
-        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
-        /// glyph to be set
-        /// </param>
-        /// <param name="font">
-        /// 
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// font to be set
-        /// </param>
-        [System.ObsoleteAttribute(@"use SetProcessedGlyphLineAndFont(iText.IO.Font.Otf.GlyphLine, iText.Kernel.Font.PdfFont) instead"
-            )]
-        protected internal virtual void SetGlyphLineAndFont(GlyphLine gl, PdfFont font) {
-            SetProcessedGlyphLineAndFont(gl, font);
         }
 
         protected internal virtual void SetProcessedGlyphLineAndFont(GlyphLine gl, PdfFont font) {

@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Common.Logging;
+using iText.Forms.Exceptions;
 using iText.Forms.Fields;
 using iText.Forms.Xfa;
 using iText.IO.Util;
@@ -551,7 +552,6 @@ namespace iText.Forms {
         /// </remarks>
         /// <param name="appearance">a String containing a sequence of valid PDF syntax</param>
         /// <returns>current AcroForm</returns>
-        /// <seealso cref="iText.Forms.Fields.PdfFormField.SetDefaultAppearance(System.String)"/>
         public virtual iText.Forms.PdfAcroForm SetDefaultAppearance(String appearance) {
             return Put(PdfName.DA, new PdfString(appearance));
         }
@@ -735,7 +735,7 @@ namespace iText.Forms {
         /// </remarks>
         public virtual void FlattenFields() {
             if (document.IsAppendMode()) {
-                throw new PdfException(PdfException.FieldFlatteningIsNotSupportedInAppendMode);
+                throw new PdfException(FormsExceptionMessageConstant.FIELD_FLATTENING_IS_NOT_SUPPORTED_IN_APPEND_MODE);
             }
             ICollection<PdfFormField> fields;
             if (fieldsForFlattening.Count == 0) {
@@ -805,7 +805,8 @@ namespace iText.Forms {
                         xObject.Put(PdfName.Subtype, PdfName.Form);
                         Rectangle annotBBox = fieldObject.GetAsRectangle(PdfName.Rect);
                         if (page.IsFlushed()) {
-                            throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
+                            throw new PdfException(FormsExceptionMessageConstant.PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING
+                                );
                         }
                         PdfCanvas canvas = new PdfCanvas(page, !wrappedPages.Contains(page));
                         wrappedPages.Add(page);
@@ -1101,7 +1102,8 @@ namespace iText.Forms {
             PdfDictionary pageDic = annot.GetPageObject();
             if (pageDic != null) {
                 if (warnIfPageFlushed && pageDic.IsFlushed()) {
-                    throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
+                    throw new PdfException(FormsExceptionMessageConstant.PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING
+                        );
                 }
                 PdfDocument doc = pageDic.GetIndirectReference().GetDocument();
                 PdfPage widgetPage = doc.GetPage(pageDic);

@@ -340,10 +340,6 @@ namespace iText.Svg {
             /// <remarks>Tag defining the description of an element. Is not rendered.</remarks>
             public const String TITLE = "title";
 
-            /// <summary>Deprecated in SVG.</summary>
-            /// <remarks>Deprecated in SVG. Tag defining text that was defined in an SVG document.</remarks>
-            public const String TREF = "tref";
-
             /// <summary>Tag defining a span within a text element.</summary>
             public const String TSPAN = "tspan";
 
@@ -672,14 +668,6 @@ namespace iText.Svg {
             /// <summary>Value representing the fill rule "nonzero".</summary>
             public const String FILL_RULE_NONZERO = "nonzero";
 
-            /// <summary>Value representing the gradient units relation "objectBoundingBox".</summary>
-            [System.ObsoleteAttribute(@"it will be removed in the 7.2 update. Use OBJECT_BOUNDING_BOX instead.")]
-            public const String GRADIENT_UNITS_OBJECT_BOUNDING_BOX = SvgConstants.Values.OBJECT_BOUNDING_BOX;
-
-            /// <summary>Value representing the gradient units relation "userSpaceOnUse".</summary>
-            [System.ObsoleteAttribute(@"it will be removed in the 7.2 update. Use USER_SPACE_ON_USE instead.")]
-            public const String GRADIENT_UNITS_USER_SPACE_ON_USE = SvgConstants.Values.USER_SPACE_ON_USE;
-
             /// <summary>Value representing the meet for preserve aspect ratio calculations.</summary>
             public const String MEET = "meet";
 
@@ -691,11 +679,6 @@ namespace iText.Svg {
 
             /// <summary>The value representing slice for the preserve aspect ratio calculations;</summary>
             public const String SLICE = "slice";
-
-            /// <summary>The value corresponding with the namespace url for SVG.</summary>
-            /// <remarks>The value corresponding with the namespace url for SVG. Will be removed since version 7.2.</remarks>
-            [Obsolete]
-            public const String SVGNAMESPACEURL = "http://www.w3.org/2000/svg";
 
             /// <summary>Value representing the text-alignment end for text objects</summary>
             public const String TEXT_ANCHOR_END = "end";

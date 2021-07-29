@@ -49,6 +49,7 @@ using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Exceptions;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -751,7 +752,7 @@ namespace iText.Layout.Element {
 
         private static ImageData CheckImageType(ImageData image) {
             if (image is WmfImageData) {
-                throw new PdfException(PdfException.CannotCreateLayoutImageByWmfImage);
+                throw new PdfException(LayoutExceptionMessageConstant.CANNOT_CREATE_LAYOUT_IMAGE_BY_WMF_IMAGE);
             }
             return image;
         }

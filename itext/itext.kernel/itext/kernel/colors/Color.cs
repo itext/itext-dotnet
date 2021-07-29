@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
@@ -245,7 +246,7 @@ namespace iText.Kernel.Colors {
         /// <param name="value">new color value</param>
         public virtual void SetColorValue(float[] value) {
             if (colorValue.Length != value.Length) {
-                throw new PdfException(PdfException.IncorrectNumberOfComponents, this);
+                throw new PdfException(KernelExceptionMessageConstant.INCORRECT_NUMBER_OF_COMPONENTS, this);
             }
             colorValue = value;
         }
@@ -273,7 +274,7 @@ namespace iText.Kernel.Colors {
 
         /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
-            int result = colorSpace != null ? colorSpace.GetPdfObject().GetHashCode() : 0;
+            int result = colorSpace == null ? 0 : colorSpace.GetPdfObject().GetHashCode();
             result = 31 * result + (colorValue != null ? JavaUtil.ArraysHashCode(colorValue) : 0);
             return result;
         }

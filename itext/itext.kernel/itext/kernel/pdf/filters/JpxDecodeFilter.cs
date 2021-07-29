@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using Common.Logging;
-using iText.Kernel;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     public class PdfViewerPreferences : PdfObjectWrapper<PdfDictionary> {
@@ -501,7 +502,7 @@ namespace iText.Kernel.Pdf {
                         // the viewer preferences dictionary specifies a valid value other than AppDefault
                         PdfName curPrintScaling = GetPdfObject().GetAsName(PdfName.PrintScaling);
                         if (curPrintScaling == null || PdfName.AppDefault.Equals(curPrintScaling)) {
-                            throw new PdfException(PdfException.PrintScalingEnforceEntryInvalid);
+                            throw new PdfException(KernelExceptionMessageConstant.PRINT_SCALING_ENFORCE_ENTRY_INVALID);
                         }
                     }
                 }

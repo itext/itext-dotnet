@@ -85,11 +85,8 @@ namespace iText.Svg.Processors.Impl {
             if (fontProvider == null) {
                 fontProvider = new BasicFontProvider();
             }
-            IResourceRetriever retriever = null;
-            if (converterProperties is SvgConverterProperties) {
-                retriever = ((SvgConverterProperties)converterProperties).GetResourceRetriever();
-            }
-            resourceResolver = new ResourceResolver(converterProperties.GetBaseUri(), retriever);
+            resourceResolver = new ResourceResolver(converterProperties.GetBaseUri(), converterProperties.GetResourceRetriever
+                ());
             cssContext = new SvgCssContext();
         }
 

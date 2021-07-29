@@ -41,8 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-
 namespace iText.Layout.Properties {
     /// <summary>
     /// An enum of property names that are used for graphical properties of layout
@@ -133,7 +131,7 @@ namespace iText.Layout.Properties {
 
         public const int FLEX_GROW = 132;
 
-        public const int FLEX_SHRINK = 133;
+        public const int FLEX_SHRINK = 127;
 
         public const int FLEX_WRAP = 128;
 
@@ -206,7 +204,7 @@ namespace iText.Layout.Properties {
 
         public const int ITALIC_SIMULATION = 31;
 
-        public const int JUSTIFY_CONTENT = 135;
+        public const int JUSTIFY_CONTENT = 133;
 
         public const int KEEP_TOGETHER = 32;
 
@@ -268,11 +266,7 @@ namespace iText.Layout.Properties {
 
         public const int OUTLINE_OFFSET = 107;
 
-        [System.ObsoleteAttribute(@"Use OVERFLOW_X and/or OVERFLOW_Y instead. The OVERFLOW property doesn't have any affect and will be removed in iText 7.2"
-            )]
-        public const int OVERFLOW = 102;
-
-        public const int OVERFLOW_WRAP = 127;
+        public const int OVERFLOW_WRAP = 102;
 
         public const int OVERFLOW_X = 103;
 
@@ -376,7 +370,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 127;
+        private const int MAX_INHERITED_PROPERTY_ID = 124;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];

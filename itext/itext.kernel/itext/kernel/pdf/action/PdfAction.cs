@@ -740,7 +740,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <see cref="iText.Kernel.Pdf.Navigation.PdfDestination">destination</see>
         /// to be validated
         /// </param>
-        public static void ValidateNotRemoteDestination(PdfDestination destination) {
+        private static void ValidateNotRemoteDestination(PdfDestination destination) {
             if (destination is PdfExplicitRemoteGoToDestination) {
                 LogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfAction)).Warn(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE
                     );

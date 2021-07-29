@@ -1380,12 +1380,6 @@ namespace iText.Layout.Renderer {
             return new MinMaxWidth(minWidth, maxColTotalWidth, additionalWidth);
         }
 
-        [System.ObsoleteAttribute(@"Will be removed in next major release (iText 7.2). The aim of this method overriding here is achieved by overriding AllowLastYLineRecursiveExtraction() method."
-            )]
-        protected internal override float? GetLastYLineRecursively() {
-            return null;
-        }
-
         protected internal override bool AllowLastYLineRecursiveExtraction() {
             return false;
         }

@@ -49,13 +49,8 @@ namespace iText.Svg.Renderers.Impl {
             this.performRootTransformations = false;
         }
 
-        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            if (GetParent() is AbstractSvgNodeRenderer) {
-                return ((AbstractSvgNodeRenderer)GetParent()).GetObjectBoundingBox(context);
-            }
-            else {
-                return null;
-            }
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            return GetParent().GetObjectBoundingBox(context);
         }
     }
 }

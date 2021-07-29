@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -59,16 +59,6 @@ namespace iText.IO.Source
 		/// 	</summary>
 		private bool forceRead = false;
 
-        /// <summary>
-        /// Whether
-        /// <see cref="System.IO.FileStream"/>
-        /// should be used instead of a
-        /// <see cref="java.nio.channels.FileChannel"/>
-        /// , where applicable
-        /// </summary>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.2. The field makes sense only in Java.")]
-        private bool usePlainRandomAccess = false;
-
 		/// <summary>Whether the underlying file should have a RW lock on it or just an R lock
 		/// 	</summary>
 		private bool exclusivelyLockFile = false;
@@ -89,23 +79,20 @@ namespace iText.IO.Source
 			this.forceRead = forceRead;
 			return this;
 		}
-
-        /// <summary>
-        /// Determines whether
-        /// <see cref="System.IO.FileStream"/>
-        /// should be used as the primary data access mechanism
-        /// </summary>
-        /// <param name="usePlainRandomAccess">
-        /// whether
-        /// <see cref="System.IO.FileStream"/>
-        /// should be used as the primary data access mechanism
-        /// </param>
-        /// <returns>this object (this allows chaining of method calls)</returns>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.2. The method makes sense only in Java.")]
-        public RandomAccessSourceFactory SetUsePlainRandomAccess(bool
-			 usePlainRandomAccess)
+		
+		/// <summary>
+		/// Determines whether
+		/// <see cref="System.IO.FileStream"/>
+		/// should be used as the primary data access mechanism
+		/// </summary>
+		/// <param name="usePlainRandomAccess">
+		/// whether
+		/// <see cref="System.IO.FileStream"/>
+		/// should be used as the primary data access mechanism
+		/// </param>
+		/// <returns>this object (this allows chaining of method calls)</returns>
+		public RandomAccessSourceFactory SetUsePlainRandomAccess(bool usePlainRandomAccess)
 		{
-			this.usePlainRandomAccess = usePlainRandomAccess;
 			return this;
 		}
 

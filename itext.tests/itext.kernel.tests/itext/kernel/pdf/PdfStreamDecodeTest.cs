@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -60,8 +62,8 @@ namespace iText.Kernel.Pdf {
             pdfStream.Put(PdfName.Filter, new PdfArray(JavaUtil.ArraysAsList((PdfObject)PdfName.FlateDecode, (PdfObject
                 )PdfName.JBIG2Decode)));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfStream.GetBytes(true));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.Filter1IsNotSupported, PdfName.JBIG2Decode
-                ), e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.THIS_FILTER_IS_NOT_SUPPORTED
+                , PdfName.JBIG2Decode), e.Message);
         }
 
         [NUnit.Framework.Test]

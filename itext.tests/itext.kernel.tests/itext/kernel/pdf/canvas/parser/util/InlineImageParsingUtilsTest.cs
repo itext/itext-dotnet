@@ -41,7 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.IO.Util;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -85,7 +85,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             NUnit.Framework.Assert.That(() =>  {
                 InlineImageParsingUtils.GetComponentsPerPixel(colorSpace, dictionary);
             }
-            , NUnit.Framework.Throws.InstanceOf<InlineImageParsingUtils.InlineImageParseException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.UnexpectedColorSpace1, "/ICCBased")))
+            , NUnit.Framework.Throws.InstanceOf<InlineImageParsingUtils.InlineImageParseException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_COLOR_SPACE, "/ICCBased")))
 ;
         }
 
@@ -102,7 +102,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             NUnit.Framework.Assert.That(() =>  {
                 InlineImageParsingUtils.GetComponentsPerPixel(colorSpace, dictionary);
             }
-            , NUnit.Framework.Throws.InstanceOf<InlineImageParsingUtils.InlineImageParseException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.UnexpectedColorSpace1, "/ICCBased")))
+            , NUnit.Framework.Throws.InstanceOf<InlineImageParsingUtils.InlineImageParseException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_COLOR_SPACE, "/ICCBased")))
 ;
         }
 

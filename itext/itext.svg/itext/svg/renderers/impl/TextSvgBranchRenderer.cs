@@ -58,7 +58,7 @@ namespace iText.Svg.Renderers.Impl {
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for the &lt;text&gt; and &lt;tspan&gt; tag.
     /// </summary>
-    public class TextSvgBranchRenderer : AbstractSvgNodeRenderer, ISvgTextNodeRenderer, ISvgTextNodeHelper {
+    public class TextSvgBranchRenderer : AbstractSvgNodeRenderer, ISvgTextNodeRenderer {
         /// <summary>Top level transformation to flip the y-axis results in the character glyphs being mirrored, this tf corrects for this behaviour
         ///     </summary>
         protected internal static readonly AffineTransform TEXTFLIP = new AffineTransform(1, 0, 0, -1, 0, 0);
@@ -172,8 +172,8 @@ namespace iText.Svg.Renderers.Impl {
                 basePoint.Translate(GetRelativeTranslation()[0], GetRelativeTranslation()[1]);
                 Rectangle commonRect = null;
                 foreach (ISvgTextNodeRenderer child in GetChildren()) {
-                    if (child is ISvgTextNodeHelper) {
-                        TextRectangle rectangle = ((ISvgTextNodeHelper)child).GetTextRectangle(context, basePoint);
+                    if (child != null) {
+                        TextRectangle rectangle = child.GetTextRectangle(context, basePoint);
                         basePoint = rectangle.GetTextBaseLineRightPoint();
                         commonRect = Rectangle.GetCommonRectangle(commonRect, rectangle);
                     }
@@ -186,7 +186,7 @@ namespace iText.Svg.Renderers.Impl {
             return null;
         }
 
-        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             return GetTextRectangle(context, null);
         }
 
@@ -319,7 +319,7 @@ namespace iText.Svg.Renderers.Impl {
                     font = PdfFontFactory.CreateFont();
                 }
                 catch (System.IO.IOException e) {
-                    throw new SvgProcessingException(SvgLogMessageConstant.FONT_NOT_FOUND, e);
+                    throw new SvgProcessingException(SvgExceptionMessageConstant.FONT_NOT_FOUND, e);
                 }
             }
         }

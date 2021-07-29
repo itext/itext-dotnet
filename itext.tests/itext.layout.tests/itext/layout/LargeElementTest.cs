@@ -49,6 +49,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -952,7 +953,7 @@ namespace iText.Layout {
                 doc.Add(table);
             }
             catch (PdfException e) {
-                if (!e.Message.Equals(PdfException.CannotAddCellToCompletedLargeTable)) {
+                if (!e.Message.Equals(LayoutExceptionMessageConstant.CANNOT_ADD_CELL_TO_COMPLETED_LARGE_TABLE)) {
                     throw;
                 }
             }

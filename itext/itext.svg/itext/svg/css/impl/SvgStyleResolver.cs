@@ -56,6 +56,7 @@ using iText.StyledXmlParser.Util;
 using iText.Svg;
 using iText.Svg.Css;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Processors.Impl;
 
 namespace iText.Svg.Css.Impl {
@@ -88,28 +89,6 @@ namespace iText.Svg.Css.Impl {
 
         /// <summary>The resource resolver</summary>
         private readonly ResourceResolver resourceResolver;
-
-        /// <summary>
-        /// Creates a
-        /// <see cref="SvgStyleResolver"/>
-        /// with a given default CSS.
-        /// </summary>
-        /// <param name="defaultCssStream">the default CSS</param>
-        [System.ObsoleteAttribute(@"will be removed in next major release, useSvgStyleResolver(System.IO.Stream, iText.Svg.Processors.Impl.SvgProcessorContext) instead"
-            )]
-        public SvgStyleResolver(Stream defaultCssStream)
-            : this(defaultCssStream, new SvgProcessorContext(new SvgConverterProperties())) {
-        }
-
-        /// <summary>
-        /// Creates a
-        /// <see cref="SvgStyleResolver"/>.
-        /// </summary>
-        [System.ObsoleteAttribute(@"will be removed in next major release, useSvgStyleResolver(iText.Svg.Processors.Impl.SvgProcessorContext) instead"
-            )]
-        public SvgStyleResolver()
-            : this(new SvgProcessorContext(new SvgConverterProperties())) {
-        }
 
         /// <summary>
         /// Creates a
@@ -297,7 +276,7 @@ namespace iText.Svg.Css.Impl {
         /// <param name="attributesMap">the element styles map</param>
         private void ProcessXLink(IAttribute attr, IDictionary<String, String> attributesMap) {
             String xlinkValue = attr.GetValue();
-            if (!IsStartedWithHash(xlinkValue) && !new ResourceResolver("").IsDataSrc(xlinkValue)) {
+            if (!IsStartedWithHash(xlinkValue) && !ResourceResolver.IsDataSrc(xlinkValue)) {
                 try {
                     xlinkValue = this.resourceResolver.ResolveAgainstBaseUri(attr.GetValue()).ToExternalForm();
                 }
@@ -337,8 +316,8 @@ namespace iText.Svg.Css.Impl {
                                 styleData = ((ITextNode)currentNode.ChildNodes()[0]).WholeText();
                             }
                             CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData);
-                            //TODO (DEVSIX-2263): media query wrap
-                            //styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
+                            // TODO (DEVSIX-2263): media query wrap
+                            // styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
                             this.css.AppendCssStyleSheet(styleSheet);
                         }
                     }

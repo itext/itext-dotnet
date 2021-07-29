@@ -44,6 +44,7 @@ using System;
 using System.IO;
 using Common.Logging;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filespec {
@@ -157,17 +158,20 @@ namespace iText.Kernel.Pdf.Filespec {
             }
             PdfDictionary ef = dictionary.GetAsDictionary(PdfName.EF);
             if (ef == null || (ef.GetAsStream(PdfName.F) == null) && (ef.GetAsStream(PdfName.UF) == null)) {
-                throw new PdfException(PdfException.EncryptedPayloadFileSpecShallHaveEFDictionary);
+                throw new PdfException(KernelExceptionMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_EF_DICTIONARY
+                    );
             }
             if (!PdfName.Filespec.Equals(dictionary.GetAsName(PdfName.Type))) {
-                throw new PdfException(PdfException.EncryptedPayloadFileSpecShallHaveTypeEqualToFilespec);
+                throw new PdfException(KernelExceptionMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_TYPE_EQUAL_TO_FILESPEC
+                    );
             }
             if (!dictionary.IsIndirect()) {
-                throw new PdfException(PdfException.EncryptedPayloadFileSpecShallBeIndirect);
+                throw new PdfException(KernelExceptionMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_BE_INDIRECT);
             }
             PdfFileSpec fileSpec = PdfFileSpec.WrapFileSpecObject(dictionary);
             if (PdfEncryptedPayload.ExtractFrom(fileSpec) == null) {
-                throw new PdfException(PdfException.EncryptedPayloadFileSpecDoesntHaveEncryptedPayloadDictionary);
+                throw new PdfException(KernelExceptionMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_DOES_NOT_HAVE_ENCRYPTED_PAYLOAD_DICTIONARY
+                    );
             }
             return fileSpec;
         }

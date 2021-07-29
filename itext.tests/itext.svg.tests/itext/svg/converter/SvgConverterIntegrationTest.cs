@@ -51,9 +51,9 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
-using iText.Layout.Font;
 using iText.Svg.Dummy.Sdk;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
@@ -109,7 +109,7 @@ namespace iText.Svg.Converter {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void NonExistingTagIntegrationTest() {
             String contents = "<svg width='100pt' height='100pt'> <nonExistingTag/> </svg>";
             PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
@@ -121,7 +121,7 @@ namespace iText.Svg.Converter {
         /// <summary>Convert a SVG file defining all ignored tags currently defined in the project.</summary>
         /// <result>There will be no <c>Exception</c> during the process and PDF output is generated.</result>
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 31)]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 31)]
         public virtual void ConvertFileWithAllIgnoredTags() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "ignored_tags");
         }
@@ -134,7 +134,7 @@ namespace iText.Svg.Converter {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 12)]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 12)]
         public virtual void CaseSensitiveTagTest() {
             String contents = "<svg width='100pt' height='100pt'>" + "<altGlyph /><altglyph />" + "<feMergeNode /><femergeNode /><feMergenode /><femergenode />"
                  + "<foreignObject /><foreignobject />" + "<glyphRef /><glyphref />" + "<linearGradient /><lineargradient />"
@@ -511,8 +511,6 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ParseAndProcessSuccessTest() {
-            String name = "minimal";
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             IDictionary<String, ISvgNodeRenderer> map = new Dictionary<String, ISvgNodeRenderer>();
             RectangleSvgNodeRenderer rect = new RectangleSvgNodeRenderer();
             rect.SetAttribute("fill", "none");
@@ -525,10 +523,14 @@ namespace iText.Svg.Converter {
             root.SetAttribute("width", "500");
             root.SetAttribute("height", "400");
             root.SetAttribute("font-size", "12pt");
-            ISvgProcessorResult expected = new SvgProcessorResult(map, root, new FontProvider(), new FontSet());
-            ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
-            NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer().GetAttributeMapCopy(), actual.GetRootRenderer()
-                .GetAttributeMapCopy());
+            ISvgProcessorResult expected = new SvgProcessorResult(map, root, new SvgProcessorContext(new SvgConverterProperties
+                ()));
+            String name = "minimal";
+            using (FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read)) {
+                ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
+                NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer().GetAttributeMapCopy(), actual.GetRootRenderer()
+                    .GetAttributeMapCopy());
+            }
         }
 
         [NUnit.Framework.Test]

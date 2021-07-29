@@ -28,6 +28,7 @@ using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Util;
 
 namespace iText.StyledXmlParser.Util {
+    /// <summary>Utility class for resolving parent-inheritance of style and attribute declarations.</summary>
     public sealed class StyleUtil {
         private StyleUtil() {
         }
@@ -106,8 +107,8 @@ namespace iText.StyledXmlParser.Util {
             if (value == null) {
                 return false;
             }
-            return value.EndsWith(measurement) && CssTypesValidationUtils.IsNumericValue(value.JSubstring(0, value.Length
-                 - measurement.Length).Trim());
+            return value.EndsWith(measurement) && CssTypesValidationUtils.IsNumber(value.JSubstring(0, value.Length - 
+                measurement.Length).Trim());
         }
     }
 }

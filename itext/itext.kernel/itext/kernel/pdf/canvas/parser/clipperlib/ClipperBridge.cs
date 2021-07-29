@@ -74,7 +74,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
     /// </description></item>
     /// </list>
     /// </remarks>
-    public class ClipperBridge {
+    public sealed class ClipperBridge {
         /// <summary>
         /// Since the clipper library uses integer coordinates, we should convert
         /// our floating point numbers into fixed point numbers by multiplying by
@@ -87,6 +87,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// </remarks>
         public static double floatMultiplier = Math.Pow(10, 14);
 
+        private ClipperBridge() {
+        }
+
+        //empty constructor
         /// <summary>
         /// Converts Clipper library
         /// <see cref="PolyTree"/>

@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.Linq;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Geom {
@@ -686,7 +687,7 @@ namespace iText.Kernel.Geom {
             ) {
             IList<iText.Kernel.Geom.Rectangle> boundingRectangles = new List<iText.Kernel.Geom.Rectangle>();
             if (quadPoints.Size() % 8 != 0) {
-                throw new PdfException(PdfException.QuadPointArrayLengthIsNotAMultipleOfEight);
+                throw new PdfException(KernelExceptionMessageConstant.QUAD_POINT_ARRAY_LENGTH_IS_NOT_A_MULTIPLE_OF_EIGHT);
             }
             for (int i = 0; i < quadPoints.Size(); i += 8) {
                 float[] quadPointEntry = JavaUtil.ArraysCopyOfRange(quadPoints.ToFloatArray(), i, i + 8);
@@ -702,7 +703,7 @@ namespace iText.Kernel.Geom {
         public static iText.Kernel.Geom.Rectangle CreateBoundingRectangleFromQuadPoint(PdfArray quadPoints) {
             //Check if array length is a multiple of 8
             if (quadPoints.Size() % 8 != 0) {
-                throw new PdfException(PdfException.QuadPointArrayLengthIsNotAMultipleOfEight);
+                throw new PdfException(KernelExceptionMessageConstant.QUAD_POINT_ARRAY_LENGTH_IS_NOT_A_MULTIPLE_OF_EIGHT);
             }
             float llx = float.MaxValue;
             float lly = float.MaxValue;

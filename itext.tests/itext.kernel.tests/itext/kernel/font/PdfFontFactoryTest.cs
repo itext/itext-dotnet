@@ -25,6 +25,7 @@ using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -38,7 +39,7 @@ namespace iText.Kernel.Font {
             Type1Font fontProgram = (Type1Font)FontProgramFactory.CreateFont(StandardFonts.HELVETICA);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFontFactory.CreateFont(fontProgram
                 , PdfEncodings.UTF8, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
-            NUnit.Framework.Assert.AreEqual(PdfException.CannotEmbedStandardFont, e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_EMBED_STANDARD_FONT, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -145,7 +146,7 @@ namespace iText.Kernel.Font {
             TrueTypeFont fontProgram = new PdfFontFactoryTest.CustomTrueTypeFontProgram(false);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFontFactory.CreateFont(fontProgram
                 , PdfEncodings.UTF8, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.CannotBeEmbeddedDueToLicensingRestrictions
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS
                 , "CustomNameCustomStyle"), e.Message);
         }
 
@@ -208,8 +209,8 @@ namespace iText.Kernel.Font {
             TrueTypeFont fontProgram = new PdfFontFactoryTest.CustomTrueTypeFontProgram(true);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFontFactory.CreateFont(fontProgram
                 , PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.FORCE_NOT_EMBEDDED));
-            NUnit.Framework.Assert.AreEqual(PdfException.CannotCreateType0FontWithTrueTypeFontProgramWithoutEmbedding, 
-                e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_CREATE_TYPE_0_FONT_WITH_TRUE_TYPE_FONT_PROGRAM_WITHOUT_EMBEDDING_IT
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -217,7 +218,7 @@ namespace iText.Kernel.Font {
             TrueTypeFont fontProgram = new PdfFontFactoryTest.CustomTrueTypeFontProgram(false);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFontFactory.CreateFont(fontProgram
                 , PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.CannotBeEmbeddedDueToLicensingRestrictions
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS
                 , "CustomNameCustomStyle"), e.Message);
         }
 
@@ -226,7 +227,7 @@ namespace iText.Kernel.Font {
             TrueTypeFont fontProgram = new PdfFontFactoryTest.CustomTrueTypeFontProgram(false);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFontFactory.CreateFont(fontProgram
                 , PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.CannotBeEmbeddedDueToLicensingRestrictions
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS
                 , "CustomNameCustomStyle"), e.Message);
         }
 
@@ -235,7 +236,7 @@ namespace iText.Kernel.Font {
             TrueTypeFont fontProgram = new PdfFontFactoryTest.CustomTrueTypeFontProgram(false);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFontFactory.CreateFont(fontProgram
                 , PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.CannotBeEmbeddedDueToLicensingRestrictions
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS
                 , "CustomNameCustomStyle"), e.Message);
         }
 
@@ -244,7 +245,7 @@ namespace iText.Kernel.Font {
             TrueTypeFont fontProgram = new PdfFontFactoryTest.CustomTrueTypeFontProgram(false);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFontFactory.CreateFont(fontProgram
                 , PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.FORCE_NOT_EMBEDDED));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.CannotBeEmbeddedDueToLicensingRestrictions
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS
                 , "CustomNameCustomStyle"), e.Message);
         }
 
@@ -264,7 +265,8 @@ namespace iText.Kernel.Font {
             PdfDictionary dictionary = null;
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFontFactory.CreateFont(dictionary
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfException.CannotCreateFontFromNullFontDictionary, e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_CREATE_FONT_FROM_NULL_PDF_DICTIONARY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -272,26 +274,8 @@ namespace iText.Kernel.Font {
             PdfDictionary dictionary = new PdfDictionary();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFontFactory.CreateFont(dictionary
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfException.DictionaryDoesntHaveSupportedFontData, e.Message);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DeprecatedEmbeddedFlagTrueWorksAsPreferEmbeddedTest() {
-            // simply checks that embedded = true works as prefer embedded
-            // this test can be safely removed with clean up of deprecated methods in PdfFontFactory
-            PdfType1Font font = (PdfType1Font)PdfFontFactory.CreateFont(StandardFonts.HELVETICA, true);
-            NUnit.Framework.Assert.IsNotNull(font);
-            NUnit.Framework.Assert.IsFalse(font.IsEmbedded());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DeprecatedEmbeddedFlagFalseWorksAsPreferNotEmbeddedTest() {
-            // simply checks that embedded = false works as prefer not embedded
-            // this test can be safely removed with clean up of deprecated methods in PdfFontFactory
-            TrueTypeFont fontProgram = new PdfFontFactoryTest.CustomTrueTypeFontProgram(true);
-            PdfType0Font font = (PdfType0Font)PdfFontFactory.CreateFont(fontProgram, PdfEncodings.IDENTITY_H, false);
-            NUnit.Framework.Assert.IsNotNull(font);
-            NUnit.Framework.Assert.IsTrue(font.IsEmbedded());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DICTIONARY_DOES_NOT_HAVE_SUPPORTED_FONT_DATA
+                , e.Message);
         }
 
         private class CustomType1FontProgram : Type1Font {

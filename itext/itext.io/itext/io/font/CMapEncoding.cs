@@ -163,18 +163,6 @@ namespace iText.IO.Font {
             return Object.Equals(cmap, this.cmap);
         }
 
-        /// <param name="cid">a CID</param>
-        /// <returns>CMAP code as an int</returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. Use GetCmapBytes(int) instead.")]
-        public virtual int GetCmapCode(int cid) {
-            if (isDirect) {
-                return cid;
-            }
-            else {
-                return ToInteger(cid2Code.Lookup(cid));
-            }
-        }
-
         public virtual byte[] GetCmapBytes(int cid) {
             int length = GetCmapBytesLength(cid);
             byte[] result = new byte[length];
@@ -245,15 +233,6 @@ namespace iText.IO.Font {
                 }
             }
             return false;
-        }
-
-        private static int ToInteger(byte[] bytes) {
-            int result = 0;
-            foreach (byte b in bytes) {
-                result <<= 8;
-                result += b & 0xff;
-            }
-            return result;
         }
     }
 }

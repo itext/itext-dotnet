@@ -24,7 +24,7 @@ using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -77,8 +77,8 @@ namespace iText.Signatures.Sign {
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             //TODO DEVSIX-5637 Improve SignaturesCompareTool#compareSignatures to check encrypted pdf
-            NUnit.Framework.Assert.AreEqual(PdfException.BadUserPassword, SignaturesCompareTool.CompareSignatures(outPdf
-                , cmpPdf));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.BAD_USER_PASSWORD, SignaturesCompareTool.CompareSignatures
+                (outPdf, cmpPdf));
         }
 
         [NUnit.Framework.Test]
@@ -93,7 +93,7 @@ namespace iText.Signatures.Sign {
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             //TODO DEVSIX-5637 Improve SignaturesCompareTool#compareSignatures to check encrypted pdf
-            NUnit.Framework.Assert.AreEqual(PdfException.CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CERTIFICATE_IS_NOT_PROVIDED_DOCUMENT_IS_ENCRYPTED_WITH_PUBLIC_KEY_CERTIFICATE
                 , SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
         }
     }

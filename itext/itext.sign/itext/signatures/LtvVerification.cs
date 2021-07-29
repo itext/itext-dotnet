@@ -55,8 +55,8 @@ using iText.Forms;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Pdf;
+using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>Add verification according to PAdES-LTV (part 4).</summary>
@@ -134,7 +134,7 @@ namespace iText.Signatures {
         public virtual bool AddVerification(String signatureName, IOcspClient ocsp, ICrlClient crl, LtvVerification.CertificateOption
              certOption, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude) {
             if (used) {
-                throw new InvalidOperationException(PdfException.VerificationAlreadyOutput);
+                throw new InvalidOperationException(SignExceptionMessageConstant.VERIFICATION_ALREADY_OUTPUT);
             }
             PdfPKCS7 pk = sgnUtil.ReadSignatureData(signatureName);
             LOGGER.Info("Adding verification for " + signatureName);
@@ -217,7 +217,7 @@ namespace iText.Signatures {
         public virtual bool AddVerification(String signatureName, ICollection<byte[]> ocsps, ICollection<byte[]> crls
             , ICollection<byte[]> certs) {
             if (used) {
-                throw new InvalidOperationException(PdfException.VerificationAlreadyOutput);
+                throw new InvalidOperationException(SignExceptionMessageConstant.VERIFICATION_ALREADY_OUTPUT);
             }
             LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
             if (ocsps != null) {

@@ -48,6 +48,7 @@ using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
@@ -151,7 +152,7 @@ namespace iText.Kernel.Font {
             Normalize1000UnitsToGlyphSpaceUnits(fontMatrixArray);
             NormalizeGlyphSpaceUnitsTo1000Units(fontBBoxRect);
             NormalizeGlyphSpaceUnitsTo1000Units(widthsArray);
-            int firstChar = InitializeShortTag(fontDictionary);
+            int firstChar = InitializeUsedGlyphs(fontDictionary);
             fontMatrix = fontMatrixArray;
             InitializeFontBBox(fontBBoxRect);
             InitializeTypoAscenderDescender(fontBBoxRect);
@@ -375,7 +376,7 @@ namespace iText.Kernel.Font {
             double[] widths = new double[lastChar - firstChar + 1];
             for (int k = firstChar; k <= lastChar; ++k) {
                 int i = k - firstChar;
-                if (shortTag[k] == 0) {
+                if (usedGlyphs[k] == 0) {
                     widths[i] = 0;
                 }
                 else {
@@ -478,7 +479,7 @@ namespace iText.Kernel.Font {
 
         private void FlushFontData() {
             if (((Type3Font)GetFontProgram()).GetNumberOfGlyphs() < 1) {
-                throw new PdfException(PdfException.NoGlyphsDefinedForType3Font);
+                throw new PdfException(KernelExceptionMessageConstant.NO_GLYPHS_DEFINED_FOR_TYPE_3_FONT);
             }
             PdfDictionary charProcs = new PdfDictionary();
             for (int i = 0; i <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; i++) {
@@ -513,7 +514,8 @@ namespace iText.Kernel.Font {
         private double[] ReadWidths(PdfDictionary fontDictionary) {
             PdfArray pdfWidths = fontDictionary.GetAsArray(PdfName.Widths);
             if (pdfWidths == null) {
-                throw new PdfException(PdfException.MissingRequiredFieldInFontDictionary).SetMessageParams(PdfName.Widths);
+                throw new PdfException(KernelExceptionMessageConstant.MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY).SetMessageParams
+                    (PdfName.Widths);
             }
             double[] widths = new double[pdfWidths.Size()];
             for (int i = 0; i < pdfWidths.Size(); i++) {
@@ -523,12 +525,12 @@ namespace iText.Kernel.Font {
             return widths;
         }
 
-        private int InitializeShortTag(PdfDictionary fontDictionary) {
+        private int InitializeUsedGlyphs(PdfDictionary fontDictionary) {
             int firstChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.FirstChar), 0);
             int lastChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.LastChar), PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE
                 );
             for (int i = firstChar; i <= lastChar; i++) {
-                shortTag[i] = 1;
+                usedGlyphs[i] = 1;
             }
             return firstChar;
         }
@@ -548,8 +550,8 @@ namespace iText.Kernel.Font {
         private double[] ReadFontMatrix() {
             PdfArray fontMatrixArray = GetPdfObject().GetAsArray(PdfName.FontMatrix);
             if (fontMatrixArray == null) {
-                throw new PdfException(PdfException.MissingRequiredFieldInFontDictionary).SetMessageParams(PdfName.FontMatrix
-                    );
+                throw new PdfException(KernelExceptionMessageConstant.MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY).SetMessageParams
+                    (PdfName.FontMatrix);
             }
             double[] fontMatrix = new double[6];
             for (int i = 0; i < fontMatrixArray.Size(); i++) {

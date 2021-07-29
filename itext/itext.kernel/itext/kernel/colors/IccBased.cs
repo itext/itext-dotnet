@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System.IO;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
@@ -75,7 +76,7 @@ namespace iText.Kernel.Colors {
         public IccBased(Stream iccStream, float[] range, float[] value)
             : this(new PdfCieBasedCs.IccBased(iccStream, range), value) {
             if (GetNumberOfComponents() * 2 != range.Length) {
-                throw new PdfException(PdfException.InvalidRangeArray, this);
+                throw new PdfException(KernelExceptionMessageConstant.INVALID_RANGE_ARRAY, this);
             }
         }
     }

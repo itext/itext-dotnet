@@ -58,7 +58,8 @@ namespace iText.Svg.Utils {
         public virtual void NoTranslateValuesTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 ("translate()"));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
@@ -86,7 +87,8 @@ namespace iText.Svg.Utils {
         public virtual void TooManyTranslateValuesTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 ("translate(1 2 3)"));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message
+                );
         }
     }
 }

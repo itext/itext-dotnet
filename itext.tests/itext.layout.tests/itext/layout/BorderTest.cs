@@ -273,44 +273,14 @@ namespace iText.Layout {
             }
         }
 
-        //When 7.2 release is in progress, remove the underlying code. It's here to pass A SQ line coverage quality gate and tests deprecated protected methods
-        public class TestDashedBorder : DashedBorder {
-            public TestDashedBorder(BorderTest _enclosing, float width)
+        private class TestBorder : DashedBorder {
+            public TestBorder(float width)
                 : base(width) {
-                this._enclosing = _enclosing;
             }
 
             public virtual float PublicGetDotsGap(double distance, float initialGap) {
-                return this.GetDotsGap(distance, initialGap);
+                return GetDotsGap(distance, initialGap);
             }
-
-            private readonly BorderTest _enclosing;
-        }
-
-        public class TestDottedBorder : DottedBorder {
-            public TestDottedBorder(BorderTest _enclosing, float width)
-                : base(width) {
-                this._enclosing = _enclosing;
-            }
-
-            public virtual float PublicGetDotsGap(double distance, float initialGap) {
-                return this.GetDotsGap(distance, initialGap);
-            }
-
-            private readonly BorderTest _enclosing;
-        }
-
-        public class TestRoundDotsBorder : RoundDotsBorder {
-            public TestRoundDotsBorder(BorderTest _enclosing, float width)
-                : base(width) {
-                this._enclosing = _enclosing;
-            }
-
-            public virtual float PublicGetDotsGap(double distance, float initialGap) {
-                return this.GetDotsGap(distance, initialGap);
-            }
-
-            private readonly BorderTest _enclosing;
         }
 
         [NUnit.Framework.Test]
@@ -318,15 +288,9 @@ namespace iText.Layout {
             float expected = 0.2f;
             double distance = 0.2;
             float initialGap = 0.2f;
-            BorderTest.TestDashedBorder db = new BorderTest.TestDashedBorder(this, 1f);
-            BorderTest.TestDottedBorder dotb = new BorderTest.TestDottedBorder(this, 1f);
-            BorderTest.TestRoundDotsBorder rdb = new BorderTest.TestRoundDotsBorder(this, 1f);
-            float dbActual = db.PublicGetDotsGap(distance, initialGap);
-            float dotbActual = dotb.PublicGetDotsGap(distance, initialGap);
-            float rdbActual = rdb.PublicGetDotsGap(distance, initialGap);
-            NUnit.Framework.Assert.AreEqual(expected, dbActual, 0.0001f);
-            NUnit.Framework.Assert.AreEqual(expected, dotbActual, 0.0001f);
-            NUnit.Framework.Assert.AreEqual(expected, rdbActual, 0.0001f);
+            BorderTest.TestBorder border = new BorderTest.TestBorder(1f);
+            float actual = border.PublicGetDotsGap(distance, initialGap);
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0.0001f);
         }
     }
 }

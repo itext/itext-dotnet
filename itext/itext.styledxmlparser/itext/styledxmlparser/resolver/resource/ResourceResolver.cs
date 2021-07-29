@@ -55,10 +55,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>Identifier string used when loading in base64 images.</summary>
         public const String BASE64_IDENTIFIER = "base64";
 
-        /// <summary>Identifier string used when loading in base64 images.</summary>
-        [System.ObsoleteAttribute(@"This variable will be replaced by BASE64_IDENTIFIER in 7.2 release")]
-        public const String BASE64IDENTIFIER = "base64";
-
         /// <summary>Identifier string used to detect that the source is under data URI scheme.</summary>
         public const String DATA_SCHEMA_PREFIX = "data:";
 
@@ -168,31 +164,14 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         /// <summary>
-        /// Retrieve
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>.
-        /// </summary>
-        /// <param name="src">either link to file or base64 encoded stream</param>
-        /// <returns>PdfImageXObject on success, otherwise null</returns>
-        [System.ObsoleteAttribute(@"will return iText.Kernel.Pdf.Xobject.PdfXObject in pdfHTML 3.0.0")]
-        public virtual PdfImageXObject RetrieveImage(String src) {
-            PdfXObject image = RetrieveImageExtended(src);
-            if (image is PdfImageXObject) {
-                return (PdfImageXObject)image;
-            }
-            else {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Retrieve image as either
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
         /// , or
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
         /// </summary>
         /// <param name="src">either link to file or base64 encoded stream</param>
-        /// <returns>PdfImageXObject on success, otherwise null</returns>
-        public virtual PdfXObject RetrieveImageExtended(String src) {
+        /// <returns>PdfXObject on success, otherwise null</returns>
+        public virtual PdfXObject RetrieveImage(String src) {
             if (src != null) {
                 if (IsContains64Mark(src)) {
                     PdfXObject imageXObject = TryResolveBase64ImageSource(src);
@@ -214,43 +193,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                     , uriResolver.GetBaseUri(), src));
             }
             return null;
-        }
-
-        /// <summary>
-        /// Open an
-        /// <see cref="System.IO.Stream"/>
-        /// to a style sheet URI.
-        /// </summary>
-        /// <param name="uri">the URI</param>
-        /// <returns>
-        /// the
-        /// <see cref="System.IO.Stream"/>
-        /// </returns>
-        [System.ObsoleteAttribute(@"use RetrieveResourceAsInputStream(System.String) instead")]
-        public virtual Stream RetrieveStyleSheet(String uri) {
-            return retriever.GetInputStreamByUrl(uriResolver.ResolveAgainstBaseUri(uri));
-        }
-
-        /// <summary>Replaced by retrieveBytesFromResource for the sake of method name clarity.</summary>
-        /// <remarks>
-        /// Replaced by retrieveBytesFromResource for the sake of method name clarity.
-        /// <para />
-        /// Retrieve a resource as a byte array from a source that
-        /// can either be a link to a file, or a base64 encoded
-        /// <see cref="System.String"/>.
-        /// </remarks>
-        /// <param name="src">either link to file or base64 encoded stream</param>
-        /// <returns>byte[] on success, otherwise null</returns>
-        [System.ObsoleteAttribute(@"use RetrieveBytesFromResource(System.String) instead")]
-        public virtual byte[] RetrieveStream(String src) {
-            try {
-                return RetrieveBytesFromResource(src);
-            }
-            catch (Exception e) {
-                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
-                    , uriResolver.GetBaseUri(), src), e);
-                return null;
-            }
         }
 
         /// <summary>
@@ -299,7 +241,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <remarks>Checks if source is under data URI scheme. (eg data:[&lt;media type&gt;][;base64],&lt;data&gt;).</remarks>
         /// <param name="src">string to test</param>
         /// <returns>true if source is under data URI scheme</returns>
-        public virtual bool IsDataSrc(String src) {
+        public static bool IsDataSrc(String src) {
             return src != null && src.ToLowerInvariant().StartsWith(DATA_SCHEMA_PREFIX) && src.Contains(",");
         }
 
@@ -313,25 +255,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>Resets the simple image cache.</summary>
         public virtual void ResetCache() {
             imageCache.Reset();
-        }
-
-        /// <summary>
-        /// Check if the type of image located at the passed is supported by the
-        /// <see cref="iText.IO.Image.ImageDataFactory"/>.
-        /// </summary>
-        /// <param name="src">location of the image resource</param>
-        /// <returns>true if the image type is supported, false otherwise</returns>
-        [System.ObsoleteAttribute(@"there is no need to perform laborious type checking because any resource extraction is wrapped in an try-catch block"
-            )]
-        public virtual bool IsImageTypeSupportedByImageDataFactory(String src) {
-            try {
-                Uri url = uriResolver.ResolveAgainstBaseUri(src);
-                url = UrlUtil.GetFinalURL(url);
-                return ImageDataFactory.IsSupportedType(retriever.GetByteArrayByUrl(url));
-            }
-            catch (Exception) {
-                return false;
-            }
         }
 
         protected internal virtual PdfXObject TryResolveBase64ImageSource(String src) {

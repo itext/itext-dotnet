@@ -50,6 +50,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -337,7 +338,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas RestoreState() {
             document.CheckIsoConformance('Q', IsoKey.CANVAS_STACK);
             if (gsStack.IsEmpty()) {
-                throw new PdfException(PdfException.UnbalancedSaveRestoreStateOperators);
+                throw new PdfException(KernelExceptionMessageConstant.UNBALANCED_SAVE_RESTORE_STATE_OPERATORS);
             }
             currentGs = gsStack.Pop();
             contentStream.GetOutputStream().WriteBytes(Q);
@@ -644,7 +645,8 @@ namespace iText.Kernel.Pdf.Canvas {
             document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
             PdfFont font;
             if ((font = currentGs.GetFont()) == null) {
-                throw new PdfException(PdfException.FontAndSizeMustBeSetBeforeWritingAnyText, currentGs);
+                throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
+                    );
             }
             float fontSize = currentGs.GetFontSize() / 1000f;
             float charSpacing = currentGs.GetCharSpacing();
@@ -800,7 +802,8 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(PdfArray textArray) {
             document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
             if (currentGs.GetFont() == null) {
-                throw new PdfException(PdfException.FontAndSizeMustBeSetBeforeWritingAnyText, currentGs);
+                throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
+                    );
             }
             contentStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("["));
             foreach (PdfObject obj in textArray) {
@@ -1633,7 +1636,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 layerDepth.JRemoveAt(layerDepth.Count - 1);
             }
             else {
-                throw new PdfException(PdfException.UnbalancedLayerOperators);
+                throw new PdfException(KernelExceptionMessageConstant.UNBALANCED_LAYER_OPERATORS);
             }
             while (num-- > 0) {
                 contentStream.GetOutputStream().WriteBytes(EMC).WriteNewLine();
@@ -2369,7 +2372,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas EndMarkedContent() {
             if (--mcDepth < 0) {
-                throw new PdfException(PdfException.UnbalancedBeginEndMarkedContentOperators);
+                throw new PdfException(KernelExceptionMessageConstant.UNBALANCED_BEGIN_END_MARKED_CONTENT_OPERATORS);
             }
             contentStream.GetOutputStream().WriteBytes(EMC);
             return this;
@@ -2616,7 +2619,7 @@ namespace iText.Kernel.Pdf.Canvas {
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float x, float y, float width) {
             PdfArray bbox = form.GetPdfObject().GetAsArray(PdfName.BBox);
             if (bbox == null) {
-                throw new PdfException(PdfException.PdfFormXobjectHasInvalidBbox);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_FORM_XOBJECT_HAS_INVALID_BBOX);
             }
             float formWidth = Math.Abs(bbox.GetAsNumber(2).FloatValue() - bbox.GetAsNumber(0).FloatValue());
             float formHeight = Math.Abs(bbox.GetAsNumber(3).FloatValue() - bbox.GetAsNumber(1).FloatValue());
@@ -2643,7 +2646,7 @@ namespace iText.Kernel.Pdf.Canvas {
              dummy) {
             PdfArray bbox = form.GetPdfObject().GetAsArray(PdfName.BBox);
             if (bbox == null) {
-                throw new PdfException(PdfException.PdfFormXobjectHasInvalidBbox);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_FORM_XOBJECT_HAS_INVALID_BBOX);
             }
             float formWidth = Math.Abs(bbox.GetAsNumber(2).FloatValue() - bbox.GetAsNumber(0).FloatValue());
             float formHeight = Math.Abs(bbox.GetAsNumber(3).FloatValue() - bbox.GetAsNumber(1).FloatValue());
@@ -2764,7 +2767,8 @@ namespace iText.Kernel.Pdf.Canvas {
         private void ShowTextInt(String text) {
             document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
             if (currentGs.GetFont() == null) {
-                throw new PdfException(PdfException.FontAndSizeMustBeSetBeforeWritingAnyText, currentGs);
+                throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
+                    );
             }
             currentGs.GetFont().WriteText(text, contentStream.GetOutputStream());
         }

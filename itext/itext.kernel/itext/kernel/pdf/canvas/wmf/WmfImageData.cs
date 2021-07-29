@@ -46,6 +46,7 @@ using System.IO;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>Image implementation for WMF, Windows Metafile.</summary>
@@ -64,7 +65,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             : base(url, ImageType.WMF) {
             byte[] imageType = ReadImageType(url);
             if (!ImageTypeIs(imageType, wmf)) {
-                throw new PdfException(PdfException.NotAWmfImage);
+                throw new PdfException(KernelExceptionMessageConstant.NOT_A_WMF_IMAGE);
             }
         }
 
@@ -74,7 +75,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             : base(bytes, ImageType.WMF) {
             byte[] imageType = ReadImageType(bytes);
             if (!ImageTypeIs(imageType, wmf)) {
-                throw new PdfException(PdfException.NotAWmfImage);
+                throw new PdfException(KernelExceptionMessageConstant.NOT_A_WMF_IMAGE);
             }
         }
 
@@ -96,7 +97,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                 return bytes;
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.IoException, e);
+                throw new PdfException(KernelExceptionMessageConstant.IO_EXCEPTION, e);
             }
             finally {
                 if (@is != null) {

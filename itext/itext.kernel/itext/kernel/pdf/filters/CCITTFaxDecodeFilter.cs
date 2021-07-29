@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using iText.IO.Codec;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {
@@ -53,7 +54,7 @@ namespace iText.Kernel.Pdf.Filters {
             PdfNumber wn = streamDictionary.GetAsNumber(PdfName.Width);
             PdfNumber hn = streamDictionary.GetAsNumber(PdfName.Height);
             if (wn == null || hn == null) {
-                throw new PdfException(PdfException.FilterCcittfaxdecodeIsOnlySupportedForImages);
+                throw new PdfException(KernelExceptionMessageConstant.FILTER_CCITTFAXDECODE_IS_ONLY_SUPPORTED_FOR_IMAGES);
             }
             int width = wn.IntValue();
             int height = hn.IntValue();

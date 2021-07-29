@@ -58,21 +58,24 @@ namespace iText.Svg.Utils {
         public virtual void NoMatrixValuesTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 ("matrix()"));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void NotEnoughMatrixValuesTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 ("matrix(0)"));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void TooManyMatrixValuesTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 ("matrix(1 2 3 4 5 6 7 8)"));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message
+                );
         }
     }
 }

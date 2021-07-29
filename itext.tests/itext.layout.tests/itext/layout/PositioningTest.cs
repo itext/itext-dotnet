@@ -51,6 +51,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -308,7 +309,8 @@ namespace iText.Layout {
                     int pageNumberToDrawTextOn = 1;
                     Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => doc.ShowTextAligned(new Paragraph("Hello Bruno on page 1!"
                         ), 36, 36, pageNumberToDrawTextOn, TextAlignment.LEFT, VerticalAlignment.TOP, 0));
-                    NUnit.Framework.Assert.AreEqual(PdfException.CannotDrawElementsOnAlreadyFlushedPages, e.Message);
+                    NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.CANNOT_DRAW_ELEMENTS_ON_ALREADY_FLUSHED_PAGES
+                        , e.Message);
                 }
             }
         }

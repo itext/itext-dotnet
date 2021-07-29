@@ -277,9 +277,6 @@ namespace iText.Pdfa {
 
         public const String WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_OR_AA_ENTRY = "Widget annotation dictionary or field dictionary shall not include a or aa entry";
 
-        [Obsolete]
-        public const String IF_THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_TRANSPARENCY_IS_FORBIDDEN = "If the document does not contain a pdfa outputintent transparency is forbidden";
-
         /// <summary>Creates a PdfAConformanceException.</summary>
         /// <param name="message">the error message</param>
         public PdfAConformanceException(String message)

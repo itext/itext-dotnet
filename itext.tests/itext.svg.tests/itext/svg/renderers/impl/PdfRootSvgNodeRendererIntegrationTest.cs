@@ -120,7 +120,7 @@ namespace iText.Svg.Renderers.Impl {
             SvgDrawContext context = new SvgDrawContext(null, null);
             context.PushCanvas(canvas);
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => root.Draw(context));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.ROOT_SVG_NO_BBOX, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.ROOT_SVG_NO_BBOX, e.Message);
         }
 
         [NUnit.Framework.Test]

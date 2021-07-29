@@ -91,8 +91,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                         , shorthandExpression));
                     return JavaCollectionsUtil.EmptyList<CssDeclaration>();
                 }
-                if (CommonCssConstants.BORDER_WIDTH_VALUES.Contains(value) || CssTypesValidationUtils.IsNumericValue(value
-                    ) || CssTypesValidationUtils.IsMetricValue(value) || CssTypesValidationUtils.IsRelativeValue(value)) {
+                if (CommonCssConstants.BORDER_WIDTH_VALUES.Contains(value) || CssTypesValidationUtils.IsNumber(value) || CssTypesValidationUtils
+                    .IsMetricValue(value) || CssTypesValidationUtils.IsRelativeValue(value)) {
                     borderWidthValue = value;
                 }
                 else {

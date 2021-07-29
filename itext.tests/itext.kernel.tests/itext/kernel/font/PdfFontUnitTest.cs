@@ -20,25 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-/*
-
-This program is offered under a commercial and under the AGPL license.
-For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
-
-AGPL licensing:
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -46,6 +27,7 @@ using System.Text.RegularExpressions;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -513,7 +495,7 @@ namespace iText.Kernel.Font {
         public virtual void GetEmptyPdfStreamTest() {
             PdfFontUnitTest.TestFont font = new PdfFontUnitTest.TestFont();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => font.GetPdfFontStream(null, null));
-            NUnit.Framework.Assert.AreEqual(PdfException.FontEmbeddingIssue, e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.FONT_EMBEDDING_ISSUE, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -588,6 +570,36 @@ namespace iText.Kernel.Font {
                 }
             }
             return sentence;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotGetFontStreamForNullBytesTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfFont pdfFont = PdfFontFactory.CreateFont();
+                pdfFont.GetPdfFontStream(null, new int[] { 1 });
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.FONT_EMBEDDING_ISSUE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotGetFontStreamForNullLengthsTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfFont pdfFont = PdfFontFactory.CreateFont();
+                pdfFont.GetPdfFontStream(new byte[] { 1 }, null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.FONT_EMBEDDING_ISSUE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotGetFontStreamForNullBytesAndLengthsTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfFont pdfFont = PdfFontFactory.CreateFont();
+                pdfFont.GetPdfFontStream(null, null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.FONT_EMBEDDING_ISSUE))
+;
         }
     }
 }

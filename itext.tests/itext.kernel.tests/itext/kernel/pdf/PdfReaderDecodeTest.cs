@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -114,8 +114,8 @@ namespace iText.Kernel.Pdf {
                 array.Add(PdfName.Fl);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => PdfReader.DecodeBytes
                     (b, stream));
-                NUnit.Framework.Assert.AreEqual(PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed, 
-                    e.Message);
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
+                    , e.Message);
             }
         }
 
@@ -155,8 +155,8 @@ namespace iText.Kernel.Pdf {
                 // Limit is reached, and the stream with one filter is considered to be suspicious
                 Exception e = NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => PdfReader.DecodeBytes
                     (b, stream));
-                NUnit.Framework.Assert.AreEqual(PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed, 
-                    e.Message);
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
+                    , e.Message);
             }
         }
 
@@ -223,7 +223,7 @@ namespace iText.Kernel.Pdf {
                 byte[] b = stream.GetBytes(false);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => PdfReader.DecodeBytes
                     (b, stream));
-                NUnit.Framework.Assert.AreEqual(PdfException.DuringDecompressionMultipleStreamsInSumOccupiedMoreMemoryThanAllowed
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DURING_DECOMPRESSION_MULTIPLE_STREAMS_IN_SUM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
                     , e.Message);
             }
         }
@@ -238,7 +238,7 @@ namespace iText.Kernel.Pdf {
                 ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => pdfDocument.GetFirstPage
                     ().GetContentBytes());
-                NUnit.Framework.Assert.AreEqual(PdfException.DuringDecompressionMultipleStreamsInSumOccupiedMoreMemoryThanAllowed
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DURING_DECOMPRESSION_MULTIPLE_STREAMS_IN_SUM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
                     , e.Message);
             }
         }
@@ -253,8 +253,8 @@ namespace iText.Kernel.Pdf {
                 ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => pdfDocument.GetFirstPage
                     ().GetContentBytes());
-                NUnit.Framework.Assert.AreEqual(PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed, 
-                    e.Message);
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
+                    , e.Message);
             }
         }
     }

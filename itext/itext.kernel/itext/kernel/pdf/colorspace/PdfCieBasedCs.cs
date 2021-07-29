@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Colors;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Colorspace {
@@ -85,7 +86,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             public CalGray(float[] whitePoint)
                 : this(GetInitialPdfArray()) {
                 if (whitePoint == null || whitePoint.Length != 3) {
-                    throw new PdfException(PdfException.WhitePointIsIncorrectlySpecified, this);
+                    throw new PdfException(KernelExceptionMessageConstant.WHITE_POINT_IS_INCORRECTLY_SPECIFIED, this);
                 }
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
                 d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));
@@ -122,7 +123,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             public CalRgb(float[] whitePoint)
                 : this(GetInitialPdfArray()) {
                 if (whitePoint == null || whitePoint.Length != 3) {
-                    throw new PdfException(PdfException.WhitePointIsIncorrectlySpecified, this);
+                    throw new PdfException(KernelExceptionMessageConstant.WHITE_POINT_IS_INCORRECTLY_SPECIFIED, this);
                 }
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
                 d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));
@@ -162,7 +163,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             public Lab(float[] whitePoint)
                 : this(GetInitialPdfArray()) {
                 if (whitePoint == null || whitePoint.Length != 3) {
-                    throw new PdfException(PdfException.WhitePointIsIncorrectlySpecified, this);
+                    throw new PdfException(KernelExceptionMessageConstant.WHITE_POINT_IS_INCORRECTLY_SPECIFIED, this);
                 }
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
                 d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -163,7 +164,7 @@ namespace iText.Kernel.Pdf.Collection {
             // this line will throw an exception as getValue() method is not
             // supported for subType which differs from S, N and D.
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => field.GetValue(stringValue));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException._1IsNotAnAcceptableValueForTheField2
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNACCEPTABLE_FIELD_VALUE
                 , stringValue, fieldName), e.Message);
         }
 

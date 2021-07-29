@@ -66,6 +66,7 @@ namespace iText.Svg.Renderers.Factories {
     [System.ObsoleteAttribute(@"The public access to this class will be removed in 7.2. The class itself can become either package private or the inner private static class for the DefaultSvgNodeRendererFactory . Users should override ISvgNodeRendererFactory (or at least DefaultSvgNodeRendererFactory ) and should not deal with the mapping class as it's more of an implementation detail."
         )]
     public class DefaultSvgNodeRendererMapper : ISvgNodeRendererMapper {
+        // TODO DEVSIX-5081 7.2 svg: Remove deprecated API and refactor tests related to ISvgNodeRendererMapper
         public virtual IDictionary<String, Type> GetMapping() {
             IDictionary<String, Type> result = new Dictionary<String, Type>();
             result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));

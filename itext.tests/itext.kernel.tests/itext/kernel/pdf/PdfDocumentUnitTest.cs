@@ -1,53 +1,35 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Layer;
 using iText.Test;
 using iText.Test.Attributes;
@@ -225,7 +207,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentNoWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_265(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            PdfDocument pdfDocument = new _PdfDocument_251(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
             // This class instance extends pdfDocument
             // TODO DEVSIX-5292 These fields shouldn't be initialized during the document's opening
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -235,15 +217,15 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_265 : PdfDocument {
-            public _PdfDocument_265(PdfReader baseArg1)
+        private sealed class _PdfDocument_251 : PdfDocument {
+            public _PdfDocument_251(PdfReader baseArg1)
                 : base(baseArg1) {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_282(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"), new PdfWriter
+            PdfDocument pdfDocument = new _PdfDocument_268(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"), new PdfWriter
                 (new ByteArrayOutputStream()));
             // This class instance extends pdfDocument
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -254,8 +236,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_282 : PdfDocument {
-            public _PdfDocument_282(PdfReader baseArg1, PdfWriter baseArg2)
+        private sealed class _PdfDocument_268 : PdfDocument {
+            public _PdfDocument_268(PdfReader baseArg1, PdfWriter baseArg2)
                 : base(baseArg1, baseArg2) {
             }
         }
@@ -327,6 +309,109 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(layerDictionary.Get(PdfName.Name));
             String layerNameString = layerDictionary.Get(PdfName.Name).ToString();
             NUnit.Framework.Assert.AreEqual(name, layerNameString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotGetTagStructureForUntaggedDocumentTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                pdfDoc.GetTagStructureContext();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.MUST_BE_A_TAGGED_DOCUMENT))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotAddPageAfterDocumentIsClosedTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                pdfDoc.AddNewPage(1);
+                pdfDoc.Close();
+                pdfDoc.AddNewPage(2);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotMovePageToZeroPositionTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                pdfDoc.AddNewPage();
+                pdfDoc.MovePage(1, 0);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS, 0)))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotMovePageToNegativePosition() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                pdfDoc.AddNewPage();
+                pdfDoc.MovePage(1, -1);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS, -1)))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotMovePageToOneMorePositionThanPagesNumberTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                pdfDoc.AddNewPage();
+                pdfDoc.MovePage(1, 3);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS, 3)))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotAddPageToAnotherDocumentTest01() {
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            pdfDoc1.AddNewPage(1);
+            NUnit.Framework.Assert.That(() =>  {
+                pdfDoc2.CheckAndAddPage(1, pdfDoc1.GetPage(1));
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT, pdfDoc1, 1, pdfDoc2)))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotAddPageToAnotherDocumentTest02() {
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            pdfDoc1.AddNewPage(1);
+            NUnit.Framework.Assert.That(() =>  {
+                pdfDoc2.CheckAndAddPage(pdfDoc1.GetPage(1));
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT, pdfDoc1, 1, pdfDoc2)))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotSetEncryptedPayloadInReadingModeTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "setEncryptedPayloadInReadingModeTest.pdf"
+                    ));
+                pdfDoc.SetEncryptedPayload(null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_DOCUMENT_OPENED_IN_READING_MODE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotSetEncryptedPayloadToEncryptedDocTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                WriterProperties writerProperties = new WriterProperties();
+                writerProperties.SetStandardEncryption(new byte[] {  }, new byte[] {  }, 1, 1);
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream(), writerProperties));
+                PdfFileSpec fs = PdfFileSpec.CreateExternalFileSpec(pdfDoc, sourceFolder + "testPath");
+                pdfDoc.SetEncryptedPayload(fs);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_ENCRYPTED_DOCUMENT))
+;
         }
     }
 }

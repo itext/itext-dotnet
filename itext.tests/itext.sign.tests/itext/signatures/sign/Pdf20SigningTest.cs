@@ -31,6 +31,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Signatures;
+using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Test;
 using iText.Test.Signutils;
@@ -85,8 +86,8 @@ namespace iText.Signatures.Sign {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => Sign(srcFile, fieldName, outPdf, chain
                 , pk, DigestAlgorithms.RIPEMD160, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity", rect, false, true
                 , PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED, null));
-            NUnit.Framework.Assert.AreEqual(PdfException.CertificationSignatureCreationFailedDocShallNotContainSigs, e
-                .Message);
+            NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.CERTIFICATION_SIGNATURE_CREATION_FAILED_DOC_SHALL_NOT_CONTAIN_SIGS
+                , e.Message);
         }
 
         [NUnit.Framework.Test]

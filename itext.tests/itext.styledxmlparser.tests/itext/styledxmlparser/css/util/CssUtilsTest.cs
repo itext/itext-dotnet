@@ -47,7 +47,6 @@ using iText.Layout.Properties;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Pseudo;
-using iText.StyledXmlParser.Exceptions;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Test;
@@ -56,6 +55,20 @@ using iText.Test.Attributes;
 namespace iText.StyledXmlParser.Css.Util {
     public class CssUtilsTest : ExtendedITextTest {
         private static float EPS = 0.0001f;
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertFloatMaximumToPdfTest() {
+            float expected = float.PositiveInfinity;
+            float actual = CssUtils.ConvertPtsToPx(float.MaxValue);
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertFloatMinimumToPdfTest() {
+            float expected = 1.4E-45f;
+            float actual = CssUtils.ConvertPtsToPx(float.Epsilon);
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
+        }
 
         [NUnit.Framework.Test]
         public virtual void ExtractShorthandPropertiesFromEmptyStringTest() {
@@ -95,110 +108,13 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
-        public virtual void ParseAbsoluteLengthFromNAN() {
-            String value = "Definitely not a number";
-            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssUtils.ParseAbsoluteLength
-                (value));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.NAN, "Definitely not a number"
-                ), e.Message);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseAbsoluteLengthFromNull() {
-            String value = null;
-            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssUtils.ParseAbsoluteLength
-                (value));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.NAN, "null"), e.Message);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseAbsoluteLengthFrom10px() {
-            String value = "10px";
-            float actual = CssUtils.ParseAbsoluteLength(value, CommonCssConstants.PX);
-            float expected = 7.5f;
-            NUnit.Framework.Assert.AreEqual(expected, actual, 0);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseAbsoluteLengthFrom10cm() {
-            String value = "10cm";
-            float actual = CssUtils.ParseAbsoluteLength(value, CommonCssConstants.CM);
-            float expected = 283.46457f;
-            NUnit.Framework.Assert.AreEqual(expected, actual, 0);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseAbsoluteLengthFrom10in() {
-            String value = "10in";
-            float actual = CssUtils.ParseAbsoluteLength(value, CommonCssConstants.IN);
-            float expected = 720.0f;
-            NUnit.Framework.Assert.AreEqual(expected, actual, 0);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseAbsoluteLengthFrom10pt() {
-            String value = "10pt";
-            float actual = CssUtils.ParseAbsoluteLength(value, CommonCssConstants.PT);
-            float expected = 10.0f;
-            NUnit.Framework.Assert.AreEqual(expected, actual, 0);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseAboluteLengthExponential01() {
-            String value = "1e2pt";
-            float actual = CssUtils.ParseAbsoluteLength(value);
-            float expected = 1e2f;
-            NUnit.Framework.Assert.AreEqual(expected, actual, 0);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseAboluteLengthExponential02() {
-            String value = "1e2px";
-            float actual = CssUtils.ParseAbsoluteLength(value);
-            float expected = 1e2f * 0.75f;
-            NUnit.Framework.Assert.AreEqual(expected, actual, 0);
-        }
-
-        [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 1)]
-        public virtual void ParseAbsoluteLengthFromUnknownType() {
-            String value = "10pateekes";
-            float actual = CssUtils.ParseAbsoluteLength(value, "pateekes");
-            float expected = 10.0f;
-            NUnit.Framework.Assert.AreEqual(expected, actual, 0);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ValidateMetricValue() {
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1px"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1in"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1cm"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1mm"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1pc"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsMetricValue("1em"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsMetricValue("1rem"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsMetricValue("1ex"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1pt"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsMetricValue("1inch"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsMetricValue("+1m"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ValidateNumericValue() {
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsNumericValue("1"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsNumericValue("12"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsNumericValue("1.2"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsNumericValue(".12"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsNumericValue("12f"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsNumericValue("f1.2"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsNumericValue(".12f"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseLength() {
-            NUnit.Framework.Assert.AreEqual(9, CssUtils.ParseAbsoluteLength("12"), 0);
-            NUnit.Framework.Assert.AreEqual(576, CssUtils.ParseAbsoluteLength("8inch"), 0);
-            NUnit.Framework.Assert.AreEqual(576, CssUtils.ParseAbsoluteLength("8", CommonCssConstants.IN), 0);
+        public virtual void NormalConvertPtsToPxTest() {
+            float[] input = new float[] { -1f, 0f, 1f };
+            float[] expected = new float[] { -1.3333334f, 0f, 1.3333334f };
+            for (int i = 0; i < input.Length; i++) {
+                float actual = CssUtils.ConvertPtsToPx(input[i]);
+                NUnit.Framework.Assert.AreEqual(expected[i], actual, 0f);
+            }
         }
 
         [NUnit.Framework.Test]
@@ -253,99 +169,6 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         // wrong syntax
-        [NUnit.Framework.Test]
-        public virtual void ParseAbsoluteFontSizeTest() {
-            NUnit.Framework.Assert.AreEqual(75, CssUtils.ParseAbsoluteFontSize("100", CommonCssConstants.PX), EPS);
-            NUnit.Framework.Assert.AreEqual(75, CssUtils.ParseAbsoluteFontSize("100px"), EPS);
-            NUnit.Framework.Assert.AreEqual(12, CssUtils.ParseAbsoluteFontSize(CommonCssConstants.MEDIUM), EPS);
-            NUnit.Framework.Assert.AreEqual(0, CssUtils.ParseAbsoluteFontSize("", ""), EPS);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseRelativeFontSizeTest() {
-            NUnit.Framework.Assert.AreEqual(120, CssUtils.ParseRelativeFontSize("10em", 12), EPS);
-            NUnit.Framework.Assert.AreEqual(12.5f, CssUtils.ParseRelativeFontSize(CommonCssConstants.SMALLER, 15), EPS
-                );
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseAbsoluteLengthTest() {
-            NUnit.Framework.Assert.AreEqual(75, CssUtils.ParseAbsoluteLength("100", CommonCssConstants.PX), EPS);
-            NUnit.Framework.Assert.AreEqual(75, CssUtils.ParseAbsoluteLength("100px"), EPS);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseInvalidFloat() {
-            String value = "invalidFloat";
-            try {
-                NUnit.Framework.Assert.IsNull(CssUtils.ParseFloat(value));
-            }
-            catch (Exception) {
-                NUnit.Framework.Assert.Fail();
-            }
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseAbsoluteLength12cmTest() {
-            // Calculations in CssUtils#parseAbsoluteLength were changed to work
-            // with double values instead of float to improve precision and eliminate
-            // the difference between java and .net. So the test verifies this fix.
-            NUnit.Framework.Assert.AreEqual(340.15747f, CssUtils.ParseAbsoluteLength("12cm"), 0f);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseAbsoluteLength12qTest() {
-            // Calculations in CssUtils#parseAbsoluteLength were changed to work
-            // with double values instead of float to improve precision and eliminate
-            // the difference between java and .net. So the test verifies this fix
-            NUnit.Framework.Assert.AreEqual(8.503937f, CssUtils.ParseAbsoluteLength("12q"), 0f);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestIsAngleCorrectValues() {
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsAngleValue("10deg"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsAngleValue("-20grad"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsAngleValue("30.5rad"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsAngleValue("0rad"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestIsAngleNullValue() {
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue(null));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestIsAngleIncorrectValues() {
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("deg"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("-20,6grad"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("0"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("10in"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("10px"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseResolutionValidDpiUnit() {
-            NUnit.Framework.Assert.AreEqual(10f, CssUtils.ParseResolution("10dpi"), 0);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseResolutionValidDpcmUnit() {
-            NUnit.Framework.Assert.AreEqual(25.4f, CssUtils.ParseResolution("10dpcm"), 0);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseResolutionValidDppxUnit() {
-            NUnit.Framework.Assert.AreEqual(960f, CssUtils.ParseResolution("10dppx"), 0);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseResolutionInvalidUnit() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssUtils.ParseResolution
-                ("10incorrectUnit"));
-            NUnit.Framework.Assert.AreEqual(iText.StyledXmlParser.LogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE, 
-                e.Message);
-        }
-
         [NUnit.Framework.Test]
         public virtual void ElementNodeIsStyleSheetLink() {
             iText.StyledXmlParser.Jsoup.Nodes.Element element = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
@@ -441,26 +264,6 @@ namespace iText.StyledXmlParser.Css.Util {
                 ));
             NUnit.Framework.Assert.AreEqual(BlendMode.NORMAL, CssUtils.ParseBlendMode("invalid"));
             NUnit.Framework.Assert.AreEqual(BlendMode.NORMAL, CssUtils.ParseBlendMode("SCREEN"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void IsNegativeValueTest() {
-            // Invalid values
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue(null));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("-..23"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("12 34"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("12reeem"));
-            // Valid not negative values
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue(".23"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("+123"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("57%"));
-            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("3.7em"));
-            // Valid negative values
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-1.7rem"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-43.56%"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-12"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-0.123"));
-            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-.34"));
         }
 
         [NUnit.Framework.Test]

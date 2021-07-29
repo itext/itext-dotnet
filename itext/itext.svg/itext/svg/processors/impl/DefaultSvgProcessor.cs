@@ -87,7 +87,7 @@ namespace iText.Svg.Processors.Impl {
 
         public virtual ISvgProcessorResult Process(INode root, ISvgConverterProperties converterProps) {
             if (root == null) {
-                throw new SvgProcessingException(SvgLogMessageConstant.INODEROOTISNULL);
+                throw new SvgProcessingException(SvgExceptionMessageConstant.I_NODE_ROOT_IS_NULL);
             }
             if (converterProps == null) {
                 converterProps = new SvgConverterProperties();
@@ -103,13 +103,8 @@ namespace iText.Svg.Processors.Impl {
                 return new SvgProcessorResult(namedObjects, rootSvgRenderer, context);
             }
             else {
-                throw new SvgProcessingException(SvgLogMessageConstant.NOROOT);
+                throw new SvgProcessingException(SvgExceptionMessageConstant.NO_ROOT);
             }
-        }
-
-        [Obsolete]
-        public virtual ISvgProcessorResult Process(INode root) {
-            return Process(root, null);
         }
 
         /// <summary>Load in configuration, set initial processorState and create/fill-in context of the processor</summary>

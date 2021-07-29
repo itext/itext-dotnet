@@ -48,6 +48,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -245,8 +246,8 @@ namespace iText.Layout {
                 customRolePara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
                 customRolePara.GetAccessibilityProperties().SetNamespace(explicitDefaultNs);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Add(customRolePara));
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "p"
-                    , "http://iso.org/pdf/ssn"), e.Message);
+                NUnit.Framework.Assert.AreEqual(String.Format(LayoutExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                    , "p", "http://iso.org/pdf/ssn"), e.Message);
             }
         }
 
@@ -263,8 +264,8 @@ namespace iText.Layout {
                 Paragraph customRolePara = new Paragraph("Hello world text.");
                 customRolePara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Add(customRolePara));
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RoleIsNotMappedToAnyStandardRole, "p"), e.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(String.Format(LayoutExceptionMessageConstant.ROLE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                    , "p"), e.Message);
             }
         }
 
@@ -277,8 +278,8 @@ namespace iText.Layout {
                 Paragraph customRolePara = new Paragraph("Hello world text.");
                 customRolePara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Add(customRolePara));
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "p"
-                    , "http://iso.org/pdf2/ssn"), e.Message);
+                NUnit.Framework.Assert.AreEqual(String.Format(LayoutExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                    , "p", "http://iso.org/pdf2/ssn"), e.Message);
             }
         }
 
@@ -318,8 +319,8 @@ namespace iText.Layout {
                 // not explicitly setting namespace that we've manually created. This will lead to the situation, when
                 // /Namespaces entry in StructTreeRoot would have two different namespace dictionaries with the same name.
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Add(customRolePara2));
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "p"
-                    , "http://iso.org/pdf2/ssn"), e.Message);
+                NUnit.Framework.Assert.AreEqual(String.Format(LayoutExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                    , "p", "http://iso.org/pdf2/ssn"), e.Message);
             }
         }
 
@@ -370,8 +371,8 @@ namespace iText.Layout {
                 customRolePText1.GetAccessibilityProperties().SetNamespace(stdNs2);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Add(new Paragraph(customRolePText1
                     )));
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole, "span"
-                    , "http://iso.org/pdf2/ssn"), e.Message);
+                NUnit.Framework.Assert.AreEqual(String.Format(LayoutExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                    , "span", "http://iso.org/pdf2/ssn"), e.Message);
             }
         }
 
@@ -384,8 +385,8 @@ namespace iText.Layout {
                 Paragraph h9Para = new Paragraph("Header level 9");
                 h9Para.GetAccessibilityProperties().SetRole("H9");
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Add(h9Para));
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RoleIsNotMappedToAnyStandardRole, "H9"), e.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(String.Format(LayoutExceptionMessageConstant.ROLE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                    , "H9"), e.Message);
             }
         }
 

@@ -91,7 +91,7 @@ namespace iText.Signatures {
                 }
                 BasicOcspResp basicResponse = (BasicOcspResp)ocspResponse.GetResponseObject();
                 if (verifier != null) {
-                    verifier.IsValidResponse(basicResponse, rootCert);
+                    verifier.IsValidResponse(basicResponse, rootCert, DateTimeUtil.GetCurrentUtcTime());
                 }
                 return basicResponse;
             }

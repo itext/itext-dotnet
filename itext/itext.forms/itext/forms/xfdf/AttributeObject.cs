@@ -54,7 +54,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="value">the value of the attribute, constrained by XML attributes specification.</param>
         public AttributeObject(String name, String value) {
             if (name == null || value == null) {
-                throw new XfdfException(XfdfConstants.ATTRIBUTE_NAME_OR_VALUE_MISSING);
+                throw new XfdfException(XfdfException.ATTRIBUTE_NAME_OR_VALUE_MISSING);
             }
             this.name = name;
             this.value = value;

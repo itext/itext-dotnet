@@ -45,11 +45,11 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
-using iText.Kernel;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.Test;
@@ -172,7 +172,8 @@ namespace iText.Layout {
                 Document doc = new Document(pdfDoc);
                 Paragraph paragraph = new Paragraph("Hello world!").SetFontFamily("ABRACADABRA_NO_FONT_PROVIDER_ANYWAY");
                 Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => doc.Add(paragraph));
-                NUnit.Framework.Assert.AreEqual(PdfException.FontProviderNotSetFontFamilyNotResolved, e.Message);
+                NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.FONT_PROVIDER_NOT_SET_FONT_FAMILY_NOT_RESOLVED
+                    , e.Message);
             }
         }
     }

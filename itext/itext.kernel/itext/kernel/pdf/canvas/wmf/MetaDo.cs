@@ -49,6 +49,7 @@ using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -226,7 +227,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <summary>Reads and processes all the data of the InputMeta.</summary>
         public virtual void ReadAll() {
             if (@in.ReadInt() != unchecked((int)(0x9AC6CDD7))) {
-                throw new PdfException(PdfException.NotAPlaceableWindowsMetafile);
+                throw new PdfException(KernelExceptionMessageConstant.NOT_A_PLACEABLE_WINDOWS_METAFILE);
             }
             @in.ReadWord();
             left = @in.ReadShort();
@@ -838,7 +839,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <returns>the wrapped BMP</returns>
         public static byte[] WrapBMP(ImageData image) {
             if (image.GetOriginalType() != ImageType.BMP) {
-                throw new PdfException(PdfException.OnlyBmpCanBeWrappedInWmf);
+                throw new PdfException(KernelExceptionMessageConstant.ONLY_BMP_CAN_BE_WRAPPED_IN_WMF);
             }
             Stream imgIn;
             byte[] data;

@@ -41,7 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     public interface ISvgTextNodeRenderer : ISvgNodeRenderer {
@@ -54,5 +56,17 @@ namespace iText.Svg.Renderers.Impl {
         bool ContainsAbsolutePositionChange();
 
         float[][] GetAbsolutePositionChanges();
+
+        /// <summary>Return the bounding rectangle of the text element.</summary>
+        /// <param name="context">
+        /// current
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// </param>
+        /// <param name="basePoint">end point of previous text element</param>
+        /// <returns>
+        /// created instance of
+        /// <see cref="iText.Svg.Utils.TextRectangle"/>
+        /// </returns>
+        TextRectangle GetTextRectangle(SvgDrawContext context, Point basePoint);
     }
 }

@@ -71,9 +71,6 @@ namespace iText.Layout.Renderer {
     /// <see cref="DrawContext"/>.
     /// </remarks>
     public class ParagraphRenderer : BlockRenderer {
-        [Obsolete]
-        protected internal float previousDescent = 0;
-
         protected internal IList<LineRenderer> lines = null;
 
         /// <summary>Creates a ParagraphRenderer from its corresponding layout object.</summary>
@@ -151,7 +148,14 @@ namespace iText.Layout.Renderer {
             }
             Border[] borders = GetBorders();
             UnitValue[] paddings = GetPaddings();
-            float additionalWidth = ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
+            float parentWidth = parentBBox.GetWidth();
+            ApplyMargins(parentBBox, false);
+            ApplyBorderBox(parentBBox, borders, false);
+            if (IsFixedLayout()) {
+                parentBBox.SetX((float)this.GetPropertyAsFloat(Property.LEFT));
+            }
+            ApplyPaddings(parentBBox, paddings, false);
+            float additionalWidth = parentWidth - parentBBox.GetWidth();
             ApplyWidth(parentBBox, blockWidth, overflowX);
             wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, wasParentsHeightClipped
                 , overflowY);

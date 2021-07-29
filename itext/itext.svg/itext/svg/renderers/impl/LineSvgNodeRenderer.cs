@@ -71,7 +71,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             if (SetParameterss()) {
                 float x = Math.Min(x1, x2);
                 float y = Math.Min(y1, y2);
@@ -80,7 +80,7 @@ namespace iText.Svg.Renderers.Impl {
                 return new Rectangle(x, y, width, height);
             }
             else {
-                return base.GetObjectBoundingBox(context);
+                return null;
             }
         }
 

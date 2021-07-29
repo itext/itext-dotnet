@@ -96,7 +96,7 @@ namespace iText.Svg.Utils {
         public static double GetCoordinateForUserSpaceOnUse(String attributeValue, double defaultValue, double start
             , double length, float em, float rem) {
             double absoluteValue;
-            UnitValue unitValue = CssUtils.ParseLengthValueToPt(attributeValue, em, rem);
+            UnitValue unitValue = CssDimensionParsingUtils.ParseLengthValueToPt(attributeValue, em, rem);
             if (unitValue == null) {
                 absoluteValue = defaultValue;
             }
@@ -130,7 +130,7 @@ namespace iText.Svg.Utils {
                 return CssDimensionParsingUtils.ParseRelativeValue(attributeValue, 1);
             }
             else {
-                if (CssTypesValidationUtils.IsNumericValue(attributeValue) || CssTypesValidationUtils.IsMetricValue(attributeValue
+                if (CssTypesValidationUtils.IsNumber(attributeValue) || CssTypesValidationUtils.IsMetricValue(attributeValue
                     ) || CssTypesValidationUtils.IsRelativeValue(attributeValue)) {
                     // if there is incorrect value metric, then we do not need to parse the value
                     int unitsPosition = CssDimensionParsingUtils.DeterminePositionBetweenValueAndUnit(attributeValue);

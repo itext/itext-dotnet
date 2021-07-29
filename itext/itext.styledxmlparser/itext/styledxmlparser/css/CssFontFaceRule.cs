@@ -54,14 +54,7 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>Instantiates a new CSS font face rule.</summary>
         public CssFontFaceRule()
-            : this("") {
-        }
-
-        /// <summary>Instantiates a new CSS font face rule.</summary>
-        /// <param name="ruleParameters">the rule parameters</param>
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. Use CssFontFaceRule() instead")]
-        public CssFontFaceRule(String ruleParameters)
-            : base(CssRuleName.FONT_FACE, ruleParameters) {
+            : base(CssRuleName.FONT_FACE, "") {
         }
 
         /// <summary>Gets the properties.</summary>

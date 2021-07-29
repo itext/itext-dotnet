@@ -72,12 +72,12 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             if (SetParameters()) {
                 return new Rectangle(cx - rx, cy - ry, rx + rx, ry + ry);
             }
             else {
-                return base.GetObjectBoundingBox(context);
+                return null;
             }
         }
 

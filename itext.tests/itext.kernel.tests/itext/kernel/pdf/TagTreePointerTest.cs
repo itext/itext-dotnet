@@ -46,6 +46,7 @@ using System.IO;
 using iText.IO.Font.Constants;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagging;
@@ -143,7 +144,7 @@ namespace iText.Kernel.Pdf {
             catch (PdfException e) {
                 exceptionMessage = e.Message;
             }
-            NUnit.Framework.Assert.AreEqual(PdfException.TagTreePointerIsInInvalidStateItPointsAtRemovedElementUseMoveToRoot
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.TAG_TREE_POINTER_IS_IN_INVALID_STATE_IT_POINTS_AT_REMOVED_ELEMENT_USE_MOVE_TO_ROOT
                 , exceptionMessage);
             tagPointerCopy.MoveToRoot().MoveToKid(StandardRoles.TABLE);
             tagPointerCopy.MoveToKid(StandardRoles.TR);
@@ -156,7 +157,7 @@ namespace iText.Kernel.Pdf {
             catch (PdfException e) {
                 exceptionMessage = e.Message;
             }
-            NUnit.Framework.Assert.AreEqual(PdfException.TagTreePointerIsInInvalidStateItPointsAtFlushedElementUseMoveToRoot
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.TAG_TREE_POINTER_IS_IN_INVALID_STATE_IT_POINTS_AT_FLUSHED_ELEMENT_USE_MOVE_TO_ROOT
                 , exceptionMessage);
             try {
                 tagPointerCopy.MoveToKid(0);
@@ -164,7 +165,8 @@ namespace iText.Kernel.Pdf {
             catch (PdfException e) {
                 exceptionMessage = e.Message;
             }
-            NUnit.Framework.Assert.AreEqual(PdfException.CannotMoveToFlushedKid, exceptionMessage);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_MOVE_TO_FLUSHED_KID, exceptionMessage
+                );
             document.Close();
         }
 
@@ -285,8 +287,8 @@ namespace iText.Kernel.Pdf {
                 exceptionMessage = e.Message;
             }
             document.Close();
-            NUnit.Framework.Assert.AreEqual(PdfException.CannotFlushDocumentRootTagBeforeDocumentIsClosed, exceptionMessage
-                );
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_FLUSH_DOCUMENT_ROOT_TAG_BEFORE_DOCUMENT_IS_CLOSED
+                , exceptionMessage);
             CompareResult("tagStructureFlushingTest01.pdf", "taggedDocument.pdf", "diffFlushing01_");
         }
 

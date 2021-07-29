@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Collection;
 using iText.Kernel.Pdf.Layer;
@@ -106,7 +107,7 @@ namespace iText.Kernel.Pdf {
         protected internal PdfCatalog(PdfDictionary pdfObject)
             : base(pdfObject) {
             if (pdfObject == null) {
-                throw new PdfException(PdfException.DocumentHasNoPdfCatalogObject);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NO_PDF_CATALOG_OBJECT);
             }
             EnsureObjectIsAddedToDocument(pdfObject);
             GetPdfObject().Put(PdfName.Type, PdfName.Catalog);
@@ -816,13 +817,13 @@ namespace iText.Kernel.Pdf {
                 PdfDictionary next = current.GetAsDictionary(PdfName.Next);
                 PdfDictionary parent = current.GetAsDictionary(PdfName.Parent);
                 if (null == parent) {
-                    throw new PdfException(MessageFormatUtil.Format(PdfException.CORRUPTED_OUTLINE_NO_PARENT_ENTRY, current.indirectReference
-                        ));
+                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_PARENT_ENTRY
+                        , current.indirectReference));
                 }
                 PdfString title = current.GetAsString(PdfName.Title);
                 if (null == title) {
-                    throw new PdfException(MessageFormatUtil.Format(PdfException.CORRUPTED_OUTLINE_NO_TITLE_ENTRY, current.indirectReference
-                        ));
+                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_TITLE_ENTRY
+                        , current.indirectReference));
                 }
                 parentOutline = parentOutlineMap.Get(parent);
                 PdfOutline currentOutline = new PdfOutline(title.ToUnicodeString(), current, parentOutline);

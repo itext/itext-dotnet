@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Collection {
@@ -75,7 +76,8 @@ namespace iText.Kernel.Pdf.Collection {
                 GetPdfObject().Put(PdfName.A, PdfBoolean.ValueOf(ascending));
             }
             else {
-                throw new PdfException(PdfException.YouHaveToDefineABooleanArrayForThisCollectionSortDictionary);
+                throw new PdfException(KernelExceptionMessageConstant.YOU_HAVE_TO_DEFINE_A_BOOLEAN_ARRAY_FOR_THIS_COLLECTION_SORT_DICTIONARY
+                    );
             }
             return this;
         }
@@ -87,13 +89,15 @@ namespace iText.Kernel.Pdf.Collection {
             PdfObject obj = GetPdfObject().Get(PdfName.S);
             if (obj.IsArray()) {
                 if (((PdfArray)obj).Size() != ascending.Length) {
-                    throw new PdfException(PdfException.NumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields);
+                    throw new PdfException(KernelExceptionMessageConstant.NUMBER_OF_BOOLEANS_IN_THE_ARRAY_DOES_NOT_CORRESPOND_WITH_THE_NUMBER_OF_FIELDS
+                        );
                 }
                 GetPdfObject().Put(PdfName.A, new PdfArray(ascending));
                 return this;
             }
             else {
-                throw new PdfException(PdfException.YouNeedASingleBooleanForThisCollectionSortDictionary);
+                throw new PdfException(KernelExceptionMessageConstant.YOU_NEED_A_SINGLE_BOOLEAN_FOR_THIS_COLLECTION_SORT_DICTIONARY
+                    );
             }
         }
 

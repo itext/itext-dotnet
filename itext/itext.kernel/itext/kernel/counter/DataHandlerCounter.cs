@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel;
 using iText.Kernel.Counter.Context;
 using iText.Kernel.Counter.Data;
 using iText.Kernel.Counter.Event;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Counter {
     /// <summary>
@@ -109,7 +109,7 @@ namespace iText.Kernel.Counter {
         /// </param>
         protected internal override void OnEvent(IEvent @event, IMetaInfo metaInfo) {
             if (this.closed) {
-                throw new InvalidOperationException(PdfException.DataHandlerCounterHasBeenDisabled);
+                throw new InvalidOperationException(KernelExceptionMessageConstant.DATA_HANDLER_COUNTER_HAS_BEEN_DISABLED);
             }
             this.dataHandler.Register(@event, metaInfo);
         }

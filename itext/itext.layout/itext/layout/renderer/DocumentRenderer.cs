@@ -49,6 +49,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Tagging;
@@ -112,13 +113,16 @@ namespace iText.Layout.Renderer {
             }
             AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != null ? overflowResult.GetAreaBreak
                 () : null;
+            int currentPageNumber = currentArea == null ? 0 : currentArea.GetPageNumber();
             if (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE) {
                 while (currentPageNumber < document.GetPdfDocument().GetNumberOfPages()) {
-                    MoveToNextPage();
+                    PossiblyFlushPreviousPage(currentPageNumber);
+                    currentPageNumber++;
                 }
             }
             else {
-                MoveToNextPage();
+                PossiblyFlushPreviousPage(currentPageNumber);
+                currentPageNumber++;
             }
             PageSize customPageSize = areaBreak != null ? areaBreak.GetPageSize() : null;
             while (document.GetPdfDocument().GetNumberOfPages() >= currentPageNumber && document.GetPdfDocument().GetPage
@@ -147,7 +151,7 @@ namespace iText.Layout.Renderer {
                 EnsureDocumentHasNPages(pageNum, null);
                 PdfPage correspondingPage = pdfDocument.GetPage(pageNum);
                 if (correspondingPage.IsFlushed()) {
-                    throw new PdfException(PdfException.CannotDrawElementsOnAlreadyFlushedPages);
+                    throw new PdfException(LayoutExceptionMessageConstant.CANNOT_DRAW_ELEMENTS_ON_ALREADY_FLUSHED_PAGES);
                 }
                 bool wrapOldContent = pdfDocument.GetReader() != null && pdfDocument.GetWriter() != null && correspondingPage
                     .GetContentStreamCount() > 0 && correspondingPage.GetLastContentStream().GetLength() > 0 && !wrappedContentPage
@@ -161,6 +165,9 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>Adds new page with defined page size to PDF document.</summary>
+        /// <param name="customPageSize">the size of new page, can be null</param>
+        /// <returns>the page size of created page</returns>
         protected internal virtual PageSize AddNewPage(PageSize customPageSize) {
             if (customPageSize != null) {
                 document.GetPdfDocument().AddNewPage(customPageSize);
@@ -171,13 +178,17 @@ namespace iText.Layout.Renderer {
             return customPageSize != null ? customPageSize : document.GetPdfDocument().GetDefaultPageSize();
         }
 
-        /// <summary>Adds some pages so that the overall number is at least n.</summary>
+        /// <summary>Ensures that PDF document has n pages.</summary>
         /// <remarks>
-        /// Adds some pages so that the overall number is at least n.
-        /// Returns the page size of the page number
-        /// <paramref name="n"/>.
+        /// Ensures that PDF document has n pages. If document has less pages,
+        /// adds new pages by calling
+        /// <see cref="AddNewPage(iText.Kernel.Geom.PageSize)"/>
+        /// method.
         /// </remarks>
-        private PageSize EnsureDocumentHasNPages(int n, PageSize customPageSize) {
+        /// <param name="n">the expected number of pages if document</param>
+        /// <param name="customPageSize">the size of created pages, can be null</param>
+        /// <returns>the page size of the last created page, or null if no page was created</returns>
+        protected internal virtual PageSize EnsureDocumentHasNPages(int n, PageSize customPageSize) {
             PageSize lastPageSize = null;
             while (document.GetPdfDocument().GetNumberOfPages() < n) {
                 lastPageSize = AddNewPage(customPageSize);
@@ -194,13 +205,12 @@ namespace iText.Layout.Renderer {
                 () - leftMargin - rightMargin, pageSize.GetHeight() - bottomMargin - topMargin);
         }
 
-        private void MoveToNextPage() {
-            // We don't flush this page immediately, but only flush previous one because of manipulations
-            // with areas in case of keepTogether property.
+        private void PossiblyFlushPreviousPage(int currentPageNumber) {
             if (immediateFlush && currentPageNumber > 1) {
+                // We don't flush current page immediately, but only flush previous one
+                // because of manipulations with areas in case of keepTogether property
                 document.GetPdfDocument().GetPage(currentPageNumber - 1).Flush();
             }
-            currentPageNumber++;
         }
     }
 }

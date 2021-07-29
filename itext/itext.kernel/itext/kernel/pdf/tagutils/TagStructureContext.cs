@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagging;
@@ -141,7 +142,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         public TagStructureContext(PdfDocument document, PdfVersion tagStructureTargetVersion) {
             this.document = document;
             if (!document.IsTagged()) {
-                throw new PdfException(PdfException.MustBeATaggedDocument);
+                throw new PdfException(KernelExceptionMessageConstant.MUST_BE_A_TAGGED_DOCUMENT);
             }
             waitingTagsManager = new WaitingTagsManager();
             namespaces = new LinkedHashSet<PdfDictionary>();
@@ -803,8 +804,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         private String ComposeInvalidRoleException(String role, PdfNamespace @namespace) {
-            return ComposeExceptionBasedOnNamespacePresence(role, @namespace, PdfException.RoleIsNotMappedToAnyStandardRole
-                , PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole);
+            return ComposeExceptionBasedOnNamespacePresence(role, @namespace, KernelExceptionMessageConstant.ROLE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                , KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE);
         }
 
         private String ComposeTooMuchTransitiveMappingsException(String role, PdfNamespace @namespace) {
@@ -856,7 +857,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
                 else {
                     if (pageTag is PdfMcr) {
-                        throw new PdfException(PdfException.CannotRemoveTagBecauseItsParentIsFlushed);
+                        throw new PdfException(KernelExceptionMessageConstant.CANNOT_REMOVE_TAG_BECAUSE_ITS_PARENT_IS_FLUSHED);
                     }
                 }
             }

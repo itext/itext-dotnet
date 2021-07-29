@@ -106,7 +106,12 @@ namespace iText.Layout.Renderer {
             }
             Border[] borders = GetBorders();
             UnitValue[] paddings = GetPaddings();
-            ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
+            ApplyMargins(parentBBox, false);
+            ApplyBorderBox(parentBBox, borders, false);
+            if (IsFixedLayout()) {
+                parentBBox.SetX((float)this.GetPropertyAsFloat(Property.LEFT));
+            }
+            ApplyPaddings(parentBBox, paddings, false);
             float? blockMaxHeight = RetrieveMaxHeight();
             OverflowPropertyValue? overflowY = (null == blockMaxHeight || blockMaxHeight > parentBBox.GetHeight()) && 
                 !wasParentsHeightClipped ? OverflowPropertyValue.FIT : this.GetProperty<OverflowPropertyValue?>(Property
@@ -906,28 +911,6 @@ namespace iText.Layout.Renderer {
                 float difference = layoutBox.GetBottom() - occupiedArea.GetBBox().GetBottom();
                 occupiedArea.GetBBox().MoveUp(difference).DecreaseHeight(difference);
             }
-        }
-
-        /// <summary>Decreases parentBBox to the size of borders, paddings and margins.</summary>
-        /// <param name="parentBBox">
-        /// 
-        /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// to be decreased
-        /// </param>
-        /// <param name="borders">the border values to decrease parentBBox</param>
-        /// <param name="paddings">the padding values to decrease parentBBox</param>
-        /// <returns>the difference between previous and current parentBBox's</returns>
-        [System.ObsoleteAttribute(@"Need to be removed in next major release.")]
-        protected internal virtual float ApplyBordersPaddingsMargins(Rectangle parentBBox, Border[] borders, UnitValue
-            [] paddings) {
-            float parentWidth = parentBBox.GetWidth();
-            ApplyMargins(parentBBox, false);
-            ApplyBorderBox(parentBBox, borders, false);
-            if (IsFixedLayout()) {
-                parentBBox.SetX((float)this.GetPropertyAsFloat(Property.LEFT));
-            }
-            ApplyPaddings(parentBBox, paddings, false);
-            return parentWidth - parentBBox.GetWidth();
         }
 
         /// <summary><inheritDoc/></summary>

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -53,6 +53,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using iText.Kernel;
 using iText.Kernel.Pdf;
+using iText.Signatures.Exceptions;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ocsp;
@@ -83,7 +84,7 @@ namespace iText.Signatures {
                     algorithm = "ECDSA";
                 }
             } else {
-                throw new PdfException(PdfException.UnknownKeyAlgorithm1).SetMessageParams(cp.ToString());
+                throw new PdfException(SignExceptionMessageConstant.UNKNOWN_KEY_ALGORITHM).SetMessageParams(cp.ToString());
             }
 
             return algorithm;
@@ -120,7 +121,8 @@ namespace iText.Signatures {
             HttpWebRequest con = (HttpWebRequest) WebRequest.Create(urlt);
             HttpWebResponse response = (HttpWebResponse) con.GetResponse();
             if (response.StatusCode != HttpStatusCode.OK)
-                throw new PdfException(PdfException.InvalidHttpResponse1).SetMessageParams(response.StatusCode);
+                throw new PdfException(
+                    SignExceptionMessageConstant.INVALID_HTTP_RESPONSE).SetMessageParams(response.StatusCode);
             return response.GetResponseStream();
         }
 
@@ -139,7 +141,8 @@ namespace iText.Signatures {
             outp.Dispose();
             HttpWebResponse response = (HttpWebResponse) con.GetResponse();
             if (response.StatusCode != HttpStatusCode.OK)
-                throw new PdfException(PdfException.InvalidHttpResponse1).SetMessageParams(response.StatusCode);
+                throw new PdfException(
+                    SignExceptionMessageConstant.INVALID_HTTP_RESPONSE).SetMessageParams(response.StatusCode);
 
             return response.GetResponseStream();
         }
@@ -209,7 +212,7 @@ namespace iText.Signatures {
             try {
                 con = (HttpWebRequest) WebRequest.Create(tsaUrl);
             } catch (Exception e) {
-                throw new PdfException(PdfException.FailedToGetTsaResponseFrom1).SetMessageParams(tsaUrl);
+                throw new PdfException(SignExceptionMessageConstant.FAILED_TO_GET_TSA_RESPONSE).SetMessageParams(tsaUrl);
             }
             con.ContentLength = requestBytes.Length;
             con.ContentType = "application/timestamp-query";
@@ -241,6 +244,7 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="cert"></param>
         /// <returns></returns>
+        /// TODO DEVSIX-2534
         [Obsolete]
         internal static bool HasUnsupportedCriticalExtension(X509Certificate cert) {
             if ( cert == null ) {

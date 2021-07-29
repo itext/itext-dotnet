@@ -57,12 +57,12 @@ namespace iText.Kernel.Counter {
     /// You can implement your own counter factory and register it like this:
     /// <c>EventCounterHandler.getInstance().register(new SystemOutEventCounterFactory());</c>
     /// <para />
-    /// <see cref="SystemOutEventCounterFactory"/>
+    /// <see cref="StandardOutputEventCounterFactory"/>
     /// is just an example of
     /// <see cref="IEventCounterFactory"/>
     /// implementation.
     /// It creates
-    /// <see cref="SystemOutEventCounter"/>
+    /// <see cref="StandardOutputEventCounter"/>
     /// that writes info about files being read and written to the
     /// <see cref="System.Console.Out"/>
     /// <para />

@@ -52,6 +52,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
@@ -83,7 +84,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 }
             }
             catch (Exception e) {
-                throw new PdfException(PdfException.PdfEncryption, e);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);
             }
             return md.Digest();
         }
@@ -111,7 +112,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 encryptionKey = md.Digest();
             }
             catch (Exception f) {
-                throw new PdfException(PdfException.PdfDecryption, f);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_DECRYPTION, f);
             }
             return encryptionKey;
         }
@@ -130,7 +131,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 recipients = GetEncodedRecipients();
             }
             catch (Exception e) {
-                throw new PdfException(PdfException.PdfEncryption, e);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);
             }
             return recipients;
         }

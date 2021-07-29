@@ -139,17 +139,15 @@ namespace iText.Svg.Renderers.Impl {
             return copy;
         }
 
-        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             Point lastPoint = null;
             Rectangle commonRectangle = null;
             foreach (IPathShape item in GetShapes()) {
                 if (lastPoint == null) {
                     lastPoint = item.GetEndingPoint();
                 }
-                if (item is AbstractPathShape) {
-                    Rectangle rectangle = ((AbstractPathShape)item).GetPathShapeRectangle(lastPoint);
-                    commonRectangle = Rectangle.GetCommonRectangle(commonRectangle, rectangle);
-                }
+                Rectangle rectangle = item.GetPathShapeRectangle(lastPoint);
+                commonRectangle = Rectangle.GetCommonRectangle(commonRectangle, rectangle);
                 lastPoint = item.GetEndingPoint();
             }
             return commonRectangle;
@@ -239,7 +237,7 @@ namespace iText.Svg.Renderers.Impl {
             if (argumentCount == 0) {
                 // closePath operator
                 if (previousShape == null) {
-                    throw new SvgProcessingException(SvgLogMessageConstant.INVALID_CLOSEPATH_OPERATOR_USE);
+                    throw new SvgProcessingException(SvgExceptionMessageConstant.INVALID_CLOSEPATH_OPERATOR_USE);
                 }
                 shapes.Add(zOperator);
                 return shapes;
@@ -357,7 +355,7 @@ namespace iText.Svg.Renderers.Impl {
                 throw new SvgProcessingException(SvgExceptionMessageConstant.PATH_OBJECT_MUST_HAVE_D_ATTRIBUTE);
             }
             if (ContainsInvalidAttributes(attributes)) {
-                throw new SvgProcessingException(SvgLogMessageConstant.INVALID_PATH_D_ATTRIBUTE_OPERATORS).SetMessageParams
+                throw new SvgProcessingException(SvgExceptionMessageConstant.INVALID_PATH_D_ATTRIBUTE_OPERATORS).SetMessageParams
                     (attributes);
             }
             String[] operators = SplitPathStringIntoOperators(attributes);

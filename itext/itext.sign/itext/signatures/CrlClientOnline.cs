@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Common.Logging;
-using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
 using iText.IO.Util;
 
@@ -92,14 +91,9 @@ namespace iText.Signatures {
                 X509Certificate cert = (X509Certificate)chain[i];
                 LOGGER.Info("Checking certificate: " + cert.SubjectDN);
                 String url = null;
-                try {
-                    url = CertificateUtil.GetCRLURL(cert);
-                    if (url != null) {
-                        AddUrl(url);
-                    }
-                }
-                catch (CertificateParsingException) {
-                    LOGGER.Info("Skipped CRL url (certificate could not be parsed)");
+                url = CertificateUtil.GetCRLURL(cert);
+                if (url != null) {
+                    AddUrl(url);
                 }
             }
         }

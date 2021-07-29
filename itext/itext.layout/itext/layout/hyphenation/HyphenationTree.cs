@@ -44,7 +44,6 @@ namespace iText.Layout.Hyphenation {
         protected internal TernaryTree classmap;
 
         /// <summary>Temporary map to store interletter values on pattern loading.</summary>
-        [System.NonSerialized]
         private TernaryTree ivalues;
 
         /// <summary>Default constructor.</summary>

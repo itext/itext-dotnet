@@ -74,7 +74,7 @@ namespace iText.Kernel.Counter {
     /// <see cref="SimpleEventCounterFactory"/>
     /// like this:
     /// <c>EventCounterHandler.getInstance().register(new SimpleEventCounterFactory(new SystemOutEventCounter());</c>
-    /// <see cref="SystemOutEventCounter"/>
+    /// <see cref="StandardOutputEventCounter"/>
     /// is just an example of a
     /// <see cref="EventCounter"/>
     /// implementation.

@@ -48,9 +48,9 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Pdf.Colorspace {
     /// <summary>Represents the most common properties of color spaces.</summary>
     public abstract class PdfColorSpace : PdfObjectWrapper<PdfObject> {
-        public static readonly ICollection<PdfName> directColorSpaces = JavaCollectionsUtil.UnmodifiableSet(new HashSet
-            <PdfName>(JavaUtil.ArraysAsList(PdfName.DeviceGray, PdfName.DeviceRGB, PdfName.DeviceCMYK, PdfName.Pattern
-            )));
+        public static readonly ICollection<PdfName> DIRECT_COLOR_SPACES = JavaCollectionsUtil.UnmodifiableSet(new 
+            HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.DeviceGray, PdfName.DeviceRGB, PdfName.DeviceCMYK, PdfName
+            .Pattern)));
 
         protected internal PdfColorSpace(PdfObject pdfObject)
             : base(pdfObject) {

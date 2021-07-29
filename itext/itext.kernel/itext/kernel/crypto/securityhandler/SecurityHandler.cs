@@ -47,6 +47,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using iText.Kernel;
 using iText.Kernel.Crypto;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     public abstract class SecurityHandler {
@@ -70,7 +71,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// </summary>
         protected internal int nextObjectKeySize;
 
-        [System.NonSerialized]
         protected internal IDigest md5;
 
         /// <summary>Work area to prepare the object/generation bytes</summary>
@@ -112,7 +112,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 md5 = DigestUtilities.GetDigest("MD5");
             }
             catch (Exception e) {
-                throw new PdfException(PdfException.PdfEncryption, e);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);
             }
         }
     }

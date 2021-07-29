@@ -78,7 +78,7 @@ namespace iText.Svg.Renderers.Path.Impl {
         public override void SetCoordinates(String[] inputCoordinates, Point previous) {
             startPoint = previous;
             if (inputCoordinates.Length < ARGUMENT_SIZE) {
-                throw new ArgumentException(MessageFormatUtil.Format(SvgLogMessageConstant.ARC_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0
+                throw new ArgumentException(MessageFormatUtil.Format(SvgExceptionMessageConstant.ARC_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0
                     , JavaUtil.ArraysToString(inputCoordinates)));
             }
             coordinates = new String[ARGUMENT_SIZE];

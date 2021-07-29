@@ -42,7 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Dummy.Renderers.Impl {
@@ -122,6 +124,10 @@ namespace iText.Svg.Dummy.Renderers.Impl {
             iText.Svg.Dummy.Renderers.Impl.DummySvgNodeRenderer otherDummy = (iText.Svg.Dummy.Renderers.Impl.DummySvgNodeRenderer
                 )o;
             return this.name.Equals(otherDummy.name);
+        }
+
+        public virtual Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
         }
 
         public virtual bool IsDrawn() {

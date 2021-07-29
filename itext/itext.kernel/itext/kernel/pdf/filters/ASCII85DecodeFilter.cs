@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System.IO;
 using iText.IO.Source;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {
@@ -87,7 +88,7 @@ namespace iText.Kernel.Pdf.Filters {
                     continue;
                 }
                 if (ch < '!' || ch > 'u') {
-                    throw new PdfException(PdfException.IllegalCharacterInAscii85decode);
+                    throw new PdfException(KernelExceptionMessageConstant.ILLEGAL_CHARACTER_IN_ASCII85DECODE);
                 }
                 chn[state] = ch - '!';
                 ++state;

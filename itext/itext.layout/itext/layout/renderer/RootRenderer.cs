@@ -57,8 +57,6 @@ namespace iText.Layout.Renderer {
 
         protected internal RootLayoutArea currentArea;
 
-        protected internal int currentPageNumber;
-
         protected internal IList<IRenderer> waitingDrawingElements = new List<IRenderer>();
 
         internal IList<Rectangle> floatRendererAreas;
@@ -237,7 +235,7 @@ namespace iText.Layout.Renderer {
                 renderer = positionedRenderers[positionedRenderers.Count - 1];
                 int? positionedPageNumber = renderer.GetProperty<int?>(Property.PAGE_NUMBER);
                 if (positionedPageNumber == null) {
-                    positionedPageNumber = currentPageNumber;
+                    positionedPageNumber = currentArea.GetPageNumber();
                 }
                 LayoutArea layoutArea;
                 // For position=absolute, if none of the top, bottom, left, right properties are provided,
@@ -412,7 +410,6 @@ namespace iText.Layout.Renderer {
                                 if (secondElementLayoutResult.GetStatus() != LayoutResult.NOTHING) {
                                     ableToProcessKeepWithNext = true;
                                     currentArea = firstElementSplitLayoutArea;
-                                    currentPageNumber = firstElementSplitLayoutArea.GetPageNumber();
                                     ShrinkCurrentAreaAndProcessRenderer(firstElementSplitLayoutResult.GetSplitRenderer(), new List<IRenderer>(
                                         ), firstElementSplitLayoutResult);
                                     UpdateCurrentAndInitialArea(firstElementSplitLayoutResult);
@@ -422,7 +419,6 @@ namespace iText.Layout.Renderer {
                             }
                             if (!ableToProcessKeepWithNext) {
                                 currentArea = storedArea;
-                                currentPageNumber = storedArea.GetPageNumber();
                             }
                         }
                     }
@@ -446,7 +442,6 @@ namespace iText.Layout.Renderer {
                     }
                     if (!ableToProcessKeepWithNext) {
                         currentArea = storedArea;
-                        currentPageNumber = storedArea.GetPageNumber();
                     }
                 }
                 if (!ableToProcessKeepWithNext) {

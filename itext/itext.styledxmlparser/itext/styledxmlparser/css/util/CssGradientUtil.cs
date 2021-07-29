@@ -178,7 +178,7 @@ namespace iText.StyledXmlParser.Css.Util {
                     }
                     else {
                         for (int j = 1; j < elementsList.Count; ++j) {
-                            if (CssTypesValidationUtils.IsNumericValue(elementsList[j])) {
+                            if (CssTypesValidationUtils.IsNumber(elementsList[j])) {
                                 // the numeric value is invalid in linear gradient function.
                                 // So check it here as parsing method will use the default pt metric
                                 throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE

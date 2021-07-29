@@ -46,6 +46,7 @@ using System.Linq;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Tagging {
@@ -191,7 +192,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 if (mcr is PdfObjRef) {
                     PdfDictionary obj = ((PdfDictionary)mcr.GetPdfObject()).GetAsDictionary(PdfName.Obj);
                     if (obj == null || obj.IsFlushed()) {
-                        throw new PdfException(PdfException.WhenAddingObjectReferenceToTheTagTreeItMustBeConnectedToNotFlushedObject
+                        throw new PdfException(KernelExceptionMessageConstant.WHEN_ADDING_OBJECT_REFERENCE_TO_THE_TAG_TREE_IT_MUST_BE_CONNECTED_TO_NOT_FLUSHED_OBJECT
                             );
                     }
                     PdfNumber n = obj.GetAsNumber(PdfName.StructParent);
@@ -199,7 +200,7 @@ namespace iText.Kernel.Pdf.Tagging {
                         pageMcrs.PutObjectReferenceMcr(n.IntValue(), mcr);
                     }
                     else {
-                        throw new PdfException(PdfException.StructParentIndexNotFoundInTaggedObject);
+                        throw new PdfException(KernelExceptionMessageConstant.STRUCT_PARENT_INDEX_NOT_FOUND_IN_TAGGED_OBJECT);
                     }
                 }
                 else {
@@ -218,7 +219,8 @@ namespace iText.Kernel.Pdf.Tagging {
                 return;
             }
             if (pageDict.IsFlushed()) {
-                throw new PdfException(PdfException.CannotRemoveMarkedContentReferenceBecauseItsPageWasAlreadyFlushed);
+                throw new PdfException(KernelExceptionMessageConstant.CANNOT_REMOVE_MARKED_CONTENT_REFERENCE_BECAUSE_ITS_PAGE_WAS_ALREADY_FLUSHED
+                    );
             }
             ParentTreeHandler.PageMcrsContainer pageMcrs = pageToPageMcrs.Get(pageDict.GetIndirectReference());
             if (pageMcrs != null) {

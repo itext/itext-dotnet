@@ -128,18 +128,5 @@ namespace iText.Layout.Borders {
             new FixedDashedBorder(GetColor(), width, GetOpacity(), dash, adjustedGap, dash + adjustedGap / 2).DrawCellBorder
                 (canvas, x1, y1, x2, y2, defaultSide);
         }
-
-        /// <summary>Adjusts the size of the gap between dots</summary>
-        /// <param name="distance">
-        /// the
-        /// <see cref="Border">border</see>
-        /// length
-        /// </param>
-        /// <param name="initialGap">the initial size of the gap</param>
-        /// <returns>the adjusted size of the gap</returns>
-        [System.ObsoleteAttribute(@"logic moved to super-class")]
-        protected internal override float GetDotsGap(double distance, float initialGap) {
-            return base.GetDotsGap(distance, initialGap);
-        }
     }
 }

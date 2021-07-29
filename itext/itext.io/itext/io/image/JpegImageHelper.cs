@@ -148,7 +148,7 @@ namespace iText.IO.Image {
                     total += bytes.Length - 14;
                 }
                 try {
-                    image.SetProfile(IccProfile.GetInstance(ficc, image.GetColorSpace()));
+                    image.SetProfile(IccProfile.GetInstance(ficc, image.GetColorEncodingComponentsNumber()));
                 }
                 catch (Exception e) {
                     LOGGER.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED
@@ -164,7 +164,8 @@ namespace iText.IO.Image {
                 decodeParms.Put("ColorTransform", 0);
                 image.decodeParms = decodeParms;
             }
-            if (image.GetColorSpace() != 1 && image.GetColorSpace() != 3 && image.IsInverted()) {
+            int colorComponents = image.GetColorEncodingComponentsNumber();
+            if (colorComponents != 1 && colorComponents != 3 && image.IsInverted()) {
                 image.decode = new float[] { 1, 0, 1, 0, 1, 0, 1, 0 };
             }
         }
@@ -350,7 +351,7 @@ namespace iText.IO.Image {
                         }
                         image.SetHeight(GetShort(jpegStream));
                         image.SetWidth(GetShort(jpegStream));
-                        image.SetColorSpace(jpegStream.Read());
+                        image.SetColorEncodingComponentsNumber(jpegStream.Read());
                         image.SetBpc(8);
                         break;
                     }

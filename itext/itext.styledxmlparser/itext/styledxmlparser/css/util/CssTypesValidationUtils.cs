@@ -58,8 +58,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 value = value.Trim();
             }
             foreach (String metricPostfix in ANGLE_MEASUREMENTS_VALUES) {
-                if (value.EndsWith(metricPostfix) && IsNumericValue(value.JSubstring(0, value.Length - metricPostfix.Length
-                    ))) {
+                if (value.EndsWith(metricPostfix) && IsNumber(value.JSubstring(0, value.Length - metricPostfix.Length))) {
                     return true;
                 }
             }
@@ -92,7 +91,7 @@ namespace iText.StyledXmlParser.Css.Util {
             else {
                 value = value.Trim();
             }
-            return value.EndsWith(CommonCssConstants.EM) && IsNumericValue(value.JSubstring(0, value.Length - CommonCssConstants
+            return value.EndsWith(CommonCssConstants.EM) && IsNumber(value.JSubstring(0, value.Length - CommonCssConstants
                 .EM.Length));
         }
 
@@ -107,8 +106,8 @@ namespace iText.StyledXmlParser.Css.Util {
             else {
                 value = value.Trim();
             }
-            return value != null && value.EndsWith(CommonCssConstants.EX) && IsNumericValue(value.JSubstring(0, value.
-                Length - CommonCssConstants.EX.Length));
+            return value != null && value.EndsWith(CommonCssConstants.EX) && IsNumber(value.JSubstring(0, value.Length
+                 - CommonCssConstants.EX.Length));
         }
 
         /// <summary>Checks whether a string contains an allowed metric unit in HTML/CSS; px, in, cm, mm, pc, Q or pt.
@@ -124,8 +123,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 value = value.Trim();
             }
             foreach (String metricPostfix in CommonCssConstants.METRIC_MEASUREMENTS_VALUES) {
-                if (value.EndsWith(metricPostfix) && IsNumericValue(value.JSubstring(0, value.Length - metricPostfix.Length
-                    ))) {
+                if (value.EndsWith(metricPostfix) && IsNumber(value.JSubstring(0, value.Length - metricPostfix.Length))) {
                     return true;
                 }
             }
@@ -143,7 +141,7 @@ namespace iText.StyledXmlParser.Css.Util {
             if (value == null) {
                 return false;
             }
-            if (IsNumericValue(value) || IsRelativeValue(value) || IsMetricValue(value)) {
+            if (IsNumber(value) || IsRelativeValue(value) || IsMetricValue(value)) {
                 return value.StartsWith("-");
             }
             return false;
@@ -156,7 +154,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// </remarks>
         /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains an allowed metric value</returns>
-        public static bool IsNumericValue(String value) {
+        public static bool IsNumber(String value) {
             return value != null && (value.Matches("^[-+]?\\d\\d*\\.\\d*$") || value.Matches("^[-+]?\\d\\d*$") || value
                 .Matches("^[-+]?\\.\\d\\d*$"));
         }
@@ -172,8 +170,8 @@ namespace iText.StyledXmlParser.Css.Util {
             else {
                 value = value.Trim();
             }
-            return value.EndsWith(CommonCssConstants.PERCENTAGE) && IsNumericValue(value.JSubstring(0, value.Length - 
-                CommonCssConstants.PERCENTAGE.Length));
+            return value.EndsWith(CommonCssConstants.PERCENTAGE) && IsNumber(value.JSubstring(0, value.Length - CommonCssConstants
+                .PERCENTAGE.Length));
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to previously set value.</summary>
@@ -188,8 +186,8 @@ namespace iText.StyledXmlParser.Css.Util {
                 value = value.Trim();
             }
             foreach (String relativePostfix in RELATIVE_MEASUREMENTS_VALUES) {
-                if (value.EndsWith(relativePostfix) && IsNumericValue(value.JSubstring(0, value.Length - relativePostfix.Length
-                    ))) {
+                if (value.EndsWith(relativePostfix) && IsNumber(value.JSubstring(0, value.Length - relativePostfix.Length)
+                    )) {
                     return true;
                 }
             }
@@ -207,8 +205,8 @@ namespace iText.StyledXmlParser.Css.Util {
             else {
                 value = value.Trim();
             }
-            return value != null && value.EndsWith(CommonCssConstants.REM) && IsNumericValue(value.JSubstring(0, value
-                .Length - CommonCssConstants.REM.Length));
+            return value != null && value.EndsWith(CommonCssConstants.REM) && IsNumber(value.JSubstring(0, value.Length
+                 - CommonCssConstants.REM.Length));
         }
 
         /// <summary>Checks if a string is in a valid format.</summary>
@@ -218,7 +216,7 @@ namespace iText.StyledXmlParser.Css.Util {
             if (value == null || value.Contains(" ")) {
                 return false;
             }
-            return IsRelativeValue(value) || IsMetricValue(value) || IsNumericValue(value);
+            return IsRelativeValue(value) || IsMetricValue(value) || IsNumber(value);
         }
 
         /// <summary>Checks if value is initial, inherit or unset.</summary>

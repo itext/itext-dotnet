@@ -49,6 +49,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;
@@ -875,7 +876,8 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.AreEqual(PdfException.UnbalancedBeginEndMarkedContentOperators, message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNBALANCED_BEGIN_END_MARKED_CONTENT_OPERATORS
+                , message);
         }
 
         [NUnit.Framework.Test]

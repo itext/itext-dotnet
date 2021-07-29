@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Layout.Font;
 using iText.StyledXmlParser.Css.Media;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Renderers.Factories;
 
 namespace iText.Svg.Processors {
@@ -93,5 +94,13 @@ namespace iText.Svg.Processors {
         /// <summary>Gets the media device description.</summary>
         /// <returns>the media device description</returns>
         MediaDeviceDescription GetMediaDeviceDescription();
+
+        /// <summary>Gets the resource retriever.</summary>
+        /// <remarks>
+        /// Gets the resource retriever.
+        /// The resourceRetriever is used to retrieve data from resources by URL.
+        /// </remarks>
+        /// <returns>the resource retriever</returns>
+        IResourceRetriever GetResourceRetriever();
     }
 }

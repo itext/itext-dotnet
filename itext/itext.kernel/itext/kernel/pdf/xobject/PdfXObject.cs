@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using Common.Logging;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
@@ -91,7 +91,7 @@ namespace iText.Kernel.Pdf.Xobject {
                     return new PdfImageXObject(stream);
                 }
                 else {
-                    throw new NotSupportedException(PdfException.UnsupportedXObjectType);
+                    throw new NotSupportedException(KernelExceptionMessageConstant.UNSUPPORTED_XOBJECT_TYPE);
                 }
             }
         }

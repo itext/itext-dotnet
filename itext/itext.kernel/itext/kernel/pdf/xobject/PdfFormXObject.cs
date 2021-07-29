@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;
@@ -139,7 +140,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public static Rectangle CalculateBBoxMultipliedByMatrix(iText.Kernel.Pdf.Xobject.PdfFormXObject form) {
             PdfArray pdfArrayBBox = form.GetPdfObject().GetAsArray(PdfName.BBox);
             if (pdfArrayBBox == null) {
-                throw new PdfException(PdfException.PdfFormXobjectHasInvalidBbox);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_FORM_XOBJECT_HAS_INVALID_BBOX);
             }
             float[] bBoxArray = pdfArrayBBox.ToFloatArray();
             PdfArray pdfArrayMatrix = form.GetPdfObject().GetAsArray(PdfName.Matrix);
@@ -272,7 +273,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public override void Flush() {
             resources = null;
             if (GetPdfObject().Get(PdfName.BBox) == null) {
-                throw new PdfException(PdfException.FormXObjectMustHaveBbox);
+                throw new PdfException(KernelExceptionMessageConstant.FORM_XOBJECT_MUST_HAVE_BBOX);
             }
             base.Flush();
         }

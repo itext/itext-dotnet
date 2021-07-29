@@ -51,6 +51,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
+using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>Utility class that provides several convenience methods concerning digital signatures.</summary>
@@ -65,22 +66,6 @@ namespace iText.Signatures {
 
         private int totalRevisions;
 
-        /// <summary>
-        /// Converts a
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// to an array of longs
-        /// </summary>
-        /// <param name="pdfArray">PdfArray to be converted</param>
-        /// <returns>long[] containing the PdfArray values</returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. Use iText.Kernel.Pdf.PdfArray.ToLongArray() instead")]
-        public static long[] AsLongArray(PdfArray pdfArray) {
-            long[] rslt = new long[pdfArray.Size()];
-            for (int k = 0; k < rslt.Length; ++k) {
-                rslt[k] = pdfArray.GetAsNumber(k).LongValue();
-            }
-            return rslt;
-        }
-
         /// <summary>Creates a SignatureUtil instance.</summary>
         /// <remarks>
         /// Creates a SignatureUtil instance. Sets the acroForm field to the acroForm in the PdfDocument.
@@ -91,41 +76,6 @@ namespace iText.Signatures {
             this.document = document;
             // Only create new AcroForm if there is a writer
             this.acroForm = PdfAcroForm.GetAcroForm(document, document.GetWriter() != null);
-        }
-
-        /// <summary>
-        /// Prepares an
-        /// <see cref="PdfPKCS7"/>
-        /// instance for the given signature.
-        /// </summary>
-        /// <remarks>
-        /// Prepares an
-        /// <see cref="PdfPKCS7"/>
-        /// instance for the given signature.
-        /// This method handles signature parsing and might throw an exception if
-        /// signature is malformed.
-        /// <para />
-        /// The returned
-        /// <see cref="PdfPKCS7"/>
-        /// can be used to fetch additional info about the signature
-        /// and also to perform integrity check of data signed by the given signature field.
-        /// <para />
-        /// In order to check that given signature covers the current PdfDocument revision please
-        /// use
-        /// <see cref="SignatureCoversWholeDocument(System.String)"/>
-        /// method.
-        /// </remarks>
-        /// <param name="name">the signature field name</param>
-        /// <returns>
-        /// a
-        /// <see cref="PdfPKCS7"/>
-        /// instance which can be used to fetch additional info about the signature
-        /// and also to perform integrity check of data signed by the given signature field.
-        /// </returns>
-        [System.ObsoleteAttribute(@"This method is deprecated and will be removed in future versions. Please use ReadSignatureData(System.String, System.String) instead."
-            )]
-        public virtual PdfPKCS7 VerifySignature(String name) {
-            return ReadSignatureData(name);
         }
 
         /// <summary>
@@ -397,15 +347,11 @@ namespace iText.Signatures {
             }
             JavaCollectionsUtil.Sort(sorter, new SignatureUtil.SorterComparator());
             if (sorter.Count > 0) {
-                try {
-                    if (((int[])sorter[sorter.Count - 1][1])[0] == document.GetReader().GetFileLength()) {
-                        totalRevisions = sorter.Count;
-                    }
-                    else {
-                        totalRevisions = sorter.Count + 1;
-                    }
+                if (((int[])sorter[sorter.Count - 1][1])[0] == document.GetReader().GetFileLength()) {
+                    totalRevisions = sorter.Count;
                 }
-                catch (System.IO.IOException) {
+                else {
+                    totalRevisions = sorter.Count + 1;
                 }
                 for (int k = 0; k < sorter.Count; ++k) {
                     Object[] objs = sorter[k];
@@ -447,14 +393,8 @@ namespace iText.Signatures {
                 rangeIsCorrect = false;
                 PdfDictionary signature = (PdfDictionary)signatureField.GetValue();
                 int[] byteRange = ((PdfArray)signature.Get(PdfName.ByteRange)).ToIntArray();
-                try {
-                    if (4 != byteRange.Length || 0 != byteRange[0] || tokens.GetSafeFile().Length() != byteRange[2] + byteRange
-                        [3]) {
-                        return false;
-                    }
-                }
-                catch (System.IO.IOException) {
-                    // That's not expected because if the signature is invalid, it should have already failed
+                if (4 != byteRange.Length || 0 != byteRange[0] || tokens.GetSafeFile().Length() != byteRange[2] + byteRange
+                    [3]) {
                     return false;
                 }
                 contentsStart = byteRange[1];
@@ -493,7 +433,7 @@ namespace iText.Signatures {
                         break;
                     }
                     if (tokens.GetTokenType() != PdfTokenizer.TokenType.Name) {
-                        tokens.ThrowError(PdfException.DictionaryKey1IsNotAName, tokens.GetStringValue());
+                        tokens.ThrowError(SignExceptionMessageConstant.DICTIONARY_THIS_KEY_IS_NOT_A_NAME, tokens.GetStringValue());
                     }
                     PdfName name = ReadPdfName(true);
                     PdfObject obj;
@@ -525,10 +465,10 @@ namespace iText.Signatures {
                     }
                     if (obj == null) {
                         if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
-                            tokens.ThrowError(PdfException.UnexpectedGtGt);
+                            tokens.ThrowError(SignExceptionMessageConstant.UNEXPECTED_GT_GT);
                         }
                         if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
-                            tokens.ThrowError(PdfException.UnexpectedCloseBracket);
+                            tokens.ThrowError(SignExceptionMessageConstant.UNEXPECTED_CLOSE_BRACKET);
                         }
                     }
                     dic.Put(name, obj);

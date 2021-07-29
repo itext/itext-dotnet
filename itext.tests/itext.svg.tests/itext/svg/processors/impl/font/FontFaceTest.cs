@@ -46,7 +46,7 @@ using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Font;
-using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
@@ -258,7 +258,7 @@ namespace iText.Svg.Processors.Impl.Font {
             String fileName = "resolveFonts_WithAllProperties";
             String svgFile = "fontSelectorTest";
             WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
-            String baseUri = FileUtil.GetParentDirectory(new FileInfo(sourceFolder + svgFile + ".svg"));
+            String baseUri = FileUtil.GetParentDirectoryUri(new FileInfo(sourceFolder + svgFile + ".svg"));
             ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(baseUri).SetFontProvider(new 
                 BasicFontProvider()).SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
             ConvertToSinglePage(new FileInfo(sourceFolder + svgFile + ".svg"), new FileInfo(destinationFolder + fileName
@@ -281,7 +281,7 @@ namespace iText.Svg.Processors.Impl.Font {
             String fileName = "resolveFonts_WithConverterPropsAndWriterProps";
             String svgFile = "fontSelectorTest";
             WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
-            String baseUri = FileUtil.GetParentDirectory(new FileInfo(sourceFolder + svgFile + ".svg"));
+            String baseUri = FileUtil.GetParentDirectoryUri(new FileInfo(sourceFolder + svgFile + ".svg"));
             ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(baseUri).SetFontProvider(new 
                 BasicFontProvider()).SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
             ConvertToSinglePage(new FileStream(sourceFolder + svgFile + ".svg", FileMode.Open, FileAccess.Read), new FileStream

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Function;
 
@@ -97,10 +98,10 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// </returns>
         public static PdfShading MakeShading(PdfDictionary shadingDictionary) {
             if (!shadingDictionary.ContainsKey(PdfName.ShadingType)) {
-                throw new PdfException(PdfException.ShadingTypeNotFound);
+                throw new PdfException(KernelExceptionMessageConstant.SHADING_TYPE_NOT_FOUND);
             }
             if (!shadingDictionary.ContainsKey(PdfName.ColorSpace)) {
-                throw new PdfException(PdfException.ColorSpaceNotFound);
+                throw new PdfException(KernelExceptionMessageConstant.COLOR_SPACE_NOT_FOUND);
             }
             PdfShading shading;
             switch (shadingDictionary.GetAsNumber(PdfName.ShadingType).IntValue()) {
@@ -121,7 +122,7 @@ namespace iText.Kernel.Pdf.Colorspace {
 
                 case PdfShading.ShadingType.FREE_FORM_GOURAUD_SHADED_TRIANGLE_MESH: {
                     if (!shadingDictionary.IsStream()) {
-                        throw new PdfException(PdfException.UnexpectedShadingType);
+                        throw new PdfException(KernelExceptionMessageConstant.UNEXPECTED_SHADING_TYPE);
                     }
                     shading = new PdfShading.FreeFormGouraudShadedTriangleMesh((PdfStream)shadingDictionary);
                     break;
@@ -129,7 +130,7 @@ namespace iText.Kernel.Pdf.Colorspace {
 
                 case PdfShading.ShadingType.LATTICE_FORM_GOURAUD_SHADED_TRIANGLE_MESH: {
                     if (!shadingDictionary.IsStream()) {
-                        throw new PdfException(PdfException.UnexpectedShadingType);
+                        throw new PdfException(KernelExceptionMessageConstant.UNEXPECTED_SHADING_TYPE);
                     }
                     shading = new PdfShading.LatticeFormGouraudShadedTriangleMesh((PdfStream)shadingDictionary);
                     break;
@@ -137,7 +138,7 @@ namespace iText.Kernel.Pdf.Colorspace {
 
                 case PdfShading.ShadingType.COONS_PATCH_MESH: {
                     if (!shadingDictionary.IsStream()) {
-                        throw new PdfException(PdfException.UnexpectedShadingType);
+                        throw new PdfException(KernelExceptionMessageConstant.UNEXPECTED_SHADING_TYPE);
                     }
                     shading = new PdfShading.CoonsPatchMesh((PdfStream)shadingDictionary);
                     break;
@@ -145,14 +146,14 @@ namespace iText.Kernel.Pdf.Colorspace {
 
                 case PdfShading.ShadingType.TENSOR_PRODUCT_PATCH_MESH: {
                     if (!shadingDictionary.IsStream()) {
-                        throw new PdfException(PdfException.UnexpectedShadingType);
+                        throw new PdfException(KernelExceptionMessageConstant.UNEXPECTED_SHADING_TYPE);
                     }
                     shading = new PdfShading.TensorProductPatchMesh((PdfStream)shadingDictionary);
                     break;
                 }
 
                 default: {
-                    throw new PdfException(PdfException.UnexpectedShadingType);
+                    throw new PdfException(KernelExceptionMessageConstant.UNEXPECTED_SHADING_TYPE);
                 }
             }
             return shading;

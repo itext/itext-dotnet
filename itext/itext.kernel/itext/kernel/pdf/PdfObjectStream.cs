@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System.IO;
 using iText.IO.Source;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     internal class PdfObjectStream : PdfStream {
@@ -89,7 +90,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="object">object to add.</param>
         public virtual void AddObject(PdfObject @object) {
             if (size.IntValue() == MAX_OBJ_STREAM_SIZE) {
-                throw new PdfException(PdfException.PdfObjectStreamReachMaxSize);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_OBJECT_STREAM_REACH_MAX_SIZE);
             }
             PdfOutputStream outputStream = GetOutputStream();
             indexStream.WriteInteger(@object.GetIndirectReference().GetObjNumber()).WriteSpace().WriteLong(outputStream

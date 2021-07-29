@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
@@ -578,8 +579,8 @@ namespace iText.Kernel.Font {
         /// , if there is an error reading the font.
         /// </returns>
         protected internal virtual PdfStream GetPdfFontStream(byte[] fontStreamBytes, int[] fontStreamLengths) {
-            if (fontStreamBytes == null) {
-                throw new PdfException(PdfException.FontEmbeddingIssue);
+            if (fontStreamBytes == null || fontStreamLengths == null) {
+                throw new PdfException(KernelExceptionMessageConstant.FONT_EMBEDDING_ISSUE);
             }
             PdfStream fontStream = new PdfStream(fontStreamBytes);
             MakeObjectIndirect(fontStream);

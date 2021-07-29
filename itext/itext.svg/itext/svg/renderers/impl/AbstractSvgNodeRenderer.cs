@@ -196,18 +196,6 @@ namespace iText.Svg.Renderers.Impl {
         /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         protected internal abstract void DoDraw(SvgDrawContext context);
 
-        /// <summary>Evaluate the current object bounding box.</summary>
-        /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
-        /// <returns>
-        /// the
-        /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// representing the current object's bounding box
-        /// </returns>
-        [Obsolete]
-        protected internal virtual Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            return null;
-        }
-
         internal static float GetAlphaFromRGBA(String value) {
             try {
                 return WebColors.GetRGBAColor(value)[3];
@@ -486,5 +474,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public abstract ISvgNodeRenderer CreateDeepCopy();
+
+        public abstract Rectangle GetObjectBoundingBox(SvgDrawContext arg1);
     }
 }

@@ -45,6 +45,7 @@ using System;
 using System.IO;
 using System.util.zlib;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {
@@ -203,7 +204,7 @@ namespace iText.Kernel.Pdf.Filters {
 
                     default: {
                         // Error -- unknown filter type
-                        throw new PdfException(PdfException.PngFilterUnknown);
+                        throw new PdfException(KernelExceptionMessageConstant.PNG_FILTER_UNKNOWN);
                     }
                 }
                 try {

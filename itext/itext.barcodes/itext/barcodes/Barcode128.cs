@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.Barcodes.Exceptions;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
@@ -283,7 +284,7 @@ namespace iText.Barcodes {
             for (int k = 0; k < tLen; ++k) {
                 c = text[k];
                 if (c > 127 && c != FNC1) {
-                    throw new PdfException(PdfException.ThereAreIllegalCharactersForBarcode128In1);
+                    throw new PdfException(BarcodeExceptionMessageConstant.THERE_ARE_ILLEGAL_CHARACTERS_FOR_BARCODE_128);
                 }
             }
             c = text[0];
@@ -325,7 +326,7 @@ namespace iText.Barcodes {
                 }
             }
             if (codeSet != Barcode128.Barcode128CodeSet.AUTO && currentCode != GetStartSymbol(codeSet)) {
-                throw new PdfException(PdfException.ThereAreIllegalCharactersForBarcode128In1);
+                throw new PdfException(BarcodeExceptionMessageConstant.THERE_ARE_ILLEGAL_CHARACTERS_FOR_BARCODE_128);
             }
             while (index < tLen) {
                 switch (currentCode) {
@@ -416,7 +417,7 @@ namespace iText.Barcodes {
                     }
                 }
                 if (codeSet != Barcode128.Barcode128CodeSet.AUTO && currentCode != GetStartSymbol(codeSet)) {
-                    throw new PdfException(PdfException.ThereAreIllegalCharactersForBarcode128In1);
+                    throw new PdfException(BarcodeExceptionMessageConstant.THERE_ARE_ILLEGAL_CHARACTERS_FOR_BARCODE_128);
                 }
             }
             return @out;

@@ -26,6 +26,7 @@ using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -54,6 +55,10 @@ namespace iText.Svg.Renderers.Impl {
             return copy;
         }
 
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+        }
+
         internal override void PreDraw(SvgDrawContext context) {
             base.PreDraw(context);
             float[] markerWidthHeight = GetMarkerWidthHeightValues();
@@ -61,8 +66,8 @@ namespace iText.Svg.Renderers.Impl {
             float markerHeight = markerWidthHeight[1];
             String xAttribute = this.GetAttribute(SvgConstants.Attributes.X);
             String yAttribute = this.GetAttribute(SvgConstants.Attributes.Y);
-            float x = xAttribute != null ? CssDimensionParsingUtils.ParseAbsoluteLength(xAttribute) : 0f;
-            float y = yAttribute != null ? CssDimensionParsingUtils.ParseAbsoluteLength(yAttribute) : 0f;
+            float x = xAttribute == null ? 0f : CssDimensionParsingUtils.ParseAbsoluteLength(xAttribute);
+            float y = yAttribute == null ? 0f : CssDimensionParsingUtils.ParseAbsoluteLength(yAttribute);
             Rectangle markerViewport = new Rectangle(x, y, markerWidth, markerHeight);
             context.AddViewPort(markerViewport);
         }
@@ -170,7 +175,7 @@ namespace iText.Svg.Renderers.Impl {
                         rotAngle = ((IMarkerCapable)GetParent()).GetAutoOrientAngle(this, true);
                     }
                     else {
-                        if (CssTypesValidationUtils.IsAngleValue(orient) || CssTypesValidationUtils.IsNumericValue(orient)) {
+                        if (CssTypesValidationUtils.IsAngleValue(orient) || CssTypesValidationUtils.IsNumber(orient)) {
                             rotAngle = CssDimensionParsingUtils.ParseAngle(this.attributesAndStyles.Get(SvgConstants.Attributes.ORIENT
                                 ));
                         }

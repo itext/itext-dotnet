@@ -83,13 +83,13 @@ namespace iText.StyledXmlParser.Css.Util {
 
         [NUnit.Framework.Test]
         public virtual void ValidateNumericValue() {
-            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsNumericValue("1"));
-            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsNumericValue("12"));
-            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsNumericValue("1.2"));
-            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsNumericValue(".12"));
-            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsNumericValue("12f"));
-            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsNumericValue("f1.2"));
-            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsNumericValue(".12f"));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsNumber("1"));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsNumber("12"));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsNumber("1.2"));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsNumber(".12"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsNumber("12f"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsNumber("f1.2"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsNumber(".12f"));
         }
 
         [NUnit.Framework.Test]

@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     public abstract class PdfObjectWrapper<T>
@@ -129,7 +130,8 @@ namespace iText.Kernel.Pdf {
 
         protected internal virtual void EnsureUnderlyingObjectHasIndirectReference() {
             if (GetPdfObject().GetIndirectReference() == null) {
-                throw new PdfException(PdfException.ToFlushThisWrapperUnderlyingObjectMustBeAddedToDocument);
+                throw new PdfException(KernelExceptionMessageConstant.TO_FLUSH_THIS_WRAPPER_UNDERLYING_OBJECT_MUST_BE_ADDED_TO_DOCUMENT
+                    );
             }
         }
 
@@ -165,7 +167,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         protected internal static void EnsureObjectIsAddedToDocument(PdfObject @object) {
             if (@object.GetIndirectReference() == null) {
-                throw new PdfException(PdfException.ObjectMustBeIndirectToWorkWithThisWrapper);
+                throw new PdfException(KernelExceptionMessageConstant.OBJECT_MUST_BE_INDIRECT_TO_WORK_WITH_THIS_WRAPPER);
             }
         }
     }

@@ -52,11 +52,11 @@ namespace iText.IO.Image {
                 throw new ArgumentException("Raw image expected.");
             }
             // will also have the CCITT parameters
-            int colorSpace = image.GetColorSpace();
+            int colorSpace = image.GetColorEncodingComponentsNumber();
             int typeCCITT = image.GetTypeCcitt();
             if (typeCCITT > 0xff) {
                 if (!image.IsMask()) {
-                    image.SetColorSpace(1);
+                    image.SetColorEncodingComponentsNumber(1);
                 }
                 image.SetBpc(1);
                 image.SetFilter("CCITTFaxDecode");
@@ -109,7 +109,7 @@ namespace iText.IO.Image {
                     image.SetImageAttributes(additional);
                 }
                 if (image.IsMask() && (image.GetBpc() == 1 || image.GetBpc() > 8)) {
-                    image.SetColorSpace(-1);
+                    image.SetColorEncodingComponentsNumber(-1);
                 }
                 if (image.IsDeflated()) {
                     image.SetFilter("FlateDecode");
@@ -134,7 +134,7 @@ namespace iText.IO.Image {
             if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8) {
                 throw new iText.IO.IOException(iText.IO.IOException.BitsPerComponentMustBe1_2_4or8);
             }
-            image.SetColorSpace(components);
+            image.SetColorEncodingComponentsNumber(components);
             image.SetBpc(bpc);
             image.data = data;
         }
@@ -176,7 +176,7 @@ namespace iText.IO.Image {
             }
             image.SetHeight(height);
             image.SetWidth(width);
-            image.SetColorSpace(parameters);
+            image.SetColorEncodingComponentsNumber(parameters);
             image.SetTypeCcitt(typeCcitt);
             image.data = data;
         }

@@ -49,6 +49,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
+using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -707,7 +708,7 @@ namespace iText.Layout.Element {
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddCell(Cell cell) {
             if (isComplete && null != lastAddedRow) {
-                throw new PdfException(PdfException.CannotAddCellToCompletedLargeTable);
+                throw new PdfException(LayoutExceptionMessageConstant.CANNOT_ADD_CELL_TO_COMPLETED_LARGE_TABLE);
             }
             // Try to find first empty slot in table.
             // We shall not use colspan or rowspan, 1x1 will be enough.

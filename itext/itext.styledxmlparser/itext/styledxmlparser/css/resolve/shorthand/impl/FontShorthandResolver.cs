@@ -117,7 +117,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                             }
                             else {
                                 if (FONT_SIZE_VALUES.Contains(value) || CssTypesValidationUtils.IsMetricValue(value) || CssTypesValidationUtils
-                                    .IsNumericValue(value) || CssTypesValidationUtils.IsRelativeValue(value)) {
+                                    .IsNumber(value) || CssTypesValidationUtils.IsRelativeValue(value)) {
                                     fontSizeValue = value;
                                 }
                                 else {

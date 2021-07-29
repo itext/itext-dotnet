@@ -292,7 +292,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <returns>the unit value</returns>
         public static UnitValue ParseLengthValueToPt(String value, float emValue, float remValue) {
             // TODO (DEVSIX-3596) Add support of 'lh' 'ch' units and viewport-relative units
-            if (CssTypesValidationUtils.IsMetricValue(value) || CssTypesValidationUtils.IsNumericValue(value)) {
+            if (CssTypesValidationUtils.IsMetricValue(value) || CssTypesValidationUtils.IsNumber(value)) {
                 return new UnitValue(UnitValue.POINT, ParseAbsoluteLength(value));
             }
             else {

@@ -51,21 +51,21 @@ namespace iText.Svg.Utils {
         public virtual void NullStringTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 (null));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_NULL, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TRANSFORM_NULL, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void EmptyTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 (""));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_EMPTY, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TRANSFORM_EMPTY, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void NoTransformationTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 ("Lorem ipsum"));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.INVALID_TRANSFORM_DECLARATION, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.INVALID_TRANSFORM_DECLARATION, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -78,7 +78,7 @@ namespace iText.Svg.Utils {
         public virtual void TooManyParenthesesTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 ("(((())))"));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.INVALID_TRANSFORM_DECLARATION, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.INVALID_TRANSFORM_DECLARATION, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -155,7 +155,7 @@ namespace iText.Svg.Utils {
         public virtual void UnknownTransformationTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 ("unknown(1 2 3)"));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.UNKNOWN_TRANSFORMATION_TYPE, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.UNKNOWN_TRANSFORMATION_TYPE, e.Message);
         }
 
         [NUnit.Framework.Test]

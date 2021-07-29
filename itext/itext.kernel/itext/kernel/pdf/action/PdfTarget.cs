@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
@@ -183,7 +184,7 @@ namespace iText.Kernel.Pdf.Action {
             PdfDocument pdfDocument) {
             PdfPage page = pdfAnnotation.GetPage();
             if (null == page) {
-                throw new PdfException(PdfException.AnnotationShallHaveReferenceToPage);
+                throw new PdfException(KernelExceptionMessageConstant.ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE);
             }
             else {
                 Put(PdfName.P, new PdfNumber(pdfDocument.GetPageNumber(page) - 1));

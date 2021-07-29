@@ -47,6 +47,7 @@ using System.IO;
 using System.Text;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
@@ -102,7 +103,7 @@ namespace iText.Kernel.Utils {
             // get the StructTreeRoot from the document
             PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
             if (structTreeRoot == null) {
-                throw new PdfException(PdfException.DocumentDoesntContainStructTreeRoot);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_DOES_NOT_CONTAIN_STRUCT_TREE_ROOT);
             }
             // Inspect the child or children of the StructTreeRoot
             InspectKids(structTreeRoot.GetKids());

@@ -29,6 +29,7 @@ using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Geom;
 using iText.Svg;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -38,9 +39,9 @@ namespace iText.Svg.Renderers.Impl {
     /// abstract implementation for gradient tags
     /// (&lt;linearGradient&gt;, &lt;radialGradient&gt;).
     /// </summary>
-    public abstract class AbstractGradientSvgNodeRenderer : NoDrawOperationSvgNodeRenderer, ISvgPaintServer {
+    public abstract class AbstractGradientSvgNodeRenderer : AbstractBranchSvgNodeRenderer, ISvgPaintServer {
         protected internal override void DoDraw(SvgDrawContext context) {
-            throw new NotSupportedException(SvgLogMessageConstant.DRAW_NO_DRAW);
+            throw new NotSupportedException(SvgExceptionMessageConstant.DRAW_NO_DRAW);
         }
 
         /// <summary>Checks whether the gradient units values are on user space on use or object bounding box</summary>

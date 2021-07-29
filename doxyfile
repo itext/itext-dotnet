@@ -914,12 +914,10 @@ EXCLUDE_PATTERNS       = */.git/* \
                          */bin/* \
                          */obj/* \
                          */itext.tests/* \
-                         */itext.pdftest/* \
-                         */bouncycastle/* \
+                         */itext.pdftest/* \                         
                          */itext/itext.io/itext/io/util/zlib/* \
                          */KeyVersionAttribute.cs \
-                         */TypographyVersionAttribute.cs \
-                         */LayoutRect.cs
+                         */TypographyVersionAttribute.cs \                         
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the

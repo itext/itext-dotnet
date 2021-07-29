@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Exception class for exceptions occurred during decompressed pdf streams processing.</summary>
@@ -59,7 +60,7 @@ namespace iText.Kernel.Pdf {
         /// method).
         /// </param>
         public MemoryLimitsAwareException(Exception cause)
-            : this(UnknownPdfException, cause) {
+            : this(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION, cause) {
         }
 
         /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Collection {
@@ -104,7 +105,7 @@ namespace iText.Kernel.Pdf.Collection {
             PdfName fieldName = new PdfName(key);
             PdfObject obj = GetPdfObject().Get(fieldName);
             if (obj == null) {
-                throw new PdfException(PdfException.YouMustSetAValueBeforeAddingAPrefix);
+                throw new PdfException(KernelExceptionMessageConstant.YOU_MUST_SET_A_VALUE_BEFORE_ADDING_A_PREFIX);
             }
             PdfDictionary subItem = new PdfDictionary();
             subItem.Put(PdfName.D, obj);

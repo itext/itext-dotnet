@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -157,12 +157,7 @@ namespace iText.IO.Util {
             bool Accept(FileInfo pathname);
         }
 
-        [System.ObsoleteAttribute]
-        public static String GetParentDirectory(String path) {
-            return Directory.GetParent(path).FullName;
-        }
-
-        public static String GetParentDirectory(FileInfo file) {
+        public static String GetParentDirectoryUri(FileInfo file) {
             return file != null ? new Uri(Directory.GetParent(file.FullName).FullName).AbsoluteUri + System.IO.Path.DirectorySeparatorChar : "";
         }
 

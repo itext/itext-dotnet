@@ -46,13 +46,5 @@ namespace iText.IO.Font.Otf {
         protected internal ContextualSubTable(OpenTypeFontTableReader openReader, int lookupFlag)
             : base(openReader, lookupFlag) {
         }
-
-        public override ContextualSubstRule GetMatchingContextRule(GlyphLine line) {
-            return base.GetMatchingContextRule(line);
-        }
-
-        protected internal override int CheckIfContextMatch(GlyphLine line, ContextualSubstRule rule) {
-            return base.CheckIfContextMatch(line, rule);
-        }
     }
 }

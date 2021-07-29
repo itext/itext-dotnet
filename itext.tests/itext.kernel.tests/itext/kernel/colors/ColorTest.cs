@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Test;
@@ -70,7 +71,7 @@ namespace iText.Kernel.Colors {
             Color color = Color.MakeColor(PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB), colorValues);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => color.SetColorValue(new float[] { 0.1f
                 , 0.2f }));
-            NUnit.Framework.Assert.AreEqual(PdfException.IncorrectNumberOfComponents, e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.INCORRECT_NUMBER_OF_COMPONENTS, e.Message);
         }
 
         [NUnit.Framework.Test]

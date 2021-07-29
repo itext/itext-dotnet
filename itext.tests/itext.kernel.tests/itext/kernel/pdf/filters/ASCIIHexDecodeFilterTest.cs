@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Filters {
@@ -46,7 +47,8 @@ namespace iText.Kernel.Pdf.Filters {
             byte[] bytes = "4c6f72656d20697073756d2eg>".GetBytes();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => ASCIIHexDecodeFilter.ASCIIHexDecode
                 (bytes));
-            NUnit.Framework.Assert.AreEqual(PdfException.IllegalCharacterInAsciihexdecode, e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.ILLEGAL_CHARACTER_IN_ASCIIHEXDECODE, e.Message
+                );
         }
 
         [NUnit.Framework.Test]

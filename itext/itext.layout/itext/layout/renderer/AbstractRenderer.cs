@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Font;
@@ -60,6 +59,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
@@ -501,14 +501,8 @@ namespace iText.Layout.Renderer {
         /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         public virtual void DrawBackground(DrawContext drawContext) {
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
-            Object uncastedBackgroundImage = this.GetProperty<Object>(Property.BACKGROUND_IMAGE);
-            IList<BackgroundImage> backgroundImagesList;
-            if (uncastedBackgroundImage is BackgroundImage) {
-                backgroundImagesList = JavaCollectionsUtil.SingletonList((BackgroundImage)uncastedBackgroundImage);
-            }
-            else {
-                backgroundImagesList = this.GetProperty<IList<BackgroundImage>>(Property.BACKGROUND_IMAGE);
-            }
+            IList<BackgroundImage> backgroundImagesList = this.GetProperty<IList<BackgroundImage>>(Property.BACKGROUND_IMAGE
+                );
             if (background != null || backgroundImagesList != null) {
                 Rectangle bBox = GetOccupiedAreaBBox();
                 bool isTagged = drawContext.IsTaggingEnabled();
@@ -2475,21 +2469,16 @@ namespace iText.Layout.Renderer {
                 return (PdfFont)font;
             }
             else {
-                if (font is String || font is String[]) {
-                    if (font is String) {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                        logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
-                            );
-                        IList<String> splitFontFamily = FontFamilySplitter.SplitFontFamily((String)font);
-                        font = splitFontFamily.ToArray(new String[splitFontFamily.Count]);
-                    }
+                if (font is String[]) {
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     if (provider == null) {
-                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
+                        throw new InvalidOperationException(LayoutExceptionMessageConstant.FONT_PROVIDER_NOT_SET_FONT_FAMILY_NOT_RESOLVED
+                            );
                     }
                     FontSet fontSet = this.GetProperty<FontSet>(Property.FONT_SET);
                     if (provider.GetFontSet().IsEmpty() && (fontSet == null || fontSet.IsEmpty())) {
-                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
+                        throw new InvalidOperationException(LayoutExceptionMessageConstant.FONT_PROVIDER_NOT_SET_FONT_FAMILY_NOT_RESOLVED
+                            );
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
                     return ResolveFirstPdfFont((String[])font, provider, fc, fontSet);

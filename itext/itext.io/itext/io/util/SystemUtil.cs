@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -55,12 +55,6 @@ namespace iText.IO.Util {
     /// </summary>
     public class SystemUtil {
         private const String SPLIT_REGEX = "((\".+?\"|[^'\\s]|'.+?')+)\\s*";
-
-        [System.ObsoleteAttribute(
-            @"To be removed in iText version 7.2. For time-based seed, please use {@link #getTimeBasedSeed()} instead.")]
-        public static long GetSystemTimeTicks() {
-            return DateTime.Now.Ticks / 10000 + Environment.TickCount;
-        }
 
         public static long GetTimeBasedSeed() {
             return DateTime.Now.Ticks + Environment.TickCount;

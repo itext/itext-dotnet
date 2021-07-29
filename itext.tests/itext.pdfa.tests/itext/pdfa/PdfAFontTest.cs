@@ -88,7 +88,8 @@ namespace iText.Pdfa {
             PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi");
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_NOT_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
                 ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
@@ -268,6 +269,20 @@ namespace iText.Pdfa {
                 ));
             NUnit.Framework.Assert.AreEqual(PdfAConformanceException.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_OR_WIN_ANSI_ENCODING_AS_THE_ENCODING_ENTRY
                 , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SymbolicTtfCharEncodingsPdfA1Test04() {
+            // emulate behaviour with default WinAnsi, which was present in 7.1
+            CreateDocumentWithFont("symbolicTtfCharEncodingsPdfA1Test04.pdf", "Symbols1.ttf", PdfEncodings.WINANSI, PdfAConformanceLevel
+                .PDF_A_1B);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SymbolicTtfCharEncodingsPdfA1Test05() {
+            // Identity-H behaviour should be the same as the default one, starting from 7.2
+            CreateDocumentWithFont("symbolicTtfCharEncodingsPdfA1Test05.pdf", "Symbols1.ttf", PdfEncodings.IDENTITY_H, 
+                PdfAConformanceLevel.PDF_A_1B);
         }
 
         [NUnit.Framework.Test]

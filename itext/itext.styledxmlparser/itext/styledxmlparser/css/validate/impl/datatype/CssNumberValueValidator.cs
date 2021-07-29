@@ -52,7 +52,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
                 CommonCssConstants.UNSET.Equals(objectString)) {
                 return true;
             }
-            if (!CssTypesValidationUtils.IsNumericValue(objectString)) {
+            if (!CssTypesValidationUtils.IsNumber(objectString)) {
                 return false;
             }
             if (CssTypesValidationUtils.IsNegativeValue(objectString) && !CssTypesValidationUtils.IsZero(objectString)

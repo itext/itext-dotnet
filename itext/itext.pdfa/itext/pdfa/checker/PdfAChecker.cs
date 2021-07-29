@@ -310,21 +310,6 @@ namespace iText.Pdfa.Checker {
         /// This method checks compliance with the color restrictions imposed by the
         /// available color spaces in the document.
         /// </summary>
-        /// <param name="color">the color to check</param>
-        /// <param name="currentColorSpaces">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// containing the color spaces used in the document
-        /// </param>
-        /// <param name="fill">whether the color is used for fill or stroke operations</param>
-        [System.ObsoleteAttribute(@"This method will be replaced by CheckColor(iText.Kernel.Colors.Color, iText.Kernel.Pdf.PdfDictionary, bool?, iText.Kernel.Pdf.PdfStream) checkColor in 7.2 release"
-            )]
-        public abstract void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill);
-
-        /// <summary>
-        /// This method checks compliance with the color restrictions imposed by the
-        /// available color spaces in the document.
-        /// </summary>
         /// <remarks>
         /// This method checks compliance with the color restrictions imposed by the
         /// available color spaces in the document.
@@ -338,9 +323,8 @@ namespace iText.Pdfa.Checker {
         /// </param>
         /// <param name="fill">whether the color is used for fill or stroke operations</param>
         /// <param name="contentStream">current content stream</param>
-        public virtual void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
-            ) {
-        }
+        public abstract void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
+            );
 
         /// <summary>
         /// This method performs a range of checks on the given color space, depending
@@ -369,39 +353,6 @@ namespace iText.Pdfa.Checker {
         /// <param name="intent">the intent to be analyzed</param>
         public abstract void CheckRenderingIntent(PdfName intent);
 
-        /// <summary>
-        /// Performs a number of checks on the graphics state, among others ISO
-        /// 19005-1 section 6.2.8 and 6.4 and ISO 19005-2 section 6.2.5 and 6.2.10.
-        /// </summary>
-        /// <param name="extGState">the graphics state to be checked</param>
-        [System.ObsoleteAttribute(@"This method will be replaced by CheckExtGState(iText.Kernel.Pdf.Canvas.CanvasGraphicsState, iText.Kernel.Pdf.PdfStream) checkExtGState in 7.2 release"
-            )]
-        public abstract void CheckExtGState(CanvasGraphicsState extGState);
-
-        /// <summary>
-        /// Performs a number of checks on the graphics state, among others ISO
-        /// 19005-1 section 6.2.8 and 6.4 and ISO 19005-2 section 6.2.5 and 6.2.10.
-        /// </summary>
-        /// <remarks>
-        /// Performs a number of checks on the graphics state, among others ISO
-        /// 19005-1 section 6.2.8 and 6.4 and ISO 19005-2 section 6.2.5 and 6.2.10.
-        /// This method will be abstract in the update 7.2
-        /// </remarks>
-        /// <param name="extGState">the graphics state to be checked</param>
-        /// <param name="contentStream">current content stream</param>
-        public virtual void CheckExtGState(CanvasGraphicsState extGState, PdfStream contentStream) {
-        }
-
-        /// <summary>Performs a number of checks on the font.</summary>
-        /// <remarks>
-        /// Performs a number of checks on the font. See ISO 19005-1 section 6.3,
-        /// ISO 19005-2 and ISO 19005-3 section 6.2.11.
-        /// Be aware that not all constraints defined in the ISO are checked in this method,
-        /// for most of them we consider that iText always creates valid fonts.
-        /// </remarks>
-        /// <param name="pdfFont">font to be checked</param>
-        public abstract void CheckFont(PdfFont pdfFont);
-
         /// <summary>Performs a check of the each font glyph as a Form XObject.</summary>
         /// <remarks>
         /// Performs a check of the each font glyph as a Form XObject. See ISO 19005-2 Annex A.5.
@@ -414,15 +365,34 @@ namespace iText.Pdfa.Checker {
         /// to be checked
         /// </param>
         /// <param name="contentStream">stream containing checked font</param>
-        public virtual void CheckFontGlyphs(PdfFont font, PdfStream contentStream) {
-        }
+        public abstract void CheckFontGlyphs(PdfFont font, PdfStream contentStream);
+
+        /// <summary>
+        /// Performs a number of checks on the graphics state, among others ISO
+        /// 19005-1 section 6.2.8 and 6.4 and ISO 19005-2 section 6.2.5 and 6.2.10.
+        /// </summary>
+        /// <remarks>
+        /// Performs a number of checks on the graphics state, among others ISO
+        /// 19005-1 section 6.2.8 and 6.4 and ISO 19005-2 section 6.2.5 and 6.2.10.
+        /// This method will be abstract in the update 7.2
+        /// </remarks>
+        /// <param name="extGState">the graphics state to be checked</param>
+        /// <param name="contentStream">current content stream</param>
+        public abstract void CheckExtGState(CanvasGraphicsState extGState, PdfStream contentStream);
+
+        /// <summary>Performs a number of checks on the font.</summary>
+        /// <remarks>
+        /// Performs a number of checks on the font. See ISO 19005-1 section 6.3,
+        /// ISO 19005-2 and ISO 19005-3 section 6.2.11.
+        /// Be aware that not all constraints defined in the ISO are checked in this method,
+        /// for most of them we consider that iText always creates valid fonts.
+        /// </remarks>
+        /// <param name="pdfFont">font to be checked</param>
+        public abstract void CheckFont(PdfFont pdfFont);
 
         /// <summary>Verify the conformity of the cross-reference table.</summary>
         /// <param name="xrefTable">is the Xref table</param>
         public abstract void CheckXrefTable(PdfXrefTable xrefTable);
-
-        protected internal virtual void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources) {
-        }
 
         /// <summary>Attest content stream conformance with appropriate specification.</summary>
         /// <remarks>
@@ -430,8 +400,7 @@ namespace iText.Pdfa.Checker {
         /// Throws PdfAConformanceException if any discrepancy was found
         /// </remarks>
         /// <param name="contentStream">is a content stream to validate</param>
-        protected internal virtual void CheckContentStream(PdfStream contentStream) {
-        }
+        protected internal abstract void CheckContentStream(PdfStream contentStream);
 
         /// <summary>
         /// Verify the conformity of the operand of content stream with appropriate
@@ -442,8 +411,7 @@ namespace iText.Pdfa.Checker {
         /// specification. Throws PdfAConformanceException if any discrepancy was found
         /// </remarks>
         /// <param name="object">is an operand of content stream to validate</param>
-        protected internal virtual void CheckContentStreamObject(PdfObject @object) {
-        }
+        protected internal abstract void CheckContentStreamObject(PdfObject @object);
 
         /// <summary>Retrieve maximum allowed number of indirect objects in conforming document.</summary>
         /// <returns>maximum allowed number of indirect objects</returns>
@@ -496,6 +464,9 @@ namespace iText.Pdfa.Checker {
         protected internal abstract void CheckSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont);
 
         protected internal abstract void CheckTrailer(PdfDictionary trailer);
+
+        protected internal abstract void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
+            );
 
         protected internal virtual void CheckResources(PdfDictionary resources) {
             if (resources == null) {

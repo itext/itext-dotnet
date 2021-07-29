@@ -58,6 +58,8 @@ namespace iText.IO {
 
         public const String ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT = "Attempt to create a tag for a hint which is already marked as finished, tag will not be created.";
 
+        public const String ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES = "Attempt to generate PDF pages tree without any pages, so a new page will be added.";
+
         public const String ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT = "An attempt is made to move the tag tree pointer to the tag parent which has been already flushed. Tag tree pointer is moved to the root tag instead.";
 
         /// <summary>The log message for hashcode method call for modified instance of PdfNumber object.</summary>
@@ -147,7 +149,6 @@ namespace iText.IO {
 
         public const String FAILED_TO_PARSE_ENCODING_STREAM = "Failed to parse encoding stream.";
 
-        [System.ObsoleteAttribute(@"Moved into cleanup module The constant will be removed in 7.2.")]
         public const String FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX = "Failed to process a transformation matrix which is noninvertible. Some content may be placed not as expected.";
 
         public const String FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY = "Value \"{0}\" is not contained in /Opt array of field \"{1}\".";
@@ -165,8 +166,6 @@ namespace iText.IO {
         public const String FONT_HAS_INVALID_GLYPH = "Font {0} has invalid glyph: {1}";
 
         public const String FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT = "The \"Property.FONT\" property must be a PdfFont object in this context.";
-
-        public const String FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD = "The \"Property.FONT\" property with values of String type is deprecated, use String[] as property value type instead.";
 
         public const String FONT_SUBSET_ISSUE = "Font subset issue. Full font will be embedded.";
 
@@ -201,9 +200,6 @@ namespace iText.IO {
         public const String IMAGE_HAS_JPXDECODE_FILTER = "Image cannot be inline if it has JPXDecode filter. It will be added as an ImageXObject";
 
         public const String IMAGE_HAS_MASK = "Image cannot be inline if it has a Mask";
-
-        [System.ObsoleteAttribute(@"Moved into cleanup module The constant will be removed in 7.2.")]
-        public const String IMAGE_MASK_CLEAN_UP_NOT_SUPPORTED = "Partial clean up of transparent images with mask encoded with one of the following filters is not supported: JBIG2Decode, DCTDecode, JPXDecode. Image will become non-transparent.";
 
         public const String IMAGE_SIZE_CANNOT_BE_MORE_4KB = "Inline image size cannot be more than 4KB. It will be added as an ImageXObject";
 
@@ -290,9 +286,6 @@ namespace iText.IO {
         public const String RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES = "The {0} rectangle has negative or zero sizes. It will not be displayed.";
 
         public const String RECTANGLE_HAS_NEGATIVE_SIZE = "The {0} rectangle has negative size. It will not be displayed.";
-
-        [System.ObsoleteAttribute(@"Moved into cleanup module The constant will be removed in 7.2.")]
-        public const String REDACTION_OF_ANNOTATION_TYPE_WATERMARK_IS_NOT_SUPPORTED = "Redaction of annotation subtype /Watermark is not supported";
 
         public const String REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED = "The page requested to be removed has already been flushed.";
 
@@ -383,10 +376,6 @@ namespace iText.IO {
         public const String XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE = "Xfdf unsupported attribute type";
 
         public const String XOBJECT_HAS_NO_STRUCT_PARENTS = "XObject has no StructParents entry in its stream, no entry in ParentTree will be created for the corresponding structure elements";
-
-        [System.ObsoleteAttribute(@"Use XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT instead. The constant will be removed in 7.2."
-            )]
-        public const String XREF_ERROR = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
 
         public const String XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
     }
