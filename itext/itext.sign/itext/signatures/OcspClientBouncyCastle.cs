@@ -147,7 +147,7 @@ namespace iText.Signatures {
         /// <param name="checkCert">to certificate to check</param>
         /// <param name="rootCert">the parent certificate</param>
         /// <param name="url">
-        /// to get the verification. It it's null it will be taken
+        /// to get the verification. If it's null it will be taken
         /// from the check cert or from other implementation specific source
         /// </param>
         /// <returns>an OCSP response</returns>

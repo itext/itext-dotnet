@@ -61,19 +61,27 @@ namespace iText.Signatures.Testutils.Builder {
         private X509Certificate issuerCert;
         private ICipherParameters issuerPrivateKey;
 
-        private CertificateStatus certificateStatus = CertificateStatus.Good;
+        private CertificateStatus certificateStatus;
 
         private DateTime thisUpdate = DateTimeUtil.GetCurrentTime();
 
         private DateTime nextUpdate = DateTimeUtil.GetCurrentTime();
 
-        public TestOcspResponseBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey) {
+        public TestOcspResponseBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey,
+            CertificateStatus certificateStatus)
+        {
             this.issuerCert = issuerCert;
             this.issuerPrivateKey = issuerPrivateKey;
+            this.certificateStatus = certificateStatus;
             X509Name subjectDN = issuerCert.SubjectDN;
             thisUpdate = thisUpdate.AddDays(-1);
             nextUpdate = nextUpdate.AddDays(30);
             responseBuilder = new BasicOcspRespGenerator(new RespID(subjectDN));
+        }
+
+        public TestOcspResponseBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey)
+            : this(issuerCert, issuerPrivateKey, CertificateStatus.Good)
+        {
         }
 
         public X509Certificate GetIssuerCert() {
