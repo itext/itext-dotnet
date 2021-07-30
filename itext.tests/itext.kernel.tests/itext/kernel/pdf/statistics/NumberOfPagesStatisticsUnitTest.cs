@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Util;
 using iText.Kernel.Actions.Data;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 using iText.Test;
 using iText.Test.Attributes;
@@ -42,9 +43,28 @@ namespace iText.Kernel.Pdf.Statistics {
         }
 
         [NUnit.Framework.Test]
+        public virtual void InvalidArgumentEventTest() {
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => new NumberOfPagesStatisticsEvent
+                (-1, ITextCoreProductData.GetInstance()));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.NUMBER_OF_PAGES_CAN_NOT_BE_NEGATIVE, exception
+                .Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ZeroNumberOfPagesTest() {
             NUnit.Framework.Assert.DoesNotThrow(() => new NumberOfPagesStatisticsEvent(0, ITextCoreProductData.GetInstance
                 ()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AggregateZeroPageEventTest() {
+            NumberOfPagesStatisticsAggregator aggregator = new NumberOfPagesStatisticsAggregator();
+            aggregator.Aggregate(new NumberOfPagesStatisticsEvent(0, ITextCoreProductData.GetInstance()));
+            Object aggregation = aggregator.RetrieveAggregation();
+            IDictionary<String, AtomicLong> castedAggregation = (IDictionary<String, AtomicLong>)aggregation;
+            NUnit.Framework.Assert.AreEqual(1, castedAggregation.Count);
+            long numberOfPages = castedAggregation.Get("1").Get();
+            NUnit.Framework.Assert.AreEqual(1, numberOfPages);
         }
 
         [NUnit.Framework.Test]

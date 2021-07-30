@@ -339,6 +339,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String NO_VALID_ENCRYPTION_MODE = "No valid encryption mode.";
 
+        public const String NUMBER_OF_PAGES_CAN_NOT_BE_NEGATIVE = "Number of pages can not be negative.";
+
         public const String NUMBER_OF_BOOLEANS_IN_THE_ARRAY_DOES_NOT_CORRESPOND_WITH_THE_NUMBER_OF_FIELDS = "The "
              + "number of booleans in the array doesn't correspond with the number of fields.";
 

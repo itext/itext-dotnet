@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.IO.Util;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Data;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf.Statistics {
     /// <summary>Class which represents event for counting the number of pages in a PDF document.</summary>
@@ -45,6 +46,9 @@ namespace iText.Kernel.Pdf.Statistics {
         /// <param name="productData">is a description of the product which has generated an event</param>
         public NumberOfPagesStatisticsEvent(int numberOfPages, ProductData productData)
             : base(productData) {
+            if (numberOfPages < 0) {
+                throw new InvalidOperationException(KernelExceptionMessageConstant.NUMBER_OF_PAGES_CAN_NOT_BE_NEGATIVE);
+            }
             this.numberOfPages = numberOfPages;
         }
 
