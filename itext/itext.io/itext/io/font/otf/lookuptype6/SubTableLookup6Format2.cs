@@ -47,7 +47,7 @@ using iText.IO.Util;
 
 namespace iText.IO.Font.Otf.Lookuptype6 {
     /// <summary>Chaining Contextual Substitution Subtable: Class-based Chaining Context Glyph Substitution</summary>
-    public class SubTableLookup6Format2 : SubTableLookup6 {
+    public class SubTableLookup6Format2 : ChainingContextualTable<ContextualSubstRule> {
         private ICollection<int> substCoverageGlyphIds;
 
         private IList<IList<ContextualSubstRule>> subClassSets;

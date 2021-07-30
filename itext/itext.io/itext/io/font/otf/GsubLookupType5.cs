@@ -48,12 +48,12 @@ using iText.IO.Font.Otf.Lookuptype5;
 namespace iText.IO.Font.Otf {
     /// <summary>LookupType 5: Contextual Substitution Subtable</summary>
     public class GsubLookupType5 : OpenTableLookup {
-        protected internal IList<ContextualSubTable> subTables;
+        protected internal IList<ContextualTable<ContextualSubstRule>> subTables;
 
         protected internal GsubLookupType5(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations
             )
             : base(openReader, lookupFlag, subTableLocations) {
-            subTables = new List<ContextualSubTable>();
+            subTables = new List<ContextualTable<ContextualSubstRule>>();
             ReadSubTables();
         }
 
@@ -62,7 +62,7 @@ namespace iText.IO.Font.Otf {
             int oldLineStart = line.start;
             int oldLineEnd = line.end;
             int initialLineIndex = line.idx;
-            foreach (ContextualSubTable subTable in subTables) {
+            foreach (ContextualTable<ContextualSubstRule> subTable in subTables) {
                 ContextualSubstRule contextRule = subTable.GetMatchingContextRule(line);
                 if (contextRule == null) {
                     continue;

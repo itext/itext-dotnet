@@ -41,9 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Net;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
+using iText.IO.Util;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Test;
@@ -52,12 +54,16 @@ using iText.Test.Signutils;
 
 namespace iText.Signatures {
     public class OcspClientBouncyCastleTest : ExtendedITextTest {
-        private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
+        private static readonly String ocspCertsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/OcspClientBouncyCastleTest/";
+
+        private static readonly String rootOcspCert = ocspCertsSrc + "ocspRootRsa.p12";
+
+        private static readonly String signOcspCert = ocspCertsSrc + "ocspSignRsa.p12";
 
         private static readonly char[] password = "testpass".ToCharArray();
 
-        private static readonly String caCertFileName = certsSrc + "rootRsa.p12";
+        private const String ocspServiceUrl = "http://localhost:9000/demo/ocsp/ocsp-service";
 
         private static X509Certificate checkCert;
 
@@ -71,26 +77,66 @@ namespace iText.Signatures {
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
-            builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
-            checkCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(certsSrc + "signCertRsa01.p12", password)[0];
+            builder = CreateBuilder(CertificateStatus.Good);
+            checkCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(signOcspCert, password)[0];
             rootCert = builder.GetIssuerCert();
         }
 
         [NUnit.Framework.Test]
-        public virtual void GetBasicOCSPRespTest() {
+        public virtual void GetOcspResponseWhenCheckCertIsNullTest() {
+            OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
+            NUnit.Framework.Assert.IsNull(castle.GetOcspResponse(null, rootCert, ocspServiceUrl));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetOcspResponseWhenRootCertIsNullTest() {
+            OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
+            NUnit.Framework.Assert.IsNull(castle.GetOcspResponse(checkCert, null, ocspServiceUrl));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetOcspResponseWhenRootAndCheckCertIsNullTest() {
+            OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
+            NUnit.Framework.Assert.IsNull(castle.GetOcspResponse(null, null, ocspServiceUrl));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Getting OCSP from http://asd", LogLevel = LogLevelConstants.INFO)]
+        public virtual void IncorrectUrlTest() {
+            OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
+            NUnit.Framework.Assert.Catch(typeof(WebException), () => castle.GetOcspResponse(checkCert, rootCert, "http://asd"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Getting OCSP from", LogLevel = LogLevelConstants.INFO)]
+        public virtual void MalformedUrlTest() {
+            OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
+            NUnit.Framework.Assert.Catch(typeof(UriFormatException), () => castle.GetOcspResponse(checkCert, rootCert, 
+                ""));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Getting OCSP from http://localhost:9000/demo/ocsp/ocsp-service", LogLevel = LogLevelConstants
+            .INFO)]
+        public virtual void ConnectionRefusedTest() {
+            OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
+            NUnit.Framework.Assert.Catch(typeof(WebException), () => castle.GetOcspResponse(checkCert, rootCert, ocspServiceUrl
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetBasicOcspRespTest() {
             OcspClientBouncyCastle ocspClientBouncyCastle = CreateOcspClient();
-            BasicOcspResp basicOCSPResp = ocspClientBouncyCastle.GetBasicOCSPResp(checkCert, rootCert, null);
+            BasicOcspResp basicOCSPResp = ocspClientBouncyCastle.GetBasicOCSPResp(checkCert, rootCert, ocspServiceUrl);
             NUnit.Framework.Assert.IsNotNull(basicOCSPResp);
             NUnit.Framework.Assert.IsTrue(basicOCSPResp.Responses.Length > 0);
         }
 
         [NUnit.Framework.Test]
-        public virtual void GetBasicOCSPRespNullTest() {
-            OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
-            OcspClientBouncyCastle ocspClientBouncyCastle = new OcspClientBouncyCastle(ocspVerifier);
-            BasicOcspResp basicOCSPResp = ocspClientBouncyCastle.GetBasicOCSPResp(checkCert, null, null);
+        public virtual void GetBasicOcspRespNullTest() {
+            OcspClientBouncyCastle ocspClientBouncyCastle = new OcspClientBouncyCastle(null);
+            BasicOcspResp basicOCSPResp = ocspClientBouncyCastle.GetBasicOCSPResp(checkCert, null, ocspServiceUrl);
             NUnit.Framework.Assert.IsNull(basicOCSPResp);
         }
 
@@ -105,26 +151,64 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void GetEncodedTest() {
             OcspClientBouncyCastle ocspClientBouncyCastle = CreateOcspClient();
-            byte[] encoded = ocspClientBouncyCastle.GetEncoded(checkCert, rootCert, null);
+            byte[] encoded = ocspClientBouncyCastle.GetEncoded(checkCert, rootCert, ocspServiceUrl);
             NUnit.Framework.Assert.IsNotNull(encoded);
             NUnit.Framework.Assert.IsTrue(encoded.Length > 0);
         }
 
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.OCSP_STATUS_IS_REVOKED)]
+        public virtual void OcspStatusIsRevokedTest() {
+            RevokedStatus status = new RevokedStatus(DateTimeUtil.GetCurrentUtcTime().AddDays(-20), Org.BouncyCastle.Asn1.Ocsp.OcspResponseStatus.Successful
+                );
+            TestOcspResponseBuilder responseBuilder = CreateBuilder(status);
+            OcspClientBouncyCastle ocspClientBouncyCastle = CreateTestOcspClient(responseBuilder);
+            byte[] encoded = ocspClientBouncyCastle.GetEncoded(checkCert, rootCert, ocspServiceUrl);
+            NUnit.Framework.Assert.IsNull(encoded);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.OCSP_STATUS_IS_UNKNOWN)]
+        public virtual void OcspStatusIsUnknownTest() {
+            UnknownStatus status = new UnknownStatus();
+            TestOcspResponseBuilder responseBuilder = CreateBuilder(status);
+            OcspClientBouncyCastle ocspClientBouncyCastle = CreateTestOcspClient(responseBuilder);
+            byte[] encoded = ocspClientBouncyCastle.GetEncoded(checkCert, rootCert, ocspServiceUrl);
+            NUnit.Framework.Assert.IsNull(encoded);
+        }
+
         private static OcspClientBouncyCastle CreateOcspClient() {
+            return CreateOcspClient(builder);
+        }
+
+        private static OcspClientBouncyCastle CreateOcspClient(TestOcspResponseBuilder builder) {
             OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
-            return new OcspClientBouncyCastleTest.TestOcspClientBouncyCastle(ocspVerifier);
+            return new OcspClientBouncyCastleTest.TestOcspClientBouncyCastle(ocspVerifier, builder);
+        }
+
+        private static OcspClientBouncyCastle CreateTestOcspClient(TestOcspResponseBuilder responseBuilder) {
+            return CreateOcspClient(responseBuilder);
+        }
+
+        private static TestOcspResponseBuilder CreateBuilder(CertificateStatus status) {
+            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(rootOcspCert, password)[0];
+            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(rootOcspCert, password, password);
+            return new TestOcspResponseBuilder(caCert, caPrivateKey, status);
         }
 
         private sealed class TestOcspClientBouncyCastle : OcspClientBouncyCastle {
-            public TestOcspClientBouncyCastle(OCSPVerifier verifier)
+            private static TestOcspResponseBuilder testOcspBuilder;
+
+            public TestOcspClientBouncyCastle(OCSPVerifier verifier, TestOcspResponseBuilder testBuilder)
                 : base(verifier) {
+                testOcspBuilder = testBuilder;
             }
 
             internal override OcspResp GetOcspResponse(X509Certificate chCert, X509Certificate rCert, String url) {
                 try {
                     CertificateID id = SignTestPortUtil.GenerateCertificateId(rootCert, checkCert.SerialNumber, Org.BouncyCastle.Ocsp.CertificateID.HashSha1
                         );
-                    BasicOcspResp basicOCSPResp = builder.MakeOcspResponseObject(SignTestPortUtil.GenerateOcspRequestWithNonce
+                    BasicOcspResp basicOCSPResp = testOcspBuilder.MakeOcspResponseObject(SignTestPortUtil.GenerateOcspRequestWithNonce
                         (id).GetEncoded());
                     return new OCSPRespGenerator().Generate(Org.BouncyCastle.Asn1.Ocsp.OcspResponseStatus.Successful, basicOCSPResp
                         );
