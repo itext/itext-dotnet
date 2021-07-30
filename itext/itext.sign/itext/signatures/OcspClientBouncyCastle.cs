@@ -60,8 +60,8 @@ namespace iText.Signatures {
         private readonly OCSPVerifier verifier;
 
         /// <summary>
-        /// Create
-        /// <c>OcspClient</c>
+        /// Creates
+        /// <c>OcspClient</c>.
         /// </summary>
         /// <param name="verifier">will be used for response verification.</param>
         /// <seealso cref="OCSPVerifier"/>
