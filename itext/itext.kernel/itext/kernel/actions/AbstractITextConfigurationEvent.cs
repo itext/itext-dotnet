@@ -81,6 +81,12 @@ namespace iText.Kernel.Actions {
             ProductEventHandler.INSTANCE.AddEvent(id, @event);
         }
 
+        /// <summary>Registers internal namespace.</summary>
+        /// <param name="namespace">is the namespace to register</param>
+        protected internal virtual void RegisterInternalNamespace(String @namespace) {
+            AbstractITextEvent.RegisterNamespace(@namespace);
+        }
+
         /// <summary>Method defines the logic of action processing.</summary>
         protected internal abstract void DoAction();
     }

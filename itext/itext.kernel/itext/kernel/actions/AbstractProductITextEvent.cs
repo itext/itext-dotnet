@@ -64,7 +64,7 @@ namespace iText.Kernel.Actions {
         /// <summary>Gets a name of product which generated the event.</summary>
         /// <returns>product name</returns>
         public virtual String GetProductName() {
-            return productData.GetProductName();
+            return GetProductData().GetProductName();
         }
     }
 }

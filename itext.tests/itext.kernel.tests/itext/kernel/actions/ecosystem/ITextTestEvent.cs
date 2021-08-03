@@ -31,19 +31,16 @@ namespace iText.Kernel.Actions.Ecosystem {
     public class ITextTestEvent : AbstractProductProcessITextEvent {
         private readonly String eventType;
 
-        private readonly String productName;
-
         public ITextTestEvent(SequenceId sequenceId, IMetaInfo metaInfo, String eventType, String productName)
-            : base(sequenceId, new ProductData("", "", "", 2000, 2100), metaInfo, EventConfirmationType.ON_CLOSE) {
+            : base(sequenceId, new ProductData("", productName, "", 2000, 2100), metaInfo, EventConfirmationType.ON_CLOSE
+                ) {
             this.eventType = eventType;
-            this.productName = productName;
         }
 
         public ITextTestEvent(SequenceId sequenceId, ProductData productData, IMetaInfo metaInfo, String eventType
             , EventConfirmationType confirmationType)
             : base(sequenceId, productData, metaInfo, confirmationType) {
             this.eventType = eventType;
-            this.productName = productData.GetProductName();
         }
 
         public ITextTestEvent(SequenceId sequenceId, ProductData productData, IMetaInfo metaInfo, String eventType
@@ -53,10 +50,6 @@ namespace iText.Kernel.Actions.Ecosystem {
 
         public override String GetEventType() {
             return eventType;
-        }
-
-        public override String GetProductName() {
-            return productName;
         }
     }
 }

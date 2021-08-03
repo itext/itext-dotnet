@@ -62,10 +62,6 @@ namespace iText.Kernel.Counter.Event {
             return new iText.Kernel.Counter.Event.ITextCoreEvent(sequenceId, metaInfo, PROCESS_PDF, confirmationType);
         }
 
-        public override String GetProductName() {
-            return ProductNameConstant.ITEXT_CORE;
-        }
-
         public override String GetEventType() {
             return eventType;
         }

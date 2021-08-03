@@ -57,11 +57,8 @@ namespace iText.Kernel.Counter {
 
         static ContextManager() {
             iText.Kernel.Counter.ContextManager local = new iText.Kernel.Counter.ContextManager();
-            local.RegisterGenericContextForProducts(JavaUtil.ArraysAsList(NamespaceConstant.CORE_IO, NamespaceConstant
-                .CORE_KERNEL, NamespaceConstant.CORE_LAYOUT, NamespaceConstant.CORE_BARCODES, NamespaceConstant.CORE_PDFA
-                , NamespaceConstant.CORE_SIGN, NamespaceConstant.CORE_FORMS, NamespaceConstant.CORE_SXP, NamespaceConstant
-                .CORE_SVG), JavaCollectionsUtil.SingletonList(NamespaceConstant.ITEXT), JavaCollectionsUtil.Singleton(
-                ProductNameConstant.ITEXT_CORE));
+            local.RegisterGenericContextForProducts(NamespaceConstant.ITEXT_CORE_NAMESPACES, JavaCollectionsUtil.SingletonList
+                (NamespaceConstant.ITEXT), JavaCollectionsUtil.Singleton(ProductNameConstant.ITEXT_CORE));
             local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_DEBUG), JavaCollectionsUtil
                 .SingletonList(NamespaceConstant.PDF_DEBUG), JavaCollectionsUtil.EmptyList<String>());
             local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_HTML), JavaCollectionsUtil

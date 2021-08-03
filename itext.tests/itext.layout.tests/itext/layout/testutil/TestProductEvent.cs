@@ -49,16 +49,11 @@ using iText.Kernel.Actions.Sequence;
 namespace iText.Layout.Testutil {
     public class TestProductEvent : AbstractProductProcessITextEvent {
         public TestProductEvent(SequenceId sequenceId)
-            : base(sequenceId, new ProductData("itext-core", "layout", "", 1998, 2100), null, EventConfirmationType.ON_CLOSE
-                ) {
+            : base(sequenceId, ITextCoreProductData.GetInstance(), null, EventConfirmationType.ON_CLOSE) {
         }
 
         public override String GetEventType() {
             return "testEvent";
-        }
-
-        public override String GetProductName() {
-            return GetProductData().GetPublicProductName();
         }
     }
 }

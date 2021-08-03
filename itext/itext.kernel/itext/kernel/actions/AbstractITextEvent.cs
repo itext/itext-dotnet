@@ -21,20 +21,39 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using iText.Kernel.Counter;
 
 namespace iText.Kernel.Actions {
     /// <summary>Abstract class which defines events only for internal usage.</summary>
     public abstract class AbstractITextEvent : IBaseEvent {
-        private const String INTERNAL_PACKAGE = "iText";
-
         private const String ONLY_FOR_INTERNAL_USE = "AbstractITextEvent is only for internal usage.";
+
+        private static readonly IDictionary<String, Object> INTERNAL_PACKAGES = new ConcurrentDictionary<String, Object
+            >();
+
+        static AbstractITextEvent() {
+            RegisterNamespace(NamespaceConstant.ITEXT);
+        }
 
         /// <summary>Creates an instance of abstract iText event.</summary>
         /// <remarks>Creates an instance of abstract iText event. Only for internal usage.</remarks>
         public AbstractITextEvent() {
-            if (!this.GetType().FullName.StartsWith(INTERNAL_PACKAGE)) {
+            bool isUnknown = true;
+            foreach (String @namespace in INTERNAL_PACKAGES.Keys) {
+                if (this.GetType().FullName.StartsWith(@namespace)) {
+                    isUnknown = false;
+                    break;
+                }
+            }
+            if (isUnknown) {
                 throw new NotSupportedException(ONLY_FOR_INTERNAL_USE);
             }
+        }
+
+        internal static void RegisterNamespace(String @namespace) {
+            INTERNAL_PACKAGES.Put(@namespace + ".", new Object());
         }
     }
 }

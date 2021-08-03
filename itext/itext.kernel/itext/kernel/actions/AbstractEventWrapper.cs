@@ -72,12 +72,12 @@ namespace iText.Kernel.Actions {
             return @event;
         }
 
-        public override String GetEventType() {
-            return @event.GetEventType();
+        public override Type GetClassFromContext() {
+            return GetEvent().GetClassFromContext();
         }
 
-        public override String GetProductName() {
-            return @event.GetProductName();
+        public override String GetEventType() {
+            return GetEvent().GetEventType();
         }
     }
 }

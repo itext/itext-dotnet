@@ -42,9 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using iText.IO.Util;
 
 namespace iText.Kernel.Counter {
-    public class NamespaceConstant {
+    public sealed class NamespaceConstant {
         public const String ITEXT = "iText";
 
         //Core
@@ -76,7 +78,16 @@ namespace iText.Kernel.Counter {
         public const String PDF_SWEEP = ITEXT + ".PdfCleanup";
 		
 		public const String PDF_OCR = ITEXT + ".Pdfocr";
-
+        
         public const String PDF_OCR_TESSERACT4 = PDF_OCR + ".Tesseract4";
+
+        public static readonly IList<String> ITEXT_CORE_NAMESPACES = JavaCollectionsUtil.UnmodifiableList(JavaUtil.ArraysAsList
+            (iText.Kernel.Counter.NamespaceConstant.CORE_IO, iText.Kernel.Counter.NamespaceConstant.CORE_KERNEL, iText.Kernel.Counter.NamespaceConstant
+            .CORE_LAYOUT, iText.Kernel.Counter.NamespaceConstant.CORE_BARCODES, iText.Kernel.Counter.NamespaceConstant
+            .CORE_PDFA, iText.Kernel.Counter.NamespaceConstant.CORE_SIGN, iText.Kernel.Counter.NamespaceConstant.CORE_FORMS
+            , iText.Kernel.Counter.NamespaceConstant.CORE_SXP, iText.Kernel.Counter.NamespaceConstant.CORE_SVG));
+
+        private NamespaceConstant() {
+        }
     }
 }
