@@ -72,6 +72,10 @@ namespace iText.Layout {
             sb[ind] = ch;
         }
 
+        public static byte[] GetBytes(this String str, Encoding encoding) {
+            return encoding.GetBytes(str);
+        }
+
         public static TValue JRemove<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {
             TValue value;
             dictionary.TryGetValue(key, out value);
