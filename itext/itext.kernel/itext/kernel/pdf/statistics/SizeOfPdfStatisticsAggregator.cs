@@ -65,8 +65,7 @@ namespace iText.Kernel.Pdf.Statistics {
 
         private readonly Object Lock = new Object();
 
-        private readonly IDictionary<String, AtomicLong> numberOfDocuments = new LinkedDictionary<String, AtomicLong
-            >();
+        private readonly IDictionary<String, long?> numberOfDocuments = new LinkedDictionary<String, long?>();
 
         /// <summary>Aggregates size of the PDF document from the provided event.</summary>
         /// <param name="event">
@@ -87,13 +86,9 @@ namespace iText.Kernel.Pdf.Statistics {
                 }
             }
             lock (Lock) {
-                AtomicLong documentsOfThisRange = numberOfDocuments.Get(range);
-                if (documentsOfThisRange == null) {
-                    numberOfDocuments.Put(range, new AtomicLong(1));
-                }
-                else {
-                    documentsOfThisRange.IncrementAndGet();
-                }
+                long? documentsOfThisRange = numberOfDocuments.Get(range);
+                long? currentValue = documentsOfThisRange == null ? 1L : documentsOfThisRange.Value + 1L;
+                numberOfDocuments.Put(range, currentValue);
             }
         }
 
@@ -118,11 +113,15 @@ namespace iText.Kernel.Pdf.Statistics {
             if (!(aggregator is SizeOfPdfStatisticsAggregator)) {
                 return;
             }
-            IDictionary<String, AtomicLong> numberOfDocuments = ((SizeOfPdfStatisticsAggregator)aggregator).numberOfDocuments;
+            IDictionary<String, long?> numberOfDocuments = ((SizeOfPdfStatisticsAggregator)aggregator).numberOfDocuments;
             lock (Lock) {
                 MapUtil.Merge(this.numberOfDocuments, numberOfDocuments, (el1, el2) => {
-                    el1.Add(el2.Get());
-                    return el1;
+                    if (el2 == null) {
+                        return el1;
+                    }
+                    else {
+                        return el1 + el2;
+                    }
                 }
                 );
             }

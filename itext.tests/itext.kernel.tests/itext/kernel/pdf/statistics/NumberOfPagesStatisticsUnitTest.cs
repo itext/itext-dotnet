@@ -61,10 +61,10 @@ namespace iText.Kernel.Pdf.Statistics {
             NumberOfPagesStatisticsAggregator aggregator = new NumberOfPagesStatisticsAggregator();
             aggregator.Aggregate(new NumberOfPagesStatisticsEvent(0, ITextCoreProductData.GetInstance()));
             Object aggregation = aggregator.RetrieveAggregation();
-            IDictionary<String, AtomicLong> castedAggregation = (IDictionary<String, AtomicLong>)aggregation;
+            IDictionary<String, long?> castedAggregation = (IDictionary<String, long?>)aggregation;
             NUnit.Framework.Assert.AreEqual(1, castedAggregation.Count);
-            long numberOfPages = castedAggregation.Get("1").Get();
-            NUnit.Framework.Assert.AreEqual(1, numberOfPages);
+            long? numberOfPages = castedAggregation.Get("1");
+            NUnit.Framework.Assert.AreEqual(1L, numberOfPages);
         }
 
         [NUnit.Framework.Test]
@@ -96,24 +96,24 @@ namespace iText.Kernel.Pdf.Statistics {
             @event = new NumberOfPagesStatisticsEvent(1, ITextCoreProductData.GetInstance());
             aggregator.Aggregate(@event);
             Object aggregation = aggregator.RetrieveAggregation();
-            IDictionary<String, AtomicLong> castedAggregation = (IDictionary<String, AtomicLong>)aggregation;
+            IDictionary<String, long?> castedAggregation = (IDictionary<String, long?>)aggregation;
             NUnit.Framework.Assert.AreEqual(4, castedAggregation.Count);
-            long numberOfPages = castedAggregation.Get("1").Get();
-            NUnit.Framework.Assert.AreEqual(1, numberOfPages);
-            numberOfPages = castedAggregation.Get("2-10").Get();
-            NUnit.Framework.Assert.AreEqual(4, numberOfPages);
+            long? numberOfPages = castedAggregation.Get("1");
+            NUnit.Framework.Assert.AreEqual(1L, numberOfPages);
+            numberOfPages = castedAggregation.Get("2-10");
+            NUnit.Framework.Assert.AreEqual(4L, numberOfPages);
             NUnit.Framework.Assert.IsNull(castedAggregation.Get("11-100"));
-            numberOfPages = castedAggregation.Get("101-1000").Get();
-            NUnit.Framework.Assert.AreEqual(2, numberOfPages);
-            numberOfPages = castedAggregation.Get("1001+").Get();
-            NUnit.Framework.Assert.AreEqual(1, numberOfPages);
+            numberOfPages = castedAggregation.Get("101-1000");
+            NUnit.Framework.Assert.AreEqual(2L, numberOfPages);
+            numberOfPages = castedAggregation.Get("1001+");
+            NUnit.Framework.Assert.AreEqual(1L, numberOfPages);
         }
 
         [NUnit.Framework.Test]
         public virtual void NothingAggregatedTest() {
             NumberOfPagesStatisticsAggregator aggregator = new NumberOfPagesStatisticsAggregator();
             Object aggregation = aggregator.RetrieveAggregation();
-            IDictionary<String, AtomicLong> castedAggregation = (IDictionary<String, AtomicLong>)aggregation;
+            IDictionary<String, long?> castedAggregation = (IDictionary<String, long?>)aggregation;
             NUnit.Framework.Assert.IsTrue(castedAggregation.IsEmpty());
         }
 
@@ -122,7 +122,7 @@ namespace iText.Kernel.Pdf.Statistics {
             NumberOfPagesStatisticsAggregator aggregator = new NumberOfPagesStatisticsAggregator();
             aggregator.Aggregate(new SizeOfPdfStatisticsEvent(200, ITextCoreProductData.GetInstance()));
             Object aggregation = aggregator.RetrieveAggregation();
-            IDictionary<String, AtomicLong> castedAggregation = (IDictionary<String, AtomicLong>)aggregation;
+            IDictionary<String, long?> castedAggregation = (IDictionary<String, long?>)aggregation;
             NUnit.Framework.Assert.IsTrue(castedAggregation.IsEmpty());
         }
 
@@ -149,17 +149,17 @@ namespace iText.Kernel.Pdf.Statistics {
             aggregator2.Aggregate(@event);
             aggregator1.Merge(aggregator2);
             Object aggregation = aggregator1.RetrieveAggregation();
-            IDictionary<String, AtomicLong> castedAggregation = (IDictionary<String, AtomicLong>)aggregation;
+            IDictionary<String, long?> castedAggregation = (IDictionary<String, long?>)aggregation;
             NUnit.Framework.Assert.AreEqual(4, castedAggregation.Count);
-            long numberOfPages = castedAggregation.Get("1").Get();
-            NUnit.Framework.Assert.AreEqual(1, numberOfPages);
-            numberOfPages = castedAggregation.Get("2-10").Get();
-            NUnit.Framework.Assert.AreEqual(4, numberOfPages);
+            long? numberOfPages = castedAggregation.Get("1");
+            NUnit.Framework.Assert.AreEqual(1L, numberOfPages);
+            numberOfPages = castedAggregation.Get("2-10");
+            NUnit.Framework.Assert.AreEqual(4L, numberOfPages);
             NUnit.Framework.Assert.IsNull(castedAggregation.Get("11-100"));
-            numberOfPages = castedAggregation.Get("101-1000").Get();
-            NUnit.Framework.Assert.AreEqual(2, numberOfPages);
-            numberOfPages = castedAggregation.Get("1001+").Get();
-            NUnit.Framework.Assert.AreEqual(1, numberOfPages);
+            numberOfPages = castedAggregation.Get("101-1000");
+            NUnit.Framework.Assert.AreEqual(2L, numberOfPages);
+            numberOfPages = castedAggregation.Get("1001+");
+            NUnit.Framework.Assert.AreEqual(1L, numberOfPages);
         }
     }
 }
