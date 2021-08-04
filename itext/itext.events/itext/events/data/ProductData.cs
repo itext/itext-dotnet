@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 
-namespace iText.Kernel.Actions.Data {
+namespace iText.Events.Data {
     /// <summary>Class is used to describe used product information.</summary>
     public sealed class ProductData {
         private readonly String publicProductName;

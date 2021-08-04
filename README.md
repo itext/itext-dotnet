@@ -14,6 +14,7 @@ The **iText 7 Core/Community** release contains:
 - ```sign.dll```: use this if you need support for digital signatures
 - ```styled-xml-parser.dll```: use this if you need support for SVG or html2pdf
 - ```svg.dll```: SVG support
+- ```events.dll```: events handling mechanism
 
 The **iText 7 Community** source code is hosted on [Github][github], where you can also [download the latest releases][latest].
 

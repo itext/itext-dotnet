@@ -21,12 +21,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Events.Data;
 using iText.Kernel.Actions;
 
 namespace iText.Kernel.Actions.Data {
     /// <summary>
     /// Stores an instance of
-    /// <see cref="ProductData"/>
+    /// <see cref="iText.Events.Data.ProductData"/>
     /// related to iText core module.
     /// </summary>
     public class ITextCoreProductData {
@@ -43,7 +44,7 @@ namespace iText.Kernel.Actions.Data {
 
         /// <summary>
         /// Getter for an instance of
-        /// <see cref="ProductData"/>
+        /// <see cref="iText.Events.Data.ProductData"/>
         /// related to iText core module.
         /// </summary>
         /// <returns>iText core product description</returns>

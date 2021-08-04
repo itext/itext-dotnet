@@ -21,17 +21,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel.Actions.Data;
+using iText.Events.Data;
 
 namespace iText.Kernel.Actions {
     /// <summary>
     /// Abstract class which defines general product events by encapsulating
-    /// <see cref="iText.Kernel.Actions.Data.ProductData"/>
+    /// <see cref="iText.Events.Data.ProductData"/>
     /// of the product which generated event.
     /// </summary>
     /// <remarks>
     /// Abstract class which defines general product events by encapsulating
-    /// <see cref="iText.Kernel.Actions.Data.ProductData"/>
+    /// <see cref="iText.Events.Data.ProductData"/>
     /// of the product which generated event. Only for internal usage.
     /// </remarks>
     public abstract class AbstractProductITextEvent : AbstractITextEvent {

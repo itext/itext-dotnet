@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Events.Data;
 using iText.IO.Util;
 using iText.Kernel.Actions;
-using iText.Kernel.Actions.Data;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf.Statistics {
@@ -38,7 +38,7 @@ namespace iText.Kernel.Pdf.Statistics {
 
         /// <summary>
         /// Creates an instance of this class based on the
-        /// <see cref="iText.Kernel.Actions.Data.ProductData"/>
+        /// <see cref="iText.Events.Data.ProductData"/>
         /// and the number of pages.
         /// </summary>
         /// <param name="numberOfPages">the number of pages in the PDF document during the processing of which the event was sent

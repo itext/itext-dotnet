@@ -23,8 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Common.Logging;
+using iText.Events.Data;
 using iText.IO.Util;
-using iText.Kernel.Actions.Data;
 using iText.Kernel.Logs;
 
 namespace iText.Kernel.Actions {
