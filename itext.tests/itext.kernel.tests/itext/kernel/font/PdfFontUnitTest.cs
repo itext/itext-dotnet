@@ -199,12 +199,6 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        public virtual void GetFontMatrixTest() {
-            PdfFontUnitTest.TestFont font = new PdfFontUnitTest.TestFont();
-            NUnit.Framework.Assert.AreEqual(PdfFont.DEFAULT_FONT_MATRIX, font.GetFontMatrix());
-        }
-
-        [NUnit.Framework.Test]
         public virtual void GetWidthUnicodeTest() {
             PdfFontUnitTest.TestFont font = new PdfFontUnitTest.TestFont();
             NUnit.Framework.Assert.AreEqual(PdfFontUnitTest.TestFont.SIMPLE_GLYPH_WIDTH, font.GetWidth(PdfFontUnitTest.TestFont

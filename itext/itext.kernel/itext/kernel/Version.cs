@@ -94,11 +94,6 @@ namespace iText.Kernel {
 
         private bool expired;
 
-        [System.ObsoleteAttribute(@"Use GetInstance() instead. Will be removed in next major release.")]
-        public Version() {
-            this.info = new VersionInfo(iTextProductName, release, producerLine, null);
-        }
-
         internal Version(VersionInfo info, bool expired) {
             this.info = info;
             this.expired = expired;

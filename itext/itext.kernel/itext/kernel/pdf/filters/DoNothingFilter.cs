@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {
@@ -53,14 +52,6 @@ namespace iText.Kernel.Pdf.Filters {
             ) {
             lastFilterName = filterName;
             return b;
-        }
-
-        /// <summary>Returns the last decoded filter name.</summary>
-        /// <returns>the last decoded filter name.</returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. Used as a crutch iniText.Kernel.Pdf.Xobject.PdfImageXObject.GetImageBytes() implementation. Now this method does not needed. If the user has been used it, then the same approach can be reached with nested class."
-            )]
-        public virtual PdfName GetLastFilterName() {
-            return lastFilterName;
         }
     }
 }

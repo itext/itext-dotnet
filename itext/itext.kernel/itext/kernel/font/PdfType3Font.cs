@@ -95,7 +95,8 @@ namespace iText.Kernel.Font {
 
         private const int FONT_BBOX_URY = 3;
 
-        [Obsolete]
+        private static readonly double[] DEFAULT_FONT_MATRIX = new double[] { 0.001, 0, 0, 0.001, 0, 0 };
+
         private double[] fontMatrix = DEFAULT_FONT_MATRIX;
 
         /// <summary>Used to normalize font metrics expressed in glyph space units.</summary>
@@ -104,6 +105,12 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfType3Font"/>.
         /// </remarks>
         private double glyphSpaceNormalizationFactor;
+
+        /// <summary>Gets the transformation matrix that defines relation between text and glyph spaces.</summary>
+        /// <returns>the font matrix</returns>
+        private double[] GetFontMatrix() {
+            return this.fontMatrix;
+        }
 
         /// <summary>Creates a Type 3 font.</summary>
         /// <param name="colorized">defines whether the glyph color is specified in the glyph descriptions in the font.
@@ -243,21 +250,6 @@ namespace iText.Kernel.Font {
             return true;
         }
 
-        public override double[] GetFontMatrix() {
-            return this.fontMatrix;
-        }
-
-        /// <summary>Sets font matrix, mapping glyph space to text space.</summary>
-        /// <remarks>Sets font matrix, mapping glyph space to text space. Must be identity matrix divided by 1000.</remarks>
-        /// <param name="fontMatrix">
-        /// an array of six numbers specifying the font matrix,
-        /// mapping glyph space to text space.
-        /// </param>
-        [System.ObsoleteAttribute(@"will be made internal in next major release")]
-        public virtual void SetFontMatrix(double[] fontMatrix) {
-            this.fontMatrix = fontMatrix;
-        }
-
         /// <summary>Gets count of glyphs in Type 3 font.</summary>
         /// <returns>number of glyphs.</returns>
         public virtual int GetNumberOfGlyphs() {
@@ -394,10 +386,6 @@ namespace iText.Kernel.Font {
 
         protected internal virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
-        }
-
-        protected internal override double GetGlyphWidth(Glyph glyph) {
-            return glyph != null ? glyph.GetWidth() / this.GetGlyphSpaceNormalizationFactor() : 0;
         }
 
         internal double GetGlyphSpaceNormalizationFactor() {
