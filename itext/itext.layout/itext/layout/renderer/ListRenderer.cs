@@ -436,19 +436,24 @@ namespace iText.Layout.Renderer {
                 listItemNum = 0;
                 foreach (IRenderer childRenderer in childRenderers) {
                     childRenderer.SetParent(this);
-                    childRenderer.DeleteOwnProperty(Property.MARGIN_LEFT);
-                    UnitValue marginLeftUV = childRenderer.GetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(0f));
-                    if (!marginLeftUV.IsPointValue()) {
+                    // Symbol indent's value should be summed with the margin's value
+                    bool isRtl = BaseDirection.RIGHT_TO_LEFT == childRenderer.GetProperty<BaseDirection?>(Property.BASE_DIRECTION
+                        );
+                    int marginToSet = isRtl ? Property.MARGIN_RIGHT : Property.MARGIN_LEFT;
+                    childRenderer.DeleteOwnProperty(marginToSet);
+                    UnitValue marginToSetUV = childRenderer.GetProperty<UnitValue>(marginToSet, UnitValue.CreatePointValue(0f)
+                        );
+                    if (!marginToSetUV.IsPointValue()) {
                         ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListRenderer));
-                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                            .MARGIN_LEFT));
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, marginToSet
+                            ));
                     }
-                    float calculatedMargin = marginLeftUV.GetValue();
+                    float calculatedMargin = marginToSetUV.GetValue();
                     if ((ListSymbolPosition)GetListItemOrListProperty(childRenderer, this, Property.LIST_SYMBOL_POSITION) == ListSymbolPosition
                         .DEFAULT) {
                         calculatedMargin += maxSymbolWidth + (float)(symbolIndent != null ? symbolIndent : 0f);
                     }
-                    childRenderer.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(calculatedMargin));
+                    childRenderer.SetProperty(marginToSet, UnitValue.CreatePointValue(calculatedMargin));
                     IRenderer symbolRenderer = symbolRenderers[listItemNum++];
                     ((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer, maxSymbolWidth);
                     if (symbolRenderer != null) {
