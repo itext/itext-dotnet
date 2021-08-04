@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
