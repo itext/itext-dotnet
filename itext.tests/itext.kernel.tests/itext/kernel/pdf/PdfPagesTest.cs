@@ -68,8 +68,6 @@ namespace iText.Kernel.Pdf {
 
         private static readonly PdfName PageNum = new PdfName("PageNum");
 
-        private static readonly PdfName PageNum5 = new PdfName("PageNum");
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Setup() {
             CreateDestinationFolder(destinationFolder);
@@ -603,6 +601,26 @@ namespace iText.Kernel.Pdf {
             FindAndAssertNullPages(pdfDocument, nullPages);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void TestPageTreeGenerationWhenFirstPdfPagesHasOnePageOnly() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            int totalPageCount = PdfPagesTree.DEFAULT_LEAF_SIZE + 4;
+            for (int i = 0; i < totalPageCount; i++) {
+                pdfDocument.AddNewPage();
+            }
+            NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetCatalog().GetPageTree().GetParents().Count);
+            NUnit.Framework.Assert.AreEqual(PdfPagesTree.DEFAULT_LEAF_SIZE, pdfDocument.GetCatalog().GetPageTree().GetParents
+                ()[0].GetCount());
+            // Leave only one page in the first pages tree
+            for (int i = PdfPagesTree.DEFAULT_LEAF_SIZE - 1; i >= 1; i--) {
+                pdfDocument.RemovePage(i);
+            }
+            NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetCatalog().GetPageTree().GetParents().Count);
+            NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetCatalog().GetPageTree().GetParents()[0].GetCount());
+            // TODO DEVSIX-5575 remove expected exception and add proper assertions
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => pdfDocument.Close());
+        }
+
         private static void FindAndAssertNullPages(PdfDocument pdfDocument, ICollection<int> nullPages) {
             foreach (int? e in nullPages) {
                 NUnit.Framework.Assert.IsNull(pdfDocument.GetPage((int)e));
@@ -626,7 +644,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 1; i <= pdfDocument.GetNumberOfPages(); i++) {
                 PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.IsNotNull(page);
-                PdfNumber number = page.GetAsNumber(PageNum5);
+                PdfNumber number = page.GetAsNumber(PageNum);
                 NUnit.Framework.Assert.AreEqual(i, number.IntValue(), "Page number");
             }
             NUnit.Framework.Assert.AreEqual(numOfPages, pdfDocument.GetNumberOfPages(), "Number of pages");

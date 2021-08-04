@@ -55,7 +55,9 @@ namespace iText.Kernel.Pdf {
     /// tree
     /// </summary>
     internal class PdfPagesTree {
-        private readonly int leafSize = 10;
+        internal const int DEFAULT_LEAF_SIZE = 10;
+
+        private readonly int leafSize = DEFAULT_LEAF_SIZE;
 
         private IList<PdfIndirectReference> pageRefs;
 
@@ -326,7 +328,6 @@ namespace iText.Kernel.Pdf {
                                 dynamicLeafSize = leafSize;
                             }
                         }
-                        System.Diagnostics.Debug.Assert(current != null);
                         current.AddPages(pages);
                     }
                     parents = nextParents;
