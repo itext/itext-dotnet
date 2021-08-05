@@ -119,9 +119,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>Constructs a new PdfReader.</summary>
         /// <param name="byteSource">source of bytes for the reader</param>
         /// <param name="properties">properties of the created reader</param>
-        public PdfReader(IRandomAccessSource byteSource, ReaderProperties properties) {
-            this.properties = properties;
-            this.tokens = GetOffsetTokeniser(byteSource);
+        public PdfReader(IRandomAccessSource byteSource, ReaderProperties properties)
+            : this(byteSource, properties, false) {
         }
 
         /// <summary>Reads and parses a PDF document.</summary>
@@ -133,7 +132,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <param name="properties">properties of the created reader</param>
         public PdfReader(Stream @is, ReaderProperties properties)
-            : this(new RandomAccessSourceFactory().CreateSource(@is), properties) {
+            : this(new RandomAccessSourceFactory().CreateSource(@is), properties, true) {
         }
 
         /// <summary>Reads and parses a PDF document.</summary>
@@ -163,13 +162,18 @@ namespace iText.Kernel.Pdf {
         /// <param name="filename">the file name of the document</param>
         /// <param name="properties">properties of the created reader</param>
         public PdfReader(String filename, ReaderProperties properties)
-            : this(new RandomAccessSourceFactory().SetForceRead(false).CreateBestSource(filename), properties) {
+            : this(new RandomAccessSourceFactory().SetForceRead(false).CreateBestSource(filename), properties, true) {
         }
 
         /// <summary>Reads and parses a PDF document.</summary>
         /// <param name="filename">the file name of the document</param>
         public PdfReader(String filename)
             : this(filename, new ReaderProperties()) {
+        }
+
+        internal PdfReader(IRandomAccessSource byteSource, ReaderProperties properties, bool closeStream) {
+            this.properties = properties;
+            this.tokens = GetOffsetTokeniser(byteSource, closeStream);
         }
 
         /// <summary>
@@ -1446,7 +1450,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="byteSource">the source to check</param>
         /// <returns>a tokeniser that is guaranteed to start at the PDF header</returns>
-        private static PdfTokenizer GetOffsetTokeniser(IRandomAccessSource byteSource) {
+        private static PdfTokenizer GetOffsetTokeniser(IRandomAccessSource byteSource, bool closeStream) {
             iText.IO.IOException possibleException = null;
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(byteSource));
             int offset;
@@ -1458,7 +1462,7 @@ namespace iText.Kernel.Pdf {
                 throw possibleException;
             }
             finally {
-                if (possibleException != null) {
+                if (possibleException != null && closeStream) {
                     tok.Close();
                 }
             }

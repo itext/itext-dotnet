@@ -627,17 +627,6 @@ namespace iText.Kernel.Font {
             return cmapEncoding;
         }
 
-        /// <summary>Creates a ToUnicode CMap to allow copy and paste from Acrobat.</summary>
-        /// <param name="metrics">
-        /// metrics[0] contains the glyph index and metrics[2]
-        /// contains the Unicode code
-        /// </param>
-        /// <returns>the stream representing this CMap or <c>null</c></returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2. Use GetToUnicode() instead")]
-        public virtual PdfStream GetToUnicode(Object[] metrics) {
-            return GetToUnicode();
-        }
-
         protected internal override PdfDictionary GetFontDescriptor(String fontName) {
             PdfDictionary fontDescriptor = new PdfDictionary();
             MakeObjectIndirect(fontDescriptor);
@@ -657,18 +646,6 @@ namespace iText.Kernel.Font {
                 fontDescriptor.Put(PdfName.Style, styleDictionary);
             }
             return fontDescriptor;
-        }
-
-        /// <summary>Generates the CIDFontType2 dictionary.</summary>
-        /// <param name="ttf">a font program of this font instance</param>
-        /// <param name="fontDescriptor">the font descriptor dictionary</param>
-        /// <param name="fontName">a name of the font</param>
-        /// <param name="metrics">the horizontal width metrics</param>
-        /// <returns>fully initialized CIDFont</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2")]
-        protected internal virtual PdfDictionary GetCidFontType2(TrueTypeFont ttf, PdfDictionary fontDescriptor, String
-             fontName, int[][] metrics) {
-            return GetCidFont(fontDescriptor, fontName, ttf != null && !ttf.IsCff());
         }
 
         private void ConvertToBytes(Glyph glyph, ByteBuffer result) {
@@ -783,18 +760,6 @@ namespace iText.Kernel.Font {
                     throw new InvalidOperationException("Unsupported CID Font");
                 }
             }
-        }
-
-        /// <summary>Generates the CIDFontType2 dictionary.</summary>
-        /// <param name="ttf">a font program of this font instance</param>
-        /// <param name="fontDescriptor">the indirect reference to the font descriptor</param>
-        /// <param name="fontName">a name of the font</param>
-        /// <param name="glyphIds">glyph ids used in from the font</param>
-        /// <returns>fully initialized CIDFont</returns>
-        [System.ObsoleteAttribute(@"use GetCidFont(iText.Kernel.Pdf.PdfDictionary, System.String, bool) instead.")]
-        protected internal virtual PdfDictionary GetCidFontType2(TrueTypeFont ttf, PdfDictionary fontDescriptor, String
-             fontName, int[] glyphIds) {
-            return GetCidFont(fontDescriptor, fontName, ttf != null && !ttf.IsCff());
         }
 
         /// <summary>Generates the CIDFontType2 dictionary.</summary>

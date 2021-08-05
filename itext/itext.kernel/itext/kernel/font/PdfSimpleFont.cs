@@ -517,14 +517,5 @@ namespace iText.Kernel.Font {
         protected internal virtual void SetFontProgram(T fontProgram) {
             this.fontProgram = fontProgram;
         }
-
-        /// <summary>Gets glyph width which us ready to be written to the output file.</summary>
-        /// <param name="glyph">the glyph which widths is required to be written to the output file</param>
-        /// <returns>glyph width in glyph-space</returns>
-        [System.ObsoleteAttribute(@"This method was introduced to allow overriding of widths array entry writing to output file. It's now replaced by more specific PdfSimpleFont{T}.BuildWidthsArray(int, int) in order to avoid confusion between this method and iText.IO.Font.Otf.Glyph.GetWidth() . This method will be removed in the next major release."
-            )]
-        protected internal virtual double GetGlyphWidth(Glyph glyph) {
-            return glyph != null ? glyph.GetWidth() : 0;
-        }
     }
 }

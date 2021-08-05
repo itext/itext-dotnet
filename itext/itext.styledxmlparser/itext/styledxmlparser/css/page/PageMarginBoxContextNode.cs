@@ -41,6 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
@@ -50,7 +53,7 @@ namespace iText.StyledXmlParser.Css.Page {
     /// <see cref="iText.StyledXmlParser.Css.CssContextNode"/>
     /// implementation for page margin box contexts.
     /// </summary>
-    public class PageMarginBoxContextNode : CssContextNode {
+    public class PageMarginBoxContextNode : CssContextNode, ICustomElementNode {
         /// <summary>The Constant PAGE_MARGIN_BOX_TAG.</summary>
         public const String PAGE_MARGIN_BOX_TAG = "_064ef03_page-margin-box";
 
@@ -86,7 +89,8 @@ namespace iText.StyledXmlParser.Css.Page {
         /// <param name="pageMarginBoxRectangle">
         /// the
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// defining position and dimensions of the margin box content area
+        /// defining position and dimensions of the margin box content
+        /// area
         /// </param>
         public virtual void SetPageMarginBoxRectangle(Rectangle pageMarginBoxRectangle) {
             this.pageMarginBoxRectangle = pageMarginBoxRectangle;
@@ -124,6 +128,63 @@ namespace iText.StyledXmlParser.Css.Page {
         /// </returns>
         public virtual Rectangle GetContainingBlockForMarginBox() {
             return containingBlockForMarginBox;
+        }
+
+        public virtual String Name() {
+            return iText.StyledXmlParser.Css.Page.PageMarginBoxContextNode.PAGE_MARGIN_BOX_TAG;
+        }
+
+        public virtual IAttributes GetAttributes() {
+            return new PageMarginBoxContextNode.AttributesStub();
+        }
+
+        public virtual String GetAttribute(String key) {
+            return null;
+        }
+
+        public virtual IList<IDictionary<String, String>> GetAdditionalHtmlStyles() {
+            return null;
+        }
+
+        public virtual void AddAdditionalHtmlStyles(IDictionary<String, String> styles) {
+            throw new NotSupportedException();
+        }
+
+        public virtual String GetLang() {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// A simple
+        /// <see cref="iText.StyledXmlParser.Node.IAttributes"/>
+        /// implementation.
+        /// </summary>
+        private class AttributesStub : IAttributes {
+            /// <summary><inheritDoc/></summary>
+            public virtual String GetAttribute(String key) {
+                return null;
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public virtual void SetAttribute(String key, String value) {
+                throw new NotSupportedException();
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public virtual int Size() {
+                return 0;
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public virtual IEnumerator<IAttribute> GetEnumerator() {
+                return JavaCollectionsUtil.EmptyIterator<IAttribute>();
+            }
+
+        /// <summary><inheritDoc/></summary>
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
+
         }
     }
 }

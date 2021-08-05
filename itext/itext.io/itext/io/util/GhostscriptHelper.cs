@@ -42,6 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using iText.IO;
 
 namespace iText.IO.Util {
@@ -65,7 +68,16 @@ namespace iText.IO.Util {
 
         internal const String GHOSTSCRIPT_KEYWORD = "GPL Ghostscript";
 
-        private const String GHOSTSCRIPT_PARAMS = " -dSAFER -dNOPAUSE -dBATCH -sDEVICE=png16m -r150 {0} -sOutputFile=\"{1}\" \"{2}\"";
+        private const String TEMP_FILE_PREFIX = "itext_gs_io_temp";
+
+        private const String RENDERED_IMAGE_EXTENSION = "png";
+
+        private const String GHOSTSCRIPT_PARAMS = " -dSAFER -dNOPAUSE -dBATCH -sDEVICE=" + RENDERED_IMAGE_EXTENSION
+             + "16m -r150 {0} -sOutputFile=\"{1}\" \"{2}\"";
+
+        private const String PAGE_NUMBER_PATTERN = "%03d";
+
+        private static readonly Regex PAGE_LIST_REGEX = iText.IO.Util.StringUtil.RegexCompile("^(\\d+,)*\\d+$");
 
         private String gsExec;
 
@@ -105,33 +117,79 @@ namespace iText.IO.Util {
             return gsExec;
         }
 
-        /// <summary>Runs ghostscript to create images of pdfs.</summary>
-        /// <param name="pdf">Path to the pdf file.</param>
-        /// <param name="outDir">Path to the output directory</param>
-        /// <param name="image">Path to the generated image</param>
+        /// <summary>Runs Ghostscript to render the PDF's pages as PNG images.</summary>
+        /// <param name="pdf">Path to the PDF file to be rendered</param>
+        /// <param name="outDir">Path to the output directory, in which the rendered pages will be stored</param>
+        /// <param name="image">
+        /// String which defines the name of the resultant images. This string will be
+        /// concatenated with the number of the rendered page from the start of the
+        /// PDF in "-%03d" format, e.g. "-011" for the eleventh rendered page and so on.
+        /// This number may not correspond to the actual page number: for example,
+        /// if the passed pageList equals to "5,3", then images with postfixes "-001.png"
+        /// and "-002.png" will be created: the former for the third page, the latter
+        /// for the fifth page. "%" sign in the passed name is prohibited.
+        /// </param>
         public virtual void RunGhostScriptImageGeneration(String pdf, String outDir, String image) {
             RunGhostScriptImageGeneration(pdf, outDir, image, null);
         }
 
-        /// <summary>Runs ghostscript to create images of specified pages of pdfs.</summary>
-        /// <param name="pdf">Path to the pdf file.</param>
-        /// <param name="outDir">Path to the output directory</param>
-        /// <param name="image">Path to the generated image</param>
+        /// <summary>Runs Ghostscript to render the PDF's pages as PNG images.</summary>
+        /// <param name="pdf">Path to the PDF file to be rendered</param>
+        /// <param name="outDir">Path to the output directory, in which the rendered pages will be stored</param>
+        /// <param name="image">
+        /// String which defines the name of the resultant images. This string will be
+        /// concatenated with the number of the rendered page from the start of the
+        /// PDF in "-%03d" format, e.g. "-011" for the eleventh rendered page and so on.
+        /// This number may not correspond to the actual page number: for example,
+        /// if the passed pageList equals to "5,3", then images with postfixes "-001.png"
+        /// and "-002.png" will be created: the former for the third page, the latter
+        /// for the fifth page. "%" sign in the passed name is prohibited.
+        /// </param>
         /// <param name="pageList">
-        /// String with numbers of the required pages to extract as image. Should be formatted as string with
-        /// numbers, separated by commas, without whitespaces. Can be null, if it is required to extract
-        /// all pages as images.
+        /// String with numbers of the required pages to be rendered as images.
+        /// This string should be formatted as a string with numbers, separated by commas,
+        /// without whitespaces. Can be null, if it is required to render all the PDF's pages.
         /// </param>
         public virtual void RunGhostScriptImageGeneration(String pdf, String outDir, String image, String pageList
             ) {
             if (!FileUtil.DirectoryExists(outDir)) {
                 throw new ArgumentException(IoExceptionMessage.CANNOT_OPEN_OUTPUT_DIRECTORY.Replace("<filename>", pdf));
             }
-            pageList = (pageList == null) ? "" : "-sPageList=<pagelist>".Replace("<pagelist>", pageList);
-            String currGsParams = MessageFormatUtil.Format(GHOSTSCRIPT_PARAMS, pageList, outDir + image, pdf);
-            if (!SystemUtil.RunProcessAndWait(gsExec, currGsParams)) {
-                throw new GhostscriptHelper.GhostscriptExecutionException(IoExceptionMessage.GHOSTSCRIPT_FAILED.Replace("<filename>"
-                    , pdf));
+            if (!ValidateImageFilePattern(image)) {
+                throw new ArgumentException("Invalid output image pattern: " + image);
+            }
+            if (!ValidatePageList(pageList)) {
+                throw new ArgumentException("Invalid page list: " + pageList);
+            }
+            String formattedPageList = (pageList == null) ? "" : "-sPageList=<pagelist>".Replace("<pagelist>", pageList
+                );
+            String replacementPdf = null;
+            String replacementImagesDirectory = null;
+            String[] temporaryOutputImages = null;
+            try {
+                replacementPdf = FileUtil.CreateTempCopy(pdf, TEMP_FILE_PREFIX, null);
+                replacementImagesDirectory = FileUtil.CreateTempDirectory(TEMP_FILE_PREFIX);
+                String currGsParams = MessageFormatUtil.Format(GHOSTSCRIPT_PARAMS, formattedPageList, System.IO.Path.Combine
+                    (replacementImagesDirectory, TEMP_FILE_PREFIX + PAGE_NUMBER_PATTERN + "." + RENDERED_IMAGE_EXTENSION).
+                    ToString(), replacementPdf);
+                if (!SystemUtil.RunProcessAndWait(gsExec, currGsParams)) {
+                    temporaryOutputImages = FileUtil.ListFilesInDirectory(replacementImagesDirectory, false);
+                    throw new GhostscriptHelper.GhostscriptExecutionException(IoExceptionMessage.GHOSTSCRIPT_FAILED.Replace("<filename>"
+                        , pdf));
+                }
+                temporaryOutputImages = FileUtil.ListFilesInDirectory(replacementImagesDirectory, false);
+                if (null != temporaryOutputImages) {
+                    for (int i = 0; i < temporaryOutputImages.Length; i++) {
+                        FileUtil.Copy(temporaryOutputImages[i], System.IO.Path.Combine(outDir, image + "-" + FormatImageNumber(i +
+                             1) + "." + RENDERED_IMAGE_EXTENSION).ToString());
+                    }
+                }
+            }
+            finally {
+                if (null != temporaryOutputImages) {
+                    FileUtil.RemoveFiles(temporaryOutputImages);
+                }
+                FileUtil.RemoveFiles(new String[] { replacementImagesDirectory, replacementPdf });
             }
         }
 
@@ -148,6 +206,26 @@ namespace iText.IO.Util {
             public GhostscriptExecutionException(String msg)
                 : base(msg) {
             }
+        }
+
+        internal static bool ValidatePageList(String pageList) {
+            return null == pageList || iText.IO.Util.Matcher.Match(PAGE_LIST_REGEX, pageList).Matches();
+        }
+
+        internal static bool ValidateImageFilePattern(String imageFilePattern) {
+            return null != imageFilePattern && !String.IsNullOrEmpty(imageFilePattern.Trim()) && !imageFilePattern.Contains
+                ("%");
+        }
+
+        internal static String FormatImageNumber(int pageNumber) {
+            StringBuilder stringBuilder = new StringBuilder();
+            int zeroFiller = pageNumber;
+            while (0 == zeroFiller / 100) {
+                stringBuilder.Append('0');
+                zeroFiller *= 10;
+            }
+            stringBuilder.Append(pageNumber);
+            return stringBuilder.ToString();
         }
     }
 }

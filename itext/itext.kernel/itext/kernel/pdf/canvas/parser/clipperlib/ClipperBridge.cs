@@ -453,41 +453,5 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
                 path.CloseSubpath();
             }
         }
-
-        /// <summary>
-        /// Adds rectangle path based on array of
-        /// <see cref="iText.Kernel.Geom.Point"/>
-        /// (internally converting
-        /// them by
-        /// <see cref="ConvertToLongPoints(System.Collections.Generic.IList{E})"/>
-        /// ) and adds this path to
-        /// <see cref="Clipper"/>
-        /// instance.
-        /// </summary>
-        /// <param name="clipper">
-        /// 
-        /// <see cref="Clipper"/>
-        /// instance to which the created rectangle path will be added.
-        /// </param>
-        /// <param name="rectVertices">
-        /// an array of
-        /// <see cref="iText.Kernel.Geom.Point"/>
-        /// which will be internally converted
-        /// to clipper path and added to the clipper instance.
-        /// </param>
-        /// <param name="polyType">
-        /// either
-        /// <see cref="PolyType.SUBJECT"/>
-        /// or
-        /// <see cref="PolyType.CLIP"/>
-        /// denoting whether added
-        /// path is a subject of clipping or a part of the clipping polygon.
-        /// </param>
-        [System.ObsoleteAttribute(@"use AddPolygonToClipper(Clipper, iText.Kernel.Geom.Point[], PolyType) instead."
-            )]
-        public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType polyType) {
-            clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(JavaUtil.ArraysAsList(rectVertices)
-                ))), polyType, true);
-        }
     }
 }

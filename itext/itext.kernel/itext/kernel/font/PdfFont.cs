@@ -62,9 +62,6 @@ namespace iText.Kernel.Font {
 
         protected internal static readonly byte[] EMPTY_BYTES = new byte[0];
 
-        [Obsolete]
-        protected internal static readonly double[] DEFAULT_FONT_MATRIX = new double[] { 0.001, 0, 0, 0.001, 0, 0 };
-
         protected internal IDictionary<int, Glyph> notdefGlyphs = new Dictionary<int, Glyph>();
 
         /// <summary>false, if the font comes from PdfDocument.</summary>
@@ -200,14 +197,6 @@ namespace iText.Kernel.Font {
         public abstract void WriteText(GlyphLine text, int from, int to, PdfOutputStream stream);
 
         public abstract void WriteText(String text, PdfOutputStream stream);
-
-        /// <summary>Gets the transformation matrix that defines relation between text and glyph spaces.</summary>
-        /// <returns>the font matrix</returns>
-        [System.ObsoleteAttribute(@"Use iText.IO.Font.FontProgram.UNITS_NORMALIZATION constant for conversion between text and glyph space. For now we opted to always expect that all PdfFont metrics in glyph-space are related to text space as 1 to 1000, as it is defined for the majority of fonts. For fonts which don't necessary follow this rule (see PdfType3Font ), we perform internal normalization of font metrics in order to adhere to this common expectation. This method will be removed in next major release."
-            )]
-        public virtual double[] GetFontMatrix() {
-            return DEFAULT_FONT_MATRIX;
-        }
 
         /// <summary>Returns the width of a certain character of this font in 1000 normalized units.</summary>
         /// <param name="unicode">a certain character.</param>
@@ -588,47 +577,6 @@ namespace iText.Kernel.Font {
                 fontStream.Put(new PdfName("Length" + (k + 1)), new PdfNumber(fontStreamLengths[k]));
             }
             return fontStream;
-        }
-
-        /// <summary>
-        /// Normalizes given ranges by making sure that first values in pairs are lower than second values and merges overlapping
-        /// ranges in one.
-        /// </summary>
-        /// <param name="ranges">
-        /// a
-        /// <see cref="System.Collections.IList{E}"/>
-        /// of integer arrays, which are constituted by pairs of ints that denote
-        /// each range limits. Each integer array size shall be a multiple of two.
-        /// </param>
-        /// <returns>single merged array consisting of pairs of integers, each of them denoting a range.</returns>
-        [System.ObsoleteAttribute(@"The logic has been moved to iText.IO.Font.TrueTypeFont .")]
-        protected internal static int[] CompactRanges(IList<int[]> ranges) {
-            IList<int[]> simp = new List<int[]>();
-            foreach (int[] range in ranges) {
-                for (int j = 0; j < range.Length; j += 2) {
-                    simp.Add(new int[] { Math.Max(0, Math.Min(range[j], range[j + 1])), Math.Min(0xffff, Math.Max(range[j], range
-                        [j + 1])) });
-                }
-            }
-            for (int k1 = 0; k1 < simp.Count - 1; ++k1) {
-                for (int k2 = k1 + 1; k2 < simp.Count; ++k2) {
-                    int[] r1 = simp[k1];
-                    int[] r2 = simp[k2];
-                    if (r1[0] >= r2[0] && r1[0] <= r2[1] || r1[1] >= r2[0] && r1[0] <= r2[1]) {
-                        r1[0] = Math.Min(r1[0], r2[0]);
-                        r1[1] = Math.Max(r1[1], r2[1]);
-                        simp.JRemoveAt(k2);
-                        --k2;
-                    }
-                }
-            }
-            int[] s = new int[simp.Count * 2];
-            for (int k = 0; k < simp.Count; ++k) {
-                int[] r = simp[k];
-                s[k * 2] = r[0];
-                s[k * 2 + 1] = r[1];
-            }
-            return s;
         }
 
         /// <summary>Helper method for making an object indirect, if the object already is indirect.</summary>

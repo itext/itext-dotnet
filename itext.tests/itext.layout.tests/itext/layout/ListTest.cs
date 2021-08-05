@@ -485,5 +485,53 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void BothSymbolIndentAndMarginAreSetTest() {
+            // There is no symbol indent in html: one uses margins for such a purpose.
+            String outFileName = destinationFolder + "bothSymbolIndentAndMarginAreSetTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_bothSymbolIndentAndMarginAreSetTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            List l = CreateTestList();
+            ListItem li = new ListItem("Only symbol indent: 50pt");
+            li.SetBackgroundColor(ColorConstants.BLUE);
+            l.Add(li);
+            li = new ListItem("Symbol indent: 50pt and margin-left: 50pt = 100pt");
+            li.SetMarginLeft(50);
+            li.SetBackgroundColor(ColorConstants.YELLOW);
+            l.Add(li);
+            document.Add(l);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED)]
+        public virtual void ListItemMarginInPercentTest() {
+            String outFileName = destinationFolder + "listItemMarginInPercentTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_listItemMarginInPercentTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            List l = CreateTestList();
+            ListItem li = new ListItem("Left margin in percent: 50%");
+            li.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePercentValue(50));
+            li.SetBackgroundColor(ColorConstants.BLUE);
+            l.Add(li);
+            document.Add(l);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        private static List CreateTestList() {
+            List l = new List();
+            l.SetWidth(300);
+            l.SetBackgroundColor(ColorConstants.RED);
+            l.SetSymbolIndent(50);
+            l.SetListSymbol("\u2022");
+            return l;
+        }
     }
 }

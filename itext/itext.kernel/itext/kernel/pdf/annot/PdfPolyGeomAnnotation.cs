@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using Common.Logging;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -49,12 +48,6 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Annot {
     public abstract class PdfPolyGeomAnnotation : PdfMarkupAnnotation {
-        [System.ObsoleteAttribute(@", use iText.Kernel.Pdf.PdfName.Polygon instead.")]
-        public static readonly PdfName Polygon = PdfName.Polygon;
-
-        [System.ObsoleteAttribute(@", use iText.Kernel.Pdf.PdfName.PolyLine instead.")]
-        public static readonly PdfName PolyLine = PdfName.PolyLine;
-
         internal PdfPolyGeomAnnotation(Rectangle rect, float[] vertices)
             : base(rect) {
             SetVertices(vertices);

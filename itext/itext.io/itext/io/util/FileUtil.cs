@@ -179,5 +179,64 @@ namespace iText.IO.Util {
         public static String ParentDirectory(Uri url) {
             return new Uri(url, ".").ToString();
         }
+
+        public static FileInfo CreateTempFile(String tempFilePrefix, String tempFilePostfix) { 
+            return new FileInfo(Path.Combine(Path.GetTempPath(), 
+                tempFilePrefix + Guid.NewGuid() + Interlocked.Increment(ref tempFileCounter) + tempFilePostfix));
+        }
+
+        public static String CreateTempCopy(String file, String tempFilePrefix, String tempFilePostfix) {
+            string copiedFile = null;
+            try {
+                copiedFile = Path.Combine(Path.GetTempPath(), 
+                    tempFilePrefix + Guid.NewGuid() + Interlocked.Increment(ref tempFileCounter) + tempFilePostfix);
+                Copy(file, copiedFile);
+            } catch (IOException e) {
+                RemoveFiles(new Object[] {copiedFile});
+                throw e;
+            }
+            return copiedFile;
+        }
+ 
+        public static void Copy(String fileToCopy, String copiedFile) {
+            File.Copy(fileToCopy, copiedFile, true);
+        }
+
+        public static String CreateTempDirectory(String tempFilePrefix) {
+            string temporaryDirectory = null;
+            try {
+                temporaryDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + tempFilePrefix + 
+                                                                      Interlocked.Increment(ref tempFileCounter));
+                Directory.CreateDirectory(temporaryDirectory);
+            } catch (IOException e) {
+                RemoveFiles(new Object[] {temporaryDirectory});
+                throw e;    
+            }
+            return temporaryDirectory;
+        }
+
+        public static bool RemoveFiles(Object[] paths) {
+            bool allFilesAreRemoved = true;
+            foreach (String path in paths) {
+                try {
+                    if (null != path) {
+                        File.Delete(path);
+                    }
+                } catch (Exception e) {
+                    if (Directory.Exists(path)) {
+                        try {   
+                            Directory.Delete(path);
+                        }
+                        catch (Exception exc) {
+                            allFilesAreRemoved = false;
+                        }
+                    }
+                    else {
+                        allFilesAreRemoved = false;
+                    }
+                }
+            }
+            return allFilesAreRemoved;
+        }
     }
 }

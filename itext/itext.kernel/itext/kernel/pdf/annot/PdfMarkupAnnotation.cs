@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using Common.Logging;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -511,39 +510,6 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual PdfDictionary GetExternalData() {
             return GetPdfObject().GetAsDictionary(PdfName.ExData);
-        }
-
-        /// <summary>Sets an external data dictionary specifying data that shall be associated with the annotation.</summary>
-        /// <remarks>
-        /// Sets an external data dictionary specifying data that shall be associated with the annotation.
-        /// This dictionary should contain the following entries:
-        /// <list type="bullet">
-        /// <item><description>
-        /// <see cref="iText.Kernel.Pdf.PdfName.Type"/>
-        /// - (optional) If present, shall be
-        /// <see cref="iText.Kernel.Pdf.PdfName.ExData"/>.
-        /// </description></item>
-        /// <item><description>
-        /// <see cref="iText.Kernel.Pdf.PdfName.Subtype"/>
-        /// - (required) a name specifying the type of data that the markup annotation
-        /// shall be associated with. The only defined value is
-        /// <see cref="iText.Kernel.Pdf.PdfName.Markup3D"/>
-        /// . Table 298 (ISO-320001)
-        /// lists the values that correspond to a subtype of Markup3D (See also
-        /// <see cref="Pdf3DAnnotation"/>
-        /// ).
-        /// </description></item>
-        /// </list>
-        /// </remarks>
-        /// <param name="exData">the external data dictionary</param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfMarkupAnnotation"/>
-        /// instance
-        /// </returns>
-        [System.ObsoleteAttribute(@"use SetExternalData(iText.Kernel.Pdf.PdfDictionary) instead")]
-        public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetExternalData(PdfName exData) {
-            return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.ExData, exData);
         }
 
         /// <summary>Sets an external data dictionary specifying data that shall be associated with the annotation.</summary>

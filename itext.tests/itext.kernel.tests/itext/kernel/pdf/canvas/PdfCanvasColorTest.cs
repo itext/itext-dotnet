@@ -459,10 +459,6 @@ namespace iText.Kernel.Pdf.Canvas {
             patternColorLine.SetColorValue(cyan);
             canvas.SetFillColor(patternColorLine);
             canvas.Rectangle(180, 576, 126, 126).Fill();
-            // this case will be removed when deprecated method is removed
-            patternColorLine.SetPattern(circle);
-            canvas.SetFillColor(patternColorLine);
-            canvas.Rectangle(360, 696, 126, 126).Fill();
             byte[] pageContentStreamBytes = canvas.GetContentStream().GetBytes();
             canvas.Release();
             document.Close();
@@ -470,7 +466,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 .ASCII);
             int p1Count = CountSubstringOccurrences(contentStreamString, "/P1 scn");
             int p2Count = CountSubstringOccurrences(contentStreamString, "/P2 scn");
-            NUnit.Framework.Assert.AreEqual(3, p1Count);
+            NUnit.Framework.Assert.AreEqual(2, p1Count);
             NUnit.Framework.Assert.AreEqual(2, p2Count);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + name, SOURCE_FOLDER 
                 + "cmp_" + name, DESTINATION_FOLDER));

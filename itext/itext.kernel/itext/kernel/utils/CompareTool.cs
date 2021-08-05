@@ -1063,12 +1063,12 @@ namespace iText.Kernel.Utils {
             this.cmpPdf = cmpPdf;
             outPdfName = new FileInfo(outPdf).Name;
             cmpPdfName = new FileInfo(cmpPdf).Name;
-            outImage = outPdfName + "-%03d.png";
+            outImage = outPdfName;
             if (cmpPdfName.StartsWith("cmp_")) {
-                cmpImage = cmpPdfName + "-%03d.png";
+                cmpImage = cmpPdfName;
             }
             else {
-                cmpImage = "cmp_" + cmpPdfName + "-%03d.png";
+                cmpImage = "cmp_" + cmpPdfName;
             }
         }
 
