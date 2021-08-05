@@ -1838,7 +1838,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private FileInfo CopyFileForTest(String fileName, String copiedFileName) {
+        private static FileInfo CopyFileForTest(String fileName, String copiedFileName) {
             FileInfo copiedFile = new FileInfo(copiedFileName);
             File.Copy(System.IO.Path.Combine(fileName), System.IO.Path.Combine(copiedFileName));
             return copiedFile;

@@ -118,11 +118,6 @@ namespace iText.Kernel.Pdf {
 
         protected internal bool xrefStm = false;
 
-        internal PdfReader(IRandomAccessSource byteSource, ReaderProperties properties, bool closeStream) {
-            this.properties = properties;
-            this.tokens = GetOffsetTokeniser(byteSource, closeStream);
-        }
-
         /// <summary>Constructs a new PdfReader.</summary>
         /// <param name="byteSource">source of bytes for the reader</param>
         /// <param name="properties">properties of the created reader</param>
@@ -177,6 +172,11 @@ namespace iText.Kernel.Pdf {
         /// <param name="filename">the file name of the document</param>
         public PdfReader(String filename)
             : this(filename, new ReaderProperties()) {
+        }
+
+        internal PdfReader(IRandomAccessSource byteSource, ReaderProperties properties, bool closeStream) {
+            this.properties = properties;
+            this.tokens = GetOffsetTokeniser(byteSource, closeStream);
         }
 
         /// <summary>
