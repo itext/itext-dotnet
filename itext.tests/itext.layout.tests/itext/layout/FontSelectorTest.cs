@@ -140,28 +140,28 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinGroupFontAsStringValue() {
-            NUnit.Framework.Assert.That(() =>  {
-                String fileName = "cyrillicAndLatinGroupDeprecatedFontAsStringValue";
-                String outFileName = destinationFolder + fileName + ".pdf";
-                String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
-                FontProvider sel = new FontProvider();
-                NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "FreeSans.ttf"));
-                NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
-                NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "Puritan2.otf"));
-                String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
-                Document doc = new Document(pdfDoc);
-                doc.SetFontProvider(sel);
-                doc.SetProperty(Property.FONT, "'Puritan', \"FreeSans\"");
-                Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
-                Paragraph paragraph = new Paragraph(text);
+            String fileName = "cyrillicAndLatinGroupDeprecatedFontAsStringValue";
+            String outFileName = destinationFolder + fileName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
+            FontProvider sel = new FontProvider();
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "FreeSans.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "Puritan2.otf"));
+            String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            doc.SetProperty(Property.FONT, "'Puritan', \"FreeSans\"");
+            Text text = new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            Paragraph paragraph = new Paragraph(text);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => {
                 doc.Add(paragraph);
                 doc.Close();
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                     , "diff" + fileName));
             }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>().With.Message.EqualTo("Invalid FONT property value type."))
-;
+            );
+            NUnit.Framework.Assert.AreEqual("Invalid FONT property value type.", exception.Message);
         }
 
         [NUnit.Framework.Test]
@@ -492,8 +492,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void OpenSansFontSetIncorrectNameTest01() {
-            // TODO DEVSIX-2120 Currently both light and regular fonts have the same score so that light is picked up lexicographically. After the changes are implemented the correct one (regular) font shall be selected and the expected constants should be updated
-            // TODO Default font shall be specified.
             FontSet set = GetOpenSansFontSet();
             AddTimesFonts(set);
             ICollection<FontInfo> fontInfoCollection = set.GetFonts();
@@ -567,8 +565,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void OpenSansFontSetRegularTest01() {
-            // TODO DEVSIX-2120 Currently both light and regular fonts have the same score so that light is picked up lexicographically. After the changes are implemented the correct one (regular) font shall be selected and the expected constants should be updated
-            // TODO Default font shall be specified.
             FontSet set = GetOpenSansFontSet();
             AddTimesFonts(set);
             ICollection<FontInfo> fontInfoCollection = set.GetFonts();
@@ -643,8 +639,6 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void OpenSansFontSetLightTest01() {
             // TODO DEVSIX-2127 After DEVSIX-2120 the font should be selected correctly, but the text will still need to be bolded via emulation
-            // TODO DEVSIX-2120 Light subfamily is not processed
-            // TODO Default font shall be specified.
             FontSet set = GetOpenSansFontSet();
             AddTimesFonts(set);
             ICollection<FontInfo> fontInfoCollection = set.GetFonts();
@@ -717,11 +711,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-2120 ExtraBold subfamily is not processed
-        // TODO DEVSIX-2135 if FontCharacteristics instance is not modified, font-family is parsed and 'bold' substring is considered as a reason to set bold flag in FontCharacteristics instance. That should be reviewed.
-        [NUnit.Framework.Ignore("DEVSIX-2120: we cannot set a wrong expected string for normal font characteristics because in different contexts iText selects different fonts"
-            )]
         public virtual void OpenSansFontSetExtraBoldTest01() {
+            // TODO DEVSIX-2135 if FontCharacteristics instance is not modified, font-family is parsed and 'bold' substring is considered as a reason to set bold flag in FontCharacteristics instance. That should be reviewed.
             FontSet set = GetOpenSansFontSet();
             AddTimesFonts(set);
             ICollection<FontInfo> fontInfoCollection = set.GetFonts();
