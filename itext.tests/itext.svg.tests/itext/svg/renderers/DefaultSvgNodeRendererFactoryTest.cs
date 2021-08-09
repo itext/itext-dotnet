@@ -40,13 +40,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using System.Collections.Generic;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg.Dummy.Factories;
 using iText.Svg.Dummy.Renderers.Impl;
-using iText.Svg.Exceptions;
 using iText.Svg.Logs;
 using iText.Svg.Renderers.Factories;
 using iText.Test;
@@ -54,39 +51,16 @@ using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers {
     public class DefaultSvgNodeRendererFactoryTest : ExtendedITextTest {
-        private ISvgNodeRendererFactory fact;
-
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-            fact = new DefaultSvgNodeRendererFactory(new DummySvgNodeMapper());
-        }
+        private readonly ISvgNodeRendererFactory fact = new DummySvgNodeFactory();
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void NonExistingTagTest() {
+            ISvgNodeRendererFactory factory = new DefaultSvgNodeRendererFactory();
             iText.StyledXmlParser.Jsoup.Nodes.Element nonExistingElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
                 (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("notAnExistingTag"), "");
             IElementNode tag = new JsoupElementNode(nonExistingElement);
-            fact.CreateSvgNodeRendererForTag(tag, null);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ProtectedConstructorTest() {
-            iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
-                (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("protected"), "");
-            IElementNode tag = new JsoupElementNode(protectedElement);
-            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => fact.CreateSvgNodeRendererForTag(tag, null
-                ));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ProtectedConstructorInnerTest() {
-            iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
-                (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("protected"), "");
-            IElementNode tag = new JsoupElementNode(protectedElement);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => fact.CreateSvgNodeRendererForTag
-                (tag, null));
-            NUnit.Framework.Assert.IsTrue(e.InnerException is MissingMethodException);
+            factory.CreateSvgNodeRendererForTag(tag, null);
         }
 
         [NUnit.Framework.Test]
@@ -94,18 +68,9 @@ namespace iText.Svg.Renderers {
             iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
                 (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("argumented"), "");
             IElementNode tag = new JsoupElementNode(protectedElement);
-            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => NUnit.Framework.Assert.IsNull(fact.CreateSvgNodeRendererForTag
-                (tag, null)));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ArgumentedConstructorInnerTest() {
-            iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
-                (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("argumented"), "");
-            IElementNode tag = new JsoupElementNode(protectedElement);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => fact.CreateSvgNodeRendererForTag
-                (tag, null));
-            NUnit.Framework.Assert.IsTrue(e.InnerException is MissingMethodException);
+            ISvgNodeRenderer renderer = fact.CreateSvgNodeRendererForTag(tag, null);
+            NUnit.Framework.Assert.IsTrue(renderer is DummyArgumentedConstructorSvgNodeRenderer);
+            NUnit.Framework.Assert.AreEqual(15, ((DummyArgumentedConstructorSvgNodeRenderer)renderer).number);
         }
 
         [NUnit.Framework.Test]
@@ -117,25 +82,27 @@ namespace iText.Svg.Renderers {
             NUnit.Framework.Assert.IsTrue(childRenderer is DummySvgNodeRenderer);
         }
 
-        private class LocalTestMapper : ISvgNodeRendererMapper {
-            public virtual IDictionary<String, Type> GetMapping() {
-                IDictionary<String, Type> result = new Dictionary<String, Type>();
-                result.Put("test", typeof(DummyProcessableSvgNodeRenderer));
-                return result;
-            }
-
-            public virtual ICollection<String> GetIgnoredTags() {
-                return new List<String>();
+        private class LocalSvgNodeRendererFactory : DefaultSvgNodeRendererFactory {
+            public override ISvgNodeRenderer CreateSvgNodeRendererForTag(IElementNode tag, ISvgNodeRenderer parent) {
+                ISvgNodeRenderer result;
+                if ("test".Equals(tag.Name())) {
+                    result = new DummyProcessableSvgNodeRenderer();
+                    result.SetParent(parent);
+                    return result;
+                }
+                else {
+                    return null;
+                }
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void CustomMapperTest() {
-            fact = new DefaultSvgNodeRendererFactory(new DefaultSvgNodeRendererFactoryTest.LocalTestMapper());
+            ISvgNodeRendererFactory factory = new DefaultSvgNodeRendererFactoryTest.LocalSvgNodeRendererFactory();
             iText.StyledXmlParser.Jsoup.Nodes.Element element = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("test"), "");
             IElementNode tag = new JsoupElementNode(element);
-            ISvgNodeRenderer rend = fact.CreateSvgNodeRendererForTag(tag, null);
+            ISvgNodeRenderer rend = factory.CreateSvgNodeRendererForTag(tag, null);
             NUnit.Framework.Assert.IsTrue(rend is DummyProcessableSvgNodeRenderer);
         }
 
@@ -150,23 +117,6 @@ namespace iText.Svg.Renderers {
             ISvgNodeRenderer parentRenderer = fact.CreateSvgNodeRendererForTag(parentTag, null);
             ISvgNodeRenderer childRenderer = fact.CreateSvgNodeRendererForTag(childTag, parentRenderer);
             NUnit.Framework.Assert.AreEqual(parentRenderer, childRenderer.GetParent());
-        }
-
-        private class FaultyTestMapper : ISvgNodeRendererMapper {
-            public virtual IDictionary<String, Type> GetMapping() {
-                throw new Exception();
-            }
-
-            public virtual ICollection<String> GetIgnoredTags() {
-                return null;
-            }
-        }
-
-        /// <summary>Tests that exception is already thrown in constructor</summary>
-        [NUnit.Framework.Test]
-        public virtual void FaultyMapperTest() {
-            NUnit.Framework.Assert.Catch(typeof(Exception), () => new DefaultSvgNodeRendererFactory(new DefaultSvgNodeRendererFactoryTest.FaultyTestMapper
-                ()));
         }
     }
 }

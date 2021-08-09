@@ -67,33 +67,10 @@ namespace iText.Svg.Renderers.Factories {
         /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
         /// creation logic.
         /// </summary>
-        public DefaultSvgNodeRendererFactory()
-            : this(new DefaultSvgNodeRendererMapper()) {
-        }
-
-        /// <summary>
-        /// Constructor which allows injecting a custom
-        /// <see cref="ISvgNodeRendererMapper"/>
-        /// implementation.
-        /// </summary>
-        /// <param name="mapper">
-        /// the custom mapper implementation - if null, then we fall
-        /// back to the
-        /// <see cref="DefaultSvgNodeRendererMapper"/>
-        /// </param>
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. The user should use the customISvgNodeRendererFactory implementation (or the customDefaultSvgNodeRendererFactory extension) to create extensions of the factory."
-            )]
-        public DefaultSvgNodeRendererFactory(ISvgNodeRendererMapper mapper) {
-            // TODO DEVSIX-5081 7.2 svg: Remove deprecated API and refactor tests related to ISvgNodeRendererMapper
-            if (mapper != null) {
-                rendererMap.AddAll(mapper.GetMapping());
-                ignoredTags.AddAll(mapper.GetIgnoredTags());
-            }
-            else {
-                ISvgNodeRendererMapper defaultMapper = new DefaultSvgNodeRendererMapper();
-                rendererMap.AddAll(defaultMapper.GetMapping());
-                ignoredTags.AddAll(defaultMapper.GetIgnoredTags());
-            }
+        public DefaultSvgNodeRendererFactory() {
+            DefaultSvgNodeRendererMapper defaultMapper = new DefaultSvgNodeRendererMapper();
+            rendererMap.AddAll(defaultMapper.GetMapping());
+            ignoredTags.AddAll(defaultMapper.GetIgnoredTags());
         }
 
         public virtual ISvgNodeRenderer CreateSvgNodeRendererForTag(IElementNode tag, ISvgNodeRenderer parent) {

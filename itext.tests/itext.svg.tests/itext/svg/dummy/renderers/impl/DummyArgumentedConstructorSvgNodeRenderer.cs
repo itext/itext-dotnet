@@ -42,7 +42,10 @@ address: sales@itextpdf.com
 */
 namespace iText.Svg.Dummy.Renderers.Impl {
     public class DummyArgumentedConstructorSvgNodeRenderer : DummySvgNodeRenderer {
+        public int number;
+
         public DummyArgumentedConstructorSvgNodeRenderer(int arg) {
+            number = arg;
         }
     }
 }

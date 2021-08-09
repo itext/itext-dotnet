@@ -58,7 +58,17 @@ namespace iText.Svg.Dummy.Factories {
                 result = new DummyBranchSvgNodeRenderer(tag.Name());
             }
             else {
-                result = new DummySvgNodeRenderer(tag.Name());
+                if ("processable".Equals(tag.Name())) {
+                    result = new DummyProcessableSvgNodeRenderer();
+                }
+                else {
+                    if ("argumented".Equals(tag.Name())) {
+                        result = new DummyArgumentedConstructorSvgNodeRenderer(15);
+                    }
+                    else {
+                        result = new DummySvgNodeRenderer(tag.Name());
+                    }
+                }
             }
             result.SetParent(parent);
             return result;
