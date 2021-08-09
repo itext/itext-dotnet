@@ -35,7 +35,7 @@ namespace iText.Kernel.Actions.Data {
 
         private const String CORE_VERSION = "7.2.0-SNAPSHOT";
 
-        private const int CORE_COPYRIGHT_SINCE = 1998;
+        private const int CORE_COPYRIGHT_SINCE = 2000;
 
         private const int CORE_COPYRIGHT_TO = 2021;
 
