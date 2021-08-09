@@ -251,7 +251,6 @@ namespace iText.Layout.Renderer {
                         () == AreaBreakType.NEXT_PAGE)) {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
                             childRenderers[childPos] = result.GetSplitRenderer();
-                            // TODO linkedList would make it faster
                             childRenderers.Add(childPos + 1, result.GetOverflowRenderer());
                         }
                         else {
