@@ -41,10 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Svg.Renderers.Factories;
 using iText.Test;
 
-namespace iText.Svg.Renderers {
+namespace iText.Svg.Renderers.Factories {
     public class DefaultRendererMapperTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void MapperNotEmptyTest() {

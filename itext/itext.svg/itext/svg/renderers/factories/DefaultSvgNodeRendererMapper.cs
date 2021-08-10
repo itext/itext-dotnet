@@ -47,27 +47,14 @@ using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Renderers.Factories {
     /// <summary>
-    /// The implementation of
-    /// <see cref="ISvgNodeRendererMapper"/>
-    /// that will be used by
-    /// default in the
-    /// <see cref="DefaultSvgNodeRendererFactory"/>.
-    /// </summary>
-    /// <remarks>
-    /// The implementation of
-    /// <see cref="ISvgNodeRendererMapper"/>
-    /// that will be used by
-    /// default in the
-    /// <see cref="DefaultSvgNodeRendererFactory"/>
-    /// . It contains the mapping
-    /// of the default implementations, provided by this project for the standard SVG
+    /// Contains the mapping of the default implementations, provided by this project for the standard SVG
     /// tags as defined in the SVG Specification.
-    /// </remarks>
-    [System.ObsoleteAttribute(@"The public access to this class will be removed in 7.2. The class itself can become either package private or the inner private static class for the DefaultSvgNodeRendererFactory . Users should override ISvgNodeRendererFactory (or at least DefaultSvgNodeRendererFactory ) and should not deal with the mapping class as it's more of an implementation detail."
-        )]
-    public class DefaultSvgNodeRendererMapper : ISvgNodeRendererMapper {
-        // TODO DEVSIX-5081 7.2 svg: Remove deprecated API and refactor tests related to ISvgNodeRendererMapper
-        public virtual IDictionary<String, Type> GetMapping() {
+    /// </summary>
+    internal class DefaultSvgNodeRendererMapper {
+        internal DefaultSvgNodeRendererMapper() {
+        }
+
+        internal virtual IDictionary<String, Type> GetMapping() {
             IDictionary<String, Type> result = new Dictionary<String, Type>();
             result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
             result.Put(SvgConstants.Tags.CLIP_PATH, typeof(ClipPathSvgNodeRenderer));
@@ -93,7 +80,7 @@ namespace iText.Svg.Renderers.Factories {
             return result;
         }
 
-        public virtual ICollection<String> GetIgnoredTags() {
+        internal virtual ICollection<String> GetIgnoredTags() {
             ICollection<String> ignored = new HashSet<String>();
             // Not supported tags as of yet
             ignored.Add(SvgConstants.Tags.A);

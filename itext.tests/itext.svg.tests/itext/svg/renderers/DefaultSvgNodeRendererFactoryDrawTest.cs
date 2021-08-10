@@ -49,12 +49,7 @@ using iText.Test;
 
 namespace iText.Svg.Renderers {
     public class DefaultSvgNodeRendererFactoryDrawTest : ExtendedITextTest {
-        private ISvgNodeRendererFactory fact;
-
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-            fact = new DefaultSvgNodeRendererFactory(new DummySvgNodeMapper());
-        }
+        private readonly ISvgNodeRendererFactory fact = new DummySvgNodeFactory();
 
         [NUnit.Framework.Test]
         public virtual void BasicProcessedRendererTest() {

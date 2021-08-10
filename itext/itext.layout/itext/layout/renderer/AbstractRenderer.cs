@@ -124,7 +124,6 @@ namespace iText.Layout.Renderer {
 
         private const int ARC_QUARTER_CLOCKWISE_EXTENT = -90;
 
-        // TODO linkedList?
         protected internal IList<IRenderer> childRenderers = new List<IRenderer>();
 
         protected internal IList<IRenderer> positionedRenderers = new List<IRenderer>();
