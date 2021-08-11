@@ -42,69 +42,78 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
+using iText.StyledXmlParser.Jsoup.Helper;
+using iText.StyledXmlParser.Jsoup.Parser;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>HTML entities, and escape routines.</summary>
     /// <remarks>
-    /// HTML entities, and escape routines.
-    /// Source: <a href="http://www.w3.org/tr/html5/named-character-references.html#named-character-references">W3C HTML
-    /// named character references</a>.
+    /// HTML entities, and escape routines. Source: <a href="http://www.w3.org/tr/html5/named-character-references.html#named-character-references">W3C
+    /// HTML named character references</a>.
     /// </remarks>
     public class Entities {
+        private const int empty = -1;
+
+        private const String emptyName = "";
+
+        internal const int codepointRadix = 36;
+
+        private static readonly char[] codeDelims = new char[] { ',', ';' };
+
+        private static readonly Dictionary<String, String> multipoints = new Dictionary<String, String>();
+
+        // name -> multiple character references
+        private static readonly OutputSettings DefaultOutput = new OutputSettings();
+
         public class EscapeMode {
             /// <summary>Restricted entities suitable for XHTML output: lt, gt, amp, and quot only.</summary>
-            public static readonly Entities.EscapeMode xhtml = new Entities.EscapeMode(xhtmlByVal, "xhtml");
+            public static Entities.EscapeMode xhtml = new Entities.EscapeMode(EntitiesData.xmlPoints, 4);
 
             /// <summary>Default HTML output entities.</summary>
-            public static readonly Entities.EscapeMode @base = new Entities.EscapeMode(baseByVal, "base");
+            public static Entities.EscapeMode @base = new Entities.EscapeMode(EntitiesData.basePoints, 106);
 
             /// <summary>Complete HTML entities.</summary>
-            public static readonly Entities.EscapeMode extended = new Entities.EscapeMode(fullByVal, "extended");
+            public static Entities.EscapeMode extended = new Entities.EscapeMode(EntitiesData.fullPoints, 2125);
 
-            private static IDictionary<String, Entities.EscapeMode> nameValueMap = new Dictionary<String, Entities.EscapeMode
-                >();
+            // table of named references to their codepoints. sorted so we can binary search. built by BuildEntities.
+            internal String[] nameKeys;
 
-            public static Entities.EscapeMode ValueOf(String name) {
-                return nameValueMap.Get(name);
+            internal int[] codeVals;
+
+            // limitation is the few references with multiple characters; those go into multipoints.
+            // table of codepoints to named entities.
+            internal int[] codeKeys;
+
+            // we don't support multicodepoints to single named value currently
+            internal String[] nameVals;
+
+            internal EscapeMode(String file, int size) {
+                Load(this, file, size);
             }
 
-            static EscapeMode() {
-                nameValueMap.Put(xhtml.name, xhtml);
-                nameValueMap.Put(@base.name, @base);
-                nameValueMap.Put(extended.name, extended);
+            internal virtual int CodepointForName(String name) {
+                int index = Array.IndexOf(nameKeys, name);
+                return index >= 0 ? codeVals[index] : empty;
             }
 
-            private IDictionary<char, String> map;
-
-            private String name;
-
-            private EscapeMode(IDictionary<char, String> map, String name) {
-                this.map = map;
-                this.name = name;
+            internal virtual String NameForCodepoint(int codepoint) {
+                int index = JavaUtil.ArraysBinarySearch(codeKeys, codepoint);
+                if (index >= 0) {
+                    // the results are ordered so lower case versions of same codepoint come after uppercase, and we prefer to emit lower
+                    // (and binary search for same item with multi results is undefined
+                    return (index < nameVals.Length - 1 && codeKeys[index + 1] == codepoint) ? nameVals[index + 1] : nameVals[
+                        index];
+                }
+                return emptyName;
             }
 
-            public virtual IDictionary<char, String> GetMap() {
-                return map;
-            }
-
-            public virtual String Name() {
-                return name;
+            private int Size() {
+                return nameKeys.Length;
             }
         }
-
-        private static readonly IDictionary<String, char?> full;
-
-        private static readonly IDictionary<char, String> xhtmlByVal;
-
-        private static readonly IDictionary<String, char?> @base;
-
-        private static readonly IDictionary<char, String> baseByVal;
-
-        private static readonly IDictionary<char, String> fullByVal;
 
         private Entities() {
         }
@@ -113,7 +122,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="name">the possible entity name (e.g. "lt" or "amp")</param>
         /// <returns>true if a known named entity</returns>
         public static bool IsNamedEntity(String name) {
-            return full.ContainsKey(name);
+            return Entities.EscapeMode.extended.CodepointForName(name) != empty;
         }
 
         /// <summary>Check if the input is a known named entity in the base entity set.</summary>
@@ -121,24 +130,54 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>true if a known named entity in the base set</returns>
         /// <seealso cref="IsNamedEntity(System.String)"/>
         public static bool IsBaseNamedEntity(String name) {
-            return @base.ContainsKey(name);
+            return Entities.EscapeMode.@base.CodepointForName(name) != empty;
         }
 
-        /// <summary>Get the Character value of the named entity</summary>
-        /// <param name="name">named entity (e.g. "lt" or "amp")</param>
-        /// <returns>
-        /// the Character value of the named entity (e.g. '
+        /// <summary>Get the character(s) represented by the named entity</summary>
+        /// <param name="name">entity (e.g. "lt" or "amp")</param>
+        /// <returns>the string value of the character(s) represented by this entity, or "" if not defined</returns>
+        public static String GetByName(String name) {
+            String val = multipoints.Get(name);
+            if (val != null) {
+                return val;
+            }
+            int codepoint = Entities.EscapeMode.extended.CodepointForName(name);
+            if (codepoint != empty) {
+                return new String(new char[] { (char)codepoint }, 0, 1);
+            }
+            return emptyName;
+        }
+
+        public static int CodepointsForName(String name, int[] codepoints) {
+            String val = multipoints.Get(name);
+            if (val != null) {
+                codepoints[0] = val.CodePointAt(0);
+                codepoints[1] = val.CodePointAt(1);
+                return 2;
+            }
+            int codepoint = Entities.EscapeMode.extended.CodepointForName(name);
+            if (codepoint != empty) {
+                codepoints[0] = codepoint;
+                return 1;
+            }
+            return 0;
+        }
+
+        /// <summary>HTML escape an input string.</summary>
+        /// <remarks>
+        /// HTML escape an input string. That is,
         /// <c>&lt;</c>
-        /// ' or '
-        /// <c>&amp;</c>
-        /// ')
-        /// </returns>
-        public static char? GetCharacterByName(String name) {
-            return full.Get(name);
-        }
-
-        internal static String Escape(String @string, OutputSettings @out) {
-            StringBuilder accum = new StringBuilder(@string.Length * 2);
+        /// is returned as
+        /// <c>&amp;lt;</c>
+        /// </remarks>
+        /// <param name="string">the un-escaped string to escape</param>
+        /// <param name="out">the output settings to use</param>
+        /// <returns>the escaped string</returns>
+        public static String Escape(String @string, OutputSettings @out) {
+            if (@string == null) {
+                return "";
+            }
+            StringBuilder accum = iText.StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
             try {
                 Escape(accum, @string, @out, false, false, false);
             }
@@ -146,24 +185,37 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 throw new SerializationException(e);
             }
             // doesn't happen
-            return accum.ToString();
+            return iText.StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(accum);
+        }
+
+        /// <summary>HTML escape an input string, using the default settings (UTF-8, base entities).</summary>
+        /// <remarks>
+        /// HTML escape an input string, using the default settings (UTF-8, base entities). That is,
+        /// <c>&lt;</c>
+        /// is returned as
+        /// <c>&amp;lt;</c>
+        /// </remarks>
+        /// <param name="string">the un-escaped string to escape</param>
+        /// <returns>the escaped string</returns>
+        public static String Escape(String @string) {
+            return Escape(@string, DefaultOutput);
         }
 
         // this method is ugly, and does a lot. but other breakups cause rescanning and stringbuilder generations
-        internal static void Escape(StringBuilder accum, String str, OutputSettings outputSettings, bool inAttribute
-            , bool normaliseWhite, bool stripLeadingWhite) {
+        internal static void Escape(StringBuilder accum, String str, OutputSettings @out, bool inAttribute, bool normaliseWhite
+            , bool stripLeadingWhite) {
             bool lastWasWhite = false;
             bool reachedNonWhite = false;
-            Entities.EscapeMode escapeMode = outputSettings.EscapeMode();
-            System.Text.Encoding encoder = outputSettings.Charset();
-            Entities.CoreCharset coreCharset = GetCoreCharsetByName(outputSettings.Charset().Name());
-            IDictionary<char, String> map = escapeMode.GetMap();
+            Entities.EscapeMode escapeMode = @out.EscapeMode();
+            System.Text.Encoding encoder = @out.Encoder();
+            Entities.CoreCharset coreCharset = @out.coreCharset;
+            // init in out.prepareEncoder()
             int length = str.Length;
             int codePoint;
             for (int offset = 0; offset < length; offset += iText.IO.Util.TextUtil.CharCount(codePoint)) {
                 codePoint = str.CodePointAt(offset);
                 if (normaliseWhite) {
-                    if (iText.StyledXmlParser.Jsoup.Helper.StringUtil.IsWhitespace(codePoint)) {
+                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.IsWhitespace(codePoint)) {
                         if ((stripLeadingWhite && !reachedNonWhite) || lastWasWhite) {
                             continue;
                         }
@@ -197,8 +249,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                         }
 
                         case '<': {
-                            // escape when in character data or when in a xml attribue val; not needed in html attr val
-                            if (!inAttribute || escapeMode == Entities.EscapeMode.xhtml) {
+                            // escape when in character data or when in a xml attribute val or XML syntax; not needed in html attr val
+                            if (!inAttribute || escapeMode == Entities.EscapeMode.xhtml || @out.Syntax() == iText.StyledXmlParser.Jsoup.Nodes.Syntax
+                                .xml) {
                                 accum.Append("&lt;");
                             }
                             else {
@@ -232,12 +285,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                                 accum.Append(c);
                             }
                             else {
-                                if (map.ContainsKey(c)) {
-                                    accum.Append('&').Append(map.Get(c)).Append(';');
-                                }
-                                else {
-                                    accum.Append("&#x").Append(JavaUtil.IntegerToHexString(codePoint)).Append(';');
-                                }
+                                AppendEncoded(accum, escapeMode, codePoint);
                             }
                             break;
                         }
@@ -250,13 +298,33 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                         accum.Append(c);
                     }
                     else {
-                        accum.Append("&#x").Append(JavaUtil.IntegerToHexString(codePoint)).Append(';');
+                        AppendEncoded(accum, escapeMode, codePoint);
                     }
                 }
             }
         }
 
-        internal static String Unescape(String @string) {
+        private static void AppendEncoded(StringBuilder accum, Entities.EscapeMode escapeMode, int codePoint) {
+            String name = escapeMode.NameForCodepoint(codePoint);
+            if (!emptyName.Equals(name)) {
+                // ok for identity check
+                accum.Append('&').Append(name).Append(';');
+            }
+            else {
+                accum.Append("&#x").Append(JavaUtil.IntegerToHexString(codePoint)).Append(';');
+            }
+        }
+
+        /// <summary>Un-escape an HTML escaped string.</summary>
+        /// <remarks>
+        /// Un-escape an HTML escaped string. That is,
+        /// <c>&amp;lt;</c>
+        /// is returned as
+        /// <c>&lt;</c>.
+        /// </remarks>
+        /// <param name="string">the HTML string to un-escape</param>
+        /// <returns>the unescaped string</returns>
+        public static String Unescape(String @string) {
             return Unescape(@string, false);
         }
 
@@ -282,7 +350,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         * Jsoup: 167, 2
         */
         private static bool CanEncode(Entities.CoreCharset charset, char c, System.Text.Encoding fallback) {
-            // todo add more charset tests if impacted by Android's bad perf in canEncode
             switch (charset) {
                 case Entities.CoreCharset.ascii: {
                     return c < 0x80;
@@ -299,13 +366,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
         }
 
-        private enum CoreCharset {
+        internal enum CoreCharset {
             ascii,
             utf,
             fallback
         }
 
-        private static Entities.CoreCharset GetCoreCharsetByName(String name) {
+        internal static Entities.CoreCharset GetCoreCharsetByName(String name) {
             if (name.Equals("US-ASCII")) {
                 return Entities.CoreCharset.ascii;
             }
@@ -316,58 +383,41 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return Entities.CoreCharset.fallback;
         }
 
-        // xhtml has restricted entities
-        private static readonly Object[][] xhtmlArray = new Object[][] { new Object[] { "quot", 0x00022 }, new Object
-            [] { "amp", 0x00026 }, new Object[] { "lt", 0x0003C }, new Object[] { "gt", 0x0003E } };
-
-        static Entities() {
-            xhtmlByVal = new Dictionary<char, String>();
-            @base = LoadEntities("entities-base.properties");
-            // most common / default
-            baseByVal = ToCharacterKey(@base);
-            full = LoadEntities("entities-full.properties");
-            // extended and overblown.
-            fullByVal = ToCharacterKey(full);
-            foreach (Object[] entity in xhtmlArray) {
-                char c = (char)((int?)entity[1]).Value;
-                xhtmlByVal.Put(c, ((String)entity[0]));
-            }
-        }
-
-        private static IDictionary<String, char?> LoadEntities(String filename) {
-            Properties properties = new Properties();
-            IDictionary<String, char?> entities = new Dictionary<String, char?>();
-            try {
-                Stream @in = typeof(Entities).GetResourceAsStream(filename);
-                properties.Load(@in);
-                @in.Dispose();
-            }
-            catch (System.IO.IOException e) {
-                throw new MissingResourceException("Error loading entities resource: " + e.Message, "Entities", filename);
-            }
-            foreach (Object name in properties.Keys) {
-                char? val = (char)Convert.ToInt32(properties.GetProperty((String)name), 16);
-                entities.Put((String)name, val);
-            }
-            return entities;
-        }
-
-        private static IDictionary<char, String> ToCharacterKey(IDictionary<String, char?> inMap) {
-            IDictionary<char, String> outMap = new Dictionary<char, String>();
-            foreach (KeyValuePair<String, char?> entry in inMap) {
-                char character = (char)entry.Value;
-                String name = entry.Key;
-                if (outMap.ContainsKey(character)) {
-                    // dupe, prefer the lower case version
-                    if (name.ToLowerInvariant().Equals(name)) {
-                        outMap.Put(character, name);
-                    }
+        private static void Load(Entities.EscapeMode e, String pointsData, int size) {
+            e.nameKeys = new String[size];
+            e.codeVals = new int[size];
+            e.codeKeys = new int[size];
+            e.nameVals = new String[size];
+            int i = 0;
+            CharacterReader reader = new CharacterReader(pointsData);
+            while (!reader.IsEmpty()) {
+                // NotNestedLessLess=10913,824;1887&
+                String name = reader.ConsumeTo('=');
+                reader.Advance();
+                int cp1 = PortUtil.ToInt32(reader.ConsumeToAny(codeDelims), codepointRadix);
+                char codeDelim = reader.Current();
+                reader.Advance();
+                int cp2;
+                if (codeDelim == ',') {
+                    cp2 = PortUtil.ToInt32(reader.ConsumeTo(';'), codepointRadix);
+                    reader.Advance();
                 }
                 else {
-                    outMap.Put(character, name);
+                    cp2 = empty;
                 }
+                String indexS = reader.ConsumeTo('&');
+                int index = PortUtil.ToInt32(indexS, codepointRadix);
+                reader.Advance();
+                e.nameKeys[i] = name;
+                e.codeVals[i] = cp1;
+                e.codeKeys[index] = cp1;
+                e.nameVals[index] = name;
+                if (cp2 != empty) {
+                    multipoints.Put(name, new String(new char[] { (char)cp1, (char)cp2 }, 0, 2));
+                }
+                i++;
             }
-            return outMap;
+            Validate.IsTrue(i == size, "Unexpected count of entities loaded");
         }
     }
 }

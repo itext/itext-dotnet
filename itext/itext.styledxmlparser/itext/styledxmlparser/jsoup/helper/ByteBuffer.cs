@@ -44,7 +44,7 @@ using System;
 
 namespace iText.StyledXmlParser.Jsoup.Helper
 {
-    internal class ByteBuffer {
+    public class ByteBuffer {
         internal byte[] buffer;
         internal int position = 0;
         internal int mark = -1;

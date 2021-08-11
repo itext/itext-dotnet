@@ -88,9 +88,7 @@ namespace iText.Svg {
             /// <summary>Tag defining a clipping path.</summary>
             /// <remarks>Tag defining a clipping path. A clipping path defines the region where can be drawn. Anything outside the path won't be drawn.
             ///     </remarks>
-            public static readonly String CLIP_PATH = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "clipPath".ToLowerInvariant();
+            public const String CLIP_PATH = "clipPath";
 
             /// <summary>Tag defining the color profile to be used.</summary>
             public const String COLOR_PROFILE = "color-profile";
@@ -235,9 +233,7 @@ namespace iText.Svg {
             /// Tag defining a
             /// <see cref="iText.Svg.Renderers.Impl.LinearGradientSvgNodeRenderer">linear gradient</see>.
             /// </summary>
-            public static readonly String LINEAR_GRADIENT = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "linearGradient".ToLowerInvariant();
+            public const String LINEAR_GRADIENT = "linearGradient";
 
             /// <summary>Tag defining a link</summary>
             public const String LINK = "link";
@@ -404,14 +400,10 @@ namespace iText.Svg {
             public const String BOLD = "bold";
 
             /// <summary>Attribute defining the units relation for a color gradient.</summary>
-            public static readonly String GRADIENT_UNITS = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "gradientUnits".ToLowerInvariant();
+            public const String GRADIENT_UNITS = "gradientUnits";
 
             /// <summary>Attribute defining the transformations for a color gradient.</summary>
-            public static readonly String GRADIENT_TRANSFORM = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "gradientTransform".ToLowerInvariant();
+            public const String GRADIENT_TRANSFORM = "gradientTransform";
 
             /// <summary>Attribute defining the height.</summary>
             /// <remarks>Attribute defining the height. Used in several elements.</remarks>
@@ -427,9 +419,7 @@ namespace iText.Svg {
             public const String MARKER_END = "marker-end";
 
             /// <summary>Attribute defining the height of the viewport in which the marker is to be fitted</summary>
-            public static readonly String MARKER_HEIGHT = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "markerHeight".ToLowerInvariant();
+            public const String MARKER_HEIGHT = "markerHeight";
 
             /// <summary>Attribute defining the marker drawn at every other vertex but the start and end of a path, line, polygon or polyline
             ///     </summary>
@@ -439,15 +429,11 @@ namespace iText.Svg {
             public const String MARKER_START = "marker-start";
 
             /// <summary>Attribute defining the width of the viewport in which the marker is to be fitted</summary>
-            public static readonly String MARKER_WIDTH = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "markerWidth".ToLowerInvariant();
+            public const String MARKER_WIDTH = "markerWidth";
 
             /// <summary>Attribute defining the coordinate system for attributes ‘markerWidth’, ‘markerHeight’ and the contents of the ‘marker’.
             ///     </summary>
-            public static readonly String MARKER_UNITS = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "markerUnits".ToLowerInvariant();
+            public const String MARKER_UNITS = "markerUnits";
 
             /// <summary>Attribute defining the offset of a stop color for gradients.</summary>
             public const String OFFSET = "offset";
@@ -528,42 +514,30 @@ namespace iText.Svg {
             public const String PATH_DATA_REL_QUAD_CURVE_TO = "q";
 
             /// <summary>Attribute defining the coordinate system for the pattern content.</summary>
-            public static readonly String PATTERN_CONTENT_UNITS = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "patternContentUnits".ToLowerInvariant();
+            public const String PATTERN_CONTENT_UNITS = "patternContentUnits";
 
             /// <summary>Attribute defining list of transform definitions for the pattern element.</summary>
-            public static readonly String PATTERN_TRANSFORM = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "patternTransform".ToLowerInvariant();
+            public const String PATTERN_TRANSFORM = "patternTransform";
 
             /// <summary>Attribute defining the coordinate system for attributes x, y, width , and height in pattern.</summary>
-            public static readonly String PATTERN_UNITS = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "patternUnits".ToLowerInvariant();
+            public const String PATTERN_UNITS = "patternUnits";
 
             /// <summary>Attribute defining the points of a polyline or polygon.</summary>
             public const String POINTS = "points";
 
             /// <summary>Attribute defining how to preserve the aspect ratio when scaling.</summary>
-            public static readonly String PRESERVE_ASPECT_RATIO = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "preserveAspectRatio".ToLowerInvariant();
+            public const String PRESERVE_ASPECT_RATIO = "preserveAspectRatio";
 
             /// <summary>Attribute defining the radius of a circle.</summary>
             public const String R = "r";
 
             /// <summary>Attribute defining the x-axis coordinate of the reference point which is to be aligned exactly at the marker position.
             ///     </summary>
-            public static readonly String REFX = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "refX".ToLowerInvariant();
+            public const String REFX = "refX";
 
             /// <summary>Attribute defining the y-axis coordinate of the reference point which is to be aligned exactly at the marker position.
             ///     </summary>
-            public static readonly String REFY = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "refY".ToLowerInvariant();
+            public const String REFY = "refY";
 
             /// <summary>Attribute defining the x-axis of an ellipse or the x-axis radius of rounded rectangles.</summary>
             public const String RX = "rx";
@@ -572,9 +546,7 @@ namespace iText.Svg {
             public const String RY = "ry";
 
             /// <summary>Attribute defining the spread method for a color gradient.</summary>
-            public static readonly String SPREAD_METHOD = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "spreadMethod".ToLowerInvariant();
+            public const String SPREAD_METHOD = "spreadMethod";
 
             /// <summary>Attribute defining the stroke color.</summary>
             public const String STROKE = "stroke";
@@ -610,9 +582,7 @@ namespace iText.Svg {
             public const String TRANSFORM = "transform";
 
             /// <summary>Attribute defining the viewbox of an element.</summary>
-            public static readonly String VIEWBOX = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "viewBox".ToLowerInvariant();
+            public const String VIEWBOX = "viewBox";
 
             /// <summary>Attribute defining the width of an element.</summary>
             public const String WIDTH = "width";

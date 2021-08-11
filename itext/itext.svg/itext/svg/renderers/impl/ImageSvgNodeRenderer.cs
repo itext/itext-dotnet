@@ -100,6 +100,13 @@ namespace iText.Svg.Renderers.Impl {
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO)) {
                 preserveAspectRatio = attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO);
             }
+            else {
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant())) {
+                    // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                    preserveAspectRatio = attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant
+                        ());
+                }
+            }
             preserveAspectRatio = preserveAspectRatio.ToLowerInvariant();
             if (!SvgConstants.Values.NONE.Equals(preserveAspectRatio) && !(width == 0 || height == 0)) {
                 float normalizedWidth;

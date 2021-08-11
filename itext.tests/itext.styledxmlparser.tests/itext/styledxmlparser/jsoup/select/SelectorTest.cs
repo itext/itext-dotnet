@@ -3,42 +3,22 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.StyledXmlParser.Jsoup.Nodes;
@@ -50,8 +30,9 @@ namespace iText.StyledXmlParser.Jsoup.Select {
     public class SelectorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestByTag() {
-            Elements els = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div id=1><div id=2><p>Hello</p></div></div><div id=3>"
-                ).Select("div");
+            // should be case insensitive
+            Elements els = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div id=1><div id=2><p>Hello</p></div></div><DIV id=3>"
+                ).Select("DIV");
             NUnit.Framework.Assert.AreEqual(3, els.Count);
             NUnit.Framework.Assert.AreEqual("1", els[0].Id());
             NUnit.Framework.Assert.AreEqual("2", els[1].Id());
@@ -74,8 +55,8 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         [NUnit.Framework.Test]
         public virtual void TestByClass() {
-            Elements els = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p id=0 class='one two'><p id=1 class='one'><p id=2 class='two'>"
-                ).Select("p.one");
+            Elements els = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p id=0 class='ONE two'><p id=1 class='one'><p id=2 class='two'>"
+                ).Select("P.One");
             NUnit.Framework.Assert.AreEqual(2, els.Count);
             NUnit.Framework.Assert.AreEqual("0", els[0].Id());
             NUnit.Framework.Assert.AreEqual("1", els[1].Id());
@@ -86,35 +67,13 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestByAttribute() {
-            String h = "<div Title=Foo /><div Title=Bar /><div Style=Qux /><div title=Bam /><div title=SLAM />" + "<div data-name='with spaces'/>";
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
-            Elements withTitle = doc.Select("[title]");
-            NUnit.Framework.Assert.AreEqual(4, withTitle.Count);
-            Elements foo = doc.Select("[title=foo]");
-            NUnit.Framework.Assert.AreEqual(1, foo.Count);
-            Elements foo2 = doc.Select("[title=\"foo\"]");
-            NUnit.Framework.Assert.AreEqual(1, foo2.Count);
-            Elements foo3 = doc.Select("[title=\"Foo\"]");
-            NUnit.Framework.Assert.AreEqual(1, foo3.Count);
-            Elements dataName = doc.Select("[data-name=\"with spaces\"]");
-            NUnit.Framework.Assert.AreEqual(1, dataName.Count);
-            NUnit.Framework.Assert.AreEqual("with spaces", dataName.First().Attr("data-name"));
-            Elements not = doc.Select("div[title!=bar]");
-            NUnit.Framework.Assert.AreEqual(5, not.Count);
-            NUnit.Framework.Assert.AreEqual("Foo", not.First().Attr("title"));
-            Elements starts = doc.Select("[title^=ba]");
-            NUnit.Framework.Assert.AreEqual(2, starts.Count);
-            NUnit.Framework.Assert.AreEqual("Bar", starts.First().Attr("title"));
-            NUnit.Framework.Assert.AreEqual("Bam", starts.Last().Attr("title"));
-            Elements ends = doc.Select("[title$=am]");
-            NUnit.Framework.Assert.AreEqual(2, ends.Count);
-            NUnit.Framework.Assert.AreEqual("Bam", ends.First().Attr("title"));
-            NUnit.Framework.Assert.AreEqual("SLAM", ends.Last().Attr("title"));
-            Elements contains = doc.Select("[title*=a]");
-            NUnit.Framework.Assert.AreEqual(3, contains.Count);
-            NUnit.Framework.Assert.AreEqual("Bar", contains.First().Attr("title"));
-            NUnit.Framework.Assert.AreEqual("SLAM", contains.Last().Attr("title"));
+        public virtual void TestByClassCaseInsensitive() {
+            String html = "<p Class=foo>One <p Class=Foo>Two <p class=FOO>Three <p class=farp>Four";
+            Elements elsFromClass = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html).Select("P.Foo");
+            Elements elsFromAttr = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html).Select("p[class=foo]");
+            NUnit.Framework.Assert.AreEqual(elsFromAttr.Count, elsFromClass.Count);
+            NUnit.Framework.Assert.AreEqual(3, elsFromClass.Count);
+            NUnit.Framework.Assert.AreEqual("Two", elsFromClass[1].Text());
         }
 
         [NUnit.Framework.Test]
@@ -138,16 +97,59 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestByAttributeStarting() {
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div id=1 data-name=jsoup>Hello</div><p data-val=5 id=2>There</p><p id=3>No</p>"
+        public virtual void TestWildcardNamespacedTag() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><abc:def id=1>Hello</abc:def></div> <abc:def class=bold id=2>There</abc:def>"
                 );
-            Elements withData = doc.Select("[^data-]");
-            NUnit.Framework.Assert.AreEqual(2, withData.Count);
-            NUnit.Framework.Assert.AreEqual("1", withData.First().Id());
-            NUnit.Framework.Assert.AreEqual("2", withData.Last().Id());
-            withData = doc.Select("p[^data-]");
-            NUnit.Framework.Assert.AreEqual(1, withData.Count);
-            NUnit.Framework.Assert.AreEqual("2", withData.First().Id());
+            Elements byTag = doc.Select("*|def");
+            NUnit.Framework.Assert.AreEqual(2, byTag.Count);
+            NUnit.Framework.Assert.AreEqual("1", byTag.First().Id());
+            NUnit.Framework.Assert.AreEqual("2", byTag.Last().Id());
+            Elements byAttr = doc.Select(".bold");
+            NUnit.Framework.Assert.AreEqual(1, byAttr.Count);
+            NUnit.Framework.Assert.AreEqual("2", byAttr.Last().Id());
+            Elements byTagAttr = doc.Select("*|def.bold");
+            NUnit.Framework.Assert.AreEqual(1, byTagAttr.Count);
+            NUnit.Framework.Assert.AreEqual("2", byTagAttr.Last().Id());
+            Elements byContains = doc.Select("*|def:contains(e)");
+            NUnit.Framework.Assert.AreEqual(2, byContains.Count);
+            NUnit.Framework.Assert.AreEqual("1", byContains.First().Id());
+            NUnit.Framework.Assert.AreEqual("2", byContains.Last().Id());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestWildcardNamespacedXmlTag() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><Abc:Def id=1>Hello</Abc:Def></div> <Abc:Def class=bold id=2>There</abc:def>"
+                , "", iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser());
+            Elements byTag = doc.Select("*|Def");
+            NUnit.Framework.Assert.AreEqual(2, byTag.Count);
+            NUnit.Framework.Assert.AreEqual("1", byTag.First().Id());
+            NUnit.Framework.Assert.AreEqual("2", byTag.Last().Id());
+            Elements byAttr = doc.Select(".bold");
+            NUnit.Framework.Assert.AreEqual(1, byAttr.Count);
+            NUnit.Framework.Assert.AreEqual("2", byAttr.Last().Id());
+            Elements byTagAttr = doc.Select("*|Def.bold");
+            NUnit.Framework.Assert.AreEqual(1, byTagAttr.Count);
+            NUnit.Framework.Assert.AreEqual("2", byTagAttr.Last().Id());
+            Elements byContains = doc.Select("*|Def:contains(e)");
+            NUnit.Framework.Assert.AreEqual(2, byContains.Count);
+            NUnit.Framework.Assert.AreEqual("1", byContains.First().Id());
+            NUnit.Framework.Assert.AreEqual("2", byContains.Last().Id());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestWildCardNamespacedCaseVariations() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<One:Two>One</One:Two><three:four>Two</three:four>"
+                , "", iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser());
+            Elements els1 = doc.Select("One|Two");
+            Elements els2 = doc.Select("one|two");
+            Elements els3 = doc.Select("Three|Four");
+            Elements els4 = doc.Select("three|Four");
+            NUnit.Framework.Assert.AreEqual(els1, els2);
+            NUnit.Framework.Assert.AreEqual(els3, els4);
+            NUnit.Framework.Assert.AreEqual("One", els1.Text());
+            NUnit.Framework.Assert.AreEqual(1, els1.Count);
+            NUnit.Framework.Assert.AreEqual("Two", els3.Text());
+            NUnit.Framework.Assert.AreEqual(1, els2.Count);
         }
 
         [NUnit.Framework.Test]
@@ -218,7 +220,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             NUnit.Framework.Assert.AreEqual("div", els[1].TagName());
             NUnit.Framework.Assert.AreEqual("bar", els[1].Attr("title"));
             NUnit.Framework.Assert.AreEqual("div", els[2].TagName());
-            NUnit.Framework.Assert.IsTrue(els[2].Attr("title").Length == 0);
+            NUnit.Framework.Assert.AreEqual(0, els[2].Attr("title").Length);
             // missing attributes come back as empty string
             NUnit.Framework.Assert.IsFalse(els[2].HasAttr("title"));
             NUnit.Framework.Assert.AreEqual("p", els[3].TagName());
@@ -239,7 +241,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         public virtual void Descendant() {
             String h = "<div class=head><p class=first>Hello</p><p>There</p></div><p>None</p>";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
-            iText.StyledXmlParser.Jsoup.Nodes.Element root = doc.GetElementsByClass("head").First();
+            iText.StyledXmlParser.Jsoup.Nodes.Element root = doc.GetElementsByClass("HEAD").First();
             Elements els = root.Select(".head p");
             NUnit.Framework.Assert.AreEqual(2, els.Count);
             NUnit.Framework.Assert.AreEqual("Hello", els[0].Text());
@@ -342,10 +344,10 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             String h = "<dIv tItle=bAr><div>";
             // mixed case so a simple toLowerCase() on value doesn't catch
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
-            NUnit.Framework.Assert.AreEqual(2, doc.Select("DIV").Count);
-            NUnit.Framework.Assert.AreEqual(1, doc.Select("DIV[TITLE]").Count);
-            NUnit.Framework.Assert.AreEqual(1, doc.Select("DIV[TITLE=BAR]").Count);
-            NUnit.Framework.Assert.AreEqual(0, doc.Select("DIV[TITLE=BARBARELLA").Count);
+            NUnit.Framework.Assert.AreEqual(2, doc.Select("DiV").Count);
+            NUnit.Framework.Assert.AreEqual(1, doc.Select("DiV[TiTLE]").Count);
+            NUnit.Framework.Assert.AreEqual(1, doc.Select("DiV[TiTLE=BAR]").Count);
+            NUnit.Framework.Assert.AreEqual(0, doc.Select("DiV[TiTLE=BARBARELLA]").Count);
         }
 
         [NUnit.Framework.Test]
@@ -498,7 +500,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             NUnit.Framework.Assert.AreEqual(2, divs1.Count);
             NUnit.Framework.Assert.AreEqual("0", divs1[0].Id());
             NUnit.Framework.Assert.AreEqual("1", divs1[1].Id());
-            Elements divs2 = doc.Select("div:has([class]");
+            Elements divs2 = doc.Select("div:has([class])");
             NUnit.Framework.Assert.AreEqual(1, divs2.Count);
             NUnit.Framework.Assert.AreEqual("1", divs2[0].Id());
             Elements divs3 = doc.Select("div:has(span, p)");
@@ -512,6 +514,11 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             NUnit.Framework.Assert.AreEqual("body", els1.First().TagName());
             NUnit.Framework.Assert.AreEqual("0", els1[1].Id());
             NUnit.Framework.Assert.AreEqual("2", els1[2].Id());
+            Elements els2 = doc.Body().Select(":has(> span)");
+            NUnit.Framework.Assert.AreEqual(2, els2.Count);
+            // p, div
+            NUnit.Framework.Assert.AreEqual("p", els2.First().TagName());
+            NUnit.Framework.Assert.AreEqual("1", els2[1].Id());
         }
 
         [NUnit.Framework.Test]
@@ -534,27 +541,6 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestPseudoContains() {
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>The Rain.</p> <p class=light>The <i>rain</i>.</p> <p>Rain, the.</p></div>"
-                );
-            Elements ps1 = doc.Select("p:contains(Rain)");
-            NUnit.Framework.Assert.AreEqual(3, ps1.Count);
-            Elements ps2 = doc.Select("p:contains(the rain)");
-            NUnit.Framework.Assert.AreEqual(2, ps2.Count);
-            NUnit.Framework.Assert.AreEqual("The Rain.", ps2.First().Html());
-            NUnit.Framework.Assert.AreEqual("The <i>rain</i>.", ps2.Last().Html());
-            Elements ps3 = doc.Select("p:contains(the Rain):has(i)");
-            NUnit.Framework.Assert.AreEqual(1, ps3.Count);
-            NUnit.Framework.Assert.AreEqual("light", ps3.First().ClassName());
-            Elements ps4 = doc.Select(".light:contains(rain)");
-            NUnit.Framework.Assert.AreEqual(1, ps4.Count);
-            NUnit.Framework.Assert.AreEqual("light", ps3.First().ClassName());
-            Elements ps5 = doc.Select(":contains(rain)");
-            NUnit.Framework.Assert.AreEqual(8, ps5.Count);
-        }
-
-        // html, body, div,...
-        [NUnit.Framework.Test]
         public virtual void TestPsuedoContainsWithParentheses() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p id=1>This (is good)</p><p id=2>This is bad)</p>"
                 );
@@ -564,15 +550,6 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             Elements ps2 = doc.Select("p:contains(this is bad\\))");
             NUnit.Framework.Assert.AreEqual(1, ps2.Count);
             NUnit.Framework.Assert.AreEqual("2", ps2.First().Id());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ContainsOwn() {
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p id=1>Hello <b>there</b> now</p>");
-            Elements ps = doc.Select("p:containsOwn(Hello now)");
-            NUnit.Framework.Assert.AreEqual(1, ps.Count);
-            NUnit.Framework.Assert.AreEqual("1", ps.First().Id());
-            NUnit.Framework.Assert.AreEqual(0, doc.Select("p:containsOwn(there)").Count);
         }
 
         [NUnit.Framework.Test]
@@ -708,10 +685,216 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         public virtual void AttributeWithBrackets() {
             String html = "<div data='End]'>One</div> <div data='[Another)]]'>Two</div>";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
-            NUnit.Framework.Assert.AreEqual("One", doc.Select("div[data='End]'").First().Text());
-            NUnit.Framework.Assert.AreEqual("Two", doc.Select("div[data='[Another)]]'").First().Text());
-            NUnit.Framework.Assert.AreEqual("One", doc.Select("div[data=\"End]\"").First().Text());
-            NUnit.Framework.Assert.AreEqual("Two", doc.Select("div[data=\"[Another)]]\"").First().Text());
+            NUnit.Framework.Assert.AreEqual("One", doc.Select("div[data='End]']").First().Text());
+            NUnit.Framework.Assert.AreEqual("Two", doc.Select("div[data='[Another)]]']").First().Text());
+            NUnit.Framework.Assert.AreEqual("One", doc.Select("div[data=\"End]\"]").First().Text());
+            NUnit.Framework.Assert.AreEqual("Two", doc.Select("div[data=\"[Another)]]\"]").First().Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContainsWithQuote() {
+            String html = "<p>One'One</p><p>One'Two</p>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            Elements els = doc.Select("p:contains(One\\'One)");
+            NUnit.Framework.Assert.AreEqual(1, els.Count);
+            NUnit.Framework.Assert.AreEqual("One'One", els.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SelectFirst() {
+            String html = "<p>One<p>Two<p>Three";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            NUnit.Framework.Assert.AreEqual("One", doc.SelectFirst("p").Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SelectFirstWithAnd() {
+            String html = "<p>One<p class=foo>Two<p>Three";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            NUnit.Framework.Assert.AreEqual("Two", doc.SelectFirst("p.foo").Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SelectFirstWithOr() {
+            String html = "<p>One<p>Two<p>Three<div>Four";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            NUnit.Framework.Assert.AreEqual("One", doc.SelectFirst("p, div").Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchText() {
+            String html = "<p>One<br>Two</p>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            String origHtml = doc.Html();
+            Elements one = doc.Select("p:matchText:first-child");
+            NUnit.Framework.Assert.AreEqual("One", one.First().Text());
+            Elements two = doc.Select("p:matchText:last-child");
+            NUnit.Framework.Assert.AreEqual("Two", two.First().Text());
+            NUnit.Framework.Assert.AreEqual(origHtml, doc.Html());
+            NUnit.Framework.Assert.AreEqual("Two", doc.Select("p:matchText + br + *").Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NthLastChildWithNoParent() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element el = new iText.StyledXmlParser.Jsoup.Nodes.Element("p").Text("Orphan"
+                );
+            Elements els = el.Select("p:nth-last-child(1)");
+            NUnit.Framework.Assert.AreEqual(0, els.Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitOnBr() {
+            String html = "<div><p>One<br>Two<br>Three</p></div>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            Elements els = doc.Select("p:matchText");
+            NUnit.Framework.Assert.AreEqual(3, els.Count);
+            NUnit.Framework.Assert.AreEqual("One", els[0].Text());
+            NUnit.Framework.Assert.AreEqual("Two", els[1].Text());
+            NUnit.Framework.Assert.AreEqual("Three", els[2].ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchTextAttributes() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p class=one>One<br>Two<p class=two>Three<br>Four"
+                );
+            Elements els = doc.Select("p.two:matchText:last-child");
+            NUnit.Framework.Assert.AreEqual(1, els.Count);
+            NUnit.Framework.Assert.AreEqual("Four", els.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FindBetweenSpan() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p><span>One</span> Two <span>Three</span>");
+            Elements els = doc.Select("span ~ p:matchText");
+            // the Two becomes its own p, sibling of the span
+            NUnit.Framework.Assert.AreEqual(1, els.Count);
+            NUnit.Framework.Assert.AreEqual("Two", els.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StartsWithBeginsWithSpace() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<small><a href=\" mailto:abc@def.net\">(abc@def.net)</a></small>"
+                );
+            Elements els = doc.Select("a[href^=' mailto']");
+            NUnit.Framework.Assert.AreEqual(1, els.Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EndsWithEndsWithSpaces() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<small><a href=\" mailto:abc@def.net \">(abc@def.net)</a></small>"
+                );
+            Elements els = doc.Select("a[href$='.net ']");
+            NUnit.Framework.Assert.AreEqual(1, els.Count);
+        }
+
+        // https://github.com/jhy/jsoup/issues/1257
+        private readonly String mixedCase = "<html xmlns:n=\"urn:ns\"><n:mixedCase>text</n:mixedCase></html>";
+
+        private readonly String lowercase = "<html xmlns:n=\"urn:ns\"><n:lowercase>text</n:lowercase></html>";
+
+        [NUnit.Framework.Test]
+        public virtual void Html_mixed_case_simple_name() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(mixedCase, "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .HtmlParser());
+            NUnit.Framework.Assert.AreEqual(0, doc.Select("mixedCase").Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Html_mixed_case_wildcard_name() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(mixedCase, "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .HtmlParser());
+            NUnit.Framework.Assert.AreEqual(1, doc.Select("*|mixedCase").Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Html_lowercase_simple_name() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(lowercase, "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .HtmlParser());
+            NUnit.Framework.Assert.AreEqual(0, doc.Select("lowercase").Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Html_lowercase_wildcard_name() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(lowercase, "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .HtmlParser());
+            NUnit.Framework.Assert.AreEqual(1, doc.Select("*|lowercase").Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Xml_mixed_case_simple_name() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(mixedCase, "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
+            NUnit.Framework.Assert.AreEqual(0, doc.Select("mixedCase").Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Xml_mixed_case_wildcard_name() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(mixedCase, "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
+            NUnit.Framework.Assert.AreEqual(1, doc.Select("*|mixedCase").Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Xml_lowercase_simple_name() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(lowercase, "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
+            NUnit.Framework.Assert.AreEqual(0, doc.Select("lowercase").Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Xml_lowercase_wildcard_name() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(lowercase, "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
+            NUnit.Framework.Assert.AreEqual(1, doc.Select("*|lowercase").Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TrimSelector() {
+            // https://github.com/jhy/jsoup/issues/1274
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p><span>Hello");
+            Elements els = doc.Select(" p span ");
+            NUnit.Framework.Assert.AreEqual(1, els.Count);
+            NUnit.Framework.Assert.AreEqual("Hello", els.First().Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XmlWildcardNamespaceTest() {
+            // https://github.com/jhy/jsoup/issues/1208
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<ns1:MyXmlTag>1111</ns1:MyXmlTag><ns2:MyXmlTag>2222</ns2:MyXmlTag>"
+                , "", iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser());
+            Elements select = doc.Select("*|MyXmlTag");
+            NUnit.Framework.Assert.AreEqual(2, select.Count);
+            NUnit.Framework.Assert.AreEqual("1111", select[0].Text());
+            NUnit.Framework.Assert.AreEqual("2222", select[1].Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChildElements() {
+            // https://github.com/jhy/jsoup/issues/1292
+            String html = "<body><span id=1>One <span id=2>Two</span></span></body>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            iText.StyledXmlParser.Jsoup.Nodes.Element outer = doc.SelectFirst("span");
+            iText.StyledXmlParser.Jsoup.Nodes.Element span = outer.SelectFirst("span");
+            iText.StyledXmlParser.Jsoup.Nodes.Element inner = outer.SelectFirst("* span");
+            NUnit.Framework.Assert.AreEqual("1", outer.Id());
+            NUnit.Framework.Assert.AreEqual("1", span.Id());
+            NUnit.Framework.Assert.AreEqual("2", inner.Id());
+            NUnit.Framework.Assert.AreEqual(outer, span);
+            NUnit.Framework.Assert.AreNotEqual(outer, inner);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SelectFirstLevelChildrenOnly() {
+            // testcase for https://github.com/jhy/jsoup/issues/984
+            String html = "<div><span>One <span>Two</span></span> <span>Three <span>Four</span></span>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("div");
+            NUnit.Framework.Assert.IsNotNull(div);
+            // want to select One and Three only - the first level children
+            Elements spans = div.Select(":root > span");
+            NUnit.Framework.Assert.AreEqual(2, spans.Count);
+            NUnit.Framework.Assert.AreEqual("One Two", spans[0].Text());
+            NUnit.Framework.Assert.AreEqual("Three Four", spans[1].Text());
         }
     }
 }

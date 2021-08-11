@@ -3,47 +3,29 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Helper;
+using iText.StyledXmlParser.Jsoup.Parser;
 using iText.StyledXmlParser.Jsoup.Select;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
@@ -53,10 +35,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         private iText.StyledXmlParser.Jsoup.Nodes.OutputSettings outputSettings = new iText.StyledXmlParser.Jsoup.Nodes.OutputSettings
             ();
 
+        private iText.StyledXmlParser.Jsoup.Parser.Parser parser;
+
+        // the parser used to parse this document
         private iText.StyledXmlParser.Jsoup.Nodes.QuirksMode quirksMode = iText.StyledXmlParser.Jsoup.Nodes.QuirksMode
             .noQuirks;
 
-        private String location;
+        private readonly String location;
 
         private bool updateMetaCharset = false;
 
@@ -65,16 +50,19 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <seealso cref="iText.StyledXmlParser.Jsoup.Jsoup.Parse(System.String)"/>
         /// <seealso cref="CreateShell(System.String)"/>
         public Document(String baseUri)
-            : base(iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("#root"), baseUri) {
+            : base(iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("#root", ParseSettings.htmlDefault), baseUri) {
             this.location = baseUri;
+            this.parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser();
         }
 
+        // default, but overridable
         /// <summary>Create a valid, empty shell of a document, suitable for adding more elements to.</summary>
         /// <param name="baseUri">baseUri of document</param>
         /// <returns>document with html, head, and body elements.</returns>
         public static iText.StyledXmlParser.Jsoup.Nodes.Document CreateShell(String baseUri) {
             Validate.NotNull(baseUri);
             iText.StyledXmlParser.Jsoup.Nodes.Document doc = new iText.StyledXmlParser.Jsoup.Nodes.Document(baseUri);
+            doc.parser = doc.Parser();
             iText.StyledXmlParser.Jsoup.Nodes.Element html = doc.AppendElement("html");
             html.AppendElement("head");
             html.AppendElement("body");
@@ -85,36 +73,111 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <remarks>
         /// Get the URL this Document was parsed from. If the starting URL is a redirect,
         /// this will return the final URL from which the document was served from.
+        /// <para />Will return an empty string if the location is unknown (e.g. if parsed from a String).
         /// </remarks>
         /// <returns>location</returns>
         public virtual String Location() {
             return location;
         }
 
-        /// <summary>
-        /// Accessor to the document's
-        /// <c>head</c>
-        /// element.
-        /// </summary>
-        /// <returns>
-        /// 
-        /// <c>head</c>
-        /// </returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Head() {
-            return FindFirstElementByTagName("head", this);
+        /// <summary>Returns this Document's doctype.</summary>
+        /// <returns>document type, or null if not set</returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.DocumentType DocumentType() {
+            foreach (iText.StyledXmlParser.Jsoup.Nodes.Node node in childNodes) {
+                if (node is iText.StyledXmlParser.Jsoup.Nodes.DocumentType) {
+                    return (iText.StyledXmlParser.Jsoup.Nodes.DocumentType)node;
+                }
+                else {
+                    if (!(node is LeafNode)) {
+                        // scans forward across comments, text, processing instructions etc
+                        break;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>Find the root HTML element, or create it if it doesn't exist.</summary>
+        /// <returns>the root HTML element.</returns>
+        private iText.StyledXmlParser.Jsoup.Nodes.Element HtmlEl() {
+            foreach (iText.StyledXmlParser.Jsoup.Nodes.Element el in ChildElementsList()) {
+                if (el.NormalName().Equals("html")) {
+                    return el;
+                }
+            }
+            return AppendElement("html");
         }
 
         /// <summary>
-        /// Accessor to the document's
-        /// <c>body</c>
+        /// Get this document's
+        /// <c>head</c>
         /// element.
         /// </summary>
+        /// <remarks>
+        /// Get this document's
+        /// <c>head</c>
+        /// element.
+        /// <para />
+        /// As a side-effect, if this Document does not already have a HTML structure, it will be created. If you do not want
+        /// that, use
+        /// <c>#selectFirst("head")</c>
+        /// instead.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <c>head</c>
+        /// element.
+        /// </returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Head() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element html = HtmlEl();
+            foreach (iText.StyledXmlParser.Jsoup.Nodes.Element el in html.ChildElementsList()) {
+                if (el.NormalName().Equals("head")) {
+                    return el;
+                }
+            }
+            return html.PrependElement("head");
+        }
+
+        /// <summary>
+        /// Get this document's
+        /// <c>&lt;body&gt;</c>
+        /// or
+        /// <c>&lt;frameset&gt;</c>
+        /// element.
+        /// </summary>
+        /// <remarks>
+        /// Get this document's
+        /// <c>&lt;body&gt;</c>
+        /// or
+        /// <c>&lt;frameset&gt;</c>
+        /// element.
+        /// <para />
+        /// As a <b>side-effect</b>, if this Document does not already have a HTML structure, it will be created with a
+        /// <c>&lt;body&gt;</c>
+        /// element. If you do not want that, use
+        /// <c>#selectFirst("body")</c>
+        /// instead.
+        /// </remarks>
         /// <returns>
         /// 
         /// <c>body</c>
+        /// element for documents with a
+        /// <c>&lt;body&gt;</c>
+        /// , a new
+        /// <c>&lt;body&gt;</c>
+        /// element if the document
+        /// had no contents, or the outermost
+        /// <c>&lt;frameset&gt; element</c>
+        /// for frameset documents.
         /// </returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Body() {
-            return FindFirstElementByTagName("body", this);
+            iText.StyledXmlParser.Jsoup.Nodes.Element html = HtmlEl();
+            foreach (iText.StyledXmlParser.Jsoup.Nodes.Element el in html.ChildElementsList()) {
+                if ("body".Equals(el.NormalName()) || "frameset".Equals(el.NormalName())) {
+                    return el;
+                }
+            }
+            return html.AppendElement("body");
         }
 
         /// <summary>
@@ -125,10 +188,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>Trimmed title, or empty string if none set.</returns>
         public virtual String Title() {
             // title is a preserve whitespace tag (for document output), but normalised here
-            iText.StyledXmlParser.Jsoup.Nodes.Element titleEl = GetElementsByTag("title").First();
-            return titleEl != null ? iText.StyledXmlParser.Jsoup.Helper.StringUtil.NormaliseWhitespace(titleEl.Text())
-                .Trim() : "";
+            iText.StyledXmlParser.Jsoup.Nodes.Element titleEl = Head().SelectFirst(titleEval);
+            return titleEl != null ? iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace(titleEl.Text(
+                )).Trim() : "";
         }
+
+        private static readonly Evaluator titleEval = new Evaluator.Tag("title");
 
         /// <summary>
         /// Set the document's
@@ -148,14 +213,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="title">string to set as title</param>
         public virtual void Title(String title) {
             Validate.NotNull(title);
-            iText.StyledXmlParser.Jsoup.Nodes.Element titleEl = GetElementsByTag("title").First();
+            iText.StyledXmlParser.Jsoup.Nodes.Element titleEl = Head().SelectFirst(titleEval);
             if (titleEl == null) {
                 // add to head
-                Head().AppendElement("title").Text(title);
+                titleEl = Head().AppendElement("title");
             }
-            else {
-                titleEl.Text(title);
-            }
+            titleEl.Text(title);
         }
 
         /// <summary>Create a new Element, with this document's base uri.</summary>
@@ -169,7 +232,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>new element</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element CreateElement(String tagName) {
             return new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf(tagName
-                ), this.BaseUri());
+                , ParseSettings.preserveCase), this.BaseUri());
         }
 
         /// <summary>Normalise the document.</summary>
@@ -179,19 +242,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </remarks>
         /// <returns>this document after normalisation</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Document Normalise() {
-            iText.StyledXmlParser.Jsoup.Nodes.Element htmlEl = FindFirstElementByTagName("html", this);
-            if (htmlEl == null) {
-                htmlEl = AppendElement("html");
-            }
-            if (Head() == null) {
-                htmlEl.PrependElement("head");
-            }
-            if (Body() == null) {
-                htmlEl.AppendElement("body");
-            }
+            iText.StyledXmlParser.Jsoup.Nodes.Element htmlEl = HtmlEl();
+            // these all create if not found
+            iText.StyledXmlParser.Jsoup.Nodes.Element head = Head();
+            Body();
             // pull text nodes out of root, html, and head els, and push into body. non-text nodes are already taken care
             // of. do in inverse order to maintain text order.
-            NormaliseTextNodes(Head());
+            NormaliseTextNodes(head);
             NormaliseTextNodes(htmlEl);
             NormaliseTextNodes(this);
             NormaliseStructure("head", htmlEl);
@@ -214,7 +271,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             for (int i = toMove.Count - 1; i >= 0; i--) {
                 iText.StyledXmlParser.Jsoup.Nodes.Node node = toMove[i];
                 element.RemoveChild(node);
-                Body().PrependChild(new TextNode(" ", ""));
+                Body().PrependChild(new TextNode(" "));
                 Body().PrependChild(node);
             }
         }
@@ -229,9 +286,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 IList<iText.StyledXmlParser.Jsoup.Nodes.Node> toMove = new List<iText.StyledXmlParser.Jsoup.Nodes.Node>();
                 for (int i = 1; i < elements.Count; i++) {
                     iText.StyledXmlParser.Jsoup.Nodes.Node dupe = elements[i];
-                    foreach (iText.StyledXmlParser.Jsoup.Nodes.Node node in dupe.childNodes) {
-                        toMove.Add(node);
-                    }
+                    toMove.AddAll(dupe.EnsureChildNodes());
                     dupe.Remove();
                 }
                 foreach (iText.StyledXmlParser.Jsoup.Nodes.Node dupe in toMove) {
@@ -239,29 +294,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 }
             }
             // ensure parented by <html>
-            if (!master.Parent().Equals(htmlEl)) {
+            if (master.Parent() != null && !master.Parent().Equals(htmlEl)) {
                 htmlEl.AppendChild(master);
             }
         }
 
         // includes remove()            
-        // fast method to get first by tag name, used for html, head, body finders
-        private iText.StyledXmlParser.Jsoup.Nodes.Element FindFirstElementByTagName(String tag, iText.StyledXmlParser.Jsoup.Nodes.Node
-             node) {
-            if (node.NodeName().Equals(tag)) {
-                return (iText.StyledXmlParser.Jsoup.Nodes.Element)node;
-            }
-            else {
-                foreach (iText.StyledXmlParser.Jsoup.Nodes.Node child in node.childNodes) {
-                    iText.StyledXmlParser.Jsoup.Nodes.Element found = FindFirstElementByTagName(tag, child);
-                    if (found != null) {
-                        return found;
-                    }
-                }
-            }
-            return null;
-        }
-
         public override String OuterHtml() {
             return base.Html();
         }
@@ -300,10 +338,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// This enables
         /// <see cref="UpdateMetaCharsetElement(bool)">meta charset update</see>.
         /// <para />
-        /// If there's no element with charset / encoding information yet it will
-        /// be created. Obsolete charset / encoding definitions are removed!
-        /// <para />
-        /// <b>Elements used:</b>
+        /// If there's no element with charset / encoding information yet it will be created.
+        /// Obsolete charset / encoding definitions are removed!
+        /// <para /><b>Elements used:</b>
         /// <list type="bullet">
         /// <item><description><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i>
         /// </description></item>
@@ -344,8 +381,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <see cref="Charset(System.Text.Encoding)">Document.charset(Charset)</see>
         /// or not.
         /// <para />
-        /// If set to <tt>false</tt> <i>(default)</i> there are no elements
-        /// modified.
+        /// If set to <tt>false</tt> <i>(default)</i> there are no elements modified.
         /// </remarks>
         /// <param name="update">
         /// If <tt>true</tt> the element updated on charset
@@ -388,7 +424,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// set to
         /// <tt>true</tt>, otherwise this method does nothing.
         /// <list type="bullet">
-        /// <item><description>An exsiting element gets updated with the current charset
+        /// <item><description>An existing element gets updated with the current charset
         /// </description></item>
         /// <item><description>If there's no element yet it will be inserted
         /// </description></item>
@@ -407,40 +443,36 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             if (updateMetaCharset) {
                 iText.StyledXmlParser.Jsoup.Nodes.Syntax syntax = OutputSettings().Syntax();
                 if (syntax == iText.StyledXmlParser.Jsoup.Nodes.Syntax.html) {
-                    iText.StyledXmlParser.Jsoup.Nodes.Element metaCharset = Select("meta[charset]").First();
+                    iText.StyledXmlParser.Jsoup.Nodes.Element metaCharset = SelectFirst("meta[charset]");
                     if (metaCharset != null) {
                         metaCharset.Attr("charset", Charset().DisplayName());
                     }
                     else {
-                        iText.StyledXmlParser.Jsoup.Nodes.Element head = Head();
-                        if (head != null) {
-                            head.AppendElement("meta").Attr("charset", Charset().DisplayName());
-                        }
+                        Head().AppendElement("meta").Attr("charset", Charset().DisplayName());
                     }
-                    // Remove obsolete elements
                     Select("meta[name=charset]").Remove();
                 }
                 else {
+                    // Remove obsolete elements
                     if (syntax == iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml) {
-                        iText.StyledXmlParser.Jsoup.Nodes.Node node = ChildNodes()[0];
+                        iText.StyledXmlParser.Jsoup.Nodes.Node node = EnsureChildNodes()[0];
                         if (node is XmlDeclaration) {
                             XmlDeclaration decl = (XmlDeclaration)node;
                             if (decl.Name().Equals("xml")) {
                                 decl.Attr("encoding", Charset().DisplayName());
-                                String version = decl.Attr("version");
-                                if (version != null) {
+                                if (decl.HasAttr("version")) {
                                     decl.Attr("version", "1.0");
                                 }
                             }
                             else {
-                                decl = new XmlDeclaration("xml", baseUri, false);
+                                decl = new XmlDeclaration("xml", false);
                                 decl.Attr("version", "1.0");
                                 decl.Attr("encoding", Charset().DisplayName());
                                 PrependChild(decl);
                             }
                         }
                         else {
-                            XmlDeclaration decl = new XmlDeclaration("xml", baseUri, false);
+                            XmlDeclaration decl = new XmlDeclaration("xml", false);
                             decl.Attr("version", "1.0");
                             decl.Attr("encoding", Charset().DisplayName());
                             PrependChild(decl);
@@ -450,8 +482,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
         }
 
+        // initialized by start of OuterHtmlVisitor
+        // fast encoders for ascii and utf8
+        // created at start of OuterHtmlVisitor so each pass has own encoder, so OutputSettings can be shared among threads
         // new charset and charset encoder
-        // indentAmount, prettyPrint are primitives so object.clone() will handle
         /// <summary>Get the document's current output settings.</summary>
         /// <returns>the document's current output settings.</returns>
         public virtual OutputSettings OutputSettings() {
@@ -475,6 +509,24 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             this.quirksMode = quirksMode;
             return this;
         }
+
+        /// <summary>Get the parser that was used to parse this document.</summary>
+        /// <returns>the parser</returns>
+        public virtual iText.StyledXmlParser.Jsoup.Parser.Parser Parser() {
+            return parser;
+        }
+
+        /// <summary>Set the parser used to create this document.</summary>
+        /// <remarks>
+        /// Set the parser used to create this document. This parser is then used when further parsing within this document
+        /// is required.
+        /// </remarks>
+        /// <param name="parser">the configured parser to use when further parsing is required for this document.</param>
+        /// <returns>this document, for chaining.</returns>
+        public virtual Document Parser(iText.StyledXmlParser.Jsoup.Parser.Parser parser) {
+            this.parser = parser;
+            return this;
+        }
     }
 
     /// <summary>A Document's output settings control the form of the text() and html() methods.</summary>
@@ -485,9 +537,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
  {
         private Entities.EscapeMode escapeMode = Entities.EscapeMode.@base;
 
-        private System.Text.Encoding charset = EncodingUtil.GetEncoding("UTF-8");
+        private System.Text.Encoding charset = DataUtil.UTF_8;
 
-        private System.Text.Encoding charsetEncoder;
+        private readonly ThreadLocal<System.Text.Encoding> encoderThreadLocal = new ThreadLocal<System.Text.Encoding
+            >();
+
+        internal Entities.CoreCharset coreCharset;
 
         private bool prettyPrint = true;
 
@@ -498,7 +553,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         private iText.StyledXmlParser.Jsoup.Nodes.Syntax syntax = iText.StyledXmlParser.Jsoup.Nodes.Syntax.html;
 
         public OutputSettings() {
-            charsetEncoder = iText.IO.Util.TextUtil.NewEncoder(charset);
         }
 
         /// <summary>
@@ -550,7 +604,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>the document's output settings, for chaining</returns>
         public virtual OutputSettings Charset(System.Text.Encoding charset) {
             this.charset = charset;
-            charsetEncoder = iText.IO.Util.TextUtil.NewEncoder(charset);
             return this;
         }
 
@@ -560,6 +613,18 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual OutputSettings Charset(String charset) {
             Charset(EncodingUtil.GetEncoding(charset));
             return this;
+        }
+
+        internal virtual System.Text.Encoding PrepareEncoder() {
+            System.Text.Encoding encoder = iText.IO.Util.TextUtil.NewEncoder(charset);
+            encoderThreadLocal.Value = encoder;
+            coreCharset = Entities.GetCoreCharsetByName(encoder.Name());
+            return encoder;
+        }
+
+        internal virtual System.Text.Encoding Encoder() {
+            System.Text.Encoding encoder = encoderThreadLocal.Value;
+            return encoder != null ? encoder : PrepareEncoder();
         }
 
         /// <summary>Get the document's current output syntax.</summary>
@@ -639,10 +704,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         public virtual Object Clone() {
-            OutputSettings clone;
-            clone = (OutputSettings)MemberwiseClone();
+            OutputSettings clone = (OutputSettings)MemberwiseClone();
             clone.Charset(charset.Name());
-            clone.escapeMode = Entities.EscapeMode.ValueOf(escapeMode.Name());
+            clone.escapeMode = escapeMode;
             return clone;
         }
     }

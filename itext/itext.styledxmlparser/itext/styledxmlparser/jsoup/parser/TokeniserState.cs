@@ -3,54 +3,34 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.IO.Util;
+using iText.StyledXmlParser.Jsoup.Nodes;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>States and transition activations for the Tokeniser.</summary>
     internal abstract class TokeniserState {
-        private sealed class _TokeniserState_52 : TokeniserState {
-            public _TokeniserState_52() {
+        private sealed class _TokeniserState_31 : TokeniserState {
+            public _TokeniserState_31() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "Data";
             }
 
@@ -88,13 +68,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState Data = new _TokeniserState_52();
+        internal static TokeniserState Data = new _TokeniserState_31();
 
-        private sealed class _TokeniserState_83 : TokeniserState {
-            public _TokeniserState_83() {
+        private sealed class _TokeniserState_62 : TokeniserState {
+            public _TokeniserState_62() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "CharacterReferenceInData";
             }
 
@@ -104,13 +84,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState CharacterReferenceInData = new _TokeniserState_83();
+        internal static TokeniserState CharacterReferenceInData = new _TokeniserState_62();
 
-        private sealed class _TokeniserState_96 : TokeniserState {
-            public _TokeniserState_96() {
+        private sealed class _TokeniserState_75 : TokeniserState {
+            public _TokeniserState_75() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "Rcdata";
             }
 
@@ -140,7 +120,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     default: {
-                        String data = r.ConsumeToAny('&', '<', TokeniserState.nullChar);
+                        String data = r.ConsumeData();
                         t.Emit(data);
                         break;
                     }
@@ -148,13 +128,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState Rcdata = new _TokeniserState_96();
+        internal static TokeniserState Rcdata = new _TokeniserState_75();
 
-        private sealed class _TokeniserState_128 : TokeniserState {
-            public _TokeniserState_128() {
+        private sealed class _TokeniserState_107 : TokeniserState {
+            public _TokeniserState_107() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "CharacterReferenceInRcdata";
             }
 
@@ -163,43 +143,43 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState CharacterReferenceInRcdata = new _TokeniserState_128();
+        internal static TokeniserState CharacterReferenceInRcdata = new _TokeniserState_107();
 
-        private sealed class _TokeniserState_140 : TokeniserState {
-            public _TokeniserState_140() {
+        private sealed class _TokeniserState_119 : TokeniserState {
+            public _TokeniserState_119() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "Rawtext";
             }
 
             internal override void Read(Tokeniser t, CharacterReader r) {
-                TokeniserState.ReadData(t, r, this, TokeniserState.RawtextLessthanSign);
+                TokeniserState.ReadRawData(t, r, this, TokeniserState.RawtextLessthanSign);
             }
         }
 
-        internal static TokeniserState Rawtext = new _TokeniserState_140();
+        internal static TokeniserState Rawtext = new _TokeniserState_119();
 
-        private sealed class _TokeniserState_152 : TokeniserState {
-            public _TokeniserState_152() {
+        private sealed class _TokeniserState_131 : TokeniserState {
+            public _TokeniserState_131() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptData";
             }
 
             internal override void Read(Tokeniser t, CharacterReader r) {
-                TokeniserState.ReadData(t, r, this, TokeniserState.ScriptDataLessthanSign);
+                TokeniserState.ReadRawData(t, r, this, TokeniserState.ScriptDataLessthanSign);
             }
         }
 
-        internal static TokeniserState ScriptData = new _TokeniserState_152();
+        internal static TokeniserState ScriptData = new _TokeniserState_131();
 
-        private sealed class _TokeniserState_164 : TokeniserState {
-            public _TokeniserState_164() {
+        private sealed class _TokeniserState_143 : TokeniserState {
+            public _TokeniserState_143() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "PLAINTEXT";
             }
 
@@ -226,13 +206,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState PLAINTEXT = new _TokeniserState_164();
+        internal static TokeniserState PLAINTEXT = new _TokeniserState_143();
 
-        private sealed class _TokeniserState_189 : TokeniserState {
-            public _TokeniserState_189() {
+        private sealed class _TokeniserState_168 : TokeniserState {
+            public _TokeniserState_168() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "TagOpen";
             }
 
@@ -250,6 +230,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     case '?': {
+                        t.CreateBogusCommentPending();
                         t.AdvanceTransition(TokeniserState.BogusComment);
                         break;
                     }
@@ -271,13 +252,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState TagOpen = new _TokeniserState_189();
+        internal static TokeniserState TagOpen = new _TokeniserState_168();
 
-        private sealed class _TokeniserState_222 : TokeniserState {
-            public _TokeniserState_222() {
+        private sealed class _TokeniserState_202 : TokeniserState {
+            public _TokeniserState_202() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "EndTagOpen";
             }
 
@@ -299,6 +280,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                         }
                         else {
                             t.Error(this);
+                            t.CreateBogusCommentPending();
                             t.AdvanceTransition(TokeniserState.BogusComment);
                         }
                     }
@@ -306,13 +288,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState EndTagOpen = new _TokeniserState_222();
+        internal static TokeniserState EndTagOpen = new _TokeniserState_202();
 
-        private sealed class _TokeniserState_247 : TokeniserState {
-            public _TokeniserState_247() {
+        private sealed class _TokeniserState_228 : TokeniserState {
+            public _TokeniserState_228() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "TagName";
             }
 
@@ -320,9 +302,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             internal override void Read(Tokeniser t, CharacterReader r) {
                 // previous TagOpen state did NOT consume, will have a letter char in current
                 //String tagName = r.consumeToAnySorted(tagCharsSorted).toLowerCase();
-                String tagName = r.ConsumeTagName().ToLowerInvariant();
+                String tagName = r.ConsumeTagName();
                 t.tagPending.AppendTagName(tagName);
-                switch (r.Consume()) {
+                char c = r.Consume();
+                switch (c) {
                     case '\t':
                     case '\n':
                     case '\r':
@@ -335,6 +318,15 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     case '/': {
                         t.Transition(TokeniserState.SelfClosingStartTag);
                         break;
+                    }
+
+                    case '<': {
+                        // NOTE: out of spec, but clear author intent
+                        r.Unconsume();
+                        t.Error(this);
+                        goto case 
+                                                // intended fall through to next >
+                                                '>';
                     }
 
                     case '>': {
@@ -355,18 +347,23 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                         t.Transition(TokeniserState.Data);
                         break;
                     }
+
+                    default: {
+                        // buffer underrun
+                        t.tagPending.AppendTagName(c);
+                        break;
+                    }
                 }
             }
         }
 
-        internal static TokeniserState TagName = new _TokeniserState_247();
+        internal static TokeniserState TagName = new _TokeniserState_228();
 
-        private sealed class _TokeniserState_287 : TokeniserState {
-            public _TokeniserState_287() {
+        private sealed class _TokeniserState_275 : TokeniserState {
+            public _TokeniserState_275() {
             }
 
-            // no default, as covered with above consumeToAny
-            internal override String GetName() {
+            public override String ToString() {
                 return "RcdataLessthanSign";
             }
 
@@ -383,11 +380,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                         // consuming to EOF; break out here
                         t.tagPending = t.CreateTagPending(false).Name(t.AppropriateEndTagName());
                         t.EmitTagPending();
-                        r.Unconsume();
-                        // undo "<"
-                        t.Transition(TokeniserState.Data);
+                        t.Transition(TokeniserState.TagOpen);
                     }
                     else {
+                        // straight into TagOpen, as we came from < and looks like we're on a start tag
                         t.Emit("<");
                         t.Transition(TokeniserState.Rcdata);
                     }
@@ -395,21 +391,21 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState RcdataLessthanSign = new _TokeniserState_287();
+        internal static TokeniserState RcdataLessthanSign = new _TokeniserState_275();
 
-        private sealed class _TokeniserState_313 : TokeniserState {
-            public _TokeniserState_313() {
+        private sealed class _TokeniserState_300 : TokeniserState {
+            public _TokeniserState_300() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "RCDATAEndTagOpen";
             }
 
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchesLetter()) {
                     t.CreateTagPending(false);
-                    t.tagPending.AppendTagName(char.ToLower(r.Current()));
-                    t.dataBuffer.Append(char.ToLower(r.Current()));
+                    t.tagPending.AppendTagName(r.Current());
+                    t.dataBuffer.Append(r.Current());
                     t.AdvanceTransition(TokeniserState.RCDATAEndTagName);
                 }
                 else {
@@ -419,20 +415,20 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState RCDATAEndTagOpen = new _TokeniserState_313();
+        internal static TokeniserState RCDATAEndTagOpen = new _TokeniserState_300();
 
-        private sealed class _TokeniserState_333 : TokeniserState {
-            public _TokeniserState_333() {
+        private sealed class _TokeniserState_320 : TokeniserState {
+            public _TokeniserState_320() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "RCDATAEndTagName";
             }
 
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchesLetter()) {
                     String name = r.ConsumeLetterSequence();
-                    t.tagPending.AppendTagName(name.ToLowerInvariant());
+                    t.tagPending.AppendTagName(name);
                     t.dataBuffer.Append(name);
                     return;
                 }
@@ -481,19 +477,20 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
 
             private void AnythingElse(Tokeniser t, CharacterReader r) {
-                t.Emit("</" + t.dataBuffer.ToString());
+                t.Emit("</");
+                t.Emit(t.dataBuffer);
                 r.Unconsume();
                 t.Transition(TokeniserState.Rcdata);
             }
         }
 
-        internal static TokeniserState RCDATAEndTagName = new _TokeniserState_333();
+        internal static TokeniserState RCDATAEndTagName = new _TokeniserState_320();
 
-        private sealed class _TokeniserState_386 : TokeniserState {
-            public _TokeniserState_386() {
+        private sealed class _TokeniserState_374 : TokeniserState {
+            public _TokeniserState_374() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "RawtextLessthanSign";
             }
 
@@ -509,13 +506,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState RawtextLessthanSign = new _TokeniserState_386();
+        internal static TokeniserState RawtextLessthanSign = new _TokeniserState_374();
 
-        private sealed class _TokeniserState_404 : TokeniserState {
-            public _TokeniserState_404() {
+        private sealed class _TokeniserState_392 : TokeniserState {
+            public _TokeniserState_392() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "RawtextEndTagOpen";
             }
 
@@ -524,13 +521,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState RawtextEndTagOpen = new _TokeniserState_404();
+        internal static TokeniserState RawtextEndTagOpen = new _TokeniserState_392();
 
-        private sealed class _TokeniserState_416 : TokeniserState {
-            public _TokeniserState_416() {
+        private sealed class _TokeniserState_404 : TokeniserState {
+            public _TokeniserState_404() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "RawtextEndTagName";
             }
 
@@ -539,13 +536,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState RawtextEndTagName = new _TokeniserState_416();
+        internal static TokeniserState RawtextEndTagName = new _TokeniserState_404();
 
-        private sealed class _TokeniserState_428 : TokeniserState {
-            public _TokeniserState_428() {
+        private sealed class _TokeniserState_416 : TokeniserState {
+            public _TokeniserState_416() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataLessthanSign";
             }
 
@@ -563,6 +560,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                         break;
                     }
 
+                    case TokeniserState.eof: {
+                        t.Emit("<");
+                        t.EofError(this);
+                        t.Transition(TokeniserState.Data);
+                        break;
+                    }
+
                     default: {
                         t.Emit("<");
                         r.Unconsume();
@@ -573,13 +577,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataLessthanSign = new _TokeniserState_428();
+        internal static TokeniserState ScriptDataLessthanSign = new _TokeniserState_416();
 
-        private sealed class _TokeniserState_453 : TokeniserState {
-            public _TokeniserState_453() {
+        private sealed class _TokeniserState_446 : TokeniserState {
+            public _TokeniserState_446() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataEndTagOpen";
             }
 
@@ -588,13 +592,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataEndTagOpen = new _TokeniserState_453();
+        internal static TokeniserState ScriptDataEndTagOpen = new _TokeniserState_446();
 
-        private sealed class _TokeniserState_465 : TokeniserState {
-            public _TokeniserState_465() {
+        private sealed class _TokeniserState_458 : TokeniserState {
+            public _TokeniserState_458() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataEndTagName";
             }
 
@@ -603,13 +607,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataEndTagName = new _TokeniserState_465();
+        internal static TokeniserState ScriptDataEndTagName = new _TokeniserState_458();
 
-        private sealed class _TokeniserState_477 : TokeniserState {
-            public _TokeniserState_477() {
+        private sealed class _TokeniserState_470 : TokeniserState {
+            public _TokeniserState_470() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataEscapeStart";
             }
 
@@ -624,13 +628,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataEscapeStart = new _TokeniserState_477();
+        internal static TokeniserState ScriptDataEscapeStart = new _TokeniserState_470();
 
-        private sealed class _TokeniserState_494 : TokeniserState {
-            public _TokeniserState_494() {
+        private sealed class _TokeniserState_487 : TokeniserState {
+            public _TokeniserState_487() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataEscapeStartDash";
             }
 
@@ -645,13 +649,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataEscapeStartDash = new _TokeniserState_494();
+        internal static TokeniserState ScriptDataEscapeStartDash = new _TokeniserState_487();
 
-        private sealed class _TokeniserState_511 : TokeniserState {
-            public _TokeniserState_511() {
+        private sealed class _TokeniserState_504 : TokeniserState {
+            public _TokeniserState_504() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataEscaped";
             }
 
@@ -689,13 +693,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataEscaped = new _TokeniserState_511();
+        internal static TokeniserState ScriptDataEscaped = new _TokeniserState_504();
 
-        private sealed class _TokeniserState_545 : TokeniserState {
-            public _TokeniserState_545() {
+        private sealed class _TokeniserState_538 : TokeniserState {
+            public _TokeniserState_538() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataEscapedDash";
             }
 
@@ -734,13 +738,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataEscapedDash = new _TokeniserState_545();
+        internal static TokeniserState ScriptDataEscapedDash = new _TokeniserState_538();
 
-        private sealed class _TokeniserState_580 : TokeniserState {
-            public _TokeniserState_580() {
+        private sealed class _TokeniserState_573 : TokeniserState {
+            public _TokeniserState_573() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataEscapedDashDash";
             }
 
@@ -784,21 +788,22 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataEscapedDashDash = new _TokeniserState_580();
+        internal static TokeniserState ScriptDataEscapedDashDash = new _TokeniserState_573();
 
-        private sealed class _TokeniserState_618 : TokeniserState {
-            public _TokeniserState_618() {
+        private sealed class _TokeniserState_611 : TokeniserState {
+            public _TokeniserState_611() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataEscapedLessthanSign";
             }
 
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchesLetter()) {
                     t.CreateTempBuffer();
-                    t.dataBuffer.Append(char.ToLower(r.Current()));
-                    t.Emit("<" + r.Current());
+                    t.dataBuffer.Append(r.Current());
+                    t.Emit("<");
+                    t.Emit(r.Current());
                     t.AdvanceTransition(TokeniserState.ScriptDataDoubleEscapeStart);
                 }
                 else {
@@ -814,20 +819,20 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataEscapedLessthanSign = new _TokeniserState_618();
+        internal static TokeniserState ScriptDataEscapedLessthanSign = new _TokeniserState_611();
 
-        private sealed class _TokeniserState_641 : TokeniserState {
-            public _TokeniserState_641() {
+        private sealed class _TokeniserState_635 : TokeniserState {
+            public _TokeniserState_635() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataEscapedEndTagOpen";
             }
 
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchesLetter()) {
                     t.CreateTagPending(false);
-                    t.tagPending.AppendTagName(char.ToLower(r.Current()));
+                    t.tagPending.AppendTagName(r.Current());
                     t.dataBuffer.Append(r.Current());
                     t.AdvanceTransition(TokeniserState.ScriptDataEscapedEndTagName);
                 }
@@ -838,13 +843,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataEscapedEndTagOpen = new _TokeniserState_641();
+        internal static TokeniserState ScriptDataEscapedEndTagOpen = new _TokeniserState_635();
 
-        private sealed class _TokeniserState_661 : TokeniserState {
-            public _TokeniserState_661() {
+        private sealed class _TokeniserState_655 : TokeniserState {
+            public _TokeniserState_655() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataEscapedEndTagName";
             }
 
@@ -853,13 +858,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataEscapedEndTagName = new _TokeniserState_661();
+        internal static TokeniserState ScriptDataEscapedEndTagName = new _TokeniserState_655();
 
-        private sealed class _TokeniserState_673 : TokeniserState {
-            public _TokeniserState_673() {
+        private sealed class _TokeniserState_667 : TokeniserState {
+            public _TokeniserState_667() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataDoubleEscapeStart";
             }
 
@@ -869,13 +874,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataDoubleEscapeStart = new _TokeniserState_673();
+        internal static TokeniserState ScriptDataDoubleEscapeStart = new _TokeniserState_667();
 
-        private sealed class _TokeniserState_685 : TokeniserState {
-            public _TokeniserState_685() {
+        private sealed class _TokeniserState_679 : TokeniserState {
+            public _TokeniserState_679() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataDoubleEscaped";
             }
 
@@ -916,13 +921,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataDoubleEscaped = new _TokeniserState_685();
+        internal static TokeniserState ScriptDataDoubleEscaped = new _TokeniserState_679();
 
-        private sealed class _TokeniserState_719 : TokeniserState {
-            public _TokeniserState_719() {
+        private sealed class _TokeniserState_713 : TokeniserState {
+            public _TokeniserState_713() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataDoubleEscapedDash";
             }
 
@@ -963,13 +968,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataDoubleEscapedDash = new _TokeniserState_719();
+        internal static TokeniserState ScriptDataDoubleEscapedDash = new _TokeniserState_713();
 
-        private sealed class _TokeniserState_753 : TokeniserState {
-            public _TokeniserState_753() {
+        private sealed class _TokeniserState_747 : TokeniserState {
+            public _TokeniserState_747() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataDoubleEscapedDashDash";
             }
 
@@ -1015,13 +1020,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataDoubleEscapedDashDash = new _TokeniserState_753();
+        internal static TokeniserState ScriptDataDoubleEscapedDashDash = new _TokeniserState_747();
 
-        private sealed class _TokeniserState_790 : TokeniserState {
-            public _TokeniserState_790() {
+        private sealed class _TokeniserState_784 : TokeniserState {
+            public _TokeniserState_784() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataDoubleEscapedLessthanSign";
             }
 
@@ -1037,13 +1042,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataDoubleEscapedLessthanSign = new _TokeniserState_790();
+        internal static TokeniserState ScriptDataDoubleEscapedLessthanSign = new _TokeniserState_784();
 
-        private sealed class _TokeniserState_808 : TokeniserState {
-            public _TokeniserState_808() {
+        private sealed class _TokeniserState_802 : TokeniserState {
+            public _TokeniserState_802() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "ScriptDataDoubleEscapeEnd";
             }
 
@@ -1053,13 +1058,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState ScriptDataDoubleEscapeEnd = new _TokeniserState_808();
+        internal static TokeniserState ScriptDataDoubleEscapeEnd = new _TokeniserState_802();
 
-        private sealed class _TokeniserState_820 : TokeniserState {
-            public _TokeniserState_820() {
+        private sealed class _TokeniserState_814 : TokeniserState {
+            public _TokeniserState_814() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "BeforeAttributeName";
             }
 
@@ -1081,6 +1086,15 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                         break;
                     }
 
+                    case '<': {
+                        // NOTE: out of spec, but clear (spec has this as a part of the attribute name)
+                        r.Unconsume();
+                        t.Error(this);
+                        goto case 
+                                                // intended fall through as if >
+                                                '>';
+                    }
+
                     case '>': {
                         t.EmitTagPending();
                         t.Transition(TokeniserState.Data);
@@ -1088,9 +1102,9 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     case TokeniserState.nullChar: {
+                        r.Unconsume();
                         t.Error(this);
                         t.tagPending.NewAttribute();
-                        r.Unconsume();
                         t.Transition(TokeniserState.AttributeName);
                         break;
                     }
@@ -1103,7 +1117,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
                     case '"':
                     case '\'':
-                    case '<':
                     case '=': {
                         t.Error(this);
                         t.tagPending.NewAttribute();
@@ -1123,20 +1136,20 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState BeforeAttributeName = new _TokeniserState_820();
+        internal static TokeniserState BeforeAttributeName = new _TokeniserState_814();
 
-        private sealed class _TokeniserState_871 : TokeniserState {
-            public _TokeniserState_871() {
+        private sealed class _TokeniserState_868 : TokeniserState {
+            public _TokeniserState_868() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "AttributeName";
             }
 
             // from before attribute name
             internal override void Read(Tokeniser t, CharacterReader r) {
                 String name = r.ConsumeToAnySorted(TokeniserState.attributeNameCharsSorted);
-                t.tagPending.AppendAttributeName(name.ToLowerInvariant());
+                t.tagPending.AppendAttributeName(name);
                 char c = r.Consume();
                 switch (c) {
                     case '\t':
@@ -1183,18 +1196,23 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                         t.tagPending.AppendAttributeName(c);
                         break;
                     }
+
+                    default: {
+                        // buffer underrun
+                        t.tagPending.AppendAttributeName(c);
+                        break;
+                    }
                 }
             }
         }
 
-        internal static TokeniserState AttributeName = new _TokeniserState_871();
+        internal static TokeniserState AttributeName = new _TokeniserState_868();
 
-        private sealed class _TokeniserState_920 : TokeniserState {
-            public _TokeniserState_920() {
+        private sealed class _TokeniserState_919 : TokeniserState {
+            public _TokeniserState_919() {
             }
 
-            // no default, as covered in consumeToAny
-            internal override String GetName() {
+            public override String ToString() {
                 return "AfterAttributeName";
             }
 
@@ -1260,13 +1278,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState AfterAttributeName = new _TokeniserState_920();
+        internal static TokeniserState AfterAttributeName = new _TokeniserState_919();
 
-        private sealed class _TokeniserState_972 : TokeniserState {
-            public _TokeniserState_972() {
+        private sealed class _TokeniserState_971 : TokeniserState {
+            public _TokeniserState_971() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "BeforeAttributeValue";
             }
 
@@ -1337,18 +1355,18 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState BeforeAttributeValue = new _TokeniserState_972();
+        internal static TokeniserState BeforeAttributeValue = new _TokeniserState_971();
 
-        private sealed class _TokeniserState_1028 : TokeniserState {
-            public _TokeniserState_1028() {
+        private sealed class _TokeniserState_1027 : TokeniserState {
+            public _TokeniserState_1027() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "AttributeValue_doubleQuoted";
             }
 
             internal override void Read(Tokeniser t, CharacterReader r) {
-                String value = r.ConsumeToAny(TokeniserState.attributeDoubleValueCharsSorted);
+                String value = r.ConsumeAttributeQuoted(false);
                 if (value.Length > 0) {
                     t.tagPending.AppendAttributeValue(value);
                 }
@@ -1363,7 +1381,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     case '&': {
-                        char[] @ref = t.ConsumeCharacterReference('"', true);
+                        int[] @ref = t.ConsumeCharacterReference('"', true);
                         if (@ref != null) {
                             t.tagPending.AppendAttributeValue(@ref);
                         }
@@ -1384,23 +1402,28 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                         t.Transition(TokeniserState.Data);
                         break;
                     }
+
+                    default: {
+                        // hit end of buffer in first read, still in attribute
+                        t.tagPending.AppendAttributeValue(c);
+                        break;
+                    }
                 }
             }
         }
 
-        internal static TokeniserState AttributeValue_doubleQuoted = new _TokeniserState_1028();
+        internal static TokeniserState AttributeValue_doubleQuoted = new _TokeniserState_1027();
 
         private sealed class _TokeniserState_1067 : TokeniserState {
             public _TokeniserState_1067() {
             }
 
-            // no default, handled in consume to any above
-            internal override String GetName() {
+            public override String ToString() {
                 return "AttributeValue_singleQuoted";
             }
 
             internal override void Read(Tokeniser t, CharacterReader r) {
-                String value = r.ConsumeToAny(TokeniserState.attributeSingleValueCharsSorted);
+                String value = r.ConsumeAttributeQuoted(true);
                 if (value.Length > 0) {
                     t.tagPending.AppendAttributeValue(value);
                 }
@@ -1415,7 +1438,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     case '&': {
-                        char[] @ref = t.ConsumeCharacterReference('\'', true);
+                        int[] @ref = t.ConsumeCharacterReference('\'', true);
                         if (@ref != null) {
                             t.tagPending.AppendAttributeValue(@ref);
                         }
@@ -1436,18 +1459,23 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                         t.Transition(TokeniserState.Data);
                         break;
                     }
+
+                    default: {
+                        // hit end of buffer in first read, still in attribute
+                        t.tagPending.AppendAttributeValue(c);
+                        break;
+                    }
                 }
             }
         }
 
         internal static TokeniserState AttributeValue_singleQuoted = new _TokeniserState_1067();
 
-        private sealed class _TokeniserState_1106 : TokeniserState {
-            public _TokeniserState_1106() {
+        private sealed class _TokeniserState_1107 : TokeniserState {
+            public _TokeniserState_1107() {
             }
 
-            // no default, handled in consume to any above
-            internal override String GetName() {
+            public override String ToString() {
                 return "AttributeValue_unquoted";
             }
 
@@ -1468,7 +1496,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     case '&': {
-                        char[] @ref = t.ConsumeCharacterReference('>', true);
+                        int[] @ref = t.ConsumeCharacterReference('>', true);
                         if (@ref != null) {
                             t.tagPending.AppendAttributeValue(@ref);
                         }
@@ -1505,19 +1533,24 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                         t.tagPending.AppendAttributeValue(c);
                         break;
                     }
+
+                    default: {
+                        // hit end of buffer in first read, still in attribute
+                        t.tagPending.AppendAttributeValue(c);
+                        break;
+                    }
                 }
             }
         }
 
-        internal static TokeniserState AttributeValue_unquoted = new _TokeniserState_1106();
+        internal static TokeniserState AttributeValue_unquoted = new _TokeniserState_1107();
 
-        private sealed class _TokeniserState_1161 : TokeniserState {
-            public _TokeniserState_1161() {
+        private sealed class _TokeniserState_1162 : TokeniserState {
+            public _TokeniserState_1162() {
             }
 
-            // no default, handled in consume to any above
             // CharacterReferenceInAttributeValue state handled inline
-            internal override String GetName() {
+            public override String ToString() {
                 return "AfterAttributeValue_quoted";
             }
 
@@ -1551,8 +1584,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     default: {
-                        t.Error(this);
                         r.Unconsume();
+                        t.Error(this);
                         t.Transition(TokeniserState.BeforeAttributeName);
                         break;
                     }
@@ -1560,13 +1593,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState AfterAttributeValue_quoted = new _TokeniserState_1161();
+        internal static TokeniserState AfterAttributeValue_quoted = new _TokeniserState_1162();
 
-        private sealed class _TokeniserState_1198 : TokeniserState {
-            public _TokeniserState_1198() {
+        private sealed class _TokeniserState_1199 : TokeniserState {
+            public _TokeniserState_1199() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "SelfClosingStartTag";
             }
 
@@ -1587,6 +1620,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     default: {
+                        r.Unconsume();
                         t.Error(this);
                         t.Transition(TokeniserState.BeforeAttributeName);
                         break;
@@ -1595,36 +1629,35 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState SelfClosingStartTag = new _TokeniserState_1198();
+        internal static TokeniserState SelfClosingStartTag = new _TokeniserState_1199();
 
-        private sealed class _TokeniserState_1224 : TokeniserState {
-            public _TokeniserState_1224() {
+        private sealed class _TokeniserState_1226 : TokeniserState {
+            public _TokeniserState_1226() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "BogusComment";
             }
 
             internal override void Read(Tokeniser t, CharacterReader r) {
-                // todo: handle bogus comment starting from eof. when does that trigger?
                 // rewind to capture character that lead us here
                 r.Unconsume();
-                Token.Comment comment = new Token.Comment();
-                comment.bogus = true;
-                comment.data.Append(r.ConsumeTo('>'));
-                // todo: replace nullChar with replaceChar
-                t.Emit(comment);
-                t.AdvanceTransition(TokeniserState.Data);
+                t.commentPending.Append(r.ConsumeTo('>'));
+                char next = r.Consume();
+                if (next == '>' || next == TokeniserState.eof) {
+                    t.EmitCommentPending();
+                    t.Transition(TokeniserState.Data);
+                }
             }
         }
 
-        internal static TokeniserState BogusComment = new _TokeniserState_1224();
+        internal static TokeniserState BogusComment = new _TokeniserState_1226();
 
-        private sealed class _TokeniserState_1244 : TokeniserState {
-            public _TokeniserState_1244() {
+        private sealed class _TokeniserState_1245 : TokeniserState {
+            public _TokeniserState_1245() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "MarkupDeclarationOpen";
             }
 
@@ -1639,13 +1672,14 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                     else {
                         if (r.MatchConsume("[CDATA[")) {
-                            // todo: should actually check current namepspace, and only non-html allows cdata. until namespace
                             // is implemented properly, keep handling as cdata
                             //} else if (!t.currentNodeInHtmlNS() && r.matchConsume("[CDATA[")) {
+                            t.CreateTempBuffer();
                             t.Transition(TokeniserState.CdataSection);
                         }
                         else {
                             t.Error(this);
+                            t.CreateBogusCommentPending();
                             t.AdvanceTransition(TokeniserState.BogusComment);
                         }
                     }
@@ -1653,14 +1687,14 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState MarkupDeclarationOpen = new _TokeniserState_1244();
+        internal static TokeniserState MarkupDeclarationOpen = new _TokeniserState_1245();
 
-        private sealed class _TokeniserState_1269 : TokeniserState {
-            public _TokeniserState_1269() {
+        private sealed class _TokeniserState_1271 : TokeniserState {
+            public _TokeniserState_1271() {
             }
 
             // advance so this character gets in bogus comment data's rewind
-            internal override String GetName() {
+            public override String ToString() {
                 return "CommentStart";
             }
 
@@ -1674,7 +1708,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
                     case TokeniserState.nullChar: {
                         t.Error(this);
-                        t.commentPending.data.Append(TokeniserState.replacementChar);
+                        t.commentPending.Append(TokeniserState.replacementChar);
                         t.Transition(TokeniserState.Comment);
                         break;
                     }
@@ -1694,7 +1728,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     default: {
-                        t.commentPending.data.Append(c);
+                        r.Unconsume();
                         t.Transition(TokeniserState.Comment);
                         break;
                     }
@@ -1702,13 +1736,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState CommentStart = new _TokeniserState_1269();
+        internal static TokeniserState CommentStart = new _TokeniserState_1271();
 
-        private sealed class _TokeniserState_1304 : TokeniserState {
-            public _TokeniserState_1304() {
+        private sealed class _TokeniserState_1306 : TokeniserState {
+            public _TokeniserState_1306() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "CommentStartDash";
             }
 
@@ -1722,7 +1756,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
                     case TokeniserState.nullChar: {
                         t.Error(this);
-                        t.commentPending.data.Append(TokeniserState.replacementChar);
+                        t.commentPending.Append(TokeniserState.replacementChar);
                         t.Transition(TokeniserState.Comment);
                         break;
                     }
@@ -1742,7 +1776,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     default: {
-                        t.commentPending.data.Append(c);
+                        t.commentPending.Append(c);
                         t.Transition(TokeniserState.Comment);
                         break;
                     }
@@ -1750,13 +1784,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState CommentStartDash = new _TokeniserState_1304();
+        internal static TokeniserState CommentStartDash = new _TokeniserState_1306();
 
-        private sealed class _TokeniserState_1339 : TokeniserState {
-            public _TokeniserState_1339() {
+        private sealed class _TokeniserState_1341 : TokeniserState {
+            public _TokeniserState_1341() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "Comment";
             }
 
@@ -1771,7 +1805,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     case TokeniserState.nullChar: {
                         t.Error(this);
                         r.Advance();
-                        t.commentPending.data.Append(TokeniserState.replacementChar);
+                        t.commentPending.Append(TokeniserState.replacementChar);
                         break;
                     }
 
@@ -1783,20 +1817,20 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     default: {
-                        t.commentPending.data.Append(r.ConsumeToAny('-', TokeniserState.nullChar));
+                        t.commentPending.Append(r.ConsumeToAny('-', TokeniserState.nullChar));
                         break;
                     }
                 }
             }
         }
 
-        internal static TokeniserState Comment = new _TokeniserState_1339();
+        internal static TokeniserState Comment = new _TokeniserState_1341();
 
-        private sealed class _TokeniserState_1368 : TokeniserState {
-            public _TokeniserState_1368() {
+        private sealed class _TokeniserState_1370 : TokeniserState {
+            public _TokeniserState_1370() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "CommentEndDash";
             }
 
@@ -1810,7 +1844,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
                     case TokeniserState.nullChar: {
                         t.Error(this);
-                        t.commentPending.data.Append('-').Append(TokeniserState.replacementChar);
+                        t.commentPending.Append('-').Append(TokeniserState.replacementChar);
                         t.Transition(TokeniserState.Comment);
                         break;
                     }
@@ -1823,7 +1857,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     default: {
-                        t.commentPending.data.Append('-').Append(c);
+                        t.commentPending.Append('-').Append(c);
                         t.Transition(TokeniserState.Comment);
                         break;
                     }
@@ -1831,13 +1865,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState CommentEndDash = new _TokeniserState_1368();
+        internal static TokeniserState CommentEndDash = new _TokeniserState_1370();
 
-        private sealed class _TokeniserState_1398 : TokeniserState {
-            public _TokeniserState_1398() {
+        private sealed class _TokeniserState_1400 : TokeniserState {
+            public _TokeniserState_1400() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "CommentEnd";
             }
 
@@ -1852,7 +1886,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
                     case TokeniserState.nullChar: {
                         t.Error(this);
-                        t.commentPending.data.Append("--").Append(TokeniserState.replacementChar);
+                        t.commentPending.Append("--").Append(TokeniserState.replacementChar);
                         t.Transition(TokeniserState.Comment);
                         break;
                     }
@@ -1865,7 +1899,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
                     case '-': {
                         t.Error(this);
-                        t.commentPending.data.Append('-');
+                        t.commentPending.Append('-');
                         break;
                     }
 
@@ -1878,7 +1912,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
                     default: {
                         t.Error(this);
-                        t.commentPending.data.Append("--").Append(c);
+                        t.commentPending.Append("--").Append(c);
                         t.Transition(TokeniserState.Comment);
                         break;
                     }
@@ -1886,13 +1920,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState CommentEnd = new _TokeniserState_1398();
+        internal static TokeniserState CommentEnd = new _TokeniserState_1400();
 
-        private sealed class _TokeniserState_1438 : TokeniserState {
-            public _TokeniserState_1438() {
+        private sealed class _TokeniserState_1440 : TokeniserState {
+            public _TokeniserState_1440() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "CommentEndBang";
             }
 
@@ -1900,7 +1934,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 char c = r.Consume();
                 switch (c) {
                     case '-': {
-                        t.commentPending.data.Append("--!");
+                        t.commentPending.Append("--!");
                         t.Transition(TokeniserState.CommentEndDash);
                         break;
                     }
@@ -1913,7 +1947,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
                     case TokeniserState.nullChar: {
                         t.Error(this);
-                        t.commentPending.data.Append("--!").Append(TokeniserState.replacementChar);
+                        t.commentPending.Append("--!").Append(TokeniserState.replacementChar);
                         t.Transition(TokeniserState.Comment);
                         break;
                     }
@@ -1926,7 +1960,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
 
                     default: {
-                        t.commentPending.data.Append("--!").Append(c);
+                        t.commentPending.Append("--!").Append(c);
                         t.Transition(TokeniserState.Comment);
                         break;
                     }
@@ -1934,13 +1968,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState CommentEndBang = new _TokeniserState_1438();
+        internal static TokeniserState CommentEndBang = new _TokeniserState_1440();
 
-        private sealed class _TokeniserState_1473 : TokeniserState {
-            public _TokeniserState_1473() {
+        private sealed class _TokeniserState_1475 : TokeniserState {
+            public _TokeniserState_1475() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "Doctype";
             }
 
@@ -1982,13 +2016,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState Doctype = new _TokeniserState_1473();
+        internal static TokeniserState Doctype = new _TokeniserState_1475();
 
-        private sealed class _TokeniserState_1507 : TokeniserState {
-            public _TokeniserState_1507() {
+        private sealed class _TokeniserState_1509 : TokeniserState {
+            public _TokeniserState_1509() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "BeforeDoctypeName";
             }
 
@@ -2036,20 +2070,20 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState BeforeDoctypeName = new _TokeniserState_1507();
+        internal static TokeniserState BeforeDoctypeName = new _TokeniserState_1509();
 
-        private sealed class _TokeniserState_1549 : TokeniserState {
-            public _TokeniserState_1549() {
+        private sealed class _TokeniserState_1551 : TokeniserState {
+            public _TokeniserState_1551() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "DoctypeName";
             }
 
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchesLetter()) {
                     String name = r.ConsumeLetterSequence();
-                    t.doctypePending.name.Append(name.ToLowerInvariant());
+                    t.doctypePending.name.Append(name);
                     return;
                 }
                 char c = r.Consume();
@@ -2091,13 +2125,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState DoctypeName = new _TokeniserState_1549();
+        internal static TokeniserState DoctypeName = new _TokeniserState_1551();
 
-        private sealed class _TokeniserState_1591 : TokeniserState {
-            public _TokeniserState_1591() {
+        private sealed class _TokeniserState_1593 : TokeniserState {
+            public _TokeniserState_1593() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "AfterDoctypeName";
             }
 
@@ -2119,11 +2153,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                         t.AdvanceTransition(TokeniserState.Data);
                     }
                     else {
-                        if (r.MatchConsumeIgnoreCase("PUBLIC")) {
+                        if (r.MatchConsumeIgnoreCase(DocumentType.PUBLIC_KEY)) {
+                            t.doctypePending.pubSysKey = DocumentType.PUBLIC_KEY;
                             t.Transition(TokeniserState.AfterDoctypePublicKeyword);
                         }
                         else {
-                            if (r.MatchConsumeIgnoreCase("SYSTEM")) {
+                            if (r.MatchConsumeIgnoreCase(DocumentType.SYSTEM_KEY)) {
+                                t.doctypePending.pubSysKey = DocumentType.SYSTEM_KEY;
                                 t.Transition(TokeniserState.AfterDoctypeSystemKeyword);
                             }
                             else {
@@ -2137,13 +2173,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState AfterDoctypeName = new _TokeniserState_1591();
+        internal static TokeniserState AfterDoctypeName = new _TokeniserState_1593();
 
-        private sealed class _TokeniserState_1624 : TokeniserState {
-            public _TokeniserState_1624() {
+        private sealed class _TokeniserState_1628 : TokeniserState {
+            public _TokeniserState_1628() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "AfterDoctypePublicKeyword";
             }
 
@@ -2199,13 +2235,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState AfterDoctypePublicKeyword = new _TokeniserState_1624();
+        internal static TokeniserState AfterDoctypePublicKeyword = new _TokeniserState_1628();
 
-        private sealed class _TokeniserState_1671 : TokeniserState {
-            public _TokeniserState_1671() {
+        private sealed class _TokeniserState_1675 : TokeniserState {
+            public _TokeniserState_1675() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "BeforeDoctypePublicIdentifier";
             }
 
@@ -2258,13 +2294,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState BeforeDoctypePublicIdentifier = new _TokeniserState_1671();
+        internal static TokeniserState BeforeDoctypePublicIdentifier = new _TokeniserState_1675();
 
-        private sealed class _TokeniserState_1715 : TokeniserState {
-            public _TokeniserState_1715() {
+        private sealed class _TokeniserState_1719 : TokeniserState {
+            public _TokeniserState_1719() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "DoctypePublicIdentifier_doubleQuoted";
             }
 
@@ -2306,13 +2342,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState DoctypePublicIdentifier_doubleQuoted = new _TokeniserState_1715();
+        internal static TokeniserState DoctypePublicIdentifier_doubleQuoted = new _TokeniserState_1719();
 
-        private sealed class _TokeniserState_1750 : TokeniserState {
-            public _TokeniserState_1750() {
+        private sealed class _TokeniserState_1754 : TokeniserState {
+            public _TokeniserState_1754() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "DoctypePublicIdentifier_singleQuoted";
             }
 
@@ -2354,13 +2390,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState DoctypePublicIdentifier_singleQuoted = new _TokeniserState_1750();
+        internal static TokeniserState DoctypePublicIdentifier_singleQuoted = new _TokeniserState_1754();
 
-        private sealed class _TokeniserState_1785 : TokeniserState {
-            public _TokeniserState_1785() {
+        private sealed class _TokeniserState_1789 : TokeniserState {
+            public _TokeniserState_1789() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "AfterDoctypePublicIdentifier";
             }
 
@@ -2414,13 +2450,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState AfterDoctypePublicIdentifier = new _TokeniserState_1785();
+        internal static TokeniserState AfterDoctypePublicIdentifier = new _TokeniserState_1789();
 
-        private sealed class _TokeniserState_1830 : TokeniserState {
-            public _TokeniserState_1830() {
+        private sealed class _TokeniserState_1834 : TokeniserState {
+            public _TokeniserState_1834() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "BetweenDoctypePublicAndSystemIdentifiers";
             }
 
@@ -2473,13 +2509,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState BetweenDoctypePublicAndSystemIdentifiers = new _TokeniserState_1830();
+        internal static TokeniserState BetweenDoctypePublicAndSystemIdentifiers = new _TokeniserState_1834();
 
-        private sealed class _TokeniserState_1874 : TokeniserState {
-            public _TokeniserState_1874() {
+        private sealed class _TokeniserState_1878 : TokeniserState {
+            public _TokeniserState_1878() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "AfterDoctypeSystemKeyword";
             }
 
@@ -2535,13 +2571,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState AfterDoctypeSystemKeyword = new _TokeniserState_1874();
+        internal static TokeniserState AfterDoctypeSystemKeyword = new _TokeniserState_1878();
 
-        private sealed class _TokeniserState_1921 : TokeniserState {
-            public _TokeniserState_1921() {
+        private sealed class _TokeniserState_1925 : TokeniserState {
+            public _TokeniserState_1925() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "BeforeDoctypeSystemIdentifier";
             }
 
@@ -2594,13 +2630,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState BeforeDoctypeSystemIdentifier = new _TokeniserState_1921();
+        internal static TokeniserState BeforeDoctypeSystemIdentifier = new _TokeniserState_1925();
 
-        private sealed class _TokeniserState_1965 : TokeniserState {
-            public _TokeniserState_1965() {
+        private sealed class _TokeniserState_1969 : TokeniserState {
+            public _TokeniserState_1969() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "DoctypeSystemIdentifier_doubleQuoted";
             }
 
@@ -2642,13 +2678,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState DoctypeSystemIdentifier_doubleQuoted = new _TokeniserState_1965();
+        internal static TokeniserState DoctypeSystemIdentifier_doubleQuoted = new _TokeniserState_1969();
 
-        private sealed class _TokeniserState_2000 : TokeniserState {
-            public _TokeniserState_2000() {
+        private sealed class _TokeniserState_2004 : TokeniserState {
+            public _TokeniserState_2004() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "DoctypeSystemIdentifier_singleQuoted";
             }
 
@@ -2690,13 +2726,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState DoctypeSystemIdentifier_singleQuoted = new _TokeniserState_2000();
+        internal static TokeniserState DoctypeSystemIdentifier_singleQuoted = new _TokeniserState_2004();
 
-        private sealed class _TokeniserState_2035 : TokeniserState {
-            public _TokeniserState_2035() {
+        private sealed class _TokeniserState_2039 : TokeniserState {
+            public _TokeniserState_2039() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "AfterDoctypeSystemIdentifier";
             }
 
@@ -2734,14 +2770,14 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState AfterDoctypeSystemIdentifier = new _TokeniserState_2035();
+        internal static TokeniserState AfterDoctypeSystemIdentifier = new _TokeniserState_2039();
 
-        private sealed class _TokeniserState_2069 : TokeniserState {
-            public _TokeniserState_2069() {
+        private sealed class _TokeniserState_2073 : TokeniserState {
+            public _TokeniserState_2073() {
             }
 
             // NOT force quirks
-            internal override String GetName() {
+            public override String ToString() {
                 return "BogusDoctype";
             }
 
@@ -2768,58 +2804,45 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static TokeniserState BogusDoctype = new _TokeniserState_2069();
+        internal static TokeniserState BogusDoctype = new _TokeniserState_2073();
 
-        private sealed class _TokeniserState_2094 : TokeniserState {
-            public _TokeniserState_2094() {
+        private sealed class _TokeniserState_2098 : TokeniserState {
+            public _TokeniserState_2098() {
             }
 
-            internal override String GetName() {
+            public override String ToString() {
                 return "CdataSection";
             }
 
             internal override void Read(Tokeniser t, CharacterReader r) {
                 String data = r.ConsumeTo("]]>");
-                t.Emit(data);
-                r.MatchConsume("]]>");
-                t.Transition(TokeniserState.Data);
+                t.dataBuffer.Append(data);
+                if (r.MatchConsume("]]>") || r.IsEmpty()) {
+                    t.Emit(new Token.CData(t.dataBuffer.ToString()));
+                    t.Transition(TokeniserState.Data);
+                }
             }
         }
 
-        internal static TokeniserState CdataSection = new _TokeniserState_2094();
+        internal static TokeniserState CdataSection = new _TokeniserState_2098();
 
-        public override String ToString() {
-            return GetName();
-        }
-
-        internal abstract String GetName();
-
+        // otherwise, buffer underrun, stay in data section
         internal abstract void Read(Tokeniser t, CharacterReader r);
 
         internal const char nullChar = '\u0000';
 
-        private static readonly char[] attributeSingleValueCharsSorted = new char[] { '\'', '&', nullChar };
+        // char searches. must be sorted, used in inSorted. MUST update TokenisetStateTest if more arrays are added.
+        internal static readonly char[] attributeNameCharsSorted = new char[] { nullChar, '\t', '\n', '\f', '\r', 
+            ' ', '"', '\'', '/', '<', '=', '>' };
 
-        private static readonly char[] attributeDoubleValueCharsSorted = new char[] { '"', '&', nullChar };
-
-        private static readonly char[] attributeNameCharsSorted = new char[] { '\t', '\n', '\r', '\f', ' ', '/', '='
-            , '>', nullChar, '"', '\'', '<' };
-
-        private static readonly char[] attributeValueUnquoted = new char[] { '\t', '\n', '\r', '\f', ' ', '&', '>'
-            , nullChar, '"', '\'', '<', '=', '`' };
+        internal static readonly char[] attributeValueUnquoted = new char[] { nullChar, '\t', '\n', '\f', '\r', ' '
+            , '"', '&', '\'', '<', '=', '>', '`' };
 
         private const char replacementChar = Tokeniser.replacementChar;
 
         private static readonly String replacementStr = Tokeniser.replacementChar.ToString();
 
         private const char eof = CharacterReader.EOF;
-
-        static TokeniserState() {
-            JavaUtil.Sort(attributeSingleValueCharsSorted);
-            JavaUtil.Sort(attributeDoubleValueCharsSorted);
-            JavaUtil.Sort(attributeNameCharsSorted);
-            JavaUtil.Sort(attributeValueUnquoted);
-        }
 
         /// <summary>Handles RawtextEndTagName, ScriptDataEndTagName, and ScriptDataEscapedEndTagName.</summary>
         /// <remarks>
@@ -2829,7 +2852,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         private static void HandleDataEndTag(Tokeniser t, CharacterReader r, TokeniserState elseTransition) {
             if (r.MatchesLetter()) {
                 String name = r.ConsumeLetterSequence();
-                t.tagPending.AppendTagName(name.ToLowerInvariant());
+                t.tagPending.AppendTagName(name);
                 t.dataBuffer.Append(name);
                 return;
             }
@@ -2868,12 +2891,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 needsExitTransition = true;
             }
             if (needsExitTransition) {
-                t.Emit("</" + t.dataBuffer.ToString());
+                t.Emit("</");
+                t.Emit(t.dataBuffer);
                 t.Transition(elseTransition);
             }
         }
 
-        private static void ReadData(Tokeniser t, CharacterReader r, TokeniserState current, TokeniserState advance
+        private static void ReadRawData(Tokeniser t, CharacterReader r, TokeniserState current, TokeniserState advance
             ) {
             switch (r.Current()) {
                 case '<': {
@@ -2894,7 +2918,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
 
                 default: {
-                    String data = r.ConsumeToAny('<', nullChar);
+                    String data = r.ConsumeRawData();
                     t.Emit(data);
                     break;
                 }
@@ -2902,7 +2926,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         private static void ReadCharRef(Tokeniser t, TokeniserState advance) {
-            char[] c = t.ConsumeCharacterReference(null, false);
+            int[] c = t.ConsumeCharacterReference(null, false);
             if (c == null) {
                 t.Emit('&');
             }
@@ -2927,7 +2951,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
              fallback) {
             if (r.MatchesLetter()) {
                 String name = r.ConsumeLetterSequence();
-                t.dataBuffer.Append(name.ToLowerInvariant());
+                t.dataBuffer.Append(name);
                 t.Emit(name);
                 return;
             }

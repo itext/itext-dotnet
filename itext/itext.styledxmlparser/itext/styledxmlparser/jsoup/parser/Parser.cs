@@ -3,45 +3,26 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.StyledXmlParser.Jsoup.Nodes;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
@@ -57,24 +38,47 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <see cref="iText.StyledXmlParser.Jsoup.Jsoup"/>.
     /// </remarks>
     public class Parser {
-        private const int DEFAULT_MAX_ERRORS = 0;
-
-        // by default, error tracking is disabled.
         private TreeBuilder treeBuilder;
 
-        private int maxErrors = DEFAULT_MAX_ERRORS;
-
         private ParseErrorList errors;
+
+        private ParseSettings settings;
 
         /// <summary>Create a new Parser, using the specified TreeBuilder</summary>
         /// <param name="treeBuilder">TreeBuilder to use to parse input into Documents.</param>
         public Parser(TreeBuilder treeBuilder) {
             this.treeBuilder = treeBuilder;
+            settings = treeBuilder.DefaultSettings();
+            errors = ParseErrorList.NoTracking();
+        }
+
+        /// <summary>Creates a new Parser as a deep copy of this; including initializing a new TreeBuilder.</summary>
+        /// <remarks>Creates a new Parser as a deep copy of this; including initializing a new TreeBuilder. Allows independent (multi-threaded) use.
+        ///     </remarks>
+        /// <returns>a copied parser</returns>
+        public virtual iText.StyledXmlParser.Jsoup.Parser.Parser NewInstance() {
+            return new iText.StyledXmlParser.Jsoup.Parser.Parser(this);
+        }
+
+        private Parser(iText.StyledXmlParser.Jsoup.Parser.Parser copy) {
+            treeBuilder = copy.treeBuilder.NewInstance();
+            // because extended
+            errors = new ParseErrorList(copy.errors);
+            // only copies size, not contents
+            settings = new ParseSettings(copy.settings);
         }
 
         public virtual Document ParseInput(String html, String baseUri) {
-            errors = IsTrackErrors() ? ParseErrorList.Tracking(maxErrors) : ParseErrorList.NoTracking();
-            return treeBuilder.Parse(html, baseUri, errors);
+            return treeBuilder.Parse(new StringReader(html), baseUri, this);
+        }
+
+        public virtual Document ParseInput(TextReader inputHtml, String baseUri) {
+            return treeBuilder.Parse(inputHtml, baseUri, this);
+        }
+
+        public virtual IList<iText.StyledXmlParser.Jsoup.Nodes.Node> ParseFragmentInput(String fragment, iText.StyledXmlParser.Jsoup.Nodes.Element
+             context, String baseUri) {
+            return treeBuilder.ParseFragment(fragment, context, baseUri, this);
         }
 
         // gets & sets
@@ -89,27 +93,46 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         /// <returns>this, for chaining</returns>
         public virtual iText.StyledXmlParser.Jsoup.Parser.Parser SetTreeBuilder(TreeBuilder treeBuilder) {
             this.treeBuilder = treeBuilder;
+            treeBuilder.parser = this;
             return this;
         }
 
         /// <summary>Check if parse error tracking is enabled.</summary>
         /// <returns>current track error state.</returns>
         public virtual bool IsTrackErrors() {
-            return maxErrors > 0;
+            return errors.GetMaxSize() > 0;
         }
 
         /// <summary>Enable or disable parse error tracking for the next parse.</summary>
         /// <param name="maxErrors">the maximum number of errors to track. Set to 0 to disable.</param>
         /// <returns>this, for chaining</returns>
         public virtual iText.StyledXmlParser.Jsoup.Parser.Parser SetTrackErrors(int maxErrors) {
-            this.maxErrors = maxErrors;
+            errors = maxErrors > 0 ? ParseErrorList.Tracking(maxErrors) : ParseErrorList.NoTracking();
             return this;
         }
 
         /// <summary>Retrieve the parse errors, if any, from the last parse.</summary>
         /// <returns>list of parse errors, up to the size of the maximum errors tracked.</returns>
-        public virtual IList<ParseError> GetErrors() {
+        public virtual ParseErrorList GetErrors() {
             return errors;
+        }
+
+        public virtual iText.StyledXmlParser.Jsoup.Parser.Parser Settings(ParseSettings settings) {
+            this.settings = settings;
+            return this;
+        }
+
+        public virtual ParseSettings Settings() {
+            return settings;
+        }
+
+        /// <summary>(An internal method, visible for Element.</summary>
+        /// <remarks>
+        /// (An internal method, visible for Element. For HTML parse, signals that script and style text should be treated as
+        /// Data Nodes).
+        /// </remarks>
+        public virtual bool IsContentForTagData(String normalName) {
+            return GetTreeBuilder().IsContentForTagData(normalName);
         }
 
         // static parse functions below
@@ -119,16 +142,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         /// <returns>parsed Document</returns>
         public static Document Parse(String html, String baseUri) {
             TreeBuilder treeBuilder = new HtmlTreeBuilder();
-            return treeBuilder.Parse(html, baseUri, ParseErrorList.NoTracking());
-        }
-
-        /// <summary>Parse XML into a Document.</summary>
-        /// <param name="xml">XML to parse</param>
-        /// <param name="baseUri">base URI of document (i.e. original fetch location), for resolving relative URLs.</param>
-        /// <returns>parsed Document</returns>
-        public static Document ParseXml(String xml, String baseUri) {
-            TreeBuilder treeBuilder = new XmlTreeBuilder();
-            return treeBuilder.Parse(xml, baseUri, ParseErrorList.NoTracking());
+            return treeBuilder.Parse(new StringReader(html), baseUri, new iText.StyledXmlParser.Jsoup.Parser.Parser(treeBuilder
+                ));
         }
 
         /// <summary>Parse a fragment of HTML into a list of nodes.</summary>
@@ -145,7 +160,29 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         public static IList<iText.StyledXmlParser.Jsoup.Nodes.Node> ParseFragment(String fragmentHtml, iText.StyledXmlParser.Jsoup.Nodes.Element
              context, String baseUri) {
             HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder();
-            return treeBuilder.ParseFragment(fragmentHtml, context, baseUri, ParseErrorList.NoTracking());
+            return treeBuilder.ParseFragment(fragmentHtml, context, baseUri, new iText.StyledXmlParser.Jsoup.Parser.Parser
+                (treeBuilder));
+        }
+
+        /// <summary>Parse a fragment of HTML into a list of nodes.</summary>
+        /// <remarks>Parse a fragment of HTML into a list of nodes. The context element, if supplied, supplies parsing context.
+        ///     </remarks>
+        /// <param name="fragmentHtml">the fragment of HTML to parse</param>
+        /// <param name="context">
+        /// (optional) the element that this HTML fragment is being parsed for (i.e. for inner HTML). This
+        /// provides stack context (for implicit element creation).
+        /// </param>
+        /// <param name="baseUri">base URI of document (i.e. original fetch location), for resolving relative URLs.</param>
+        /// <param name="errorList">list to add errors to</param>
+        /// <returns>list of nodes parsed from the input HTML. Note that the context element, if supplied, is not modified.
+        ///     </returns>
+        public static IList<iText.StyledXmlParser.Jsoup.Nodes.Node> ParseFragment(String fragmentHtml, iText.StyledXmlParser.Jsoup.Nodes.Element
+             context, String baseUri, ParseErrorList errorList) {
+            HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder();
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = new iText.StyledXmlParser.Jsoup.Parser.Parser(treeBuilder
+                );
+            parser.errors = errorList;
+            return treeBuilder.ParseFragment(fragmentHtml, context, baseUri, parser);
         }
 
         /// <summary>Parse a fragment of XML into a list of nodes.</summary>
@@ -155,7 +192,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         public static IList<iText.StyledXmlParser.Jsoup.Nodes.Node> ParseXmlFragment(String fragmentXml, String baseUri
             ) {
             XmlTreeBuilder treeBuilder = new XmlTreeBuilder();
-            return treeBuilder.ParseFragment(fragmentXml, baseUri, ParseErrorList.NoTracking());
+            return treeBuilder.ParseFragment(fragmentXml, baseUri, new iText.StyledXmlParser.Jsoup.Parser.Parser(treeBuilder
+                ));
         }
 
         /// <summary>
@@ -171,7 +209,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             iText.StyledXmlParser.Jsoup.Nodes.Element body = doc.Body();
             IList<iText.StyledXmlParser.Jsoup.Nodes.Node> nodeList = ParseFragment(bodyHtml, body, baseUri);
             iText.StyledXmlParser.Jsoup.Nodes.Node[] nodes = nodeList.ToArray(new iText.StyledXmlParser.Jsoup.Nodes.Node
-                [nodeList.Count]);
+                [0]);
             // the node list gets modified when re-parented
             for (int i = nodes.Length - 1; i > 0; i--) {
                 nodes[i].Remove();
@@ -189,16 +227,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         public static String UnescapeEntities(String @string, bool inAttribute) {
             Tokeniser tokeniser = new Tokeniser(new CharacterReader(@string), ParseErrorList.NoTracking());
             return tokeniser.UnescapeEntities(inAttribute);
-        }
-
-        /// <param name="bodyHtml">HTML to parse</param>
-        /// <param name="baseUri">baseUri base URI of document (i.e. original fetch location), for resolving relative URLs.
-        ///     </param>
-        /// <returns>parsed Document</returns>
-        [System.ObsoleteAttribute(@"Use ParseBodyFragment(System.String, System.String) or ParseFragment(System.String, iText.StyledXmlParser.Jsoup.Nodes.Element, System.String) instead."
-            )]
-        public static Document ParseBodyFragmentRelaxed(String bodyHtml, String baseUri) {
-            return Parse(bodyHtml, baseUri);
         }
 
         // builders

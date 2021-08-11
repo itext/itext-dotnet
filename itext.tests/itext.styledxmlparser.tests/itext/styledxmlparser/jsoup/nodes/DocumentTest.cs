@@ -3,49 +3,31 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
-using iText.StyledXmlParser.Jsoup.Integration;
+using iText.StyledXmlParser.Jsoup.Parser;
+using iText.StyledXmlParser.Jsoup.Select;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
@@ -112,6 +94,36 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         [NUnit.Framework.Test]
+        public virtual void AccessorsWillNormalizeStructure() {
+            Document doc = new Document("");
+            NUnit.Framework.Assert.AreEqual("", doc.Html());
+            iText.StyledXmlParser.Jsoup.Nodes.Element body = doc.Body();
+            NUnit.Framework.Assert.AreEqual("body", body.TagName());
+            iText.StyledXmlParser.Jsoup.Nodes.Element head = doc.Head();
+            NUnit.Framework.Assert.AreEqual("head", head.TagName());
+            NUnit.Framework.Assert.AreEqual("<html><head></head><body></body></html>", TextUtil.StripNewlines(doc.Html
+                ()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AccessorsAreCaseInsensitive() {
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser().
+                Settings(ParseSettings.preserveCase);
+            Document doc = parser.ParseInput("<!DOCTYPE html><HTML><HEAD><TITLE>SHOUTY</TITLE></HEAD><BODY>HELLO</BODY></HTML>"
+                , "");
+            iText.StyledXmlParser.Jsoup.Nodes.Element body = doc.Body();
+            NUnit.Framework.Assert.AreEqual("BODY", body.TagName());
+            NUnit.Framework.Assert.AreEqual("body", body.NormalName());
+            iText.StyledXmlParser.Jsoup.Nodes.Element head = doc.Head();
+            NUnit.Framework.Assert.AreEqual("HEAD", head.TagName());
+            NUnit.Framework.Assert.AreEqual("body", body.NormalName());
+            iText.StyledXmlParser.Jsoup.Nodes.Element root = doc.SelectFirst("html");
+            NUnit.Framework.Assert.AreEqual("HTML", root.TagName());
+            NUnit.Framework.Assert.AreEqual("html", root.NormalName());
+            NUnit.Framework.Assert.AreEqual("SHOUTY", doc.Title());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestClone() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<title>Hello</title> <p>One<p>Two");
             Document clone = (Document)doc.Clone();
@@ -135,22 +147,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestLocation() {
-            FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/yahoo-jp.html");
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@in, "UTF-8", "http://www.yahoo.co.jp/index.html");
-            String location = doc.Location();
-            String baseUri = doc.BaseUri();
-            NUnit.Framework.Assert.AreEqual("http://www.yahoo.co.jp/index.html", location);
-            NUnit.Framework.Assert.AreEqual("http://www.yahoo.co.jp/_ylh=X3oDMTB0NWxnaGxsBF9TAzIwNzcyOTYyNjUEdGlkAzEyBHRtcGwDZ2Ex/"
-                , baseUri);
-            @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/nyt-article-1.html");
-            doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@in, null, "http://www.nytimes.com/2010/07/26/business/global/26bp.html?hp"
-                );
-            location = doc.Location();
-            baseUri = doc.BaseUri();
-            NUnit.Framework.Assert.AreEqual("http://www.nytimes.com/2010/07/26/business/global/26bp.html?hp", location
-                );
-            NUnit.Framework.Assert.AreEqual("http://www.nytimes.com/2010/07/26/business/global/26bp.html?hp", baseUri);
+        public virtual void TestLocationFromString() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p>Hello");
+            NUnit.Framework.Assert.AreEqual("", doc.Location());
         }
 
         [NUnit.Framework.Test]
@@ -158,11 +157,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             String h = "<!DOCTYPE html><body><img async checked='checked' src='&<>\"'>&lt;&gt;&amp;&quot;<foo />bar";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
             doc.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.html);
-            NUnit.Framework.Assert.AreEqual("<!doctype html>\n" + "<html>\n" + " <head></head>\n" + " <body>\n" + "  <img async checked src=\"&amp;<>&quot;\">&lt;&gt;&amp;\"\n"
-                 + "  <foo />bar\n" + " </body>\n" + "</html>", doc.Html());
+            NUnit.Framework.Assert.AreEqual("<!doctype html>\n" + "<html>\n" + " <head></head>\n" + " <body>\n" + "  <img async checked src=\"&amp;<>&quot;\">&lt;&gt;&amp;\"<foo />bar\n"
+                 + " </body>\n" + "</html>", doc.Html());
             doc.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml);
-            NUnit.Framework.Assert.AreEqual("<!DOCTYPE html>\n" + "<html>\n" + " <head></head>\n" + " <body>\n" + "  <img async=\"\" checked=\"checked\" src=\"&amp;<>&quot;\" />&lt;&gt;&amp;\"\n"
-                 + "  <foo />bar\n" + " </body>\n" + "</html>", doc.Html());
+            NUnit.Framework.Assert.AreEqual("<!DOCTYPE html>\n" + "<html>\n" + " <head></head>\n" + " <body>\n" + "  <img async=\"\" checked=\"checked\" src=\"&amp;&lt;>&quot;\" />&lt;&gt;&amp;\"<foo />bar\n"
+                 + " </body>\n" + "</html>", doc.Html());
         }
 
         [NUnit.Framework.Test]
@@ -182,16 +181,20 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             NUnit.Framework.Assert.AreEqual(htmlContent, document.Html(new StringBuilder()).ToString());
         }
 
-        // This test can take awhile to run.
         [NUnit.Framework.Test]
         public virtual void TestOverflowClone() {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<head><base href='https://jsoup.org/'>");
             for (int i = 0; i < 100000; i++) {
-                builder.Insert(0, "<i>");
-                builder.Append("</i>");
+                sb.Append("<div>");
             }
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(builder.ToString());
-            doc.Clone();
+            sb.Append("<p>Hello <a href='/example.html'>there</a>");
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(sb.ToString());
+            String expectedLink = "https://jsoup.org/example.html";
+            NUnit.Framework.Assert.AreEqual(expectedLink, doc.SelectFirst("a").Attr("abs:href"));
+            Document clone = (Document)doc.Clone();
+            doc.HasSameValue(clone);
+            NUnit.Framework.Assert.AreEqual(expectedLink, clone.SelectFirst("a").Attr("abs:href"));
         }
 
         [NUnit.Framework.Test]
@@ -199,14 +202,14 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             Document docA = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div/>One");
             Document docB = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div/>One");
             Document docC = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div/>Two");
-            NUnit.Framework.Assert.IsFalse(docA.Equals(docB));
-            NUnit.Framework.Assert.IsTrue(docA.Equals(docA));
+            NUnit.Framework.Assert.AreNotEqual(docA, docB);
+            NUnit.Framework.Assert.AreEqual(docA, docA);
             NUnit.Framework.Assert.AreEqual(docA.GetHashCode(), docA.GetHashCode());
-            NUnit.Framework.Assert.IsFalse(docA.GetHashCode() == docC.GetHashCode());
+            NUnit.Framework.Assert.AreNotEqual(docA.GetHashCode(), docC.GetHashCode());
         }
 
         [NUnit.Framework.Test]
-        public virtual void DocumentsWithSameContentAreVerifialbe() {
+        public virtual void DocumentsWithSameContentAreVerifiable() {
             Document docA = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div/>One");
             Document docB = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div/>One");
             Document docC = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div/>Two");
@@ -368,8 +371,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             Document doc = new Document("");
             doc.AppendElement("root").Text("node");
             doc.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml);
-            if (addDecl == true) {
-                XmlDeclaration decl = new XmlDeclaration("xml", "", false);
+            if (addDecl) {
+                XmlDeclaration decl = new XmlDeclaration("xml", false);
                 decl.Attr("version", version);
                 decl.Attr("encoding", charset);
                 doc.PrependChild(decl);
@@ -381,14 +384,67 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void TestShiftJisRoundtrip() {
             String input = "<html>" + "<head>" + "<meta http-equiv=\"content-type\" content=\"text/html; charset=Shift_JIS\" />"
                  + "</head>" + "<body>" + "before&nbsp;after" + "</body>" + "</html>";
-            Stream @is = new MemoryStream(input.GetBytes(EncodingUtil.GetEncoding("ASCII")));
+            Stream @is = new MemoryStream(input.GetBytes(System.Text.Encoding.ASCII));
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@is, null, "http://example.com");
             doc.OutputSettings().EscapeMode(Entities.EscapeMode.xhtml);
             String output = iText.IO.Util.JavaUtil.GetStringForBytes(doc.Html().GetBytes(doc.OutputSettings().Charset(
                 )), doc.OutputSettings().Charset());
-            NUnit.Framework.Assert.IsFalse(output.Contains("?"), "Should not have contained a '?'.");
-            NUnit.Framework.Assert.IsTrue(output.Contains("&#xa0;") || output.Contains("&nbsp;"), "Should have contained a '&#xa0;' or a '&nbsp;'."
-                );
+            NUnit.Framework.Assert.IsFalse(output.Contains("?"));
+            NUnit.Framework.Assert.IsTrue(output.Contains("&#xa0;") || output.Contains("&nbsp;"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseAndHtmlOnDifferentThreads() {
+            String html = "<p>Alrighty then it's not \uD83D\uDCA9. <span>Next</span></p>";
+            // 💩
+            String asci = "<p>Alrighty then it's not &#x1f4a9;. <span>Next</span></p>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            String[] @out = new String[1];
+            Elements p = doc.Select("p");
+            NUnit.Framework.Assert.AreEqual(html, p.OuterHtml());
+            Thread thread = new Thread(() => {
+                @out[0] = p.OuterHtml();
+                doc.OutputSettings().Charset(System.Text.Encoding.ASCII);
+            }
+            );
+            thread.Start();
+            thread.Join();
+            NUnit.Framework.Assert.AreEqual(html, @out[0]);
+            NUnit.Framework.Assert.AreEqual(System.Text.Encoding.ASCII, doc.OutputSettings().Charset());
+            NUnit.Framework.Assert.AreEqual(asci, p.OuterHtml());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestDocumentTypeGet() {
+            String html = "\n\n<!-- comment -->  <!doctype html><p>One</p>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            DocumentType documentType = doc.DocumentType();
+            NUnit.Framework.Assert.IsNotNull(documentType);
+            NUnit.Framework.Assert.AreEqual("html", documentType.Name());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FramesetSupportsBodyMethod() {
+            String html = "<html><head><title>Frame Test</title></head><frameset id=id><frame src=foo.html></frameset>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            iText.StyledXmlParser.Jsoup.Nodes.Element head = doc.Head();
+            NUnit.Framework.Assert.IsNotNull(head);
+            NUnit.Framework.Assert.AreEqual("Frame Test", doc.Title());
+            // Frameset docs per html5 spec have no body element - but instead a frameset elelemt
+            NUnit.Framework.Assert.IsNull(doc.SelectFirst("body"));
+            iText.StyledXmlParser.Jsoup.Nodes.Element frameset = doc.SelectFirst("frameset");
+            NUnit.Framework.Assert.IsNotNull(frameset);
+            // the body() method returns body or frameset and does not otherwise modify the document
+            // doing it in body() vs parse keeps the html close to original for round-trip option
+            iText.StyledXmlParser.Jsoup.Nodes.Element body = doc.Body();
+            NUnit.Framework.Assert.IsNotNull(body);
+            NUnit.Framework.Assert.AreSame(frameset, body);
+            NUnit.Framework.Assert.AreEqual("frame", body.Child(0).TagName());
+            NUnit.Framework.Assert.IsNull(doc.SelectFirst("body"));
+            // did not vivify a body element
+            String expected = "<html>\n" + " <head>\n" + "  <title>Frame Test</title>\n" + " </head>\n" + " <frameset id=\"id\">\n"
+                 + "  <frame src=\"foo.html\">\n" + " </frameset>\n" + "</html>";
+            NUnit.Framework.Assert.AreEqual(expected, doc.Html());
         }
     }
 }

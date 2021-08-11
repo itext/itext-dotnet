@@ -3,51 +3,33 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Text;
+using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Helper;
+using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Nodes;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Parse tokens for the Tokeniser.</summary>
-    internal abstract class Token {
+    public abstract class Token {
         internal iText.StyledXmlParser.Jsoup.Parser.TokenType type;
 
         private Token() {
@@ -73,6 +55,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         internal sealed class Doctype : Token {
             internal readonly StringBuilder name = new StringBuilder();
 
+            internal String pubSysKey = null;
+
             internal readonly StringBuilder publicIdentifier = new StringBuilder();
 
             internal readonly StringBuilder systemIdentifier = new StringBuilder();
@@ -85,6 +69,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
             internal override Token Reset() {
                 Reset(name);
+                pubSysKey = null;
                 Reset(publicIdentifier);
                 Reset(systemIdentifier);
                 forceQuirks = false;
@@ -93,6 +78,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
             internal String GetName() {
                 return name.ToString();
+            }
+
+            internal String GetPubSysKey() {
+                return pubSysKey;
             }
 
             internal String GetPublicIdentifier() {
@@ -111,6 +100,9 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         internal abstract class Tag : Token {
             protected internal String tagName;
 
+            protected internal String normalName;
+
+            // lc version of tag name, for case insensitive tree build
             private String pendingAttributeName;
 
             // attribute names are generally caught in one hop, not accumulated
@@ -132,6 +124,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             // start tags get attributes on construction. End tags get attributes on first new attribute (but only for parser convenience, not used).
             internal override Token Reset() {
                 tagName = null;
+                normalName = null;
                 pendingAttributeName = null;
                 Reset(pendingAttributeValue);
                 pendingAttributeValueS = null;
@@ -147,20 +140,24 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     attributes = new Attributes();
                 }
                 if (pendingAttributeName != null) {
-                    iText.StyledXmlParser.Jsoup.Nodes.Attribute attribute;
-                    if (hasPendingAttributeValue) {
-                        attribute = new iText.StyledXmlParser.Jsoup.Nodes.Attribute(pendingAttributeName, pendingAttributeValue.Length
-                             > 0 ? pendingAttributeValue.ToString() : pendingAttributeValueS);
-                    }
-                    else {
-                        if (hasEmptyAttributeValue) {
-                            attribute = new iText.StyledXmlParser.Jsoup.Nodes.Attribute(pendingAttributeName, "");
+                    // the tokeniser has skipped whitespace control chars, but trimming could collapse to empty for other control codes, so verify here
+                    pendingAttributeName = PortUtil.TrimControlCodes(pendingAttributeName);
+                    if (pendingAttributeName.Length > 0) {
+                        String value;
+                        if (hasPendingAttributeValue) {
+                            value = pendingAttributeValue.Length > 0 ? pendingAttributeValue.ToString() : pendingAttributeValueS;
                         }
                         else {
-                            attribute = new BooleanAttribute(pendingAttributeName);
+                            if (hasEmptyAttributeValue) {
+                                value = "";
+                            }
+                            else {
+                                value = null;
+                            }
                         }
+                        // note that we add, not put. So that the first is kept, and rest are deduped, once in a context where case sensitivity is known (the appropriate tree builder).
+                        attributes.Add(pendingAttributeName, value);
                     }
-                    attributes.Put(attribute);
                 }
                 pendingAttributeName = null;
                 hasEmptyAttributeValue = false;
@@ -169,21 +166,41 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 pendingAttributeValueS = null;
             }
 
+            internal bool HasAttributes() {
+                return attributes != null;
+            }
+
+            internal bool HasAttribute(String key) {
+                return attributes != null && attributes.HasKey(key);
+            }
+
             internal void FinaliseTag() {
                 // finalises for emit
                 if (pendingAttributeName != null) {
-                    // todo: check if attribute name exists; if so, drop and error
                     NewAttribute();
                 }
             }
 
+            /// <summary>Preserves case</summary>
             internal String Name() {
+                // preserves case, for input into Tag.valueOf (which may drop case)
                 Validate.IsFalse(tagName == null || tagName.Length == 0);
                 return tagName;
             }
 
+            /// <summary>Lower case</summary>
+            internal String NormalName() {
+                // lower case, used in tree building for working out where in tree it should go
+                return normalName;
+            }
+
+            internal String ToStringName() {
+                return tagName != null ? tagName : "[unset]";
+            }
+
             internal Token.Tag Name(String name) {
                 tagName = name;
+                normalName = Normalizer.LowerCase(name);
                 return this;
             }
 
@@ -191,13 +208,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return selfClosing;
             }
 
-            internal Attributes GetAttributes() {
-                return attributes;
-            }
-
             // these appenders are rarely hit in not null state-- caused by null chars.
             internal void AppendTagName(String append) {
                 tagName = tagName == null ? append : tagName + append;
+                normalName = Normalizer.LowerCase(tagName);
             }
 
             internal void AppendTagName(char append) {
@@ -232,6 +246,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 pendingAttributeValue.Append(append);
             }
 
+            internal void AppendAttributeValue(int[] appendCodepoints) {
+                EnsureAttributeValue();
+                foreach (int codepoint in appendCodepoints) {
+                    pendingAttributeValue.AppendCodePoint(codepoint);
+                }
+            }
+
             internal void SetEmptyAttributeValue() {
                 hasEmptyAttributeValue = true;
             }
@@ -244,34 +265,35 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     pendingAttributeValueS = null;
                 }
             }
+
+            public abstract override String ToString();
         }
 
         internal sealed class StartTag : Token.Tag {
             internal StartTag()
                 : base() {
-                attributes = new Attributes();
                 type = iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag;
             }
 
             internal override Token Reset() {
                 base.Reset();
-                attributes = new Attributes();
-                // todo - would prefer these to be null, but need to check Element assertions
+                attributes = null;
                 return this;
             }
 
             internal Token.StartTag NameAttr(String name, Attributes attributes) {
                 this.tagName = name;
                 this.attributes = attributes;
+                normalName = Normalizer.LowerCase(tagName);
                 return this;
             }
 
             public override String ToString() {
-                if (attributes != null && attributes.Size() > 0) {
-                    return "<" + Name() + " " + attributes.ToString() + ">";
+                if (HasAttributes() && attributes.Size() > 0) {
+                    return "<" + ToStringName() + " " + attributes.ToString() + ">";
                 }
                 else {
-                    return "<" + Name() + ">";
+                    return "<" + ToStringName() + ">";
                 }
             }
         }
@@ -283,17 +305,21 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
 
             public override String ToString() {
-                return "</" + Name() + ">";
+                return "</" + ToStringName() + ">";
             }
         }
 
         internal sealed class Comment : Token {
-            internal readonly StringBuilder data = new StringBuilder();
+            private readonly StringBuilder data = new StringBuilder();
 
+            private String dataS;
+
+            // try to get in one shot
             internal bool bogus = false;
 
             internal override Token Reset() {
                 Reset(data);
+                dataS = null;
                 bogus = false;
                 return this;
             }
@@ -303,7 +329,32 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
 
             internal String GetData() {
-                return data.ToString();
+                return dataS != null ? dataS : data.ToString();
+            }
+
+            internal Token.Comment Append(String append) {
+                EnsureData();
+                if (data.Length == 0) {
+                    dataS = append;
+                }
+                else {
+                    data.Append(append);
+                }
+                return this;
+            }
+
+            internal Token.Comment Append(char append) {
+                EnsureData();
+                data.Append(append);
+                return this;
+            }
+
+            private void EnsureData() {
+                // if on second hit, we'll need to move to the builder
+                if (dataS != null) {
+                    data.Append(dataS);
+                    dataS = null;
+                }
             }
 
             public override String ToString() {
@@ -311,7 +362,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal sealed class Character : Token {
+        internal class Character : Token {
             private String data;
 
             internal Character()
@@ -324,17 +375,28 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return this;
             }
 
-            internal Token.Character Data(String data) {
+            internal virtual Token.Character Data(String data) {
                 this.data = data;
                 return this;
             }
 
-            internal String GetData() {
+            internal virtual String GetData() {
                 return data;
             }
 
             public override String ToString() {
                 return GetData();
+            }
+        }
+
+        internal sealed class CData : Token.Character {
+            internal CData(String data)
+                : base() {
+                this.Data(data);
+            }
+
+            public override String ToString() {
+                return "<![CDATA[" + GetData() + "]]>";
             }
         }
 
@@ -345,6 +407,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
             internal override Token Reset() {
                 return this;
+            }
+
+            public override String ToString() {
+                return "";
             }
         }
 
@@ -384,6 +450,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return type == iText.StyledXmlParser.Jsoup.Parser.TokenType.Character;
         }
 
+        internal bool IsCData() {
+            return this is Token.CData;
+        }
+
         internal Token.Character AsCharacter() {
             return (Token.Character)this;
         }
@@ -391,9 +461,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         internal bool IsEOF() {
             return type == iText.StyledXmlParser.Jsoup.Parser.TokenType.EOF;
         }
+        // note no CData - treated in builder as an extension of Character
     }
 
-    internal enum TokenType {
+    public enum TokenType {
         Doctype,
         StartTag,
         EndTag,

@@ -3,42 +3,22 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -46,6 +26,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Helper;
+using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Select;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
@@ -60,32 +41,103 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// </remarks>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class Element : iText.StyledXmlParser.Jsoup.Nodes.Node {
+        private static readonly IList<iText.StyledXmlParser.Jsoup.Nodes.Element> EmptyChildren = JavaCollectionsUtil
+            .EmptyList<iText.StyledXmlParser.Jsoup.Nodes.Element>();
+
+        private static readonly Regex ClassSplit = iText.IO.Util.StringUtil.RegexCompile("\\s+");
+
+        private static readonly String BaseUriKey = iText.StyledXmlParser.Jsoup.Nodes.Attributes.InternalKey("baseUri"
+            );
+
         private iText.StyledXmlParser.Jsoup.Parser.Tag tag;
 
-        private static readonly Regex classSplit = iText.IO.Util.StringUtil.RegexCompile("\\s+");
+        private WeakReference shadowChildrenRef;
+
+        // points to child elements shadowed from node children
+        internal IList<iText.StyledXmlParser.Jsoup.Nodes.Node> childNodes;
+
+        private iText.StyledXmlParser.Jsoup.Nodes.Attributes attributes;
+
+        // field is nullable but all methods for attributes are non null
+        /// <summary>Create a new, standalone element.</summary>
+        /// <param name="tag">tag name</param>
+        public Element(String tag)
+            : this(iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf(tag), "", null) {
+        }
 
         /// <summary>Create a new, standalone Element.</summary>
         /// <remarks>Create a new, standalone Element. (Standalone in that is has no parent.)</remarks>
         /// <param name="tag">tag of this element</param>
-        /// <param name="baseUri">the base URI</param>
-        /// <param name="attributes">initial attributes</param>
+        /// <param name="baseUri">the base URI (optional, may be null to inherit from parent, or "" to clear parent's)
+        ///     </param>
+        /// <param name="attributes">initial attributes (optional, may be null)</param>
         /// <seealso cref="AppendChild(Node)"/>
         /// <seealso cref="AppendElement(System.String)"/>
-        public Element(iText.StyledXmlParser.Jsoup.Parser.Tag tag, String baseUri, Attributes attributes)
-            : base(baseUri, attributes) {
+        public Element(iText.StyledXmlParser.Jsoup.Parser.Tag tag, String baseUri, iText.StyledXmlParser.Jsoup.Nodes.Attributes
+             attributes) {
             Validate.NotNull(tag);
+            childNodes = EmptyNodes;
+            this.attributes = attributes;
             this.tag = tag;
+            if (baseUri != null) {
+                this.SetBaseUri(baseUri);
+            }
         }
 
-        /// <summary>Create a new Element from a tag and a base URI.</summary>
+        /// <summary>Create a new Element from a Tag and a base URI.</summary>
         /// <param name="tag">element tag</param>
-        /// <param name="baseUri">
-        /// the base URI of this element. It is acceptable for the base URI to be an empty
-        /// string, but not null.
-        /// </param>
-        /// <seealso cref="iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf(System.String)"/>
+        /// <param name="baseUri">the base URI of this element. Optional, and will inherit from its parent, if any.</param>
+        /// <seealso cref="iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf(System.String, iText.StyledXmlParser.Jsoup.Parser.ParseSettings)
+        ///     "/>
         public Element(iText.StyledXmlParser.Jsoup.Parser.Tag tag, String baseUri)
-            : this(tag, baseUri, new Attributes()) {
+            : this(tag, baseUri, null) {
+        }
+
+        /// <summary>Internal test to check if a nodelist object has been created.</summary>
+        protected internal virtual bool HasChildNodes() {
+            return childNodes != EmptyNodes;
+        }
+
+        protected internal override IList<iText.StyledXmlParser.Jsoup.Nodes.Node> EnsureChildNodes() {
+            if (childNodes == EmptyNodes) {
+                childNodes = new Element.NodeList(this, 4);
+            }
+            return childNodes;
+        }
+
+        protected internal override bool HasAttributes() {
+            return attributes != null;
+        }
+
+        public override iText.StyledXmlParser.Jsoup.Nodes.Attributes Attributes() {
+            if (attributes == null) {
+                // not using hasAttributes, as doesn't clear warning
+                attributes = new iText.StyledXmlParser.Jsoup.Nodes.Attributes();
+            }
+            return attributes;
+        }
+
+        public override String BaseUri() {
+            return SearchUpForAttribute(this, BaseUriKey);
+        }
+
+        private static String SearchUpForAttribute(iText.StyledXmlParser.Jsoup.Nodes.Element start, String key) {
+            iText.StyledXmlParser.Jsoup.Nodes.Element el = start;
+            while (el != null) {
+                if (el.attributes != null && el.attributes.HasKey(key)) {
+                    return el.attributes.Get(key);
+                }
+                el = (iText.StyledXmlParser.Jsoup.Nodes.Element)el.Parent();
+            }
+            return "";
+        }
+
+        protected internal override void DoSetBaseUri(String baseUri) {
+            Attributes().Put(BaseUriKey, baseUri);
+        }
+
+        public override int ChildNodeSize() {
+            return childNodes.Count;
         }
 
         public override String NodeName() {
@@ -96,15 +148,34 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <remarks>
         /// Get the name of the tag for this element. E.g.
         /// <c>div</c>
+        /// . If you are using
+        /// <see cref="iText.StyledXmlParser.Jsoup.Parser.ParseSettings.preserveCase">case preserving parsing</see>
+        /// , this will return the source's original case.
         /// </remarks>
         /// <returns>the tag name</returns>
         public virtual String TagName() {
             return tag.GetName();
         }
 
-        /// <summary>Change the tag of this element.</summary>
+        /// <summary>Get the normalized name of this Element's tag.</summary>
         /// <remarks>
-        /// Change the tag of this element. For example, convert a
+        /// Get the normalized name of this Element's tag. This will always be the lowercased version of the tag, regardless
+        /// of the tag case preserving setting of the parser. For e.g.,
+        /// <c>&lt;DIV&gt;</c>
+        /// and
+        /// <c>&lt;div&gt;</c>
+        /// both have a
+        /// normal name of
+        /// <c>div</c>.
+        /// </remarks>
+        /// <returns>normal name</returns>
+        public virtual String NormalName() {
+            return tag.NormalName();
+        }
+
+        /// <summary>Change (rename) the tag of this element.</summary>
+        /// <remarks>
+        /// Change (rename) the tag of this element. For example, convert a
         /// <c>&lt;span&gt;</c>
         /// to a
         /// <c>&lt;div&gt;</c>
@@ -113,9 +184,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </remarks>
         /// <param name="tagName">new tag name for this element</param>
         /// <returns>this element, for chaining</returns>
+        /// <seealso cref="iText.StyledXmlParser.Jsoup.Select.Elements.TagName(System.String)"></seealso>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element TagName(String tagName) {
             Validate.NotEmpty(tagName, "Tag name must not be empty.");
-            tag = iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf(tagName);
+            tag = iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf(tagName, NodeUtils.Parser(this).Settings());
+            // maintains the case option of the original parse
             return this;
         }
 
@@ -130,7 +203,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// Test if this element is a block-level element. (E.g.
         /// <c>&lt;div&gt; == true</c>
         /// or an inline element
-        /// <c>&lt;p&gt; == false</c>
+        /// <c>&lt;span&gt; == false</c>
         /// ).
         /// </remarks>
         /// <returns>true if block, false if not (and thus inline)</returns>
@@ -145,7 +218,20 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </summary>
         /// <returns>The id attribute, if present, or an empty string if not.</returns>
         public virtual String Id() {
-            return attributes.Get("id");
+            return attributes != null ? attributes.GetIgnoreCase("id") : "";
+        }
+
+        /// <summary>
+        /// Set the
+        /// <paramref name="id"/>
+        /// attribute of this element.
+        /// </summary>
+        /// <param name="id">the ID value to use</param>
+        /// <returns>this Element, for chaining</returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Id(String id) {
+            Validate.NotNull(id);
+            Attr("id", id);
+            return this;
         }
 
         /// <summary>Set an attribute value on this element.</summary>
@@ -169,7 +255,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="attributeValue">the attribute value</param>
         /// <returns>this element</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Attr(String attributeKey, bool attributeValue) {
-            attributes.Put(attributeKey, attributeValue);
+            Attributes().Put(attributeKey, attributeValue);
             return this;
         }
 
@@ -196,7 +282,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// custom data attributes.
         /// </returns>
         public virtual IDictionary<String, String> Dataset() {
-            return attributes.Dataset();
+            return Attributes().Dataset();
         }
 
         public sealed override iText.StyledXmlParser.Jsoup.Nodes.Node Parent() {
@@ -233,7 +319,26 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </returns>
         /// <seealso cref="Node.ChildNode(int)"/>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Child(int index) {
-            return Children()[index];
+            return ChildElementsList()[index];
+        }
+
+        /// <summary>Get the number of child nodes of this element that are elements.</summary>
+        /// <remarks>
+        /// Get the number of child nodes of this element that are elements.
+        /// <para />
+        /// This method works on the same filtered list like
+        /// <see cref="Child(int)"/>
+        /// . Use
+        /// <see cref="Node.ChildNodes()"/>
+        /// and
+        /// <see cref="ChildNodeSize()"/>
+        /// to get the unfiltered Nodes (e.g. includes TextNodes etc.)
+        /// </remarks>
+        /// <returns>the number of child nodes that are elements</returns>
+        /// <seealso cref="Children()"/>
+        /// <seealso cref="Child(int)"/>
+        public virtual int ChildrenSize() {
+            return ChildElementsList().Count;
         }
 
         /// <summary>Get this element's child elements.</summary>
@@ -244,21 +349,42 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <see cref="Node.ChildNodes()"/>
         /// to get Element nodes.
         /// </remarks>
-        /// <returns>
-        /// child elements. If this element has no children, returns an
-        /// empty list.
-        /// </returns>
+        /// <returns>child elements. If this element has no children, returns an empty list.</returns>
         /// <seealso cref="Node.ChildNodes()"/>
         public virtual Elements Children() {
-            // create on the fly rather than maintaining two lists. if gets slow, memoize, and mark dirty on change
-            IList<iText.StyledXmlParser.Jsoup.Nodes.Element> elements = new List<iText.StyledXmlParser.Jsoup.Nodes.Element
-                >(childNodes.Count);
-            foreach (iText.StyledXmlParser.Jsoup.Nodes.Node node in childNodes) {
-                if (node is iText.StyledXmlParser.Jsoup.Nodes.Element) {
-                    elements.Add((iText.StyledXmlParser.Jsoup.Nodes.Element)node);
-                }
+            return new Elements(ChildElementsList());
+        }
+
+        /// <summary>Maintains a shadow copy of this element's child elements.</summary>
+        /// <remarks>Maintains a shadow copy of this element's child elements. If the nodelist is changed, this cache is invalidated.
+        ///     </remarks>
+        /// <returns>a list of child elements</returns>
+        internal virtual IList<iText.StyledXmlParser.Jsoup.Nodes.Element> ChildElementsList() {
+            if (ChildNodeSize() == 0) {
+                return EmptyChildren;
             }
-            return new Elements(elements);
+            // short circuit creating empty
+            IList<iText.StyledXmlParser.Jsoup.Nodes.Element> children;
+            if (shadowChildrenRef == null || (children = (IList<iText.StyledXmlParser.Jsoup.Nodes.Element>)shadowChildrenRef
+                .Target) == null) {
+                int size = childNodes.Count;
+                children = new List<iText.StyledXmlParser.Jsoup.Nodes.Element>(size);
+                //noinspection ForLoopReplaceableByForEach (beacause it allocates an Iterator which is wasteful here)
+                for (int i = 0; i < size; i++) {
+                    iText.StyledXmlParser.Jsoup.Nodes.Node node = childNodes[i];
+                    if (node is iText.StyledXmlParser.Jsoup.Nodes.Element) {
+                        children.Add((iText.StyledXmlParser.Jsoup.Nodes.Element)node);
+                    }
+                }
+                shadowChildrenRef = new WeakReference(children);
+            }
+            return children;
+        }
+
+        /// <summary>Clears the cached shadow child elements.</summary>
+        internal override void NodelistChanged() {
+            base.NodelistChanged();
+            shadowChildrenRef = null;
         }
 
         /// <summary>Get this element's child text nodes.</summary>
@@ -347,10 +473,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <remarks>
         /// Find elements that match the
         /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
-        /// CSS query, with this element as the starting context. Matched elements
-        /// may include this element, or any of its children.
-        /// <para />
-        /// This method is generally more powerful to use than the DOM-type
+        /// CSS query, with this element as the starting context.
+        /// Matched elements may include this element, or any of its children.
+        /// <para />This method is generally more powerful to use than the DOM-type
         /// <c>getElementBy*</c>
         /// methods, because
         /// multiple filters can be combined, e.g.:
@@ -368,23 +493,183 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// - finds links pointing to example.com (loosely)
         /// </description></item>
         /// </list>
+        /// <para />
         /// See the query syntax documentation in
         /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>.
+        /// <para />
+        /// Also known as
+        /// <c>querySelectorAll()</c>
+        /// in the Web DOM.
         /// </remarks>
         /// <param name="cssQuery">
         /// a
         /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
         /// CSS-like query
         /// </param>
-        /// <returns>elements that match the query (empty if none match)</returns>
-        /// <seealso cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
+        /// <returns>
+        /// an
+        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Elements"/>
+        /// list containing elements that match the query (empty if none match)
+        /// </returns>
+        /// <seealso cref="iText.StyledXmlParser.Jsoup.Select.Selector">selector query syntax</seealso>
+        /// <seealso cref="iText.StyledXmlParser.Jsoup.Select.QueryParser.Parse(System.String)"/>
         public virtual Elements Select(String cssQuery) {
             return Selector.Select(cssQuery, this);
         }
 
-        /// <summary>Add a node child node to this element.</summary>
+        /// <summary>Find elements that match the supplied Evaluator.</summary>
+        /// <remarks>
+        /// Find elements that match the supplied Evaluator. This has the same functionality as
+        /// <see cref="Select(System.String)"/>
+        /// , but
+        /// may be useful if you are running the same query many times (on many documents) and want to save the overhead of
+        /// repeatedly parsing the CSS query.
+        /// </remarks>
+        /// <param name="evaluator">an element evaluator</param>
+        /// <returns>
+        /// an
+        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Elements"/>
+        /// list containing elements that match the query (empty if none match)
+        /// </returns>
+        public virtual Elements Select(Evaluator evaluator) {
+            return Selector.Select(evaluator, this);
+        }
+
+        /// <summary>
+        /// Find the first Element that matches the
+        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
+        /// CSS query, with this element as the starting context.
+        /// </summary>
+        /// <remarks>
+        /// Find the first Element that matches the
+        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
+        /// CSS query, with this element as the starting context.
+        /// <para />
+        /// This is effectively the same as calling
+        /// <c>element.select(query).first()</c>
+        /// , but is more efficient as query
+        /// execution stops on the first hit.
+        /// <para />
+        /// Also known as
+        /// <c>querySelector()</c>
+        /// in the Web DOM.
+        /// </remarks>
+        /// <param name="cssQuery">
+        /// cssQuery a
+        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
+        /// CSS-like query
+        /// </param>
+        /// <returns>
+        /// the first matching element, or <b>
+        /// <see langword="null"/>
+        /// </b> if there is no match.
+        /// </returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element SelectFirst(String cssQuery) {
+            return Selector.SelectFirst(cssQuery, this);
+        }
+
+        /// <summary>
+        /// Finds the first Element that matches the supplied Evaluator, with this element as the starting context, or
+        /// <see langword="null"/>
+        /// if none match.
+        /// </summary>
+        /// <param name="evaluator">an element evaluator</param>
+        /// <returns>
+        /// the first matching element (walking down the tree, starting from this element), or
+        /// <see langword="null"/>
+        /// if none
+        /// matchn.
+        /// </returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element SelectFirst(Evaluator evaluator) {
+            return Collector.FindFirst(evaluator, this);
+        }
+
+        /// <summary>
+        /// Checks if this element matches the given
+        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
+        /// CSS query.
+        /// </summary>
+        /// <remarks>
+        /// Checks if this element matches the given
+        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
+        /// CSS query. Also knows as
+        /// <c>matches()</c>
+        /// in the Web
+        /// DOM.
+        /// </remarks>
+        /// <param name="cssQuery">
+        /// a
+        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
+        /// CSS query
+        /// </param>
+        /// <returns>if this element matches the query</returns>
+        public virtual bool Is(String cssQuery) {
+            return Is(QueryParser.Parse(cssQuery));
+        }
+
+        /// <summary>Check if this element matches the given evaluator.</summary>
+        /// <param name="evaluator">an element evaluator</param>
+        /// <returns>if this element matches</returns>
+        public virtual bool Is(Evaluator evaluator) {
+            return evaluator.Matches((iText.StyledXmlParser.Jsoup.Nodes.Element)this.Root(), this);
+        }
+
+        /// <summary>Find the closest element up the tree of parents that matches the specified CSS query.</summary>
+        /// <remarks>
+        /// Find the closest element up the tree of parents that matches the specified CSS query. Will return itself, an
+        /// ancestor, or
+        /// <see langword="null"/>
+        /// if there is no such matching element.
+        /// </remarks>
+        /// <param name="cssQuery">
+        /// a
+        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
+        /// CSS query
+        /// </param>
+        /// <returns>
+        /// the closest ancestor element (possibly itself) that matches the provided evaluator.
+        /// <see langword="null"/>
+        /// if not
+        /// found.
+        /// </returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Closest(String cssQuery) {
+            return Closest(QueryParser.Parse(cssQuery));
+        }
+
+        /// <summary>Find the closest element up the tree of parents that matches the specified evaluator.</summary>
+        /// <remarks>
+        /// Find the closest element up the tree of parents that matches the specified evaluator. Will return itself, an
+        /// ancestor, or
+        /// <see langword="null"/>
+        /// if there is no such matching element.
+        /// </remarks>
+        /// <param name="evaluator">a query evaluator</param>
+        /// <returns>
+        /// the closest ancestor element (possibly itself) that matches the provided evaluator.
+        /// <see langword="null"/>
+        /// if not
+        /// found.
+        /// </returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Closest(Evaluator evaluator) {
+            Validate.NotNull(evaluator);
+            iText.StyledXmlParser.Jsoup.Nodes.Element el = this;
+            iText.StyledXmlParser.Jsoup.Nodes.Element root = (iText.StyledXmlParser.Jsoup.Nodes.Element)Root();
+            do {
+                if (evaluator.Matches(root, el)) {
+                    return el;
+                }
+                el = (iText.StyledXmlParser.Jsoup.Nodes.Element)el.Parent();
+            }
+            while (el != null);
+            return null;
+        }
+
+        /// <summary>Insert a node to the end of this Element's children.</summary>
+        /// <remarks>Insert a node to the end of this Element's children. The incoming node will be re-parented.</remarks>
         /// <param name="child">node to add.</param>
-        /// <returns>this element, so that you can add more child nodes or elements.</returns>
+        /// <returns>this Element, for chaining</returns>
+        /// <seealso cref="PrependChild(Node)"/>
+        /// <seealso cref="InsertChildren(int, System.Collections.Generic.ICollection{E})"/>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element AppendChild(iText.StyledXmlParser.Jsoup.Nodes.Node
              child) {
             Validate.NotNull(child);
@@ -396,36 +681,43 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return this;
         }
 
+        /// <summary>Insert the given nodes to the end of this Element's children.</summary>
+        /// <param name="children">nodes to add</param>
+        /// <returns>this Element, for chaining</returns>
+        /// <seealso cref="InsertChildren(int, System.Collections.Generic.ICollection{E})"/>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element AppendChildren<_T0>(ICollection<_T0> children)
+            where _T0 : iText.StyledXmlParser.Jsoup.Nodes.Node {
+            InsertChildren(-1, children);
+            return this;
+        }
+
+        /// <summary>Add this element to the supplied parent element, as its next child.</summary>
+        /// <param name="parent">element to which this element will be appended</param>
+        /// <returns>this element, so that you can continue modifying the element</returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element AppendTo(iText.StyledXmlParser.Jsoup.Nodes.Element
+             parent) {
+            Validate.NotNull(parent);
+            parent.AppendChild(this);
+            return this;
+        }
+
         /// <summary>Add a node to the start of this element's children.</summary>
         /// <param name="child">node to add.</param>
         /// <returns>this element, so that you can add more child nodes or elements.</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element PrependChild(iText.StyledXmlParser.Jsoup.Nodes.Node
              child) {
-            return InsertChild(0, child);
+            Validate.NotNull(child);
+            AddChildren(0, child);
+            return this;
         }
 
-        /// <summary>Inserts the given child node into this element at the specified index.</summary>
-        /// <remarks>
-        /// Inserts the given child node into this element at the specified index. Current node will be shifted to the
-        /// right. The inserted nodes will be moved from their current parent. To prevent moving, copy the node first.
-        /// </remarks>
-        /// <param name="index">
-        /// 0-based index to insert children at. Specify
-        /// <c>0</c>
-        /// to insert at the start,
-        /// <c>-1</c>
-        /// at the
-        /// end
-        /// </param>
-        /// <param name="child">child node to insert</param>
-        /// <returns>this element, for chaining.</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element InsertChild(int index, iText.StyledXmlParser.Jsoup.Nodes.Node
-             child) {
-            if (index == -1) {
-                return AppendChild(child);
-            }
-            Validate.NotNull(child);
-            AddChildren(index, child);
+        /// <summary>Insert the given nodes to the start of this Element's children.</summary>
+        /// <param name="children">nodes to add</param>
+        /// <returns>this Element, for chaining</returns>
+        /// <seealso cref="InsertChildren(int, System.Collections.Generic.ICollection{E})"/>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element PrependChildren<_T0>(ICollection<_T0> children)
+            where _T0 : iText.StyledXmlParser.Jsoup.Nodes.Node {
+            InsertChildren(0, children);
             return this;
         }
 
@@ -457,9 +749,57 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             List<iText.StyledXmlParser.Jsoup.Nodes.Node> nodes = new List<iText.StyledXmlParser.Jsoup.Nodes.Node>(children
                 );
             iText.StyledXmlParser.Jsoup.Nodes.Node[] nodeArray = nodes.ToArray(new iText.StyledXmlParser.Jsoup.Nodes.Node
-                [nodes.Count]);
+                [0]);
             AddChildren(index, nodeArray);
             return this;
+        }
+
+        /// <summary>Inserts the given child nodes into this element at the specified index.</summary>
+        /// <remarks>
+        /// Inserts the given child nodes into this element at the specified index. Current nodes will be shifted to the
+        /// right. The inserted nodes will be moved from their current parent. To prevent moving, copy the nodes first.
+        /// </remarks>
+        /// <param name="index">
+        /// 0-based index to insert children at. Specify
+        /// <c>0</c>
+        /// to insert at the start,
+        /// <c>-1</c>
+        /// at the
+        /// end
+        /// </param>
+        /// <param name="children">child nodes to insert</param>
+        /// <returns>this element, for chaining.</returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element InsertChildren(int index, params iText.StyledXmlParser.Jsoup.Nodes.Node
+            [] children) {
+            Validate.NotNull(children, "Children collection to be inserted must not be null.");
+            int currentSize = ChildNodeSize();
+            if (index < 0) {
+                index += currentSize + 1;
+            }
+            // roll around
+            Validate.IsTrue(index >= 0 && index <= currentSize, "Insert position out of bounds.");
+            AddChildren(index, children);
+            return this;
+        }
+
+        /// <summary>Inserts the given child node into this element at the specified index.</summary>
+        /// <remarks>
+        /// Inserts the given child node into this element at the specified index. Current node will be shifted to the
+        /// right. The inserted nodes will be moved from their current parent. To prevent moving, copy the node first.
+        /// </remarks>
+        /// <param name="index">
+        /// 0-based index to insert children at. Specify
+        /// <c>0</c>
+        /// to insert at the start,
+        /// <c>-1</c>
+        /// at the
+        /// end
+        /// </param>
+        /// <param name="child">child node to insert</param>
+        /// <returns>this element, for chaining.</returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element InsertChild(int index, iText.StyledXmlParser.Jsoup.Nodes.Node
+             child) {
+            return InsertChildren(index, child);
         }
 
         /// <summary>Create a new element by tag name, and add it as the last child.</summary>
@@ -474,7 +814,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element AppendElement(String tagName) {
             iText.StyledXmlParser.Jsoup.Nodes.Element child = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf(tagName), BaseUri());
+                .ValueOf(tagName, NodeUtils.Parser(this).Settings()), BaseUri());
             AppendChild(child);
             return child;
         }
@@ -491,7 +831,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element PrependElement(String tagName) {
             iText.StyledXmlParser.Jsoup.Nodes.Element child = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf(tagName), BaseUri());
+                .ValueOf(tagName, NodeUtils.Parser(this).Settings()), BaseUri());
             PrependChild(child);
             return child;
         }
@@ -501,7 +841,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>this element</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element AppendText(String text) {
             Validate.NotNull(text);
-            TextNode node = new TextNode(text, BaseUri());
+            TextNode node = new TextNode(text);
             AppendChild(node);
             return this;
         }
@@ -511,7 +851,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>this element</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element PrependText(String text) {
             Validate.NotNull(text);
-            TextNode node = new TextNode(text, BaseUri());
+            TextNode node = new TextNode(text);
             PrependChild(node);
             return this;
         }
@@ -524,9 +864,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <seealso cref="Html(System.String)"/>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Append(String html) {
             Validate.NotNull(html);
-            IList<iText.StyledXmlParser.Jsoup.Nodes.Node> nodes = iText.StyledXmlParser.Jsoup.Parser.Parser.ParseFragment
-                (html, this, BaseUri());
-            AddChildren(nodes.ToArray(new iText.StyledXmlParser.Jsoup.Nodes.Node[nodes.Count]));
+            IList<iText.StyledXmlParser.Jsoup.Nodes.Node> nodes = NodeUtils.Parser(this).ParseFragmentInput(html, this
+                , BaseUri());
+            AddChildren(nodes.ToArray(new iText.StyledXmlParser.Jsoup.Nodes.Node[0]));
             return this;
         }
 
@@ -538,9 +878,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <seealso cref="Html(System.String)"/>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Prepend(String html) {
             Validate.NotNull(html);
-            IList<iText.StyledXmlParser.Jsoup.Nodes.Node> nodes = iText.StyledXmlParser.Jsoup.Parser.Parser.ParseFragment
-                (html, this, BaseUri());
-            AddChildren(0, nodes.ToArray(new iText.StyledXmlParser.Jsoup.Nodes.Node[nodes.Count]));
+            IList<iText.StyledXmlParser.Jsoup.Nodes.Node> nodes = NodeUtils.Parser(this).ParseFragmentInput(html, this
+                , BaseUri());
+            AddChildren(0, nodes.ToArray(new iText.StyledXmlParser.Jsoup.Nodes.Node[0]));
             return this;
         }
 
@@ -565,7 +905,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>this element, for chaining</returns>
         /// <seealso cref="Before(System.String)"/>
         public override iText.StyledXmlParser.Jsoup.Nodes.Node After(String html) {
-            return (iText.StyledXmlParser.Jsoup.Nodes.Element)base.After(html);
+            return base.After(html);
         }
 
         /// <summary>Insert the specified node into the DOM after this node (as a following sibling).</summary>
@@ -573,13 +913,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>this element, for chaining</returns>
         /// <seealso cref="Before(Node)"/>
         public override iText.StyledXmlParser.Jsoup.Nodes.Node After(iText.StyledXmlParser.Jsoup.Nodes.Node node) {
-            return (iText.StyledXmlParser.Jsoup.Nodes.Element)base.After(node);
+            return base.After(node);
         }
 
         /// <summary>Remove all of the element's child nodes.</summary>
         /// <remarks>Remove all of the element's child nodes. Any attributes are left as-is.</remarks>
         /// <returns>this element</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Empty() {
+        public override iText.StyledXmlParser.Jsoup.Nodes.Node Empty() {
             childNodes.Clear();
             return this;
         }
@@ -608,12 +948,25 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>the CSS Path that can be used to retrieve the element in a selector.</returns>
         public virtual String CssSelector() {
             if (Id().Length > 0) {
-                return "#" + Id();
+                // prefer to return the ID - but check that it's actually unique first!
+                String idSel = "#" + Id();
+                Document doc = OwnerDocument();
+                if (doc != null) {
+                    Elements els = doc.Select(idSel);
+                    if (els.Count == 1 && els[0] == this) {
+                        // otherwise, continue to the nth-child impl
+                        return idSel;
+                    }
+                }
+                else {
+                    return idSel;
+                }
             }
+            // no ownerdoc, return the ID selector
             // Translate HTML namespace ns:tag to CSS namespace syntax ns|tag
             String tagName = TagName().Replace(':', '|');
             StringBuilder selector = new StringBuilder(tagName);
-            String classes = iText.StyledXmlParser.Jsoup.Helper.StringUtil.Join(ClassNames(), ".");
+            String classes = iText.StyledXmlParser.Jsoup.Internal.StringUtil.Join(ClassNames(), ".");
             if (classes.Length > 0) {
                 selector.Append('.').Append(classes);
             }
@@ -622,10 +975,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 return selector.ToString();
             }
             selector.Insert(0, " > ");
-            if (((iText.StyledXmlParser.Jsoup.Nodes.Element)Parent()).Select(selector.ToString()).Count > 1) {
+            iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)Parent();
+            if (parent.Select(selector.ToString()).Count > 1) {
                 selector.Append(MessageFormatUtil.Format(":nth-child({0})", ElementSiblingIndex() + 1));
             }
-            return ((iText.StyledXmlParser.Jsoup.Nodes.Element)Parent()).CssSelector() + selector.ToString();
+            return parent.CssSelector() + selector.ToString();
         }
 
         /// <summary>Get sibling elements.</summary>
@@ -638,8 +992,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             if (parentNode == null) {
                 return new Elements(0);
             }
-            IList<iText.StyledXmlParser.Jsoup.Nodes.Element> elements = ((iText.StyledXmlParser.Jsoup.Nodes.Element)Parent
-                ()).Children();
+            iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)Parent();
+            IList<iText.StyledXmlParser.Jsoup.Nodes.Element> elements = parent.ChildElementsList();
             Elements siblings = new Elements(elements.Count - 1);
             foreach (iText.StyledXmlParser.Jsoup.Nodes.Element el in elements) {
                 if (el != this) {
@@ -673,17 +1027,22 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             if (parentNode == null) {
                 return null;
             }
-            IList<iText.StyledXmlParser.Jsoup.Nodes.Element> siblings = ((iText.StyledXmlParser.Jsoup.Nodes.Element)Parent
-                ()).Children();
+            iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)Parent();
+            IList<iText.StyledXmlParser.Jsoup.Nodes.Element> siblings = parent.ChildElementsList();
             int index = IndexInList(this, siblings);
-            Validate.IsTrue(index >= 0);
-            //Validate.notNull(index);
             if (siblings.Count > index + 1) {
                 return siblings[index + 1];
             }
             else {
                 return null;
             }
+        }
+
+        /// <summary>Get each of the sibling elements that come after this element.</summary>
+        /// <returns>each of the element siblings after this element, or an empty list if there are no next sibling elements
+        ///     </returns>
+        public virtual Elements NextElementSiblings() {
+            return NextElementSiblings(true);
         }
 
         /// <summary>Gets the previous element sibling of this element.</summary>
@@ -693,10 +1052,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             if (parentNode == null) {
                 return null;
             }
-            IList<iText.StyledXmlParser.Jsoup.Nodes.Element> siblings = ((iText.StyledXmlParser.Jsoup.Nodes.Element)Parent
-                ()).Children();
+            iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)Parent();
+            IList<iText.StyledXmlParser.Jsoup.Nodes.Element> siblings = parent.ChildElementsList();
             int index = IndexInList(this, siblings);
-            Validate.IsTrue(index >= 0);
             if (index > 0) {
                 return siblings[index - 1];
             }
@@ -705,15 +1063,36 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
         }
 
-        /// <summary>Gets the first element sibling of this element.</summary>
-        /// <returns>the first sibling that is an element (aka the parent's first element child)</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element FirstElementSibling() {
-            // todo: should firstSibling() exclude this?
-            IList<iText.StyledXmlParser.Jsoup.Nodes.Element> siblings = ((iText.StyledXmlParser.Jsoup.Nodes.Element)Parent
-                ()).Children();
-            return siblings.Count > 1 ? siblings[0] : null;
+        /// <summary>Get each of the element siblings before this element.</summary>
+        /// <returns>the previous element siblings, or an empty list if there are none.</returns>
+        public virtual Elements PreviousElementSiblings() {
+            return NextElementSiblings(false);
         }
 
+        private Elements NextElementSiblings(bool next) {
+            Elements els = new Elements();
+            if (parentNode == null) {
+                return els;
+            }
+            els.Add(this);
+            return next ? els.NextAll() : els.PrevAll();
+        }
+
+        /// <summary>Gets the first Element sibling of this element.</summary>
+        /// <remarks>Gets the first Element sibling of this element. That may be this element.</remarks>
+        /// <returns>the first sibling that is an element (aka the parent's first element child)</returns>
+        public virtual iText.StyledXmlParser.Jsoup.Nodes.Element FirstElementSibling() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)Parent();
+            if (parent != null) {
+                IList<iText.StyledXmlParser.Jsoup.Nodes.Element> siblings = parent.ChildElementsList();
+                return siblings.Count > 1 ? siblings[0] : this;
+            }
+            else {
+                return this;
+            }
+        }
+
+        // orphan is its own first sibling
         /// <summary>Get the list index of this element in its element sibling list.</summary>
         /// <remarks>
         /// Get the list index of this element in its element sibling list. I.e. if this is the first element
@@ -721,31 +1100,36 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </remarks>
         /// <returns>position in element sibling list</returns>
         public virtual int ElementSiblingIndex() {
-            if (Parent() == null) {
+            iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)Parent();
+            if (parent == null) {
                 return 0;
             }
-            return IndexInList(this, ((iText.StyledXmlParser.Jsoup.Nodes.Element)Parent()).Children());
+            return IndexInList(this, parent.ChildElementsList());
         }
 
-        /// <summary>Gets the last element sibling of this element</summary>
+        /// <summary>Gets the last element sibling of this element.</summary>
+        /// <remarks>Gets the last element sibling of this element. That may be this element.</remarks>
         /// <returns>the last sibling that is an element (aka the parent's last element child)</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element LastElementSibling() {
-            IList<iText.StyledXmlParser.Jsoup.Nodes.Element> siblings = ((iText.StyledXmlParser.Jsoup.Nodes.Element)Parent
-                ()).Children();
-            return siblings.Count > 1 ? siblings[siblings.Count - 1] : null;
+            iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)Parent();
+            if (parent != null) {
+                IList<iText.StyledXmlParser.Jsoup.Nodes.Element> siblings = parent.ChildElementsList();
+                return siblings.Count > 1 ? siblings[siblings.Count - 1] : this;
+            }
+            else {
+                return this;
+            }
         }
 
         private static int IndexInList<E>(iText.StyledXmlParser.Jsoup.Nodes.Element search, IList<E> elements)
             where E : iText.StyledXmlParser.Jsoup.Nodes.Element {
-            Validate.NotNull(search);
-            Validate.NotNull(elements);
-            for (int i = 0; i < elements.Count; i++) {
-                E element = elements[i];
-                if (element == search) {
+            int size = elements.Count;
+            for (int i = 0; i < size; i++) {
+                if (elements[i] == search) {
                     return i;
                 }
             }
-            return -1;
+            return 0;
         }
 
         // DOM type methods
@@ -755,7 +1139,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         ///     </returns>
         public virtual Elements GetElementsByTag(String tagName) {
             Validate.NotEmpty(tagName);
-            tagName = tagName.ToLowerInvariant().Trim();
+            tagName = Normalizer.Normalize(tagName);
             return Collector.Collect(new Evaluator.Tag(tagName), this);
         }
 
@@ -809,7 +1193,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>elements that have this attribute, empty if none</returns>
         public virtual Elements GetElementsByAttribute(String key) {
             Validate.NotEmpty(key);
-            key = key.Trim().ToLowerInvariant();
+            key = key.Trim();
             return Collector.Collect(new Evaluator.Attribute(key), this);
         }
 
@@ -827,7 +1211,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>elements that have attribute names that start with with the prefix, empty if none.</returns>
         public virtual Elements GetElementsByAttributeStarting(String keyPrefix) {
             Validate.NotEmpty(keyPrefix);
-            keyPrefix = keyPrefix.Trim().ToLowerInvariant();
+            keyPrefix = keyPrefix.Trim();
             return Collector.Collect(new Evaluator.AttributeStarting(keyPrefix), this);
         }
 
@@ -984,7 +1368,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return Collector.Collect(new Evaluator.MatchesOwn(pattern), this);
         }
 
-        /// <summary>Find elements whose text matches the supplied regular expression.</summary>
+        /// <summary>Find elements whose own text matches the supplied regular expression.</summary>
         /// <param name="regex">
         /// regular expression to match text against.
         /// You can use <a href="http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded">embedded flags</a>
@@ -1009,28 +1393,48 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return Collector.Collect(new Evaluator.AllElements(), this);
         }
 
-        /// <summary>Gets the combined text of this element and all its children.</summary>
+        /// <summary>Gets the <b>normalized, combined text</b> of this element and all its children.</summary>
         /// <remarks>
-        /// Gets the combined text of this element and all its children. Whitespace is normalized and trimmed.
-        /// <para />
-        /// For example, given HTML
+        /// Gets the <b>normalized, combined text</b> of this element and all its children. Whitespace is normalized and
+        /// trimmed.
+        /// <para />For example, given HTML
         /// <c>&lt;p&gt;Hello  &lt;b&gt;there&lt;/b&gt; now! &lt;/p&gt;</c>
         /// ,
         /// <c>p.text()</c>
         /// returns
-        /// <c>"Hello there now!"</c>
+        /// <c>
+        /// "Hello there
+        /// now!"
+        /// </c>
+        /// <para />If you do not want normalized text, use
+        /// <see cref="WholeText()"/>
+        /// . If you want just the text of this node (and not
+        /// children), use
+        /// <see cref="OwnText()"/>
+        /// <para />Note that this method returns the textual content that would be presented to a reader. The contents of data
+        /// nodes (such as
+        /// <c>&lt;script&gt;</c>
+        /// tags are not considered text. Use
+        /// <see cref="Data()"/>
+        /// or
+        /// <see cref="Html()"/>
+        /// to retrieve
+        /// that content.
         /// </remarks>
-        /// <returns>unencoded text, or empty string if none.</returns>
+        /// <returns>unencoded, normalized text, or empty string if none.</returns>
+        /// <seealso cref="WholeText()"/>
         /// <seealso cref="OwnText()"/>
         /// <seealso cref="TextNodes()"/>
         public virtual String Text() {
-            StringBuilder accum = new StringBuilder();
-            new NodeTraversor(new _NodeVisitor_955(accum)).Traverse(this);
-            return accum.ToString().Trim();
+            StringBuilder accum = iText.StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
+            NodeTraversor.Traverse(new _NodeVisitor_1262(accum), 
+                        // make sure there is a space between block tags and immediately following text nodes <div>One</div>Two should be "One Two".
+                        this);
+            return iText.StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(accum).Trim();
         }
 
-        private sealed class _NodeVisitor_955 : NodeVisitor {
-            public _NodeVisitor_955(StringBuilder accum) {
+        private sealed class _NodeVisitor_1262 : NodeVisitor {
+            public _NodeVisitor_1262(StringBuilder accum) {
                 this.accum = accum;
             }
 
@@ -1044,9 +1448,45 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                         iText.StyledXmlParser.Jsoup.Nodes.Element element = (iText.StyledXmlParser.Jsoup.Nodes.Element)node;
                         if (accum.Length > 0 && (element.IsBlock() || element.tag.GetName().Equals("br")) && !TextNode.LastCharIsWhitespace
                             (accum)) {
-                            accum.Append(" ");
+                            accum.Append(' ');
                         }
                     }
+                }
+            }
+
+            public void Tail(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
+                if (node is iText.StyledXmlParser.Jsoup.Nodes.Element) {
+                    iText.StyledXmlParser.Jsoup.Nodes.Element element = (iText.StyledXmlParser.Jsoup.Nodes.Element)node;
+                    if (element.IsBlock() && (node.NextSibling() is TextNode) && !TextNode.LastCharIsWhitespace(accum)) {
+                        accum.Append(' ');
+                    }
+                }
+            }
+
+            private readonly StringBuilder accum;
+        }
+
+        /// <summary>
+        /// Get the (unencoded) text of all children of this element, including any newlines and spaces present in the
+        /// original.
+        /// </summary>
+        /// <returns>unencoded, un-normalized text</returns>
+        /// <seealso cref="Text()"/>
+        public virtual String WholeText() {
+            StringBuilder accum = iText.StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
+            NodeTraversor.Traverse(new _NodeVisitor_1299(accum), this);
+            return iText.StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(accum);
+        }
+
+        private sealed class _NodeVisitor_1299 : NodeVisitor {
+            public _NodeVisitor_1299(StringBuilder accum) {
+                this.accum = accum;
+            }
+
+            public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
+                if (node is TextNode) {
+                    TextNode textNode = (TextNode)node;
+                    accum.Append(textNode.GetWholeText());
                 }
             }
 
@@ -1056,9 +1496,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             private readonly StringBuilder accum;
         }
 
-        /// <summary>Gets the text owned by this element only; does not get the combined text of all children.</summary>
+        /// <summary>Gets the (normalized) text owned by this element only; does not get the combined text of all children.
+        ///     </summary>
         /// <remarks>
-        /// Gets the text owned by this element only; does not get the combined text of all children.
+        /// Gets the (normalized) text owned by this element only; does not get the combined text of all children.
         /// <para />
         /// For example, given HTML
         /// <c>&lt;p&gt;Hello &lt;b&gt;there&lt;/b&gt; now!&lt;/p&gt;</c>
@@ -1081,9 +1522,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <seealso cref="Text()"/>
         /// <seealso cref="TextNodes()"/>
         public virtual String OwnText() {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = iText.StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
             OwnText(sb);
-            return sb.ToString().Trim();
+            return iText.StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(sb).Trim();
         }
 
         private void OwnText(StringBuilder accum) {
@@ -1102,11 +1543,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         private static void AppendNormalisedText(StringBuilder accum, TextNode textNode) {
             String text = textNode.GetWholeText();
-            if (PreserveWhitespace(textNode.parentNode)) {
+            if (PreserveWhitespace(textNode.parentNode) || textNode is CDataNode) {
                 accum.Append(text);
             }
             else {
-                iText.StyledXmlParser.Jsoup.Helper.StringUtil.AppendNormalisedWhitespace(accum, text, TextNode.LastCharIsWhitespace
+                iText.StyledXmlParser.Jsoup.Internal.StringUtil.AppendNormalisedWhitespace(accum, text, TextNode.LastCharIsWhitespace
                     (accum));
             }
         }
@@ -1119,24 +1560,47 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         internal static bool PreserveWhitespace(iText.StyledXmlParser.Jsoup.Nodes.Node node) {
-            // looks only at this element and one level up, to prevent recursion & needless stack searches
-            if (node != null && node is iText.StyledXmlParser.Jsoup.Nodes.Element) {
-                iText.StyledXmlParser.Jsoup.Nodes.Element element = (iText.StyledXmlParser.Jsoup.Nodes.Element)node;
-                return element.tag.PreserveWhitespace() || element.Parent() != null && ((iText.StyledXmlParser.Jsoup.Nodes.Element
-                    )element.Parent()).tag.PreserveWhitespace();
+            // looks only at this element and five levels up, to prevent recursion & needless stack searches
+            if (node is iText.StyledXmlParser.Jsoup.Nodes.Element) {
+                iText.StyledXmlParser.Jsoup.Nodes.Element el = (iText.StyledXmlParser.Jsoup.Nodes.Element)node;
+                int i = 0;
+                do {
+                    if (el.tag.PreserveWhitespace()) {
+                        return true;
+                    }
+                    el = (iText.StyledXmlParser.Jsoup.Nodes.Element)el.Parent();
+                    i++;
+                }
+                while (i < 6 && el != null);
             }
             return false;
         }
 
         /// <summary>Set the text of this element.</summary>
-        /// <remarks>Set the text of this element. Any existing contents (text or elements) will be cleared</remarks>
+        /// <remarks>
+        /// Set the text of this element. Any existing contents (text or elements) will be cleared.
+        /// <para />
+        /// As a special case, for
+        /// <c>&lt;script&gt;</c>
+        /// and
+        /// <c>&lt;style&gt;</c>
+        /// tags, the input text will be treated as data,
+        /// not visible text.
+        /// </remarks>
         /// <param name="text">unencoded text</param>
         /// <returns>this element</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Text(String text) {
             Validate.NotNull(text);
             Empty();
-            TextNode textNode = new TextNode(text, baseUri);
-            AppendChild(textNode);
+            // special case for script/style in HTML: should be data node
+            Document owner = OwnerDocument();
+            // an alternate impl would be to run through the parser
+            if (owner != null && owner.Parser().IsContentForTagData(NormalName())) {
+                AppendChild(new DataNode(text));
+            }
+            else {
+                AppendChild(new TextNode(text));
+            }
             return this;
         }
 
@@ -1165,27 +1629,46 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Get the combined data of this element.</summary>
         /// <remarks>
         /// Get the combined data of this element. Data is e.g. the inside of a
-        /// <c>script</c>
-        /// tag.
+        /// <c>&lt;script&gt;</c>
+        /// tag. Note that data is NOT the
+        /// text of the element. Use
+        /// <see cref="Text()"/>
+        /// to get the text that would be visible to a user, and
+        /// <c>data()</c>
+        /// for the contents of scripts, comments, CSS styles, etc.
         /// </remarks>
         /// <returns>the data, or empty string if none</returns>
         /// <seealso cref="DataNodes()"/>
         public virtual String Data() {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = iText.StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
             foreach (iText.StyledXmlParser.Jsoup.Nodes.Node childNode in childNodes) {
                 if (childNode is DataNode) {
                     DataNode data = (DataNode)childNode;
                     sb.Append(data.GetWholeData());
                 }
                 else {
-                    if (childNode is iText.StyledXmlParser.Jsoup.Nodes.Element) {
-                        iText.StyledXmlParser.Jsoup.Nodes.Element element = (iText.StyledXmlParser.Jsoup.Nodes.Element)childNode;
-                        String elementData = element.Data();
-                        sb.Append(elementData);
+                    if (childNode is Comment) {
+                        Comment comment = (Comment)childNode;
+                        sb.Append(comment.GetData());
+                    }
+                    else {
+                        if (childNode is iText.StyledXmlParser.Jsoup.Nodes.Element) {
+                            iText.StyledXmlParser.Jsoup.Nodes.Element element = (iText.StyledXmlParser.Jsoup.Nodes.Element)childNode;
+                            String elementData = element.Data();
+                            sb.Append(elementData);
+                        }
+                        else {
+                            if (childNode is CDataNode) {
+                                // this shouldn't really happen because the html parser won't see the cdata as anything special when parsing script.
+                                // but incase another type gets through.
+                                CDataNode cDataNode = (CDataNode)childNode;
+                                sb.Append(cDataNode.GetWholeText());
+                            }
+                        }
                     }
                 }
             }
-            return sb.ToString();
+            return iText.StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(sb);
         }
 
         /// <summary>
@@ -1217,7 +1700,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </remarks>
         /// <returns>set of classnames, empty if no class attribute</returns>
         public virtual ICollection<String> ClassNames() {
-            String[] names = iText.IO.Util.StringUtil.Split(classSplit, ClassName());
+            String[] names = iText.IO.Util.StringUtil.Split(ClassSplit, ClassName());
             ICollection<String> classNames = new LinkedHashSet<String>(JavaUtil.ArraysAsList(names));
             classNames.Remove("");
             // if classNames() was empty, would include an empty class
@@ -1233,7 +1716,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>this element, for chaining</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element ClassNames(ICollection<String> classNames) {
             Validate.NotNull(classNames);
-            attributes.Put("class", iText.StyledXmlParser.Jsoup.Helper.StringUtil.Join(classNames, " "));
+            if (classNames.IsEmpty()) {
+                Attributes().Remove("class");
+            }
+            else {
+                Attributes().Put("class", iText.StyledXmlParser.Jsoup.Internal.StringUtil.Join(classNames, " "));
+            }
             return this;
         }
 
@@ -1242,23 +1730,44 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="className">name of class to check for</param>
         /// <returns>true if it does, false if not</returns>
         public virtual bool HasClass(String className) {
-            /*
-            Used by common .class selector, so perf tweaked to reduce object creation vs hitting classnames().
-            
-            Wiki: 71, 13 (5.4x)
-            CNN: 227, 91 (2.5x)
-            Alterslash: 59, 4 (14.8x)
-            Jsoup: 14, 1 (14x)
-            */
-            String classAttr = attributes.Get("class");
-            if (classAttr.Equals("") || classAttr.Length < className.Length) {
+            // performance sensitive
+            if (attributes == null) {
                 return false;
             }
-            String[] classes = iText.IO.Util.StringUtil.Split(classSplit, classAttr);
-            foreach (String name in classes) {
-                if (className.EqualsIgnoreCase(name)) {
-                    return true;
+            String classAttr = attributes.GetIgnoreCase("class");
+            int len = classAttr.Length;
+            int wantLen = className.Length;
+            if (len == 0 || len < wantLen) {
+                return false;
+            }
+            // if both lengths are equal, only need compare the className with the attribute
+            if (len == wantLen) {
+                return className.EqualsIgnoreCase(classAttr);
+            }
+            // otherwise, scan for whitespace and compare regions (with no string or arraylist allocations)
+            bool inClass = false;
+            int start = 0;
+            for (int i = 0; i < len; i++) {
+                if (iText.IO.Util.TextUtil.IsWhiteSpace(classAttr[i])) {
+                    if (inClass) {
+                        // white space ends a class name, compare it with the requested one, ignore case
+                        if (i - start == wantLen && classAttr.RegionMatches(true, start, className, 0, wantLen)) {
+                            return true;
+                        }
+                        inClass = false;
+                    }
                 }
+                else {
+                    if (!inClass) {
+                        // we're in a class name : keep the start of the substring
+                        inClass = true;
+                        start = i;
+                    }
+                }
+            }
+            // check the last entry
+            if (inClass && len - start == wantLen) {
+                return classAttr.RegionMatches(true, start, className, 0, wantLen);
             }
             return false;
         }
@@ -1316,7 +1825,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Get the value of a form element (input, textarea, etc).</summary>
         /// <returns>the value of the form element, or empty string if not set.</returns>
         public virtual String Val() {
-            if (TagName().Equals("textarea")) {
+            if (NormalName().Equals("textarea")) {
                 return Text();
             }
             else {
@@ -1328,7 +1837,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="value">value to set</param>
         /// <returns>this element (for chaining)</returns>
         public virtual iText.StyledXmlParser.Jsoup.Nodes.Element Val(String value) {
-            if (TagName().Equals("textarea")) {
+            if (NormalName().Equals("textarea")) {
                 Text(value);
             }
             else {
@@ -1338,8 +1847,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
-            if (@out.PrettyPrint() && (tag.FormatAsBlock() || (Parent() != null && ((iText.StyledXmlParser.Jsoup.Nodes.Element
-                )Parent()).Tag().FormatAsBlock()) || @out.Outline())) {
+            if (@out.PrettyPrint() && IsFormatAsBlock(@out) && !IsInlineable(@out)) {
                 if (accum is StringBuilder) {
                     if (((StringBuilder)accum).Length > 0) {
                         Indent(accum, depth, @out);
@@ -1349,8 +1857,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                     Indent(accum, depth, @out);
                 }
             }
-            accum.Append("<").Append(TagName());
-            attributes.Html(accum, @out);
+            accum.Append('<').Append(TagName());
+            if (attributes != null) {
+                attributes.Html(accum, @out);
+            }
             // selfclosing includes unknown tags, isEmpty defines tags that are always empty
             if (childNodes.IsEmpty() && tag.IsSelfClosing()) {
                 if (@out.Syntax() == iText.StyledXmlParser.Jsoup.Nodes.Syntax.html && tag.IsEmpty()) {
@@ -1362,7 +1872,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
             else {
                 // <img> in html, <img /> in xml
-                accum.Append(">");
+                accum.Append('>');
             }
         }
 
@@ -1372,7 +1882,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                     .Count > 1 || (childNodes.Count == 1 && !(childNodes[0] is TextNode))))))) {
                     Indent(accum, depth, @out);
                 }
-                accum.Append("</").Append(TagName()).Append(">");
+                accum.Append("</").Append(TagName()).Append('>');
             }
         }
 
@@ -1393,15 +1903,16 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>String of HTML.</returns>
         /// <seealso cref="Node.OuterHtml()"/>
         public virtual String Html() {
-            StringBuilder accum = new StringBuilder();
+            StringBuilder accum = iText.StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
             Html(accum);
-            return GetOutputSettings().PrettyPrint() ? accum.ToString().Trim() : accum.ToString();
+            String html = iText.StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(accum);
+            return NodeUtils.OutputSettings(this).PrettyPrint() ? html.Trim() : html;
         }
 
-        /// <summary><inheritDoc/></summary>
         public override StringBuilder Html(StringBuilder appendable) {
-            foreach (iText.StyledXmlParser.Jsoup.Nodes.Node node in childNodes) {
-                node.OuterHtml(appendable);
+            int size = childNodes.Count;
+            for (int i = 0; i < size; i++) {
+                childNodes[i].OuterHtml(appendable);
             }
             return appendable;
         }
@@ -1417,12 +1928,76 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return this;
         }
 
-        public override String ToString() {
-            return OuterHtml();
+        public override Object Clone() {
+            return (iText.StyledXmlParser.Jsoup.Nodes.Element)base.Clone();
         }
 
-        public override Object Clone() {
-            return base.Clone();
+        public override iText.StyledXmlParser.Jsoup.Nodes.Node ShallowClone() {
+            // simpler than implementing a clone version with no child copy
+            return new iText.StyledXmlParser.Jsoup.Nodes.Element(tag, BaseUri(), (iText.StyledXmlParser.Jsoup.Nodes.Attributes
+                )(attributes == null ? null : attributes.Clone()));
+        }
+
+        protected internal override iText.StyledXmlParser.Jsoup.Nodes.Node DoClone(iText.StyledXmlParser.Jsoup.Nodes.Node
+             parent) {
+            iText.StyledXmlParser.Jsoup.Nodes.Element clone = (iText.StyledXmlParser.Jsoup.Nodes.Element)base.DoClone(
+                parent);
+            clone.attributes = (iText.StyledXmlParser.Jsoup.Nodes.Attributes)(attributes != null ? attributes.Clone() : 
+                null);
+            clone.childNodes = new Element.NodeList(clone, childNodes.Count);
+            clone.childNodes.AddAll(childNodes);
+            // the children then get iterated and cloned in Node.clone
+            return clone;
+        }
+
+        // overrides of Node for call chaining
+        public override iText.StyledXmlParser.Jsoup.Nodes.Node ClearAttributes() {
+            if (attributes != null) {
+                base.ClearAttributes();
+                attributes = null;
+            }
+            return this;
+        }
+
+        public override iText.StyledXmlParser.Jsoup.Nodes.Node RemoveAttr(String attributeKey) {
+            return (iText.StyledXmlParser.Jsoup.Nodes.Element)base.RemoveAttr(attributeKey);
+        }
+
+        public override iText.StyledXmlParser.Jsoup.Nodes.Node Root() {
+            return (iText.StyledXmlParser.Jsoup.Nodes.Element)base.Root();
+        }
+
+        // probably a document, but always at least an element
+        public override iText.StyledXmlParser.Jsoup.Nodes.Node Traverse(NodeVisitor nodeVisitor) {
+            return (iText.StyledXmlParser.Jsoup.Nodes.Element)base.Traverse(nodeVisitor);
+        }
+
+        public override iText.StyledXmlParser.Jsoup.Nodes.Node Filter(NodeFilter nodeFilter) {
+            return (iText.StyledXmlParser.Jsoup.Nodes.Element)base.Filter(nodeFilter);
+        }
+
+        private sealed class NodeList : ChangeNotifyingArrayList<iText.StyledXmlParser.Jsoup.Nodes.Node> {
+            private readonly iText.StyledXmlParser.Jsoup.Nodes.Element owner;
+
+            internal NodeList(iText.StyledXmlParser.Jsoup.Nodes.Element owner, int initialCapacity)
+                : base(initialCapacity) {
+                this.owner = owner;
+            }
+
+            public override void OnContentsChanged() {
+                owner.NodelistChanged();
+            }
+        }
+
+        private bool IsFormatAsBlock(OutputSettings @out) {
+            iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)Parent();
+            return tag.FormatAsBlock() || (parent != null && parent.Tag().FormatAsBlock()) || @out.Outline();
+        }
+
+        private bool IsInlineable(OutputSettings @out) {
+            iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)Parent();
+            return Tag().IsInline() && !Tag().IsEmpty() && (parent == null || parent.IsBlock()) && PreviousSibling() !=
+                 null && !@out.Outline();
         }
     }
 }

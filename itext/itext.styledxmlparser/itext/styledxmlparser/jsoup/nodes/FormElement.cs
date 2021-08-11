@@ -3,42 +3,22 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -47,6 +27,10 @@ using iText.StyledXmlParser.Jsoup.Helper;
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>A HTML Form Element provides ready access to the form fields/controls that are associated with it.
     ///     </summary>
+    /// <remarks>
+    /// A HTML Form Element provides ready access to the form fields/controls that are associated with it. It also allows a
+    /// form to easily be submitted.
+    /// </remarks>
     public class FormElement : iText.StyledXmlParser.Jsoup.Nodes.Element {
         private readonly iText.StyledXmlParser.Jsoup.Select.Elements elements = new iText.StyledXmlParser.Jsoup.Select.Elements
             ();
@@ -74,23 +58,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return this;
         }
 
-        //    /**
-        //     * Prepare to submit this form. A Connection object is created with the request set up from the form values. You
-        //     * can then set up other options (like user-agent, timeout, cookies), then execute it.
-        //     * @return a connection prepared from the values of this form.
-        //     * @throws IllegalArgumentException if the form's absolute action URL cannot be determined. Make sure you pass the
-        //     * document's base URI when parsing.
-        //     */
-        //    public Connection submit() {
-        //        String action = hasAttr("action") ? absUrl("action") : baseUri();
-        //        Validate.notEmpty(action, "Could not determine a form action URL for submit. Ensure you set a base URI when parsing.");
-        //        Connection.Method method = attr("method").toUpperCase().equals("POST") ?
-        //                Connection.Method.POST : Connection.Method.GET;
-        //
-        //        return Jsoup.connect(action)
-        //                .data(formData())
-        //                .method(method);
-        //    }
+        protected internal override void RemoveChild(iText.StyledXmlParser.Jsoup.Nodes.Node @out) {
+            base.RemoveChild(@out);
+            elements.Remove((iText.StyledXmlParser.Jsoup.Nodes.Element)@out);
+        }
+
         /// <summary>Get the data that this form submits.</summary>
         /// <remarks>
         /// Get the data that this form submits. The returned list is a copy of the data, and changes to the contents of the
@@ -114,7 +86,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                     continue;
                 }
                 String type = el.Attr("type");
-                if ("select".Equals(el.TagName())) {
+                if (type.EqualsIgnoreCase("button")) {
+                    continue;
+                }
+                // browsers don't submit these
+                if ("select".Equals(el.NormalName())) {
                     iText.StyledXmlParser.Jsoup.Select.Elements options = el.Select("option[selected]");
                     bool set = false;
                     foreach (iText.StyledXmlParser.Jsoup.Nodes.Element option in options) {
@@ -122,7 +98,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                         set = true;
                     }
                     if (!set) {
-                        iText.StyledXmlParser.Jsoup.Nodes.Element option = el.Select("option").First();
+                        iText.StyledXmlParser.Jsoup.Nodes.Element option = el.SelectFirst("option");
                         if (option != null) {
                             data.Add(KeyVal.Create(name, option.Val()));
                         }
@@ -142,6 +118,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 }
             }
             return data;
+        }
+
+        public override Object Clone() {
+            return (iText.StyledXmlParser.Jsoup.Nodes.FormElement)base.Clone();
         }
     }
 }

@@ -3,47 +3,27 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.Text;
 using iText.IO.Util;
-using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Nodes;
 
@@ -55,14 +35,26 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         // replaces null character
         private static readonly char[] notCharRefCharsSorted = new char[] { '\t', '\n', '\r', '\f', ' ', '<', '&' };
 
+        // Some illegal character escapes are parsed by browsers as windows-1252 instead. See issue #1034
+        // https://html.spec.whatwg.org/multipage/parsing.html#numeric-character-reference-end-state
+        internal const int win1252ExtensionsStart = 0x80;
+
+        internal static readonly int[] win1252Extensions = new int[] { 
+                // we could build this manually, but Windows-1252 is not a standard java charset so that could break on
+                
+                // some platforms - this table is verified with a test
+                0x20AC, 0x0081, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021, 0x02C6, 0x2030, 0x0160, 0x2039, 0x0152, 0x008D
+            , 0x017D, 0x008F, 0x0090, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014, 0x02DC, 0x2122, 0x0161
+            , 0x203A, 0x0153, 0x009D, 0x017E, 0x0178 };
+
         static Tokeniser() {
             JavaUtil.Sort(notCharRefCharsSorted);
         }
 
-        private CharacterReader reader;
+        private readonly CharacterReader reader;
 
         // html input
-        private ParseErrorList errors;
+        private readonly ParseErrorList errors;
 
         // errors found while tokenising
         private TokeniserState state = TokeniserState.Data;
@@ -100,25 +92,20 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         private String lastStartTag;
 
         // the last start tag emitted, to test appropriate end tag
-        private bool selfClosingFlagAcknowledged = true;
-
         internal Tokeniser(CharacterReader reader, ParseErrorList errors) {
             this.reader = reader;
             this.errors = errors;
         }
 
         internal Token Read() {
-            if (!selfClosingFlagAcknowledged) {
-                Error("Self closing flag not acknowledged");
-                selfClosingFlagAcknowledged = true;
-            }
             while (!isEmitPending) {
                 state.Read(this, reader);
             }
             // if emit is pending, a non-character token was found: return any chars in buffer, and leave token for next read:
-            if (charsBuilder.Length > 0) {
-                String str = charsBuilder.ToString();
-                charsBuilder.Delete(0, charsBuilder.Length);
+            StringBuilder cb = this.charsBuilder;
+            if (cb.Length != 0) {
+                String str = cb.ToString();
+                cb.Delete(0, cb.Length);
                 charsString = null;
                 return charPending.Data(str);
             }
@@ -136,20 +123,17 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         internal void Emit(Token token) {
-            Validate.IsFalse(isEmitPending, "There is an unread token pending!");
+            Validate.IsFalse(isEmitPending);
             emitPending = token;
             isEmitPending = true;
             if (token.type == iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag) {
                 Token.StartTag startTag = (Token.StartTag)token;
                 lastStartTag = startTag.tagName;
-                if (startTag.selfClosing) {
-                    selfClosingFlagAcknowledged = false;
-                }
             }
             else {
                 if (token.type == iText.StyledXmlParser.Jsoup.Parser.TokenType.EndTag) {
                     Token.EndTag endTag = (Token.EndTag)token;
-                    if (endTag.attributes != null) {
+                    if (endTag.HasAttributes()) {
                         Error("Attributes incorrectly present on end tag");
                     }
                 }
@@ -171,12 +155,54 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
+        // variations to limit need to create temp strings
+        internal void Emit(StringBuilder str) {
+            if (charsString == null) {
+                charsString = str.ToString();
+            }
+            else {
+                if (charsBuilder.Length == 0) {
+                    charsBuilder.Append(charsString);
+                }
+                charsBuilder.Append(str);
+            }
+        }
+
+        internal void Emit(char c) {
+            if (charsString == null) {
+                charsString = c.ToString();
+            }
+            else {
+                if (charsBuilder.Length == 0) {
+                    charsBuilder.Append(charsString);
+                }
+                charsBuilder.Append(c);
+            }
+        }
+
         internal void Emit(char[] chars) {
             Emit(JavaUtil.GetStringForChars(chars));
         }
 
-        internal void Emit(char c) {
-            Emit(c.ToString());
+        internal void Emit(int[] codepoints) {
+            // We have to do this conversion manually because .NET doesn't support creating String from int array.
+            IList<char> chars = new List<char>();
+            foreach (int codepoint in codepoints) {
+                if ((int)(((uint)codepoint) >> 16) == 0) {
+                    chars.Add((char)codepoint);
+                }
+                else {
+                    char highSymbol = (char)(((int)(((uint)codepoint) >> 10)) + ('\uD800' - ((int)(((uint)0x010000) >> 10))));
+                    chars.Add(highSymbol);
+                    char lowSymbol = (char)((codepoint & 0x3ff) + '\uDC00');
+                    chars.Add(lowSymbol);
+                }
+            }
+            char[] charsArray = new char[chars.Count];
+            for (int i = 0; i < chars.Count; i++) {
+                charsArray[i] = (char)chars[i];
+            }
+            Emit(charsArray);
         }
 
         internal TokeniserState GetState() {
@@ -192,14 +218,12 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             this.state = state;
         }
 
-        internal void AcknowledgeSelfClosingFlag() {
-            selfClosingFlagAcknowledged = true;
-        }
-
-        private readonly char[] charRefHolder = new char[1];
+        private readonly int[] codepointHolder = new int[1];
 
         // holder to not have to keep creating arrays
-        internal char[] ConsumeCharacterReference(char? additionalAllowedCharacter, bool inAttribute) {
+        private readonly int[] multipointHolder = new int[2];
+
+        internal int[] ConsumeCharacterReference(char? additionalAllowedCharacter, bool inAttribute) {
             if (reader.IsEmpty()) {
                 return null;
             }
@@ -209,7 +233,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             if (reader.MatchesAnySorted(notCharRefCharsSorted)) {
                 return null;
             }
-            char[] charRef = charRefHolder;
+            int[] codeRef = codepointHolder;
             reader.Mark();
             if (reader.MatchConsume("#")) {
                 // numbered
@@ -221,6 +245,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     reader.RewindToMark();
                     return null;
                 }
+                reader.Unmark();
                 if (!reader.MatchConsume(";")) {
                     CharacterReferenceError("missing semicolon");
                 }
@@ -235,20 +260,17 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 // skip
                 if (charval == -1 || (charval >= 0xD800 && charval <= 0xDFFF) || charval > 0x10FFFF) {
                     CharacterReferenceError("character outside of valid range");
-                    charRef[0] = replacementChar;
-                    return charRef;
+                    codeRef[0] = replacementChar;
                 }
                 else {
-                    // todo: implement number replacement table
-                    // todo: check for extra illegal unicode points as parse errors
-                    if (charval < iText.IO.Util.TextUtil.CHARACTER_MIN_SUPPLEMENTARY_CODE_POINT) {
-                        charRef[0] = (char)charval;
-                        return charRef;
+                    // fix illegal unicode characters to match browser behavior
+                    if (charval >= win1252ExtensionsStart && charval < win1252ExtensionsStart + win1252Extensions.Length) {
+                        CharacterReferenceError("character is not a valid unicode code point");
+                        charval = win1252Extensions[charval - win1252ExtensionsStart];
                     }
-                    else {
-                        return iText.IO.Util.TextUtil.ToChars(charval);
-                    }
+                    codeRef[0] = charval;
                 }
+                return codeRef;
             }
             else {
                 // named
@@ -261,8 +283,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     reader.RewindToMark();
                     if (looksLegit) {
                         // named with semicolon
-                        CharacterReferenceError(MessageFormatUtil.Format("invalid named referenece " + PortUtil.EscapedSingleBracket
-                             + "{0}" + PortUtil.EscapedSingleBracket, nameRef));
+                        CharacterReferenceError("invalid named reference");
                     }
                     return null;
                 }
@@ -271,12 +292,25 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     reader.RewindToMark();
                     return null;
                 }
+                reader.Unmark();
                 if (!reader.MatchConsume(";")) {
                     CharacterReferenceError("missing semicolon");
                 }
                 // missing semi
-                charRef[0] = (char)Entities.GetCharacterByName(nameRef);
-                return charRef;
+                int numChars = Entities.CodepointsForName(nameRef, multipointHolder);
+                if (numChars == 1) {
+                    codeRef[0] = multipointHolder[0];
+                    return codeRef;
+                }
+                else {
+                    if (numChars == 2) {
+                        return multipointHolder;
+                    }
+                    else {
+                        Validate.Fail("Unexpected characters returned for " + nameRef);
+                        return multipointHolder;
+                    }
+                }
             }
         }
 
@@ -298,6 +332,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             Emit(commentPending);
         }
 
+        internal void CreateBogusCommentPending() {
+            commentPending.Reset();
+            commentPending.bogus = true;
+        }
+
         internal void CreateDoctypePending() {
             doctypePending.Reset();
         }
@@ -311,20 +350,18 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         internal bool IsAppropriateEndTagToken() {
-            return lastStartTag != null && tagPending.tagName.Equals(lastStartTag);
+            return lastStartTag != null && tagPending.Name().EqualsIgnoreCase(lastStartTag);
         }
 
         internal String AppropriateEndTagName() {
-            if (lastStartTag == null) {
-                return null;
-            }
             return lastStartTag;
         }
 
+        // could be null
         internal void Error(TokeniserState state) {
             if (errors.CanAddError()) {
-                errors.Add(new ParseError(reader.Pos(), "Unexpected character " + PortUtil.EscapedSingleBracket + "{0}" + 
-                    PortUtil.EscapedSingleBracket + " in input state [{}]", reader.Current(), state));
+                errors.Add(new ParseError(reader.Pos(), "Unexpected character '{0}' in input state [{1}]", reader.Current(
+                    ), state));
             }
         }
 
@@ -341,38 +378,40 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        private void Error(String errorMsg) {
+        internal void Error(String errorMsg) {
             if (errors.CanAddError()) {
                 errors.Add(new ParseError(reader.Pos(), errorMsg));
             }
         }
 
         internal bool CurrentNodeInHtmlNS() {
-            // todo: implement namespaces correctly
             return true;
         }
 
         // Element currentNode = currentNode();
         // return currentNode != null && currentNode.namespace().equals("HTML");
         /// <summary>Utility method to consume reader and unescape entities found within.</summary>
-        /// <param name="inAttribute"/>
+        /// <param name="inAttribute">if the text to be unescaped is in an attribute</param>
         /// <returns>unescaped string from reader</returns>
         internal String UnescapeEntities(bool inAttribute) {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = iText.StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
             while (!reader.IsEmpty()) {
                 builder.Append(reader.ConsumeTo('&'));
                 if (reader.Matches('&')) {
                     reader.Consume();
-                    char[] c = ConsumeCharacterReference(null, inAttribute);
+                    int[] c = ConsumeCharacterReference(null, inAttribute);
                     if (c == null || c.Length == 0) {
                         builder.Append('&');
                     }
                     else {
-                        builder.Append(c);
+                        builder.AppendCodePoint(c[0]);
+                        if (c.Length == 2) {
+                            builder.AppendCodePoint(c[1]);
+                        }
                     }
                 }
             }
-            return builder.ToString();
+            return iText.StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(builder);
         }
     }
 }

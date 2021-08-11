@@ -1340,6 +1340,10 @@ namespace iText.Svg.Converter {
             bool viewBoxPresent = false;
             //Parse viewbox
             String vbString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.VIEWBOX);
+            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+            if (vbString == null) {
+                vbString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.VIEWBOX.ToLowerInvariant());
+            }
             float[] values = new float[] { 0, 0, 0, 0 };
             if (vbString != null) {
                 IList<String> valueStrings = SvgCssUtils.SplitValueList(vbString);

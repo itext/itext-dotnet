@@ -3,69 +3,51 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
 using iText.StyledXmlParser.Jsoup.Helper;
+using iText.StyledXmlParser.Jsoup.Internal;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>HTML Tag capabilities.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class Tag {
+    public class Tag
+#if !NETSTANDARD2_0
+ : ICloneable
+#endif
+ {
         private static readonly IDictionary<String, iText.StyledXmlParser.Jsoup.Parser.Tag> tags = new Dictionary<
             String, iText.StyledXmlParser.Jsoup.Parser.Tag>();
 
         // map of known tags
         private String tagName;
 
+        private String normalName;
+
+        // always the lower case version of this tag, regardless of case preservation mode
         private bool isBlock = true;
 
-        // block or inline
+        // block
         private bool formatAsBlock = true;
 
         // should be formatted as a block
-        private bool canContainBlock = true;
-
-        // Can this tag hold block level tags?
-        private bool canContainInline = true;
-
-        // only pcdata if not
         private bool empty = false;
 
         // can hold nothing; e.g. img
@@ -82,13 +64,20 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         // a control that can be submitted in a form: input etc
         private Tag(String tagName) {
-            this.tagName = tagName.ToLowerInvariant();
+            this.tagName = tagName;
+            normalName = Normalizer.LowerCase(tagName);
         }
 
         /// <summary>Get this tag's name.</summary>
         /// <returns>the tag's name</returns>
         public virtual String GetName() {
             return tagName;
+        }
+
+        /// <summary>Get this tag's normalized (lowercased) name.</summary>
+        /// <returns>the tag's normal name.</returns>
+        public virtual String NormalName() {
+            return normalName;
         }
 
         /// <summary>Get a Tag by name.</summary>
@@ -98,22 +87,44 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         /// Pre-defined tags (P, DIV etc) will be ==, but unknown tags are not registered and will only .equals().
         /// </remarks>
         /// <param name="tagName">Name of tag, e.g. "p". Case insensitive.</param>
+        /// <param name="settings">used to control tag name sensitivity</param>
         /// <returns>The tag, either defined or new generic.</returns>
-        public static iText.StyledXmlParser.Jsoup.Parser.Tag ValueOf(String tagName) {
+        public static iText.StyledXmlParser.Jsoup.Parser.Tag ValueOf(String tagName, ParseSettings settings) {
             Validate.NotNull(tagName);
             iText.StyledXmlParser.Jsoup.Parser.Tag tag = tags.Get(tagName);
             if (tag == null) {
-                tagName = tagName.Trim().ToLowerInvariant();
+                tagName = settings.NormalizeTag(tagName);
+                // the name we'll use
                 Validate.NotEmpty(tagName);
-                tag = tags.Get(tagName);
+                String normalName = Normalizer.LowerCase(tagName);
+                // the lower-case name to get tag settings off
+                tag = tags.Get(normalName);
                 if (tag == null) {
                     // not defined: create default; go anywhere, do anything! (incl be inside a <p>)
                     tag = new iText.StyledXmlParser.Jsoup.Parser.Tag(tagName);
                     tag.isBlock = false;
-                    tag.canContainBlock = true;
+                }
+                else {
+                    if (settings.PreserveTagCase() && !tagName.Equals(normalName)) {
+                        tag = (iText.StyledXmlParser.Jsoup.Parser.Tag)tag.Clone();
+                        // get a new version vs the static one, so name update doesn't reset all
+                        tag.tagName = tagName;
+                    }
                 }
             }
             return tag;
+        }
+
+        /// <summary>Get a Tag by name.</summary>
+        /// <remarks>
+        /// Get a Tag by name. If not previously defined (unknown), returns a new generic tag, that can do anything.
+        /// <para />
+        /// Pre-defined tags (P, DIV etc) will be ==, but unknown tags are not registered and will only .equals().
+        /// </remarks>
+        /// <param name="tagName">Name of tag, e.g. "p". <b>Case sensitive</b>.</param>
+        /// <returns>The tag, either defined or new generic.</returns>
+        public static iText.StyledXmlParser.Jsoup.Parser.Tag ValueOf(String tagName) {
+            return ValueOf(tagName, ParseSettings.preserveCase);
         }
 
         /// <summary>Gets if this is a block tag.</summary>
@@ -128,22 +139,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return formatAsBlock;
         }
 
-        /// <summary>Gets if this tag can contain block tags.</summary>
-        /// <returns>if tag can contain block tags</returns>
-        public virtual bool CanContainBlock() {
-            return canContainBlock;
-        }
-
         /// <summary>Gets if this tag is an inline tag.</summary>
         /// <returns>if this tag is an inline tag.</returns>
         public virtual bool IsInline() {
             return !isBlock;
-        }
-
-        /// <summary>Gets if this tag is a data only tag.</summary>
-        /// <returns>if this tag is a data only tag</returns>
-        public virtual bool IsData() {
-            return !canContainInline && !IsEmpty();
         }
 
         /// <summary>Get if this is an empty tag</summary>
@@ -172,7 +171,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         /// <summary>Get if this tag should preserve whitespace within child text nodes.</summary>
-        /// <returns>if preserve whitepace</returns>
+        /// <returns>if preserve whitespace</returns>
         public virtual bool PreserveWhitespace() {
             return preserveWhitespace;
         }
@@ -207,12 +206,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             if (!tagName.Equals(tag.tagName)) {
                 return false;
             }
-            if (canContainBlock != tag.canContainBlock) {
-                return false;
-            }
-            if (canContainInline != tag.canContainInline) {
-                return false;
-            }
             if (empty != tag.empty) {
                 return false;
             }
@@ -238,8 +231,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             int result = tagName.GetHashCode();
             result = 31 * result + (isBlock ? 1 : 0);
             result = 31 * result + (formatAsBlock ? 1 : 0);
-            result = 31 * result + (canContainBlock ? 1 : 0);
-            result = 31 * result + (canContainInline ? 1 : 0);
             result = 31 * result + (empty ? 1 : 0);
             result = 31 * result + (selfClosing ? 1 : 0);
             result = 31 * result + (preserveWhitespace ? 1 : 0);
@@ -252,21 +243,34 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return tagName;
         }
 
+        public virtual Object Clone() {
+            iText.StyledXmlParser.Jsoup.Parser.Tag newTag = new iText.StyledXmlParser.Jsoup.Parser.Tag(this.tagName);
+            newTag.normalName = this.normalName;
+            newTag.empty = this.empty;
+            newTag.formatAsBlock = this.formatAsBlock;
+            newTag.formList = this.formList;
+            newTag.formSubmit = this.formSubmit;
+            newTag.preserveWhitespace = this.preserveWhitespace;
+            newTag.selfClosing = this.selfClosing;
+            newTag.isBlock = this.isBlock;
+            return newTag;
+        }
+
         // internal static initialisers:
         // prepped from http://www.w3.org/TR/REC-html40/sgml/dtd.html and other sources
         private static readonly String[] blockTags = new String[] { "html", "head", "body", "frameset", "script", 
             "noscript", "style", "meta", "link", "title", "frame", "noframes", "section", "nav", "aside", "hgroup"
             , "header", "footer", "p", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "pre", "div", "blockquote", 
-            "hr", "address", "figure", "figcaption", "form", "fieldset", "ins", "del", "s", "dl", "dt", "dd", "li"
-            , "table", "caption", "thead", "tfoot", "tbody", "colgroup", "col", "tr", "th", "td", "video", "audio"
-            , "canvas", "details", "menu", "plaintext", "template", "article", "main", "svg", "math" };
+            "hr", "address", "figure", "figcaption", "form", "fieldset", "ins", "del", "dl", "dt", "dd", "li", "table"
+            , "caption", "thead", "tfoot", "tbody", "colgroup", "col", "tr", "th", "td", "video", "audio", "canvas"
+            , "details", "menu", "plaintext", "template", "article", "main", "svg", "math", "center" };
 
         private static readonly String[] inlineTags = new String[] { "object", "base", "font", "tt", "i", "b", "u"
             , "big", "small", "em", "strong", "dfn", "code", "samp", "kbd", "var", "cite", "abbr", "time", "acronym"
             , "mark", "ruby", "rt", "rp", "a", "img", "br", "wbr", "map", "q", "sub", "sup", "bdo", "iframe", "embed"
             , "span", "input", "select", "textarea", "label", "button", "optgroup", "option", "legend", "datalist"
             , "keygen", "output", "progress", "meter", "area", "param", "source", "track", "summary", "command", "device"
-            , "area", "basefont", "bgsound", "menuitem", "param", "source", "track", "data", "bdi" };
+            , "area", "basefont", "bgsound", "menuitem", "param", "source", "track", "data", "bdi", "s" };
 
         private static readonly String[] emptyTags = new String[] { "meta", "link", "base", "frame", "img", "br", 
             "wbr", "embed", "hr", "input", "keygen", "col", "command", "device", "area", "basefont", "bgsound", "menuitem"
@@ -279,7 +283,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
              };
 
         // script is not here as it is a data node, which always preserve whitespace
-        // todo: I think we just need submit tags, and can scrub listed
         private static readonly String[] formListedTags = new String[] { "button", "fieldset", "input", "keygen", 
             "object", "output", "select", "textarea" };
 
@@ -295,7 +298,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             foreach (String tagName in inlineTags) {
                 iText.StyledXmlParser.Jsoup.Parser.Tag tag = new iText.StyledXmlParser.Jsoup.Parser.Tag(tagName);
                 tag.isBlock = false;
-                tag.canContainBlock = false;
                 tag.formatAsBlock = false;
                 Register(tag);
             }
@@ -303,8 +305,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             foreach (String tagName in emptyTags) {
                 iText.StyledXmlParser.Jsoup.Parser.Tag tag = tags.Get(tagName);
                 Validate.NotNull(tag);
-                tag.canContainBlock = false;
-                tag.canContainInline = false;
                 tag.empty = true;
             }
             foreach (String tagName in formatAsInlineTags) {

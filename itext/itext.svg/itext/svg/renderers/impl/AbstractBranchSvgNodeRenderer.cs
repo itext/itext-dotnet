@@ -135,9 +135,15 @@ namespace iText.Svg.Renderers.Impl {
         internal virtual String[] RetrieveAlignAndMeet() {
             String meetOrSlice = SvgConstants.Values.MEET;
             String align = SvgConstants.Values.DEFAULT_ASPECT_RATIO;
-            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO)) {
-                String preserveAspectRatioValue = this.attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
-                    );
+            String preserveAspectRatioValue = this.attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
+                );
+            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+            if (preserveAspectRatioValue == null) {
+                preserveAspectRatioValue = this.attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant
+                    ());
+            }
+            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO) || this.attributesAndStyles
+                .ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant())) {
                 IList<String> aspectRatioValuesSplitValues = SvgCssUtils.SplitValueList(preserveAspectRatioValue);
                 align = aspectRatioValuesSplitValues[0].ToLowerInvariant();
                 if (aspectRatioValuesSplitValues.Count > 1) {
@@ -165,8 +171,11 @@ namespace iText.Svg.Renderers.Impl {
         private void ApplyViewportTranslationCorrection(SvgDrawContext context) {
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
             AffineTransform tf = this.CalculateViewPortTranslation(context);
-            if (!tf.IsIdentity() && SvgConstants.Values.NONE.Equals(this.GetAttribute(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
-                ))) {
+            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+            bool preserveAspectRationNone = SvgConstants.Values.NONE.Equals(GetAttribute(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
+                )) || SvgConstants.Values.NONE.Equals(GetAttribute(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant
+                ()));
+            if (!tf.IsIdentity() && preserveAspectRationNone) {
                 currentCanvas.ConcatMatrix(tf);
             }
         }
@@ -359,6 +368,10 @@ namespace iText.Svg.Renderers.Impl {
                 return new float[] {  };
             }
             String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
+            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+            if (viewBoxValues == null) {
+                viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX.ToLowerInvariant());
+            }
             if (viewBoxValues == null) {
                 return new float[] {  };
             }

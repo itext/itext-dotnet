@@ -3,43 +3,25 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.StyledXmlParser.Jsoup.Helper;
+
 namespace iText.StyledXmlParser.Jsoup.Select {
     /// <summary>Depth-first node traversor.</summary>
     /// <remarks>
@@ -48,32 +30,37 @@ namespace iText.StyledXmlParser.Jsoup.Select {
     /// This implementation does not use recursion, so a deep DOM does not risk blowing the stack.
     /// </remarks>
     public class NodeTraversor {
-        private NodeVisitor visitor;
-
-        /// <summary>Create a new traversor.</summary>
-        /// <param name="visitor">
-        /// a class implementing the
-        /// <see cref="NodeVisitor"/>
-        /// interface, to be called when visiting each node.
-        /// </param>
-        public NodeTraversor(NodeVisitor visitor) {
-            this.visitor = visitor;
-        }
-
         /// <summary>Start a depth-first traverse of the root and all of its descendants.</summary>
+        /// <param name="visitor">Node visitor.</param>
         /// <param name="root">the root node point to traverse.</param>
-        public virtual void Traverse(iText.StyledXmlParser.Jsoup.Nodes.Node root) {
+        public static void Traverse(NodeVisitor visitor, iText.StyledXmlParser.Jsoup.Nodes.Node root) {
             iText.StyledXmlParser.Jsoup.Nodes.Node node = root;
+            iText.StyledXmlParser.Jsoup.Nodes.Node parent;
+            // remember parent to find nodes that get replaced in .head
             int depth = 0;
             while (node != null) {
+                parent = node.ParentNode();
                 visitor.Head(node, depth);
+                // visit current node
+                if (parent != null && !node.HasParent()) {
+                    // must have been replaced; find replacement
+                    node = parent.ChildNode(node.SiblingIndex());
+                }
+                // replace ditches parent but keeps sibling index
                 if (node.ChildNodeSize() > 0) {
+                    // descend
                     node = node.ChildNode(0);
                     depth++;
                 }
                 else {
-                    while (node.NextSibling() == null && depth > 0) {
+                    while (true) {
+                        System.Diagnostics.Debug.Assert(node != null);
+                        // as depth > 0, will have parent
+                        if (!(node.NextSibling() == null && depth > 0)) {
+                            break;
+                        }
                         visitor.Tail(node, depth);
+                        // when no more siblings, ascend
                         node = node.ParentNode();
                         depth--;
                     }
@@ -82,6 +69,99 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                         break;
                     }
                     node = node.NextSibling();
+                }
+            }
+        }
+
+        /// <summary>Start a depth-first traverse of all elements.</summary>
+        /// <param name="visitor">Node visitor.</param>
+        /// <param name="elements">Elements to filter.</param>
+        public static void Traverse(NodeVisitor visitor, Elements elements) {
+            Validate.NotNull(visitor);
+            Validate.NotNull(elements);
+            foreach (iText.StyledXmlParser.Jsoup.Nodes.Element el in elements) {
+                Traverse(visitor, el);
+            }
+        }
+
+        /// <summary>Start a depth-first filtering of the root and all of its descendants.</summary>
+        /// <param name="filter">Node visitor.</param>
+        /// <param name="root">the root node point to traverse.</param>
+        /// <returns>
+        /// The filter result of the root node, or
+        /// <see cref="FilterResult.STOP"/>.
+        /// </returns>
+        public static NodeFilter.FilterResult Filter(NodeFilter filter, iText.StyledXmlParser.Jsoup.Nodes.Node root
+            ) {
+            iText.StyledXmlParser.Jsoup.Nodes.Node node = root;
+            int depth = 0;
+            while (node != null) {
+                NodeFilter.FilterResult result = filter.Head(node, depth);
+                if (result == NodeFilter.FilterResult.STOP) {
+                    return result;
+                }
+                // Descend into child nodes:
+                if (result == NodeFilter.FilterResult.CONTINUE && node.ChildNodeSize() > 0) {
+                    node = node.ChildNode(0);
+                    ++depth;
+                    continue;
+                }
+                // No siblings, move upwards:
+                while (true) {
+                    System.Diagnostics.Debug.Assert(node != null);
+                    // depth > 0, so has parent
+                    if (!(node.NextSibling() == null && depth > 0)) {
+                        break;
+                    }
+                    // 'tail' current node:
+                    if (result == NodeFilter.FilterResult.CONTINUE || result == NodeFilter.FilterResult.SKIP_CHILDREN) {
+                        result = filter.Tail(node, depth);
+                        if (result == NodeFilter.FilterResult.STOP) {
+                            return result;
+                        }
+                    }
+                    iText.StyledXmlParser.Jsoup.Nodes.Node prev = node;
+                    // In case we need to remove it below.
+                    node = node.ParentNode();
+                    depth--;
+                    if (result == NodeFilter.FilterResult.REMOVE) {
+                        prev.Remove();
+                    }
+                    // Remove AFTER finding parent.
+                    result = NodeFilter.FilterResult.CONTINUE;
+                }
+                // Parent was not pruned.
+                // 'tail' current node, then proceed with siblings:
+                if (result == NodeFilter.FilterResult.CONTINUE || result == NodeFilter.FilterResult.SKIP_CHILDREN) {
+                    result = filter.Tail(node, depth);
+                    if (result == NodeFilter.FilterResult.STOP) {
+                        return result;
+                    }
+                }
+                if (node == root) {
+                    return result;
+                }
+                iText.StyledXmlParser.Jsoup.Nodes.Node prev_1 = node;
+                // In case we need to remove it below.
+                node = node.NextSibling();
+                if (result == NodeFilter.FilterResult.REMOVE) {
+                    prev_1.Remove();
+                }
+            }
+            // Remove AFTER finding sibling.
+            // root == null?
+            return NodeFilter.FilterResult.CONTINUE;
+        }
+
+        /// <summary>Start a depth-first filtering of all elements.</summary>
+        /// <param name="filter">Node filter.</param>
+        /// <param name="elements">Elements to filter.</param>
+        public static void Filter(NodeFilter filter, Elements elements) {
+            Validate.NotNull(filter);
+            Validate.NotNull(elements);
+            foreach (iText.StyledXmlParser.Jsoup.Nodes.Element el in elements) {
+                if (Filter(filter, el) == NodeFilter.FilterResult.STOP) {
+                    break;
                 }
             }
         }
