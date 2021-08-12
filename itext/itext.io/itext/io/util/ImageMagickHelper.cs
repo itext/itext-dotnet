@@ -137,7 +137,9 @@ namespace iText.IO.Util {
             try {
                 replacementOutFile = FileUtil.CreateTempCopy(outImageFilePath, TEMP_FILE_PREFIX, null);
                 replacementCmpFile = FileUtil.CreateTempCopy(cmpImageFilePath, TEMP_FILE_PREFIX, null);
-                replacementDiff = FileUtil.CreateTempFile(TEMP_FILE_PREFIX, null).ToString();
+                // ImageMagick generates difference images in .png format, therefore we can specify it.
+                // For some reason .webp comparison fails if the extension of diff image is not specified.
+                replacementDiff = FileUtil.CreateTempFile(TEMP_FILE_PREFIX, ".png").FullName;
                 String currCompareParams = fuzzValue + " '" + replacementOutFile + "' '" + replacementCmpFile + "' '" + replacementDiff
                      + "'";
                 bool result = SystemUtil.RunProcessAndWait(compareExec, currCompareParams);
