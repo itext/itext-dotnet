@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Exceptions;
 

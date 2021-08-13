@@ -44,8 +44,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.IO;
+using iText.Events.Util;
 using iText.IO.Font.Otf.Lookuptype7;
-using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
     /// <summary>

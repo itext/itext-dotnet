@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Common.Logging;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
@@ -115,7 +115,7 @@ namespace iText.Kernel.Actions.Producer {
 
         private static String PopulatePlaceholders(String producerLine, IList<ConfirmedEventWrapper> events) {
             int lastIndex = 0;
-            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, producerLine);
+            Matcher matcher = iText.Events.Util.Matcher.Match(PATTERN, producerLine);
             StringBuilder builder = new StringBuilder();
             while (matcher.Find()) {
                 builder.Append(producerLine.JSubstring(lastIndex, matcher.Start()));

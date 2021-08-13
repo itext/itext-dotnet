@@ -44,13 +44,15 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using iText.IO;
+using iText.Events.Sequence;
+using iText.Events.Util;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Events;
-using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter;
 using iText.Kernel.Counter.Event;
 using iText.Kernel.Crypto;
@@ -1907,7 +1909,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Obtains document id as a
-        /// <see cref="iText.Kernel.Actions.Sequence.SequenceId"/>.
+        /// <see cref="iText.Events.Sequence.SequenceId"/>.
         /// </summary>
         /// <returns>document id</returns>
         public virtual SequenceId GetDocumentIdWrapper() {

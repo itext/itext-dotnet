@@ -193,7 +193,8 @@ namespace iText.Kernel.Font {
         }
 
         private void FillBBFromBytes(byte[] bytes) {
-            String str = iText.IO.Util.JavaUtil.GetStringForBytes(bytes, iText.IO.Util.EncodingUtil.ISO_8859_1);
+            String str = iText.Events.Util.JavaUtil.GetStringForBytes(bytes, iText.Events.Util.EncodingUtil.ISO_8859_1
+                );
             int d0Pos = str.IndexOf(D_0_STR, StringComparison.Ordinal);
             int d1Pos = str.IndexOf(D_1_STR, StringComparison.Ordinal);
             if (d0Pos != -1) {

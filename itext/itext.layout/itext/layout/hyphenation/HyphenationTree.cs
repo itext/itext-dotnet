@@ -19,7 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iText.IO.Util;
+using iText.Events.Util;
 
 namespace iText.Layout.Hyphenation {
     /// <summary>

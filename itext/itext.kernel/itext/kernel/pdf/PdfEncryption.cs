@@ -361,7 +361,7 @@ namespace iText.Kernel.Pdf {
             long time = SystemUtil.GetTimeBasedSeed();
             long mem = SystemUtil.GetFreeMemory();
             String s = time + "+" + mem + "+" + (seq++);
-            return md5.Digest(s.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            return md5.Digest(s.GetBytes(iText.Events.Util.EncodingUtil.ISO_8859_1));
         }
 
         /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>

@@ -21,16 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using System.IO;
 using iText.Events.Data;
+using iText.Events.Sequence;
 using iText.IO.Source;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Ecosystem;
 using iText.Kernel.Actions.Processors;
-using iText.Kernel.Actions.Sequence;
-using iText.Kernel.Actions.Session;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -40,38 +38,6 @@ namespace iText.Kernel.Actions.Events {
     public class FlushPdfDocumentEventTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/actions/";
-
-        [NUnit.Framework.Test]
-        public virtual void DoActionTest() {
-            using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
-                using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
-                    IList<String> forMessages = new List<String>();
-                    access.AddProcessor(new FlushPdfDocumentEventTest.TestProductEventProcessor("test-product-1", forMessages)
-                        );
-                    access.AddProcessor(new FlushPdfDocumentEventTest.TestProductEventProcessor("test-product-2", forMessages)
-                        );
-                    access.AddEvent(document.GetDocumentIdWrapper(), GetEvent("test-product-1", document.GetDocumentIdWrapper(
-                        )));
-                    access.AddEvent(document.GetDocumentIdWrapper(), GetEvent("test-product-1", document.GetDocumentIdWrapper(
-                        )));
-                    access.AddEvent(document.GetDocumentIdWrapper(), GetEvent("test-product-2", document.GetDocumentIdWrapper(
-                        )));
-                    access.AddEvent(document.GetDocumentIdWrapper(), GetEvent("test-product-2", document.GetDocumentIdWrapper(
-                        )));
-                    new FlushPdfDocumentEvent(document).DoAction();
-                    NUnit.Framework.Assert.AreEqual(4, forMessages.Count);
-                    NUnit.Framework.Assert.IsTrue(forMessages.Contains("aggregation message from test-product-1"));
-                    NUnit.Framework.Assert.IsTrue(forMessages.Contains("aggregation message from test-product-2"));
-                    NUnit.Framework.Assert.IsTrue(forMessages.Contains("completion message from test-product-1"));
-                    NUnit.Framework.Assert.IsTrue(forMessages.Contains("completion message from test-product-2"));
-                    // check order
-                    NUnit.Framework.Assert.IsTrue(forMessages[0].StartsWith("aggregation"));
-                    NUnit.Framework.Assert.IsTrue(forMessages[1].StartsWith("aggregation"));
-                    NUnit.Framework.Assert.IsTrue(forMessages[2].StartsWith("completion"));
-                    NUnit.Framework.Assert.IsTrue(forMessages[3].StartsWith("completion"));
-                }
-            }
-        }
 
         [NUnit.Framework.Test]
         public virtual void OnCloseReportingTest() {
@@ -166,13 +132,10 @@ namespace iText.Kernel.Actions.Events {
         }
 
         private class TestProductEventProcessor : ITextProductEventProcessor {
-            public readonly IList<String> aggregatedMessages;
-
             private readonly String processorId;
 
-            public TestProductEventProcessor(String processorId, IList<String> aggregatedMessages) {
+            public TestProductEventProcessor(String processorId) {
                 this.processorId = processorId;
-                this.aggregatedMessages = aggregatedMessages;
             }
 
             public virtual void OnEvent(AbstractProductProcessITextEvent @event) {
@@ -189,14 +152,6 @@ namespace iText.Kernel.Actions.Events {
 
             public virtual String GetProducer() {
                 return "iText";
-            }
-
-            public virtual void AggregationOnClose(ClosingSession session) {
-                aggregatedMessages.Add("aggregation message from " + processorId);
-            }
-
-            public virtual void CompletionOnClose(ClosingSession session) {
-                aggregatedMessages.Add("completion message from " + processorId);
             }
         }
 

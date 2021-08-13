@@ -23,9 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Events.Data;
+using iText.Events.Sequence;
 using iText.Kernel.Actions.Ecosystem;
 using iText.Kernel.Actions.Events;
-using iText.Kernel.Actions.Sequence;
 using iText.Test;
 
 namespace iText.Kernel.Actions.Producer {

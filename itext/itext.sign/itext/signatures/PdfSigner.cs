@@ -49,6 +49,7 @@ using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+using iText.Events.Util;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.IO;

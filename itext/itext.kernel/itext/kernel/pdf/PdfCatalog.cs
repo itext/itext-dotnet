@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.IO;
+using iText.Events.Util;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Exceptions;

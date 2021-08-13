@@ -45,6 +45,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using iText.Events.Util;
 using iText.IO;
 
 namespace iText.IO.Util {

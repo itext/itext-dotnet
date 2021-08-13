@@ -22,8 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
-using iText.Kernel.Actions.Exceptions;
+using iText.Events;
+using iText.Events.Exceptions;
+using iText.Events.Util;
 
 namespace iText.Kernel.Actions {
     /// <summary>Entry point for event handling mechanism.</summary>
@@ -81,7 +82,7 @@ namespace iText.Kernel.Actions {
 
         /// <summary>
         /// Add new
-        /// <see cref="IBaseEventHandler"/>
+        /// <see cref="iText.Events.IBaseEventHandler"/>
         /// to the event handling process.
         /// </summary>
         /// <param name="handler">is a handler to add</param>

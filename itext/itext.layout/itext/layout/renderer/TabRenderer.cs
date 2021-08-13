@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Draw;

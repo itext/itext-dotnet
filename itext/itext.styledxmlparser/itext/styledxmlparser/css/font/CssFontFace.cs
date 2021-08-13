@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Util;
@@ -252,7 +252,7 @@ namespace iText.StyledXmlParser.Css.Font {
             /// object
             /// </returns>
             public static CssFontFace.CssFontFaceSrc Create(String src) {
-                Matcher m = iText.IO.Util.Matcher.Match(UrlPattern, src);
+                Matcher m = iText.Events.Util.Matcher.Match(UrlPattern, src);
                 if (!m.Matches()) {
                     return null;
                 }

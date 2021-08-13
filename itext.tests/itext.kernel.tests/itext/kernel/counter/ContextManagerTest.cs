@@ -41,7 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Util;
+using iText.Events;
+using iText.Events.Util;
 using iText.Test;
 
 namespace iText.Kernel.Counter {

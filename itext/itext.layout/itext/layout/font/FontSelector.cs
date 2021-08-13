@@ -42,8 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Events.Util;
 using iText.IO.Font;
-using iText.IO.Util;
 
 namespace iText.Layout.Font {
     /// <summary>Sort given set of fonts according to font name and style.</summary>

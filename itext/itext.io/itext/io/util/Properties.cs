@@ -46,6 +46,7 @@ using System;
 using System.Text;
 using System.IO;
 using System.Collections.Generic;
+using iText.Events.Util;
 
 namespace iText.IO.Util {
     /// <summary>

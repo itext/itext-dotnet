@@ -44,6 +44,7 @@ using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.IO;
+using iText.Events.Util;
 using iText.IO.Codec;
 using iText.IO.Image;
 using iText.IO.Util;

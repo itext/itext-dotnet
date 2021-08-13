@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 

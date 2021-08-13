@@ -44,7 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Css.Selector;
 using iText.StyledXmlParser.Node;
@@ -159,7 +159,8 @@ namespace iText.StyledXmlParser.Css {
             > normalDeclarations, IList<CssDeclaration> importantDeclarations) {
             foreach (CssDeclaration declaration in declarations) {
                 int exclIndex = declaration.GetExpression().IndexOf('!');
-                if (exclIndex > 0 && iText.IO.Util.Matcher.Match(importantMatcher, declaration.GetExpression()).Matches()) {
+                if (exclIndex > 0 && iText.Events.Util.Matcher.Match(importantMatcher, declaration.GetExpression()).Matches
+                    ()) {
                     importantDeclarations.Add(new CssDeclaration(declaration.GetProperty(), declaration.GetExpression().JSubstring
                         (0, exclIndex).Trim()));
                 }

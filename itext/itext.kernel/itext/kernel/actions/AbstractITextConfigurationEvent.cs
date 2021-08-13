@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Events.Sequence;
 using iText.Kernel.Actions.Processors;
-using iText.Kernel.Actions.Sequence;
 
 namespace iText.Kernel.Actions {
     /// <summary>Abstract class which represents system configuration events.</summary>

@@ -23,12 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Common.Logging;
-using iText.IO.Util;
+using iText.Events.Sequence;
+using iText.Events.Util;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Processors;
 using iText.Kernel.Actions.Producer;
-using iText.Kernel.Actions.Sequence;
-using iText.Kernel.Actions.Session;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 
@@ -68,31 +67,16 @@ namespace iText.Kernel.Actions.Events {
                 }
                 products.Add(@event.GetProductName());
             }
-            IDictionary<String, ITextProductEventProcessor> knownProducts = new Dictionary<String, ITextProductEventProcessor
-                >();
             foreach (String product in products) {
                 ITextProductEventProcessor processor = GetActiveProcessor(product);
-                if (processor == null) {
-                    if (LOGGER.IsWarnEnabled) {
-                        LOGGER.Warn(MessageFormatUtil.Format(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED, product));
-                    }
-                }
-                else {
-                    knownProducts.Put(product, processor);
+                if (processor == null && LOGGER.IsWarnEnabled) {
+                    LOGGER.Warn(MessageFormatUtil.Format(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED, product));
                 }
             }
             String oldProducer = pdfDocument.GetDocumentInfo().GetProducer();
             String newProducer = ProducerBuilder.ModifyProducer(GetConfirmedEvents(pdfDocument.GetDocumentIdWrapper())
                 , oldProducer);
             pdfDocument.GetDocumentInfo().SetProducer(newProducer);
-            ClosingSession session = new ClosingSession((PdfDocument)document.Target);
-            foreach (KeyValuePair<String, ITextProductEventProcessor> product in knownProducts) {
-                product.Value.AggregationOnClose(session);
-            }
-            // do not join these loops into one as order of processing is important!
-            foreach (KeyValuePair<String, ITextProductEventProcessor> product in knownProducts) {
-                product.Value.CompletionOnClose(session);
-            }
         }
 
         private IList<ConfirmedEventWrapper> GetConfirmedEvents(SequenceId sequenceId) {

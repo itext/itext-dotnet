@@ -51,7 +51,6 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
 using iText.IO;
-using iText.IO.Util;
 
 namespace iText.Signatures {
     /// <summary>

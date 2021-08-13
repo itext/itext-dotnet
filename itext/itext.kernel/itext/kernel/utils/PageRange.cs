@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Events.Util;
 
 namespace iText.Kernel.Utils {
     /// <summary>
@@ -115,7 +115,7 @@ namespace iText.Kernel.Utils {
             }
             else {
                 Matcher matcher;
-                if ((matcher = iText.IO.Util.Matcher.Match(SEQUENCE_PATTERN, rangeDef)).Matches()) {
+                if ((matcher = iText.Events.Util.Matcher.Match(SEQUENCE_PATTERN, rangeDef)).Matches()) {
                     int start = Convert.ToInt32(matcher.Group(1), System.Globalization.CultureInfo.InvariantCulture);
                     if (matcher.Group(2) != null) {
                         return new PageRange.PageRangePartSequence(start, Convert.ToInt32(matcher.Group(2), System.Globalization.CultureInfo.InvariantCulture
@@ -126,7 +126,7 @@ namespace iText.Kernel.Utils {
                     }
                 }
                 else {
-                    if ((matcher = iText.IO.Util.Matcher.Match(SINGLE_PAGE_PATTERN, rangeDef)).Matches()) {
+                    if ((matcher = iText.Events.Util.Matcher.Match(SINGLE_PAGE_PATTERN, rangeDef)).Matches()) {
                         return new PageRange.PageRangePartSingle(Convert.ToInt32(matcher.Group(1), System.Globalization.CultureInfo.InvariantCulture
                             ));
                     }

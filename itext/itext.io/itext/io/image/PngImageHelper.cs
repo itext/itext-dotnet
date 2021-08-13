@@ -47,6 +47,7 @@ using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.IO;
+using iText.Events.Util;
 using iText.IO.Colors;
 using iText.IO.Source;
 using iText.IO.Util;

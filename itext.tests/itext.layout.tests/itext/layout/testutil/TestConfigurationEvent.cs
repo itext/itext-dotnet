@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Events.Sequence;
 using iText.Kernel.Actions;
-using iText.Kernel.Actions.Sequence;
 
 namespace iText.Layout.Testutil {
     public class TestConfigurationEvent : AbstractITextConfigurationEvent {

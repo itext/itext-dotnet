@@ -41,10 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Events.Sequence;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Events;
-using iText.Kernel.Actions.Sequence;
 
 namespace iText.Layout.Testutil {
     public class TestProductEvent : AbstractProductProcessITextEvent {

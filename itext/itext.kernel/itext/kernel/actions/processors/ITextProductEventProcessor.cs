@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Actions;
-using iText.Kernel.Actions.Session;
 
 namespace iText.Kernel.Actions.Processors {
     /// <summary>Interface for product event processors.</summary>
@@ -45,37 +44,5 @@ namespace iText.Kernel.Actions.Processors {
         /// <summary>Gets the producer line for the product.</summary>
         /// <returns>the producer line</returns>
         String GetProducer();
-
-        /// <summary>
-        /// When document is closing it will search for every
-        /// <see cref="ITextProductEventProcessor"/>
-        /// associated with the products involved into document processing and may aggregate some data
-        /// from them.
-        /// </summary>
-        /// <remarks>
-        /// When document is closing it will search for every
-        /// <see cref="ITextProductEventProcessor"/>
-        /// associated with the products involved into document processing and may aggregate some data
-        /// from them. Aggregation stage is the first stage of closing process. See also the second step:
-        /// <see cref="CompletionOnClose(iText.Kernel.Actions.Session.ClosingSession)"/>
-        /// </remarks>
-        /// <param name="session">is a closing session</param>
-        void AggregationOnClose(ClosingSession session);
-
-        /// <summary>
-        /// When document is closing it will search for every
-        /// <see cref="ITextProductEventProcessor"/>
-        /// associated with the products involved into document processing and may aggregate some data
-        /// from them.
-        /// </summary>
-        /// <remarks>
-        /// When document is closing it will search for every
-        /// <see cref="ITextProductEventProcessor"/>
-        /// associated with the products involved into document processing and may aggregate some data
-        /// from them. Completion stage is the second stage of closing process. See also the first step:
-        /// <see cref="AggregationOnClose(iText.Kernel.Actions.Session.ClosingSession)"/>
-        /// </remarks>
-        /// <param name="session">is a closing session</param>
-        void CompletionOnClose(ClosingSession session);
     }
 }

@@ -21,8 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Events.Sequence;
 using iText.Kernel.Actions.Events;
-using iText.Kernel.Actions.Sequence;
 
 namespace iText.Kernel.Actions {
     /// <summary>Base class to wrap events.</summary>
@@ -44,11 +44,11 @@ namespace iText.Kernel.Actions {
 
         /// <summary>
         /// Creates a wrapper of event associated with
-        /// <see cref="iText.Kernel.Actions.Sequence.SequenceId"/>.
+        /// <see cref="iText.Events.Sequence.SequenceId"/>.
         /// </summary>
         /// <param name="updatedSequenceId">
         /// is a
-        /// <see cref="iText.Kernel.Actions.Sequence.SequenceId"/>
+        /// <see cref="iText.Events.Sequence.SequenceId"/>
         /// for the document. May be different with
         /// sequence id of original event if
         /// <see cref="iText.Kernel.Actions.Events.LinkDocumentIdEvent"/>

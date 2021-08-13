@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.Kernel.Colors;
 using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;

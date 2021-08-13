@@ -20,8 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Events.Sequence;
 using iText.Kernel.Actions;
-using iText.Kernel.Actions.Sequence;
 
 namespace iText.Kernel.Actions.Events {
     /// <summary>
@@ -33,7 +33,7 @@ namespace iText.Kernel.Actions.Events {
         /// <summary>Creates an instance of confirmation event.</summary>
         /// <param name="updatedSequenceId">
         /// is a
-        /// <see cref="iText.Kernel.Actions.Sequence.SequenceId"/>
+        /// <see cref="iText.Events.Sequence.SequenceId"/>
         /// for the document. May be different with
         /// sequence id of original event if
         /// <see cref="LinkDocumentIdEvent"/>

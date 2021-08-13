@@ -21,12 +21,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.IO.Util;
+using iText.Events;
+using iText.Events.Exceptions;
+using iText.Events.Sequence;
+using iText.Events.Util;
 using iText.Kernel.Actions.Ecosystem;
 using iText.Kernel.Actions.Events;
-using iText.Kernel.Actions.Exceptions;
 using iText.Kernel.Actions.Processors;
-using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Pdf;
 using iText.Test;
 

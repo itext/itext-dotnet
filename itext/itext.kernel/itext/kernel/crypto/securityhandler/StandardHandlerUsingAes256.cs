@@ -48,6 +48,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 using iText.IO;
+using iText.Events.Util;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto;

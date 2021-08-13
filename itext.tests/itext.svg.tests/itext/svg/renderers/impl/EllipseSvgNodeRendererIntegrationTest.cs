@@ -164,7 +164,7 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             // Calculate coordinates with better precision (in double type) in the method EllipseSvgNodeRenderer#doDraw
             ellipseRenderer.Draw(context);
-            String pageContentBytes = iText.IO.Util.JavaUtil.GetStringForBytes(doc.GetPage(1).GetContentBytes(), System.Text.Encoding
+            String pageContentBytes = iText.Events.Util.JavaUtil.GetStringForBytes(doc.GetPage(1).GetContentBytes(), System.Text.Encoding
                 .UTF8);
             doc.Close();
             String expectedResult = "132.22 254.63 m\n" + "132.22 257.11 130.21 259.13 127.72 259.13 c\n" + "125.24 259.13 123.22 257.11 123.22 254.63 c\n"

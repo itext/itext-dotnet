@@ -48,9 +48,9 @@ using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+using iText.Events.Util;
 using iText.Forms;
 using iText.IO;
-using iText.IO.Util;
 using iText.Kernel.Counter.Event;
 using iText.Kernel.Pdf;
 

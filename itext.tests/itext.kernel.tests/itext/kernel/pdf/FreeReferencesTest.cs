@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -101,7 +101,7 @@ namespace iText.Kernel.Pdf {
             pdfDocument.AddNewPage();
             // fix page content
             PdfStream firstPageContentStream = pdfDocument.GetPage(1).GetContentStream(0);
-            String firstPageData = iText.IO.Util.JavaUtil.GetStringForBytes(firstPageContentStream.GetBytes());
+            String firstPageData = iText.Events.Util.JavaUtil.GetStringForBytes(firstPageContentStream.GetBytes());
             firstPageContentStream.SetData((firstPageData.JSubstring(0, firstPageData.LastIndexOf("BT")) + "ET").GetBytes
                 ());
             firstPageContentStream.SetModified();
@@ -908,7 +908,8 @@ namespace iText.Kernel.Pdf {
 
         private String[] ExtractXrefTableAsStrings(String @out) {
             byte[] outPdfBytes = ReadFile(destinationFolder + @out);
-            String outPdfContent = iText.IO.Util.JavaUtil.GetStringForBytes(outPdfBytes, System.Text.Encoding.ASCII);
+            String outPdfContent = iText.Events.Util.JavaUtil.GetStringForBytes(outPdfBytes, System.Text.Encoding.ASCII
+                );
             String xrefStr = "\nxref";
             String trailerStr = "trailer";
             int xrefInd = outPdfContent.IndexOf(xrefStr, StringComparison.Ordinal);

@@ -21,10 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Events.Sequence;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Events;
-using iText.Kernel.Actions.Sequence;
 
 namespace iText.Kernel.Counter.Event {
     /// <summary>Class represents events registered in iText core module.</summary>

@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using iText.IO.Util;
+using iText.Events.Util;
 
 namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Tokenizer for CSS declaration values.</summary>

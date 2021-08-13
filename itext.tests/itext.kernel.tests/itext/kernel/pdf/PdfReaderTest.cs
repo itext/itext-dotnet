@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Events.Util;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -182,7 +183,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 1; i <= document.GetNumberOfPages(); i++) {
                 PdfPage page = document.GetPage(i);
                 byte[] content = page.GetFirstContentStream().GetBytes();
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(contentTemplate, i), iText.IO.Util.JavaUtil.GetStringForBytes
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(contentTemplate, i), iText.Events.Util.JavaUtil.GetStringForBytes
                     (content), "Page content " + i);
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -359,13 +360,13 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(testXref, testPage.GetPdfObject().GetIndirectReference().GetObjNumber());
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             for (int i = 1; i < pageCount + 1; i++) {
                 PdfPage page = document.GetPage(1);
                 document.RemovePage(page);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -375,7 +376,7 @@ namespace iText.Kernel.Pdf {
                 int pageNum = document.GetNumberOfPages();
                 PdfPage page = document.GetPage(pageNum);
                 document.RemovePage(pageNum);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + pageNum + ")"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -391,13 +392,13 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(1000, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             for (int i = 1; i < pageCount + 1; i++) {
                 PdfPage page = document.GetPage(1);
                 document.RemovePage(page);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -408,7 +409,7 @@ namespace iText.Kernel.Pdf {
                 int pageNum = document.GetNumberOfPages();
                 PdfPage page = document.GetPage(pageNum);
                 document.RemovePage(pageNum);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + pageNum + ")"));
             }
             document.Close();
@@ -423,13 +424,13 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             for (int i = 1; i < pageCount + 1; i++) {
                 PdfPage page = document.GetPage(1);
                 document.RemovePage(page);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -440,7 +441,7 @@ namespace iText.Kernel.Pdf {
                 int pageNum = document.GetNumberOfPages();
                 PdfPage page = document.GetPage(pageNum);
                 document.RemovePage(pageNum);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + pageNum + ")"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -456,13 +457,13 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(3, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(i + "00"));
             }
             for (int i = 1; i < pageCount + 1; i++) {
                 PdfPage page = document.GetPage(1);
                 document.RemovePage(page);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(i + "00"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -473,7 +474,7 @@ namespace iText.Kernel.Pdf {
                 int pageNum = document.GetNumberOfPages();
                 PdfPage page = document.GetPage(pageNum);
                 document.RemovePage(pageNum);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(pageNum + "00"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -489,13 +490,13 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(3, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(i + "00"));
             }
             for (int i = 1; i < pageCount + 1; i++) {
                 PdfPage page = document.GetPage(1);
                 document.RemovePage(page);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(i + "00"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -506,7 +507,7 @@ namespace iText.Kernel.Pdf {
                 int pageNum = document.GetNumberOfPages();
                 PdfPage page = document.GetPage(pageNum);
                 document.RemovePage(pageNum);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(pageNum + "00"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -521,10 +522,10 @@ namespace iText.Kernel.Pdf {
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(2, pageCount);
             PdfPage page = document.GetPage(1);
-            String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+            String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("100"));
             page = document.GetPage(2);
-            content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+            content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("300"));
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             document.Close();
@@ -532,11 +533,11 @@ namespace iText.Kernel.Pdf {
             document = new PdfDocument(reader);
             page = document.GetPage(2);
             document.RemovePage(page);
-            content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+            content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("300"));
             page = document.GetPage(1);
             document.RemovePage(1);
-            content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+            content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("100"));
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             document.Close();
@@ -588,11 +589,11 @@ namespace iText.Kernel.Pdf {
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(1, pageCount);
             PdfPage page = document.GetPage(1);
-            String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+            String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("100"));
             page = document.GetPage(1);
             document.RemovePage(1);
-            content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+            content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("100"));
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             document.Close();
@@ -609,7 +610,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 int pageNum = rnd.Next(document.GetNumberOfPages()) + 1;
                 PdfPage page = document.GetPage(pageNum);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + pageNum + ")"));
             }
             IList<int> pageNums = new List<int>(1000);
@@ -621,7 +622,7 @@ namespace iText.Kernel.Pdf {
                 int pageNum = (int)pageNums.JRemoveAt(index - 1);
                 PdfPage page = document.GetPage(index);
                 document.RemovePage(index);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + pageNum + ")"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -730,7 +731,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             document.Close();
@@ -747,7 +748,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             document.Close();
@@ -764,7 +765,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             document.Close();
@@ -811,7 +812,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             document.Close();
@@ -847,7 +848,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             document.Close();
@@ -867,7 +868,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             document.Close();
@@ -888,7 +889,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             document.Close();
@@ -905,7 +906,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             document.Close();
@@ -922,7 +923,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             document.Close();
@@ -940,7 +941,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(1000, pageCount);
             for (int i = 1; i < 10; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             bool exception = false;
@@ -997,7 +998,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             document.Close();
@@ -1013,7 +1014,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             NUnit.Framework.Assert.IsTrue(reader.HasFixedXref(), "Need live fixXref()");
@@ -1031,7 +1032,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             document.Close();
@@ -1060,11 +1061,11 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(1000, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -1080,11 +1081,11 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(1000, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -1100,11 +1101,11 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -1120,11 +1121,11 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
@@ -1141,11 +1142,11 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
@@ -1163,11 +1164,11 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++) {
                 PdfPage page = document.GetPage(i);
-                String content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
+                String content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iText.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
+                content = iText.Events.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");

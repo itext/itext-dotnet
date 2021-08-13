@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using iText.IO.Util;
+using iText.Events.Util;
 
 namespace iText.Signatures {
     /// <summary>An exception that is thrown when something is wrong with a certificate.</summary>

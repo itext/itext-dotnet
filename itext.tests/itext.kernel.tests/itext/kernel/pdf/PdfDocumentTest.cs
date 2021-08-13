@@ -329,8 +329,8 @@ namespace iText.Kernel.Pdf {
                 new StampingProperties().UseAppendMode());
             PdfPage page = pdfDocument.GetPage(1);
             PdfStream contentStream = new PdfStream();
-            String contentStr = iText.IO.Util.JavaUtil.GetStringForBytes(pdfDocument.GetPage(1).GetFirstContentStream(
-                ).GetBytes(), System.Text.Encoding.ASCII);
+            String contentStr = iText.Events.Util.JavaUtil.GetStringForBytes(pdfDocument.GetPage(1).GetFirstContentStream
+                ().GetBytes(), System.Text.Encoding.ASCII);
             contentStream.SetData(contentStr.Replace("/F1 16", "/F1 24").GetBytes(System.Text.Encoding.ASCII));
             page.GetPdfObject().Put(PdfName.Contents, contentStream);
             page.SetModified();

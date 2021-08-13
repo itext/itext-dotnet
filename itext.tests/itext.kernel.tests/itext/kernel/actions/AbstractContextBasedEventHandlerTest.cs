@@ -20,8 +20,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Events;
+using iText.Events.Sequence;
 using iText.Kernel.Actions.Ecosystem;
-using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter.Context;
 using iText.Test;
 

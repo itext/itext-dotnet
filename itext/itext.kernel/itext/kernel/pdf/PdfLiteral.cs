@@ -42,8 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Events.Util;
 using iText.IO.Font;
-using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfLiteral : PdfPrimitiveObject {
@@ -73,7 +73,7 @@ namespace iText.Kernel.Pdf {
 
         public override String ToString() {
             if (content != null) {
-                return iText.IO.Util.JavaUtil.GetStringForBytes(content, iText.IO.Util.EncodingUtil.ISO_8859_1);
+                return iText.Events.Util.JavaUtil.GetStringForBytes(content, iText.Events.Util.EncodingUtil.ISO_8859_1);
             }
             else {
                 return "";

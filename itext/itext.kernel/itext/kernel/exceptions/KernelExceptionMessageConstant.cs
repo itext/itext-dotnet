@@ -202,19 +202,6 @@ namespace iText.Kernel.Exceptions {
         public const String DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_THAN_MAX_INTEGER_VALUE = "During " + 
             "decompression a single stream occupied more than a maximum integer value. Please check your pdf.";
 
-        /// <summary>Message warns about overriding of the identifier of identifiable element.</summary>
-        /// <remarks>
-        /// Message warns about overriding of the identifier of identifiable element. List of params:
-        /// <list type="bullet">
-        /// <item><description>0th is an original element identifier;
-        /// </description></item>
-        /// <item><description>1st is a new element identifier;
-        /// </description></item>
-        /// </list>
-        /// </remarks>
-        public const String ELEMENT_ALREADY_HAS_IDENTIFIER = "Element already has sequence id: {0}, new id {1} " +
-             "will be ignored";
-
         public const String END_OF_CONTENT_STREAM_REACHED_BEFORE_END_OF_IMAGE_DATA = "End of content stream " + "reached before end of image data.";
 
         public const String ERROR_WHILE_READING_OBJECT_STREAM = "Error while reading Object Stream.";

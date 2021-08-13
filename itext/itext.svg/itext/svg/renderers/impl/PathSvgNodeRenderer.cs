@@ -44,7 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Svg;
@@ -345,7 +345,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         internal virtual bool ContainsInvalidAttributes(String attributes) {
-            return iText.IO.Util.Matcher.Match(invalidRegexPattern, attributes).Find();
+            return iText.Events.Util.Matcher.Match(invalidRegexPattern, attributes).Find();
         }
 
         internal virtual ICollection<String> ParsePathOperations() {

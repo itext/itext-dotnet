@@ -48,6 +48,7 @@ using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
 using iText.IO;
+using iText.Events.Util;
 using iText.IO.Util;
 
 namespace iText.Signatures {

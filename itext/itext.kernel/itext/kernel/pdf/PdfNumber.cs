@@ -42,8 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Events.Util;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfNumber : PdfPrimitiveObject {
@@ -120,15 +120,15 @@ namespace iText.Kernel.Pdf {
 
         public override String ToString() {
             if (content != null) {
-                return iText.IO.Util.JavaUtil.GetStringForBytes(content, iText.IO.Util.EncodingUtil.ISO_8859_1);
+                return iText.Events.Util.JavaUtil.GetStringForBytes(content, iText.Events.Util.EncodingUtil.ISO_8859_1);
             }
             else {
                 if (isDouble) {
-                    return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue()), iText.IO.Util.EncodingUtil.ISO_8859_1
+                    return iText.Events.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue()), iText.Events.Util.EncodingUtil.ISO_8859_1
                         );
                 }
                 else {
-                    return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue()), iText.IO.Util.EncodingUtil.ISO_8859_1
+                    return iText.Events.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue()), iText.Events.Util.EncodingUtil.ISO_8859_1
                         );
                 }
             }
@@ -174,7 +174,7 @@ namespace iText.Kernel.Pdf {
 
         protected internal virtual void GenerateValue() {
             try {
-                value = Double.Parse(iText.IO.Util.JavaUtil.GetStringForBytes(content, iText.IO.Util.EncodingUtil.ISO_8859_1
+                value = Double.Parse(iText.Events.Util.JavaUtil.GetStringForBytes(content, iText.Events.Util.EncodingUtil.ISO_8859_1
                     ), System.Globalization.CultureInfo.InvariantCulture);
             }
             catch (FormatException) {

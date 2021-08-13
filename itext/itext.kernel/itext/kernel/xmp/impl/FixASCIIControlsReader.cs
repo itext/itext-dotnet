@@ -28,6 +28,7 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System.IO;
+using iText.Events.Util;
 using iText.IO.Util;
 
 namespace iText.Kernel.XMP.Impl {

@@ -46,7 +46,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Utils.Objectpathitems {

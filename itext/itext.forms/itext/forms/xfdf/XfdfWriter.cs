@@ -46,7 +46,7 @@ using System.IO;
 using System.Xml;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.Kernel.Pdf;
 
 namespace iText.Forms.Xfdf {

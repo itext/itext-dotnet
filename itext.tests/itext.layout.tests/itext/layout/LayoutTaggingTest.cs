@@ -42,10 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
+using iText.Events.Util;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
-using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;

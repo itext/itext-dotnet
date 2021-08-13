@@ -25,11 +25,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Common.Logging;
-using iText.IO.Util;
+using iText.Events;
+using iText.Events.Exceptions;
+using iText.Events.Sequence;
+using iText.Events.Util;
 using iText.Kernel.Actions.Events;
-using iText.Kernel.Actions.Exceptions;
 using iText.Kernel.Actions.Processors;
-using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter.Context;
 using iText.Kernel.Logs;
 

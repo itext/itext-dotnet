@@ -48,6 +48,7 @@ using System.Text;
 using System.Xml;
 using Microsoft.Extensions.Logging;
 using iText.IO;
+using iText.Events.Util;
 using iText.IO.Font;
 using iText.IO.Util;
 using iText.Kernel.Counter.Event;
@@ -1762,14 +1763,14 @@ namespace iText.Kernel.Utils {
                 int rCmp = Math.Min(cmpStreamBytes.Length, firstDifferenceOffset + diffBytesAreaR);
                 int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
                 int rOut = Math.Min(outStreamBytes.Length, firstDifferenceOffset + diffBytesAreaR);
-                String cmpByte = iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes[firstDifferenceOffset
-                    ] }, iText.IO.Util.EncodingUtil.ISO_8859_1);
-                String cmpByteNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.JavaUtil.GetStringForBytes(cmpStreamBytes
-                    , lCmp, rCmp - lCmp, iText.IO.Util.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
-                String outByte = iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes[firstDifferenceOffset
-                    ] }, iText.IO.Util.EncodingUtil.ISO_8859_1);
-                String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.JavaUtil.GetStringForBytes(outStreamBytes
-                    , lOut, rOut - lOut, iText.IO.Util.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
+                String cmpByte = iText.Events.Util.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes[firstDifferenceOffset
+                    ] }, iText.Events.Util.EncodingUtil.ISO_8859_1);
+                String cmpByteNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.Events.Util.JavaUtil.GetStringForBytes
+                    (cmpStreamBytes, lCmp, rCmp - lCmp, iText.Events.Util.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
+                String outByte = iText.Events.Util.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes[firstDifferenceOffset
+                    ] }, iText.Events.Util.EncodingUtil.ISO_8859_1);
+                String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.Events.Util.JavaUtil.GetStringForBytes
+                    (outStreamBytes, lOut, rOut - lOut, iText.Events.Util.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
                 bytesDifference = MessageFormatUtil.Format("First bytes difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different bytes: {5}"
                     , JavaUtil.IntegerToString(Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours, outByte
                     , outBytesNeighbours, numberOfDifferentBytes);

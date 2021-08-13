@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Events.Util;
 
 namespace iText.StyledXmlParser.Util {
     /// <summary>Split CSS 'font-family' string into list of font-families or generic-families</summary>
@@ -65,12 +65,12 @@ namespace iText.StyledXmlParser.Util {
             IList<String> result = new List<String>(names.Length);
             foreach (String name in names) {
                 // TODO DEVSIX-2534 improve pattern matching according to CSS specification. E.g. unquoted font-families with spaces.
-                if (iText.IO.Util.Matcher.Match(FONT_FAMILY_PATTERN, name).Matches()) {
+                if (iText.Events.Util.Matcher.Match(FONT_FAMILY_PATTERN, name).Matches()) {
                     result.Add(name.Trim());
                 }
                 else {
-                    if (iText.IO.Util.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED, name).Matches()) {
-                        Matcher selectMatcher = iText.IO.Util.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, name);
+                    if (iText.Events.Util.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED, name).Matches()) {
+                        Matcher selectMatcher = iText.Events.Util.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, name);
                         if (selectMatcher.Find()) {
                             result.Add(selectMatcher.Group());
                         }
@@ -81,7 +81,7 @@ namespace iText.StyledXmlParser.Util {
         }
 
         public static String RemoveQuotes(String fontFamily) {
-            Matcher selectMatcher = iText.IO.Util.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, fontFamily);
+            Matcher selectMatcher = iText.Events.Util.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, fontFamily);
             if (selectMatcher.Find()) {
                 return selectMatcher.Group();
             }

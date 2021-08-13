@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.Events.Data;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.Kernel.Logs;
 
 namespace iText.Kernel.Actions {

@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Events.Util;
 
 namespace iText.Kernel {
     /// <summary>Exception class for License-key version exceptions throw in the Version class</summary>

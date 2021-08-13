@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.IO.Util;
+using iText.Events.Util;
 
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Class to store escape characters and their processing logic.</summary>

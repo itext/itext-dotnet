@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Actions;
-using iText.Kernel.Actions.Session;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Actions.Processors {
@@ -53,16 +52,6 @@ namespace iText.Kernel.Actions.Processors {
 
         public virtual String GetProducer() {
             return "iText\u00ae ${usedProducts:P V (T 'version')} \u00a9${copyrightSince}-${copyrightTo} iText Group NV";
-        }
-
-        /// <summary>Collects info about products involved into document processing.</summary>
-        /// <param name="closingSession">is a closing session</param>
-        public virtual void AggregationOnClose(ClosingSession closingSession) {
-        }
-
-        /// <summary>Updates meta info of the document.</summary>
-        /// <param name="closingSession">is a closing session</param>
-        public virtual void CompletionOnClose(ClosingSession closingSession) {
         }
     }
 }

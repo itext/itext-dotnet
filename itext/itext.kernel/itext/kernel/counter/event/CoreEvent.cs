@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel.Counter;
+using iText.Events;
 
 namespace iText.Kernel.Counter.Event {
     /// <summary>The generic event for core</summary>

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Events.Util;
 using iText.StyledXmlParser.Css.Selector.Item;
 
 namespace iText.StyledXmlParser.Css.Parse {
@@ -72,7 +72,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// </returns>
         public static IList<ICssSelectorItem> ParseSelectorItems(String selectorItemsStr) {
             IList<ICssSelectorItem> selectorItems = new List<ICssSelectorItem>();
-            Matcher itemMatcher = iText.IO.Util.Matcher.Match(selectorPattern, selectorItemsStr);
+            Matcher itemMatcher = iText.Events.Util.Matcher.Match(selectorPattern, selectorItemsStr);
             while (itemMatcher.Find()) {
                 String selectorItem = itemMatcher.Group(0);
                 if (selectorItem[0] == ':') {

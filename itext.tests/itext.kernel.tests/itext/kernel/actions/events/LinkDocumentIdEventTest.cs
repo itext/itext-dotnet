@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Events.Sequence;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Ecosystem;
-using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Pdf;
 using iText.Test;
 

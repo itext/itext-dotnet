@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Events.Util;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.IO.Font {
     /// <summary>Subsets a True Type font by removing the unneeded glyphs from the font.</summary>
@@ -433,7 +433,7 @@ namespace iText.IO.Font {
             byte[] buf = new byte[length];
             rf.ReadFully(buf);
             try {
-                return iText.IO.Util.JavaUtil.GetStringForBytes(buf, PdfEncodings.WINANSI);
+                return iText.Events.Util.JavaUtil.GetStringForBytes(buf, PdfEncodings.WINANSI);
             }
             catch (Exception e) {
                 throw new iText.IO.IOException("TrueType font", e);

@@ -82,7 +82,7 @@ namespace iText.IO.Font {
                     break;
                 }
             }
-            return iText.IO.Util.JavaUtil.GetStringForBytes(b, 0, k, "ISO-8859-1");
+            return iText.Events.Util.JavaUtil.GetStringForBytes(b, 0, k, "ISO-8859-1");
         }
 
         private String ReadString() {

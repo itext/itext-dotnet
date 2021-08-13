@@ -46,10 +46,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.IO;
+using iText.Events.Sequence;
+using iText.Events.Util;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
-using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Colors;
 using iText.Kernel.Counter.Event;
 using iText.Kernel.Font;
@@ -897,7 +898,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_962();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_959();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -959,8 +960,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_962 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_962() {
+        private sealed class _IGlyphLineFilter_959 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_959() {
             }
 
             public bool Accept(Glyph glyph) {

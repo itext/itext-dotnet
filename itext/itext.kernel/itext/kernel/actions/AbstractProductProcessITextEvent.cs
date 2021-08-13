@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Events.Data;
+using iText.Events.Sequence;
 using iText.Kernel.Actions.Events;
-using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Actions {
@@ -36,11 +36,11 @@ namespace iText.Kernel.Actions {
 
         /// <summary>
         /// Creates an event associated with
-        /// <see cref="iText.Kernel.Actions.Sequence.SequenceId"/>.
+        /// <see cref="iText.Events.Sequence.SequenceId"/>.
         /// </summary>
         /// <remarks>
         /// Creates an event associated with
-        /// <see cref="iText.Kernel.Actions.Sequence.SequenceId"/>
+        /// <see cref="iText.Events.Sequence.SequenceId"/>
         /// . It may contain auxiliary meta data.
         /// </remarks>
         /// <param name="sequenceId">is a general identifier for the event</param>

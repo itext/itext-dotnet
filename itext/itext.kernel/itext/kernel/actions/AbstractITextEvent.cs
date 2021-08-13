@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using iText.Kernel.Counter;
+using iText.Events;
 
 namespace iText.Kernel.Actions {
     /// <summary>Abstract class which defines events only for internal usage.</summary>

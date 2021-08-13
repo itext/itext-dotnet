@@ -45,6 +45,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
+using iText.Events.Util;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Nodes;
@@ -282,7 +283,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             if (contentType == null) {
                 return null;
             }
-            Matcher m = iText.IO.Util.Matcher.Match(charsetPattern, contentType);
+            Matcher m = Matcher.Match(charsetPattern, contentType);
             if (m.Find()) {
                 String charset = m.Group(1).Trim();
                 charset = charset.Replace("charset=", "");

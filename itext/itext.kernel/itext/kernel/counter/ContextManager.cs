@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
-using iText.Kernel.Actions;
+using iText.Events;
+using iText.Events.Util;
 using iText.Kernel.Counter.Context;
 
 namespace iText.Kernel.Counter {
