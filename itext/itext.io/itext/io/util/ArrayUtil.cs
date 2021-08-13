@@ -106,5 +106,15 @@ namespace iText.IO.Util {
         public static int[] CloneArray(int[] src) {
             return (int[])src.Clone();
         }
+
+        public static int IndexOf(Object[] a, Object key) {
+            for (int i = 0; i < a.Length; i++) {
+                Object el = a[i];
+                if (el.Equals(key)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
     }
 }

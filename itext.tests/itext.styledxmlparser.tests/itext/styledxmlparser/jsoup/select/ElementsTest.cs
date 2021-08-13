@@ -91,7 +91,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         [NUnit.Framework.Test]
         public virtual void HasAbsAttr() {
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<a id=1 href='/foo'>One</a> <a id=2 href='http://jsoup.org'>Two</a>"
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<a id=1 href='/foo'>One</a> <a id=2 href='https://jsoup.org'>Two</a>"
                 );
             Elements one = doc.Select("#1");
             Elements two = doc.Select("#2");
@@ -112,14 +112,14 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         [NUnit.Framework.Test]
         public virtual void AbsAttr() {
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<a id=1 href='/foo'>One</a> <a id=2 href='http://jsoup.org/'>Two</a>"
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<a id=1 href='/foo'>One</a> <a id=2 href='https://jsoup.org/'>Two</a>"
                 );
             Elements one = doc.Select("#1");
             Elements two = doc.Select("#2");
             Elements both = doc.Select("a");
             NUnit.Framework.Assert.AreEqual("", one.Attr("abs:href"));
-            NUnit.Framework.Assert.AreEqual("http://jsoup.org/", two.Attr("abs:href"));
-            NUnit.Framework.Assert.AreEqual("http://jsoup.org/", both.Attr("abs:href"));
+            NUnit.Framework.Assert.AreEqual("https://jsoup.org/", two.Attr("abs:href"));
+            NUnit.Framework.Assert.AreEqual("https://jsoup.org/", both.Attr("abs:href"));
         }
 
         [NUnit.Framework.Test]
@@ -134,6 +134,21 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             els.ToggleClass("mellow");
             NUnit.Framework.Assert.AreEqual("blue", els[0].ClassName());
             NUnit.Framework.Assert.AreEqual("red green blue mellow", els[1].ClassName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HasClassCaseInsensitive() {
+            Elements els = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p Class=One>One <p class=Two>Two <p CLASS=THREE>THREE"
+                ).Select("p");
+            iText.StyledXmlParser.Jsoup.Nodes.Element one = els[0];
+            iText.StyledXmlParser.Jsoup.Nodes.Element two = els[1];
+            iText.StyledXmlParser.Jsoup.Nodes.Element thr = els[2];
+            NUnit.Framework.Assert.IsTrue(one.HasClass("One"));
+            NUnit.Framework.Assert.IsTrue(one.HasClass("ONE"));
+            NUnit.Framework.Assert.IsTrue(two.HasClass("TWO"));
+            NUnit.Framework.Assert.IsTrue(two.HasClass("Two"));
+            NUnit.Framework.Assert.IsTrue(thr.HasClass("ThreE"));
+            NUnit.Framework.Assert.IsTrue(thr.HasClass("three"));
         }
 
         [NUnit.Framework.Test]
@@ -316,22 +331,22 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         public virtual void Traverse() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            doc.Select("div").Traverse(new _NodeVisitor_303(accum));
+            doc.Select("div").Traverse(new _NodeVisitor_278(accum));
             NUnit.Framework.Assert.AreEqual("<div><p><#text></#text></p></div><div><#text></#text></div>", accum.ToString
                 ());
         }
 
-        private sealed class _NodeVisitor_303 : NodeVisitor {
-            public _NodeVisitor_303(StringBuilder accum) {
+        private sealed class _NodeVisitor_278 : NodeVisitor {
+            public _NodeVisitor_278(StringBuilder accum) {
                 this.accum = accum;
             }
 
             public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
-                accum.Append("<" + node.NodeName() + ">");
+                accum.Append("<").Append(node.NodeName()).Append(">");
             }
 
             public void Tail(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
-                accum.Append("</" + node.NodeName() + ">");
+                accum.Append("</").Append(node.NodeName()).Append(">");
             }
 
             private readonly StringBuilder accum;
@@ -341,14 +356,63 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         public virtual void Forms() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<form id=1><input name=q></form><div /><form id=2><input name=f></form>"
                 );
-            Elements els = doc.Select("*");
-            NUnit.Framework.Assert.AreEqual(9, els.Count);
+            Elements els = doc.Select("form, div");
+            NUnit.Framework.Assert.AreEqual(3, els.Count);
             IList<FormElement> forms = els.Forms();
             NUnit.Framework.Assert.AreEqual(2, forms.Count);
-            NUnit.Framework.Assert.IsTrue(forms[0] != null);
-            NUnit.Framework.Assert.IsTrue(forms[1] != null);
+            NUnit.Framework.Assert.IsNotNull(forms[0]);
+            NUnit.Framework.Assert.IsNotNull(forms[1]);
             NUnit.Framework.Assert.AreEqual("1", forms[0].Id());
             NUnit.Framework.Assert.AreEqual("2", forms[1].Id());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Comments() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<!-- comment1 --><p><!-- comment2 --><p class=two><!-- comment3 -->"
+                );
+            IList<Comment> comments = doc.Select("p").Comments();
+            NUnit.Framework.Assert.AreEqual(2, comments.Count);
+            NUnit.Framework.Assert.AreEqual(" comment2 ", comments[0].GetData());
+            NUnit.Framework.Assert.AreEqual(" comment3 ", comments[1].GetData());
+            IList<Comment> comments1 = doc.Select("p.two").Comments();
+            NUnit.Framework.Assert.AreEqual(1, comments1.Count);
+            NUnit.Framework.Assert.AreEqual(" comment3 ", comments1[0].GetData());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextNodes() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("One<p>Two<a>Three</a><p>Four</p>Five");
+            IList<TextNode> textNodes = doc.Select("p").TextNodes();
+            NUnit.Framework.Assert.AreEqual(2, textNodes.Count);
+            NUnit.Framework.Assert.AreEqual("Two", textNodes[0].Text());
+            NUnit.Framework.Assert.AreEqual("Four", textNodes[1].Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DataNodes() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p>One</p><script>Two</script><style>Three</style>"
+                );
+            IList<DataNode> dataNodes = doc.Select("p, script, style").DataNodes();
+            NUnit.Framework.Assert.AreEqual(2, dataNodes.Count);
+            NUnit.Framework.Assert.AreEqual("Two", dataNodes[0].GetWholeData());
+            NUnit.Framework.Assert.AreEqual("Three", dataNodes[1].GetWholeData());
+            doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<head><script type=application/json><crux></script><script src=foo>Blah</script>"
+                );
+            Elements script = doc.Select("script[type=application/json]");
+            IList<DataNode> scriptNode = script.DataNodes();
+            NUnit.Framework.Assert.AreEqual(1, scriptNode.Count);
+            DataNode dataNode = scriptNode[0];
+            NUnit.Framework.Assert.AreEqual("<crux>", dataNode.GetWholeData());
+            // check if they're live
+            dataNode.SetWholeData("<cromulent>");
+            NUnit.Framework.Assert.AreEqual("<script type=\"application/json\"><cromulent></script>", script.OuterHtml
+                ());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NodesEmpty() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p>");
+            NUnit.Framework.Assert.AreEqual(0, doc.Select("form").TextNodes().Count);
         }
 
         [NUnit.Framework.Test]
@@ -357,6 +421,83 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             Elements els = doc.GetElementsByClass("tab-nav");
             NUnit.Framework.Assert.AreEqual(1, els.Count);
             NUnit.Framework.Assert.AreEqual("Check", els.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Siblings() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>1<p>2<p>3<p>4<p>5<p>6</div><div><p>7<p>8<p>9<p>10<p>11<p>12</div>"
+                );
+            Elements els = doc.Select("p:eq(3)");
+            // gets p4 and p10
+            NUnit.Framework.Assert.AreEqual(2, els.Count);
+            Elements next = els.Next();
+            NUnit.Framework.Assert.AreEqual(2, next.Count);
+            NUnit.Framework.Assert.AreEqual("5", next.First().Text());
+            NUnit.Framework.Assert.AreEqual("11", next.Last().Text());
+            NUnit.Framework.Assert.AreEqual(0, els.Next("p:contains(6)").Count);
+            Elements nextF = els.Next("p:contains(5)");
+            NUnit.Framework.Assert.AreEqual(1, nextF.Count);
+            NUnit.Framework.Assert.AreEqual("5", nextF.First().Text());
+            Elements nextA = els.NextAll();
+            NUnit.Framework.Assert.AreEqual(4, nextA.Count);
+            NUnit.Framework.Assert.AreEqual("5", nextA.First().Text());
+            NUnit.Framework.Assert.AreEqual("12", nextA.Last().Text());
+            Elements nextAF = els.NextAll("p:contains(6)");
+            NUnit.Framework.Assert.AreEqual(1, nextAF.Count);
+            NUnit.Framework.Assert.AreEqual("6", nextAF.First().Text());
+            Elements prev = els.Prev();
+            NUnit.Framework.Assert.AreEqual(2, prev.Count);
+            NUnit.Framework.Assert.AreEqual("3", prev.First().Text());
+            NUnit.Framework.Assert.AreEqual("9", prev.Last().Text());
+            NUnit.Framework.Assert.AreEqual(0, els.Prev("p:contains(1)").Count);
+            Elements prevF = els.Prev("p:contains(3)");
+            NUnit.Framework.Assert.AreEqual(1, prevF.Count);
+            NUnit.Framework.Assert.AreEqual("3", prevF.First().Text());
+            Elements prevA = els.PrevAll();
+            NUnit.Framework.Assert.AreEqual(6, prevA.Count);
+            NUnit.Framework.Assert.AreEqual("3", prevA.First().Text());
+            NUnit.Framework.Assert.AreEqual("7", prevA.Last().Text());
+            Elements prevAF = els.PrevAll("p:contains(1)");
+            NUnit.Framework.Assert.AreEqual(1, prevAF.Count);
+            NUnit.Framework.Assert.AreEqual("1", prevAF.First().Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EachText() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>1<p>2<p>3<p>4<p>5<p>6</div><div><p>7<p>8<p>9<p>10<p>11<p>12<p></p></div>"
+                );
+            IList<String> divText = doc.Select("div").EachText();
+            NUnit.Framework.Assert.AreEqual(2, divText.Count);
+            NUnit.Framework.Assert.AreEqual("1 2 3 4 5 6", divText[0]);
+            NUnit.Framework.Assert.AreEqual("7 8 9 10 11 12", divText[1]);
+            IList<String> pText = doc.Select("p").EachText();
+            Elements ps = doc.Select("p");
+            NUnit.Framework.Assert.AreEqual(13, ps.Count);
+            NUnit.Framework.Assert.AreEqual(12, pText.Count);
+            // not 13, as last doesn't have text
+            NUnit.Framework.Assert.AreEqual("1", pText[0]);
+            NUnit.Framework.Assert.AreEqual("2", pText[1]);
+            NUnit.Framework.Assert.AreEqual("5", pText[4]);
+            NUnit.Framework.Assert.AreEqual("7", pText[6]);
+            NUnit.Framework.Assert.AreEqual("12", pText[11]);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EachAttr() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><a href='/foo'>1</a><a href='http://example.com/bar'>2</a><a href=''>3</a><a>4</a>"
+                , "http://example.com");
+            IList<String> hrefAttrs = doc.Select("a").EachAttr("href");
+            NUnit.Framework.Assert.AreEqual(3, hrefAttrs.Count);
+            NUnit.Framework.Assert.AreEqual("/foo", hrefAttrs[0]);
+            NUnit.Framework.Assert.AreEqual("http://example.com/bar", hrefAttrs[1]);
+            NUnit.Framework.Assert.AreEqual("", hrefAttrs[2]);
+            NUnit.Framework.Assert.AreEqual(4, doc.Select("a").Count);
+            IList<String> absAttrs = doc.Select("a").EachAttr("abs:href");
+            NUnit.Framework.Assert.AreEqual(3, absAttrs.Count);
+            NUnit.Framework.Assert.AreEqual(3, absAttrs.Count);
+            NUnit.Framework.Assert.AreEqual("http://example.com/foo", absAttrs[0]);
+            NUnit.Framework.Assert.AreEqual("http://example.com/bar", absAttrs[1]);
+            NUnit.Framework.Assert.AreEqual("http://example.com/", absAttrs[2]);
         }
     }
 }

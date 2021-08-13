@@ -3,42 +3,22 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
@@ -102,69 +82,6 @@ namespace iText.StyledXmlParser.Jsoup {
         /// <seealso cref="Parse(System.String, System.String)"/>
         public static Document Parse(String html) {
             return iText.StyledXmlParser.Jsoup.Parser.Parser.Parse(html, "");
-        }
-
-        /// <summary>Parse XML into a Document.</summary>
-        /// <remarks>Parse XML into a Document. The parser will make a sensible, balanced document tree out of any HTML.
-        ///     </remarks>
-        /// <param name="xml">XML to parse</param>
-        /// <param name="baseUri">
-        /// The URL where the HTML was retrieved from. Used to resolve relative URLs to absolute URLs, that occur
-        /// before the HTML declares a
-        /// <c>&lt;base href&gt;</c>
-        /// tag.
-        /// </param>
-        /// <returns>sane XML</returns>
-        public static Document ParseXML(String xml, String baseUri) {
-            return iText.StyledXmlParser.Jsoup.Parser.Parser.ParseXml(xml, baseUri);
-        }
-
-        /// <summary>Parse XML into a Document.</summary>
-        /// <remarks>Parse XML into a Document. The parser will make a sensible, balanced document tree out of any HTML.
-        ///     </remarks>
-        /// <param name="xml">XML to parse</param>
-        /// <returns>sane XML</returns>
-        public static Document ParseXML(String xml) {
-            return iText.StyledXmlParser.Jsoup.Parser.Parser.ParseXml(xml, "");
-        }
-
-        /// <summary>Parse XML into a Document.</summary>
-        /// <remarks>Parse XML into a Document. The parser will make a sensible, balanced document tree out of any HTML.
-        ///     </remarks>
-        /// <param name="in">input stream to read. Make sure to close it after parsing.</param>
-        /// <param name="charsetName">
-        /// (optional) character set of file contents. Set to
-        /// <see langword="null"/>
-        /// to determine from
-        /// <c>http-equiv</c>
-        /// meta tag, if
-        /// present, or fall back to
-        /// <c>UTF-8</c>
-        /// (which is often safe to do).
-        /// </param>
-        /// <param name="baseUri">The URL where the HTML was retrieved from, to resolve relative links against.</param>
-        /// <returns>sane XML</returns>
-        public static Document ParseXML(Stream @in, String charsetName, String baseUri) {
-            return Parse(@in, charsetName, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser());
-        }
-
-        /// <summary>Parse XML into a Document.</summary>
-        /// <remarks>Parse XML into a Document. The parser will make a sensible, balanced document tree out of any HTML.
-        ///     </remarks>
-        /// <param name="in">input stream to read. Make sure to close it after parsing.</param>
-        /// <param name="charsetName">
-        /// (optional) character set of file contents. Set to
-        /// <see langword="null"/>
-        /// to determine from
-        /// <c>http-equiv</c>
-        /// meta tag, if
-        /// present, or fall back to
-        /// <c>UTF-8</c>
-        /// (which is often safe to do).
-        /// </param>
-        /// <returns>sane XML</returns>
-        public static Document ParseXML(Stream @in, String charsetName) {
-            return ParseXML(@in, charsetName, "");
         }
 
         /// <summary>Parse the contents of a file as HTML.</summary>
@@ -277,70 +194,132 @@ namespace iText.StyledXmlParser.Jsoup {
         }
 
         /// <summary>
-        /// Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a white-list of permitted
+        /// Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through an allow-list of safe
         /// tags and attributes.
         /// </summary>
         /// <param name="bodyHtml">input untrusted HTML (body fragment)</param>
         /// <param name="baseUri">URL to resolve relative URLs against</param>
-        /// <param name="whitelist">white-list of permitted HTML elements</param>
+        /// <param name="safelist">list of permitted HTML elements</param>
         /// <returns>safe HTML (body fragment)</returns>
         /// <seealso cref="iText.StyledXmlParser.Jsoup.Safety.Cleaner.Clean(iText.StyledXmlParser.Jsoup.Nodes.Document)
         ///     "/>
-        public static String Clean(String bodyHtml, String baseUri, Whitelist whitelist) {
+        public static String Clean(String bodyHtml, String baseUri, Safelist safelist) {
             Document dirty = ParseBodyFragment(bodyHtml, baseUri);
-            Cleaner cleaner = new Cleaner(whitelist);
+            Cleaner cleaner = new Cleaner(safelist);
             Document clean = cleaner.Clean(dirty);
             return clean.Body().Html();
         }
 
         /// <summary>
-        /// Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a white-list of permitted
-        /// tags and attributes.
+        /// Use
+        /// <see cref="Clean(System.String, System.String, iText.StyledXmlParser.Jsoup.Safety.Safelist)"/>
+        /// instead.
         /// </summary>
-        /// <param name="bodyHtml">input untrusted HTML (body fragment)</param>
-        /// <param name="whitelist">white-list of permitted HTML elements</param>
-        /// <returns>safe HTML (body fragment)</returns>
-        /// <seealso cref="iText.StyledXmlParser.Jsoup.Safety.Cleaner.Clean(iText.StyledXmlParser.Jsoup.Nodes.Document)
-        ///     "/>
-        public static String Clean(String bodyHtml, Whitelist whitelist) {
-            return Clean(bodyHtml, "", whitelist);
+        [System.ObsoleteAttribute(@"as of 1.14.1.")]
+        public static String Clean(String bodyHtml, String baseUri, Whitelist safelist) {
+            return Clean(bodyHtml, baseUri, (Safelist)safelist);
         }
 
         /// <summary>
-        /// Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a white-list of
-        /// permitted
+        /// Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a safe-list of permitted
         /// tags and attributes.
         /// </summary>
+        /// <remarks>
+        /// Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a safe-list of permitted
+        /// tags and attributes.
+        /// <para />
+        /// Note that as this method does not take a base href URL to resolve attributes with relative URLs against, those
+        /// URLs will be removed, unless the input HTML contains a
+        /// <c>&lt;base href&gt; tag</c>
+        /// . If you wish to preserve those, use
+        /// the
+        /// <see>Jsoup#clean(String html, String baseHref, Safelist)</see>
+        /// method instead, and enable
+        /// <see>Safelist#preserveRelativeLinks(boolean true)</see>.
+        /// </remarks>
+        /// <param name="bodyHtml">input untrusted HTML (body fragment)</param>
+        /// <param name="safelist">list of permitted HTML elements</param>
+        /// <returns>safe HTML (body fragment)</returns>
+        /// <seealso cref="iText.StyledXmlParser.Jsoup.Safety.Cleaner.Clean(iText.StyledXmlParser.Jsoup.Nodes.Document)
+        ///     "/>
+        public static String Clean(String bodyHtml, Safelist safelist) {
+            return Clean(bodyHtml, "", safelist);
+        }
+
+        /// <summary>
+        /// Use
+        /// <see cref="Clean(System.String, iText.StyledXmlParser.Jsoup.Safety.Safelist)"/>
+        /// instead.
+        /// </summary>
+        [System.ObsoleteAttribute(@"as of 1.14.1.")]
+        public static String Clean(String bodyHtml, Whitelist safelist) {
+            return Clean(bodyHtml, (Safelist)safelist);
+        }
+
+        /// <summary>
+        /// Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a safe-list of
+        /// permitted tags and attributes.
+        /// </summary>
+        /// <remarks>
+        /// Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a safe-list of
+        /// permitted tags and attributes.
+        /// <para />The HTML is treated as a body fragment; it's expected the cleaned HTML will be used within the body of an
+        /// existing document. If you want to clean full documents, use
+        /// <see cref="iText.StyledXmlParser.Jsoup.Safety.Cleaner.Clean(iText.StyledXmlParser.Jsoup.Nodes.Document)"/>
+        /// instead, and add
+        /// structural tags (<c>html, head, body</c> etc) to the safelist.
+        /// </remarks>
         /// <param name="bodyHtml">input untrusted HTML (body fragment)</param>
         /// <param name="baseUri">URL to resolve relative URLs against</param>
-        /// <param name="whitelist">white-list of permitted HTML elements</param>
+        /// <param name="safelist">list of permitted HTML elements</param>
         /// <param name="outputSettings">document output settings; use to control pretty-printing and entity escape modes
         ///     </param>
         /// <returns>safe HTML (body fragment)</returns>
         /// <seealso cref="iText.StyledXmlParser.Jsoup.Safety.Cleaner.Clean(iText.StyledXmlParser.Jsoup.Nodes.Document)
         ///     "/>
-        public static String Clean(String bodyHtml, String baseUri, Whitelist whitelist, OutputSettings outputSettings
+        public static String Clean(String bodyHtml, String baseUri, Safelist safelist, OutputSettings outputSettings
             ) {
             Document dirty = ParseBodyFragment(bodyHtml, baseUri);
-            Cleaner cleaner = new Cleaner(whitelist);
+            Cleaner cleaner = new Cleaner(safelist);
             Document clean = cleaner.Clean(dirty);
             clean.OutputSettings(outputSettings);
             return clean.Body().Html();
         }
 
-        /// <summary>Test if the input HTML has only tags and attributes allowed by the Whitelist.</summary>
+        /// <summary>
+        /// Use
+        /// <see cref="Clean(System.String, System.String, iText.StyledXmlParser.Jsoup.Safety.Safelist, iText.StyledXmlParser.Jsoup.Nodes.OutputSettings)
+        ///     "/>
+        /// instead.
+        /// </summary>
+        [System.ObsoleteAttribute(@"as of 1.14.1.")]
+        public static String Clean(String bodyHtml, String baseUri, Whitelist safelist, OutputSettings outputSettings
+            ) {
+            return Clean(bodyHtml, baseUri, (Safelist)safelist, outputSettings);
+        }
+
+        /// <summary>Test if the input body HTML has only tags and attributes allowed by the Safelist.</summary>
         /// <remarks>
-        /// Test if the input HTML has only tags and attributes allowed by the Whitelist. Useful for form validation. The input HTML should
-        /// still be run through the cleaner to set up enforced attributes, and to tidy the output.
+        /// Test if the input body HTML has only tags and attributes allowed by the Safelist. Useful for form validation.
+        /// <para />The input HTML should still be run through the cleaner to set up enforced attributes, and to tidy the output.
+        /// <para />Assumes the HTML is a body fragment (i.e. will be used in an existing HTML document body.)
         /// </remarks>
         /// <param name="bodyHtml">HTML to test</param>
-        /// <param name="whitelist">whitelist to test against</param>
+        /// <param name="safelist">safelist to test against</param>
         /// <returns>true if no tags or attributes were removed; false otherwise</returns>
-        /// <seealso cref="Clean(System.String, iText.StyledXmlParser.Jsoup.Safety.Whitelist)"/>
-        public static bool IsValid(String bodyHtml, Whitelist whitelist) {
-            Document dirty = ParseBodyFragment(bodyHtml, "");
-            Cleaner cleaner = new Cleaner(whitelist);
-            return cleaner.IsValid(dirty);
+        /// <seealso cref="Clean(System.String, iText.StyledXmlParser.Jsoup.Safety.Safelist)"/>
+        public static bool IsValid(String bodyHtml, Safelist safelist) {
+            return new Cleaner(safelist).IsValidBodyHtml(bodyHtml);
+        }
+
+        /// <summary>
+        /// Use
+        /// <see cref="IsValid(System.String, iText.StyledXmlParser.Jsoup.Safety.Safelist)"/>
+        /// instead.
+        /// </summary>
+        [System.ObsoleteAttribute(@"as of 1.14.1.")]
+        public static bool IsValid(String bodyHtml, Whitelist safelist) {
+            return IsValid(bodyHtml, (Safelist)safelist);
         }
     }
 }

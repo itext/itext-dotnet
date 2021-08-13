@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
+using System.Text;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
@@ -82,8 +84,14 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.IsTrue(r.IsEmpty());
             NUnit.Framework.Assert.AreEqual(CharacterReader.EOF, r.Consume());
             r.Unconsume();
+            // read past, so have to eat again
             NUnit.Framework.Assert.IsTrue(r.IsEmpty());
-            NUnit.Framework.Assert.AreEqual(CharacterReader.EOF, r.Current());
+            r.Unconsume();
+            NUnit.Framework.Assert.IsFalse(r.IsEmpty());
+            NUnit.Framework.Assert.AreEqual('e', r.Consume());
+            NUnit.Framework.Assert.IsTrue(r.IsEmpty());
+            NUnit.Framework.Assert.AreEqual(CharacterReader.EOF, r.Consume());
+            NUnit.Framework.Assert.IsTrue(r.IsEmpty());
         }
 
         [NUnit.Framework.Test]
@@ -91,11 +99,15 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             CharacterReader r = new CharacterReader("one");
             r.Consume();
             r.Mark();
+            NUnit.Framework.Assert.AreEqual(1, r.Pos());
             NUnit.Framework.Assert.AreEqual('n', r.Consume());
             NUnit.Framework.Assert.AreEqual('e', r.Consume());
             NUnit.Framework.Assert.IsTrue(r.IsEmpty());
             r.RewindToMark();
+            NUnit.Framework.Assert.AreEqual(1, r.Pos());
             NUnit.Framework.Assert.AreEqual('n', r.Consume());
+            NUnit.Framework.Assert.IsFalse(r.IsEmpty());
+            NUnit.Framework.Assert.AreEqual(2, r.Pos());
         }
 
         [NUnit.Framework.Test]
@@ -159,7 +171,16 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.AreEqual('T', r.Consume());
             NUnit.Framework.Assert.AreEqual("wo ", r.ConsumeTo("Two"));
             NUnit.Framework.Assert.AreEqual('T', r.Consume());
-            NUnit.Framework.Assert.AreEqual("wo Four", r.ConsumeTo("Qux"));
+            // To handle strings straddling across buffers, consumeTo() may return the
+            // data in multiple pieces near EOF.
+            StringBuilder builder = new StringBuilder();
+            String part;
+            do {
+                part = r.ConsumeTo("Qux");
+                builder.Append(part);
+            }
+            while (!String.IsNullOrEmpty(part));
+            NUnit.Framework.Assert.AreEqual("wo Four", builder.ToString());
         }
 
         [NUnit.Framework.Test]
@@ -213,6 +234,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.IsFalse(r.Matches("ne Two Three Four"));
             NUnit.Framework.Assert.AreEqual("ne Two Three", r.ConsumeToEnd());
             NUnit.Framework.Assert.IsFalse(r.Matches("ne"));
+            NUnit.Framework.Assert.IsTrue(r.IsEmpty());
         }
 
         [NUnit.Framework.Test]
@@ -271,10 +293,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.AreEqual("Check", two);
             NUnit.Framework.Assert.AreEqual("Check", three);
             NUnit.Framework.Assert.AreEqual("CHOKE", four);
-            NUnit.Framework.Assert.IsTrue(one == two);
-            NUnit.Framework.Assert.IsTrue(two == three);
-            NUnit.Framework.Assert.IsTrue(three != four);
-            NUnit.Framework.Assert.IsTrue(four != five);
+            NUnit.Framework.Assert.AreSame(one, two);
+            NUnit.Framework.Assert.AreSame(two, three);
+            NUnit.Framework.Assert.AreNotSame(three, four);
+            NUnit.Framework.Assert.AreNotSame(four, five);
             NUnit.Framework.Assert.AreEqual(five, "A string that is longer than 16 chars");
         }
 
@@ -290,6 +312,68 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.IsFalse(r.RangeEquals(12, 5, "Cheeky"));
             NUnit.Framework.Assert.IsTrue(r.RangeEquals(18, 5, "CHOKE"));
             NUnit.Framework.Assert.IsFalse(r.RangeEquals(18, 5, "CHIKE"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Empty() {
+            CharacterReader r = new CharacterReader("One");
+            NUnit.Framework.Assert.IsTrue(r.MatchConsume("One"));
+            NUnit.Framework.Assert.IsTrue(r.IsEmpty());
+            r = new CharacterReader("Two");
+            String two = r.ConsumeToEnd();
+            NUnit.Framework.Assert.AreEqual("Two", two);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConsumeToNonexistentEndWhenAtAnd() {
+            CharacterReader r = new CharacterReader("<!");
+            NUnit.Framework.Assert.IsTrue(r.MatchConsume("<!"));
+            NUnit.Framework.Assert.IsTrue(r.IsEmpty());
+            String after = r.ConsumeTo('>');
+            NUnit.Framework.Assert.AreEqual("", after);
+            NUnit.Framework.Assert.IsTrue(r.IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotEmptyAtBufferSplitPoint() {
+            CharacterReader r = new CharacterReader(new StringReader("How about now"), 3);
+            NUnit.Framework.Assert.AreEqual("How", r.ConsumeTo(' '));
+            NUnit.Framework.Assert.IsFalse(r.IsEmpty());
+            NUnit.Framework.Assert.AreEqual(' ', r.Consume());
+            NUnit.Framework.Assert.IsFalse(r.IsEmpty());
+            NUnit.Framework.Assert.AreEqual(4, r.Pos());
+            NUnit.Framework.Assert.AreEqual('a', r.Consume());
+            NUnit.Framework.Assert.AreEqual(5, r.Pos());
+            NUnit.Framework.Assert.AreEqual('b', r.Consume());
+            NUnit.Framework.Assert.AreEqual('o', r.Consume());
+            NUnit.Framework.Assert.AreEqual('u', r.Consume());
+            NUnit.Framework.Assert.AreEqual('t', r.Consume());
+            NUnit.Framework.Assert.AreEqual(' ', r.Consume());
+            NUnit.Framework.Assert.AreEqual('n', r.Consume());
+            NUnit.Framework.Assert.AreEqual('o', r.Consume());
+            NUnit.Framework.Assert.AreEqual('w', r.Consume());
+            NUnit.Framework.Assert.IsTrue(r.IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BufferUp() {
+            String note = "HelloThere";
+            // + ! = 11 chars
+            int loopCount = 64;
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < loopCount; i++) {
+                sb.Append(note);
+                sb.Append("!");
+            }
+            String s = sb.ToString();
+            CharacterReader r = new CharacterReader(new StringReader(s));
+            for (int i = 0; i < loopCount; i++) {
+                String pull = r.ConsumeTo('!');
+                NUnit.Framework.Assert.AreEqual(note, pull);
+                NUnit.Framework.Assert.AreEqual('!', r.Current());
+                r.Advance();
+            }
+            NUnit.Framework.Assert.IsTrue(r.IsEmpty());
         }
     }
 }

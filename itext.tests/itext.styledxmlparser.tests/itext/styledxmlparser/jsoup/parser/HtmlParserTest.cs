@@ -3,42 +3,22 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -48,6 +28,7 @@ using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Integration;
 using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.StyledXmlParser.Jsoup.Safety;
 using iText.StyledXmlParser.Jsoup.Select;
 using iText.Test;
 
@@ -78,12 +59,37 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DropsDuplicateAttributes() {
+            String html = "<p One=One ONE=Two Two=two one=Three One=Four two=Five>Text</p>";
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser().
+                SetTrackErrors(10);
+            Document doc = parser.ParseInput(html, "");
+            iText.StyledXmlParser.Jsoup.Nodes.Element p = doc.SelectFirst("p");
+            NUnit.Framework.Assert.AreEqual("<p one=\"One\" two=\"two\">Text</p>", p.OuterHtml());
+            // normalized names due to lower casing
+            NUnit.Framework.Assert.AreEqual(1, parser.GetErrors().Count);
+            NUnit.Framework.Assert.AreEqual("Duplicate attribute", parser.GetErrors()[0].GetErrorMessage());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RetainsAttributesOfDifferentCaseIfSensitive() {
+            String html = "<p One=One One=Two one=Three two=Four two=Five Two=Six>Text</p>";
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser().
+                Settings(ParseSettings.preserveCase);
+            Document doc = parser.ParseInput(html, "");
+            NUnit.Framework.Assert.AreEqual("<p One=\"One\" one=\"Three\" two=\"Four\" Two=\"Six\">Text</p>", doc.SelectFirst
+                ("p").OuterHtml());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ParsesQuiteRoughAttributes() {
             String html = "<p =a>One<a <p>Something</p>Else";
-            // this gets a <p> with attr '=a' and an <a tag with an attribue named '<p'; and then auto-recreated
+            // this (used to; now gets cleaner) gets a <p> with attr '=a' and an <a tag with an attribue named '<p'; and then auto-recreated
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
-            NUnit.Framework.Assert.AreEqual("<p =a>One<a <p>Something</a></p>\n" + "<a <p>Else</a>", doc.Body().Html()
-                );
+            // NOTE: per spec this should be the test case. but impacts too many ppl
+            // Assert.assertEquals("<p =a>One<a <p>Something</a></p>\n<a <p>Else</a>", doc.body().html());
+            NUnit.Framework.Assert.AreEqual("<p =a>One<a></a></p><p><a>Something</a></p><a>Else</a>", TextUtil.StripNewlines
+                (doc.Body().Html()));
             doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p .....>");
             NUnit.Framework.Assert.AreEqual("<p .....></p>", doc.Body().Html());
         }
@@ -151,6 +157,14 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.AreEqual(2, options.Count);
             NUnit.Framework.Assert.AreEqual("One", options.First().Text());
             NUnit.Framework.Assert.AreEqual("TwoThree", options.Last().Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestSelectWithOption() {
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser();
+            parser.SetTrackErrors(10);
+            Document document = parser.ParseInput("<select><option>Option 1</option></select>", "http://jsoup.org");
+            NUnit.Framework.Assert.AreEqual(0, parser.GetErrors().Count);
         }
 
         [NUnit.Framework.Test]
@@ -361,23 +375,90 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         [NUnit.Framework.Test]
         public virtual void HandlesCdata() {
-            // todo: as this is html namespace, should actually treat as bogus comment, not cdata. keep as cdata for now
-            String h = "<div id=1><![CDATA[<html>\n<foo><&amp;]]></div>";
+            String h = "<div id=1><![CDATA[<html>\n <foo><&amp;]]></div>";
             // the &amp; in there should remain literal
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
             iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.GetElementById("1");
-            NUnit.Framework.Assert.AreEqual("<html> <foo><&amp;", div.Text());
+            NUnit.Framework.Assert.AreEqual("<html>\n <foo><&amp;", div.Text());
             NUnit.Framework.Assert.AreEqual(0, div.Children().Count);
             NUnit.Framework.Assert.AreEqual(1, div.ChildNodeSize());
         }
 
         // no elements, one text node
         [NUnit.Framework.Test]
+        public virtual void RoundTripsCdata() {
+            String h = "<div id=1><![CDATA[\n<html>\n <foo><&amp;]]></div>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.GetElementById("1");
+            NUnit.Framework.Assert.AreEqual("<html>\n <foo><&amp;", div.Text());
+            NUnit.Framework.Assert.AreEqual(0, div.Children().Count);
+            NUnit.Framework.Assert.AreEqual(1, div.ChildNodeSize());
+            // no elements, one text node
+            NUnit.Framework.Assert.AreEqual("<div id=\"1\"><![CDATA[\n<html>\n <foo><&amp;]]>\n</div>", div.OuterHtml(
+                ));
+            CDataNode cdata = (CDataNode)div.TextNodes()[0];
+            NUnit.Framework.Assert.AreEqual("\n<html>\n <foo><&amp;", cdata.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandlesCdataAcrossBuffer() {
+            StringBuilder sb = new StringBuilder();
+            while (sb.Length <= CharacterReader.maxBufferLen) {
+                sb.Append("A suitable amount of CData.\n");
+            }
+            String cdata = sb.ToString();
+            String h = "<div><![CDATA[" + cdata + "]]></div>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("div");
+            CDataNode node = (CDataNode)div.TextNodes()[0];
+            NUnit.Framework.Assert.AreEqual(cdata, node.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandlesCdataInScript() {
+            String html = "<script type=\"text/javascript\">//<![CDATA[\n\n  foo();\n//]]></script>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            String data = "//<![CDATA[\n\n  foo();\n//]]>";
+            iText.StyledXmlParser.Jsoup.Nodes.Element script = doc.SelectFirst("script");
+            NUnit.Framework.Assert.AreEqual("", script.Text());
+            // won't be parsed as cdata because in script data section
+            NUnit.Framework.Assert.AreEqual(data, script.Data());
+            NUnit.Framework.Assert.AreEqual(html, script.OuterHtml());
+            DataNode dataNode = (DataNode)script.ChildNode(0);
+            NUnit.Framework.Assert.AreEqual(data, dataNode.GetWholeData());
+        }
+
+        // see - not a cdata node, because in script. contrast with XmlTreeBuilder - will be cdata.
+        [NUnit.Framework.Test]
         public virtual void HandlesUnclosedCdataAtEOF() {
             // https://github.com/jhy/jsoup/issues/349 would crash, as character reader would try to seek past EOF
             String h = "<![CDATA[]]";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
             NUnit.Framework.Assert.AreEqual(1, doc.Body().ChildNodeSize());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandleCDataInText() {
+            String h = "<p>One <![CDATA[Two <&]]> Three</p>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
+            iText.StyledXmlParser.Jsoup.Nodes.Element p = doc.SelectFirst("p");
+            IList<iText.StyledXmlParser.Jsoup.Nodes.Node> nodes = p.ChildNodes();
+            NUnit.Framework.Assert.AreEqual("One ", ((TextNode)nodes[0]).GetWholeText());
+            NUnit.Framework.Assert.AreEqual("Two <&", ((TextNode)nodes[1]).GetWholeText());
+            NUnit.Framework.Assert.AreEqual("Two <&", ((CDataNode)nodes[1]).GetWholeText());
+            NUnit.Framework.Assert.AreEqual(" Three", ((TextNode)nodes[2]).GetWholeText());
+            NUnit.Framework.Assert.AreEqual(h, p.OuterHtml());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CdataNodesAreTextNodes() {
+            String h = "<p>One <![CDATA[ Two <& ]]> Three</p>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
+            iText.StyledXmlParser.Jsoup.Nodes.Element p = doc.SelectFirst("p");
+            IList<TextNode> nodes = p.TextNodes();
+            NUnit.Framework.Assert.AreEqual("One ", nodes[0].Text());
+            NUnit.Framework.Assert.AreEqual(" Two <& ", nodes[1].Text());
+            NUnit.Framework.Assert.AreEqual(" Three", nodes[2].Text());
         }
 
         [NUnit.Framework.Test]
@@ -417,6 +498,19 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ParseBodyIsIndexNoAttributes() {
+            // https://github.com/jhy/jsoup/issues/1404
+            String expectedHtml = "<form>\n" + " <hr><label>This is a searchable index. Enter search keywords: <input name=\"isindex\"></label>\n"
+                 + " <hr>\n" + "</form>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<isindex>");
+            NUnit.Framework.Assert.AreEqual(expectedHtml, doc.Body().Html());
+            doc = iText.StyledXmlParser.Jsoup.Jsoup.ParseBodyFragment("<isindex>");
+            NUnit.Framework.Assert.AreEqual(expectedHtml, doc.Body().Html());
+            doc = iText.StyledXmlParser.Jsoup.Jsoup.ParseBodyFragment("<table><input></table>");
+            NUnit.Framework.Assert.AreEqual("<input>\n<table></table>", doc.Body().Html());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void HandlesUnknownNamespaceTags() {
             // note that the first foo:bar should not really be allowed to be self closing, if parsed in html mode.
             String h = "<foo:bar id='1' /><abc:def id=2>Foo<p>Hello</p></abc:def><foo:bar>There</foo:bar>";
@@ -432,6 +526,38 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
             NUnit.Framework.Assert.AreEqual("<div id=\"1\"></div><script src=\"/foo\"></script><div id=\"2\"><img><img></div><a id=\"3\"></a><i></i><foo /><foo>One</foo> <hr> hr text <hr> hr text two"
                 , TextUtil.StripNewlines(doc.Body().Html()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandlesKnownEmptyNoFrames() {
+            String h = "<html><head><noframes /><meta name=foo></head><body>One</body></html>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
+            NUnit.Framework.Assert.AreEqual("<html><head><noframes></noframes><meta name=\"foo\"></head><body>One</body></html>"
+                , TextUtil.StripNewlines(doc.Html()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandlesKnownEmptyStyle() {
+            String h = "<html><head><style /><meta name=foo></head><body>One</body></html>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
+            NUnit.Framework.Assert.AreEqual("<html><head><style></style><meta name=\"foo\"></head><body>One</body></html>"
+                , TextUtil.StripNewlines(doc.Html()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandlesKnownEmptyTitle() {
+            String h = "<html><head><title /><meta name=foo></head><body>One</body></html>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
+            NUnit.Framework.Assert.AreEqual("<html><head><title></title><meta name=\"foo\"></head><body>One</body></html>"
+                , TextUtil.StripNewlines(doc.Html()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandlesKnownEmptyIframe() {
+            String h = "<p>One</p><iframe id=1 /><p>Two";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
+            NUnit.Framework.Assert.AreEqual("<html><head></head><body><p>One</p><iframe id=\"1\"></iframe><p>Two</p></body></html>"
+                , TextUtil.StripNewlines(doc.Html()));
         }
 
         [NUnit.Framework.Test]
@@ -597,6 +723,16 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestUnclosedNoscriptInHead() {
+            // Was getting "EOF" in html output, because the #anythingElse handler was calling an undefined toString, so used object.toString.
+            String[] strings = new String[] { "<noscript>", "<noscript>One" };
+            foreach (String html in strings) {
+                Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+                NUnit.Framework.Assert.AreEqual(html + "</noscript>", TextUtil.StripNewlines(doc.Head().Html()));
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestAFlowContents() {
             // html5 has <a> as either phrasing or block
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<a>Hello <div>there</div> <span>now</span></a>");
@@ -676,7 +812,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             // and the <i> inside the table and does not leak out.
             String h = "<p><b>One</p> <table><tr><td><p><i>Three<p>Four</i></td></tr></table> <p>Five</p>";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
-            String want = "<p><b>One</b></p>\n" + "<b> \n" + " <table>\n" + "  <tbody>\n" + "   <tr>\n" + "    <td><p><i>Three</i></p><p><i>Four</i></p></td>\n"
+            String want = "<p><b>One</b></p><b> \n" + " <table>\n" + "  <tbody>\n" + "   <tr>\n" + "    <td><p><i>Three</i></p><p><i>Four</i></p></td>\n"
                  + "   </tr>\n" + "  </tbody>\n" + " </table> <p>Five</p></b>";
             NUnit.Framework.Assert.AreEqual(want, doc.Body().Html());
         }
@@ -851,9 +987,9 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.AreEqual("20: Attributes incorrectly present on end tag", errors[0].ToString());
             NUnit.Framework.Assert.AreEqual("35: Unexpected token [Doctype] when in state [InBody]", errors[1].ToString
                 ());
-            NUnit.Framework.Assert.AreEqual("36: Invalid character reference: invalid named referenece 'arrgh'", errors
-                [2].ToString());
-            NUnit.Framework.Assert.AreEqual("50: Self closing flag not acknowledged", errors[3].ToString());
+            NUnit.Framework.Assert.AreEqual("36: Invalid character reference: invalid named reference", errors[2].ToString
+                ());
+            NUnit.Framework.Assert.AreEqual("50: Tag cannot be self closing; not a void tag", errors[3].ToString());
             NUnit.Framework.Assert.AreEqual("61: Unexpectedly reached end of file (EOF) in input state [TagName]", errors
                 [4].ToString());
         }
@@ -869,8 +1005,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.AreEqual("20: Attributes incorrectly present on end tag", errors[0].ToString());
             NUnit.Framework.Assert.AreEqual("35: Unexpected token [Doctype] when in state [InBody]", errors[1].ToString
                 ());
-            NUnit.Framework.Assert.AreEqual("36: Invalid character reference: invalid named referenece 'arrgh'", errors
-                [2].ToString());
+            NUnit.Framework.Assert.AreEqual("36: Invalid character reference: invalid named reference", errors[2].ToString
+                ());
         }
 
         [NUnit.Framework.Test]
@@ -907,7 +1043,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             // returns <html> node (not document) -- no context means doc gets created
             NUnit.Framework.Assert.AreEqual("html", nodes[0].NodeName());
             NUnit.Framework.Assert.AreEqual("<html> <head></head> <body> <ol> <li>One</li> </ol> <p>Two</p> </body> </html>"
-                , iText.StyledXmlParser.Jsoup.Helper.StringUtil.NormaliseWhitespace(nodes[0].OuterHtml()));
+                , iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace(nodes[0].OuterHtml()));
         }
 
         [NUnit.Framework.Test]
@@ -916,7 +1052,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             // (as defined in html5.) However in practise that lead to spurious matches against the author's intent.
             String html = "One &clubsuite; &clubsuit;";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
-            NUnit.Framework.Assert.AreEqual(iText.StyledXmlParser.Jsoup.Helper.StringUtil.NormaliseWhitespace("One &amp;clubsuite; ♣"
+            NUnit.Framework.Assert.AreEqual(iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace("One &amp;clubsuite; ♣"
                 ), doc.Body().Html());
         }
 
@@ -935,7 +1071,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             String html = "<?xml encoding='UTF-8' ?><body>One</body>";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
             NUnit.Framework.Assert.AreEqual("<!--?xml encoding='UTF-8' ?--> <html> <head></head> <body> One </body> </html>"
-                , iText.StyledXmlParser.Jsoup.Helper.StringUtil.NormaliseWhitespace(doc.OuterHtml()));
+                , iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace(doc.OuterHtml()));
         }
 
         [NUnit.Framework.Test]
@@ -951,7 +1087,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             String html = "<body><form><input id=1><input id=2></form></body>";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
             iText.StyledXmlParser.Jsoup.Nodes.Element el = doc.Select("form").First();
-            NUnit.Framework.Assert.IsTrue(el is FormElement, "Is form element");
+            NUnit.Framework.Assert.IsTrue(el is FormElement);
             FormElement form = (FormElement)el;
             Elements controls = form.Elements();
             NUnit.Framework.Assert.AreEqual(2, controls.Count);
@@ -965,7 +1101,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             String html = "<table><tr><form><input type=hidden id=1><td><input type=text id=2></td><tr></table>";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
             iText.StyledXmlParser.Jsoup.Nodes.Element el = doc.Select("form").First();
-            NUnit.Framework.Assert.IsTrue(el is FormElement, "Is form element");
+            NUnit.Framework.Assert.IsTrue(el is FormElement);
             FormElement form = (FormElement)el;
             Elements controls = form.Elements();
             NUnit.Framework.Assert.AreEqual(2, controls.Count);
@@ -996,13 +1132,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         public virtual void HandlesInvalidDoctypes() {
             // would previously throw invalid name exception on empty doctype
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<!DOCTYPE>");
-            NUnit.Framework.Assert.AreEqual("<!doctype> <html> <head></head> <body></body> </html>", iText.StyledXmlParser.Jsoup.Helper.StringUtil
+            NUnit.Framework.Assert.AreEqual("<!doctype> <html> <head></head> <body></body> </html>", iText.StyledXmlParser.Jsoup.Internal.StringUtil
                 .NormaliseWhitespace(doc.OuterHtml()));
             doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<!DOCTYPE><html><p>Foo</p></html>");
-            NUnit.Framework.Assert.AreEqual("<!doctype> <html> <head></head> <body> <p>Foo</p> </body> </html>", iText.StyledXmlParser.Jsoup.Helper.StringUtil
+            NUnit.Framework.Assert.AreEqual("<!doctype> <html> <head></head> <body> <p>Foo</p> </body> </html>", iText.StyledXmlParser.Jsoup.Internal.StringUtil
                 .NormaliseWhitespace(doc.OuterHtml()));
             doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<!DOCTYPE \u0000>");
-            NUnit.Framework.Assert.AreEqual("<!doctype \ufffd> <html> <head></head> <body></body> </html>", iText.StyledXmlParser.Jsoup.Helper.StringUtil
+            NUnit.Framework.Assert.AreEqual("<!doctype \ufffd> <html> <head></head> <body></body> </html>", iText.StyledXmlParser.Jsoup.Internal.StringUtil
                 .NormaliseWhitespace(doc.OuterHtml()));
         }
 
@@ -1029,17 +1165,17 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             String rendered = doc.ToString();
             int endOfEmail = rendered.IndexOf("Comment", StringComparison.Ordinal);
             int guarantee = rendered.IndexOf("Why am I here?", StringComparison.Ordinal);
-            NUnit.Framework.Assert.IsTrue(endOfEmail > -1, "Comment not found");
-            NUnit.Framework.Assert.IsTrue(guarantee > -1, "Search text not found");
-            NUnit.Framework.Assert.IsTrue(guarantee > endOfEmail, "Search text did not come after comment");
+            NUnit.Framework.Assert.IsTrue(endOfEmail > -1);
+            NUnit.Framework.Assert.IsTrue(guarantee > -1);
+            NUnit.Framework.Assert.IsTrue(guarantee > endOfEmail);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestNormalisesIsIndex() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<body><isindex action='/submit'></body>");
             String html = doc.OuterHtml();
-            NUnit.Framework.Assert.AreEqual("<form action=\"/submit\"> <hr> <label>This is a searchable index. Enter search keywords: <input name=\"isindex\"></label> <hr> </form>"
-                , iText.StyledXmlParser.Jsoup.Helper.StringUtil.NormaliseWhitespace(doc.Body().Html()));
+            NUnit.Framework.Assert.AreEqual("<form action=\"/submit\"> <hr><label>This is a searchable index. Enter search keywords: <input name=\"isindex\"></label> <hr> </form>"
+                , iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace(doc.Body().Html()));
         }
 
         [NUnit.Framework.Test]
@@ -1073,6 +1209,360 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(body);
             Elements els = doc.Select("div");
             NUnit.Framework.Assert.AreEqual("Check", els.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestFragment() {
+            // make sure when parsing a body fragment, a script tag at start goes into the body
+            String html = "<script type=\"text/javascript\">console.log('foo');</script>\n" + "<div id=\"somecontent\">some content</div>\n"
+                 + "<script type=\"text/javascript\">console.log('bar');</script>";
+            Document body = iText.StyledXmlParser.Jsoup.Jsoup.ParseBodyFragment(html);
+            NUnit.Framework.Assert.AreEqual("<script type=\"text/javascript\">console.log('foo');</script> \n" + "<div id=\"somecontent\">\n"
+                 + " some content\n" + "</div> \n" + "<script type=\"text/javascript\">console.log('bar');</script>", 
+                body.Body().Html());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestHtmlLowerCase() {
+            String html = "<!doctype HTML><DIV ID=1>One</DIV>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            NUnit.Framework.Assert.AreEqual("<!doctype html> <html> <head></head> <body> <div id=\"1\"> One </div> </body> </html>"
+                , iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace(doc.OuterHtml()));
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("#1");
+            div.After("<TaG>One</TaG>");
+            NUnit.Framework.Assert.AreEqual("<tag>One</tag>", TextUtil.StripNewlines(div.NextElementSibling().OuterHtml
+                ()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestHtmlLowerCaseAttributesOfVoidTags() {
+            String html = "<!doctype HTML><IMG ALT=One></DIV>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            NUnit.Framework.Assert.AreEqual("<!doctype html> <html> <head></head> <body> <img alt=\"One\"> </body> </html>"
+                , iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace(doc.OuterHtml()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestHtmlLowerCaseAttributesForm() {
+            String html = "<form NAME=one>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            NUnit.Framework.Assert.AreEqual("<form name=\"one\"></form>", iText.StyledXmlParser.Jsoup.Internal.StringUtil
+                .NormaliseWhitespace(doc.Body().Html()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CanPreserveTagCase() {
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser();
+            parser.Settings(new ParseSettings(true, false));
+            Document doc = parser.ParseInput("<div id=1><SPAN ID=2>", "");
+            NUnit.Framework.Assert.AreEqual("<html> <head></head> <body> <div id=\"1\"> <SPAN id=\"2\"></SPAN> </div> </body> </html>"
+                , iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace(doc.OuterHtml()));
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("#1");
+            div.After("<TaG ID=one>One</TaG>");
+            NUnit.Framework.Assert.AreEqual("<TaG id=\"one\">One</TaG>", TextUtil.StripNewlines(div.NextElementSibling
+                ().OuterHtml()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CanPreserveAttributeCase() {
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser();
+            parser.Settings(new ParseSettings(false, true));
+            Document doc = parser.ParseInput("<div id=1><SPAN ID=2>", "");
+            NUnit.Framework.Assert.AreEqual("<html> <head></head> <body> <div id=\"1\"> <span ID=\"2\"></span> </div> </body> </html>"
+                , iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace(doc.OuterHtml()));
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("#1");
+            div.After("<TaG ID=one>One</TaG>");
+            NUnit.Framework.Assert.AreEqual("<tag ID=\"one\">One</tag>", TextUtil.StripNewlines(div.NextElementSibling
+                ().OuterHtml()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CanPreserveBothCase() {
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser();
+            parser.Settings(new ParseSettings(true, true));
+            Document doc = parser.ParseInput("<div id=1><SPAN ID=2>", "");
+            NUnit.Framework.Assert.AreEqual("<html> <head></head> <body> <div id=\"1\"> <SPAN ID=\"2\"></SPAN> </div> </body> </html>"
+                , iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace(doc.OuterHtml()));
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("#1");
+            div.After("<TaG ID=one>One</TaG>");
+            NUnit.Framework.Assert.AreEqual("<TaG ID=\"one\">One</TaG>", TextUtil.StripNewlines(div.NextElementSibling
+                ().OuterHtml()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandlesControlCodeInAttributeName() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p><a \x6=foo>One</a><a/\x6=bar><a foo\x6=bar>Two</a></p>"
+                );
+            NUnit.Framework.Assert.AreEqual("<p><a>One</a><a></a><a foo=\"bar\">Two</a></p>", doc.Body().Html());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CaseSensitiveParseTree() {
+            String html = "<r><X>A</X><y>B</y></r>";
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser();
+            parser.Settings(ParseSettings.preserveCase);
+            Document doc = parser.ParseInput(html, "");
+            NUnit.Framework.Assert.AreEqual("<r> <X> A </X> <y> B </y> </r>", iText.StyledXmlParser.Jsoup.Internal.StringUtil
+                .NormaliseWhitespace(doc.Body().Html()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CaseInsensitiveParseTree() {
+            String html = "<r><X>A</X><y>B</y></r>";
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser();
+            Document doc = parser.ParseInput(html, "");
+            NUnit.Framework.Assert.AreEqual("<r> <x> A </x> <y> B </y> </r>", iText.StyledXmlParser.Jsoup.Internal.StringUtil
+                .NormaliseWhitespace(doc.Body().Html()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PreservedCaseLinksCantNest() {
+            String html = "<A>ONE <A>Two</A></A>";
+            Document doc = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser().Settings(ParseSettings.preserveCase)
+                .ParseInput(html, "");
+            NUnit.Framework.Assert.AreEqual("<A>ONE </A><A>Two</A>", iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace
+                (doc.Body().Html()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NormalizesDiscordantTags() {
+            Document document = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div>test</DIV><p></p>");
+            NUnit.Framework.Assert.AreEqual("<div>\n test\n</div>\n<p></p>", document.Body().Html());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SelfClosingVoidIsNotAnError() {
+            String html = "<p>test<br/>test<br/></p>";
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser().
+                SetTrackErrors(5);
+            parser.ParseInput(html, "");
+            NUnit.Framework.Assert.AreEqual(0, parser.GetErrors().Count);
+            NUnit.Framework.Assert.IsTrue(iText.StyledXmlParser.Jsoup.Jsoup.IsValid(html, Safelist.Basic()));
+            String clean = iText.StyledXmlParser.Jsoup.Jsoup.Clean(html, Safelist.Basic());
+            NUnit.Framework.Assert.AreEqual("<p>test<br>test<br></p>", clean);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SelfClosingOnNonvoidIsError() {
+            String html = "<p>test</p><div /><div>Two</div>";
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser().
+                SetTrackErrors(5);
+            parser.ParseInput(html, "");
+            NUnit.Framework.Assert.AreEqual(1, parser.GetErrors().Count);
+            NUnit.Framework.Assert.AreEqual("18: Tag cannot be self closing; not a void tag", parser.GetErrors()[0].ToString
+                ());
+            NUnit.Framework.Assert.IsFalse(iText.StyledXmlParser.Jsoup.Jsoup.IsValid(html, Safelist.Relaxed()));
+            String clean = iText.StyledXmlParser.Jsoup.Jsoup.Clean(html, Safelist.Relaxed());
+            NUnit.Framework.Assert.AreEqual("<p>test</p> <div></div> <div> Two </div>", iText.StyledXmlParser.Jsoup.Internal.StringUtil
+                .NormaliseWhitespace(clean));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestTemplateInsideTable() {
+            FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/table-polymer-template.html");
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@in, "UTF-8");
+            doc.OutputSettings().PrettyPrint(true);
+            Elements templates = doc.Body().GetElementsByTag("template");
+            foreach (iText.StyledXmlParser.Jsoup.Nodes.Element template in templates) {
+                NUnit.Framework.Assert.IsTrue(template.ChildNodes().Count > 1);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestHandlesDeepSpans() {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 200; i++) {
+                sb.Append("<span>");
+            }
+            sb.Append("<p>One</p>");
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(sb.ToString());
+            NUnit.Framework.Assert.AreEqual(200, doc.Select("span").Count);
+            NUnit.Framework.Assert.AreEqual(1, doc.Select("p").Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CommentAtEnd() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<!");
+            NUnit.Framework.Assert.IsTrue(doc.ChildNode(0) is Comment);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PreSkipsFirstNewline() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<pre>\n\nOne\nTwo\n</pre>");
+            iText.StyledXmlParser.Jsoup.Nodes.Element pre = doc.SelectFirst("pre");
+            NUnit.Framework.Assert.AreEqual("One\nTwo", pre.Text());
+            NUnit.Framework.Assert.AreEqual("\nOne\nTwo\n", pre.WholeText());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandlesXmlDeclAndCommentsBeforeDoctype() {
+            FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/comments.html");
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@in, "UTF-8");
+            NUnit.Framework.Assert.AreEqual("<!--?xml version=\"1.0\" encoding=\"utf-8\"?--><!-- so --><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><!-- what --> <html xml:lang=\"en\" lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"> <!-- now --> <head> <!-- then --> <meta http-equiv=\"Content-type\" content=\"text/html; charset=utf-8\"> <title>A Certain Kind of Test</title> </head> <body> <h1>Hello</h1>h1&gt; (There is a UTF8 hidden BOM at the top of this file.) </body> </html>"
+                , iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace(doc.Html()));
+            NUnit.Framework.Assert.AreEqual("A Certain Kind of Test", doc.Head().Select("title").Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SelfClosingTextAreaDoesntLeaveDroppings() {
+            // https://github.com/jhy/jsoup/issues/1220
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><div><textarea/></div></div>");
+            NUnit.Framework.Assert.IsFalse(doc.Body().Html().Contains("&lt;"));
+            NUnit.Framework.Assert.IsFalse(doc.Body().Html().Contains("&gt;"));
+            NUnit.Framework.Assert.AreEqual("<div><div><textarea></textarea></div></div>", TextUtil.StripNewlines(doc.
+                Body().Html()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestNoSpuriousSpace() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("Just<a>One</a><a>Two</a>");
+            NUnit.Framework.Assert.AreEqual("Just<a>One</a><a>Two</a>", doc.Body().Html());
+            NUnit.Framework.Assert.AreEqual("JustOneTwo", doc.Body().Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PTagsGetIndented() {
+            String html = "<div><p><a href=one>One</a><p><a href=two>Two</a></p></div>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            NUnit.Framework.Assert.AreEqual("<div>\n" + " <p><a href=\"one\">One</a></p>\n" + " <p><a href=\"two\">Two</a></p>\n"
+                 + "</div>", doc.Body().Html());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndentRegardlessOfCase() {
+            String html = "<p>1</p><P>2</P>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            NUnit.Framework.Assert.AreEqual("<body>\n" + " <p>1</p>\n" + " <p>2</p>\n" + "</body>", doc.Body().OuterHtml
+                ());
+            Document caseDoc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html, "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .HtmlParser().Settings(ParseSettings.preserveCase));
+            NUnit.Framework.Assert.AreEqual("<body>\n" + " <p>1</p>\n" + " <P>2</P>\n" + "</body>", caseDoc.Body().OuterHtml
+                ());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestH20() {
+            // https://github.com/jhy/jsoup/issues/731
+            String html = "H<sub>2</sub>O";
+            String clean = iText.StyledXmlParser.Jsoup.Jsoup.Clean(html, Safelist.Basic());
+            NUnit.Framework.Assert.AreEqual("H<sub>2</sub>O", clean);
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            NUnit.Framework.Assert.AreEqual("H2O", doc.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestUNewlines() {
+            // https://github.com/jhy/jsoup/issues/851
+            String html = "t<u>es</u>t <b>on</b> <i>f</i><u>ir</u>e";
+            String clean = iText.StyledXmlParser.Jsoup.Jsoup.Clean(html, Safelist.Basic());
+            NUnit.Framework.Assert.AreEqual("t<u>es</u>t <b>on</b> <i>f</i><u>ir</u>e", clean);
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            NUnit.Framework.Assert.AreEqual("test on fire", doc.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestFarsi() {
+            // https://github.com/jhy/jsoup/issues/1227
+            String text = "نیمه\u200Cشب";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p>" + text);
+            NUnit.Framework.Assert.AreEqual(text, doc.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestStartOptGroup() {
+            // https://github.com/jhy/jsoup/issues/1313
+            String html = "<select>\n" + "  <optgroup label=\"a\">\n" + "  <option>one\n" + "  <option>two\n" + "  <option>three\n"
+                 + "  <optgroup label=\"b\">\n" + "  <option>four\n" + "  <option>fix\n" + "  <option>six\n" + "</select>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            iText.StyledXmlParser.Jsoup.Nodes.Element select = doc.SelectFirst("select");
+            NUnit.Framework.Assert.AreEqual(2, select.ChildrenSize());
+            NUnit.Framework.Assert.AreEqual("<optgroup label=\"a\"> <option>one </option><option>two </option><option>three </option></optgroup><optgroup label=\"b\"> <option>four </option><option>fix </option><option>six </option></optgroup>"
+                , select.Html());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReaderClosedAfterParse() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("Hello");
+            TreeBuilder treeBuilder = doc.Parser().GetTreeBuilder();
+            NUnit.Framework.Assert.IsNull(treeBuilder.reader);
+            NUnit.Framework.Assert.IsNull(treeBuilder.tokeniser);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ScriptInDataNode() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<script>Hello</script><style>There</style>");
+            NUnit.Framework.Assert.IsTrue(doc.SelectFirst("script").ChildNode(0) is DataNode);
+            NUnit.Framework.Assert.IsTrue(doc.SelectFirst("style").ChildNode(0) is DataNode);
+            doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<SCRIPT>Hello</SCRIPT><STYLE>There</STYLE>", "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .HtmlParser().Settings(ParseSettings.preserveCase));
+            NUnit.Framework.Assert.IsTrue(doc.SelectFirst("script").ChildNode(0) is DataNode);
+            NUnit.Framework.Assert.IsTrue(doc.SelectFirst("style").ChildNode(0) is DataNode);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextareaValue() {
+            String html = "<TEXTAREA>YES YES</TEXTAREA>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            NUnit.Framework.Assert.AreEqual("YES YES", doc.SelectFirst("textarea").Val());
+            doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html, "", iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser
+                ().Settings(ParseSettings.preserveCase));
+            NUnit.Framework.Assert.AreEqual("YES YES", doc.SelectFirst("textarea").Val());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PreserveWhitespaceInHead() {
+            String html = "\n<!doctype html>\n<html>\n<head>\n<title>Hello</title>\n</head>\n<body>\n<p>One</p>\n</body>\n</html>\n";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            doc.OutputSettings().PrettyPrint(false);
+            NUnit.Framework.Assert.AreEqual("<!doctype html>\n<html>\n<head>\n<title>Hello</title>\n</head>\n<body>\n<p>One</p>\n\n</body></html>\n"
+                , doc.OuterHtml());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandleContentAfterBody() {
+            String html = "<body>One</body>  <p>Hello!</p></html> <p>There</p>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            doc.OutputSettings().PrettyPrint(false);
+            NUnit.Framework.Assert.AreEqual("<html><head></head><body>One  <p>Hello!</p><p>There</p></body></html> ", 
+                doc.OuterHtml());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PreservesTabs() {
+            // testcase to demonstrate tab retention - https://github.com/jhy/jsoup/issues/1240
+            String html = "<pre>One\tTwo</pre><span>\tThree\tFour</span>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
+            iText.StyledXmlParser.Jsoup.Nodes.Element pre = doc.SelectFirst("pre");
+            iText.StyledXmlParser.Jsoup.Nodes.Element span = doc.SelectFirst("span");
+            NUnit.Framework.Assert.AreEqual("One\tTwo", pre.Text());
+            NUnit.Framework.Assert.AreEqual("Three Four", span.Text());
+            // normalized, including overall trim
+            NUnit.Framework.Assert.AreEqual("\tThree\tFour", span.WholeText());
+            // text normalizes, wholeText retains original spaces incl tabs
+            NUnit.Framework.Assert.AreEqual("One\tTwo Three Four", doc.Body().Text());
+            NUnit.Framework.Assert.AreEqual("<pre>One\tTwo</pre><span> Three Four</span>", doc.Body().Html());
+            // html output provides normalized space, incl tab in pre but not in span
+            doc.OutputSettings().PrettyPrint(false);
+            NUnit.Framework.Assert.AreEqual(html, doc.Body().Html());
+        }
+
+        // disabling pretty-printing - round-trips the tab throughout, as no normalization occurs
+        [NUnit.Framework.Test]
+        public virtual void CanDetectAutomaticallyAddedElements() {
+            String bare = "<script>One</script>";
+            String full = "<html><head><title>Check</title></head><body><p>One</p></body></html>";
+            NUnit.Framework.Assert.IsTrue(DidAddElements(bare));
+            NUnit.Framework.Assert.IsFalse(DidAddElements(full));
+        }
+
+        private bool DidAddElements(String input) {
+            // two passes, one as XML and one as HTML. XML does not vivify missing/optional tags
+            Document html = iText.StyledXmlParser.Jsoup.Jsoup.Parse(input);
+            Document xml = iText.StyledXmlParser.Jsoup.Jsoup.Parse(input, "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
+            int htmlElementCount = html.GetAllElements().Count;
+            int xmlElementCount = xml.GetAllElements().Count;
+            return htmlElementCount > xmlElementCount;
         }
     }
 }

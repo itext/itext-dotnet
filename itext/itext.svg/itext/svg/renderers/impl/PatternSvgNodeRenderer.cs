@@ -221,6 +221,9 @@ namespace iText.Svg.Renderers.Impl {
 
         private bool IsObjectBoundingBoxInPatternUnits() {
             String patternUnits = GetAttribute(SvgConstants.Attributes.PATTERN_UNITS);
+            if (patternUnits == null) {
+                patternUnits = GetAttribute(SvgConstants.Attributes.PATTERN_UNITS.ToLowerInvariant());
+            }
             if (SvgConstants.Values.USER_SPACE_ON_USE.Equals(patternUnits)) {
                 return false;
             }
@@ -235,6 +238,9 @@ namespace iText.Svg.Renderers.Impl {
 
         private bool IsObjectBoundingBoxInPatternContentUnits() {
             String patternContentUnits = GetAttribute(SvgConstants.Attributes.PATTERN_CONTENT_UNITS);
+            if (patternContentUnits == null) {
+                patternContentUnits = GetAttribute(SvgConstants.Attributes.PATTERN_CONTENT_UNITS.ToLowerInvariant());
+            }
             if (SvgConstants.Values.OBJECT_BOUNDING_BOX.Equals(patternContentUnits)) {
                 return true;
             }
@@ -306,6 +312,9 @@ namespace iText.Svg.Renderers.Impl {
 
         private AffineTransform GetPatternTransform() {
             String patternTransform = GetAttribute(SvgConstants.Attributes.PATTERN_TRANSFORM);
+            if (patternTransform == null) {
+                patternTransform = GetAttribute(SvgConstants.Attributes.PATTERN_TRANSFORM.ToLowerInvariant());
+            }
             if (patternTransform != null && !String.IsNullOrEmpty(patternTransform)) {
                 return TransformUtils.ParseTransform(patternTransform);
             }

@@ -3,42 +3,22 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -70,7 +50,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             NUnit.Framework.Assert.AreEqual("http://bar/qux", withBase.AbsUrl("absHref"));
             // href is abs, so returns that
             NUnit.Framework.Assert.AreEqual("", withBase.AbsUrl("noval"));
-            iText.StyledXmlParser.Jsoup.Nodes.Element dodgyBase = new iText.StyledXmlParser.Jsoup.Nodes.Element(tag, "wtf://no-such-protocol/"
+            iText.StyledXmlParser.Jsoup.Nodes.Element dodgyBase = new iText.StyledXmlParser.Jsoup.Nodes.Element(tag, "fff://no-such-protocol/"
                 , attribs);
             NUnit.Framework.Assert.AreEqual("http://bar/qux", dodgyBase.AbsUrl("absHref"));
         }
@@ -79,7 +59,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         [NUnit.Framework.Test]
         public virtual void SetBaseUriIsRecursive() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p></p></div>");
-            String baseUri = "http://jsoup.org";
+            String baseUri = "https://jsoup.org";
             doc.SetBaseUri(baseUri);
             NUnit.Framework.Assert.AreEqual(baseUri, doc.BaseUri());
             NUnit.Framework.Assert.AreEqual(baseUri, doc.Select("div").First().BaseUri());
@@ -88,26 +68,26 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         [NUnit.Framework.Test]
         public virtual void HandlesAbsPrefix() {
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<a href=/foo>Hello</a>", "http://jsoup.org/");
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<a href=/foo>Hello</a>", "https://jsoup.org/");
             iText.StyledXmlParser.Jsoup.Nodes.Element a = doc.Select("a").First();
             NUnit.Framework.Assert.AreEqual("/foo", a.Attr("href"));
-            NUnit.Framework.Assert.AreEqual("http://jsoup.org/foo", a.Attr("abs:href"));
+            NUnit.Framework.Assert.AreEqual("https://jsoup.org/foo", a.Attr("abs:href"));
             NUnit.Framework.Assert.IsTrue(a.HasAttr("abs:href"));
         }
 
         [NUnit.Framework.Test]
         public virtual void HandlesAbsOnImage() {
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p><img src=\"/rez/osi_logo.png\" /></p>", "http://jsoup.org/"
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p><img src=\"/rez/osi_logo.png\" /></p>", "https://jsoup.org/"
                 );
             iText.StyledXmlParser.Jsoup.Nodes.Element img = doc.Select("img").First();
-            NUnit.Framework.Assert.AreEqual("http://jsoup.org/rez/osi_logo.png", img.Attr("abs:src"));
+            NUnit.Framework.Assert.AreEqual("https://jsoup.org/rez/osi_logo.png", img.Attr("abs:src"));
             NUnit.Framework.Assert.AreEqual(img.AbsUrl("src"), img.Attr("abs:src"));
         }
 
         [NUnit.Framework.Test]
         public virtual void HandlesAbsPrefixOnHasAttr() {
             // 1: no abs url; 2: has abs url
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<a id=1 href='/foo'>One</a> <a id=2 href='http://jsoup.org/'>Two</a>"
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<a id=1 href='/foo'>One</a> <a id=2 href='https://jsoup.org/'>Two</a>"
                 );
             iText.StyledXmlParser.Jsoup.Nodes.Element one = doc.Select("#1").First();
             iText.StyledXmlParser.Jsoup.Nodes.Element two = doc.Select("#2").First();
@@ -116,7 +96,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             NUnit.Framework.Assert.AreEqual("", one.AbsUrl("href"));
             NUnit.Framework.Assert.IsTrue(two.HasAttr("abs:href"));
             NUnit.Framework.Assert.IsTrue(two.HasAttr("href"));
-            NUnit.Framework.Assert.AreEqual("http://jsoup.org/", two.AbsUrl("href"));
+            NUnit.Framework.Assert.AreEqual("https://jsoup.org/", two.AbsUrl("href"));
         }
 
         [NUnit.Framework.Test]
@@ -158,11 +138,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         [NUnit.Framework.Test]
         public virtual void AbsHandlesRelativeQuery() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<a href='?foo'>One</a> <a href='bar.html?foo'>Two</a>"
-                , "http://jsoup.org/path/file?bar");
+                , "https://jsoup.org/path/file?bar");
             iText.StyledXmlParser.Jsoup.Nodes.Element a1 = doc.Select("a").First();
-            NUnit.Framework.Assert.AreEqual("http://jsoup.org/path/file?foo", a1.AbsUrl("href"));
+            NUnit.Framework.Assert.AreEqual("https://jsoup.org/path/file?foo", a1.AbsUrl("href"));
             iText.StyledXmlParser.Jsoup.Nodes.Element a2 = doc.Select("a")[1];
-            NUnit.Framework.Assert.AreEqual("http://jsoup.org/path/bar.html?foo", a2.AbsUrl("href"));
+            NUnit.Framework.Assert.AreEqual("https://jsoup.org/path/bar.html?foo", a2.AbsUrl("href"));
         }
 
         [NUnit.Framework.Test]
@@ -195,9 +175,25 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void OwnerDocument() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p>Hello");
             iText.StyledXmlParser.Jsoup.Nodes.Element p = doc.Select("p").First();
-            NUnit.Framework.Assert.IsTrue(p.OwnerDocument() == doc);
-            NUnit.Framework.Assert.IsTrue(doc.OwnerDocument() == doc);
+            NUnit.Framework.Assert.AreSame(p.OwnerDocument(), doc);
+            NUnit.Framework.Assert.AreSame(doc.OwnerDocument(), doc);
             NUnit.Framework.Assert.IsNull(doc.Parent());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Root() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello");
+            iText.StyledXmlParser.Jsoup.Nodes.Element p = doc.Select("p").First();
+            iText.StyledXmlParser.Jsoup.Nodes.Node root = p.Root();
+            NUnit.Framework.Assert.AreSame(doc, root);
+            NUnit.Framework.Assert.IsNull(root.Parent());
+            NUnit.Framework.Assert.AreSame(doc.Root(), doc);
+            NUnit.Framework.Assert.AreSame(doc.Root(), doc.OwnerDocument());
+            iText.StyledXmlParser.Jsoup.Nodes.Element standAlone = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("p"), "");
+            NUnit.Framework.Assert.IsNull(standAlone.Parent());
+            NUnit.Framework.Assert.AreSame(standAlone.Root(), standAlone);
+            NUnit.Framework.Assert.IsNull(standAlone.OwnerDocument());
         }
 
         [NUnit.Framework.Test]
@@ -245,28 +241,28 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             iText.StyledXmlParser.Jsoup.Nodes.Element span = doc.Select("span").First();
             iText.StyledXmlParser.Jsoup.Nodes.Node node = span.Unwrap();
             NUnit.Framework.Assert.AreEqual("<div>One  Two</div>", TextUtil.StripNewlines(doc.Body().Html()));
-            NUnit.Framework.Assert.IsTrue(node == null);
+            NUnit.Framework.Assert.IsNull(node);
         }
 
         [NUnit.Framework.Test]
         public virtual void Traverse() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            doc.Select("div").First().Traverse(new _NodeVisitor_265(accum));
+            doc.Select("div").First().Traverse(new _NodeVisitor_260(accum));
             NUnit.Framework.Assert.AreEqual("<div><p><#text></#text></p></div>", accum.ToString());
         }
 
-        private sealed class _NodeVisitor_265 : NodeVisitor {
-            public _NodeVisitor_265(StringBuilder accum) {
+        private sealed class _NodeVisitor_260 : NodeVisitor {
+            public _NodeVisitor_260(StringBuilder accum) {
                 this.accum = accum;
             }
 
             public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
-                accum.Append("<" + node.NodeName() + ">");
+                accum.Append("<").Append(node.NodeName()).Append(">");
             }
 
             public void Tail(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
-                accum.Append("</" + node.NodeName() + ">");
+                accum.Append("</").Append(node.NodeName()).Append(">");
             }
 
             private readonly StringBuilder accum;
@@ -322,13 +318,37 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             NUnit.Framework.Assert.IsTrue(el.HasClass("foo"));
             iText.StyledXmlParser.Jsoup.Nodes.Element elClone = ((Document)doc.Clone()).Select("div").First();
             NUnit.Framework.Assert.IsTrue(elClone.HasClass("foo"));
-            NUnit.Framework.Assert.IsTrue(elClone.Text().Equals("Text"));
+            NUnit.Framework.Assert.AreEqual("Text", elClone.Text());
             el.RemoveClass("foo");
             el.Text("None");
             NUnit.Framework.Assert.IsFalse(el.HasClass("foo"));
             NUnit.Framework.Assert.IsTrue(elClone.HasClass("foo"));
-            NUnit.Framework.Assert.IsTrue(el.Text().Equals("None"));
-            NUnit.Framework.Assert.IsTrue(elClone.Text().Equals("Text"));
+            NUnit.Framework.Assert.AreEqual("None", el.Text());
+            NUnit.Framework.Assert.AreEqual("Text", elClone.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChangingAttributeValueShouldReplaceExistingAttributeCaseInsensitive() {
+            Document document = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<INPUT id=\"foo\" NAME=\"foo\" VALUE=\"\">");
+            iText.StyledXmlParser.Jsoup.Nodes.Element inputElement = document.Select("#foo").First();
+            inputElement.Attr("value", "bar");
+            NUnit.Framework.Assert.AreEqual(SingletonAttributes(), GetAttributesCaseInsensitive(inputElement));
+        }
+
+        private Attributes GetAttributesCaseInsensitive(iText.StyledXmlParser.Jsoup.Nodes.Element element) {
+            Attributes matches = new Attributes();
+            foreach (iText.StyledXmlParser.Jsoup.Nodes.Attribute attribute in element.Attributes()) {
+                if (attribute.Key.EqualsIgnoreCase("value")) {
+                    matches.Put(attribute);
+                }
+            }
+            return matches;
+        }
+
+        private Attributes SingletonAttributes() {
+            Attributes attributes = new Attributes();
+            attributes.Put("value", "bar");
+            return attributes;
         }
     }
 }

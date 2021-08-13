@@ -55,7 +55,7 @@ namespace iText.Svg.Processors.Impl.Font {
             iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("style"), "");
             TextNode styleContents = new TextNode("\n" + "\t@font-face{\n" + "\t\tfont-family:Courier;\n" + "\t\tsrc:local(Courier);\n"
-                 + "\t}\n" + "  ", "");
+                 + "\t}\n" + "  ");
             JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
             jSoupStyle.AddChild(new JsoupTextNode(styleContents));
             SvgProcessorContext context = new SvgProcessorContext(new SvgConverterProperties());

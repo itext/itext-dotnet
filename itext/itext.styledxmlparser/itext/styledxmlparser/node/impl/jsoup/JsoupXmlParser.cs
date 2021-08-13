@@ -62,7 +62,8 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
             // Based on some brief investigations, it seems that Jsoup uses baseUri for resolving relative uri's into absolute
             // on user demand. We perform such resolving in ResourceResolver class, therefore it is not needed here.
             String baseUri = "";
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.ParseXML(xmlStream, charset, baseUri);
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xmlStream, charset, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
             INode result = WrapJsoupHierarchy(doc);
             if (result is IDocumentNode) {
                 return (IDocumentNode)result;
@@ -76,7 +77,8 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
         * @see com.itextpdf.styledxmlparser.html.IXmlParser#parse(java.lang.String)
         */
         public virtual IDocumentNode Parse(String xml) {
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.ParseXML(xml);
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xml, "", iText.StyledXmlParser.Jsoup.Parser.Parser.
+                XmlParser());
             INode result = WrapJsoupHierarchy(doc);
             if (result is IDocumentNode) {
                 return (IDocumentNode)result;

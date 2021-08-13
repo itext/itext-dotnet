@@ -186,5 +186,40 @@ namespace iText.StyledXmlParser.Css.Util {
             // the difference between java and .net. So the test verifies this fix
             NUnit.Framework.Assert.AreEqual(8.503937f, CssDimensionParsingUtils.ParseAbsoluteLength("12q"), 0f);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleIntegerValueTest() {
+            double? expectedString = 5.0;
+            double? actualString = CssDimensionParsingUtils.ParseDouble("5");
+            NUnit.Framework.Assert.AreEqual(expectedString, actualString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleManyCharsAfterDotTest() {
+            double? expectedString = 5.123456789;
+            double? actualString = CssDimensionParsingUtils.ParseDouble("5.123456789");
+            NUnit.Framework.Assert.AreEqual(expectedString, actualString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleManyCharsAfterDotNegativeTest() {
+            double? expectedString = -5.123456789;
+            double? actualString = CssDimensionParsingUtils.ParseDouble("-5.123456789");
+            NUnit.Framework.Assert.AreEqual(expectedString, actualString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleNullValueTest() {
+            double? expectedString = null;
+            double? actualString = CssDimensionParsingUtils.ParseDouble(null);
+            NUnit.Framework.Assert.AreEqual(expectedString, actualString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleNegativeTextTest() {
+            double? expectedString = null;
+            double? actualString = CssDimensionParsingUtils.ParseDouble("text");
+            NUnit.Framework.Assert.AreEqual(expectedString, actualString);
+        }
     }
 }

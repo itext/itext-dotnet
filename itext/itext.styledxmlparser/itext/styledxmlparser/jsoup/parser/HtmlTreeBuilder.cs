@@ -3,45 +3,26 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Jsoup.Select;
@@ -49,23 +30,23 @@ using iText.StyledXmlParser.Jsoup.Select;
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>HTML Tree Builder; creates a DOM from Tokens.</summary>
     public class HtmlTreeBuilder : TreeBuilder {
-        // tag searches
-        public static readonly String[] TagsSearchInScope = new String[] { "applet", "caption", "html", "table", "td"
-            , "th", "marquee", "object" };
+        // tag searches. must be sorted, used in StringUtil.inSorted. HtmlTreeBuilderTest validates they're sorted.
+        internal static readonly String[] TagsSearchInScope = new String[] { "applet", "caption", "html", "marquee"
+            , "object", "table", "td", "th" };
 
-        private static readonly String[] TagSearchList = new String[] { "ol", "ul" };
+        internal static readonly String[] TagSearchList = new String[] { "ol", "ul" };
 
-        private static readonly String[] TagSearchButton = new String[] { "button" };
+        internal static readonly String[] TagSearchButton = new String[] { "button" };
 
-        private static readonly String[] TagSearchTableScope = new String[] { "html", "table" };
+        internal static readonly String[] TagSearchTableScope = new String[] { "html", "table" };
 
-        private static readonly String[] TagSearchSelectScope = new String[] { "optgroup", "option" };
+        internal static readonly String[] TagSearchSelectScope = new String[] { "optgroup", "option" };
 
-        private static readonly String[] TagSearchEndTags = new String[] { "dd", "dt", "li", "option", "optgroup", 
-            "p", "rp", "rt" };
+        internal static readonly String[] TagSearchEndTags = new String[] { "dd", "dt", "li", "optgroup", "option"
+            , "p", "rp", "rt" };
 
-        private static readonly String[] TagSearchSpecial = new String[] { "address", "applet", "area", "article", 
-            "aside", "base", "basefont", "bgsound", "blockquote", "body", "br", "button", "caption", "center", "col"
+        internal static readonly String[] TagSearchSpecial = new String[] { "address", "applet", "area", "article"
+            , "aside", "base", "basefont", "bgsound", "blockquote", "body", "br", "button", "caption", "center", "col"
             , "colgroup", "command", "dd", "details", "dir", "div", "dl", "dt", "embed", "fieldset", "figcaption", 
             "figure", "footer", "form", "frame", "frameset", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", 
             "hgroup", "hr", "html", "iframe", "img", "input", "isindex", "li", "link", "listing", "marquee", "menu"
@@ -73,13 +54,16 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             "script", "section", "select", "style", "summary", "table", "tbody", "td", "textarea", "tfoot", "th", 
             "thead", "title", "tr", "ul", "wbr", "xmp" };
 
+        public const int MaxScopeSearchDepth = 100;
+
+        // prevents the parser bogging down in exceptionally broken pages
         private HtmlTreeBuilderState state;
 
         // the current state
         private HtmlTreeBuilderState originalState;
 
         // original / marked state
-        private bool baseUriSetFromDoc = false;
+        private bool baseUriSetFromDoc;
 
         private iText.StyledXmlParser.Jsoup.Nodes.Element headElement;
 
@@ -90,39 +74,55 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         private iText.StyledXmlParser.Jsoup.Nodes.Element contextElement;
 
         // fragment parse context -- could be null even if fragment parsing
-        private List<iText.StyledXmlParser.Jsoup.Nodes.Element> formattingElements = new List<iText.StyledXmlParser.Jsoup.Nodes.Element
-            >();
+        private List<iText.StyledXmlParser.Jsoup.Nodes.Element> formattingElements;
 
         // active (open) formatting elements
-        private IList<String> pendingTableCharacters = new List<String>();
+        private IList<String> pendingTableCharacters;
 
         // chars in table to be shifted out
-        private Token.EndTag emptyEnd = new Token.EndTag();
+        private Token.EndTag emptyEnd;
 
         // reused empty end tag
-        private bool framesetOk = true;
+        private bool framesetOk;
 
         // if ok to go into frameset
-        private bool fosterInserts = false;
+        private bool fosterInserts;
 
         // if next inserts should be fostered
-        private bool fragmentParsing = false;
+        private bool fragmentParsing;
 
         // if parsing a fragment of html
-        internal HtmlTreeBuilder() {
+        internal override ParseSettings DefaultSettings() {
+            return ParseSettings.htmlDefault;
         }
 
-        internal override Document Parse(String input, String baseUri, ParseErrorList errors) {
+        internal override TreeBuilder NewInstance() {
+            return new HtmlTreeBuilder();
+        }
+
+        protected internal override void InitialiseParse(TextReader input, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser
+             parser) {
+            base.InitialiseParse(input, baseUri, parser);
+            // this is a bit mucky.
             state = HtmlTreeBuilderState.Initial;
+            originalState = null;
             baseUriSetFromDoc = false;
-            return base.Parse(input, baseUri, errors);
+            headElement = null;
+            formElement = null;
+            contextElement = null;
+            formattingElements = new List<iText.StyledXmlParser.Jsoup.Nodes.Element>();
+            pendingTableCharacters = new List<String>();
+            emptyEnd = new Token.EndTag();
+            framesetOk = true;
+            fosterInserts = false;
+            fragmentParsing = false;
         }
 
-        internal virtual IList<iText.StyledXmlParser.Jsoup.Nodes.Node> ParseFragment(String inputFragment, iText.StyledXmlParser.Jsoup.Nodes.Element
-             context, String baseUri, ParseErrorList errors) {
+        internal override IList<iText.StyledXmlParser.Jsoup.Nodes.Node> ParseFragment(String inputFragment, iText.StyledXmlParser.Jsoup.Nodes.Element
+             context, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser parser) {
             // context may be null
             state = HtmlTreeBuilderState.Initial;
-            InitialiseParse(inputFragment, baseUri, errors);
+            InitialiseParse(new StringReader(inputFragment), baseUri, parser);
             contextElement = context;
             fragmentParsing = true;
             iText.StyledXmlParser.Jsoup.Nodes.Element root = null;
@@ -132,13 +132,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     doc.QuirksMode(context.OwnerDocument().QuirksMode());
                 }
                 // initialise the tokeniser state:
-                String contextTag = context.TagName();
-                if (iText.StyledXmlParser.Jsoup.Helper.StringUtil.In(contextTag, "title", "textarea")) {
+                String contextTag = context.NormalName();
+                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.In(contextTag, "title", "textarea")) {
                     tokeniser.Transition(TokeniserState.Rcdata);
                 }
                 else {
-                    if (iText.StyledXmlParser.Jsoup.Helper.StringUtil.In(contextTag, "iframe", "noembed", "noframes", "style", 
-                        "xmp")) {
+                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.In(contextTag, "iframe", "noembed", "noframes", "style"
+                        , "xmp")) {
                         tokeniser.Transition(TokeniserState.Rawtext);
                     }
                     else {
@@ -162,8 +162,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
                 // default
-                root = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("html"
-                    ), baseUri);
+                root = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf(contextTag
+                    , settings), baseUri);
                 doc.AppendChild(root);
                 stack.Add(root);
                 ResetInsertionMode();
@@ -179,7 +179,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
             }
             RunParser();
-            if (context != null && root != null) {
+            if (context != null) {
+                // depending on context and the input html, content may have been added outside of the root el
+                // e.g. context=p, input=div, the div will have been pushed out.
+                IList<iText.StyledXmlParser.Jsoup.Nodes.Node> nodes = root.SiblingNodes();
+                if (!nodes.IsEmpty()) {
+                    root.InsertChildren(-1, nodes);
+                }
                 return root.ChildNodes();
             }
             else {
@@ -187,7 +193,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal override bool Process(Token token) {
+        protected internal override bool Process(Token token) {
             currentToken = token;
             return this.state.Process(token, this);
         }
@@ -249,13 +255,20 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         internal virtual void Error(HtmlTreeBuilderState state) {
-            if (errors.CanAddError()) {
-                errors.Add(new ParseError(reader.Pos(), "Unexpected token [{0}] when in state [{1}]", currentToken.TokenType
-                    (), state));
+            if (parser.GetErrors().CanAddError()) {
+                parser.GetErrors().Add(new ParseError(reader.Pos(), "Unexpected token [{0}] when in state [{1}]", currentToken
+                    .TokenType(), state));
             }
         }
 
         internal virtual iText.StyledXmlParser.Jsoup.Nodes.Element Insert(Token.StartTag startTag) {
+            // cleanup duplicate attributes:
+            if (startTag.HasAttributes() && !startTag.attributes.IsEmpty()) {
+                int dupes = startTag.attributes.Deduplicate(settings);
+                if (dupes > 0) {
+                    Error("Duplicate attribute");
+                }
+            }
             // handle empty unknown tags
             // when the spec expects an empty tag, will directly hit insertEmpty, so won't generate this fake end tag.
             if (startTag.IsSelfClosing()) {
@@ -268,14 +281,14 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return el;
             }
             iText.StyledXmlParser.Jsoup.Nodes.Element el_1 = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf(startTag.Name()), baseUri, startTag.attributes);
+                .ValueOf(startTag.Name(), settings), null, settings.NormalizeAttributes(startTag.attributes));
             Insert(el_1);
             return el_1;
         }
 
         internal virtual iText.StyledXmlParser.Jsoup.Nodes.Element InsertStartTag(String startTagName) {
             iText.StyledXmlParser.Jsoup.Nodes.Element el = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf(startTagName), baseUri);
+                .ValueOf(startTagName, settings), null);
             Insert(el);
             return el;
         }
@@ -287,31 +300,28 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         internal virtual iText.StyledXmlParser.Jsoup.Nodes.Element InsertEmpty(Token.StartTag startTag) {
             iText.StyledXmlParser.Jsoup.Parser.Tag tag = iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf(startTag.Name(
-                ));
-            iText.StyledXmlParser.Jsoup.Nodes.Element el = new iText.StyledXmlParser.Jsoup.Nodes.Element(tag, baseUri, 
-                startTag.attributes);
+                ), settings);
+            iText.StyledXmlParser.Jsoup.Nodes.Element el = new iText.StyledXmlParser.Jsoup.Nodes.Element(tag, null, settings
+                .NormalizeAttributes(startTag.attributes));
             InsertNode(el);
             if (startTag.IsSelfClosing()) {
                 if (tag.IsKnownTag()) {
-                    if (tag.IsSelfClosing()) {
-                        tokeniser.AcknowledgeSelfClosingFlag();
+                    if (!tag.IsEmpty()) {
+                        tokeniser.Error("Tag cannot be self closing; not a void tag");
                     }
                 }
                 else {
-                    // if not acked, promulagates error
                     // unknown tag, remember this is self closing for output
                     tag.SetSelfClosing();
-                    tokeniser.AcknowledgeSelfClosingFlag();
                 }
             }
-            // not an distinct error
             return el;
         }
 
         internal virtual FormElement InsertForm(Token.StartTag startTag, bool onStack) {
             iText.StyledXmlParser.Jsoup.Parser.Tag tag = iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf(startTag.Name(
-                ));
-            FormElement el = new FormElement(tag, baseUri, startTag.attributes);
+                ), settings);
+            FormElement el = new FormElement(tag, null, settings.NormalizeAttributes(startTag.attributes));
             SetFormElement(el);
             InsertNode(el);
             if (onStack) {
@@ -321,27 +331,37 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         internal virtual void Insert(Token.Comment commentToken) {
-            Comment comment = new Comment(commentToken.GetData(), baseUri);
+            Comment comment = new Comment(commentToken.GetData());
             InsertNode(comment);
         }
 
         internal virtual void Insert(Token.Character characterToken) {
             iText.StyledXmlParser.Jsoup.Nodes.Node node;
-            // characters in script and style go in as datanodes, not text nodes
-            String tagName = CurrentElement().TagName();
-            if (tagName.Equals("script") || tagName.Equals("style")) {
-                node = new DataNode(characterToken.GetData(), baseUri);
+            iText.StyledXmlParser.Jsoup.Nodes.Element el = CurrentElement();
+            if (el == null) {
+                el = doc;
+            }
+            // allows for whitespace to be inserted into the doc root object (not on the stack)
+            String tagName = el.NormalName();
+            String data = characterToken.GetData();
+            if (characterToken.IsCData()) {
+                node = new CDataNode(data);
             }
             else {
-                node = new TextNode(characterToken.GetData(), baseUri);
+                if (IsContentForTagData(tagName)) {
+                    node = new DataNode(data);
+                }
+                else {
+                    node = new TextNode(data);
+                }
             }
-            CurrentElement().AppendChild(node);
+            el.AppendChild(node);
         }
 
         // doesn't use insertNode, because we don't foster these; and will always have a stack.
         private void InsertNode(iText.StyledXmlParser.Jsoup.Nodes.Node node) {
             // if the stack hasn't been set up yet, elements (doctype, comments) go into the doc
-            if (stack.Count == 0) {
+            if (stack.IsEmpty()) {
                 doc.AppendChild(node);
             }
             else {
@@ -378,9 +398,14 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return IsElementInQueue(stack, el);
         }
 
+        private const int maxQueueDepth = 256;
+
+        // an arbitrary tension point between real HTML and crafted pain
         private bool IsElementInQueue(List<iText.StyledXmlParser.Jsoup.Nodes.Element> queue, iText.StyledXmlParser.Jsoup.Nodes.Element
              element) {
-            for (int pos = queue.Count - 1; pos >= 0; pos--) {
+            int bottom = queue.Count - 1;
+            int upper = bottom >= maxQueueDepth ? bottom - maxQueueDepth : 0;
+            for (int pos = bottom; pos >= upper; pos--) {
                 iText.StyledXmlParser.Jsoup.Nodes.Element next = queue[pos];
                 if (next == element) {
                     return true;
@@ -392,7 +417,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         internal virtual iText.StyledXmlParser.Jsoup.Nodes.Element GetFromStack(String elName) {
             for (int pos = stack.Count - 1; pos >= 0; pos--) {
                 iText.StyledXmlParser.Jsoup.Nodes.Element next = stack[pos];
-                if (next.NodeName().Equals(elName)) {
+                if (next.NormalName().Equals(elName)) {
                     return next;
                 }
             }
@@ -410,21 +435,23 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return false;
         }
 
-        internal virtual void PopStackToClose(String elName) {
+        internal virtual iText.StyledXmlParser.Jsoup.Nodes.Element PopStackToClose(String elName) {
             for (int pos = stack.Count - 1; pos >= 0; pos--) {
-                iText.StyledXmlParser.Jsoup.Nodes.Element next = stack[pos];
+                iText.StyledXmlParser.Jsoup.Nodes.Element el = stack[pos];
                 stack.JRemoveAt(pos);
-                if (next.NodeName().Equals(elName)) {
-                    break;
+                if (el.NormalName().Equals(elName)) {
+                    return el;
                 }
             }
+            return null;
         }
 
+        // elnames is sorted, comes from Constants
         internal virtual void PopStackToClose(params String[] elNames) {
             for (int pos = stack.Count - 1; pos >= 0; pos--) {
                 iText.StyledXmlParser.Jsoup.Nodes.Element next = stack[pos];
                 stack.JRemoveAt(pos);
-                if (iText.StyledXmlParser.Jsoup.Helper.StringUtil.In(next.NodeName(), elNames)) {
+                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(next.NormalName(), elNames)) {
                     break;
                 }
             }
@@ -433,7 +460,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         internal virtual void PopStackToBefore(String elName) {
             for (int pos = stack.Count - 1; pos >= 0; pos--) {
                 iText.StyledXmlParser.Jsoup.Nodes.Element next = stack[pos];
-                if (next.NodeName().Equals(elName)) {
+                if (next.NormalName().Equals(elName)) {
                     break;
                 }
                 else {
@@ -447,18 +474,18 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         internal virtual void ClearStackToTableBodyContext() {
-            ClearStackToContext("tbody", "tfoot", "thead");
+            ClearStackToContext("tbody", "tfoot", "thead", "template");
         }
 
         internal virtual void ClearStackToTableRowContext() {
-            ClearStackToContext("tr");
+            ClearStackToContext("tr", "template");
         }
 
         private void ClearStackToContext(params String[] nodeNames) {
             for (int pos = stack.Count - 1; pos >= 0; pos--) {
                 iText.StyledXmlParser.Jsoup.Nodes.Element next = stack[pos];
-                if (iText.StyledXmlParser.Jsoup.Helper.StringUtil.In(next.NodeName(), nodeNames) || next.NodeName().Equals
-                    ("html")) {
+                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.In(next.NormalName(), nodeNames) || next.NormalName().
+                    Equals("html")) {
                     break;
                 }
                 else {
@@ -506,7 +533,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     last = true;
                     node = contextElement;
                 }
-                String name = node.NodeName();
+                String name = node != null ? node.NormalName() : "";
                 if ("select".Equals(name)) {
                     Transition(HtmlTreeBuilderState.InSelect);
                     break;
@@ -586,7 +613,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         // frag
-        // todo: tidy up in specific scope methods
         private String[] specificScopeTarget = new String[] { null };
 
         private bool InSpecificScope(String targetName, String[] baseTypes, String[] extraTypes) {
@@ -595,20 +621,23 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         private bool InSpecificScope(String[] targetNames, String[] baseTypes, String[] extraTypes) {
-            for (int pos = stack.Count - 1; pos >= 0; pos--) {
-                iText.StyledXmlParser.Jsoup.Nodes.Element el = stack[pos];
-                String elName = el.NodeName();
-                if (iText.StyledXmlParser.Jsoup.Helper.StringUtil.In(elName, targetNames)) {
+            // https://html.spec.whatwg.org/multipage/parsing.html#has-an-element-in-the-specific-scope
+            int bottom = stack.Count - 1;
+            int top = bottom > MaxScopeSearchDepth ? bottom - MaxScopeSearchDepth : 0;
+            // don't walk too far up the tree
+            for (int pos = bottom; pos >= top; pos--) {
+                String elName = stack[pos].NormalName();
+                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(elName, targetNames)) {
                     return true;
                 }
-                if (iText.StyledXmlParser.Jsoup.Helper.StringUtil.In(elName, baseTypes)) {
+                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(elName, baseTypes)) {
                     return false;
                 }
-                if (extraTypes != null && iText.StyledXmlParser.Jsoup.Helper.StringUtil.In(elName, extraTypes)) {
+                if (extraTypes != null && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(elName, extraTypes)) {
                     return false;
                 }
             }
-            Validate.Fail("Should not be reachable");
+            //Validate.fail("Should not be reachable"); // would end up false because hitting 'html' at root (basetypes)
             return false;
         }
 
@@ -624,8 +653,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return InSpecificScope(targetName, TagsSearchInScope, extras);
         }
 
-        // todo: in mathml namespace: mi, mo, mn, ms, mtext annotation-xml
-        // todo: in svg namespace: forignOjbect, desc, title
         internal virtual bool InListItemScope(String targetName) {
             return InScope(targetName, TagSearchList);
         }
@@ -641,11 +668,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         internal virtual bool InSelectScope(String targetName) {
             for (int pos = stack.Count - 1; pos >= 0; pos--) {
                 iText.StyledXmlParser.Jsoup.Nodes.Element el = stack[pos];
-                String elName = el.NodeName();
+                String elName = el.NormalName();
                 if (elName.Equals(targetName)) {
                     return true;
                 }
-                if (!iText.StyledXmlParser.Jsoup.Helper.StringUtil.In(elName, TagSearchSelectScope)) {
+                if (!iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(elName, TagSearchSelectScope)) {
                     // all elements except
                     return false;
                 }
@@ -686,10 +713,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return pendingTableCharacters;
         }
 
-        internal virtual void SetPendingTableCharacters(IList<String> pendingTableCharacters) {
-            this.pendingTableCharacters = pendingTableCharacters;
-        }
-
         /// <summary>11.2.5.2 Closing elements that have implied end tags</summary>
         /// <remarks>
         /// 11.2.5.2 Closing elements that have implied end tags
@@ -703,8 +726,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         /// process, then the UA must perform the above steps as if that element was not in the above list.
         /// </param>
         internal virtual void GenerateImpliedEndTags(String excludeTag) {
-            while ((excludeTag != null && !CurrentElement().NodeName().Equals(excludeTag)) && iText.StyledXmlParser.Jsoup.Helper.StringUtil
-                .In(CurrentElement().NodeName(), TagSearchEndTags)) {
+            while ((excludeTag != null && !CurrentElement().NormalName().Equals(excludeTag)) && iText.StyledXmlParser.Jsoup.Internal.StringUtil
+                .InSorted(CurrentElement().NormalName(), TagSearchEndTags)) {
                 Pop();
             }
         }
@@ -714,14 +737,21 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         internal virtual bool IsSpecial(iText.StyledXmlParser.Jsoup.Nodes.Element el) {
-            // todo: mathml's mi, mo, mn
-            // todo: svg's foreigObject, desc, title
-            String name = el.NodeName();
-            return iText.StyledXmlParser.Jsoup.Helper.StringUtil.In(name, TagSearchSpecial);
+            String name = el.NormalName();
+            return iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, TagSearchSpecial);
         }
 
         internal virtual iText.StyledXmlParser.Jsoup.Nodes.Element LastFormattingElement() {
             return formattingElements.Count > 0 ? formattingElements[formattingElements.Count - 1] : null;
+        }
+
+        internal virtual int PositionOfElement(iText.StyledXmlParser.Jsoup.Nodes.Element el) {
+            for (int i = 0; i < formattingElements.Count; i++) {
+                if (el == formattingElements[i]) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         internal virtual iText.StyledXmlParser.Jsoup.Nodes.Element RemoveLastFormattingElement() {
@@ -736,6 +766,16 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         // active formatting elements
         internal virtual void PushActiveFormattingElements(iText.StyledXmlParser.Jsoup.Nodes.Element @in) {
+            this.CheckActiveFormattingElements(@in);
+            formattingElements.Add(@in);
+        }
+
+        internal virtual void PushWithBookmark(iText.StyledXmlParser.Jsoup.Nodes.Element @in, int bookmark) {
+            this.CheckActiveFormattingElements(@in);
+            formattingElements.Add(bookmark, @in);
+        }
+
+        internal virtual void CheckActiveFormattingElements(iText.StyledXmlParser.Jsoup.Nodes.Element @in) {
             int numSeen = 0;
             for (int pos = formattingElements.Count - 1; pos >= 0; pos--) {
                 iText.StyledXmlParser.Jsoup.Nodes.Element el = formattingElements[pos];
@@ -751,18 +791,16 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     break;
                 }
             }
-            formattingElements.Add(@in);
         }
 
         private bool IsSameFormattingElement(iText.StyledXmlParser.Jsoup.Nodes.Element a, iText.StyledXmlParser.Jsoup.Nodes.Element
              b) {
             // same if: same namespace, tag, and attributes. Element.equals only checks tag, might in future check children
-            return a.NodeName().Equals(b.NodeName()) && 
+            return a.NormalName().Equals(b.NormalName()) && 
                         // a.namespace().equals(b.namespace()) &&
                         a.Attributes().Equals(b.Attributes());
         }
 
-        // todo: namespaces
         internal virtual void ReconstructFormattingElements() {
             iText.StyledXmlParser.Jsoup.Nodes.Element last = LastFormattingElement();
             if (last == null || OnStack(last)) {
@@ -796,9 +834,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 // 8. create new element from element, 9 insert into current node, onto stack
                 skip = false;
                 // can only skip increment from 4.
-                iText.StyledXmlParser.Jsoup.Nodes.Element newEl = InsertStartTag(entry.NodeName());
-                // todo: avoid fostering here?
-                // newEl.namespace(entry.namespace()); // todo: namespaces
+                iText.StyledXmlParser.Jsoup.Nodes.Element newEl = InsertStartTag(entry.NormalName());
                 newEl.Attributes().AddAll(entry.Attributes());
                 // 10. replace entry with new entry
                 formattingElements[pos] = newEl;
@@ -841,7 +877,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     break;
                 }
                 else {
-                    if (next.NodeName().Equals(nodeName)) {
+                    if (next.NormalName().Equals(nodeName)) {
                         return next;
                     }
                 }
@@ -888,6 +924,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         public override String ToString() {
             return "TreeBuilder{" + "currentToken=" + currentToken + ", state=" + state + ", currentElement=" + CurrentElement
                 () + '}';
+        }
+
+        protected internal override bool IsContentForTagData(String normalName) {
+            return (normalName.Equals("script") || normalName.Equals("style"));
         }
     }
 }

@@ -67,8 +67,10 @@ namespace iText.Svg.Css.Impl {
             (new HashSet<IStyleInheritance>(JavaUtil.ArraysAsList((IStyleInheritance)new CssInheritance(), (IStyleInheritance
             )new SvgAttributeInheritance())));
 
+        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
         private static readonly String[] ELEMENTS_INHERITING_PARENT_STYLES = new String[] { SvgConstants.Tags.MARKER
-            , SvgConstants.Tags.LINEAR_GRADIENT, SvgConstants.Tags.PATTERN };
+            , SvgConstants.Tags.LINEAR_GRADIENT, SvgConstants.Tags.LINEAR_GRADIENT.ToLowerInvariant(), SvgConstants.Tags
+            .PATTERN };
 
         private static readonly float DEFAULT_FONT_SIZE = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults
             .GetDefaultValue(SvgConstants.Attributes.FONT_SIZE));
@@ -243,7 +245,7 @@ namespace iText.Svg.Css.Impl {
             if (element.ParentNode() is IStylesContainer) {
                 IStylesContainer parentNode = (IStylesContainer)element.ParentNode();
                 IDictionary<String, String> parentStyles = parentNode.GetStyles();
-                if (parentStyles == null && !(parentNode is IDocumentNode)) {
+                if (parentStyles == null && !(parentNode is IElementNode)) {
                     LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES);
                 }
                 if (parentStyles != null) {

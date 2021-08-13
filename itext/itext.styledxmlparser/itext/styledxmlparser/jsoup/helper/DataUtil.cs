@@ -42,23 +42,29 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
 using iText.IO.Util;
-using iText.StyledXmlParser.Jsoup;
+using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.StyledXmlParser.Jsoup.Select;
 
 namespace iText.StyledXmlParser.Jsoup.Helper {
     /// <summary>Internal static utilities for handling data.</summary>
     public sealed class DataUtil {
-        private static readonly Regex charsetPattern = iText.IO.Util.StringUtil.RegexCompile("(?i)\\bcharset=\\s*(?:\"|')?([^\\s,;\"']*)"
+        private static readonly Regex charsetPattern = iText.IO.Util.StringUtil.RegexCompile("(?i)\\bcharset=\\s*(?:[\"'])?([^\\s,;\"']*)"
             );
 
-        internal const String defaultCharset = "UTF-8";
+        public static readonly System.Text.Encoding UTF_8 = EncodingUtil.GetEncoding("UTF-8");
 
-        private const int bufferSize = 0x20000;
+        // Don't use StandardCharsets, as those only appear in Android API 19, and we target 10.
+        internal static readonly String defaultCharsetName = UTF_8.Name();
 
-        private const int UNICODE_BOM = 0xFEFF;
+        // used if not found in header or meta charset
+        private const int firstReadBufferSize = 1024 * 5;
+
+        internal const int bufferSize = 1024 * 32;
 
         private static readonly char[] mimeBoundaryChars = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             .ToCharArray();
@@ -68,17 +74,38 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         private DataUtil() {
         }
 
-        // used if not found in header or meta charset
-        // ~130K.
-        /// <summary>Loads a file to a Document.</summary>
+        /// <summary>Loads and parses a file to a Document.</summary>
+        /// <remarks>
+        /// Loads and parses a file to a Document. Files that are compressed with gzip (and end in
+        /// <c>.gz</c>
+        /// or
+        /// <c>.z</c>
+        /// )
+        /// are supported in addition to uncompressed files.
+        /// </remarks>
         /// <param name="in">file to load</param>
-        /// <param name="charsetName">character set of input</param>
+        /// <param name="charsetName">
+        /// (optional) character set of input; specify
+        /// <see langword="null"/>
+        /// to attempt to autodetect. A BOM in
+        /// the file will always override this setting.
+        /// </param>
         /// <param name="baseUri">base URI of document, to resolve relative links against</param>
         /// <returns>Document</returns>
         public static Document Load(FileInfo @in, String charsetName, String baseUri) {
-            ByteBuffer byteData = ReadFileToByteBuffer(@in);
-            return ParseByteData(byteData, charsetName, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser(
-                ));
+            Stream stream = new FileStream(@in.FullName, FileMode.Open, FileAccess.Read);
+            String name = Normalizer.LowerCase(@in.Name);
+            if (name.EndsWith(".gz") || name.EndsWith(".z")) {
+                // unfortunately file input streams don't support marks (why not?), so we will close and reopen after read
+                // gzip magic bytes
+                bool zipped = (stream.Read() == 0x1f && stream.Read() == 0x8b);
+                stream.Dispose();
+                stream = zipped ?
+                    CreateSeekableStream(new GZipStream(new FileStream(@in.FullName, FileMode.Open, FileAccess.Read), CompressionMode.Decompress))
+                    : new FileStream(@in.FullName, FileMode.Open, FileAccess.Read);
+            }
+            return ParseInputStream(stream, charsetName, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser
+                ());
         }
 
         /// <summary>Parses a Document from an input steam.</summary>
@@ -87,9 +114,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         /// <param name="baseUri">base URI of document, to resolve relative links against</param>
         /// <returns>Document</returns>
         public static Document Load(Stream @in, String charsetName, String baseUri) {
-            ByteBuffer byteData = ReadToByteBuffer(@in);
-            return ParseByteData(byteData, charsetName, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser(
-                ));
+            return ParseInputStream(CreateSeekableStream(@in), charsetName, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser());
         }
 
         /// <summary>Parses a Document from an input steam, using the provided Parser.</summary>
@@ -104,8 +129,15 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         /// <returns>Document</returns>
         public static Document Load(Stream @in, String charsetName, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser
              parser) {
-            ByteBuffer byteData = ReadToByteBuffer(@in);
-            return ParseByteData(byteData, charsetName, baseUri, parser);
+            return ParseInputStream(CreateSeekableStream(@in), charsetName, baseUri, parser);
+        }
+
+        internal static Stream CreateSeekableStream(Stream input)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            input.CopyTo(memoryStream);
+            memoryStream.Position = 0;
+            return memoryStream;
         }
 
         /// <summary>Writes the input stream to the output stream.</summary>
@@ -120,107 +152,123 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             }
         }
 
-        // reads bytes first into a buffer, then decodes with the appropriate charset. done this way to support
-        // switching the chartset midstream when a meta http-equiv tag defines the charset.
-        // todo - this is getting gnarly. needs a rewrite.
-        internal static Document ParseByteData(ByteBuffer byteData, String charsetName, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser
+        internal static Document ParseInputStream(Stream input, String charsetName, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser
              parser) {
-            String docData;
+            if (input == null) {
+                // empty body
+                return new Document(baseUri);
+            }
+            input = ConstrainableInputStream.Wrap(input, bufferSize, 0);
             Document doc = null;
+            // read the start of the stream and look for a BOM or meta charset
+            long currentPosition = input.Position;
+            ByteBuffer firstBytes = ReadToByteBuffer(input, firstReadBufferSize - 1);
+            // -1 because we read one more to see if completed. First read is < buffer size, so can't be invalid.
+            bool fullyRead = (input.Read() == -1);
+            input.Position = currentPosition;
             // look for BOM - overrides any other header or input
-            charsetName = DetectCharsetFromBom(byteData, charsetName);
+            DataUtil.BomCharset bomCharset = DetectCharsetFromBom(firstBytes);
+            if (bomCharset != null) {
+                charsetName = bomCharset.charset;
+            }
             if (charsetName == null) {
                 // determine from meta. safe first parse as UTF-8
+                try {
+                    String defaultDecoded = UTF_8.Decode(firstBytes);
+                    doc = parser.ParseInput(new StringReader(defaultDecoded), baseUri);
+                }
+                catch (UncheckedIOException e) {
+                    throw e.IoException();
+                }
                 // look for <meta http-equiv="Content-Type" content="text/html;charset=gb2312"> or HTML5 <meta charset="gb2312">
-                docData = EncodingUtil.GetEncoding(defaultCharset).Decode(byteData).ToString();
-                doc = parser.ParseInput(docData, baseUri);
-                iText.StyledXmlParser.Jsoup.Nodes.Element meta = doc.Select("meta[http-equiv=content-type], meta[charset]"
-                    ).First();
+                Elements metaElements = doc.Select("meta[http-equiv=content-type], meta[charset]");
                 String foundCharset = null;
                 // if not found, will keep utf-8 as best attempt
-                if (meta != null) {
+                foreach (iText.StyledXmlParser.Jsoup.Nodes.Element meta in metaElements) {
                     if (meta.HasAttr("http-equiv")) {
                         foundCharset = GetCharsetFromContentType(meta.Attr("content"));
                     }
                     if (foundCharset == null && meta.HasAttr("charset")) {
                         foundCharset = meta.Attr("charset");
                     }
+                    if (foundCharset != null) {
+                        break;
+                    }
                 }
                 // look for <?xml encoding='ISO-8859-1'?>
-                if (foundCharset == null && doc.ChildNode(0) is XmlDeclaration) {
-                    XmlDeclaration prolog = (XmlDeclaration)doc.ChildNode(0);
-                    if (prolog.Name().Equals("xml")) {
-                        foundCharset = prolog.Attr("encoding");
+                if (foundCharset == null && doc.ChildNodeSize() > 0) {
+                    iText.StyledXmlParser.Jsoup.Nodes.Node first = doc.ChildNode(0);
+                    XmlDeclaration decl = null;
+                    if (first is XmlDeclaration) {
+                        decl = (XmlDeclaration)first;
+                    }
+                    else {
+                        if (first is Comment) {
+                            Comment comment = (Comment)first;
+                            if (comment.IsXmlDeclaration()) {
+                                decl = comment.AsXmlDeclaration();
+                            }
+                        }
+                    }
+                    if (decl != null) {
+                        if (decl.Name().EqualsIgnoreCase("xml")) {
+                            foundCharset = decl.Attr("encoding");
+                        }
                     }
                 }
                 foundCharset = ValidateCharset(foundCharset);
-                if (foundCharset != null && !foundCharset.Equals(defaultCharset)) {
-                    // need to re-decode
+                if (foundCharset != null && !foundCharset.EqualsIgnoreCase(defaultCharsetName)) {
+                    // need to re-decode. (case insensitive check here to match how validate works)
                     foundCharset = iText.IO.Util.StringUtil.ReplaceAll(foundCharset.Trim(), "[\"']", "");
                     charsetName = foundCharset;
-                    byteData.Rewind();
-                    docData = EncodingUtil.GetEncoding(foundCharset).Decode(byteData).ToString();
                     doc = null;
+                }
+                else {
+                    if (!fullyRead) {
+                        doc = null;
+                    }
                 }
             }
             else {
                 // specified by content type header (or by user on file load)
                 Validate.NotEmpty(charsetName, "Must set charset arg to character set of file to parse. Set to null to attempt to detect from HTML"
                     );
-                docData = EncodingUtil.GetEncoding(charsetName).Decode(byteData).ToString();
             }
             if (doc == null) {
-                doc = parser.ParseInput(docData, baseUri);
-                doc.OutputSettings().Charset(charsetName);
+                if (charsetName == null) {
+                    charsetName = defaultCharsetName;
+                }
+                Encoding charset = charsetName.Equals(defaultCharsetName) ? UTF_8 : EncodingUtil.GetEncoding(charsetName);
+                StreamReader reader = new StreamReader(input, charset);
+                try {
+                    doc = parser.ParseInput(reader, baseUri);
+                }
+                catch (UncheckedIOException e) {
+                    // io exception when parsing (not seen before because reading the stream as we go)
+                    throw e.IoException();
+                }
+                doc.OutputSettings().Charset(charset);
+                if (!charset.CanEncode('a')) {
+                    // some charsets can read but not encode; switch to an encodable charset and update the meta el
+                    doc.Charset(UTF_8);
+                }
             }
+            input.Dispose();
             return doc;
         }
 
         /// <summary>Read the input stream into a byte buffer.</summary>
+        /// <remarks>
+        /// Read the input stream into a byte buffer. To deal with slow input streams, you may interrupt the thread this
+        /// method is executing on. The data read until being interrupted will be available.
+        /// </remarks>
         /// <param name="inStream">the input stream to read from</param>
         /// <param name="maxSize">the maximum size in bytes to read from the stream. Set to 0 to be unlimited.</param>
         /// <returns>the filled byte buffer</returns>
-        internal static ByteBuffer ReadToByteBuffer(Stream inStream, int maxSize) {
+        public static ByteBuffer ReadToByteBuffer(Stream inStream, int maxSize) {
             Validate.IsTrue(maxSize >= 0, "maxSize must be 0 (unlimited) or larger");
-            bool capped = maxSize > 0;
-            byte[] buffer = new byte[bufferSize];
-            MemoryStream outStream = new MemoryStream(bufferSize);
-            int read;
-            int remaining = maxSize;
-            while (true) {
-                read = inStream.Read(buffer);
-                if (read == -1) {
-                    break;
-                }
-                if (capped) {
-                    if (read > remaining) {
-                        outStream.Write(buffer, 0, remaining);
-                        break;
-                    }
-                    remaining -= read;
-                }
-                outStream.Write(buffer, 0, read);
-            }
-            return ByteBuffer.Wrap(outStream.ToArray());
-        }
-
-        internal static ByteBuffer ReadToByteBuffer(Stream inStream) {
-            return ReadToByteBuffer(inStream, 0);
-        }
-
-        internal static ByteBuffer ReadFileToByteBuffer(FileInfo file) {
-            FileStream randomAccessFile = null;
-            try {
-                randomAccessFile = PortUtil.GetReadOnlyRandomAccesFile(file);
-                byte[] bytes = new byte[(int)randomAccessFile.Length];
-                randomAccessFile.ReadFully(bytes);
-                return ByteBuffer.Wrap(bytes);
-            }
-            finally {
-                if (randomAccessFile != null) {
-                    randomAccessFile.Dispose();
-                }
-            }
+            ConstrainableInputStream input = ConstrainableInputStream.Wrap(inStream, bufferSize, maxSize);
+            return input.ReadToByteBuffer(maxSize);
         }
 
         /// <summary>Parse out a charset from a content type header.</summary>
@@ -251,58 +299,65 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             if (PortUtil.CharsetIsSupported(cs)) {
                 return cs;
             }
-            StringBuilder upperCase = new StringBuilder();
-            for (int i = 0; i < cs.Length; i++) {
-                upperCase.Append(char.ToUpper(cs[i]));
-            }
-            cs = upperCase.ToString();
+            cs = cs.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
             if (PortUtil.CharsetIsSupported(cs)) {
                 return cs;
             }
-            // if our this charset matching fails.... we just take the default
             return null;
         }
 
         /// <summary>Creates a random string, suitable for use as a mime boundary</summary>
         internal static String MimeBoundary() {
-            StringBuilder mime = new StringBuilder(boundaryLength);
+            StringBuilder mime = StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
             Random rand = new Random();
             for (int i = 0; i < boundaryLength; i++) {
                 mime.Append(mimeBoundaryChars[rand.Next(mimeBoundaryChars.Length)]);
             }
-            return mime.ToString();
+            return StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(mime);
         }
 
-        private static String DetectCharsetFromBom(ByteBuffer byteData, String charsetName) {
+        private static DataUtil.BomCharset DetectCharsetFromBom(ByteBuffer byteData) {
+            // .mark and rewind used to return Buffer, now ByteBuffer, so cast for backward compat
             byteData.Mark();
             byte[] bom = new byte[4];
             if (byteData.Remaining() >= bom.Length) {
                 byteData.Get(bom);
                 byteData.Rewind();
             }
-            if (bom[0] == 0x00 && bom[1] == 0x00 && bom[2] == (byte)0xFE && bom[3] == (byte)0xFF || bom[0] == (byte)0xFF
-                 && bom[1] == (byte)0xFE && bom[2] == 0x00 && bom[3] == 0x00) {
-                // BE
+            if (bom[0] == 0x00 && bom[1] == 0x00 && bom[2] == (byte)0xFE && bom[3] == (byte)0xFF || 
+                        // BE
+                        bom[0] == (byte)0xFF && bom[1] == (byte)0xFE && bom[2] == 0x00 && bom[3] == 0x00) {
                 // LE
-                charsetName = "UTF-32";
+                return new DataUtil.BomCharset("UTF-32", false);
             }
             else {
                 // and I hope it's on your system
-                if (bom[0] == (byte)0xFE && bom[1] == (byte)0xFF || bom[0] == (byte)0xFF && bom[1] == (byte)0xFE) {
-                    // BE
-                    charsetName = "UTF-16";
+                if (bom[0] == (byte)0xFE && bom[1] == (byte)0xFF || 
+                                // BE
+                                bom[0] == (byte)0xFF && bom[1] == (byte)0xFE) {
+                    return new DataUtil.BomCharset("UTF-16", false);
                 }
                 else {
                     // in all Javas
                     if (bom[0] == (byte)0xEF && bom[1] == (byte)0xBB && bom[2] == (byte)0xBF) {
-                        charsetName = "UTF-8";
-                        // in all Javas
-                        byteData.Position(3);
+                        return new DataUtil.BomCharset("UTF-8", true);
                     }
                 }
             }
+            // in all Javas
             // 16 and 32 decoders consume the BOM to determine be/le; utf-8 should be consumed here
-            return charsetName;
+            return null;
+        }
+
+        private class BomCharset {
+            internal readonly String charset;
+
+            internal readonly bool offset;
+
+            public BomCharset(String charset, bool offset) {
+                this.charset = charset;
+                this.offset = offset;
+            }
         }
     }
 }

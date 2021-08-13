@@ -77,6 +77,10 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgConstants.Tags.TSPAN, typeof(TextSvgTSpanBranchRenderer));
             result.Put(SvgConstants.Tags.USE, typeof(UseSvgNodeRenderer));
             result.Put(SvgConstants.Tags.TEXT_LEAF, typeof(TextLeafSvgNodeRenderer));
+            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+            result.Put(SvgConstants.Tags.CLIP_PATH.ToLowerInvariant(), typeof(ClipPathSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.LINEAR_GRADIENT.ToLowerInvariant(), typeof(LinearGradientSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.TEXT_LEAF.ToLowerInvariant(), typeof(TextLeafSvgNodeRenderer));
             return result;
         }
 

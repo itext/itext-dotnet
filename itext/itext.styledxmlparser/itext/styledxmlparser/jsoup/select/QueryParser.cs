@@ -3,50 +3,30 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using iText.IO.Util;
-using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Helper;
+using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Parser;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
@@ -56,15 +36,17 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         private static readonly String[] AttributeEvals = new String[] { "=", "!=", "^=", "$=", "*=", "~=" };
 
-        private TokenQueue tq;
+        private readonly TokenQueue tq;
 
-        private String query;
+        private readonly String query;
 
-        private IList<Evaluator> evals = new List<Evaluator>();
+        private readonly IList<Evaluator> evals = new List<Evaluator>();
 
         /// <summary>Create a new QueryParser.</summary>
         /// <param name="query">CSS query</param>
         private QueryParser(String query) {
+            Validate.NotEmpty(query);
+            query = query.Trim();
             this.query = query;
             this.tq = new TokenQueue(query);
         }
@@ -72,10 +54,16 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         /// <summary>Parse a CSS query into an Evaluator.</summary>
         /// <param name="query">CSS query</param>
         /// <returns>Evaluator</returns>
+        /// <seealso cref="Selector">selector query syntax</seealso>
         public static Evaluator Parse(String query) {
-            iText.StyledXmlParser.Jsoup.Select.QueryParser p = new iText.StyledXmlParser.Jsoup.Select.QueryParser(query
-                );
-            return p.Parse();
+            try {
+                iText.StyledXmlParser.Jsoup.Select.QueryParser p = new iText.StyledXmlParser.Jsoup.Select.QueryParser(query
+                    );
+                return p.Parse();
+            }
+            catch (ArgumentException e) {
+                throw new Selector.SelectorParseException(e.Message);
+            }
         }
 
         /// <summary>Parse the query</summary>
@@ -129,6 +117,8 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                 // make sure OR (,) has precedence:
                 if (rootEval is CombiningEvaluator.OR && combinator != ',') {
                     currentEval = ((CombiningEvaluator.OR)currentEval).RightMostEvaluator();
+                    System.Diagnostics.Debug.Assert(currentEval != null);
+                    // rightMost signature can return null (if none set), but always will have one by this point
                     replaceRightMost = true;
                 }
             }
@@ -137,42 +127,44 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             }
             evals.Clear();
             // for most combinators: change the current eval into an AND of the current eval and the new eval
-            if (combinator == '>') {
-                currentEval = new CombiningEvaluator.And(newEval, new StructuralEvaluator.ImmediateParent(currentEval));
-            }
-            else {
-                if (combinator == ' ') {
-                    currentEval = new CombiningEvaluator.And(newEval, new StructuralEvaluator.Parent(currentEval));
+            switch (combinator) {
+                case '>': {
+                    currentEval = new CombiningEvaluator.And(new StructuralEvaluator.ImmediateParent(currentEval), newEval);
+                    break;
                 }
-                else {
-                    if (combinator == '+') {
-                        currentEval = new CombiningEvaluator.And(newEval, new StructuralEvaluator.ImmediatePreviousSibling(currentEval
-                            ));
+
+                case ' ': {
+                    currentEval = new CombiningEvaluator.And(new StructuralEvaluator.Parent(currentEval), newEval);
+                    break;
+                }
+
+                case '+': {
+                    currentEval = new CombiningEvaluator.And(new StructuralEvaluator.ImmediatePreviousSibling(currentEval), newEval
+                        );
+                    break;
+                }
+
+                case '~': {
+                    currentEval = new CombiningEvaluator.And(new StructuralEvaluator.PreviousSibling(currentEval), newEval);
+                    break;
+                }
+
+                case ',': {
+                    CombiningEvaluator.OR or;
+                    if (currentEval is CombiningEvaluator.OR) {
+                        or = (CombiningEvaluator.OR)currentEval;
                     }
                     else {
-                        if (combinator == '~') {
-                            currentEval = new CombiningEvaluator.And(newEval, new StructuralEvaluator.PreviousSibling(currentEval));
-                        }
-                        else {
-                            if (combinator == ',') {
-                                // group or.
-                                CombiningEvaluator.OR or;
-                                if (currentEval is CombiningEvaluator.OR) {
-                                    or = (CombiningEvaluator.OR)currentEval;
-                                    or.Add(newEval);
-                                }
-                                else {
-                                    or = new CombiningEvaluator.OR();
-                                    or.Add(currentEval);
-                                    or.Add(newEval);
-                                }
-                                currentEval = or;
-                            }
-                            else {
-                                throw new Selector.SelectorParseException("Unknown combinator: " + combinator);
-                            }
-                        }
+                        or = new CombiningEvaluator.OR();
+                        or.Add(currentEval);
                     }
+                    or.Add(newEval);
+                    currentEval = or;
+                    break;
+                }
+
+                default: {
+                    throw new Selector.SelectorParseException("Unknown combinator: " + combinator);
                 }
             }
             if (replaceRightMost) {
@@ -185,7 +177,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         }
 
         private String ConsumeSubQuery() {
-            StringBuilder sq = new StringBuilder();
+            StringBuilder sq = iText.StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
             while (!tq.IsEmpty()) {
                 if (tq.Matches("(")) {
                     sq.Append("(").Append(tq.ChompBalanced('(', ')')).Append(")");
@@ -204,7 +196,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                     }
                 }
             }
-            return sq.ToString();
+            return iText.StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(sq);
         }
 
         private void FindElements() {
@@ -216,7 +208,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                     ByClass();
                 }
                 else {
-                    if (tq.MatchesWord()) {
+                    if (tq.MatchesWord() || tq.Matches("*|")) {
                         ByTag();
                     }
                     else {
@@ -252,70 +244,79 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                                                         Contains(true);
                                                     }
                                                     else {
-                                                        if (tq.Matches(":matches(")) {
-                                                            Matches(false);
+                                                        if (tq.Matches(":containsData(")) {
+                                                            ContainsData();
                                                         }
                                                         else {
-                                                            if (tq.Matches(":matchesOwn(")) {
-                                                                Matches(true);
+                                                            if (tq.Matches(":matches(")) {
+                                                                Matches(false);
                                                             }
                                                             else {
-                                                                if (tq.Matches(":not(")) {
-                                                                    Not();
+                                                                if (tq.Matches(":matchesOwn(")) {
+                                                                    Matches(true);
                                                                 }
                                                                 else {
-                                                                    if (tq.MatchChomp(":nth-child(")) {
-                                                                        CssNthChild(false, false);
+                                                                    if (tq.Matches(":not(")) {
+                                                                        Not();
                                                                     }
                                                                     else {
-                                                                        if (tq.MatchChomp(":nth-last-child(")) {
-                                                                            CssNthChild(true, false);
+                                                                        if (tq.MatchChomp(":nth-child(")) {
+                                                                            CssNthChild(false, false);
                                                                         }
                                                                         else {
-                                                                            if (tq.MatchChomp(":nth-of-type(")) {
-                                                                                CssNthChild(false, true);
+                                                                            if (tq.MatchChomp(":nth-last-child(")) {
+                                                                                CssNthChild(true, false);
                                                                             }
                                                                             else {
-                                                                                if (tq.MatchChomp(":nth-last-of-type(")) {
-                                                                                    CssNthChild(true, true);
+                                                                                if (tq.MatchChomp(":nth-of-type(")) {
+                                                                                    CssNthChild(false, true);
                                                                                 }
                                                                                 else {
-                                                                                    if (tq.MatchChomp(":first-child")) {
-                                                                                        evals.Add(new Evaluator.IsFirstChild());
+                                                                                    if (tq.MatchChomp(":nth-last-of-type(")) {
+                                                                                        CssNthChild(true, true);
                                                                                     }
                                                                                     else {
-                                                                                        if (tq.MatchChomp(":last-child")) {
-                                                                                            evals.Add(new Evaluator.IsLastChild());
+                                                                                        if (tq.MatchChomp(":first-child")) {
+                                                                                            evals.Add(new Evaluator.IsFirstChild());
                                                                                         }
                                                                                         else {
-                                                                                            if (tq.MatchChomp(":first-of-type")) {
-                                                                                                evals.Add(new Evaluator.IsFirstOfType());
+                                                                                            if (tq.MatchChomp(":last-child")) {
+                                                                                                evals.Add(new Evaluator.IsLastChild());
                                                                                             }
                                                                                             else {
-                                                                                                if (tq.MatchChomp(":last-of-type")) {
-                                                                                                    evals.Add(new Evaluator.IsLastOfType());
+                                                                                                if (tq.MatchChomp(":first-of-type")) {
+                                                                                                    evals.Add(new Evaluator.IsFirstOfType());
                                                                                                 }
                                                                                                 else {
-                                                                                                    if (tq.MatchChomp(":only-child")) {
-                                                                                                        evals.Add(new Evaluator.IsOnlyChild());
+                                                                                                    if (tq.MatchChomp(":last-of-type")) {
+                                                                                                        evals.Add(new Evaluator.IsLastOfType());
                                                                                                     }
                                                                                                     else {
-                                                                                                        if (tq.MatchChomp(":only-of-type")) {
-                                                                                                            evals.Add(new Evaluator.IsOnlyOfType());
+                                                                                                        if (tq.MatchChomp(":only-child")) {
+                                                                                                            evals.Add(new Evaluator.IsOnlyChild());
                                                                                                         }
                                                                                                         else {
-                                                                                                            if (tq.MatchChomp(":empty")) {
-                                                                                                                evals.Add(new Evaluator.IsEmpty());
+                                                                                                            if (tq.MatchChomp(":only-of-type")) {
+                                                                                                                evals.Add(new Evaluator.IsOnlyOfType());
                                                                                                             }
                                                                                                             else {
-                                                                                                                if (tq.MatchChomp(":root")) {
-                                                                                                                    evals.Add(new Evaluator.IsRoot());
+                                                                                                                if (tq.MatchChomp(":empty")) {
+                                                                                                                    evals.Add(new Evaluator.IsEmpty());
                                                                                                                 }
                                                                                                                 else {
-                                                                                                                    // unhandled
-                                                                                                                    throw new Selector.SelectorParseException("Could not parse query " + PortUtil.EscapedSingleBracket + "{0}"
-                                                                                                                         + PortUtil.EscapedSingleBracket + ": unexpected token at " + PortUtil.EscapedSingleBracket + "{1}" + 
-                                                                                                                        PortUtil.EscapedSingleBracket, query, tq.Remainder());
+                                                                                                                    if (tq.MatchChomp(":root")) {
+                                                                                                                        evals.Add(new Evaluator.IsRoot());
+                                                                                                                    }
+                                                                                                                    else {
+                                                                                                                        if (tq.MatchChomp(":matchText")) {
+                                                                                                                            evals.Add(new Evaluator.MatchText());
+                                                                                                                        }
+                                                                                                                        else {
+                                                                                                                            // unhandled
+                                                                                                                            throw new Selector.SelectorParseException("Could not parse query '{0}': unexpected token at '{1}'", query, 
+                                                                                                                                tq.Remainder());
+                                                                                                                        }
+                                                                                                                    }
                                                                                                                 }
                                                                                                             }
                                                                                                         }
@@ -353,17 +354,26 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         private void ByClass() {
             String className = tq.ConsumeCssIdentifier();
             Validate.NotEmpty(className);
-            evals.Add(new Evaluator.Class(className.Trim().ToLowerInvariant()));
+            evals.Add(new Evaluator.Class(className.Trim()));
         }
 
         private void ByTag() {
-            String tagName = tq.ConsumeElementSelector();
+            // the tag in the selector case-sensitive (and also attribute names). But for now, normalize (lower-case) for
+            // consistency - both the selector and the element tag
+            String tagName = Normalizer.Normalize(tq.ConsumeElementSelector());
             Validate.NotEmpty(tagName);
-            // namespaces: if element name is "abc:def", selector must be "abc|def", so flip:
-            if (tagName.Contains("|")) {
-                tagName = tagName.Replace("|", ":");
+            // namespaces: wildcard match equals(tagName) or ending in ":"+tagName
+            if (tagName.StartsWith("*|")) {
+                evals.Add(new CombiningEvaluator.OR(new Evaluator.Tag(tagName), new Evaluator.TagEndsWith(tagName.Replace(
+                    "*|", ":"))));
             }
-            evals.Add(new Evaluator.Tag(tagName.Trim().ToLowerInvariant()));
+            else {
+                // namespaces: if element name is "abc:def", selector must be "abc|def", so flip:
+                if (tagName.Contains("|")) {
+                    tagName = tagName.Replace("|", ":");
+                }
+                evals.Add(new Evaluator.Tag(tagName));
+            }
         }
 
         private void ByAttribute() {
@@ -407,9 +417,8 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                                             ())));
                                     }
                                     else {
-                                        throw new Selector.SelectorParseException("Could not parse attribute query " + PortUtil.EscapedSingleBracket
-                                             + "{0}" + PortUtil.EscapedSingleBracket + ": unexpected token at " + PortUtil.EscapedSingleBracket + 
-                                            "{1}" + PortUtil.EscapedSingleBracket, query, cq.Remainder());
+                                        throw new Selector.SelectorParseException("Could not parse attribute query '{0}': unexpected token at '{1}'"
+                                            , query, cq.Remainder());
                                     }
                                 }
                             }
@@ -437,13 +446,13 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         }
 
         //pseudo selectors :first-child, :last-child, :nth-child, ...
-        private static readonly Regex NTH_AB = iText.IO.Util.StringUtil.RegexCompile("((\\+|-)?(\\d+)?)n(\\s*(\\+|-)?\\s*\\d+)?"
+        private static readonly Regex NTH_AB = iText.IO.Util.StringUtil.RegexCompile("(([+-])?(\\d+)?)n(\\s*([+-])?\\s*\\d+)?"
             , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
-        private static readonly Regex NTH_B = iText.IO.Util.StringUtil.RegexCompile("(\\+|-)?(\\d+)");
+        private static readonly Regex NTH_B = iText.IO.Util.StringUtil.RegexCompile("([+-])?(\\d+)");
 
         private void CssNthChild(bool backwards, bool ofType) {
-            String argS = tq.ChompTo(")").Trim().ToLowerInvariant();
+            String argS = Normalizer.Normalize(tq.ChompTo(")"));
             Matcher mAB = iText.IO.Util.Matcher.Match(NTH_AB, argS);
             Matcher mB = iText.IO.Util.Matcher.Match(NTH_B, argS);
             int a;
@@ -471,8 +480,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                                 );
                         }
                         else {
-                            throw new Selector.SelectorParseException("Could not parse nth-index " + PortUtil.EscapedSingleBracket + "{0}"
-                                 + PortUtil.EscapedSingleBracket + ": unexpected format", argS);
+                            throw new Selector.SelectorParseException("Could not parse nth-index '{0}': unexpected format", argS);
                         }
                     }
                 }
@@ -497,7 +505,8 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         private int ConsumeIndex() {
             String indexS = tq.ChompTo(")").Trim();
-            Validate.IsTrue(iText.StyledXmlParser.Jsoup.Helper.StringUtil.IsNumeric(indexS), "Index must be numeric");
+            Validate.IsTrue(iText.StyledXmlParser.Jsoup.Internal.StringUtil.IsNumeric(indexS), "Index must be numeric"
+                );
             return Convert.ToInt32(indexS, System.Globalization.CultureInfo.InvariantCulture);
         }
 
@@ -522,6 +531,14 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             }
         }
 
+        // pseudo selector :containsData(data)
+        private void ContainsData() {
+            tq.Consume(":containsData");
+            String searchText = TokenQueue.Unescape(tq.ChompBalanced('(', ')'));
+            Validate.NotEmpty(searchText, ":containsData(text) query must not be empty");
+            evals.Add(new Evaluator.ContainsData(searchText));
+        }
+
         // :matches(regex), matchesOwn(regex)
         private void Matches(bool own) {
             tq.Consume(own ? ":matchesOwn" : ":matches");
@@ -542,6 +559,10 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             String subQuery = tq.ChompBalanced('(', ')');
             Validate.NotEmpty(subQuery, ":not(selector) subselect must not be empty");
             evals.Add(new StructuralEvaluator.Not(Parse(subQuery)));
+        }
+
+        public override String ToString() {
+            return query;
         }
     }
 }

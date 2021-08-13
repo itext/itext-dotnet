@@ -3,49 +3,29 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using iText.IO.Util;
-using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Helper;
+using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Nodes;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
@@ -66,7 +46,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         /// <summary>Evaluator for tag name</summary>
         public sealed class Tag : Evaluator {
-            private String tagName;
+            private readonly String tagName;
 
             public Tag(String tagName) {
                 this.tagName = tagName;
@@ -74,7 +54,25 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return (element.TagName().Equals(tagName));
+                return (element.NormalName().Equals(tagName));
+            }
+
+            public override String ToString() {
+                return MessageFormatUtil.Format("{0}", tagName);
+            }
+        }
+
+        /// <summary>Evaluator for tag name that ends with</summary>
+        public sealed class TagEndsWith : Evaluator {
+            private readonly String tagName;
+
+            public TagEndsWith(String tagName) {
+                this.tagName = tagName;
+            }
+
+            public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
+                 element) {
+                return (element.NormalName().EndsWith(tagName));
             }
 
             public override String ToString() {
@@ -84,7 +82,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         /// <summary>Evaluator for element id</summary>
         public sealed class ID : Evaluator {
-            private String id;
+            private readonly String id;
 
             public ID(String id) {
                 this.id = id;
@@ -102,7 +100,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         /// <summary>Evaluator for element class</summary>
         public sealed class Class : Evaluator {
-            private String className;
+            private readonly String className;
 
             public Class(String className) {
                 this.className = className;
@@ -120,7 +118,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         /// <summary>Evaluator for attribute name matching</summary>
         public sealed class Attribute : Evaluator {
-            private String key;
+            private readonly String key;
 
             public Attribute(String key) {
                 this.key = key;
@@ -138,17 +136,18 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         /// <summary>Evaluator for attribute name prefix matching</summary>
         public sealed class AttributeStarting : Evaluator {
-            private String keyPrefix;
+            private readonly String keyPrefix;
 
             public AttributeStarting(String keyPrefix) {
-                this.keyPrefix = keyPrefix;
+                Validate.NotEmpty(keyPrefix);
+                this.keyPrefix = Normalizer.LowerCase(keyPrefix);
             }
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
                 IList<iText.StyledXmlParser.Jsoup.Nodes.Attribute> values = element.Attributes().AsList();
                 foreach (iText.StyledXmlParser.Jsoup.Nodes.Attribute attribute in values) {
-                    if (attribute.Key.StartsWith(keyPrefix)) {
+                    if (Normalizer.LowerCase(attribute.Key).StartsWith(keyPrefix)) {
                         return true;
                     }
                 }
@@ -195,12 +194,12 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         /// <summary>Evaluator for attribute name/value matching (value prefix)</summary>
         public sealed class AttributeWithValueStarting : Evaluator.AttributeKeyPair {
             public AttributeWithValueStarting(String key, String value)
-                : base(key, value) {
+                : base(key, value, false) {
             }
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return element.HasAttr(key) && element.Attr(key).ToLowerInvariant().StartsWith(value);
+                return element.HasAttr(key) && Normalizer.LowerCase(element.Attr(key)).StartsWith(value);
             }
 
             // value is lower case already
@@ -212,12 +211,12 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         /// <summary>Evaluator for attribute name/value matching (value ending)</summary>
         public sealed class AttributeWithValueEnding : Evaluator.AttributeKeyPair {
             public AttributeWithValueEnding(String key, String value)
-                : base(key, value) {
+                : base(key, value, false) {
             }
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return element.HasAttr(key) && element.Attr(key).ToLowerInvariant().EndsWith(value);
+                return element.HasAttr(key) && Normalizer.LowerCase(element.Attr(key)).EndsWith(value);
             }
 
             // value is lower case
@@ -234,7 +233,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return element.HasAttr(key) && element.Attr(key).ToLowerInvariant().Contains(value);
+                return element.HasAttr(key) && Normalizer.LowerCase(element.Attr(key)).Contains(value);
             }
 
             // value is lower case
@@ -250,7 +249,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             internal Regex pattern;
 
             public AttributeWithValueMatching(String key, Regex pattern) {
-                this.key = key.Trim().ToLowerInvariant();
+                this.key = Normalizer.Normalize(key);
                 this.pattern = pattern;
             }
 
@@ -270,14 +269,20 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
             internal String value;
 
-            public AttributeKeyPair(String key, String value) {
+            public AttributeKeyPair(String key, String value)
+                : this(key, value, true) {
+            }
+
+            public AttributeKeyPair(String key, String value, bool trimValue) {
                 Validate.NotEmpty(key);
                 Validate.NotEmpty(value);
-                this.key = key.Trim().ToLowerInvariant();
-                if (value.StartsWith("\"") && value.EndsWith("\"") || value.StartsWith("'") && value.EndsWith("'")) {
+                this.key = Normalizer.Normalize(key);
+                bool isStringLiteral = value.StartsWith("'") && value.EndsWith("'") || value.StartsWith("\"") && value.EndsWith
+                    ("\"");
+                if (isStringLiteral) {
                     value = value.JSubstring(1, value.Length - 1);
                 }
-                this.value = value.Trim().ToLowerInvariant();
+                this.value = trimValue ? Normalizer.Normalize(value) : Normalizer.Normalize(value, isStringLiteral);
             }
         }
 
@@ -305,7 +310,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return element.ElementSiblingIndex() < index;
+                return root != element && element.ElementSiblingIndex() < index;
             }
 
             public override String ToString() {
@@ -416,8 +421,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                 if (b == 0) {
                     return MessageFormatUtil.Format(":{0}({1}n)", GetPseudoClass(), a);
                 }
-                return MessageFormatUtil.Format(":{0}({1}n{2" + PortUtil.SignedNumberFormat + "})", GetPseudoClass(), a, b
-                    );
+                return MessageFormatUtil.Format(":{0}({1}n{2})", GetPseudoClass(), a, b);
             }
 
             protected internal abstract String GetPseudoClass();
@@ -452,8 +456,12 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
             protected internal override int CalculatePosition(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return ((iText.StyledXmlParser.Jsoup.Nodes.Element)element.Parent()).Children().Count - element.ElementSiblingIndex
+                iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)element.Parent
                     ();
+                if (parent == null) {
+                    return 0;
+                }
+                return parent.Children().Count - element.ElementSiblingIndex();
             }
 
             protected internal override String GetPseudoClass() {
@@ -470,7 +478,12 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             protected internal override int CalculatePosition(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
                 int pos = 0;
-                Elements family = ((iText.StyledXmlParser.Jsoup.Nodes.Element)element.Parent()).Children();
+                iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)element.Parent
+                    ();
+                if (parent == null) {
+                    return 0;
+                }
+                Elements family = parent.Children();
                 foreach (iText.StyledXmlParser.Jsoup.Nodes.Element el in family) {
                     if (el.Tag().Equals(element.Tag())) {
                         pos++;
@@ -495,7 +508,12 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             protected internal override int CalculatePosition(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
                 int pos = 0;
-                Elements family = ((iText.StyledXmlParser.Jsoup.Nodes.Element)element.Parent()).Children();
+                iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)element.Parent
+                    ();
+                if (parent == null) {
+                    return 0;
+                }
+                Elements family = parent.Children();
                 for (int i = element.ElementSiblingIndex(); i < family.Count; i++) {
                     if (family[i].Tag().Equals(element.Tag())) {
                         pos++;
@@ -540,7 +558,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
                 iText.StyledXmlParser.Jsoup.Nodes.Element p = (iText.StyledXmlParser.Jsoup.Nodes.Element)element.Parent();
-                return p != null && !(p is Document) && element.SiblingElements().Count == 0;
+                return p != null && !(p is Document) && element.SiblingElements().IsEmpty();
             }
 
             public override String ToString() {
@@ -599,43 +617,61 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         /// <summary>Evaluator for matching Element (and its descendants) text</summary>
         public sealed class ContainsText : Evaluator {
-            private String searchText;
+            private readonly String searchText;
 
             public ContainsText(String searchText) {
-                this.searchText = searchText.ToLowerInvariant();
+                this.searchText = Normalizer.LowerCase(searchText);
             }
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return (element.Text().ToLowerInvariant().Contains(searchText));
+                return Normalizer.LowerCase(element.Text()).Contains(searchText);
             }
 
             public override String ToString() {
-                return MessageFormatUtil.Format(":contains({0}", searchText);
+                return MessageFormatUtil.Format(":contains({0})", searchText);
+            }
+        }
+
+        /// <summary>Evaluator for matching Element (and its descendants) data</summary>
+        public sealed class ContainsData : Evaluator {
+            private readonly String searchText;
+
+            public ContainsData(String searchText) {
+                this.searchText = Normalizer.LowerCase(searchText);
+            }
+
+            public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
+                 element) {
+                return Normalizer.LowerCase(element.Data()).Contains(searchText);
+            }
+
+            public override String ToString() {
+                return MessageFormatUtil.Format(":containsData({0})", searchText);
             }
         }
 
         /// <summary>Evaluator for matching Element's own text</summary>
         public sealed class ContainsOwnText : Evaluator {
-            private String searchText;
+            private readonly String searchText;
 
             public ContainsOwnText(String searchText) {
-                this.searchText = searchText.ToLowerInvariant();
+                this.searchText = Normalizer.LowerCase(searchText);
             }
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return (element.OwnText().ToLowerInvariant().Contains(searchText));
+                return Normalizer.LowerCase(element.OwnText()).Contains(searchText);
             }
 
             public override String ToString() {
-                return MessageFormatUtil.Format(":containsOwn({0}", searchText);
+                return MessageFormatUtil.Format(":containsOwn({0})", searchText);
             }
         }
 
         /// <summary>Evaluator for matching Element's own text with regex</summary>
         public sealed class MatchesOwn : Evaluator {
-            private Regex pattern;
+            private readonly Regex pattern;
 
             public MatchesOwn(Regex pattern) {
                 this.pattern = pattern;
@@ -643,18 +679,40 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return iText.IO.Util.Matcher.Match(pattern, element.OwnText()).Find();
+                Matcher m = iText.IO.Util.Matcher.Match(pattern, element.OwnText());
+                return m.Find();
             }
 
             public override String ToString() {
-                return MessageFormatUtil.Format(":matchesOwn({0}", pattern);
+                return MessageFormatUtil.Format(":matchesOwn({0})", pattern);
+            }
+        }
+
+        public sealed class MatchText : Evaluator {
+            public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
+                 element) {
+                if (element is PseudoTextElement) {
+                    return true;
+                }
+                IList<TextNode> textNodes = element.TextNodes();
+                foreach (TextNode textNode in textNodes) {
+                    PseudoTextElement pel = new PseudoTextElement(iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf(element.TagName
+                        ()), element.BaseUri(), element.Attributes());
+                    textNode.ReplaceWith(pel);
+                    pel.AppendChild(textNode);
+                }
+                return false;
+            }
+
+            public override String ToString() {
+                return ":matchText";
             }
         }
     }
 
     /// <summary>Evaluator for matching Element (and its descendants) text with regex</summary>
     public sealed class MatchesElement : Evaluator {
-        private Regex pattern;
+        private readonly Regex pattern;
 
         public MatchesElement(Regex pattern) {
             this.pattern = pattern;
@@ -662,11 +720,12 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
              element) {
-            return iText.IO.Util.Matcher.Match(pattern, element.Text()).Find();
+            Matcher m = iText.IO.Util.Matcher.Match(pattern, element.Text());
+            return m.Find();
         }
 
         public override String ToString() {
-            return MessageFormatUtil.Format(":matches({0}", pattern);
+            return MessageFormatUtil.Format(":matches({0})", pattern);
         }
     }
 }

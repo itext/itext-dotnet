@@ -3,42 +3,22 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Text;
@@ -156,7 +136,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         /// <summary>Tests if queue starts with a whitespace character.</summary>
         /// <returns>if starts with whitespace</returns>
         public virtual bool MatchesWhitespace() {
-            return !IsEmpty() && iText.StyledXmlParser.Jsoup.Helper.StringUtil.IsWhitespace(queue[pos]);
+            return !IsEmpty() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.IsWhitespace(queue[pos]);
         }
 
         /// <summary>Test if the queue matches a word character (letter or digit).</summary>
@@ -252,7 +232,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         /// <param name="seq">any number of terminators to consume to. <b>Case insensitive.</b></param>
         /// <returns>consumed string</returns>
         public virtual String ConsumeToAny(params String[] seq) {
-            // todo: method name. not good that consumeTo cares for case, and consume to any doesn't. And the only use for this
             // is is a case sensitive time...
             int start = pos;
             while (!IsEmpty() && !MatchesAny(seq)) {
@@ -288,7 +267,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         /// <summary>Pulls a balanced string off the queue.</summary>
         /// <remarks>
         /// Pulls a balanced string off the queue. E.g. if queue is "(one (two) three) four", (,) will return "one (two) three",
-        /// and leave " four" on the queue. Unbalanced openers and closers can quoted (with ' or ") or escaped (with \). Those escapes will be left
+        /// and leave " four" on the queue. Unbalanced openers and closers can be quoted (with ' or ") or escaped (with \). Those escapes will be left
         /// in the returned string, which is suitable for regexes (where we need to preserve the escape), but unsuitable for
         /// contains text strings; use unescape for that.
         /// </remarks>
@@ -300,27 +279,33 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             int end = -1;
             int depth = 0;
             char last = '\u0000';
-            bool inQuote = false;
+            bool inSingleQuote = false;
+            bool inDoubleQuote = false;
             do {
                 if (IsEmpty()) {
                     break;
                 }
-                char? c = Consume();
-                if (last == 0 || last != ESC) {
-                    if ((c.Equals('\'') || c.Equals('"')) && c != open) {
-                        inQuote = !inQuote;
+                char c = Consume();
+                if (last != ESC) {
+                    if (c == '\'' && c != open && !inDoubleQuote) {
+                        inSingleQuote = !inSingleQuote;
                     }
-                    if (inQuote) {
+                    else {
+                        if (c == '"' && c != open && !inSingleQuote) {
+                            inDoubleQuote = !inDoubleQuote;
+                        }
+                    }
+                    if (inSingleQuote || inDoubleQuote) {
                         continue;
                     }
-                    if (c.Equals(open)) {
+                    if (c == open) {
                         depth++;
                         if (start == -1) {
                             start = pos;
                         }
                     }
                     else {
-                        if (c.Equals(close)) {
+                        if (c == close) {
                             depth--;
                         }
                     }
@@ -329,21 +314,26 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     end = pos;
                 }
                 // don't include the outer match pair in the return
-                last = (char)c;
+                last = c;
             }
             while (depth > 0);
-            return (end >= 0) ? queue.JSubstring(start, end) : "";
+            String @out = (end >= 0) ? queue.JSubstring(start, end) : "";
+            if (depth > 0) {
+                // ran out of queue before seeing enough )
+                Validate.Fail("Did not find balanced marker at '" + @out + "'");
+            }
+            return @out;
         }
 
-        /// <summary>Unescaped a \ escaped string.</summary>
+        /// <summary>Unescape a \ escaped string.</summary>
         /// <param name="in">backslash escaped string</param>
         /// <returns>unescaped string</returns>
         public static String Unescape(String @in) {
-            StringBuilder @out = new StringBuilder();
+            StringBuilder @out = iText.StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
             char last = '\u0000';
             foreach (char c in @in.ToCharArray()) {
                 if (c == ESC) {
-                    if (last != 0 && last == ESC) {
+                    if (last == ESC) {
                         @out.Append(c);
                     }
                 }
@@ -352,7 +342,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 last = c;
             }
-            return @out.ToString();
+            return iText.StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(@out);
         }
 
         /// <summary>Pulls the next run of whitespace characters of the queue.</summary>
@@ -386,12 +376,12 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return queue.JSubstring(start, pos);
         }
 
-        /// <summary>Consume a CSS element selector (tag name, but | instead of : for namespaces, to not conflict with :pseudo selects).
+        /// <summary>Consume a CSS element selector (tag name, but | instead of : for namespaces (or *| for wildcard namespace), to not conflict with :pseudo selects).
         ///     </summary>
         /// <returns>tag name</returns>
         public virtual String ConsumeElementSelector() {
             int start = pos;
-            while (!IsEmpty() && (MatchesWord() || MatchesAny('|', '_', '-'))) {
+            while (!IsEmpty() && (MatchesWord() || MatchesAny("*|", "|", "_", "-"))) {
                 pos++;
             }
             return queue.JSubstring(start, pos);
@@ -423,7 +413,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         /// <summary>Consume and return whatever is left on the queue.</summary>
         /// <returns>remained of queue.</returns>
         public virtual String Remainder() {
-            String remainder = queue.JSubstring(pos, queue.Length);
+            String remainder = queue.Substring(pos);
             pos = queue.Length;
             return remainder;
         }
