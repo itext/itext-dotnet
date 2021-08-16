@@ -1762,7 +1762,8 @@ namespace iText.Kernel.Pdf.Canvas {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
                 PdfXObject xObject = wmf.CreateFormXObject(document);
-                AddXObjectWithTransformationMatrix(xObject, image.GetWidth(), 0, 0, image.GetHeight(), x, y);
+                //For FormXObject args "a" and "d" will become multipliers and will not set the size, as for ImageXObject
+                AddXObjectWithTransformationMatrix(xObject, 1, 0, 0, 1, x, y);
                 return xObject;
             }
             else {
