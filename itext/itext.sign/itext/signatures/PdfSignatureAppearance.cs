@@ -541,7 +541,8 @@ namespace iText.Signatures {
                 if (image != null) {
                     if (imageScale == 0) {
                         canvas = new PdfCanvas(n2, document);
-                        canvas.AddImage(image, rotatedRect.GetWidth(), 0, 0, rotatedRect.GetHeight(), 0, 0);
+                        canvas.AddImageWithTransformationMatrix(image, rotatedRect.GetWidth(), 0, 0, rotatedRect.GetHeight(), 0, 0
+                            );
                     }
                     else {
                         float usableScale = imageScale;
@@ -554,7 +555,7 @@ namespace iText.Signatures {
                         float x = (rotatedRect.GetWidth() - w) / 2;
                         float y = (rotatedRect.GetHeight() - h) / 2;
                         canvas = new PdfCanvas(n2, document);
-                        canvas.AddImage(image, w, 0, 0, h, x, y);
+                        canvas.AddImageWithTransformationMatrix(image, w, 0, 0, h, x, y);
                     }
                 }
                 PdfFont font;
@@ -631,7 +632,7 @@ namespace iText.Signatures {
                         float x = signatureRect.GetRight() - imgWidth;
                         float y = signatureRect.GetBottom() + (signatureRect.GetHeight() - imgHeight) / 2;
                         canvas = new PdfCanvas(n2, document);
-                        canvas.AddImage(signatureGraphic, imgWidth, 0, 0, imgHeight, x, y);
+                        canvas.AddImageWithTransformationMatrix(signatureGraphic, imgWidth, 0, 0, imgHeight, x, y);
                         break;
                     }
 
@@ -652,7 +653,7 @@ namespace iText.Signatures {
                         float x_1 = signatureRect.GetLeft() + (signatureRect.GetWidth() - imgWidth_1) / 2;
                         float y_1 = signatureRect.GetBottom() + (signatureRect.GetHeight() - imgHeight_1) / 2;
                         canvas = new PdfCanvas(n2, document);
-                        canvas.AddImage(signatureGraphic, imgWidth_1, 0, 0, imgHeight_1, x_1, y_1);
+                        canvas.AddImageWithTransformationMatrix(signatureGraphic, imgWidth_1, 0, 0, imgHeight_1, x_1, y_1);
                         break;
                     }
                 }
@@ -672,7 +673,7 @@ namespace iText.Signatures {
                     if (stream != null) {
                         topLayer.GetResources().AddForm(xobj, new PdfName("n0"));
                         PdfCanvas canvas1 = new PdfCanvas(topLayer, document);
-                        canvas1.AddXObject(xobj, 1, 0, 0, 1, 0, 0);
+                        canvas1.AddXObjectWithTransformationMatrix(xobj, 1, 0, 0, 1, 0, 0);
                     }
                     else {
                         reuseAppearance = false;
@@ -684,11 +685,11 @@ namespace iText.Signatures {
                 if (!reuseAppearance) {
                     topLayer.GetResources().AddForm(n0, new PdfName("n0"));
                     PdfCanvas canvas1 = new PdfCanvas(topLayer, document);
-                    canvas1.AddXObject(n0, 1, 0, 0, 1, 0, 0);
+                    canvas1.AddXObjectWithTransformationMatrix(n0, 1, 0, 0, 1, 0, 0);
                 }
                 topLayer.GetResources().AddForm(n2, new PdfName("n2"));
                 PdfCanvas canvas1_1 = new PdfCanvas(topLayer, document);
-                canvas1_1.AddXObject(n2, 1, 0, 0, 1, 0, 0);
+                canvas1_1.AddXObjectWithTransformationMatrix(n2, 1, 0, 0, 1, 0, 0);
             }
             PdfFormXObject napp = new PdfFormXObject(rotated);
             napp.MakeIndirect(document);

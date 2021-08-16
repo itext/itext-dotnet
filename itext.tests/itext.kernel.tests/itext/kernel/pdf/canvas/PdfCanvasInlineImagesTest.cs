@@ -25,6 +25,7 @@ using System.IO;
 using iText.IO.Image;
 using iText.IO.Source;
 using iText.IO.Util;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -53,13 +54,20 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "Desert.jpg"), 36, 700, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "bulb.gif"), 36, 600, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "smpl.bmp"), 36, 500, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "itext.png"), 36, 460, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "0047478.jpg"), 36, 300, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "map.jp2"), 36, 200, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "amb.jb2"), 36, 30, 100, true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "Desert.jpg"), new Rectangle(36, 
+                700, 100, 75), true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "bulb.gif"), new Rectangle(36, 600
+                , 100, 100), true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "smpl.bmp"), new Rectangle(36, 500
+                , 100, 100), true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "itext.png"), new Rectangle(36, 
+                460, 100, 14.16f), true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "0047478.jpg"), new Rectangle(36
+                , 300, 100, 141.41f), true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "map.jp2"), new Rectangle(36, 200
+                , 100, 76.34f), true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "amb.jb2"), new Rectangle(36, 30
+                , 100, 150), true);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder));
@@ -78,31 +86,38 @@ namespace iText.Kernel.Pdf.Canvas {
             Stream stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "Desert.jpg"));
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 700, 100, true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 700, 100, 75
+                ), true);
             stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "bulb.gif"));
             baos = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 600, 100, true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 600, 100, 100
+                ), true);
             stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "smpl.bmp"));
             baos = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 500, 100, true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 500, 100, 100
+                ), true);
             stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "itext.png"));
             baos = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 460, 100, true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 460, 100, 14.16f
+                ), true);
             stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "0047478.jpg"));
             baos = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 300, 100, true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 300, 100, 141.41f
+                ), true);
             stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "map.jp2"));
             baos = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 200, 100, true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 200, 100, 76.34f
+                ), true);
             stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "amb.jb2"));
             baos = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 30, 100, true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 30, 100, 150
+                ), true);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder));
@@ -115,7 +130,8 @@ namespace iText.Kernel.Pdf.Canvas {
                 SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "bulb.gif"), 36, 600, 100, true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "bulb.gif"), new Rectangle(36, 600
+                , 100, 100), true);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder));
@@ -128,7 +144,8 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "5.png"), 36, 700, 100, true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "5.png"), new Rectangle(36, 700, 
+                100, 100), true);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder));
@@ -141,7 +158,8 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "3.png"), 36, 700, 100, true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "3.png"), new Rectangle(36, 700, 
+                100, 100), true);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder));

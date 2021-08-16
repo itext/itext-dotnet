@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Image;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
@@ -70,7 +71,7 @@ namespace iText.Kernel.Pdf.Xobject {
             // flushing pdf object directly
             imageXObject.GetPdfObject().MakeIndirect(pdfDoc).Flush();
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-            canvas.AddXObject(imageXObject, 50, 500, 200);
+            canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(50, 500, 200, 200));
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpfile, destinationFolder));
         }
@@ -140,7 +141,7 @@ namespace iText.Kernel.Pdf.Xobject {
             PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpFilename));
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(imageFilename));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-            canvas.AddXObject(imageXObject, 50, 500, 346);
+            canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(50, 500, 346, imageXObject.GetHeight()));
             pdfDoc.Close();
             PdfDocument outDoc = new PdfDocument(new PdfReader(outFilename));
             PdfStream outStream = outDoc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName

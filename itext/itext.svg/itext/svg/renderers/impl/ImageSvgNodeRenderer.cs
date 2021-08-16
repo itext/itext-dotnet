@@ -173,7 +173,7 @@ namespace iText.Svg.Renderers.Impl {
                 height = normalizedHeight;
             }
             float v = y + height;
-            currentCanvas.AddXObject(xObject, width, 0, 0, -height, x, v);
+            currentCanvas.AddXObjectWithTransformationMatrix(xObject, width, 0, 0, -height, x, v);
         }
     }
 }

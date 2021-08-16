@@ -76,7 +76,7 @@ namespace iText.Kernel.Pdf.Xobject {
                 String imgFile = imgFiles[i];
                 PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "compare_colorspaces/"
                      + imgFile));
-                canvas.AddXObject(imageXObject, 50 + i * 40, 550, 40);
+                canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(50 + i * 40, 550, 40, 160));
             }
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder, "diff_"));
@@ -128,8 +128,8 @@ namespace iText.Kernel.Pdf.Xobject {
             ImageData img = ImageDataFactory.Create(sourceFolder + imgName);
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(@out));
             PdfImageXObject imageXObject = new PdfImageXObject(img);
-            new PdfCanvas(pdfDocument.AddNewPage(new PageSize(img.GetWidth(), img.GetHeight()))).AddXObject(imageXObject
-                , 0, 0, img.GetWidth());
+            new PdfCanvas(pdfDocument.AddNewPage(new PageSize(img.GetWidth(), img.GetHeight()))).AddXObjectFittedIntoRectangle
+                (imageXObject, new Rectangle(0, 0, img.GetWidth(), img.GetHeight()));
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder, "diff_"));
         }

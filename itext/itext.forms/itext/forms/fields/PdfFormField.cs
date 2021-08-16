@@ -3361,14 +3361,14 @@ namespace iText.Forms.Fields {
             DrawBorder(canvas, xObject, width, height);
             if (img != null) {
                 PdfImageXObject imgXObj = new PdfImageXObject(img);
-                canvas.AddXObject(imgXObj, width - borderWidth, 0, 0, height - borderWidth, borderWidth / 2, borderWidth /
-                     2);
+                canvas.AddXObjectWithTransformationMatrix(imgXObj, width - borderWidth, 0, 0, height - borderWidth, borderWidth
+                     / 2, borderWidth / 2);
                 xObject.GetResources().AddImage(imgXObj);
             }
             else {
                 if (form != null) {
-                    canvas.AddXObject(form, (height - borderWidth) / form.GetHeight(), 0, 0, (height - borderWidth) / form.GetHeight
-                        (), borderWidth / 2, borderWidth / 2);
+                    canvas.AddXObjectWithTransformationMatrix(form, (height - borderWidth) / form.GetHeight(), 0, 0, (height -
+                         borderWidth) / form.GetHeight(), borderWidth / 2, borderWidth / 2);
                     xObject.GetResources().AddForm(form);
                 }
                 else {

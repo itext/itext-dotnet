@@ -104,10 +104,10 @@ namespace iText.Barcodes {
             PdfWriter writer = new PdfWriter(destinationFolder + filename);
             PdfDocument pdfDocument = new PdfDocument(writer);
             PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.AddNewPage());
-            pdfCanvas.AddXObject(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 0", 1, 1, 0), 1, 0, 0, 1, 
-                36, 791);
-            pdfCanvas.AddXObject(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 1", 1, 1, 1), 1, 0, 0, 1, 
-                36, 676);
+            pdfCanvas.AddXObjectWithTransformationMatrix(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 0"
+                , 1, 1, 0), 1, 0, 0, 1, 36, 791);
+            pdfCanvas.AddXObjectWithTransformationMatrix(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 1"
+                , 1, 1, 1), 1, 0, 0, 1, 36, 676);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));

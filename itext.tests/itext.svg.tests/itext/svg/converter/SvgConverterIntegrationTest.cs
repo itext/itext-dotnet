@@ -101,8 +101,8 @@ namespace iText.Svg.Converter {
             String filename = "basicIntegrationTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             doc.AddNewPage();
-            PdfFormXObject form = SvgConverter.ConvertToXObject("<svg width='100pt' height='100pt' />", doc);
-            new PdfCanvas(doc.GetPage(1)).AddXObject(form, new Rectangle(100, 100, 100, 100));
+            PdfFormXObject form = SvgConverter.ConvertToXObject(ECLIPSESVGSTRING, doc);
+            new PdfCanvas(doc.GetPage(1)).AddXObjectFittedIntoRectangle(form, new Rectangle(100, 100, 100, 100));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));

@@ -83,7 +83,7 @@ namespace iText.Kernel.Pdf.Xobject
             
             PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
             PdfPage firstPage = pdfDocument.GetFirstPage();
-            canvas.AddXObject(image, firstPage.GetPageSize());
+            canvas.AddXObjectFittedIntoRectangle(image, firstPage.GetPageSize());
             canvas
                     .BeginText()
                     .SetTextMatrix(36, 790)
@@ -121,7 +121,7 @@ namespace iText.Kernel.Pdf.Xobject
             
             PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
             PdfPage firstPage = pdfDocument.GetFirstPage();
-            canvas.AddXObject(image, firstPage.GetPageSize());
+            canvas.AddXObjectFittedIntoRectangle(image, firstPage.GetPageSize());
             canvas
                     .BeginText()
                     .SetTextMatrix(36, 790)

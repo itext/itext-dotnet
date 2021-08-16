@@ -227,7 +227,7 @@ namespace iText.Pdfa {
             xObjCanvas.Rectangle(30, 30, 10, 10).Fill();
             PdfTransparencyGroup group = new PdfTransparencyGroup();
             xObject.SetGroup(group);
-            canvas.AddXObject(xObject, new Rectangle(300, 300));
+            canvas.AddXObjectFittedIntoRectangle(xObject, new Rectangle(300, 300));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
             NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_GROUP_OBJECT_WITH_AN_S_KEY_WITH_A_VALUE_OF_TRANSPARENCY_SHALL_NOT_BE_INCLUDED_IN_A_FORM_XOBJECT
                 , e.Message);
