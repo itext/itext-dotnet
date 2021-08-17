@@ -44,13 +44,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.IO;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -1157,8 +1158,8 @@ namespace iText.Signatures {
                         reference.Put(PdfName.DigestMethod, digestMethod);
                     }
                     else {
-                        ILog logger = LogManager.GetLogger(typeof(PdfSigner));
-                        logger.Error(iText.IO.LogMessageConstant.UNKNOWN_DIGEST_METHOD);
+                        ILogger logger = ITextLogManager.GetLogger(typeof(PdfSigner));
+                        logger.LogError(iText.IO.LogMessageConstant.UNKNOWN_DIGEST_METHOD);
                     }
                 }
             }

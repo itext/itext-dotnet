@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel.Pdf.Colorspace;
 
@@ -92,8 +93,8 @@ namespace iText.Kernel.Colors {
             : base(new PdfDeviceCs.Rgb(), new float[] { r > 1 ? 1 : (r > 0 ? r : 0), g > 1 ? 1 : (g > 0 ? g : 0), b > 
                 1 ? 1 : (b > 0 ? b : 0) }) {
             if (r > 1 || r < 0 || g > 1 || g < 0 || b > 1 || b < 0) {
-                ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceRgb));
-                LOGGER.Warn(iText.IO.LogMessageConstant.COLORANT_INTENSITIES_INVALID);
+                ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceRgb));
+                LOGGER.LogWarning(iText.IO.LogMessageConstant.COLORANT_INTENSITIES_INVALID);
             }
         }
 
@@ -112,8 +113,8 @@ namespace iText.Kernel.Colors {
         public DeviceRgb(System.Drawing.Color color)
             : this(color.R, color.G, color.B) {
             if (color.A != 255) {
-                ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceRgb));
-                LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_ALPHA_CHANNEL_IS_IGNORED, color.A));
+                ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceRgb));
+                LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_ALPHA_CHANNEL_IS_IGNORED, color.A));
             }
         }
 

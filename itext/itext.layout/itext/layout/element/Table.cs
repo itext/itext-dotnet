@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
@@ -825,8 +826,8 @@ namespace iText.Layout.Element {
                     return renderer;
                 }
                 else {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Element.Table));
-                    logger.Error("Invalid renderer for Table: must be inherited from TableRenderer");
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Element.Table));
+                    logger.LogError("Invalid renderer for Table: must be inherited from TableRenderer");
                 }
             }
             // In case of large tables, we only add to the renderer the cells from complete row groups,

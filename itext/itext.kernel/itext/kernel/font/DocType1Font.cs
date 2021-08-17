@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
@@ -146,8 +147,8 @@ namespace iText.Kernel.Font {
 
         internal static void FillFontDescriptor(iText.Kernel.Font.DocType1Font font, PdfDictionary fontDesc) {
             if (fontDesc == null) {
-                ILog logger = LogManager.GetLogger(typeof(FontUtil));
-                logger.Warn(iText.IO.LogMessageConstant.FONT_DICTIONARY_WITH_NO_FONT_DESCRIPTOR);
+                ILogger logger = ITextLogManager.GetLogger(typeof(FontUtil));
+                logger.LogWarning(iText.IO.LogMessageConstant.FONT_DICTIONARY_WITH_NO_FONT_DESCRIPTOR);
                 return;
             }
             PdfNumber v = fontDesc.GetAsNumber(PdfName.Ascent);

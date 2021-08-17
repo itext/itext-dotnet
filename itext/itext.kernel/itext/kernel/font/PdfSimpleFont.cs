@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Constants;
@@ -305,9 +306,10 @@ namespace iText.Kernel.Font {
                     list.Add(glyph);
                 }
                 else {
-                    ILog logger = LogManager.GetLogger(this.GetType());
-                    if (logger.IsWarnEnabled) {
-                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, code));
+                    ILogger logger = ITextLogManager.GetLogger(this.GetType());
+                    if (logger.IsEnabled(LogLevel.Warning)) {
+                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, code
+                            ));
                     }
                     allCodesDecoded = false;
                 }

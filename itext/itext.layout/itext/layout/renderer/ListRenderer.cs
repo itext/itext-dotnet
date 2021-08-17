@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font.Constants;
 using iText.IO.Util;
 using iText.Kernel.Font;
@@ -444,8 +445,8 @@ namespace iText.Layout.Renderer {
                     UnitValue marginToSetUV = childRenderer.GetProperty<UnitValue>(marginToSet, UnitValue.CreatePointValue(0f)
                         );
                     if (!marginToSetUV.IsPointValue()) {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListRenderer));
-                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, marginToSet
+                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ListRenderer));
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, marginToSet
                             ));
                     }
                     float calculatedMargin = marginToSetUV.GetValue();

@@ -44,7 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -778,8 +779,8 @@ namespace iText.Kernel.Pdf {
                 ReadXref();
             }
             catch (Exception ex) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                logger.Error(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, ex);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                logger.LogError(ex, iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT);
                 RebuildXref();
             }
             pdfDocument.GetXref().MarkReadingCompleted();
@@ -871,16 +872,16 @@ namespace iText.Kernel.Pdf {
             PdfIndirectReference reference = table.Get(num);
             if (reference != null) {
                 if (reference.IsFree()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
-                        (), tokens.GetGenNr()));
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.
+                        GetObjNr(), tokens.GetGenNr()));
                     return CreatePdfNullInstance(readAsDirect);
                 }
                 if (reference.GetGenNumber() != tokens.GetGenNr()) {
                     if (fixedXref) {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
-                            (), tokens.GetGenNr()));
+                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.
+                            GetObjNr(), tokens.GetGenNr()));
                         return CreatePdfNullInstance(readAsDirect);
                     }
                     else {
@@ -891,9 +892,9 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 if (table.IsReadingCompleted()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr
-                        (), tokens.GetGenNr()));
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.
+                        GetObjNr(), tokens.GetGenNr()));
                     return CreatePdfNullInstance(readAsDirect);
                 }
                 else {

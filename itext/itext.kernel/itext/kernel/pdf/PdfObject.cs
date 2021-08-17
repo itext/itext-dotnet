@@ -41,7 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
@@ -166,8 +167,8 @@ namespace iText.Kernel.Pdf {
                 PdfDocument document = GetIndirectReference().GetDocument();
                 if (document != null) {
                     if (document.IsAppendMode() && !IsModified()) {
-                        ILog logger = LogManager.GetLogger(typeof(PdfObject));
-                        logger.Info(iText.IO.LogMessageConstant.PDF_OBJECT_FLUSHING_NOT_PERFORMED);
+                        ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
+                        logger.LogInformation(iText.IO.LogMessageConstant.PDF_OBJECT_FLUSHING_NOT_PERFORMED);
                         return;
                     }
                     document.CheckIsoConformance(this, IsoKey.PDF_OBJECT);
@@ -368,8 +369,8 @@ namespace iText.Kernel.Pdf {
         public virtual void Release() {
             // In case ForbidRelease flag is set, release will not be performed.
             if (IsReleaseForbidden()) {
-                ILog logger = LogManager.GetLogger(typeof(PdfObject));
-                logger.Warn(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET);
+                ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
+                logger.LogWarning(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET);
             }
             else {
                 if (indirectReference != null && indirectReference.GetReader() != null && !indirectReference.CheckState(FLUSHED

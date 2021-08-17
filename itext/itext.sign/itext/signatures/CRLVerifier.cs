@@ -43,9 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+using iText.IO;
 using iText.IO.Util;
 
 namespace iText.Signatures {
@@ -55,8 +56,8 @@ namespace iText.Signatures {
     /// </summary>
     public class CRLVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.CRLVerifier)
-            );
+        protected internal static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.CRLVerifier
+            ));
 
         /// <summary>The list of CRLs to check for revocation date.</summary>
         internal IList<X509Crl> crls;
@@ -104,7 +105,7 @@ namespace iText.Signatures {
                 }
             }
             // show how many valid CRLs were found
-            LOGGER.Info("Valid CRLs found: " + validCrlsFound);
+            LOGGER.LogInformation("Valid CRLs found: " + validCrlsFound);
             if (validCrlsFound > 0) {
                 result.Add(new VerificationOK(signCert, this.GetType(), "Valid CRLs found: " + validCrlsFound + (online ? 
                     " (online)" : "")));
@@ -152,7 +153,7 @@ namespace iText.Signatures {
                 if (crlurl == null) {
                     return null;
                 }
-                LOGGER.Info("Getting CRL from " + crlurl);
+                LOGGER.LogInformation("Getting CRL from " + crlurl);
                 return (X509Crl)SignUtils.ParseCrlFromStream(UrlUtil.OpenStream(new Uri(crlurl)));
             }
             catch (System.IO.IOException) {
@@ -175,7 +176,7 @@ namespace iText.Signatures {
                     return true;
                 }
                 catch (GeneralSecurityException) {
-                    LOGGER.Warn("CRL not issued by the same authority as the certificate that is being checked");
+                    LOGGER.LogWarning("CRL not issued by the same authority as the certificate that is being checked");
                 }
             }
             // check the CRL against trusted anchors

@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -201,14 +202,14 @@ namespace iText.Layout.Renderer {
             occupiedArea.GetBBox().SetWidth((float)width);
             UnitValue leftMargin = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
             if (!leftMargin.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
                     .MARGIN_LEFT));
             }
             UnitValue topMargin = this.GetPropertyAsUnitValue(Property.MARGIN_TOP);
             if (!topMargin.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
                     .MARGIN_TOP));
             }
             if (0 != leftMargin.GetValue() || 0 != topMargin.GetValue()) {
@@ -246,9 +247,9 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
-                    "Drawing won't be performed."));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                    , "Drawing won't be performed."));
                 return;
             }
             bool isRelativePosition = IsRelativePosition();

@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -685,8 +686,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
             PdfStructElem parent = (PdfStructElem)GetCurrentStructElem().GetParent();
             if (parent.IsFlushed()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagTreePointer));
-                logger.Warn(iText.IO.LogMessageConstant.ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagTreePointer));
+                logger.LogWarning(iText.IO.LogMessageConstant.ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT);
                 MoveToRoot();
             }
             else {

@@ -41,7 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
@@ -92,8 +93,8 @@ namespace iText.Svg.Renderers.Impl {
                                         inverseMatrix = translation.CreateInverse();
                                     }
                                     catch (NoninvertibleTransformException ex) {
-                                        LogManager.GetLogger(typeof(UseSvgNodeRenderer)).Warn(SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH
-                                            , ex);
+                                        ITextLogManager.GetLogger(typeof(UseSvgNodeRenderer)).LogWarning(ex, SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH
+                                            );
                                     }
                                 }
                             }

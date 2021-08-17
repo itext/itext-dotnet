@@ -22,7 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
@@ -33,7 +34,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
     /// on the size of retrieved resources using input stream with a limit on the number of bytes read.
     /// </summary>
     public class DefaultResourceRetriever : IResourceRetriever {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever
             ));
 
         private long resourceSizeByteLimit;
@@ -89,7 +90,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <returns>the limited input stream or null if the URL was filtered</returns>
         public virtual Stream GetInputStreamByUrl(Uri url) {
             if (!UrlFilter(url)) {
-                logger.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
+                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
                     , url));
                 return null;
             }
@@ -112,7 +113,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 }
             }
             catch (ReadingByteLimitException) {
-                logger.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT
+                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT
                     , url, resourceSizeByteLimit));
             }
             return null;

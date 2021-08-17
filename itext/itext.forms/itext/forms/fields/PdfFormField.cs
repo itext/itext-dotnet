@@ -45,10 +45,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields.Borders;
 using iText.Forms.Util;
+using iText.IO;
 using iText.IO.Codec;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -3047,8 +3048,8 @@ namespace iText.Forms.Fields {
             }
             else {
                 if (this.GetFieldFlag(PdfTextFormField.FF_COMB)) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
                         ));
                 }
                 modelCanvas.ShowTextAligned(CreateParagraphForTextFieldValue(value).AddStyle(paragraphStyle).SetPaddings(0
@@ -3946,8 +3947,8 @@ namespace iText.Forms.Fields {
             }
             else {
                 //Avoid NPE when handling corrupt pdfs
-                ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                logger.Error(iText.IO.LogMessageConstant.INCORRECT_PAGEROTATION);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
+                logger.LogError(iText.IO.LogMessageConstant.INCORRECT_PAGEROTATION);
                 matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
             }
             //Apply field rotation
@@ -4141,8 +4142,8 @@ namespace iText.Forms.Fields {
                             pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(k);
                         }
                         else {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                            logger.Error(iText.IO.LogMessageConstant.UNSUPPORTED_COLOR_IN_DA);
+                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
+                            logger.LogError(iText.IO.LogMessageConstant.UNSUPPORTED_COLOR_IN_DA);
                         }
                     }
                 }

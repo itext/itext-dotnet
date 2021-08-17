@@ -41,7 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
@@ -306,12 +307,12 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private void LogOverwritingOfMappingIfNeeded(String thisNsRole, PdfObject prevVal) {
             if (prevVal != null) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfNamespace));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfNamespace));
                 String nsNameStr = GetNamespaceName();
                 if (nsNameStr == null) {
                     nsNameStr = "this";
                 }
-                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.MAPPING_IN_NAMESPACE_OVERWRITTEN, thisNsRole
+                logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.MAPPING_IN_NAMESPACE_OVERWRITTEN, thisNsRole
                     , nsNameStr));
             }
         }

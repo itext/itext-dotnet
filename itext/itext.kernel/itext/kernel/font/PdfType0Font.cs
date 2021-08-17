@@ -44,7 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
@@ -140,8 +141,8 @@ namespace iText.Kernel.Font {
                     toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(uniMap);
                     if (toUnicodeCMap == null) {
                         toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(PdfEncodings.IDENTITY_H);
-                        ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNKNOWN_CMAP, uniMap));
+                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNKNOWN_CMAP, uniMap));
                     }
                 }
                 fontProgram = DocTrueTypeFont.CreateFontProgram(cidFont, toUnicodeCMap);
@@ -189,7 +190,8 @@ namespace iText.Kernel.Font {
                     cidFontType = CID_FONT_TYPE_2;
                 }
                 else {
-                    LogManager.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.FAILED_TO_DETERMINE_CID_FONT_SUBTYPE);
+                    ITextLogManager.GetLogger(GetType()).LogError(iText.IO.LogMessageConstant.FAILED_TO_DETERMINE_CID_FONT_SUBTYPE
+                        );
                 }
             }
             usedGlyphs = new SortedSet<int>();
@@ -573,14 +575,14 @@ namespace iText.Kernel.Font {
                     }
                 }
                 if (glyph == null) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                    if (logger.IsWarnEnabled) {
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
+                    if (logger.IsEnabled(LogLevel.Warning)) {
                         StringBuilder failedCodes = new StringBuilder();
                         for (int codeLength = 1; codeLength <= MAX_CID_CODE_LENGTH && i + codeLength <= charCodesSequence.Length; 
                             codeLength++) {
                             failedCodes.Append((int)charCodesSequence[i + codeLength - 1]).Append(" ");
                         }
-                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, failedCodes
+                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, failedCodes
                             .ToString()));
                     }
                     i += codeSpaceMatchedLength - 1;
@@ -710,8 +712,8 @@ namespace iText.Kernel.Font {
                                 ttfBytes = ttf.GetSubset(usedGlyphs, subset);
                             }
                             catch (iText.IO.IOException) {
-                                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                                logger.Warn(iText.IO.LogMessageConstant.FONT_SUBSET_ISSUE);
+                                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
+                                logger.LogWarning(iText.IO.LogMessageConstant.FONT_SUBSET_ISSUE);
                                 ttfBytes = null;
                             }
                         }
@@ -799,8 +801,8 @@ namespace iText.Kernel.Font {
             }
             else {
                 // TODO DEVSIX-31
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                logger.Warn("Vertical writing has not been implemented yet.");
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
+                logger.LogWarning("Vertical writing has not been implemented yet.");
             }
             return cidFont;
         }

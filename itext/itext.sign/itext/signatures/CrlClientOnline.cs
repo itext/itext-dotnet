@@ -44,8 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.X509;
+using iText.IO;
 using iText.IO.Util;
 
 namespace iText.Signatures {
@@ -56,7 +57,8 @@ namespace iText.Signatures {
     /// <author>Paulo Soares</author>
     public class CrlClientOnline : ICrlClient {
         /// <summary>The Logger instance.</summary>
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.CrlClientOnline));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.CrlClientOnline
+            ));
 
         /// <summary>The URLs of the CRLs.</summary>
         protected internal IList<Uri> urls = new List<Uri>();
@@ -89,7 +91,7 @@ namespace iText.Signatures {
         public CrlClientOnline(X509Certificate[] chain) {
             for (int i = 0; i < chain.Length; i++) {
                 X509Certificate cert = (X509Certificate)chain[i];
-                LOGGER.Info("Checking certificate: " + cert.SubjectDN);
+                LOGGER.LogInformation("Checking certificate: " + cert.SubjectDN);
                 String url = null;
                 url = CertificateUtil.GetCRLURL(cert);
                 if (url != null) {
@@ -113,7 +115,7 @@ namespace iText.Signatures {
             }
             IList<Uri> urllist = new List<Uri>(urls);
             if (urllist.Count == 0) {
-                LOGGER.Info("Looking for CRL for certificate " + checkCert.SubjectDN);
+                LOGGER.LogInformation("Looking for CRL for certificate " + checkCert.SubjectDN);
                 try {
                     if (url == null) {
                         url = CertificateUtil.GetCRLURL(checkCert);
@@ -122,16 +124,16 @@ namespace iText.Signatures {
                         throw new ArgumentException("Passed url can not be null.");
                     }
                     urllist.Add(new Uri(url));
-                    LOGGER.Info("Found CRL url: " + url);
+                    LOGGER.LogInformation("Found CRL url: " + url);
                 }
                 catch (Exception e) {
-                    LOGGER.Info("Skipped CRL url: " + e.Message);
+                    LOGGER.LogInformation("Skipped CRL url: " + e.Message);
                 }
             }
             IList<byte[]> ar = new List<byte[]>();
             foreach (Uri urlt in urllist) {
                 try {
-                    LOGGER.Info("Checking CRL: " + urlt);
+                    LOGGER.LogInformation("Checking CRL: " + urlt);
                     Stream inp = SignUtils.GetHttpResponse(urlt);
                     byte[] buf = new byte[1024];
                     MemoryStream bout = new MemoryStream();
@@ -144,10 +146,11 @@ namespace iText.Signatures {
                     }
                     inp.Dispose();
                     ar.Add(bout.ToArray());
-                    LOGGER.Info("Added CRL found at: " + urlt);
+                    LOGGER.LogInformation("Added CRL found at: " + urlt);
                 }
                 catch (Exception e) {
-                    LOGGER.Info(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_DISTRIBUTION_POINT, e.Message));
+                    LOGGER.LogInformation(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_DISTRIBUTION_POINT, e.Message
+                        ));
                 }
             }
             return ar;
@@ -160,7 +163,7 @@ namespace iText.Signatures {
                 AddUrl(new Uri(url));
             }
             catch (UriFormatException) {
-                LOGGER.Info("Skipped CRL url (malformed): " + url);
+                LOGGER.LogInformation("Skipped CRL url (malformed): " + url);
             }
         }
 
@@ -168,11 +171,11 @@ namespace iText.Signatures {
         /// <param name="url">an URL object</param>
         protected internal virtual void AddUrl(Uri url) {
             if (urls.Contains(url)) {
-                LOGGER.Info("Skipped CRL url (duplicate): " + url);
+                LOGGER.LogInformation("Skipped CRL url (duplicate): " + url);
                 return;
             }
             urls.Add(url);
-            LOGGER.Info("Added CRL url: " + url);
+            LOGGER.LogInformation("Added CRL url: " + url);
         }
 
         public virtual int GetUrlsSize() {

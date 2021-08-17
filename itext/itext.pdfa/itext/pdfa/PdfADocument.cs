@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -239,7 +240,7 @@ namespace iText.Pdfa {
             if (!alreadyLoggedThatPageFlushingWasNotPerformed) {
                 alreadyLoggedThatPageFlushingWasNotPerformed = true;
                 // This log message will be printed once for one instance of the document.
-                LogManager.GetLogger(typeof(iText.Pdfa.PdfADocument)).Warn(PdfALogMessageConstant.PDFA_PAGE_FLUSHING_WAS_NOT_PERFORMED
+                ITextLogManager.GetLogger(typeof(iText.Pdfa.PdfADocument)).LogWarning(PdfALogMessageConstant.PDFA_PAGE_FLUSHING_WAS_NOT_PERFORMED
                     );
             }
         }
@@ -253,8 +254,8 @@ namespace iText.Pdfa {
                     }
                 }
                 catch (XMPException exc) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
-                    logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, exc);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
+                    logger.LogError(exc, iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
                 }
             }
         }
@@ -269,8 +270,8 @@ namespace iText.Pdfa {
                 SetXmpMetadata(xmpMeta);
             }
             catch (XMPException e) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
-                logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
+                logger.LogError(e, iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
             }
         }
 
@@ -287,7 +288,7 @@ namespace iText.Pdfa {
                 if (!alreadyLoggedThatObjectFlushingWasNotPerformed) {
                     alreadyLoggedThatObjectFlushingWasNotPerformed = true;
                     // This log message will be printed once for one instance of the document.
-                    LogManager.GetLogger(typeof(iText.Pdfa.PdfADocument)).Warn(PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED
+                    ITextLogManager.GetLogger(typeof(iText.Pdfa.PdfADocument)).LogWarning(PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED
                         );
                 }
             }

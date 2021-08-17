@@ -18,8 +18,8 @@
     <tags>itext itext7 itextsharp c# .net csharp pdf tests</tags>
   </metadata>
   <files>
-    <file src="bin\Release\net45\itext.pdftest.dll" target="lib\net45" />
-    <file src="bin\Release\net45\itext.pdftest.xml" target="lib\net45" />
+    <file src="bin\Release\net461\itext.pdftest.dll" target="lib\net461" />
+    <file src="bin\Release\net461\itext.pdftest.xml" target="lib\net461" />
     <file src="bin\Release\netstandard2.0\itext.pdftest.dll" target="lib\netstandard2.0" />
     <file src="bin\Release\netstandard2.0\itext.pdftest.xml" target="lib\netstandard2.0" />
 	<file src="lib\verapdf\VeraPDF_license.txt" target="Build\lib\verapdf" />

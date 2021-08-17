@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Jsoup.Nodes;
@@ -53,7 +54,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
     /// <summary>Class that uses JSoup to parse HTML.</summary>
     public class JsoupXmlParser : IXmlParser {
         /// <summary>The logger.</summary>
-        private static ILog logger = LogManager.GetLogger(typeof(JsoupXmlParser));
+        private static ILogger logger = ITextLogManager.GetLogger(typeof(JsoupXmlParser));
 
         /* (non-Javadoc)
         * @see com.itextpdf.styledxmlparser.html.IXmlParser#parse(java.io.InputStream, java.lang.String)
@@ -125,7 +126,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
                                 }
                                 else {
                                     // Ignore. We should do this to avoid redundant log message
-                                    logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.ERROR_PARSING_COULD_NOT_MAP_NODE
+                                    logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.ERROR_PARSING_COULD_NOT_MAP_NODE
                                         , jsoupNode.GetType()));
                                 }
                             }

@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
@@ -153,7 +154,8 @@ namespace iText.Kernel.Font {
             PdfDictionary encoding = fontDictionary.GetAsDictionary(PdfName.Encoding);
             PdfArray differences = encoding != null ? encoding.GetAsArray(PdfName.Differences) : null;
             if (charProcsDic == null || differences == null) {
-                LogManager.GetLogger(GetType()).Warn(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE);
+                ITextLogManager.GetLogger(GetType()).LogWarning(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE
+                    );
             }
             FillFontDescriptor(fontDictionary.GetAsDictionary(PdfName.FontDescriptor));
             Normalize1000UnitsToGlyphSpaceUnits(fontMatrixArray);
@@ -357,8 +359,8 @@ namespace iText.Kernel.Font {
             else {
                 if (GetPdfObject().GetIndirectReference() != null && GetPdfObject().GetIndirectReference().GetDocument().IsTagged
                     ()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType3Font));
-                    logger.Warn(iText.IO.LogMessageConstant.TYPE3_FONT_ISSUE_TAGGED_PDF);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType3Font));
+                    logger.LogWarning(iText.IO.LogMessageConstant.TYPE3_FONT_ISSUE_TAGGED_PDF);
                 }
             }
             return null;

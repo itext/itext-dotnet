@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
@@ -93,8 +94,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             else {
                 foreach (String prop in props) {
                     if (CommonCssConstants.INHERIT.Equals(prop) || CommonCssConstants.INITIAL.Equals(prop)) {
-                        ILog logger = LogManager.GetLogger(typeof(AbstractBoxShorthandResolver));
-                        logger.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        ILogger logger = ITextLogManager.GetLogger(typeof(AbstractBoxShorthandResolver));
+                        logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                             , shorthandExpression));
                         return JavaCollectionsUtil.EmptyList<CssDeclaration>();
                     }

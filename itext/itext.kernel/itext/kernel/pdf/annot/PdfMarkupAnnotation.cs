@@ -41,7 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -344,8 +345,8 @@ namespace iText.Kernel.Pdf.Annot {
                 if (popupObject != null) {
                     PdfAnnotation annotation = MakeAnnotation(popupObject);
                     if (!(annotation is PdfPopupAnnotation)) {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfMarkupAnnotation));
-                        logger.Warn(iText.IO.LogMessageConstant.POPUP_ENTRY_IS_NOT_POPUP_ANNOTATION);
+                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfMarkupAnnotation));
+                        logger.LogWarning(iText.IO.LogMessageConstant.POPUP_ENTRY_IS_NOT_POPUP_ANNOTATION);
                         return null;
                     }
                     popup = (PdfPopupAnnotation)annotation;

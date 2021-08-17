@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 
 namespace iText.Kernel.Colors {
@@ -262,8 +263,8 @@ namespace iText.Kernel.Colors {
                             color[2] = (float)(Convert.ToInt32(colorName.Substring(4), 16) / RGB_MAX_VAL);
                         }
                         else {
-                            ILog logger = LogManager.GetLogger(typeof(WebColors));
-                            logger.Error(iText.IO.LogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);
+                            ILogger logger = ITextLogManager.GetLogger(typeof(WebColors));
+                            logger.LogError(iText.IO.LogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);
                         }
                     }
                 }

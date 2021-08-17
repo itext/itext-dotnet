@@ -44,8 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Reflection;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Versions.Attributes;
+using iText.IO;
 
 namespace iText.Kernel {
     /// <summary>This class contains version information about iText.</summary>
@@ -346,14 +347,14 @@ namespace iText.Kernel {
                 }
 
                 if (type == null) {
-                    ILog logger = LogManager.GetLogger(typeof(Version));
+                    ILogger logger = ITextLogManager.GetLogger(typeof(Version));
                     try {
                         type = System.Type.GetType(classPartialName);
                     } catch {
                         // ignore
                     }
                     if (type == null && fileLoadExceptionMessage != null) {
-                        logger.Error(fileLoadExceptionMessage);
+                        logger.LogError(fileLoadExceptionMessage);
                     }
                 }
             }

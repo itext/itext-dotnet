@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Codec;
 using iText.IO.Image;
 using iText.IO.Util;
@@ -58,7 +59,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>Identifier string used to detect that the source is under data URI scheme.</summary>
         public const String DATA_SCHEMA_PREFIX = "data:";
 
-        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver
             ));
 
         /// <summary>
@@ -185,11 +186,11 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 }
             }
             if (IsDataSrc(src)) {
-                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI
+                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI
                     , src));
             }
             else {
-                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
+                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
                     , uriResolver.GetBaseUri(), src));
             }
             return null;
@@ -212,8 +213,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 return retriever.GetByteArrayByUrl(url);
             }
             catch (Exception e) {
-                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
-                    , uriResolver.GetBaseUri(), src), e);
+                logger.LogError(e, MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                    , uriResolver.GetBaseUri(), src));
                 return null;
             }
         }
@@ -231,8 +232,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 return retriever.GetInputStreamByUrl(url);
             }
             catch (Exception e) {
-                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
-                    , uriResolver.GetBaseUri(), src), e);
+                logger.LogError(e, MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                    , uriResolver.GetBaseUri(), src));
                 return null;
             }
         }

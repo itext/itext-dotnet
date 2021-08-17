@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
@@ -75,7 +76,8 @@ namespace iText.Svg.Css.Impl {
         private static readonly float DEFAULT_FONT_SIZE = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults
             .GetDefaultValue(SvgConstants.Attributes.FONT_SIZE));
 
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver
+            ));
 
         private CssStyleSheet css;
 
@@ -116,7 +118,7 @@ namespace iText.Svg.Css.Impl {
                 }
             }
             catch (System.IO.IOException e) {
-                LOGGER.Warn(SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS, e);
+                LOGGER.LogWarning(e, SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS);
                 this.css = new CssStyleSheet();
             }
             this.resourceResolver = context.GetResourceResolver();
@@ -246,7 +248,7 @@ namespace iText.Svg.Css.Impl {
                 IStylesContainer parentNode = (IStylesContainer)element.ParentNode();
                 IDictionary<String, String> parentStyles = parentNode.GetStyles();
                 if (parentStyles == null && !(parentNode is IElementNode)) {
-                    LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES);
+                    LOGGER.LogError(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES);
                 }
                 if (parentStyles != null) {
                     parentFontSizeStr = parentStyles.Get(SvgConstants.Attributes.FONT_SIZE);
@@ -283,7 +285,7 @@ namespace iText.Svg.Css.Impl {
                     xlinkValue = this.resourceResolver.ResolveAgainstBaseUri(attr.GetValue()).ToExternalForm();
                 }
                 catch (UriFormatException mue) {
-                    LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL, mue);
+                    LOGGER.LogError(mue, iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL);
                 }
             }
             attributesMap.Put(attr.GetKey(), xlinkValue);
@@ -336,7 +338,7 @@ namespace iText.Svg.Css.Impl {
                                 }
                             }
                             catch (Exception exc) {
-                                LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE, exc);
+                                LOGGER.LogError(exc, iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE);
                             }
                         }
                     }

@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
@@ -55,7 +56,7 @@ using iText.Kernel.Pdf.Navigation;
 namespace iText.Kernel.Pdf {
     /// <summary>The root of a document’s object hierarchy.</summary>
     public class PdfCatalog : PdfObjectWrapper<PdfDictionary> {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfCatalog));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfCatalog));
 
         private readonly PdfPagesTree pageTree;
 
@@ -196,8 +197,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>PdfCatalog will be flushed in PdfDocument.close().</summary>
         /// <remarks>PdfCatalog will be flushed in PdfDocument.close(). User mustn't flush PdfCatalog!</remarks>
         public override void Flush() {
-            ILog logger = LogManager.GetLogger(typeof(PdfDocument));
-            logger.Warn("PdfCatalog cannot be flushed manually");
+            ILogger logger = ITextLogManager.GetLogger(typeof(PdfDocument));
+            logger.LogWarning("PdfCatalog cannot be flushed manually");
         }
 
         /// <summary>A value specifying a destination that shall be displayed when the document is opened.</summary>
@@ -693,7 +694,7 @@ namespace iText.Kernel.Pdf {
                 }
                 catch (IndexOutOfRangeException) {
                     pageObj = null;
-                    LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS
                         , pageNumber));
                 }
             }

@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.StyledXmlParser.Node;
 using iText.Svg.Exceptions;
@@ -81,8 +82,8 @@ namespace iText.Svg.Renderers.Factories {
             try {
                 Type clazz = rendererMap.Get(tag.Name());
                 if (clazz == null) {
-                    ILog logger = LogManager.GetLogger(this.GetType());
-                    logger.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.UNMAPPED_TAG, tag.Name()));
+                    ILogger logger = ITextLogManager.GetLogger(this.GetType());
+                    logger.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.UNMAPPED_TAG, tag.Name()));
                     return null;
                 }
                 result = (ISvgNodeRenderer)System.Activator.CreateInstance(rendererMap.Get(tag.Name()));

@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
@@ -408,8 +409,8 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         private bool IsCurrentRuleSupported() {
             bool isSupported = nestedAtRules.IsEmpty() || SUPPORTED_RULES.Contains(nestedAtRules.Peek().GetRuleName());
             if (!isSupported) {
-                LogManager.GetLogger(GetType()).Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.RULE_IS_NOT_SUPPORTED
-                    , nestedAtRules.Peek().GetRuleName()));
+                ITextLogManager.GetLogger(GetType()).LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
+                    .RULE_IS_NOT_SUPPORTED, nestedAtRules.Peek().GetRuleName()));
             }
             return isSupported;
         }

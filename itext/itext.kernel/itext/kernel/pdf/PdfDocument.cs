@@ -44,7 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -248,12 +249,12 @@ namespace iText.Kernel.Pdf {
             this.properties = properties;
             bool writerHasEncryption = WriterHasEncryption();
             if (properties.appendMode && writerHasEncryption) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Warn(iText.IO.LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.LogWarning(iText.IO.LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
             }
             if (properties.preserveEncryption && writerHasEncryption) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Warn(iText.IO.LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_PRESERVE);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.LogWarning(iText.IO.LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_PRESERVE);
             }
             Open(writer.properties.pdfVersion);
         }
@@ -881,8 +882,8 @@ namespace iText.Kernel.Pdf {
                         writer.Dispose();
                     }
                     catch (Exception e) {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                        logger.Error(iText.IO.LogMessageConstant.PDF_WRITER_CLOSING_FAILED, e);
+                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                        logger.LogError(e, iText.IO.LogMessageConstant.PDF_WRITER_CLOSING_FAILED);
                     }
                 }
                 if (reader != null && IsCloseReader()) {
@@ -890,8 +891,8 @@ namespace iText.Kernel.Pdf {
                         reader.Close();
                     }
                     catch (Exception e) {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                        logger.Error(iText.IO.LogMessageConstant.PDF_READER_CLOSING_FAILED, e);
+                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                        logger.LogError(e, iText.IO.LogMessageConstant.PDF_READER_CLOSING_FAILED);
                     }
                 }
             }
@@ -1226,8 +1227,8 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 else {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                    logger.Warn(iText.IO.LogMessageConstant.NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                    logger.LogWarning(iText.IO.LogMessageConstant.NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT);
                 }
             }
             if (catalog.IsOutlineMode()) {
@@ -1438,7 +1439,7 @@ namespace iText.Kernel.Pdf {
         public virtual void AddNamedDestination(String key, PdfObject value) {
             CheckClosingStatus();
             if (value.IsArray() && ((PdfArray)value).Get(0).IsNumber()) {
-                LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument)).Warn(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE
+                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument)).LogWarning(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE
                     );
             }
             catalog.AddNamedDestination(key, value);
@@ -1563,8 +1564,8 @@ namespace iText.Kernel.Pdf {
         /// <seealso cref="AddFileAttachment(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec)"/>
         public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Error(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.LogError(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             PdfArray afArray = catalog.GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null) {
@@ -1614,7 +1615,7 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     catch (PdfException e) {
-                        LogManager.GetLogger(GetType()).Error(e.Message);
+                        ITextLogManager.GetLogger(GetType()).LogError(e.Message);
                     }
                 }
             }
@@ -1641,7 +1642,7 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_ENCRYPTED_DOCUMENT);
             }
             if (!PdfName.EncryptedPayload.Equals(((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship))) {
-                LogManager.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_AFRELATIONSHIP_FILED_EQUAL_TO_ENCRYPTED_PAYLOAD
+                ITextLogManager.GetLogger(GetType()).LogError(iText.IO.LogMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_AFRELATIONSHIP_FILED_EQUAL_TO_ENCRYPTED_PAYLOAD
                     );
             }
             PdfEncryptedPayload encryptedPayload = PdfEncryptedPayload.ExtractFrom(fs);
@@ -1651,7 +1652,7 @@ namespace iText.Kernel.Pdf {
             }
             PdfCollection collection = GetCatalog().GetCollection();
             if (collection != null) {
-                LogManager.GetLogger(GetType()).Warn(iText.IO.LogMessageConstant.COLLECTION_DICTIONARY_ALREADY_EXISTS_IT_WILL_BE_MODIFIED
+                ITextLogManager.GetLogger(GetType()).LogWarning(iText.IO.LogMessageConstant.COLLECTION_DICTIONARY_ALREADY_EXISTS_IT_WILL_BE_MODIFIED
                     );
             }
             else {
@@ -1819,8 +1820,8 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                    logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_CREATING_DEFAULT_FONT, e);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                    logger.LogError(e, iText.IO.LogMessageConstant.EXCEPTION_WHILE_CREATING_DEFAULT_FONT);
                     defaultFont = null;
                 }
             }
@@ -2139,8 +2140,8 @@ namespace iText.Kernel.Pdf {
                 }
             }
             catch (XMPException e) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.LogError(e, iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
             }
         }
 
@@ -2290,8 +2291,8 @@ namespace iText.Kernel.Pdf {
             catch (Exception ex) {
                 structTreeRoot = null;
                 structParentIndex = -1;
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Error(iText.IO.LogMessageConstant.TAG_STRUCTURE_INIT_FAILED, ex);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.LogError(ex, iText.IO.LogMessageConstant.TAG_STRUCTURE_INIT_FAILED);
             }
         }
 
@@ -2511,8 +2512,8 @@ namespace iText.Kernel.Pdf {
 
         private void ProcessReadingError(String errorMessage) {
             if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(reader.GetStrictnessLevel())) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Error(errorMessage);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.LogError(errorMessage);
             }
             else {
                 throw new PdfException(errorMessage);
@@ -2522,13 +2523,13 @@ namespace iText.Kernel.Pdf {
         private static void OverrideFullCompressionInWriterProperties(WriterProperties properties, bool readerHasXrefStream
             ) {
             if (true == properties.isFullCompression && !readerHasXrefStream) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Warn(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.LogWarning(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY);
             }
             else {
                 if (false == properties.isFullCompression && readerHasXrefStream) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                    logger.Warn(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                    logger.LogWarning(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY);
                 }
             }
             properties.isFullCompression = readerHasXrefStream;

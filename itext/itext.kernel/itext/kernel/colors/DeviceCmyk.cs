@@ -41,7 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
@@ -98,8 +99,8 @@ namespace iText.Kernel.Colors {
             : base(new PdfDeviceCs.Cmyk(), new float[] { c > 1 ? 1 : (c > 0 ? c : 0), m > 1 ? 1 : (m > 0 ? m : 0), y >
                  1 ? 1 : (y > 0 ? y : 0), k > 1 ? 1 : (k > 0 ? k : 0) }) {
             if (c > 1 || c < 0 || m > 1 || m < 0 || y > 1 || y < 0 || k > 1 || k < 0) {
-                ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceCmyk));
-                LOGGER.Warn(iText.IO.LogMessageConstant.COLORANT_INTENSITIES_INVALID);
+                ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceCmyk));
+                LOGGER.LogWarning(iText.IO.LogMessageConstant.COLORANT_INTENSITIES_INVALID);
             }
         }
 

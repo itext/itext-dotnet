@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
@@ -149,8 +150,8 @@ namespace iText.Forms.Fields {
         public virtual iText.Forms.Fields.PdfChoiceFormField SetListSelected(String[] optionValues, bool generateAppearance
             ) {
             if (optionValues.Length > 1 && !IsMultiSelect()) {
-                ILog logger = LogManager.GetLogger(this.GetType());
-                logger.Warn(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
+                ILogger logger = ITextLogManager.GetLogger(this.GetType());
+                logger.LogWarning(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
             }
             PdfArray options = GetOptions();
             PdfArray indices = new PdfArray();
@@ -168,8 +169,8 @@ namespace iText.Forms.Fields {
                 }
                 else {
                     if (!(this.IsCombo() && this.IsEdit())) {
-                        ILog logger = LogManager.GetLogger(this.GetType());
-                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY
+                        ILogger logger = ITextLogManager.GetLogger(this.GetType());
+                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY
                             , element, this.GetFieldName()));
                     }
                     values.Add(new PdfString(element, PdfEncodings.UNICODE_BIG));
@@ -205,8 +206,8 @@ namespace iText.Forms.Fields {
         /// </returns>
         public virtual iText.Forms.Fields.PdfChoiceFormField SetListSelected(int[] optionNumbers) {
             if (optionNumbers.Length > 1 && !IsMultiSelect()) {
-                ILog logger = LogManager.GetLogger(this.GetType());
-                logger.Warn(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
+                ILogger logger = ITextLogManager.GetLogger(this.GetType());
+                logger.LogWarning(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
             }
             PdfArray indices = new PdfArray();
             PdfArray values = new PdfArray();

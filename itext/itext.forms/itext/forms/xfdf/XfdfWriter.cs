@@ -44,7 +44,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 
@@ -52,7 +53,7 @@ namespace iText.Forms.Xfdf {
     internal class XfdfWriter {
         private Stream outputStream;
 
-        private static ILog logger = LogManager.GetLogger(typeof(iText.Forms.Xfdf.XfdfWriter));
+        private static ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Xfdf.XfdfWriter));
 
         /// <summary>Creates a XfdfWriter for output stream specified.</summary>
         /// <param name="outputStream">A stream to write xfdf file into.</param>
@@ -91,7 +92,7 @@ namespace iText.Forms.Xfdf {
                     field.AppendChild(value);
                 }
                 else {
-                    logger.Info(XfdfConstants.EMPTY_FIELD_VALUE_ELEMENT);
+                    logger.LogInformation(XfdfConstants.EMPTY_FIELD_VALUE_ELEMENT);
                 }
             }
             parentElement.AppendChild(field);
@@ -205,7 +206,7 @@ namespace iText.Forms.Xfdf {
                         annot.AppendChild(onActivation);
                     }
                     else {
-                        logger.Error("Dest and OnActivation elements are both missing");
+                        logger.LogError("Dest and OnActivation elements are both missing");
                     }
                 }
                 if (annotObject.GetBorderStyleAlt() != null) {
@@ -407,7 +408,7 @@ namespace iText.Forms.Xfdf {
                                 goToR.AppendChild(file);
                             }
                             else {
-                                logger.Error("Dest or File elements are missing.");
+                                logger.LogError("Dest or File elements are missing.");
                             }
                         }
                         action.AppendChild(goToR);
@@ -427,7 +428,7 @@ namespace iText.Forms.Xfdf {
                                     launch.AppendChild(file);
                                 }
                                 else {
-                                    logger.Error("File element is missing");
+                                    logger.LogError("File element is missing");
                                 }
                                 if (actionObject.IsNewWindow()) {
                                     launch.SetAttribute(XfdfConstants.NEW_WINDOW, "true");

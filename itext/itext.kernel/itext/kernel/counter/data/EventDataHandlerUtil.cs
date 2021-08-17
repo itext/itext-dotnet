@@ -46,7 +46,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Security;
 using System.Threading;
-using Common.Logging;
+using iText.IO;
+using Microsoft.Extensions.Logging;
 
 namespace iText.Kernel.Counter.Data {
     /// <summary>
@@ -97,7 +98,7 @@ namespace iText.Kernel.Counter.Data {
                     AppDomain.CurrentDomain.ProcessExit += processExitHandler;
                 }
                 catch (SecurityException) {
-                    LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
+                    ITextLogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).LogError(iText.IO.LogMessageConstant
                         .UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK);
                     processExitHooks.JRemove(dataHandler);
                 }
@@ -114,7 +115,7 @@ namespace iText.Kernel.Counter.Data {
                     AppDomain.CurrentDomain.DomainUnload += domainUnloadHandler;
                 }
                 catch (SecurityException) {
-                    LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
+                    ITextLogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).LogError(iText.IO.LogMessageConstant
                         .UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK);
                     domainUnloadHooks.JRemove(dataHandler);
                 }
@@ -146,7 +147,7 @@ namespace iText.Kernel.Counter.Data {
                     AppDomain.CurrentDomain.ProcessExit -= processExitToDisable;
                 }
                 catch (SecurityException) {
-                    LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
+                    ITextLogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).LogError(iText.IO.LogMessageConstant
                         .UNABLE_TO_UNREGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK);
                 }
                 catch (Exception) {
@@ -159,7 +160,7 @@ namespace iText.Kernel.Counter.Data {
                     AppDomain.CurrentDomain.DomainUnload -= domainUnloadToDisable;
                 }
                 catch (SecurityException) {
-                    LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
+                    ITextLogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).LogError(iText.IO.LogMessageConstant
                         .UNABLE_TO_UNREGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK);
                 }
                 catch (Exception) {
@@ -197,7 +198,7 @@ namespace iText.Kernel.Counter.Data {
                         break;
                     }
                     catch (Exception any) {
-                        LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
+                        ITextLogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).LogError(iText.IO.LogMessageConstant
                             .UNEXPECTED_EVENT_HANDLER_SERVICE_THREAD_EXCEPTION, any);
                         break;
                     }
@@ -227,7 +228,7 @@ namespace iText.Kernel.Counter.Data {
                     toDisable.Interrupt();
                 }
                 catch (SecurityException) {
-                    LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
+                    ITextLogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).LogError(iText.IO.LogMessageConstant
                         .UNABLE_TO_INTERRUPT_THREAD);
                 }
             }

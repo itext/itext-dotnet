@@ -20,7 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 
 namespace iText.StyledXmlParser.Css.Util {
@@ -32,7 +33,7 @@ namespace iText.StyledXmlParser.Css.Util {
     /// method.
     /// </remarks>
     public class EscapeGroup {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.EscapeGroup
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.EscapeGroup
             ));
 
         private readonly char openCharacter;
@@ -94,7 +95,7 @@ namespace iText.StyledXmlParser.Css.Util {
                     if (nextCharacter == closeCharacter) {
                         --counter;
                         if (counter < 0) {
-                            LOGGER.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INCORRECT_CHARACTER_SEQUENCE
+                            LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INCORRECT_CHARACTER_SEQUENCE
                                 ));
                             counter = 0;
                         }

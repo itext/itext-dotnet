@@ -41,7 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 
@@ -52,11 +53,11 @@ namespace iText.Kernel.Pdf.Filters {
     /// (in JPEG baseline format).
     /// </remarks>
     public class DctDecodeFilter : IFilterHandler {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(DctDecodeFilter));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(DctDecodeFilter));
 
         public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
             ) {
-            LOGGER.Info(KernelLogMessageConstant.DCTDECODE_FILTER_DECODING);
+            LOGGER.LogInformation(KernelLogMessageConstant.DCTDECODE_FILTER_DECODING);
             return b;
         }
     }

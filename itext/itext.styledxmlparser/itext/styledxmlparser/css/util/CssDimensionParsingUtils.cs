@@ -21,7 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Layout.Properties;
@@ -31,7 +32,7 @@ using iText.StyledXmlParser.Exceptions;
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class for CSS dimension parsing operations.</summary>
     public sealed class CssDimensionParsingUtils {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssDimensionParsingUtils
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssDimensionParsingUtils
             ));
 
         /// <summary>
@@ -122,7 +123,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 )) {
                 return floatValue;
             }
-            logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_METRIC_ANGLE_PARSED
+            logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_METRIC_ANGLE_PARSED
                 , unit.Equals("") ? defaultMetric : unit));
             return floatValue;
         }
@@ -230,7 +231,7 @@ namespace iText.StyledXmlParser.Css.Util {
                     }
                 }
             }
-            logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+            logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
                 , unit.Equals("") ? defaultMetric : unit));
             return (float)f;
         }
@@ -447,7 +448,7 @@ namespace iText.StyledXmlParser.Css.Util {
         public static float[] ParseRgbaColor(String colorValue) {
             float[] rgbaColor = WebColors.GetRGBAColor(colorValue);
             if (rgbaColor == null) {
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_NOT_PARSED, colorValue));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_NOT_PARSED, colorValue));
                 rgbaColor = new float[] { 0, 0, 0, 1 };
             }
             return rgbaColor;

@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve;
@@ -53,7 +54,7 @@ using iText.StyledXmlParser.Css.Validate;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     public class FlexFlowShorthandResolver : IShorthandResolver {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(FlexFlowShorthandResolver));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(FlexFlowShorthandResolver));
 
         /// <summary><inheritDoc/></summary>
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
@@ -128,7 +129,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
 
         private static IList<CssDeclaration> HandleExpressionError(String logMessage, String attribute, String shorthandExpression
             ) {
-            LOGGER.Warn(MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
+            LOGGER.LogWarning(MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
             return JavaCollectionsUtil.EmptyList<CssDeclaration>();
         }
 

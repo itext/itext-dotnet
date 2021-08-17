@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Threading;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Counter.Event;
 using iText.Test;
 using iText.Test.Attributes;
@@ -105,7 +106,7 @@ namespace iText.Kernel.Counter.Data {
             }
 
             protected internal override bool Process(DataHandlerTest.SimpleData data) {
-                LogManager.GetLogger(GetType()).Warn("Process event with signature: " + data.GetSignature() + ", and count: "
+                ITextLogManager.GetLogger(GetType()).LogWarning("Process event with signature: " + data.GetSignature() + ", and count: "
                      + data.GetCount());
                 return data.GetCount() > SUCCESS_LIMIT;
             }

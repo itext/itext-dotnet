@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Codec;
 using iText.IO.Util;
 using iText.Kernel.Counter.Context;
@@ -63,7 +64,7 @@ namespace iText.Kernel.Counter {
 
         private int repeatLevel = 10000;
 
-        private ILog logger;
+        private ILogger logger;
 
         public DefaultEventCounter()
             : base(UnknownContext.RESTRICTIVE) {
@@ -103,9 +104,9 @@ namespace iText.Kernel.Counter {
                         repeatLevel = REPEAT[2];
                     }
                     if (logger == null) {
-                        logger = LogManager.GetLogger(this.GetType());
+                        logger = ITextLogManager.GetLogger(this.GetType());
                     }
-                    logger.Info(message);
+                    logger.LogInformation(message);
                 }
                 count.Set(0);
             }

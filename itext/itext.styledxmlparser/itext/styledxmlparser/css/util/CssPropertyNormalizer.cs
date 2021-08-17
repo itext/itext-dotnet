@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.StyledXmlParser;
 
@@ -110,7 +111,7 @@ namespace iText.StyledXmlParser.Css.Util {
             int end = CssUtils.FindNextUnescapedChar(source, endQuoteSymbol, start + 1);
             if (end == -1) {
                 end = source.Length;
-                LogManager.GetLogger(typeof(CssPropertyNormalizer)).Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
+                ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
                     .QUOTE_IS_NOT_CLOSED_IN_CSS_EXPRESSION, source));
             }
             else {
@@ -138,7 +139,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 else {
                     curr = CssUtils.FindNextUnescapedChar(source, ')', curr);
                     if (curr == -1) {
-                        LogManager.GetLogger(typeof(CssPropertyNormalizer)).Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
+                        ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
                             .URL_IS_NOT_CLOSED_IN_CSS_EXPRESSION, source));
                         return source.Length;
                     }
@@ -150,7 +151,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 }
             }
             else {
-                LogManager.GetLogger(typeof(CssPropertyNormalizer)).Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
+                ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
                     .URL_IS_EMPTY_IN_CSS_EXPRESSION, source));
                 return source.Length;
             }

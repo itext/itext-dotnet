@@ -21,7 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Layout.Renderer;
 
@@ -83,15 +84,15 @@ namespace iText.Layout.Properties {
         /// explaining the reason for violation
         /// </param>
         public virtual void HandleViolatedOrphans(ParagraphRenderer renderer, String message) {
-            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Properties.ParagraphOrphansControl));
+            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Properties.ParagraphOrphansControl));
             if (renderer.GetOccupiedArea() != null && renderer.GetLines() != null) {
                 int pageNumber = renderer.GetOccupiedArea().GetPageNumber();
                 String warnText = MessageFormatUtil.Format(iText.IO.LogMessageConstant.ORPHANS_CONSTRAINT_VIOLATED, pageNumber
                     , minOrphans, renderer.GetLines().Count, message);
-                logger.Warn(warnText);
+                logger.LogWarning(warnText);
             }
             else {
-                logger.Warn(iText.IO.LogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD);
+                logger.LogWarning(iText.IO.LogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD);
             }
         }
     }
