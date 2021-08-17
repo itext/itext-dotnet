@@ -48,10 +48,10 @@ using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using iText.Events.Util;
-using iText.Forms;
+using iText.Events.Contexts;
+using iText.Events.Utils;
 using iText.IO;
-using iText.Kernel.Counter.Event;
+using iText.Forms;
 using iText.Kernel.Pdf;
 
 namespace iText.Signatures {
@@ -121,7 +121,7 @@ namespace iText.Signatures {
 
         /// <summary>
         /// Sets the
-        /// <see cref="iText.Kernel.Counter.Event.IMetaInfo"/>
+        /// <see cref="iText.Events.Contexts.IMetaInfo"/>
         /// that will be used during
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// creation.

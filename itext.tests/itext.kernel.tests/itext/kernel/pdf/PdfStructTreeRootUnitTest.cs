@@ -20,7 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Exceptions;

@@ -252,7 +252,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="str">the string</param>
         /// <returns>the string without the unnecessary spaces</returns>
         public static String RemoveDoubleSpacesAndTrim(String str) {
-            String[] parts = iText.IO.Util.StringUtil.Split(str, "\\s");
+            String[] parts = iText.Events.Utils.StringUtil.Split(str, "\\s");
             StringBuilder sb = new StringBuilder();
             foreach (String part in parts) {
                 if (part.Length > 0) {
@@ -378,7 +378,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// object
         /// </returns>
         public static Range ParseUnicodeRange(String unicodeRange) {
-            String[] ranges = iText.IO.Util.StringUtil.Split(unicodeRange, ",");
+            String[] ranges = iText.Events.Utils.StringUtil.Split(unicodeRange, ",");
             RangeBuilder builder = new RangeBuilder();
             foreach (String range in ranges) {
                 if (!AddRange(builder, range)) {
@@ -435,7 +435,7 @@ namespace iText.StyledXmlParser.Css.Util {
         private static bool AddRange(RangeBuilder builder, String range) {
             range = range.Trim();
             if (range.Matches("[uU]\\+[0-9a-fA-F?]{1,6}(-[0-9a-fA-F]{1,6})?")) {
-                String[] parts = iText.IO.Util.StringUtil.Split(range.JSubstring(2, range.Length), "-");
+                String[] parts = iText.Events.Utils.StringUtil.Split(range.JSubstring(2, range.Length), "-");
                 if (1 == parts.Length) {
                     if (parts[0].Contains("?")) {
                         return AddRange(builder, parts[0].Replace('?', '0'), parts[0].Replace('?', 'F'));

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.StyledXmlParser.Css.Selector.Item;
 using iText.StyledXmlParser.Css.Util;
 
@@ -67,7 +67,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         private const String SELECTOR_PATTERN_STR = "(\\*)|([_a-zA-Z][\\w-]*)|(\\.[_a-zA-Z][\\w-]*)|(#[_a-z][\\w-]*)|(\\[[_a-zA-Z][\\w-]*(([~^$*|])?=((\"[^\"]+\")|([^\"]+)|('[^']+')|(\"\")|('')))?\\])|(::?[a-zA-Z-]*)|( )|(\\+)|(>)|(~)";
 
         /// <summary>The pattern for selectors.</summary>
-        private static readonly Regex selectorPattern = iText.IO.Util.StringUtil.RegexCompile(SELECTOR_PATTERN_STR
+        private static readonly Regex selectorPattern = iText.Events.Utils.StringUtil.RegexCompile(SELECTOR_PATTERN_STR
             );
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// </returns>
         public static IList<ICssSelectorItem> ParseSelectorItems(String selector) {
             IList<ICssSelectorItem> selectorItems = new List<ICssSelectorItem>();
-            Matcher match = iText.Events.Util.Matcher.Match(selectorPattern, selector);
+            Matcher match = iText.Events.Utils.Matcher.Match(selectorPattern, selector);
             bool tagSelectorDescription = false;
             while (match.Find()) {
                 String selectorItem = match.Group(0);
@@ -168,7 +168,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// <param name="pseudoSelector">the pseudo selector</param>
         /// <param name="match">
         /// the corresponding
-        /// <see cref="iText.Events.Util.Matcher"/>.
+        /// <see cref="iText.Events.Utils.Matcher"/>.
         /// </param>
         /// <param name="source">is the original source</param>
         private static void AppendPseudoSelector(IList<ICssSelectorItem> selectorItems, String pseudoSelector, Matcher
@@ -203,13 +203,13 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// <summary>Resolves a pseudo selector if it contains brackets.</summary>
         /// <remarks>
         /// Resolves a pseudo selector if it contains brackets. Updates internal state of
-        /// <see cref="iText.Events.Util.Matcher"/>
+        /// <see cref="iText.Events.Utils.Matcher"/>
         /// if necessary.
         /// </remarks>
         /// <param name="pseudoSelector">the pseudo selector</param>
         /// <param name="match">
         /// the corresponding
-        /// <see cref="iText.Events.Util.Matcher"/>.
+        /// <see cref="iText.Events.Utils.Matcher"/>.
         /// </param>
         /// <param name="source">is the original source</param>
         private static String HandleBracketsOfPseudoSelector(String pseudoSelector, Matcher match, String source) {

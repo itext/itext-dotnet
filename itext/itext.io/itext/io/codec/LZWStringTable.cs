@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.IO.Util;
 
 namespace iText.IO.Codec {

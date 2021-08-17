@@ -19,7 +19,7 @@
 *  That's why we imported the code into iText.
 */
 using System;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.IO.Util;
 
 namespace iText.Kernel.Geom {

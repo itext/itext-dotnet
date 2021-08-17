@@ -22,10 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Util;
+using iText.Events.Logs;
+using iText.Events.Utils;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Exceptions;
-using iText.Kernel.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -68,7 +68,7 @@ namespace iText.Kernel.Pdf.Statistics {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.INVALID_STATISTICS_NAME)]
+        [LogMessage(EventsLogMessageConstant.INVALID_STATISTICS_NAME)]
         public virtual void InvalidStatisticsNameEventTest() {
             NumberOfPagesStatisticsEvent @event = new NumberOfPagesStatisticsEvent(5, ITextCoreProductData.GetInstance
                 ());

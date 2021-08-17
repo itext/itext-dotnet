@@ -44,7 +44,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 
@@ -79,7 +79,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         * @see com.itextpdf.styledxmlparser.css.resolve.shorthand.IShorthandResolver#resolveShorthand(java.lang.String)
         */
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
-            String[] props = iText.IO.Util.StringUtil.Split(shorthandExpression, "\\s+");
+            String[] props = iText.Events.Utils.StringUtil.Split(shorthandExpression, "\\s+");
             IList<CssDeclaration> resolvedDecl = new List<CssDeclaration>();
             String topProperty = MessageFormatUtil.Format(_0_TOP_1, GetPrefix(), GetPostfix());
             String rightProperty = MessageFormatUtil.Format(_0_RIGHT_1, GetPrefix(), GetPostfix());

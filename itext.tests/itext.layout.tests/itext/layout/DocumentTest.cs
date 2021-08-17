@@ -21,10 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
+using iText.Events;
 using iText.Events.Sequence;
 using iText.IO.Source;
 using iText.Kernel;
-using iText.Kernel.Actions;
 using iText.Kernel.Counter.Event;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;

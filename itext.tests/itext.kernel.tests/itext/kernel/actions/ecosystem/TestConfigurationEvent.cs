@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using Common.Logging;
-using iText.Kernel.Actions;
+using iText.Events;
 
 namespace iText.Kernel.Actions.Ecosystem {
     public class TestConfigurationEvent : AbstractITextConfigurationEvent {
@@ -30,7 +30,7 @@ namespace iText.Kernel.Actions.Ecosystem {
 
         private static readonly ILog LOGGER = LogManager.GetLogger(typeof(TestConfigurationEvent));
 
-        protected internal override void DoAction() {
+        protected override void DoAction() {
             LOGGER.Warn(MESSAGE);
         }
     }

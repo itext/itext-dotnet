@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel.Counter.Context;
+using iText.Events.Contexts;
 using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Counter {
@@ -62,7 +62,7 @@ namespace iText.Kernel.Counter {
 
         /// <summary>
         /// Creates instance of this class that allows all events from unknown
-        /// <see cref="iText.Kernel.Counter.Context.IContext"/>.
+        /// <see cref="iText.Events.Contexts.IContext"/>.
         /// </summary>
         public EventCounter()
             : this(UnknownContext.PERMISSIVE) {
@@ -70,11 +70,11 @@ namespace iText.Kernel.Counter {
 
         /// <summary>
         /// Creates instance of this class with custom fallback
-        /// <see cref="iText.Kernel.Counter.Context.IContext"/>.
+        /// <see cref="iText.Events.Contexts.IContext"/>.
         /// </summary>
         /// <param name="fallback">
         /// the
-        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
+        /// <see cref="iText.Events.Contexts.IContext"/>
         /// that will be used in case the event context is unknown
         /// </param>
         public EventCounter(IContext fallback) {
@@ -92,7 +92,7 @@ namespace iText.Kernel.Counter {
         /// </param>
         /// <param name="metaInfo">
         /// the
-        /// <see cref="iText.Kernel.Counter.Event.IMetaInfo"/>
+        /// <see cref="iText.Events.Contexts.IMetaInfo"/>
         /// that can hold information about event origin
         /// </param>
         protected internal abstract void OnEvent(IEvent @event, IMetaInfo metaInfo);

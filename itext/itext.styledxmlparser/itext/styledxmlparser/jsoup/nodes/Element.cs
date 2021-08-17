@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Select;
@@ -1280,7 +1280,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual Elements GetElementsByAttributeValueMatching(String key, String regex) {
             Regex pattern;
             try {
-                pattern = iText.IO.Util.StringUtil.RegexCompile(regex);
+                pattern = iText.Events.Utils.StringUtil.RegexCompile(regex);
             }
             catch (ArgumentException e) {
                 throw new ArgumentException("Pattern syntax error: " + regex, e);
@@ -1352,7 +1352,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual Elements GetElementsMatchingText(String regex) {
             Regex pattern;
             try {
-                pattern = iText.IO.Util.StringUtil.RegexCompile(regex);
+                pattern = iText.Events.Utils.StringUtil.RegexCompile(regex);
             }
             catch (ArgumentException e) {
                 throw new ArgumentException("Pattern syntax error: " + regex, e);
@@ -1379,7 +1379,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual Elements GetElementsMatchingOwnText(String regex) {
             Regex pattern;
             try {
-                pattern = iText.IO.Util.StringUtil.RegexCompile(regex);
+                pattern = iText.Events.Utils.StringUtil.RegexCompile(regex);
             }
             catch (ArgumentException e) {
                 throw new ArgumentException("Pattern syntax error: " + regex, e);
@@ -1700,7 +1700,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </remarks>
         /// <returns>set of classnames, empty if no class attribute</returns>
         public virtual ICollection<String> ClassNames() {
-            String[] names = iText.IO.Util.StringUtil.Split(ClassSplit, ClassName());
+            String[] names = iText.Events.Utils.StringUtil.Split(ClassSplit, ClassName());
             ICollection<String> classNames = new LinkedHashSet<String>(JavaUtil.ArraysAsList(names));
             classNames.Remove("");
             // if classNames() was empty, would include an empty class
@@ -1748,7 +1748,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             bool inClass = false;
             int start = 0;
             for (int i = 0; i < len; i++) {
-                if (iText.IO.Util.TextUtil.IsWhiteSpace(classAttr[i])) {
+                if (iText.Events.Utils.TextUtil.IsWhiteSpace(classAttr[i])) {
                     if (inClass) {
                         // white space ends a class name, compare it with the requested one, ignore case
                         if (i - start == wantLen && classAttr.RegionMatches(true, start, className, 0, wantLen)) {

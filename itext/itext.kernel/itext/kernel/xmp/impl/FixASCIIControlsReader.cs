@@ -28,7 +28,7 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System.IO;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.IO.Util;
 
 namespace iText.Kernel.XMP.Impl {
@@ -161,7 +161,7 @@ namespace iText.Kernel.XMP.Impl {
                     }
                     else {
                         // sequence too long
-                        if (ch == ';' && Utils.IsControlChar((char)control)) {
+                        if (ch == ';' && iText.Kernel.XMP.Impl.Utils.IsControlChar((char)control)) {
                             state = STATE_START;
                             return (char)control;
                         }
@@ -185,7 +185,7 @@ namespace iText.Kernel.XMP.Impl {
                     }
                     else {
                         // sequence too long
-                        if (ch == ';' && Utils.IsControlChar((char)control)) {
+                        if (ch == ';' && iText.Kernel.XMP.Impl.Utils.IsControlChar((char)control)) {
                             state = STATE_START;
                             return (char)control;
                         }

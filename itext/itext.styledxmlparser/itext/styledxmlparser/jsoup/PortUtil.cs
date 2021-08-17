@@ -47,7 +47,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.IO.Util;
 
 namespace iText.StyledXmlParser.Jsoup

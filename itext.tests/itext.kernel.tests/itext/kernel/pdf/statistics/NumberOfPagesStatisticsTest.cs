@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using iText.Events;
 using iText.IO.Source;
-using iText.Kernel.Actions;
 using iText.Kernel.Pdf;
 using iText.Test;
 

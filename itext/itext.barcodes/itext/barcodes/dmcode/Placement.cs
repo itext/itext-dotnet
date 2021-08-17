@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using iText.Events.Util;
+using iText.Events.Utils;
 
 namespace iText.Barcodes.Dmcode {
     public class Placement {

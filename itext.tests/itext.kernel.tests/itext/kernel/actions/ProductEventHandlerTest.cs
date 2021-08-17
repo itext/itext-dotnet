@@ -22,12 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Events;
-using iText.Events.Exceptions;
-using iText.Events.Sequence;
-using iText.Events.Util;
 using iText.Kernel.Actions.Ecosystem;
-using iText.Kernel.Actions.Events;
-using iText.Kernel.Actions.Processors;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -37,79 +32,21 @@ namespace iText.Kernel.Actions {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/actions/";
 
         [NUnit.Framework.Test]
-        public virtual void UnknownProductTest() {
-            ProductEventHandler handler = ProductEventHandler.INSTANCE;
-            NUnit.Framework.Assert.That(() =>  {
-                handler.OnAcceptedEvent(new ITextTestEvent(new SequenceId(), null, "test-event", "Unknown Product"));
-            }
-            , NUnit.Framework.Throws.InstanceOf<UnknownProductException>().With.Message.EqualTo(MessageFormatUtil.Format(UnknownProductException.UNKNOWN_PRODUCT, "Unknown Product")))
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void SequenceIdBasedEventTest() {
-            ProductEventHandler handler = ProductEventHandler.INSTANCE;
-            SequenceId sequenceId = new SequenceId();
-            NUnit.Framework.Assert.IsTrue(handler.GetEvents(sequenceId).IsEmpty());
-            handler.OnAcceptedEvent(new ITextTestEvent(sequenceId, null, "test-event", ProductNameConstant.ITEXT_CORE)
-                );
-            NUnit.Framework.Assert.AreEqual(1, handler.GetEvents(sequenceId).Count);
-            AbstractProductProcessITextEvent @event = handler.GetEvents(sequenceId)[0];
-            NUnit.Framework.Assert.AreEqual(sequenceId.GetId(), @event.GetSequenceId().GetId());
-            NUnit.Framework.Assert.IsNull(@event.GetMetaInfo());
-            NUnit.Framework.Assert.AreEqual("test-event", @event.GetEventType());
-            NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
-        }
-
-        [NUnit.Framework.Test]
         public virtual void DocumentIdBasedEventTest() {
-            ProductEventHandler handler = ProductEventHandler.INSTANCE;
+            ProductEventHandlerAccess handler = new ProductEventHandlerAccess();
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
-                int alreadyRegisteredEvents = handler.GetEvents(document.GetDocumentIdWrapper()).Count;
-                handler.OnAcceptedEvent(new ITextTestEvent(document.GetDocumentIdWrapper(), null, "test-event", ProductNameConstant
-                    .ITEXT_CORE));
-                NUnit.Framework.Assert.AreEqual(alreadyRegisteredEvents + 1, handler.GetEvents(document.GetDocumentIdWrapper
+                int alreadyRegisteredEvents = handler.PublicGetEvents(document.GetDocumentIdWrapper()).Count;
+                EventManager.GetInstance().OnEvent(new ITextTestEvent(document.GetDocumentIdWrapper(), null, "test-event", 
+                    ProductNameConstant.ITEXT_CORE));
+                NUnit.Framework.Assert.AreEqual(alreadyRegisteredEvents + 1, handler.PublicGetEvents(document.GetDocumentIdWrapper
                     ()).Count);
-                DefaultITextProductEventProcessor processor = new DefaultITextProductEventProcessor(ProductNameConstant.ITEXT_CORE
-                    );
-                AbstractProductProcessITextEvent @event = handler.GetEvents(document.GetDocumentIdWrapper())[alreadyRegisteredEvents
+                AbstractProductProcessITextEvent @event = handler.PublicGetEvents(document.GetDocumentIdWrapper())[alreadyRegisteredEvents
                     ];
                 NUnit.Framework.Assert.AreEqual(document.GetDocumentIdWrapper(), @event.GetSequenceId());
-                NUnit.Framework.Assert.IsNull(@event.GetMetaInfo());
                 NUnit.Framework.Assert.AreEqual("test-event", @event.GetEventType());
                 NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
                 NUnit.Framework.Assert.IsNotNull(@event.GetProductData());
             }
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ReportEventSeveralTimesTest() {
-            ProductEventHandler handler = ProductEventHandler.INSTANCE;
-            SequenceId sequenceId = new SequenceId();
-            NUnit.Framework.Assert.IsTrue(handler.GetEvents(sequenceId).IsEmpty());
-            ITextTestEvent @event = new ITextTestEvent(sequenceId, null, "test-event", ProductNameConstant.ITEXT_CORE);
-            EventManager.GetInstance().OnEvent(@event);
-            NUnit.Framework.Assert.AreEqual(1, handler.GetEvents(sequenceId).Count);
-            NUnit.Framework.Assert.AreEqual(@event, handler.GetEvents(sequenceId)[0]);
-            EventManager.GetInstance().OnEvent(@event);
-            NUnit.Framework.Assert.AreEqual(2, handler.GetEvents(sequenceId).Count);
-            NUnit.Framework.Assert.AreEqual(@event, handler.GetEvents(sequenceId)[0]);
-            NUnit.Framework.Assert.AreEqual(@event, handler.GetEvents(sequenceId)[1]);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ConfirmEventTest() {
-            ProductEventHandler handler = ProductEventHandler.INSTANCE;
-            SequenceId sequenceId = new SequenceId();
-            NUnit.Framework.Assert.IsTrue(handler.GetEvents(sequenceId).IsEmpty());
-            ITextTestEvent @event = new ITextTestEvent(sequenceId, null, "test-event", ProductNameConstant.ITEXT_CORE);
-            EventManager.GetInstance().OnEvent(@event);
-            ConfirmEvent confirmEvent = new ConfirmEvent(sequenceId, @event);
-            EventManager.GetInstance().OnEvent(confirmEvent);
-            NUnit.Framework.Assert.AreEqual(1, handler.GetEvents(sequenceId).Count);
-            NUnit.Framework.Assert.IsTrue(handler.GetEvents(sequenceId)[0] is ConfirmedEventWrapper);
-            NUnit.Framework.Assert.AreEqual(@event, ((ConfirmedEventWrapper)handler.GetEvents(sequenceId)[0]).GetEvent
-                ());
         }
     }
 }

@@ -45,7 +45,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Util;

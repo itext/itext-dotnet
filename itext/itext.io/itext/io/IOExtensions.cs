@@ -47,7 +47,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using iText.Events.Util.Collections;
+using iText.Events.Utils.Collections;
 
 namespace iText.IO {
     internal static class IOExtensions {

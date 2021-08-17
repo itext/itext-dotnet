@@ -20,7 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Events.Util;
+using iText.Events.Utils;
 
 namespace iText.Events.Sequence {
     /// <summary>The class represents unique numeric identifier with autoincrement strategy of generation.</summary>

@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.IO.Font.Otf;
 
 namespace iText.IO.Util {

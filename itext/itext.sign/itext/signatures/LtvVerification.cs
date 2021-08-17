@@ -51,7 +51,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.Forms;
 using iText.IO;
 using iText.IO.Font;

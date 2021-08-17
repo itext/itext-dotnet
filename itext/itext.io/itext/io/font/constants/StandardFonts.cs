@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Util;
+using iText.Events.Utils;
 
 namespace iText.IO.Font.Constants {
     public sealed class StandardFonts {

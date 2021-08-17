@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel.Counter.Event;
+using iText.Events.Contexts;
 
 namespace iText.Kernel.Actions.Ecosystem {
     public class TestMetaInfo : IMetaInfo {

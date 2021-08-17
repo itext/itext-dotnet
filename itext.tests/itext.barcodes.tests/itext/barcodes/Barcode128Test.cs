@@ -96,8 +96,8 @@ namespace iText.Barcodes {
 
         [NUnit.Framework.Test]
         public virtual void BarcodeRawValueGenerationTest01() {
-            NUnit.Framework.Assert.AreEqual(iText.Events.Util.JavaUtil.GetStringForBytes(new byte[] { 103, 17, 18, 19, 
-                20, 21, 17, 18, 19, 20, 21 }), Barcode128.GetRawText("1234512345", false, Barcode128.Barcode128CodeSet
+            NUnit.Framework.Assert.AreEqual(iText.Events.Utils.JavaUtil.GetStringForBytes(new byte[] { 103, 17, 18, 19
+                , 20, 21, 17, 18, 19, 20, 21 }), Barcode128.GetRawText("1234512345", false, Barcode128.Barcode128CodeSet
                 .A));
         }
     }

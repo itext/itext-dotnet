@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Util;
+using iText.Events;
+using iText.Events.Utils;
 using iText.IO.Util;
-using iText.Kernel.Actions;
 
 namespace iText.Kernel.Pdf.Statistics {
     /// <summary>Statistics aggregator which aggregates size of PDF documents.</summary>

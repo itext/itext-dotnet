@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.Events.Util;
+using iText.Events.Utils;
 
 namespace iText.Events.Exceptions {
     /// <summary>Composite exception class.</summary>

@@ -48,12 +48,12 @@ using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Versions.Attributes;
 using iText.IO;
+using iText.Events.Contexts;
 using iText.Events.Sequence;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
-using iText.Kernel.Counter.Event;
 using iText.Kernel.Font;
 using iText.Layout.Properties;
 

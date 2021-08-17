@@ -43,7 +43,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Resolver.Resource

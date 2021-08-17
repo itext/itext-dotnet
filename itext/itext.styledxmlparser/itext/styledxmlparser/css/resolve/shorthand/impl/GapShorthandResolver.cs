@@ -44,7 +44,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Util;
@@ -69,7 +69,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY, 
                     CommonCssConstants.GAP, shorthandExpression);
             }
-            String[] gapProps = iText.IO.Util.StringUtil.Split(shorthandExpression, " ");
+            String[] gapProps = iText.Events.Utils.StringUtil.Split(shorthandExpression, " ");
             if (gapProps.Length == 1) {
                 return ResolveGapWithTwoProperties(gapProps[0], gapProps[0]);
             }

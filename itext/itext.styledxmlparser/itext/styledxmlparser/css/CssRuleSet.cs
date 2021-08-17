@@ -44,7 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Css.Selector;
 using iText.StyledXmlParser.Node;
@@ -53,7 +53,7 @@ namespace iText.StyledXmlParser.Css {
     /// <summary>Class to store a CSS rule set.</summary>
     public class CssRuleSet : CssStatement {
         /// <summary>Pattern to match "important" in a rule declaration.</summary>
-        private static readonly Regex importantMatcher = iText.IO.Util.StringUtil.RegexCompile(".*!\\s*important$"
+        private static readonly Regex importantMatcher = iText.Events.Utils.StringUtil.RegexCompile(".*!\\s*important$"
             );
 
         /// <summary>The CSS selector.</summary>
@@ -159,7 +159,7 @@ namespace iText.StyledXmlParser.Css {
             > normalDeclarations, IList<CssDeclaration> importantDeclarations) {
             foreach (CssDeclaration declaration in declarations) {
                 int exclIndex = declaration.GetExpression().IndexOf('!');
-                if (exclIndex > 0 && iText.Events.Util.Matcher.Match(importantMatcher, declaration.GetExpression()).Matches
+                if (exclIndex > 0 && iText.Events.Utils.Matcher.Match(importantMatcher, declaration.GetExpression()).Matches
                     ()) {
                     importantDeclarations.Add(new CssDeclaration(declaration.GetProperty(), declaration.GetExpression().JSubstring
                         (0, exclIndex).Trim()));

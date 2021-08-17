@@ -22,45 +22,45 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Events;
+using iText.Events.Processors;
 using iText.Events.Sequence;
-using iText.Kernel.Actions.Processors;
 
 namespace iText.Kernel.Actions {
-    /// <summary>
-    /// This class is used for testing purposes to have an access to
-    /// <see cref="ProductEventHandler"/>.
-    /// </summary>
+    /// <summary>This class is used for testing purposes to have an access to ProductEventHandler.</summary>
     /// <remarks>
-    /// This class is used for testing purposes to have an access to
-    /// <see cref="ProductEventHandler"/>
-    /// . Note
+    /// This class is used for testing purposes to have an access to ProductEventHandler. Note
     /// that work with it may access further tests because the state of ProductEventHandler is shared
     /// across application. It is strongly recommended to call
     /// <see cref="Close()"/>
     /// method to return ProductEventHandler to initial state.
     /// </remarks>
-    public class ProductEventHandlerAccess : IDisposable {
-        private ICollection<String> registeredProducts = new HashSet<String>();
+    public class ProductEventHandlerAccess : AbstractITextConfigurationEvent, IDisposable {
+        private readonly ICollection<String> registeredProducts = new HashSet<String>();
 
-        public virtual ITextProductEventProcessor AddProcessor(ITextProductEventProcessor processor) {
+        public virtual ITextProductEventProcessor PublicAddProcessor(ITextProductEventProcessor processor) {
             registeredProducts.Add(processor.GetProductName());
-            return ProductEventHandler.INSTANCE.AddProcessor(processor);
+            return base.AddProcessor(processor);
         }
 
-        public virtual ITextProductEventProcessor RemoveProcessor(String productName) {
-            return ProductEventHandler.INSTANCE.RemoveProcessor(productName);
+        public virtual ITextProductEventProcessor PublicRemoveProcessor(String productName) {
+            return base.RemoveProcessor(productName);
         }
 
-        public virtual IDictionary<String, ITextProductEventProcessor> GetProcessors() {
-            return ProductEventHandler.INSTANCE.GetProcessors();
+        public virtual IDictionary<String, ITextProductEventProcessor> PublicGetProcessors() {
+            return base.GetProcessors();
         }
 
-        public virtual IList<AbstractProductProcessITextEvent> GetEvents(SequenceId id) {
-            return ProductEventHandler.INSTANCE.GetEvents(id);
+        public virtual IList<AbstractProductProcessITextEvent> PublicGetEvents(SequenceId id) {
+            return base.GetEvents(id);
         }
 
-        public virtual void AddEvent(SequenceId id, AbstractProductProcessITextEvent @event) {
-            ProductEventHandler.INSTANCE.AddEvent(id, @event);
+        public virtual void PublicAddEvent(SequenceId id, AbstractProductProcessITextEvent @event) {
+            base.AddEvent(id, @event);
+        }
+
+        protected override void DoAction() {
+            throw new InvalidOperationException();
         }
 
         public virtual void Close() {

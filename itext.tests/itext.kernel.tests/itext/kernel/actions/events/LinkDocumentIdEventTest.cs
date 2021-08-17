@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Events;
+using iText.Events.Confirmations;
 using iText.Events.Sequence;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Ecosystem;
@@ -38,21 +40,21 @@ namespace iText.Kernel.Actions.Events {
             using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
                 using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
                     SequenceId sequenceId = new SequenceId();
-                    access.AddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-0"
+                    access.PublicAddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-0"
                         )));
-                    access.AddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-1"
+                    access.PublicAddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-1"
                         )));
-                    access.AddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-2"
+                    access.PublicAddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-2"
                         )));
-                    access.AddEvent(document.GetDocumentIdWrapper(), WrapEvent(new ITextTestEvent(document.GetDocumentIdWrapper
+                    access.PublicAddEvent(document.GetDocumentIdWrapper(), WrapEvent(new ITextTestEvent(document.GetDocumentIdWrapper
                         (), null, "document-testing", "test-product-3")));
-                    access.AddEvent(document.GetDocumentIdWrapper(), WrapEvent(new ITextTestEvent(document.GetDocumentIdWrapper
+                    access.PublicAddEvent(document.GetDocumentIdWrapper(), WrapEvent(new ITextTestEvent(document.GetDocumentIdWrapper
                         (), null, "document-testing", "test-product-4")));
-                    int initialSequenceEventsNumber = access.GetEvents(sequenceId).Count;
-                    int initialDocumentEventsNumber = access.GetEvents(document.GetDocumentIdWrapper()).Count;
+                    int initialSequenceEventsNumber = access.PublicGetEvents(sequenceId).Count;
+                    int initialDocumentEventsNumber = access.PublicGetEvents(document.GetDocumentIdWrapper()).Count;
                     new LinkDocumentIdEvent(document, sequenceId).DoAction();
-                    NUnit.Framework.Assert.AreEqual(initialSequenceEventsNumber, access.GetEvents(sequenceId).Count);
-                    IList<AbstractProductProcessITextEvent> actualDocumentEvents = access.GetEvents(document.GetDocumentIdWrapper
+                    NUnit.Framework.Assert.AreEqual(initialSequenceEventsNumber, access.PublicGetEvents(sequenceId).Count);
+                    IList<AbstractProductProcessITextEvent> actualDocumentEvents = access.PublicGetEvents(document.GetDocumentIdWrapper
                         ());
                     NUnit.Framework.Assert.AreEqual(initialDocumentEventsNumber + 3, actualDocumentEvents.Count);
                     for (int i = initialDocumentEventsNumber; i < initialDocumentEventsNumber + 3; i++) {
@@ -71,24 +73,24 @@ namespace iText.Kernel.Actions.Events {
             using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
                 using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
                     SequenceId sequenceId = new SequenceId();
-                    access.AddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-0"
+                    access.PublicAddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-0"
                         )));
-                    access.AddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-1"
+                    access.PublicAddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-1"
                         )));
-                    access.AddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-2"
+                    access.PublicAddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-2"
                         )));
-                    access.AddEvent(document.GetDocumentIdWrapper(), WrapEvent(new ITextTestEvent(document.GetDocumentIdWrapper
+                    access.PublicAddEvent(document.GetDocumentIdWrapper(), WrapEvent(new ITextTestEvent(document.GetDocumentIdWrapper
                         (), null, "document-testing", "test-product-3")));
-                    access.AddEvent(document.GetDocumentIdWrapper(), WrapEvent(new ITextTestEvent(document.GetDocumentIdWrapper
+                    access.PublicAddEvent(document.GetDocumentIdWrapper(), WrapEvent(new ITextTestEvent(document.GetDocumentIdWrapper
                         (), null, "document-testing", "test-product-4")));
-                    int initialSequenceEventsNumber = access.GetEvents(sequenceId).Count;
-                    int initialDocumentEventsNumber = access.GetEvents(document.GetDocumentIdWrapper()).Count;
+                    int initialSequenceEventsNumber = access.PublicGetEvents(sequenceId).Count;
+                    int initialDocumentEventsNumber = access.PublicGetEvents(document.GetDocumentIdWrapper()).Count;
                     LinkDocumentIdEventTest.IdentifiableElement identifiableElement = new LinkDocumentIdEventTest.IdentifiableElement
                         ();
                     SequenceIdManager.SetSequenceId(identifiableElement, sequenceId);
                     new LinkDocumentIdEvent(document, identifiableElement).DoAction();
-                    NUnit.Framework.Assert.AreEqual(initialSequenceEventsNumber, access.GetEvents(sequenceId).Count);
-                    IList<AbstractProductProcessITextEvent> actualDocumentEvents = access.GetEvents(document.GetDocumentIdWrapper
+                    NUnit.Framework.Assert.AreEqual(initialSequenceEventsNumber, access.PublicGetEvents(sequenceId).Count);
+                    IList<AbstractProductProcessITextEvent> actualDocumentEvents = access.PublicGetEvents(document.GetDocumentIdWrapper
                         ());
                     NUnit.Framework.Assert.AreEqual(initialDocumentEventsNumber + 3, actualDocumentEvents.Count);
                     for (int i = initialDocumentEventsNumber; i < initialDocumentEventsNumber + 3; i++) {
@@ -107,13 +109,14 @@ namespace iText.Kernel.Actions.Events {
             using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
                 using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
                     SequenceId sequenceId = new SequenceId();
-                    access.AddEvent(sequenceId, new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-1"));
-                    access.AddEvent(document.GetDocumentIdWrapper(), new ITextTestEvent(sequenceId, null, "sequenceId-testing"
+                    access.PublicAddEvent(sequenceId, new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-1"
+                        ));
+                    access.PublicAddEvent(document.GetDocumentIdWrapper(), new ITextTestEvent(sequenceId, null, "sequenceId-testing"
                         , "test-product-1"));
                     new LinkDocumentIdEvent(document, sequenceId).DoAction();
                     // Check that first event will be linked to document but it was the
                     // similar to stored second event, but they have different instance
-                    NUnit.Framework.Assert.AreEqual(3, access.GetEvents(document.GetDocumentIdWrapper()).Count);
+                    NUnit.Framework.Assert.AreEqual(3, access.PublicGetEvents(document.GetDocumentIdWrapper()).Count);
                 }
             }
         }

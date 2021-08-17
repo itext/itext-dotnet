@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.IO.Source;
 
 namespace iText.IO.Font {
@@ -433,7 +433,7 @@ namespace iText.IO.Font {
             byte[] buf = new byte[length];
             rf.ReadFully(buf);
             try {
-                return iText.Events.Util.JavaUtil.GetStringForBytes(buf, PdfEncodings.WINANSI);
+                return iText.Events.Utils.JavaUtil.GetStringForBytes(buf, PdfEncodings.WINANSI);
             }
             catch (Exception e) {
                 throw new iText.IO.IOException("TrueType font", e);

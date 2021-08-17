@@ -30,7 +30,7 @@
 using System;
 using System.Collections;
 using System.Text;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.Kernel.XMP;
 
 namespace iText.Kernel.XMP.Options {

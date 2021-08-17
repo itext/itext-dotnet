@@ -47,8 +47,6 @@ namespace iText.Kernel.Logs {
     public sealed class KernelLogMessageConstant {
         public const String DCTDECODE_FILTER_DECODING = "DCTDecode filter decoding into the " + "bit map is not supported. The stream data would be left in JPEG baseline format";
 
-        public const String INVALID_STATISTICS_NAME = "Statistics name {0} is invalid. Cannot find corresponding statistics aggregator.";
-
         public const String FEATURE_IS_NOT_SUPPORTED = "Exception was thrown: {0}. The feature {1} is probably not supported by your XML processor.";
 
         public const String FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY = "Full compression mode requested "
@@ -63,20 +61,6 @@ namespace iText.Kernel.Logs {
         public const String JPXDECODE_FILTER_DECODING = "JPXDecode filter decoding into the " + "bit map is not supported. The stream data would be left in JPEG2000 format";
 
         public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} " + "color space";
-
-        /// <summary>
-        /// Message notifies that unknown placeholder was ignored during parsing of the producer line
-        /// format.
-        /// </summary>
-        /// <remarks>
-        /// Message notifies that unknown placeholder was ignored during parsing of the producer line
-        /// format. List of params:
-        /// <list type="bullet">
-        /// <item><description>0th is a name of ignored placeholder;
-        /// </description></item>
-        /// </list>
-        /// </remarks>
-        public const String UNKNOWN_PLACEHOLDER_WAS_IGNORED = "Unknown placeholder {0} was ignored";
 
         /// <summary>
         /// Message warns about unexpected product name which was mentioned as involved into PDF
@@ -104,20 +88,6 @@ namespace iText.Kernel.Logs {
         /// </list>
         /// </remarks>
         public const String UNCONFIRMED_EVENT = "Event for the product {0} with type {1} was reported but was not confirmed. Probably appropriate process fail";
-
-        /// <summary>Message warns that some event is at confirmation stage but it is not known.</summary>
-        /// <remarks>
-        /// Message warns that some event is at confirmation stage but it is not known. Probably some processing has failed.
-        /// List of params:
-        /// <list type="bullet">
-        /// <item><description>0th is a name of product for which event was reported;
-        /// </description></item>
-        /// <item><description>1st is an event type;
-        /// </description></item>
-        /// </list>
-        /// </remarks>
-        public const String UNREPORTED_EVENT = "Event for the product {0} with type {1} attempted to be confirmed but it had not been reported yet. "
-             + "Probably appropriate process fail";
 
         private KernelLogMessageConstant() {
         }

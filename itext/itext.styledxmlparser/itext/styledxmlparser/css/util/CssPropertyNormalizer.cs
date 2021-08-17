@@ -45,7 +45,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.StyledXmlParser;
 
 namespace iText.StyledXmlParser.Css.Util {
@@ -86,7 +86,7 @@ namespace iText.StyledXmlParser.Css.Util {
                             i = AppendQuotedString(sb, str, i);
                         }
                         else {
-                            if ((str[i] == 'u' || str[i] == 'U') && iText.Events.Util.Matcher.Match(URL_PATTERN, str.Substring(i)).Find
+                            if ((str[i] == 'u' || str[i] == 'U') && iText.Events.Utils.Matcher.Match(URL_PATTERN, str.Substring(i)).Find
                                 ()) {
                                 sb.Append(str.JSubstring(i, i + 4).ToLowerInvariant());
                                 i = AppendUrlContent(sb, str, i + 4);

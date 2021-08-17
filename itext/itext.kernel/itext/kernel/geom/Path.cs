@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Util;
+using iText.Events.Utils;
 
 namespace iText.Kernel.Geom {
     /// <summary>Paths define shapes, trajectories, and regions of all sorts.</summary>

@@ -48,7 +48,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using iText.Events.Util;
+using iText.Events.Utils;
 
 namespace iText.IO.Util {
     /// <summary>

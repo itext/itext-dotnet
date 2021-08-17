@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.IO.Codec.Brotli.Dec;
 
 namespace iText.IO.Font.Woff2 {

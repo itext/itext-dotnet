@@ -48,10 +48,10 @@ using System.Text;
 using System.Xml;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.Events.Util;
+using iText.Events.Contexts;
+using iText.Events.Utils;
 using iText.IO.Font;
 using iText.IO.Util;
-using iText.Kernel.Counter.Event;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -270,7 +270,7 @@ namespace iText.Kernel.Utils {
 
         /// <summary>
         /// Sets
-        /// <see cref="iText.Kernel.Counter.Event.IMetaInfo"/>
+        /// <see cref="iText.Events.Contexts.IMetaInfo"/>
         /// info that will be used for both read and written documents creation.
         /// </summary>
         /// <param name="metaInfo">meta info to set</param>
@@ -1056,8 +1056,8 @@ namespace iText.Kernel.Utils {
         }
 
         internal virtual String ConvertProducerLine(String producer) {
-            return iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.StringUtil.ReplaceAll(producer, VERSION_REGEXP, VERSION_REPLACEMENT
-                ), COPYRIGHT_REGEXP, COPYRIGHT_REPLACEMENT);
+            return iText.Events.Utils.StringUtil.ReplaceAll(iText.Events.Utils.StringUtil.ReplaceAll(producer, VERSION_REGEXP
+                , VERSION_REPLACEMENT), COPYRIGHT_REGEXP, COPYRIGHT_REPLACEMENT);
         }
 
         private void Init(String outPdf, String cmpPdf) {
@@ -1763,14 +1763,14 @@ namespace iText.Kernel.Utils {
                 int rCmp = Math.Min(cmpStreamBytes.Length, firstDifferenceOffset + diffBytesAreaR);
                 int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
                 int rOut = Math.Min(outStreamBytes.Length, firstDifferenceOffset + diffBytesAreaR);
-                String cmpByte = iText.Events.Util.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes[firstDifferenceOffset
-                    ] }, iText.Events.Util.EncodingUtil.ISO_8859_1);
-                String cmpByteNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.Events.Util.JavaUtil.GetStringForBytes
-                    (cmpStreamBytes, lCmp, rCmp - lCmp, iText.Events.Util.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
-                String outByte = iText.Events.Util.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes[firstDifferenceOffset
-                    ] }, iText.Events.Util.EncodingUtil.ISO_8859_1);
-                String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.Events.Util.JavaUtil.GetStringForBytes
-                    (outStreamBytes, lOut, rOut - lOut, iText.Events.Util.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
+                String cmpByte = iText.Events.Utils.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes[firstDifferenceOffset
+                    ] }, iText.Events.Utils.EncodingUtil.ISO_8859_1);
+                String cmpByteNeighbours = iText.Events.Utils.StringUtil.ReplaceAll(iText.Events.Utils.JavaUtil.GetStringForBytes
+                    (cmpStreamBytes, lCmp, rCmp - lCmp, iText.Events.Utils.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
+                String outByte = iText.Events.Utils.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes[firstDifferenceOffset
+                    ] }, iText.Events.Utils.EncodingUtil.ISO_8859_1);
+                String outBytesNeighbours = iText.Events.Utils.StringUtil.ReplaceAll(iText.Events.Utils.JavaUtil.GetStringForBytes
+                    (outStreamBytes, lOut, rOut - lOut, iText.Events.Utils.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
                 bytesDifference = MessageFormatUtil.Format("First bytes difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different bytes: {5}"
                     , JavaUtil.IntegerToString(Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours, outByte
                     , outBytesNeighbours, numberOfDifferentBytes);
@@ -1895,10 +1895,10 @@ namespace iText.Kernel.Utils {
                 int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
                 int rOut = Math.Min(outString.Length, firstDifferenceOffset + diffBytesAreaR);
                 String cmpByte = cmpString[firstDifferenceOffset].ToString();
-                String cmpByteNeighbours = iText.IO.Util.StringUtil.ReplaceAll(cmpString.JSubstring(lCmp, rCmp), NEW_LINES
+                String cmpByteNeighbours = iText.Events.Utils.StringUtil.ReplaceAll(cmpString.JSubstring(lCmp, rCmp), NEW_LINES
                     , " ");
                 String outByte = outString[firstDifferenceOffset].ToString();
-                String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(outString.JSubstring(lOut, rOut), NEW_LINES
+                String outBytesNeighbours = iText.Events.Utils.StringUtil.ReplaceAll(outString.JSubstring(lOut, rOut), NEW_LINES
                     , " ");
                 stringDifference = MessageFormatUtil.Format("First characters difference is encountered at index {0}.\nExpected: {1} ({2}).\nFound: {3} ({4}).\nTotal number of different characters: {5}"
                     , JavaUtil.IntegerToString(Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours, outByte

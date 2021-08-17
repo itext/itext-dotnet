@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Events.Util;
+using iText.Events.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Exceptions;
 using iText.Test;

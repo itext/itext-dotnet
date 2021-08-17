@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Events;
 using iText.Events.Data;
-using iText.Events.Util;
-using iText.Kernel.Actions;
+using iText.Events.Utils;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf.Statistics {

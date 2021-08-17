@@ -214,7 +214,7 @@ namespace iText.IO.Font {
                 p.Load(resource);
                 foreach (KeyValuePair<Object, Object> entry in p) {
                     String value = (String)entry.Value;
-                    String[] splitValue = iText.IO.Util.StringUtil.Split(value, " ");
+                    String[] splitValue = iText.Events.Utils.StringUtil.Split(value, " ");
                     ICollection<String> set = new HashSet<String>();
                     foreach (String s in splitValue) {
                         if (s.Length != 0) {
