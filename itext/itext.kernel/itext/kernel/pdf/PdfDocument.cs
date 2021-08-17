@@ -589,13 +589,6 @@ namespace iText.Kernel.Pdf {
             return info;
         }
 
-        /// <summary>Gets document MetaInfo.</summary>
-        /// <returns>meta info</returns>
-        public virtual IMetaInfo GetMetaInfo() {
-            // TODO DEVSIX-5605 remove this public method before new license key release. Refactor logic to get metaInfo for pdfCalligraph module
-            return properties != null ? properties.metaInfo : null;
-        }
-
         /// <summary>
         /// Gets original document id
         /// In order to set originalDocumentId

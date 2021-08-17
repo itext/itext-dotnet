@@ -1542,7 +1542,8 @@ namespace iText.Layout.Renderer {
                 if (unicodeIdsReorderingList.Count > 0) {
                     PdfDocument pdfDocument = GetPdfDocument();
                     SequenceId sequenceId = pdfDocument == null ? null : pdfDocument.GetDocumentIdWrapper();
-                    IMetaInfo metaInfo = pdfDocument == null ? null : pdfDocument.GetMetaInfo();
+                    MetaInfoContainer metaInfoContainer = this.GetProperty<MetaInfoContainer>(Property.META_INFO);
+                    IMetaInfo metaInfo = metaInfoContainer == null ? null : metaInfoContainer.GetMetaInfo();
                     levels = TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToIntArray(unicodeIdsReorderingList), sequenceId
                         , metaInfo);
                 }

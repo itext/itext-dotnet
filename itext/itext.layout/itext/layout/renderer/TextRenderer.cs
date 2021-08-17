@@ -692,7 +692,8 @@ namespace iText.Layout.Renderer {
             if (!otfFeaturesApplied && TypographyUtils.IsPdfCalligraphAvailable() && text.start < text.end) {
                 PdfDocument pdfDocument = GetPdfDocument();
                 SequenceId sequenceId = pdfDocument == null ? null : pdfDocument.GetDocumentIdWrapper();
-                IMetaInfo metaInfo = pdfDocument == null ? null : pdfDocument.GetMetaInfo();
+                MetaInfoContainer metaInfoContainer = this.GetProperty<MetaInfoContainer>(Property.META_INFO);
+                IMetaInfo metaInfo = metaInfoContainer == null ? null : metaInfoContainer.GetMetaInfo();
                 if (HasOtfFont()) {
                     Object typographyConfig = this.GetProperty<Object>(Property.TYPOGRAPHY_CONFIG);
                     ICollection<UnicodeScript> supportedScripts = null;
@@ -898,7 +899,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_959();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_960();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -960,8 +961,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_959 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_959() {
+        private sealed class _IGlyphLineFilter_960 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_960() {
             }
 
             public bool Accept(Glyph glyph) {
