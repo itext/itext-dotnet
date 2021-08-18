@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using iText.Events;
 using iText.Events.Utils;
-using iText.IO.Util;
 
 namespace iText.Kernel.Pdf.Statistics {
     /// <summary>Statistics aggregator which aggregates size of PDF documents.</summary>

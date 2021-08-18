@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace iText.IO.Util {
+namespace iText.Events.Utils {
     /// <summary>Utility class for work with collections.</summary>
     /// <remarks>Utility class for work with collections. Not for public use.</remarks>
     public sealed class MapUtil {

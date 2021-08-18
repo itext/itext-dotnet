@@ -47,7 +47,6 @@ using Microsoft.Extensions.Logging;
 using iText.IO;
 using iText.Events.Utils;
 using iText.IO.Font.Constants;
-using iText.IO.Util;
 
 namespace iText.IO.Font {
     /// <summary>

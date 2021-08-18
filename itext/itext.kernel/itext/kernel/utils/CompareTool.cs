@@ -2043,7 +2043,7 @@ namespace iText.Kernel.Utils {
             throw new ArgumentException("PdfLinkAnnotation comparison: Page not found.");
         }
 
-        private class PngFileFilter : iText.IO.Util.FileUtil.IFileFilter {
+        private class PngFileFilter : iText.Events.Utils.FileUtil.IFileFilter {
             private String currentOutPdfName;
 
             public PngFileFilter(String currentOutPdfName) {
@@ -2058,7 +2058,7 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private class CmpPngFileFilter : iText.IO.Util.FileUtil.IFileFilter {
+        private class CmpPngFileFilter : iText.Events.Utils.FileUtil.IFileFilter {
             private String currentCmpPdfName;
 
             public CmpPngFileFilter(String currentCmpPdfName) {
@@ -2073,7 +2073,7 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private class DiffPngFileFilter : iText.IO.Util.FileUtil.IFileFilter {
+        private class DiffPngFileFilter : iText.Events.Utils.FileUtil.IFileFilter {
             private String differenceImagePrefix;
 
             public DiffPngFileFilter(String differenceImagePrefix) {

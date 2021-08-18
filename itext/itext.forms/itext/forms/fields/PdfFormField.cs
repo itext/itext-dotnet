@@ -51,8 +51,6 @@ using iText.Events.Utils;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields.Borders;
 using iText.Forms.Util;
-using iText.IO;
-using iText.IO.Codec;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Image;

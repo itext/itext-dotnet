@@ -49,7 +49,6 @@ using iText.Forms.Exceptions;
 using iText.Forms.Fields;
 using iText.Forms.Xfa;
 using iText.IO;
-using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;

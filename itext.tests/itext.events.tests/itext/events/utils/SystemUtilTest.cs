@@ -46,14 +46,17 @@ using System.Diagnostics;
 using System.Text;
 using iText.Test;
 
-namespace iText.IO.Util {
+namespace iText.Events.Utils {
     public class SystemUtilTest : ExtendedITextTest {
+        private const String MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY = "compareExec";
+        private const String MAGICK_COMPARE_ENVIRONMENT_VARIABLE = "ITEXT_MAGICK_COMPARE_EXEC";
+        
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework
-            .TestContext.CurrentContext.TestDirectory) + "/resources/itext/io/util/SystemUtilTest/";
+            .TestContext.CurrentContext.TestDirectory) + "/resources/itext/events/utils/SystemUtilTest/";
         
 
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-                                                           + "/test/itext/io/SystemUtilTest/";
+                                                           + "/test/itext/events/utils/SystemUtilTest/";
 
         // This is empty file that used to check the logic for existed execution file
         public static readonly String STUB_EXEC_FILE = SOURCE_FOLDER + "folder with space/stubFile";
@@ -136,9 +139,9 @@ namespace iText.IO.Util {
         
         [NUnit.Framework.Test]
         public virtual void RunProcessAndWaitWithWorkingDirectoryTest() {
-            String imageMagickPath = SystemUtil.GetEnvironmentVariable(ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE);
+            String imageMagickPath = SystemUtil.GetEnvironmentVariable(MAGICK_COMPARE_ENVIRONMENT_VARIABLE);
             if (imageMagickPath == null) {
-                imageMagickPath = SystemUtil.GetEnvironmentVariable(ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY);
+                imageMagickPath = SystemUtil.GetEnvironmentVariable(MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY);
             }
             String inputImage = "image.jpg";
             String cmpImage = "cmp_image.jpg";

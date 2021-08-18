@@ -45,10 +45,10 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.IO;
+using iText.Events.Utils;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class Type1Font : FontProgram {

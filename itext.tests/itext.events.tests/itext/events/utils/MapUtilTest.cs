@@ -22,10 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Utils;
 using iText.Test;
 
-namespace iText.IO.Util {
+namespace iText.Events.Utils {
     public class MapUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NullMapsAreEqualTest() {

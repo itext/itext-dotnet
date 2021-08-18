@@ -46,11 +46,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using iText.Events.Utils;
 
-namespace iText.IO.Util {
+namespace iText.Events.Utils {
     /// <summary>
     /// This file is a helper class for internal usage only.
     /// Be aware that its API and functionality may be changed in future.

@@ -45,7 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Globalization;
 
-namespace iText.IO.Util {
+namespace iText.Events.Utils {
     /// <summary>
     /// This file is a helper class for internal usage only.
     /// Be aware that its API and functionality may be changed in future.

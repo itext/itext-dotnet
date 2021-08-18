@@ -46,8 +46,8 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.IO;
+using iText.Events.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfWriter : PdfOutputStream {

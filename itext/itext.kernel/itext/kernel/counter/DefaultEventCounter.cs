@@ -46,7 +46,6 @@ using Microsoft.Extensions.Logging;
 using iText.IO;
 using iText.Events.Contexts;
 using iText.Events.Utils;
-using iText.IO.Codec;
 using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Counter {

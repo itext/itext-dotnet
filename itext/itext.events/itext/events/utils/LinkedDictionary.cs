@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace iText.IO.Util {
+namespace iText.Events.Utils {
     public class LinkedDictionary <TKey, TValue> : IDictionary<TKey, TValue> {
 		
         private Dictionary<TKey, LinkedListNode<KeyValuePair<TKey,TValue>>> dic;

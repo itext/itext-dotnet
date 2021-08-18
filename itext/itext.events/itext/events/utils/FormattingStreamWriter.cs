@@ -25,7 +25,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace iText.IO.Util {
+namespace iText.Events.Utils {
     public class FormattingStreamWriter : StreamWriter {
        
         private readonly IFormatProvider formatProvider;

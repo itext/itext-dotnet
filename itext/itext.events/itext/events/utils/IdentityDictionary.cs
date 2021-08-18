@@ -40,54 +40,40 @@ source product.
 
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
- */
-
+*/
 using System;
-using System.IO;
+using System.Collections.Generic;
 
-namespace iText.IO.Util {
-    /// <summary>
-    /// Abstract class for reading filtered character streams.
-    /// The abstract class <code>FilterReader</code> itself
-    /// provides default methods that pass all requests to
-    /// the contained stream. Subclasses of <code>FilterReader</code>
-    /// should override some of these methods and may also provide
-    /// additional methods and fields.
-    /// 
-    /// @author      Mark Reinhold
-    /// @since       JDK1.1
-    /// </summary>
-    public abstract class FilterReader : TextReader {
-        protected TextReader inp;
-        private Object lockObj = new Object();
-
-        protected FilterReader(TextReader inp) {
-            this.inp = inp;
+namespace iText.Events.Utils {
+    class IdentityComparator<T> : EqualityComparer<T>
+    {
+        public override bool Equals(T x, T y)
+        {
+            return GetHashCode(x) == GetHashCode(y) && object.ReferenceEquals(x, y);
         }
 
-        /// <summary>
-        /// Reads a single character.
-        /// </summary>
-        public override int Read() {
-            lock (lockObj) {
-                return inp.Read();
-            }
+        public override int GetHashCode(T obj)
+        {
+            return Default.GetHashCode(obj);
+        }
+    }
+
+    public class IdentityDictionary<TKey, TValue> : Dictionary<TKey, TValue>
+    {
+
+        public IdentityDictionary() :
+            base(new IdentityComparator<TKey>())
+        {
         }
 
-        /// <summary>
-        /// Reads characters into a portion of an array.
-        /// </summary>
-        public override int Read(char[] cbuf, int off, int len) {
-            lock (lockObj) {
-                return inp.Read(cbuf, off, len);
-            }
+        public IdentityDictionary(Int32 capacity) :
+            base(capacity, new IdentityComparator<TKey>())
+        {
         }
 
-        protected override void Dispose(bool disposing) {
-            if (disposing) {
-                inp.Dispose();
-            }
-            base.Dispose(disposing);
+        public IdentityDictionary(IDictionary<TKey, TValue> dictionary) :
+            base(dictionary, new IdentityComparator<TKey>())
+        {
         }
     }
 }

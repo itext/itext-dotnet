@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.IO.Util {
+namespace iText.Events.Utils {
 
     // a replacement for the StringTokenizer java class
     public class StringTokenizer {

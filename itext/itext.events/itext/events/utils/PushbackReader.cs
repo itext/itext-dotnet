@@ -7,7 +7,7 @@ using System;
 using System.IO;
 
 
-namespace iText.IO.Util {
+namespace iText.Events.Utils {
 	/// <summary>
 	/// A character-stream reader that allows characters to be pushed back into the
 	/// stream.

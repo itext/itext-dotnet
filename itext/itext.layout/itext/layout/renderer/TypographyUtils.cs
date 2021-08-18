@@ -53,7 +53,6 @@ using iText.Events.Sequence;
 using iText.Events.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
-using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Layout.Properties;
 

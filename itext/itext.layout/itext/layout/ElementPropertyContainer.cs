@@ -45,7 +45,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using iText.Events.Sequence;
-using iText.IO.Util;
+using iText.Events.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;

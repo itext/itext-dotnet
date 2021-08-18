@@ -46,7 +46,6 @@ using System.IO;
 using iText.Events.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
-using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;

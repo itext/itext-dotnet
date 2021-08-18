@@ -45,9 +45,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Microsoft.Extensions.Logging;
+using iText.Events.Utils;
 using iText.Forms;
 using iText.IO;
-using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 

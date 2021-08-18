@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Util;
+using iText.Events.Utils;
 
 namespace iText.Kernel.Crypto {
     /// <summary>An initialization vector generator for a CBC block encryption.</summary>

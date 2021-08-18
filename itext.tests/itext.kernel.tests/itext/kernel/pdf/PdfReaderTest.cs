@@ -45,7 +45,6 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Events.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;

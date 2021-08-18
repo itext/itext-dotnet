@@ -44,8 +44,8 @@ Copyright (c) 1998-2021 iText Group NV
 using System;
 using System.IO;
 using System.Text;
+using iText.Events.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.IO.Font {
     /// <summary>Converts a PFM file into an AFM file.</summary>

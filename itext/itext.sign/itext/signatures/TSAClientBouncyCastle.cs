@@ -51,7 +51,7 @@ using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Tsp;
 using iText.IO;
 using iText.IO.Codec;
-using iText.IO.Util;
+using iText.Events.Utils;
 using iText.Kernel;
 using iText.Signatures.Exceptions;
 

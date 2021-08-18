@@ -45,6 +45,15 @@ using System;
 namespace iText.Events.Logs {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class EventsLogMessageConstant {
+        /// <summary>Message notifies that an invalid statistics name was received, because there is no aggregator for it.
+        ///     </summary>
+        /// <remarks>
+        /// Message notifies that an invalid statistics name was received, because there is no aggregator for it.
+        /// <list type="bullet">
+        /// <item><description>0th is a statistics name which is invalid;
+        /// </description></item>
+        /// </list>
+        /// </remarks>
         public const String INVALID_STATISTICS_NAME = "Statistics name {0} is invalid. Cannot find corresponding statistics aggregator.";
 
         /// <summary>

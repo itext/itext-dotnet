@@ -26,7 +26,7 @@ using System.IO;
 using System.Threading;
 using iText.Test;
 
-namespace iText.IO.Util
+namespace iText.Events.Utils
 {
     public class FormattingStreamWriterUnitTest : ExtendedITextTest {
         

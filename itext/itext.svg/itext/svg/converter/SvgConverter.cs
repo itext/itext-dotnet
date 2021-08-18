@@ -45,7 +45,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.IO.Util;
+using iText.Events.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;

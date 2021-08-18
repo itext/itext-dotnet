@@ -50,7 +50,6 @@ using iText.Events.Confirmations;
 using iText.Events.Sequence;
 using iText.Events.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Events;
