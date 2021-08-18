@@ -44,7 +44,7 @@ using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Pdf.Xobject;
@@ -260,7 +260,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
         protected internal virtual PdfXObject TryResolveBase64ImageSource(String src) {
             try {
-                String fixedSrc = iText.Events.Utils.StringUtil.ReplaceAll(src, "\\s", "");
+                String fixedSrc = iText.Commons.Utils.StringUtil.ReplaceAll(src, "\\s", "");
                 fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf(BASE64_IDENTIFIER, StringComparison.Ordinal) + BASE64_IDENTIFIER
                     .Length + 1);
                 PdfXObject imageXObject = imageCache.GetImage(fixedSrc);
@@ -309,7 +309,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         private byte[] RetrieveBytesFromBase64Src(String src) {
             if (IsContains64Mark(src)) {
                 try {
-                    String fixedSrc = iText.Events.Utils.StringUtil.ReplaceAll(src, "\\s", "");
+                    String fixedSrc = iText.Commons.Utils.StringUtil.ReplaceAll(src, "\\s", "");
                     fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf(BASE64_IDENTIFIER, StringComparison.Ordinal) + BASE64_IDENTIFIER
                         .Length + 1);
                     return Convert.FromBase64String(fixedSrc);

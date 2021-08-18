@@ -23,12 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Common.Logging;
-using iText.Events;
-using iText.Events.Confirmations;
-using iText.Events.Processors;
-using iText.Events.Producer;
-using iText.Events.Sequence;
-using iText.Events.Utils;
+using iText.Commons.Actions;
+using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Processors;
+using iText.Commons.Actions.Producer;
+using iText.Commons.Actions.Sequence;
+using iText.Commons.Utils;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 

@@ -62,10 +62,10 @@ namespace iText.IO.Source {
                     continue;
                 }
                 byte[] actuals = ByteUtils.GetIsoBytes(d);
-                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.##").GetBytes(iText.Events.Utils.EncodingUtil.ISO_8859_1
+                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.##").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                     );
-                String message = "Expects: " + iText.Events.Utils.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + iText.Events.Utils.JavaUtil.GetStringForBytes
-                    (actuals) + " \\\\ " + d;
+                String message = "Expects: " + iText.Commons.Utils.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + 
+                    iText.Commons.Utils.JavaUtil.GetStringForBytes(actuals) + " \\\\ " + d;
                 NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
             }
         }
@@ -80,10 +80,10 @@ namespace iText.IO.Source {
                     continue;
                 }
                 byte[] actuals = ByteUtils.GetIsoBytes(d);
-                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.#####").GetBytes(iText.Events.Utils.EncodingUtil.ISO_8859_1
+                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.#####").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                     );
-                String message = "Expects: " + iText.Events.Utils.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + iText.Events.Utils.JavaUtil.GetStringForBytes
-                    (actuals) + " \\\\ " + d;
+                String message = "Expects: " + iText.Commons.Utils.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + 
+                    iText.Commons.Utils.JavaUtil.GetStringForBytes(actuals) + " \\\\ " + d;
                 NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
             }
         }
@@ -98,10 +98,10 @@ namespace iText.IO.Source {
                 }
                 d = Round(d, 0);
                 byte[] actuals = ByteUtils.GetIsoBytes(d);
-                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0").GetBytes(iText.Events.Utils.EncodingUtil.ISO_8859_1
+                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                     );
-                String message = "Expects: " + iText.Events.Utils.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + iText.Events.Utils.JavaUtil.GetStringForBytes
-                    (actuals) + " \\\\ " + d;
+                String message = "Expects: " + iText.Commons.Utils.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + 
+                    iText.Commons.Utils.JavaUtil.GetStringForBytes(actuals) + " \\\\ " + d;
                 NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
             }
         }
@@ -111,10 +111,10 @@ namespace iText.IO.Source {
         public virtual void WriteNanTest() {
             double d = double.NaN;
             byte[] actuals = ByteUtils.GetIsoBytes(d);
-            byte[] expecteds = DecimalFormatUtil.FormatNumber(0, "0.##").GetBytes(iText.Events.Utils.EncodingUtil.ISO_8859_1
+            byte[] expecteds = DecimalFormatUtil.FormatNumber(0, "0.##").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 );
-            String message = "Expects: " + iText.Events.Utils.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + iText.Events.Utils.JavaUtil.GetStringForBytes
-                (actuals) + " \\\\ " + d;
+            String message = "Expects: " + iText.Commons.Utils.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + 
+                iText.Commons.Utils.JavaUtil.GetStringForBytes(actuals) + " \\\\ " + d;
             NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
         }
 
@@ -123,10 +123,10 @@ namespace iText.IO.Source {
         public virtual void WriteNanHighPrecisionTest() {
             double d = double.NaN;
             byte[] actuals = ByteUtils.GetIsoBytes(d, null, true);
-            byte[] expecteds = DecimalFormatUtil.FormatNumber(0, "0.##").GetBytes(iText.Events.Utils.EncodingUtil.ISO_8859_1
+            byte[] expecteds = DecimalFormatUtil.FormatNumber(0, "0.##").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 );
-            String message = "Expects: " + iText.Events.Utils.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + iText.Events.Utils.JavaUtil.GetStringForBytes
-                (actuals) + " \\\\ " + d;
+            String message = "Expects: " + iText.Commons.Utils.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + 
+                iText.Commons.Utils.JavaUtil.GetStringForBytes(actuals) + " \\\\ " + d;
             NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
         }
     }

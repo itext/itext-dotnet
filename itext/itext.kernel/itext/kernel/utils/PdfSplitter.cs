@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Contexts;
-using iText.Events.Utils;
+using iText.Commons.Actions.Contexts;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
@@ -73,7 +73,7 @@ namespace iText.Kernel.Utils {
 
         /// <summary>
         /// Sets the
-        /// <see cref="iText.Events.Contexts.IMetaInfo"/>
+        /// <see cref="iText.Commons.Actions.Contexts.IMetaInfo"/>
         /// that will be used during
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// creation.

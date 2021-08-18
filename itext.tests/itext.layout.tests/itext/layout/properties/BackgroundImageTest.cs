@@ -44,7 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Colors.Gradients;

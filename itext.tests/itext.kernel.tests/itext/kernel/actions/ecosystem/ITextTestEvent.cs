@@ -21,11 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Events;
-using iText.Events.Confirmations;
-using iText.Events.Contexts;
-using iText.Events.Data;
-using iText.Events.Sequence;
+using iText.Commons.Actions;
+using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Contexts;
+using iText.Commons.Actions.Data;
+using iText.Commons.Actions.Sequence;
 
 namespace iText.Kernel.Actions.Ecosystem {
     public class ITextTestEvent : AbstractProductProcessITextEvent {

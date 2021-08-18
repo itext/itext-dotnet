@@ -42,18 +42,18 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.IO.Font.Otf;
 using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
     /// <summary>
     /// Complex FontSelectorStrategy split text based on
-    /// <see cref="iText.Events.Utils.UnicodeScript?"/>.
+    /// <see cref="iText.Commons.Utils.UnicodeScript?"/>.
     /// </summary>
     /// <remarks>
     /// Complex FontSelectorStrategy split text based on
-    /// <see cref="iText.Events.Utils.UnicodeScript?"/>.
+    /// <see cref="iText.Commons.Utils.UnicodeScript?"/>.
     /// If unicode script changes, a new font will be found.
     /// If there is no suitable font, only one notdef glyph from
     /// <see cref="FontSelector.BestMatch()"/>

@@ -28,7 +28,7 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System.IO;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.XMP.Impl {
     /// <since>22.08.2006</since>
@@ -57,7 +57,7 @@ namespace iText.Kernel.XMP.Impl {
         private int digits = 0;
 
         /// <summary>The look-ahead size is 6 at maximum (&amp;#xAB;)</summary>
-        /// <seealso cref="iText.Events.Utils.PushbackReader.PushbackReader(System.IO.TextReader, int)"/>
+        /// <seealso cref="iText.Commons.Utils.PushbackReader.PushbackReader(System.IO.TextReader, int)"/>
         /// <param name="input">a Reader</param>
         public FixASCIIControlsReader(TextReader input)
             : base(input, BUFFER_SIZE) {

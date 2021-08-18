@@ -43,34 +43,34 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 
 namespace iText.StyledXmlParser.Util {
     /// <summary>Split CSS 'font-family' string into list of font-families or generic-families</summary>
     public sealed class FontFamilySplitterUtil {
-        private static readonly Regex FONT_FAMILY_PATTERN = iText.Events.Utils.StringUtil.RegexCompile("^ *([\\w-]+) *$"
+        private static readonly Regex FONT_FAMILY_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile("^ *([\\w-]+) *$"
             );
 
-        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED = iText.Events.Utils.StringUtil.RegexCompile("^ *(('[\\w -]+')|(\"[\\w -]+\")) *$"
+        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED = iText.Commons.Utils.StringUtil.RegexCompile("^ *(('[\\w -]+')|(\"[\\w -]+\")) *$"
             );
 
-        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED_SELECT = iText.Events.Utils.StringUtil.RegexCompile
+        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED_SELECT = iText.Commons.Utils.StringUtil.RegexCompile
             ("[\\w-]+( +[\\w-]+)*");
 
         public static IList<String> SplitFontFamily(String fontFamilies) {
             if (fontFamilies == null) {
                 return null;
             }
-            String[] names = iText.Events.Utils.StringUtil.Split(fontFamilies, ",");
+            String[] names = iText.Commons.Utils.StringUtil.Split(fontFamilies, ",");
             IList<String> result = new List<String>(names.Length);
             foreach (String name in names) {
                 // TODO DEVSIX-2534 improve pattern matching according to CSS specification. E.g. unquoted font-families with spaces.
-                if (iText.Events.Utils.Matcher.Match(FONT_FAMILY_PATTERN, name).Matches()) {
+                if (iText.Commons.Utils.Matcher.Match(FONT_FAMILY_PATTERN, name).Matches()) {
                     result.Add(name.Trim());
                 }
                 else {
-                    if (iText.Events.Utils.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED, name).Matches()) {
-                        Matcher selectMatcher = iText.Events.Utils.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, name);
+                    if (iText.Commons.Utils.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED, name).Matches()) {
+                        Matcher selectMatcher = iText.Commons.Utils.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, name);
                         if (selectMatcher.Find()) {
                             result.Add(selectMatcher.Group());
                         }
@@ -81,7 +81,7 @@ namespace iText.StyledXmlParser.Util {
         }
 
         public static String RemoveQuotes(String fontFamily) {
-            Matcher selectMatcher = iText.Events.Utils.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, fontFamily);
+            Matcher selectMatcher = iText.Commons.Utils.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, fontFamily);
             if (selectMatcher.Find()) {
                 return selectMatcher.Group();
             }

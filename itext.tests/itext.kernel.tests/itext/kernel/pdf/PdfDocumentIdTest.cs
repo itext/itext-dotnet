@@ -175,10 +175,10 @@ namespace iText.Kernel.Pdf {
             baos.Dispose();
             PdfReader reader = new PdfReader(new MemoryStream(documentBytes));
             pdfDocument = new PdfDocument(reader);
-            String firstOriginalId = iText.Events.Utils.JavaUtil.GetStringForBytes(reader.GetOriginalFileId());
-            String secondOriginalId = iText.Events.Utils.JavaUtil.GetStringForBytes(reader.GetOriginalFileId());
-            String firstModifiedId = iText.Events.Utils.JavaUtil.GetStringForBytes(reader.GetModifiedFileId());
-            String secondModifiedId = iText.Events.Utils.JavaUtil.GetStringForBytes(reader.GetModifiedFileId());
+            String firstOriginalId = iText.Commons.Utils.JavaUtil.GetStringForBytes(reader.GetOriginalFileId());
+            String secondOriginalId = iText.Commons.Utils.JavaUtil.GetStringForBytes(reader.GetOriginalFileId());
+            String firstModifiedId = iText.Commons.Utils.JavaUtil.GetStringForBytes(reader.GetModifiedFileId());
+            String secondModifiedId = iText.Commons.Utils.JavaUtil.GetStringForBytes(reader.GetModifiedFileId());
             NUnit.Framework.Assert.AreEqual(firstOriginalId, secondOriginalId);
             NUnit.Framework.Assert.AreEqual(firstModifiedId, secondModifiedId);
         }

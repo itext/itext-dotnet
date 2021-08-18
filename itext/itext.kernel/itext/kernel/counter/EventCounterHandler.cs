@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using iText.Events.Contexts;
+using iText.Commons.Actions.Contexts;
 using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Counter {
@@ -60,7 +60,8 @@ namespace iText.Kernel.Counter {
     /// for each registered
     /// <see cref="IEventCounterFactory"/>
     /// and send corresponding events when calling
-    /// <see cref="OnEvent(iText.Kernel.Counter.Event.IEvent, iText.Events.Contexts.IMetaInfo, System.Type{T})"/>
+    /// <see cref="OnEvent(iText.Kernel.Counter.Event.IEvent, iText.Commons.Actions.Contexts.IMetaInfo, System.Type{T})
+    ///     "/>
     /// method.
     /// <para />
     /// You can implement your own
@@ -113,7 +114,7 @@ namespace iText.Kernel.Counter {
         /// </param>
         /// <param name="metaInfo">
         /// 
-        /// <see cref="iText.Events.Contexts.IMetaInfo"/>
+        /// <see cref="iText.Commons.Actions.Contexts.IMetaInfo"/>
         /// object that can holds information about instance that throws the event
         /// </param>
         /// <param name="caller">the class that throws the event</param>

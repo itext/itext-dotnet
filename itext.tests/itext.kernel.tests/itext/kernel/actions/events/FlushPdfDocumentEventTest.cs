@@ -22,11 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using iText.Events;
-using iText.Events.Confirmations;
-using iText.Events.Data;
-using iText.Events.Processors;
-using iText.Events.Sequence;
+using iText.Commons.Actions;
+using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Data;
+using iText.Commons.Actions.Processors;
+using iText.Commons.Actions.Sequence;
 using iText.IO.Source;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Data;

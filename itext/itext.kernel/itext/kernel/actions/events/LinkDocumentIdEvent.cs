@@ -22,14 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Events;
-using iText.Events.Sequence;
+using iText.Commons.Actions;
+using iText.Commons.Actions.Sequence;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Actions.Events {
     /// <summary>
     /// An event allows to associated some
-    /// <see cref="iText.Events.Sequence.SequenceId"/>
+    /// <see cref="iText.Commons.Actions.Sequence.SequenceId"/>
     /// with
     /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
     /// </summary>
@@ -43,7 +43,7 @@ namespace iText.Kernel.Actions.Events {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// with the
         /// appropriate
-        /// <see cref="iText.Events.Sequence.SequenceId"/>.
+        /// <see cref="iText.Commons.Actions.Sequence.SequenceId"/>.
         /// </summary>
         /// <param name="document">is a document</param>
         /// <param name="sequenceId">is a general identifier to be associated with the document</param>
@@ -58,7 +58,7 @@ namespace iText.Kernel.Actions.Events {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// with the
         /// appropriate
-        /// <see cref="iText.Events.Sequence.AbstractIdentifiableElement"/>.
+        /// <see cref="iText.Commons.Actions.Sequence.AbstractIdentifiableElement"/>.
         /// </summary>
         /// <param name="document">is a document</param>
         /// <param name="identifiableElement">is an identifiable element to be associated with the document</param>
@@ -71,7 +71,7 @@ namespace iText.Kernel.Actions.Events {
         /// Defines an association between
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// and
-        /// <see cref="iText.Events.Sequence.SequenceId"/>.
+        /// <see cref="iText.Commons.Actions.Sequence.SequenceId"/>.
         /// </summary>
         protected internal override void DoAction() {
             SequenceId storedSequenceId = (SequenceId)sequenceId.Target;

@@ -44,7 +44,7 @@ Copyright (c) 1998-2021 iText Group NV
 using System;
 using System.IO;
 using System.Text;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.IO.Source;
 
 namespace iText.IO.Font {
@@ -82,7 +82,7 @@ namespace iText.IO.Font {
                     break;
                 }
             }
-            return iText.Events.Utils.JavaUtil.GetStringForBytes(b, 0, k, "ISO-8859-1");
+            return iText.Commons.Utils.JavaUtil.GetStringForBytes(b, 0, k, "ISO-8859-1");
         }
 
         private String ReadString() {

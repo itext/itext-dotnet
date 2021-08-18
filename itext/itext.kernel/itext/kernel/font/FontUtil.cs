@@ -46,7 +46,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Util;

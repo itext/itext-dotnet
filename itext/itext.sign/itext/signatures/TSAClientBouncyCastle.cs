@@ -51,7 +51,7 @@ using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Tsp;
 using iText.IO;
 using iText.IO.Codec;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.Kernel;
 using iText.Signatures.Exceptions;
 
@@ -237,7 +237,8 @@ namespace iText.Signatures {
             }
             byte[] respBytes = baos.ToArray();
             if (response.encoding != null && response.encoding.ToLowerInvariant().Equals("base64".ToLowerInvariant())) {
-                respBytes = Convert.FromBase64String(iText.Events.Utils.JavaUtil.GetStringForBytes(respBytes, "US-ASCII"));
+                respBytes = Convert.FromBase64String(iText.Commons.Utils.JavaUtil.GetStringForBytes(respBytes, "US-ASCII")
+                    );
             }
             return respBytes;
         }

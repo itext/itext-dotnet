@@ -44,8 +44,8 @@ address: sales@itextpdf.com
 using System;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.Events.Contexts;
-using iText.Events.Utils;
+using iText.Commons.Actions.Contexts;
+using iText.Commons.Utils;
 using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Counter {
@@ -90,10 +90,10 @@ namespace iText.Kernel.Counter {
         protected internal override void OnEvent(IEvent @event, IMetaInfo metaInfo) {
             if (count.IncrementAndGet() > repeatLevel) {
                 if (iText.Kernel.Version.IsAGPLVersion() || iText.Kernel.Version.IsExpired()) {
-                    String message = iText.Events.Utils.JavaUtil.GetStringForBytes(message_1, iText.Events.Utils.EncodingUtil.ISO_8859_1
+                    String message = iText.Commons.Utils.JavaUtil.GetStringForBytes(message_1, iText.Commons.Utils.EncodingUtil.ISO_8859_1
                         );
                     if (iText.Kernel.Version.IsExpired()) {
-                        message = iText.Events.Utils.JavaUtil.GetStringForBytes(message_2, iText.Events.Utils.EncodingUtil.ISO_8859_1
+                        message = iText.Commons.Utils.JavaUtil.GetStringForBytes(message_2, iText.Commons.Utils.EncodingUtil.ISO_8859_1
                             );
                     }
                     level++;

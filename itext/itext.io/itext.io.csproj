@@ -104,9 +104,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\itext.events\itext.events.csproj">
+    <ProjectReference Include="..\itext.commons\itext.commons.csproj">
       <Project>{339569D2-3BA2-41CC-972C-70B05E4C4FCD}</Project>
-      <Name>itext.events</Name>
+      <Name>itext.commons</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -42,7 +42,7 @@ Copyright (c) 1998-2021 iText Group NV
 * address: sales@itextpdf.com
 */
 using System;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 
 namespace iText.IO.Font.Otf {
     public class Glyph {

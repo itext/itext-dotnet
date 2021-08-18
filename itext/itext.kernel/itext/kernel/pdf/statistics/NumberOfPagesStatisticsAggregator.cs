@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Events;
-using iText.Events.Utils;
+using iText.Commons.Actions;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf.Statistics {
     /// <summary>Statistics aggregator which aggregates number of pages in PDF documents.</summary>

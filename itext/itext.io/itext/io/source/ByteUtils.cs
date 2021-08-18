@@ -147,7 +147,7 @@ namespace iText.IO.Source {
                     logger.LogError(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN);
                     d = 0;
                 }
-                byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes(iText.Events.Utils.EncodingUtil.ISO_8859_1
+                byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                     );
                 if (buffer != null) {
                     buffer.Prepend(result);

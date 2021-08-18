@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf {
     public class PdfIndirectReference : PdfObject, IComparable<iText.Kernel.Pdf.PdfIndirectReference> {

@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Events;
-using iText.Events.Processors;
-using iText.Events.Sequence;
+using iText.Commons.Actions;
+using iText.Commons.Actions.Processors;
+using iText.Commons.Actions.Sequence;
 
 namespace iText.Kernel.Actions {
     /// <summary>This class is used for testing purposes to have an access to ProductEventHandler.</summary>

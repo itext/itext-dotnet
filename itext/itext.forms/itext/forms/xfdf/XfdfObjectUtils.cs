@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -117,7 +117,7 @@ namespace iText.Forms.Xfdf {
 
         /// <summary>Converts float value to string with UTF-8 encoding.</summary>
         internal static String ConvertFloatToString(float coord) {
-            return iText.Events.Utils.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(coord), System.Text.Encoding.UTF8
+            return iText.Commons.Utils.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(coord), System.Text.Encoding.UTF8
                 );
         }
 
@@ -153,8 +153,8 @@ namespace iText.Forms.Xfdf {
         }
 
         private static String FloatToPaddedString(float number) {
-            return iText.Events.Utils.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(number), System.Text.Encoding.UTF8
-                );
+            return iText.Commons.Utils.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(number), System.Text.Encoding.
+                UTF8);
         }
 
         /// <summary>

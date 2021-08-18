@@ -47,7 +47,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 #if NETSTANDARD2_0
 using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.DependencyModel;

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 
 namespace iText.IO {
     /// <summary>Exception class for exceptions in io module.</summary>

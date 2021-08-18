@@ -51,8 +51,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using iText.Events.Utils;
-using iText.Events.Utils.Collections;
+using iText.Commons.Utils;
+using iText.Commons.Utils.Collections;
 using Org.BouncyCastle.Crypto;
 
 internal static class KernelExtensions {

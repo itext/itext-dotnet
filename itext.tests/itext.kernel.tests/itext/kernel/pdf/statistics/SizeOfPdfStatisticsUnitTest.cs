@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Logs;
-using iText.Events.Utils;
+using iText.Commons.Logs;
+using iText.Commons.Utils;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Exceptions;
 using iText.Test;
@@ -49,7 +49,7 @@ namespace iText.Kernel.Pdf.Statistics {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(EventsLogMessageConstant.INVALID_STATISTICS_NAME)]
+        [LogMessage(CommonsLogMessageConstant.INVALID_STATISTICS_NAME)]
         public virtual void InvalidStatisticsNameEventTest() {
             SizeOfPdfStatisticsEvent @event = new SizeOfPdfStatisticsEvent(5, ITextCoreProductData.GetInstance());
             NUnit.Framework.Assert.IsNull(@event.CreateStatisticsAggregatorFromName("invalid name"));

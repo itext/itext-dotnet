@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using Common.Logging;
-using iText.Events;
+using iText.Commons.Actions;
 
 namespace iText.Kernel.Actions.Ecosystem {
     public class TestConfigurationEvent : AbstractITextConfigurationEvent {

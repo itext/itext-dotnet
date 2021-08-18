@@ -64,7 +64,7 @@ namespace iText.StyledXmlParser.Css.Page {
         public CssPageRule(String ruleParameters)
             : base(CssRuleName.PAGE, ruleParameters) {
             pageSelectors = new List<ICssSelector>();
-            String[] selectors = iText.Events.Utils.StringUtil.Split(ruleParameters, ",");
+            String[] selectors = iText.Commons.Utils.StringUtil.Split(ruleParameters, ",");
             for (int i = 0; i < selectors.Length; i++) {
                 selectors[i] = CssUtils.RemoveDoubleSpacesAndTrim(selectors[i]);
             }

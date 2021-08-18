@@ -45,7 +45,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
@@ -80,7 +80,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY, 
                     CommonCssConstants.FLEX, shorthandExpression);
             }
-            String[] flexProps = iText.Events.Utils.StringUtil.Split(shorthandExpression, " ");
+            String[] flexProps = iText.Commons.Utils.StringUtil.Split(shorthandExpression, " ");
             IList<CssDeclaration> resolvedProperties;
             switch (flexProps.Length) {
                 case 1: {

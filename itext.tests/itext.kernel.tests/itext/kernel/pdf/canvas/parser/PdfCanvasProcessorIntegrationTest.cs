@@ -81,7 +81,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             }
             byte[] logBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "contentStreamProcessorTest_events_log.dat"
                 ));
-            String expectedPageEventsLog = iText.Events.Utils.JavaUtil.GetStringForBytes(logBytes, System.Text.Encoding
+            String expectedPageEventsLog = iText.Commons.Utils.JavaUtil.GetStringForBytes(logBytes, System.Text.Encoding
                 .UTF8);
             NUnit.Framework.Assert.AreEqual(expectedPageEventsLog, pageEventsLog.ToString());
         }

@@ -45,10 +45,10 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.IO;
-using iText.Events;
-using iText.Events.Confirmations;
-using iText.Events.Sequence;
-using iText.Events.Utils;
+using iText.Commons.Actions;
+using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Sequence;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Actions.Data;
@@ -1902,7 +1902,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Obtains document id as a
-        /// <see cref="iText.Events.Sequence.SequenceId"/>.
+        /// <see cref="iText.Commons.Actions.Sequence.SequenceId"/>.
         /// </summary>
         /// <returns>document id</returns>
         public virtual SequenceId GetDocumentIdWrapper() {

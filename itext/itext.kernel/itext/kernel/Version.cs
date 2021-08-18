@@ -244,7 +244,7 @@ namespace iText.Kernel {
 
         internal static String[] ParseVersionString(String version) {
             String splitRegex = "\\.";
-            String[] split = iText.Events.Utils.StringUtil.Split(version, splitRegex);
+            String[] split = iText.Commons.Utils.StringUtil.Split(version, splitRegex);
             //Guard for empty versions and throw exceptions
             if (split.Length == 0) {
                 throw new LicenseVersionException(LicenseVersionException.VERSION_STRING_IS_EMPTY_AND_CANNOT_BE_PARSED);

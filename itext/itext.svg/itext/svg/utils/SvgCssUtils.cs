@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Node;
@@ -64,7 +64,7 @@ namespace iText.Svg.Utils {
             IList<String> result = new List<String>();
             if (value != null && value.Length > 0) {
                 value = value.Trim();
-                String[] list = iText.Events.Utils.StringUtil.Split(value, "\\s*(,|\\s)\\s*");
+                String[] list = iText.Commons.Utils.StringUtil.Split(value, "\\s*(,|\\s)\\s*");
                 result.AddAll(JavaUtil.ArraysAsList(list));
             }
             return result;

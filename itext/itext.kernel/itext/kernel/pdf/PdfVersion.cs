@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf {
     /// <summary>This class represents all official PDF versions.</summary>

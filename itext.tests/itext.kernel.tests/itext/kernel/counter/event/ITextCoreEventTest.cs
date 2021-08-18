@@ -40,9 +40,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Events;
-using iText.Events.Confirmations;
-using iText.Events.Sequence;
+using iText.Commons.Actions;
+using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Sequence;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Ecosystem;
 using iText.Test;

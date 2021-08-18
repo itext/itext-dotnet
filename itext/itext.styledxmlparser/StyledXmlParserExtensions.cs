@@ -47,7 +47,7 @@ using System.Text.RegularExpressions;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Helper;
 using System.Reflection;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 
 internal static class StyledXmlParserExtensions {
     public static String Name(this Encoding e) {

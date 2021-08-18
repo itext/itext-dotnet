@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.IO.Font;
 
 namespace iText.Kernel.Pdf {
@@ -73,7 +73,8 @@ namespace iText.Kernel.Pdf {
 
         public override String ToString() {
             if (content != null) {
-                return iText.Events.Utils.JavaUtil.GetStringForBytes(content, iText.Events.Utils.EncodingUtil.ISO_8859_1);
+                return iText.Commons.Utils.JavaUtil.GetStringForBytes(content, iText.Commons.Utils.EncodingUtil.ISO_8859_1
+                    );
             }
             else {
                 return "";

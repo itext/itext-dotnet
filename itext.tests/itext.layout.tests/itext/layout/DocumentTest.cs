@@ -21,8 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
-using iText.Events;
-using iText.Events.Sequence;
+using iText.Commons.Actions;
+using iText.Commons.Actions.Sequence;
 using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Counter.Event;

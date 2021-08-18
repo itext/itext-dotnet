@@ -235,7 +235,7 @@ namespace iText.Kernel.Pdf {
 
         public override String ToString() {
             if (value == null) {
-                return iText.Events.Utils.JavaUtil.GetStringForBytes(DecodeContent(), iText.Events.Utils.EncodingUtil.ISO_8859_1
+                return iText.Commons.Utils.JavaUtil.GetStringForBytes(DecodeContent(), iText.Commons.Utils.EncodingUtil.ISO_8859_1
                     );
             }
             else {

@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.Kernel.Font;

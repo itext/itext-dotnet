@@ -58,7 +58,7 @@ using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;

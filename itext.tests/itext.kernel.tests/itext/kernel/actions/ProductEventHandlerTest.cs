@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Events;
+using iText.Commons.Actions;
 using iText.Kernel.Actions.Ecosystem;
 using iText.Kernel.Pdf;
 using iText.Test;

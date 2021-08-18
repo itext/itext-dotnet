@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text.RegularExpressions;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.IO.Util;
 
 namespace iText.StyledXmlParser.Css.Parse {

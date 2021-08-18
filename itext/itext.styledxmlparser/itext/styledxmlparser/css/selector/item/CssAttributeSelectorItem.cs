@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text.RegularExpressions;
-using iText.Events.Utils;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
@@ -132,7 +132,7 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
 
                     case '~': {
                         String pattern = MessageFormatUtil.Format("(^{0}\\s+)|(\\s+{1}\\s+)|(\\s+{2}$)", value, value, value);
-                        return iText.Events.Utils.Matcher.Match(iText.Events.Utils.StringUtil.RegexCompile(pattern), attributeValue
+                        return iText.Commons.Utils.Matcher.Match(iText.Commons.Utils.StringUtil.RegexCompile(pattern), attributeValue
                             ).Matches();
                     }
 
