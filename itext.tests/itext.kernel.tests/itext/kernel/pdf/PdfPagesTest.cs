@@ -442,7 +442,7 @@ namespace iText.Kernel.Pdf {
                 PdfFormXObject pageCopy = sourcePage.CopyAsFormXObject(outputPdf);
                 PdfPage page = outputPdf.AddNewPage(PageSize.A4);
                 PdfCanvas outputCanvas = new PdfCanvas(page);
-                outputCanvas.AddXObject(pageCopy, scaleX, 0, 0, scaleY, 0, 0);
+                outputCanvas.AddXObjectWithTransformationMatrix(pageCopy, scaleX, 0, 0, scaleY, 0, 0);
                 page.Flush();
             }
             outputPdf.Close();

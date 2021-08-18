@@ -458,7 +458,7 @@ namespace iText.Layout.Renderer {
 
             internal PdfXObject @object;
 
-            public override PdfCanvas AddXObject(PdfXObject xObject, Rectangle rect) {
+            public override PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, Rectangle rect) {
                 if (this.@object == xObject) {
                     return null;
                 }
@@ -504,7 +504,7 @@ namespace iText.Layout.Renderer {
 
             internal PdfXObject @object;
 
-            public override PdfCanvas AddXObject(PdfXObject xObject, Rectangle rect) {
+            public override PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, Rectangle rect) {
                 if (this.@object == xObject) {
                     return null;
                 }

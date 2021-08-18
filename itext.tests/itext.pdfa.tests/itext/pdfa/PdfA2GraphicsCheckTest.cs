@@ -276,7 +276,7 @@ namespace iText.Pdfa {
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
             doc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "jpeg2000/p0_01.j2k"), 300, 300, false);
+            canvas.AddImageAt(ImageDataFactory.Create(sourceFolder + "jpeg2000/p0_01.j2k"), 300, 300, false);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
             NUnit.Framework.Assert.AreEqual(PdfAConformanceException.ONLY_JPX_BASELINE_SET_OF_FEATURES_SHALL_BE_USED, 
                 e.Message);
@@ -291,7 +291,7 @@ namespace iText.Pdfa {
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
             doc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "jpeg2000/file5.jp2"), 300, 300, false);
+            canvas.AddImageAt(ImageDataFactory.Create(sourceFolder + "jpeg2000/file5.jp2"), 300, 300, false);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
             NUnit.Framework.Assert.AreEqual(PdfAConformanceException.EXACTLY_ONE_COLOUR_SPACE_SPECIFICATION_SHALL_HAVE_THE_VALUE_0X01_IN_THE_APPROX_FIELD
                 , e.Message);
@@ -306,7 +306,7 @@ namespace iText.Pdfa {
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
             doc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "jpeg2000/file7.jp2"), 300, 300, false);
+            canvas.AddImageAt(ImageDataFactory.Create(sourceFolder + "jpeg2000/file7.jp2"), 300, 300, false);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
             NUnit.Framework.Assert.AreEqual(PdfAConformanceException.EXACTLY_ONE_COLOUR_SPACE_SPECIFICATION_SHALL_HAVE_THE_VALUE_0X01_IN_THE_APPROX_FIELD
                 , e.Message);
@@ -335,15 +335,15 @@ namespace iText.Pdfa {
             PdfCanvas canvas;
             for (int i = 1; i < 5; ++i) {
                 canvas = new PdfCanvas(doc.AddNewPage());
-                canvas.AddImage(ImageDataFactory.Create(MessageFormatUtil.Format(sourceFolder + "jpeg2000/file{0}.jp2", i.
-                    ToString())), 300, 300, false);
+                canvas.AddImageAt(ImageDataFactory.Create(MessageFormatUtil.Format(sourceFolder + "jpeg2000/file{0}.jp2", 
+                    i.ToString())), 300, 300, false);
             }
             canvas = new PdfCanvas(doc.AddNewPage());
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "jpeg2000/file6.jp2"), 300, 300, false);
+            canvas.AddImageAt(ImageDataFactory.Create(sourceFolder + "jpeg2000/file6.jp2"), 300, 300, false);
             for (int i = 8; i < 10; ++i) {
                 canvas = new PdfCanvas(doc.AddNewPage());
-                canvas.AddImage(ImageDataFactory.Create(MessageFormatUtil.Format(sourceFolder + "jpeg2000/file{0}.jp2", i.
-                    ToString())), 300, 300, false);
+                canvas.AddImageAt(ImageDataFactory.Create(MessageFormatUtil.Format(sourceFolder + "jpeg2000/file{0}.jp2", 
+                    i.ToString())), 300, 300, false);
             }
             doc.Close();
             CompareResult(outPdf, cmpPdf);

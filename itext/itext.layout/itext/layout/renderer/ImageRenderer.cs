@@ -311,8 +311,8 @@ namespace iText.Layout.Renderer {
             BeginElementOpacityApplying(drawContext);
             float renderedImageShiftX = ((float)width - renderedImageWidth) / 2;
             float renderedImageShiftY = ((float)height - renderedImageHeight) / 2;
-            canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition + deltaX + renderedImageShiftX
-                , (float)fixedYPosition + renderedImageShiftY);
+            canvas.AddXObjectWithTransformationMatrix(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition
+                 + deltaX + renderedImageShiftX, (float)fixedYPosition + renderedImageShiftY);
             EndElementOpacityApplying(drawContext);
             EndObjectFitImageClipping(canvas);
             EndTransformationIfApplied(drawContext.GetCanvas());

@@ -825,7 +825,7 @@ namespace iText.Forms {
                         AffineTransform at = CalcFieldAppTransformToAnnotRect(xObject, annotBBox);
                         float[] m = new float[6];
                         at.GetMatrix(m);
-                        canvas.AddXObject(xObject, m[0], m[1], m[2], m[3], m[4], m[5]);
+                        canvas.AddXObjectWithTransformationMatrix(xObject, m[0], m[1], m[2], m[3], m[4], m[5]);
                         if (tagPointer != null) {
                             canvas.CloseTag();
                         }

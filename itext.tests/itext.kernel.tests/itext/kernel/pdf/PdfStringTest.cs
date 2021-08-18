@@ -47,6 +47,7 @@ using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
@@ -186,7 +187,7 @@ namespace iText.Kernel.Pdf {
                  + "\u043E\u0434\u0438\u0441\u0441\u0435\u044F)", PdfEncodings.UTF8));
             ImageData img = ImageDataFactory.Create(RESOURCE);
             canvas.OpenTag(tagPointer.GetTagReference());
-            canvas.AddImage(img, 36, 700, 100, false, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(36, 700, 65, 100), false);
             canvas.CloseTag();
             canvas.EndText();
             pdfDoc.Close();

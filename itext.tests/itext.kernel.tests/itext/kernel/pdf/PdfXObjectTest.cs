@@ -86,15 +86,15 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < 4; i++) {
                 PdfPage page = document.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.AddXObject(images[i], PageSize.Default);
+                canvas.AddXObjectFittedIntoRectangle(images[i], PageSize.Default);
                 page.Flush();
             }
             PdfPage page_1 = document.AddNewPage();
             PdfCanvas canvas_1 = new PdfCanvas(page_1);
-            canvas_1.AddXObject(images[0], 0, 0, 200);
-            canvas_1.AddXObject(images[1], 300, 0, 200);
-            canvas_1.AddXObject(images[2], 0, 300, 200);
-            canvas_1.AddXObject(images[3], 300, 300, 200);
+            canvas_1.AddXObjectFittedIntoRectangle(images[0], new Rectangle(0, 0, 200, 112.35f));
+            canvas_1.AddXObjectFittedIntoRectangle(images[1], new Rectangle(300, 0, 200, 112.35f));
+            canvas_1.AddXObjectFittedIntoRectangle(images[2], new Rectangle(0, 300, 200, 112.35f));
+            canvas_1.AddXObjectFittedIntoRectangle(images[3], new Rectangle(300, 300, 200, 112.35f));
             canvas_1.Release();
             page_1.Flush();
             document.Close();
@@ -113,8 +113,8 @@ namespace iText.Kernel.Pdf {
             ImageData image = ImageDataFactory.Create(SOURCE_FOLDER + "itext.jpg");
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.AddImage(image, 50, 500, 100, true);
-            canvas.AddImage(image, 200, 500, 100, false).Flush();
+            canvas.AddImageFittedIntoRectangle(image, new Rectangle(50, 500, 100, 14.16f), true);
+            canvas.AddImageFittedIntoRectangle(image, new Rectangle(200, 500, 100, 14.16f), false).Flush();
             canvas.Release();
             page.Flush();
             document.Close();

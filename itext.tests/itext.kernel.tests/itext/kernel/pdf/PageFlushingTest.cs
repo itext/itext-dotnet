@@ -363,7 +363,7 @@ namespace iText.Kernel.Pdf {
                 pdfCanvas.SaveState();
                 for (int j = 0; j < numOfAddedXObjectsPerPage; ++j) {
                     PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "simple.jpg"));
-                    pdfCanvas.AddXObject(xObject, new Rectangle(36, 720 - j * 150, 20, 20));
+                    pdfCanvas.AddXObjectFittedIntoRectangle(xObject, new Rectangle(36, 720 - j * 150, 20, 20));
                     xObject.MakeIndirect(pdf).Flush();
                 }
                 pdfCanvas.RestoreState();
@@ -530,10 +530,10 @@ namespace iText.Kernel.Pdf {
             canvas.SaveState().SetLineWidth(5).Arc(400, 650, 550, 750, 0, 180).Stroke().RestoreState();
             canvas.SaveState().SetLineWidth(5).MoveTo(400, 550).CurveTo(500, 570, 450, 450, 550, 550).Stroke().RestoreState
                 ();
-            canvas.AddXObject(xObject, 100, 500, 400);
+            canvas.AddXObjectFittedIntoRectangle(xObject, new Rectangle(100, 500, 400, xObject.GetHeight()));
             PdfImageXObject xObject2 = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itext.png"));
             xObject2.MakeIndirect(pdfPage.GetDocument());
-            canvas.AddXObject(xObject2, 100, 300, 400);
+            canvas.AddXObjectFittedIntoRectangle(xObject2, new Rectangle(100, 500, 400, xObject2.GetHeight()));
         }
 
         private static PdfCanvas AddBasicContent(PdfPage pdfPage, PdfFont font) {

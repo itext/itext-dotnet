@@ -131,8 +131,8 @@ namespace iText.Pdfa {
             PdfCanvas canvas = new PdfCanvas(page);
             page.GetResources().SetDefaultRgb(new PdfCieBasedCs.CalRgb(new float[] { 0.3f, 0.4f, 0.5f }));
             canvas.SaveState();
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "itext.png"), 0, 0, page.GetPageSize().GetWidth() /
-                 2, false);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "itext.png"), new Rectangle(0, 0
+                , page.GetPageSize().GetWidth() / 2, page.GetPageSize().GetHeight() / 2), false);
             canvas.RestoreState();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE

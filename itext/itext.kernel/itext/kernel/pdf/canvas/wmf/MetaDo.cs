@@ -677,7 +677,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                             float height = -destHeight * bmpImage.GetHeight() / srcHeight;
                             float x = xDest - destWidth * xSrc / srcWidth;
                             float y = yDest + destHeight * ySrc / srcHeight - height;
-                            cb.AddXObject(imageXObject, new Rectangle(x, y, width, height));
+                            cb.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(x, y, width, height));
                             cb.RestoreState();
                         }
                         catch (Exception) {

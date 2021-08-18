@@ -51,6 +51,7 @@ using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Extgstate;
@@ -925,7 +926,7 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = new WmfImageData(sourceFolder + "example.wmf");
-            canvas.AddImage(img, 0, 0, 0.1f, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(0, 0, 0.1f, 0.1f), false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "wmfImageTest01.pdf", 
                 sourceFolder + "cmp_wmfImageTest01.pdf", destinationFolder, "diff_"));
@@ -937,7 +938,7 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = new WmfImageData(sourceFolder + "butterfly.wmf");
-            canvas.AddImage(img, 0, 0, 1, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(0, 0, 1, 1), false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "wmfImageTest02.pdf", 
                 sourceFolder + "cmp_wmfImageTest02.pdf", destinationFolder, "diff_"));
@@ -949,7 +950,7 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = new WmfImageData(sourceFolder + "type1.wmf");
-            canvas.AddImage(img, 0, 0, 1, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(0, 0, 1, 1), false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "wmfImageTest03.pdf", 
                 sourceFolder + "cmp_wmfImageTest03.pdf", destinationFolder, "diff_"));
@@ -961,7 +962,7 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = new WmfImageData(sourceFolder + "type0.wmf");
-            canvas.AddImage(img, 0, 0, 1, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(0, 0, 1, 1), false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "wmfImageTest04.pdf", 
                 sourceFolder + "cmp_wmfImageTest04.pdf", destinationFolder, "diff_"));
@@ -976,7 +977,7 @@ namespace iText.Kernel.Pdf.Canvas {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(stream, baos);
             ImageData img = new WmfImageData(baos.ToArray());
-            canvas.AddImage(img, 0, 0, 1, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(0, 0, 1, 1), false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "wmfImageTest05.pdf", 
                 sourceFolder + "cmp_wmfImageTest05.pdf", destinationFolder, "diff_"));
@@ -988,7 +989,7 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = ImageDataFactory.Create(sourceFolder + "2-frames.gif");
-            canvas.AddImage(img, 100, 100, 200, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(100, 100, 200, 188.24f), false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "gifImageTest01.pdf", 
                 sourceFolder + "cmp_gifImageTest01.pdf", destinationFolder, "diff_"));
@@ -1007,7 +1008,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = ImageDataFactory.CreateGifFrame(baos.ToArray(), 1);
-            canvas.AddImage(img, 100, 100, 200, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(100, 100, 200, 188.24f), false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "gifImageTest02.pdf", 
                 sourceFolder + "cmp_gifImageTest02.pdf", destinationFolder, "diff_"));
@@ -1026,7 +1027,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = ImageDataFactory.CreateGifFrame(baos.ToArray(), 2);
-            canvas.AddImage(img, 100, 100, 200, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(100, 100, 200, 262.07f), false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "gifImageTest03.pdf", 
                 sourceFolder + "cmp_gifImageTest03.pdf", destinationFolder, "diff_"));
@@ -1067,7 +1068,7 @@ namespace iText.Kernel.Pdf.Canvas {
             IList<ImageData> frames = ImageDataFactory.CreateGifFrames(baos.ToArray(), new int[] { 1, 2, 5 });
             float y = 600;
             foreach (ImageData img in frames) {
-                canvas.AddImage(img, 100, y, 200, false);
+                canvas.AddImageFittedIntoRectangle(img, new Rectangle(100, y, 200, 159.72f), false);
                 y -= 200;
             }
             document.Close();
@@ -1190,18 +1191,15 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         [NUnit.Framework.Test]
-        public virtual void EndPathNewPathTest() {
-            ByteArrayOutputStream boasEndPath = new ByteArrayOutputStream();
-            PdfDocument pdfDocEndPath = new PdfDocument(new PdfWriter(boasEndPath));
-            pdfDocEndPath.AddNewPage();
-            PdfCanvas endPathCanvas = new PdfCanvas(pdfDocEndPath.GetPage(1));
-            endPathCanvas.EndPath();
-            ByteArrayOutputStream boasNewPath = new ByteArrayOutputStream();
-            PdfDocument pdfDocNewPath = new PdfDocument(new PdfWriter(boasNewPath));
-            pdfDocNewPath.AddNewPage();
-            PdfCanvas newPathCanvas = new PdfCanvas(pdfDocNewPath.GetPage(1));
-            newPathCanvas.NewPath();
-            NUnit.Framework.Assert.AreEqual(boasNewPath.ToArray(), boasEndPath.ToArray());
+        public virtual void AddWmfImageTest() {
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "addWmfImage.pdf"));
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            ImageData img = new WmfImageData(sourceFolder + "example2.wmf");
+            canvas.AddImageAt(img, 0, 0, false);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "addWmfImage.pdf", sourceFolder
+                 + "cmp_addWmfImage.pdf", destinationFolder, "diff_"));
         }
     }
 }

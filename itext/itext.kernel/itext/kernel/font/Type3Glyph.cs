@@ -184,12 +184,12 @@ namespace iText.Kernel.Font {
         /// <param name="f">an element of the transformation matrix</param>
         /// <param name="inlineImage">true if to add image as in-line.</param>
         /// <returns>created Image XObject or null in case of in-line image (asInline = true).</returns>
-        public override PdfXObject AddImage(ImageData image, float a, float b, float c, float d, float e, float f, 
-            bool inlineImage) {
+        public override PdfXObject AddImageWithTransformationMatrix(ImageData image, float a, float b, float c, float
+             d, float e, float f, bool inlineImage) {
             if (!isColor && (!image.IsMask() || !(image.GetBpc() == 1 || image.GetBpc() > 0xff))) {
                 throw new PdfException("Not colorized type3 fonts accept only mask images.");
             }
-            return base.AddImage(image, a, b, c, d, e, f, inlineImage);
+            return base.AddImageWithTransformationMatrix(image, a, b, c, d, e, f, inlineImage);
         }
 
         private void FillBBFromBytes(byte[] bytes) {

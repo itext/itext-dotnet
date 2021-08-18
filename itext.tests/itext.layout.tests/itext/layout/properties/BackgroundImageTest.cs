@@ -662,7 +662,8 @@ namespace iText.Layout.Properties {
             ImageData image = ImageDataFactory.Create(SOURCE_FOLDER + pictureName);
             PdfFormXObject template = new PdfFormXObject(new Rectangle(image.GetWidth(), image.GetHeight()));
             PdfCanvas canvas = new PdfCanvas(template, pdfDocument);
-            canvas.AddImage(image, 0, 0, image.GetWidth(), false).Flush();
+            canvas.AddImageFittedIntoRectangle(image, new Rectangle(0, 0, image.GetWidth(), image.GetHeight()), false)
+                .Flush();
             canvas.Release();
             template.Flush();
             return template;
