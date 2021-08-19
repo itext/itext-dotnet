@@ -459,6 +459,23 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void WidgetDaEntryRemovePageTest() {
+            // TODO DEVSIX-5760 cleaned widget left in the kids of the form field
+            // In this test widgets contain entry /DA that is not specific for widget annotation, so after removing of the
+            // page such widget is not removed from the document. See method PdfDocument#removeUnusedWidgetsFromFields
+            // to see logic of removing unused widgets.
+            // If open the output PDF in Adobe Acrobat, widgets on pages 3-4 will not be viewed. It seems to adobe bug.
+            String testName = "widgetDaEntryRemovePage.pdf";
+            String outPdf = DESTINATION_FOLDER + testName;
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "widgetWithDaEntry.pdf"), new PdfWriter
+                (outPdf));
+            pdfDocument.RemovePage(3);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName
+                , DESTINATION_FOLDER));
+        }
+
         private class IgnoreTagStructurePdfDocument : PdfDocument {
             internal IgnoreTagStructurePdfDocument(PdfReader reader)
                 : base(reader) {
