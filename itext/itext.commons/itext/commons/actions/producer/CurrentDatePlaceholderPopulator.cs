@@ -127,7 +127,7 @@ namespace iText.Commons.Actions.Producer {
             }
             String piece = peaceBuilder.ToString();
             if (ALLOWED_PATTERNS.Contains(piece)) {
-                builder.Append(DateTimeUtil.FormatDate(date, piece));
+                builder.Append(DateTimeUtil.Format(date, piece));
             }
             else {
                 throw new ArgumentException(MessageFormatUtil.Format(CommonsExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_COMPONENT

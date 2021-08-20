@@ -112,7 +112,7 @@ namespace iText.Commons.Actions.Producer {
             // be generated at the beginning of the next hour.
             DateTime date = DateTimeUtil.GetCurrentUtcTime();
             String result = populator.Populate(null, "dd MM yy yyyy HH");
-            String expectedResult = DateTimeUtil.FormatDate(date, "dd MM yy yyyy HH");
+            String expectedResult = DateTimeUtil.Format(date, "dd MM yy yyyy HH");
             NUnit.Framework.Assert.AreEqual(expectedResult, result);
         }
 

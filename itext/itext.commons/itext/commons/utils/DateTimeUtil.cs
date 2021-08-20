@@ -51,6 +51,8 @@ namespace iText.Commons.Utils {
     /// Be aware that its API and functionality may be changed in future.
     /// </summary>
     public static class DateTimeUtil {
+        private static readonly String DEFAULT_PATTERN = "yyyy-MM-dd";
+        
         public static double GetUtcMillisFromEpoch(DateTime? dateTime) {
             if (dateTime == null) {
                 dateTime = DateTime.Now;
@@ -69,14 +71,42 @@ namespace iText.Commons.Utils {
         public static DateTime GetCurrentUtcTime() {
             return DateTime.UtcNow;
         }
-
-        public static DateTime ParseSimpleFormat(String date, String format) {
-            return DateTime.ParseExact(date, format, null);
+        
+        public static bool IsInPast(DateTime date) {
+            return date.CompareTo(GetCurrentTime()) < 0;
         }
 
-        public static String FormatDate(DateTime date, String pattern)
+        public static long GetRelativeTime(DateTime date) {
+            return (long) (date - GetInitial()).TotalMilliseconds;
+        }
+
+        /// <summary>
+        /// Parses passing date with default {@code yyyy-MM-dd} pattern.
+        /// </summary>
+        /// <param name="date">date is date to be parse</param>
+        /// <returns>parse date</returns>
+        public static DateTime ParseWithDefaultPattern(String date) {
+            return Parse(date, DEFAULT_PATTERN);
+        }
+        
+        public static DateTime Parse(String date, String format) {
+            // The method is rarely called, so every time we create a new DateTimeFormatInfo (necessary for automatic testing)
+            DateTimeFormatInfo dateTimeFormatInfo = new DateTimeFormatInfo();
+            dateTimeFormatInfo.Calendar = new GregorianCalendar();
+            return DateTime.ParseExact(date, format, dateTimeFormatInfo);
+        }
+
+        public static String FormatWithDefaultPattern(DateTime date) {
+            return Format(date, DEFAULT_PATTERN);
+        }
+        
+        public static String Format(DateTime date, String pattern)
         {
             return date.ToString(pattern, CultureInfo.InvariantCulture);
+        }
+        
+        private static DateTime GetInitial() {
+            return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }
     }
 }

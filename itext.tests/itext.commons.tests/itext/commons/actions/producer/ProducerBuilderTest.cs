@@ -90,8 +90,8 @@ namespace iText.Commons.Actions.Producer {
         public virtual void CurrentDateProducerLineTest() {
             IList<ConfirmedEventWrapper> events = GetEvents("Created at ${currentDate:yyyy}", 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, null);
-            NUnit.Framework.Assert.AreEqual("Created at " + DateTimeUtil.FormatDate(DateTimeUtil.GetCurrentUtcTime(), 
-                "yyyy"), newProducerLine);
+            NUnit.Framework.Assert.AreEqual("Created at " + DateTimeUtil.Format(DateTimeUtil.GetCurrentUtcTime(), "yyyy"
+                ), newProducerLine);
         }
 
         [NUnit.Framework.Test]
@@ -99,7 +99,7 @@ namespace iText.Commons.Actions.Producer {
             IList<ConfirmedEventWrapper> events = GetEvents("Created at ${currentDate:yyyy, '{\\'yes::yes\\'', yyyy}", 
                 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, null);
-            String currentYear = DateTimeUtil.FormatDate(DateTimeUtil.GetCurrentUtcTime(), "yyyy");
+            String currentYear = DateTimeUtil.Format(DateTimeUtil.GetCurrentUtcTime(), "yyyy");
             NUnit.Framework.Assert.AreEqual("Created at " + currentYear + ", {'yes::yes', " + currentYear, newProducerLine
                 );
         }
