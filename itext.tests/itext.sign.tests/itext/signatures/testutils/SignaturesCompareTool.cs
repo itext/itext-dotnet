@@ -58,11 +58,12 @@ namespace iText.Signatures.Testutils {
 
         private const String OID_SIGNED_DATA = "1.2.840.113549.1.7.2";
 
-        public static String CompareSignatures(String dest, String cmp) {
+        public static String CompareSignatures(String dest, String cmp, ReaderProperties destProperties, ReaderProperties
+             cmpProperties) {
             StringBuilder errorText = new StringBuilder();
             try {
-                using (PdfDocument outDocument = new PdfDocument(new PdfReader(dest))) {
-                    using (PdfDocument cmpDocument = new PdfDocument(new PdfReader(cmp))) {
+                using (PdfDocument outDocument = new PdfDocument(new PdfReader(dest, destProperties))) {
+                    using (PdfDocument cmpDocument = new PdfDocument(new PdfReader(cmp, cmpProperties))) {
                         SignatureUtil outSigUtil = new SignatureUtil(outDocument);
                         SignatureUtil cmpSigUtil = new SignatureUtil(cmpDocument);
                         if (!Enumerable.SequenceEqual(cmpSigUtil.GetSignatureNames(), outSigUtil.GetSignatureNames())) {
@@ -164,6 +165,10 @@ namespace iText.Signatures.Testutils {
             else {
                 return null;
             }
+        }
+
+        public static String CompareSignatures(String dest, String cmp) {
+            return CompareSignatures(dest, cmp, new ReaderProperties(), new ReaderProperties());
         }
 
         private static void WriteToFile(String path, String content) {
