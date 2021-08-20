@@ -27,8 +27,8 @@ namespace iText.Commons.Utils {
     public class DateTimeUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetCurrentTest() {
-            DateTime date = new DateTime();
-            NUnit.Framework.Assert.AreEqual(date.ToString(), DateTimeUtil.GetCurrentUtcTime().ToString());
+            DateTime date = DateTime.Now;
+            NUnit.Framework.Assert.AreEqual(date.ToString(), DateTimeUtil.GetCurrentTime().ToString());
         }
 
         [NUnit.Framework.Test]
