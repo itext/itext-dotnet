@@ -24,7 +24,6 @@ using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -34,7 +33,7 @@ using iText.Test.Signutils;
 namespace iText.Signatures.Sign {
     public class EncryptedSigningTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign" + "/EncryptedSigningTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/EncryptedSigningTest/";
 
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/signatures/sign/EncryptedSigningTest/";
@@ -69,16 +68,14 @@ namespace iText.Signatures.Sign {
             PdfReader reader = new PdfReader(srcFile, new ReaderProperties().SetPassword(ownerPass));
             PdfSigner signer = new PdfSigner(reader, new FileStream(outPdf, FileMode.Create), new StampingProperties()
                 .UseAppendMode());
-            // Creating the appearance
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason("Test1").SetLocation("TestCity"
-                );
             signer.SetFieldName(fieldName);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
-            //TODO DEVSIX-5637 Improve SignaturesCompareTool#compareSignatures to check encrypted pdf
-            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.BAD_USER_PASSWORD, SignaturesCompareTool.CompareSignatures
-                (outPdf, cmpPdf));
+            //Password to open out and cmp files are the same
+            ReaderProperties properties = new ReaderProperties().SetPassword(ownerPass);
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf, properties, properties
+                ));
         }
 
         [NUnit.Framework.Test]
@@ -92,9 +89,10 @@ namespace iText.Signatures.Sign {
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
-            //TODO DEVSIX-5637 Improve SignaturesCompareTool#compareSignatures to check encrypted pdf
-            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CERTIFICATE_IS_NOT_PROVIDED_DOCUMENT_IS_ENCRYPTED_WITH_PUBLIC_KEY_CERTIFICATE
-                , SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+            ReaderProperties properties = new ReaderProperties().SetPublicKeySecurityParams(chain[0], pk);
+            //Public key to open out and cmp files are the same
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf, properties, properties
+                ));
         }
     }
 }
