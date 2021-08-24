@@ -229,6 +229,12 @@ namespace iText.Signatures {
         }
 
         /// <summary>Get Layer 0 of the appearance.</summary>
+        /// <remarks>
+        /// Get Layer 0 of the appearance.
+        /// <para />
+        /// The size of the layer is determined by the rectangle set via
+        /// <see cref="SetPageRect(iText.Kernel.Geom.Rectangle)"/>
+        /// </remarks>
         /// <returns>layer 0</returns>
         public virtual PdfFormXObject GetLayer0() {
             if (n0 == null) {
@@ -239,6 +245,12 @@ namespace iText.Signatures {
         }
 
         /// <summary>Get Layer 2 of the appearance.</summary>
+        /// <remarks>
+        /// Get Layer 2 of the appearance.
+        /// <para />
+        /// The size of the layer is determined by the rectangle set via
+        /// <see cref="SetPageRect(iText.Kernel.Geom.Rectangle)"/>
+        /// </remarks>
         /// <returns>layer 2</returns>
         public virtual PdfFormXObject GetLayer2() {
             if (n2 == null) {
@@ -510,33 +522,9 @@ namespace iText.Signatures {
                     }
                 }
                 Rectangle rotatedRect = RotateRectangle(this.rect, document.GetPage(page).GetRotation());
-                String text;
-                if (layer2Text == null) {
-                    StringBuilder buf = new StringBuilder();
-                    buf.Append("Digitally signed by ");
-                    String name = null;
-                    CertificateInfo.X500Name x500name = CertificateInfo.GetSubjectFields((X509Certificate)signCertificate);
-                    if (x500name != null) {
-                        name = x500name.GetField("CN");
-                        if (name == null) {
-                            name = x500name.GetField("E");
-                        }
-                    }
-                    if (name == null) {
-                        name = "";
-                    }
-                    buf.Append(name).Append('\n');
-                    buf.Append("Date: ").Append(SignUtils.DateToString(signDate));
-                    if (reason != null) {
-                        buf.Append('\n').Append(reasonCaption).Append(reason);
-                    }
-                    if (location != null) {
-                        buf.Append('\n').Append(locationCaption).Append(location);
-                    }
-                    text = buf.ToString();
-                }
-                else {
-                    text = layer2Text;
+                String text = layer2Text;
+                if (null == text) {
+                    text = GenerateLayer2Text();
                 }
                 if (image != null) {
                     if (imageScale == 0) {
@@ -771,6 +759,31 @@ namespace iText.Signatures {
                 }
             }
             paragraph.SetFontSize(lFontSize);
+        }
+
+        internal virtual String GenerateLayer2Text() {
+            StringBuilder buf = new StringBuilder();
+            buf.Append("Digitally signed by ");
+            String name = null;
+            CertificateInfo.X500Name x500name = CertificateInfo.GetSubjectFields((X509Certificate)signCertificate);
+            if (x500name != null) {
+                name = x500name.GetField("CN");
+                if (name == null) {
+                    name = x500name.GetField("E");
+                }
+            }
+            if (name == null) {
+                name = "";
+            }
+            buf.Append(name).Append('\n');
+            buf.Append("Date: ").Append(SignUtils.DateToString(signDate));
+            if (reason != null) {
+                buf.Append('\n').Append(reasonCaption).Append(reason);
+            }
+            if (location != null) {
+                buf.Append('\n').Append(locationCaption).Append(location);
+            }
+            return buf.ToString();
         }
 
         /// <summary>Signature rendering modes.</summary>

@@ -52,6 +52,8 @@ using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Signatures;
 using iText.Test;
@@ -256,6 +258,76 @@ namespace iText.Signatures.Sign {
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => signer.SignDetached(pks, chain, null, null
                 , null, 0, PdfSigner.CryptoStandard.CADES));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Layer0Test() {
+            String src = SOURCE_FOLDER + "simpleDocument.pdf";
+            String fileName = "layer0Test.pdf";
+            String dest = DESTINATION_FOLDER + fileName;
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
+            // Creating the appearance
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+            signer.SetFieldName("Signature1");
+            Rectangle rect = new Rectangle(0, 600, 100, 100);
+            appearance.SetPageRect(rect);
+            // If we do not set any text, the text will be generated and the current date will be used,
+            // which we want to avoid because of visual comparison
+            appearance.SetLayer2Text("Hello");
+            PdfFormXObject layer0 = appearance.GetLayer0();
+            // Draw red rectangle with blue border
+            new PdfCanvas(layer0, signer.GetDocument()).SaveState().SetFillColor(ColorConstants.RED).SetStrokeColor(ColorConstants
+                .BLUE).Rectangle(0, 0, 100, 100).FillStroke().RestoreState();
+            // Get the same layer once more, so that the logic when n0 is not null is triggered
+            layer0 = appearance.GetLayer0();
+            // Draw yellow circle with black border
+            new PdfCanvas(layer0, signer.GetDocument()).SaveState().SetFillColor(ColorConstants.YELLOW).SetStrokeColor
+                (ColorConstants.BLACK).Circle(50, 50, 50).FillStroke().RestoreState();
+            // Signing
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Layer2Test() {
+            String src = SOURCE_FOLDER + "simpleDocument.pdf";
+            String fileName = "layer2Test.pdf";
+            String dest = DESTINATION_FOLDER + fileName;
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
+            // Creating the appearance
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+            signer.SetFieldName("Signature1");
+            Rectangle rect = new Rectangle(0, 600, 100, 100);
+            appearance.SetPageRect(rect);
+            PdfFormXObject layer2 = appearance.GetLayer2();
+            // Draw red rectangle with blue border
+            new PdfCanvas(layer2, signer.GetDocument()).SaveState().SetFillColor(ColorConstants.RED).SetStrokeColor(ColorConstants
+                .BLUE).Rectangle(0, 0, 100, 100).FillStroke().RestoreState();
+            // Get the same layer once more, so that the logic when n0 is not null is triggered
+            layer2 = appearance.GetLayer2();
+            // Draw yellow circle with black border
+            new PdfCanvas(layer2, signer.GetDocument()).SaveState().SetFillColor(ColorConstants.YELLOW).SetStrokeColor
+                (ColorConstants.BLACK).Circle(50, 50, 50).FillStroke().RestoreState();
+            // Signing
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
+        }
+
+        private static void CompareSignatureAppearances(String outPdf, String cmpPdf) {
+            ITextTest.PrintOutCmpPdfNameAndDir(outPdf, cmpPdf);
+            using (PdfDocument outDoc = new PdfDocument(new PdfReader(outPdf))) {
+                using (PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpPdf))) {
+                    PdfDictionary outN = (PdfDictionary)PdfAcroForm.GetAcroForm(outDoc, false).GetField("Signature1").GetPdfObject
+                        ().GetAsDictionary(PdfName.AP).Get(PdfName.N).GetIndirectReference().GetRefersTo();
+                    PdfDictionary cmpN = (PdfDictionary)PdfAcroForm.GetAcroForm(cmpDoc, false).GetField("Signature1").GetPdfObject
+                        ().GetAsDictionary(PdfName.AP).Get(PdfName.N).GetIndirectReference().GetRefersTo();
+                    NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(outN, cmpN));
+                }
+            }
         }
 
         private void TestSignatureOnRotatedPage(int pageNum, PdfSignatureAppearance.RenderingMode renderingMode, StringBuilder
