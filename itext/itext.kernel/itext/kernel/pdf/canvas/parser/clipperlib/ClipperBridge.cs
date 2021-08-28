@@ -85,7 +85,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// our floating point numbers into fixed point numbers by multiplying by
         /// this coefficient. Vary it to adjust the preciseness of the calculations.
         /// </remarks>
-        public static double floatMultiplier = Math.Pow(10, 14);
+        public static double floatMultiplier = Math
+                //TODO DEVSIX-5770 make this constant a single non-static configuration
+                .Pow(10, 14);
 
         private ClipperBridge() {
         }
