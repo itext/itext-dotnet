@@ -138,15 +138,28 @@ namespace iText.Commons.Actions.Producer {
         }
 
         private class ProductRepresentation {
+            private static readonly IDictionary<String, String> PRODUCT_USAGE_TYPE_TO_HUMAN_READABLE_FORM;
+
             private readonly String productName;
 
             private readonly String productUsageType;
 
             private readonly String version;
 
+            static ProductRepresentation() {
+                IDictionary<String, String> productUsageTypeMapping = new Dictionary<String, String>();
+                productUsageTypeMapping.Put("nonproduction", "non-production");
+                PRODUCT_USAGE_TYPE_TO_HUMAN_READABLE_FORM = JavaCollectionsUtil.UnmodifiableMap(productUsageTypeMapping);
+            }
+
             public ProductRepresentation(ConfirmedEventWrapper @event) {
                 productName = @event.GetEvent().GetProductData().GetPublicProductName();
-                productUsageType = @event.GetProductUsageType();
+                if (PRODUCT_USAGE_TYPE_TO_HUMAN_READABLE_FORM.ContainsKey(@event.GetProductUsageType())) {
+                    productUsageType = PRODUCT_USAGE_TYPE_TO_HUMAN_READABLE_FORM.Get(@event.GetProductUsageType());
+                }
+                else {
+                    productUsageType = @event.GetProductUsageType();
+                }
                 version = @event.GetEvent().GetProductData().GetVersion();
             }
 

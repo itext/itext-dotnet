@@ -117,6 +117,15 @@ namespace iText.Commons.Actions.Producer {
         }
 
         [NUnit.Framework.Test]
+        public virtual void HumanReadableNormalizationTest() {
+            ProductData productData = new ProductData("public-name", "name", "1.0.0", 2020, 2021);
+            ConfirmedEventWrapper @event = new ConfirmedEventWrapper(new ITextTestEvent(new SequenceId(), productData, 
+                null, "testing"), "nonproduction", "iText product");
+            String result = populator.Populate(JavaUtil.ArraysAsList(@event), "'module:'P #V (T)");
+            NUnit.Framework.Assert.AreEqual("module:public-name #1.0.0 (non-production)", result);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void InvalidLetterFormatTest() {
             NUnit.Framework.Assert.That(() =>  {
                 populator.Populate(GetEvents(1), "PVTX");
