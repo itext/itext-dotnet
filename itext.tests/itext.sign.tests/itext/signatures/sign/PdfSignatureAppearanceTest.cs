@@ -291,6 +291,74 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
+        public virtual void Layer0WithImageTest() {
+            String src = SOURCE_FOLDER + "simpleDocument.pdf";
+            String fileName = "layer0WithImageTest.pdf";
+            String dest = DESTINATION_FOLDER + fileName;
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
+            // Creating the appearance
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+            appearance.SetImage(ImageDataFactory.Create(SOURCE_FOLDER + "itext.png"));
+            signer.SetFieldName("Signature1");
+            Rectangle rect = new Rectangle(0, 600, 100, 100);
+            appearance.SetPageRect(rect);
+            // If we do not set any text, the text will be generated and the current date will be used,
+            // which we want to avoid because of visual comparison
+            appearance.SetLayer2Text("Hello");
+            // Signing
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Layer0WithImageAndPositiveImageScaleTest() {
+            String src = SOURCE_FOLDER + "simpleDocument.pdf";
+            String fileName = "layer0WithImageAndPositiveImageScaleTest.pdf";
+            String dest = DESTINATION_FOLDER + fileName;
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
+            // Creating the appearance
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+            appearance.SetImage(ImageDataFactory.Create(SOURCE_FOLDER + "itext.png"));
+            appearance.SetImageScale(1.5F);
+            signer.SetFieldName("Signature1");
+            Rectangle rect = new Rectangle(0, 600, 100, 100);
+            appearance.SetPageRect(rect);
+            // If we do not set any text, the text will be generated and the current date will be used,
+            // which we want to avoid because of visual comparison
+            appearance.SetLayer2Text("Hello");
+            // Signing
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Layer0WithImageAndNegativeImageScaleTest() {
+            String src = SOURCE_FOLDER + "simpleDocument.pdf";
+            String fileName = "layer0WithImageAndNegativeImageScale.pdf";
+            String dest = DESTINATION_FOLDER + fileName;
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
+            // Creating the appearance
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+            appearance.SetImage(ImageDataFactory.Create(SOURCE_FOLDER + "itext.png"));
+            appearance.SetImageScale(-15F);
+            signer.SetFieldName("Signature1");
+            Rectangle rect = new Rectangle(0, 600, 100, 100);
+            appearance.SetPageRect(rect);
+            // If we do not set any text, the text will be generated and the current date will be used,
+            // which we want to avoid because of visual comparison
+            appearance.SetLayer2Text("Hello");
+            // Signing
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Layer2Test() {
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             String fileName = "layer2Test.pdf";
