@@ -144,6 +144,13 @@ namespace iText.Commons.Actions.Contexts {
             RegisterGenericContextForProducts(namespaces, JavaCollectionsUtil.EmptyList<String>(), products);
         }
 
+        // TODO DEVSIX-5311 consider renaming to be in sync with renamed registerGenericContextForProducts
+        internal virtual void UnregisterGenericContextForProducts(ICollection<String> namespaces) {
+            foreach (String @namespace in namespaces) {
+                UnregisterContext(@namespace);
+            }
+        }
+
         private IContext GetNamespaceMapping(String @namespace) {
             if (@namespace != null) {
                 return contextMappings.Get(@namespace);
@@ -169,6 +176,10 @@ namespace iText.Commons.Actions.Contexts {
 
         private void RegisterContext(String @namespace, IContext context) {
             contextMappings.Put(@namespace, context);
+        }
+
+        private void UnregisterContext(String @namespace) {
+            contextMappings.JRemove(@namespace);
         }
 
         private class LengthComparator : IComparer<String> {

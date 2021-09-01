@@ -37,5 +37,9 @@ namespace iText.Commons.Actions.Contexts {
              products) {
             ContextManager.GetInstance().RegisterGenericContextForProducts(namespaces, products);
         }
+
+        protected internal virtual void UnregisterGenericContext(ICollection<String> namespaces) {
+            ContextManager.GetInstance().UnregisterGenericContextForProducts(namespaces);
+        }
     }
 }

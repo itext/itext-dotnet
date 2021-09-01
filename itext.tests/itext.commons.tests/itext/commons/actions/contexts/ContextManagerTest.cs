@@ -75,8 +75,19 @@ namespace iText.Commons.Actions.Contexts {
         [NUnit.Framework.Test]
         public virtual void NotRegisteredNamespaceTest() {
             String notRegisteredNamespace = "com.hello.world";
-            NUnit.Framework.Assert.AreEqual(null, ContextManager.GetInstance().GetRecognisedNamespace(notRegisteredNamespace
+            NUnit.Framework.Assert.IsNull(ContextManager.GetInstance().GetRecognisedNamespace(notRegisteredNamespace));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnregisterNamespaceTest() {
+            String testNamespace = "com.hello.world";
+            ContextManager manager = new ContextManager();
+            NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespace));
+            manager.RegisterGenericContextForProducts(JavaUtil.ArraysAsList(testNamespace), JavaUtil.ArraysAsList("myProduct"
                 ));
+            NUnit.Framework.Assert.AreEqual(testNamespace, manager.GetRecognisedNamespace(testNamespace + ".MyClass"));
+            manager.UnregisterGenericContextForProducts(JavaUtil.ArraysAsList(testNamespace));
+            NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespace));
         }
 
         [NUnit.Framework.Test]
