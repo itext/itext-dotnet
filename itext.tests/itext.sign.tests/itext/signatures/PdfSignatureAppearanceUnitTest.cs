@@ -24,9 +24,12 @@ using System;
 using System.IO;
 using Org.BouncyCastle.X509;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
 using iText.Test;
 using iText.Test.Signutils;
 
@@ -180,6 +183,21 @@ namespace iText.Signatures {
             Color newColor = ColorConstants.RED;
             signatureAppearance.SetLayer2FontColor(newColor);
             NUnit.Framework.Assert.AreEqual(newColor, signatureAppearance.GetLayer2FontColor());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetAppearanceInvisibleTest() {
+            PdfSignatureAppearance appearance = new PdfSignatureAppearance(null, new Rectangle(0, 100), 1);
+            PdfFormXObject xObject = appearance.GetAppearance();
+            NUnit.Framework.Assert.IsTrue(new Rectangle(0, 0).EqualsWithEpsilon(xObject.GetBBox().ToRectangle()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetSignDateTest() {
+            PdfSignatureAppearance appearance = new PdfSignatureAppearance(null, new Rectangle(100, 100), 1);
+            DateTime current = DateTimeUtil.GetCurrentTime();
+            appearance.SetSignDate(current);
+            NUnit.Framework.Assert.AreEqual(current, appearance.GetSignDate());
         }
 
         private static PdfSignatureAppearance GetTestSignatureAppearance() {
