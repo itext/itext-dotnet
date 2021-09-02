@@ -44,6 +44,10 @@ using System;
 using System.IO;
 
 namespace iText.IO.Util {
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that its API and functionality may be changed in future.
+    /// </summary>
     public class StandardOutUtil {
         internal static void RestoreStandardOut(Object stream) {
             System.Console.SetOut((TextWriter) stream);
