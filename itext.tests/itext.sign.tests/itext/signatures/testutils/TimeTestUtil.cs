@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -41,36 +40,16 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+namespace iText.Signatures.Testutils {
+    public class TimeTestUtil {
+        private const int MILLIS_IN_DAY = 86_400_000;
 
-using System;
-
-namespace iText.IO.Util {
-    /// <summary>
-    /// This file is a helper class for internal usage only.
-    /// Be aware that its API and functionality may be changed in future.
-    /// </summary>
-    public static class DateTimeUtil {
-        public static double GetUtcMillisFromEpoch(DateTime? dateTime) {
-            if (dateTime == null) {
-                dateTime = DateTime.Now;
-            }
-            return ((DateTime) dateTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
-        }
-
-        public static DateTime GetCalendar(DateTime dateTime) { 
-            return dateTime;
-        }
-
-        public static DateTime GetCurrentTime() {
-            return DateTime.Now;
-        }
-
-        public static DateTime GetCurrentUtcTime() {
-            return DateTime.UtcNow;
-        }
-
-        public static DateTime ParseSimpleFormat(String date, String format) {
-            return DateTime.ParseExact(date, format, null);
+        // This method is used to trim the hours of the day, so that two dates could be compared
+        // with a day accuracy. We need such a method since in .NET the signing DateTime extracted
+        // from the signature depends on the current time zone set on the machine.
+        // TODO DEVSIX-5812 Remove the method alongside the utility class once the issue is fixed
+        public static long GetFullDaysMillis(double millis) {
+            return (long)millis / MILLIS_IN_DAY;
         }
     }
 }

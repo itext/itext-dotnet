@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -41,36 +40,16 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-
 using System;
+using iText.Test;
 
 namespace iText.IO.Util {
-    /// <summary>
-    /// This file is a helper class for internal usage only.
-    /// Be aware that its API and functionality may be changed in future.
-    /// </summary>
-    public static class DateTimeUtil {
-        public static double GetUtcMillisFromEpoch(DateTime? dateTime) {
-            if (dateTime == null) {
-                dateTime = DateTime.Now;
-            }
-            return ((DateTime) dateTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
-        }
-
-        public static DateTime GetCalendar(DateTime dateTime) { 
-            return dateTime;
-        }
-
-        public static DateTime GetCurrentTime() {
-            return DateTime.Now;
-        }
-
-        public static DateTime GetCurrentUtcTime() {
-            return DateTime.UtcNow;
-        }
-
-        public static DateTime ParseSimpleFormat(String date, String format) {
-            return DateTime.ParseExact(date, format, null);
+    public class DateTimeUtilTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void WrappingDateWithCalendarTest() {
+            DateTime currentDate = DateTimeUtil.GetCurrentUtcTime();
+            DateTime currentCalendar = DateTimeUtil.GetCalendar(currentDate);
+            NUnit.Framework.Assert.AreEqual(0, currentCalendar.ToUniversalTime().CompareTo(currentDate));
         }
     }
 }
