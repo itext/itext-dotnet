@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto;
@@ -52,6 +52,7 @@ using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.Forms;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -62,7 +63,7 @@ namespace iText.Signatures {
     /// <summary>Add verification according to PAdES-LTV (part 4).</summary>
     /// <author>Paulo Soares</author>
     public class LtvVerification {
-        private ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.LtvVerification));
+        private ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.LtvVerification));
 
         private PdfDocument document;
 
@@ -137,14 +138,14 @@ namespace iText.Signatures {
                 throw new InvalidOperationException(SignExceptionMessageConstant.VERIFICATION_ALREADY_OUTPUT);
             }
             PdfPKCS7 pk = sgnUtil.ReadSignatureData(signatureName);
-            LOGGER.Info("Adding verification for " + signatureName);
+            LOGGER.LogInformation("Adding verification for " + signatureName);
             X509Certificate[] xc = pk.GetCertificates();
             X509Certificate cert;
             X509Certificate signingCert = pk.GetSigningCertificate();
             LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
             for (int k = 0; k < xc.Length; ++k) {
                 cert = (X509Certificate)xc[k];
-                LOGGER.Info("Certificate: " + cert.SubjectDN);
+                LOGGER.LogInformation("Certificate: " + cert.SubjectDN);
                 if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert)) {
                     continue;
                 }
@@ -153,7 +154,7 @@ namespace iText.Signatures {
                     ocspEnc = ocsp.GetEncoded(cert, GetParent(cert, xc), null);
                     if (ocspEnc != null) {
                         vd.ocsps.Add(BuildOCSPResponse(ocspEnc));
-                        LOGGER.Info("OCSP added");
+                        LOGGER.LogInformation("OCSP added");
                     }
                 }
                 if (crl != null && (level == LtvVerification.Level.CRL || level == LtvVerification.Level.OCSP_CRL || (level
@@ -170,7 +171,7 @@ namespace iText.Signatures {
                             }
                             if (!dup) {
                                 vd.crls.Add(cim);
-                                LOGGER.Info("CRL added");
+                                LOGGER.LogInformation("CRL added");
                             }
                         }
                     }

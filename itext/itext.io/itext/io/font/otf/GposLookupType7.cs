@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font.Otf.Lookuptype7;
 using iText.IO.Util;
 
@@ -52,7 +53,8 @@ namespace iText.IO.Font.Otf {
     /// Contextual Positioning Subtables
     /// </summary>
     public class GposLookupType7 : OpenTableLookup {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.IO.Font.Otf.GposLookupType7));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Font.Otf.GposLookupType7
+            ));
 
         protected internal IList<ContextualTable<ContextualPositionRule>> subTables;
 
@@ -108,7 +110,7 @@ namespace iText.IO.Font.Otf {
 
                 case 1:
                 case 3: {
-                    LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.GPOS_LOOKUP_SUBTABLE_FORMAT_NOT_SUPPORTED
+                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.GPOS_LOOKUP_SUBTABLE_FORMAT_NOT_SUPPORTED
                         , substFormat, 7));
                     break;
                 }

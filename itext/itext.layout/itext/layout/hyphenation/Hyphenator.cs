@@ -17,7 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 
 namespace iText.Layout.Hyphenation {
@@ -34,7 +35,7 @@ namespace iText.Layout.Hyphenation {
         private static readonly Object staticLock = new Object();
 
         /// <summary>Logging instance.</summary>
-        private static ILog log = LogManager.GetLogger(typeof(iText.Layout.Hyphenation.Hyphenator));
+        private static ILogger log = ITextLogManager.GetLogger(typeof(iText.Layout.Hyphenation.Hyphenator));
 
         private static HyphenationTreeCache hTreeCache;
 
@@ -132,9 +133,9 @@ namespace iText.Layout.Hyphenation {
                 String llKey = HyphenationTreeCache.ConstructLlccKey(lang, null);
                 if (!cache.IsMissing(llKey)) {
                     hTree = GetHyphenationTree2(lang, null, hyphPathNames);
-                    if (hTree != null && log.IsDebugEnabled) {
-                        log.Debug("Couldn't find hyphenation pattern " + "for lang=\"" + lang + "\",country=\"" + country + "\"." 
-                            + " Using general language pattern " + "for lang=\"" + lang + "\" instead.");
+                    if (hTree != null && log.IsEnabled(LogLevel.Debug)) {
+                        log.LogDebug("Couldn't find hyphenation pattern " + "for lang=\"" + lang + "\",country=\"" + country + "\"."
+                             + " Using general language pattern " + "for lang=\"" + lang + "\" instead.");
                     }
                     if (hTree == null) {
                         // no fallback; register as missing
@@ -149,7 +150,7 @@ namespace iText.Layout.Hyphenation {
             if (hTree == null) {
                 // (lang,country) and (lang) tried; register as missing
                 cache.NoteMissing(llccKey);
-                log.Error("Couldn't find hyphenation pattern " + "for lang=\"" + lang + "\"" + (country != null && !country
+                log.LogError("Couldn't find hyphenation pattern " + "for lang=\"" + lang + "\"" + (country != null && !country
                     .Equals("none") ? ",country=\"" + country + "\"" : "") + ".");
             }
             return hTree;
@@ -211,8 +212,8 @@ namespace iText.Layout.Hyphenation {
                 return GetHyphenationTree(fis, name);
             }
             catch (System.IO.IOException ioe) {
-                if (log.IsDebugEnabled) {
-                    log.Debug("I/O problem while trying to load " + name + ": " + ioe.Message);
+                if (log.IsEnabled(LogLevel.Debug)) {
+                    log.LogDebug("I/O problem while trying to load " + name + ": " + ioe.Message);
                 }
                 return null;
             }
@@ -232,7 +233,7 @@ namespace iText.Layout.Hyphenation {
                 hTree.LoadPatterns(@in, name);
             }
             catch (HyphenationException ex) {
-                log.Error("Can't load user patterns from XML file " + name + ": " + ex.Message);
+                log.LogError("Can't load user patterns from XML file " + name + ": " + ex.Message);
                 return null;
             }
             finally {

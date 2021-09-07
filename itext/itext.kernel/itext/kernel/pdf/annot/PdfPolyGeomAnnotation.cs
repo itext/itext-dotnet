@@ -41,7 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -85,7 +86,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(PdfArray vertices) {
             if (GetPdfObject().ContainsKey(PdfName.Path)) {
-                LogManager.GetLogger(GetType()).Warn(iText.IO.LogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED
+                ITextLogManager.GetLogger(GetType()).LogWarning(iText.IO.LogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED
                     );
             }
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, vertices);
@@ -93,7 +94,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(float[] vertices) {
             if (GetPdfObject().ContainsKey(PdfName.Path)) {
-                LogManager.GetLogger(GetType()).Warn(iText.IO.LogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED
+                ITextLogManager.GetLogger(GetType()).LogWarning(iText.IO.LogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED
                     );
             }
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, new PdfArray(vertices));
@@ -152,7 +153,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetPath(PdfArray path) {
             if (GetPdfObject().ContainsKey(PdfName.Vertices)) {
-                LogManager.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.IF_PATH_IS_SET_VERTICES_SHALL_NOT_BE_PRESENT
+                ITextLogManager.GetLogger(GetType()).LogError(iText.IO.LogMessageConstant.IF_PATH_IS_SET_VERTICES_SHALL_NOT_BE_PRESENT
                     );
             }
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Path, path);

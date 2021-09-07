@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -195,8 +196,8 @@ namespace iText.Layout {
         /// <param name="page">the page, on which this canvas will be rendered.</param>
         public virtual void EnableAutoTagging(PdfPage page) {
             if (IsCanvasOfPage() && this.page != page) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Canvas));
-                logger.Error(iText.IO.LogMessageConstant.PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Canvas));
+                logger.LogError(iText.IO.LogMessageConstant.PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED);
             }
             this.page = page;
         }

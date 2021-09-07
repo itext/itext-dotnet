@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
@@ -72,8 +73,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     resolvedProps.AddAll(shorthandResolver.ResolveShorthand(prop.GetExpression()));
                 }
                 else {
-                    ILog logger = LogManager.GetLogger(typeof(BorderShorthandResolver));
-                    logger.Error(MessageFormatUtil.Format("Cannot find a shorthand resolver for the \"{0}\" property. " + "Expected border-width, border-style or border-color properties."
+                    ILogger logger = ITextLogManager.GetLogger(typeof(BorderShorthandResolver));
+                    logger.LogError(MessageFormatUtil.Format("Cannot find a shorthand resolver for the \"{0}\" property. " + "Expected border-width, border-style or border-color properties."
                         , prop.GetProperty()));
                 }
             }

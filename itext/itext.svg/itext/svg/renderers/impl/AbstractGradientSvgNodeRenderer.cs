@@ -22,7 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Colors.Gradients;
@@ -63,7 +64,7 @@ namespace iText.Svg.Renderers.Impl {
             }
             else {
                 if (gradientUnits != null && !SvgConstants.Values.OBJECT_BOUNDING_BOX.Equals(gradientUnits)) {
-                    LogManager.GetLogger(this.GetType()).Warn(MessageFormatUtil.Format(SvgLogMessageConstant.GRADIENT_INVALID_GRADIENT_UNITS_LOG
+                    ITextLogManager.GetLogger(this.GetType()).LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.GRADIENT_INVALID_GRADIENT_UNITS_LOG
                         , gradientUnits));
                 }
             }
@@ -133,7 +134,7 @@ namespace iText.Svg.Renderers.Impl {
                 }
 
                 default: {
-                    LogManager.GetLogger(this.GetType()).Warn(MessageFormatUtil.Format(SvgLogMessageConstant.GRADIENT_INVALID_SPREAD_METHOD_LOG
+                    ITextLogManager.GetLogger(this.GetType()).LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.GRADIENT_INVALID_SPREAD_METHOD_LOG
                         , spreadMethodValue));
                     return GradientSpreadMethod.PAD;
                 }

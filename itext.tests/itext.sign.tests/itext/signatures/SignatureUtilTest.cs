@@ -42,14 +42,18 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
+using iText.Signatures.Testutils;
 using iText.Test;
 
 namespace iText.Signatures {
     public class SignatureUtilTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/SignatureUtilTest/";
+
+        private const double EPS = 0.001;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -167,8 +171,15 @@ namespace iText.Signatures {
             String inPdf = sourceFolder + "simpleSignature.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
             SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
-            NUnit.Framework.Assert.IsNotNull(signatureUtil.ReadSignatureData("Signature1"));
-            NUnit.Framework.Assert.IsTrue(signatureUtil.ReadSignatureData("Signature1") is PdfPKCS7);
+            PdfPKCS7 pkcs7 = signatureUtil.ReadSignatureData("Signature1");
+            NUnit.Framework.Assert.IsNotNull(pkcs7);
+            NUnit.Framework.Assert.AreEqual("Test 1", pkcs7.GetReason());
+            NUnit.Framework.Assert.IsNull(pkcs7.GetSignName());
+            NUnit.Framework.Assert.AreEqual("TestCity", pkcs7.GetLocation());
+            // The number corresponds to 18 May, 2021 17:23:59.
+            double expectedMillis = (double)1621347839000L;
+            NUnit.Framework.Assert.AreEqual(TimeTestUtil.GetFullDaysMillis(expectedMillis), TimeTestUtil.GetFullDaysMillis
+                (DateTimeUtil.GetUtcMillisFromEpoch(pkcs7.GetSignDate())), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -176,8 +187,16 @@ namespace iText.Signatures {
             String inPdf = sourceFolder + "adbe.x509.rsa_sha1_signature.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
             SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
-            NUnit.Framework.Assert.IsNotNull(signatureUtil.ReadSignatureData("Signature1"));
-            NUnit.Framework.Assert.IsTrue(signatureUtil.ReadSignatureData("Signature1") is PdfPKCS7);
+            PdfPKCS7 pkcs7 = signatureUtil.ReadSignatureData("Signature1");
+            NUnit.Framework.Assert.IsNotNull(pkcs7);
+            NUnit.Framework.Assert.IsNotNull(pkcs7);
+            NUnit.Framework.Assert.AreEqual("Test", pkcs7.GetReason());
+            NUnit.Framework.Assert.IsNull(pkcs7.GetSignName());
+            NUnit.Framework.Assert.AreEqual("TestCity", pkcs7.GetLocation());
+            // The number corresponds to 18 May, 2021 11:28:40.
+            double expectedMillis = (double)1621326520000L;
+            NUnit.Framework.Assert.AreEqual(TimeTestUtil.GetFullDaysMillis(expectedMillis), TimeTestUtil.GetFullDaysMillis
+                (DateTimeUtil.GetUtcMillisFromEpoch(pkcs7.GetSignDate())), EPS);
         }
 
         [NUnit.Framework.Test]

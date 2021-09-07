@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Util;
 using iText.Kernel.Font;
@@ -146,8 +147,8 @@ namespace iText.Layout.Font {
                 return false;
             }
             if (fontProgram is Type3Font) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Font.FontSet));
-                logger.Error(iText.IO.LogMessageConstant.TYPE3_FONT_CANNOT_BE_ADDED);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Font.FontSet));
+                logger.LogError(iText.IO.LogMessageConstant.TYPE3_FONT_CANNOT_BE_ADDED);
                 return false;
             }
             FontInfo fi = FontInfo.Create(fontProgram, encoding, alias, unicodeRange);

@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font.Constants;
 using iText.IO.Util;
 
@@ -54,7 +55,8 @@ namespace iText.IO.Font {
     /// without having to enter a path as parameter.
     /// </summary>
     internal class FontRegisterProvider {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.IO.Font.FontRegisterProvider));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Font.FontRegisterProvider
+            ));
 
         /// <summary>This is a map of postscriptfontnames of fonts and the path of their font file.</summary>
         private readonly IDictionary<String, String> fontNames = new Dictionary<String, String>();
@@ -272,7 +274,7 @@ namespace iText.IO.Font {
                         }
                     }
                 }
-                LOGGER.Trace(MessageFormatUtil.Format("Registered {0}", path));
+                LOGGER.LogTrace(MessageFormatUtil.Format("Registered {0}", path));
             }
             catch (System.IO.IOException e) {
                 throw new iText.IO.IOException(e);
@@ -304,7 +306,7 @@ namespace iText.IO.Font {
         /// <param name="scanSubdirectories">recursively scan subdirectories if <c>true</c></param>
         /// <returns>the number of fonts registered</returns>
         internal virtual int RegisterFontDirectory(String dir, bool scanSubdirectories) {
-            LOGGER.Debug(MessageFormatUtil.Format("Registering directory {0}, looking for fonts", dir));
+            LOGGER.LogDebug(MessageFormatUtil.Format("Registering directory {0}, looking for fonts", dir));
             int count = 0;
             try {
                 String[] files = FileUtil.ListFilesInDirectory(dir, scanSubdirectories);

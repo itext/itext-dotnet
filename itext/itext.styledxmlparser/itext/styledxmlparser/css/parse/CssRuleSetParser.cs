@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Selector;
@@ -52,7 +53,7 @@ namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Utilities class to parse CSS rule sets.</summary>
     public sealed class CssRuleSetParser {
         /// <summary>The logger.</summary>
-        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Parse.CssRuleSetParser
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Parse.CssRuleSetParser
             ));
 
         /// <summary>
@@ -142,8 +143,8 @@ namespace iText.StyledXmlParser.Css.Parse {
                     ruleSets.Add(new CssRuleSet(new CssSelector(currentSelectorStr), declarations));
                 }
                 catch (Exception exc) {
-                    logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.ERROR_PARSING_CSS_SELECTOR, 
-                        currentSelectorStr), exc);
+                    logger.LogError(exc, MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.ERROR_PARSING_CSS_SELECTOR
+                        , currentSelectorStr));
                     //if any separated selector has errors, all others become invalid.
                     //in this case we just clear map, it is the easies way to support this.
                     declarations.Clear();
@@ -167,7 +168,7 @@ namespace iText.StyledXmlParser.Css.Parse {
             String[] result = new String[2];
             int position = property.IndexOf(":", StringComparison.Ordinal);
             if (position < 0) {
-                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                     , property.Trim()));
                 return null;
             }

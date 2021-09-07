@@ -83,7 +83,7 @@ namespace iText.Signatures {
         private String location;
 
         /// <summary>Holds value of property signDate.</summary>
-        private DateTime signDate;
+        private DateTime signDate = (DateTime)TimestampConstants.UNDEFINED_TIMESTAMP_DATE;
 
         // Constructors for creating new signatures
         /// <summary>Assembles all the elements needed to create a signature, except for the data.</summary>

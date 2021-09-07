@@ -44,7 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -228,13 +229,13 @@ namespace iText.Kernel.Pdf {
                 return;
             }
             if (reference.CheckState(PdfObject.MUST_BE_FLUSHED)) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
-                logger.Error(iText.IO.LogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
+                logger.LogError(iText.IO.LogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE);
                 return;
             }
             if (reference.CheckState(PdfObject.FLUSHED)) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
-                logger.Error(iText.IO.LogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
+                logger.LogError(iText.IO.LogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE);
                 return;
             }
             reference.SetState(PdfObject.FREE).SetState(PdfObject.MODIFIED);

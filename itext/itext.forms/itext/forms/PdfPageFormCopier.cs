@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using iText.Forms.Fields;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -71,7 +72,7 @@ namespace iText.Forms {
 
         private PdfDocument documentTo;
 
-        private static ILog logger = LogManager.GetLogger(typeof(PdfPageFormCopier));
+        private static ILogger logger = ITextLogManager.GetLogger(typeof(PdfPageFormCopier));
 
         public virtual void Copy(PdfPage fromPage, PdfPage toPage) {
             if (documentFrom != fromPage.GetDocument()) {
@@ -108,8 +109,8 @@ namespace iText.Forms {
         private PdfFormField MakeFormField(PdfObject fieldDict) {
             PdfFormField field = PdfFormField.MakeFormField(fieldDict, documentTo);
             if (field == null) {
-                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, fieldDict.GetIndirectReference
-                    ()));
+                logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, fieldDict.
+                    GetIndirectReference()));
             }
             return field;
         }
@@ -210,7 +211,7 @@ namespace iText.Forms {
             if (null != newField.GetFieldName()) {
                 fullFieldName = newField.GetFieldName().ToUnicodeString();
             }
-            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, fullFieldName
+            logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, fullFieldName
                 ));
             PdfFormField existingField = formTo.GetField(fullFieldName);
             if (existingField.IsFlushed()) {

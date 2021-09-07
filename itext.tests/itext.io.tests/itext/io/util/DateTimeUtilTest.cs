@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -42,39 +41,15 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
-using Common.Logging;
-using Common.Logging.Simple;
+using iText.Test;
 
-namespace iText.Test {
-    public class ITextMemoryAddapter : CapturingLoggerFactoryAdapter {
-        private HashSet<String> expectedTemplates = new HashSet<string>();
-        
-        public void SetExpectedTemplates(HashSet<String> expectedTemplates) {
-            this.expectedTemplates.Clear();
-            this.expectedTemplates.UnionWith(expectedTemplates);
-        }
-        public void Clear() {
-            base.Clear();
-            expectedTemplates.Clear();
-        }
-        
-        public override void AddEvent(CapturingLoggerEvent le) {
-            Console.WriteLine(le.Source.Name + ": " + le.RenderedMessage);
-            if (le.Level >= LogLevel.Warn || IsExpectedMessage(le.RenderedMessage)) {
-                base.AddEvent(le);
-            }
-        }
-        
-        private bool IsExpectedMessage(String message) {
-            if (message != null) {
-                foreach (var template in expectedTemplates) {
-                    if (LogListenerHelper.EqualsMessageByTemplate(message, template)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+namespace iText.IO.Util {
+    public class DateTimeUtilTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void WrappingDateWithCalendarTest() {
+            DateTime currentDate = DateTimeUtil.GetCurrentUtcTime();
+            DateTime currentCalendar = DateTimeUtil.GetCalendar(currentDate);
+            NUnit.Framework.Assert.AreEqual(0, currentCalendar.ToUniversalTime().CompareTo(currentDate));
         }
     }
 }

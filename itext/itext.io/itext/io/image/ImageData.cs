@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Colors;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -318,13 +319,13 @@ namespace iText.IO.Image {
         /// <summary>Checks if image can be inline</summary>
         /// <returns>if the image can be inline</returns>
         public virtual bool CanImageBeInline() {
-            ILog logger = LogManager.GetLogger(typeof(iText.IO.Image.ImageData));
+            ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Image.ImageData));
             if (imageSize > 4096) {
-                logger.Warn(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
+                logger.LogWarning(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
                 return false;
             }
             if (imageMask != null) {
-                logger.Warn(iText.IO.LogMessageConstant.IMAGE_HAS_MASK);
+                logger.LogWarning(iText.IO.LogMessageConstant.IMAGE_HAS_MASK);
                 return false;
             }
             return true;

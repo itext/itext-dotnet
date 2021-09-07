@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -442,8 +443,8 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 if (!catalog.ContainsKey(PdfName.Lang)) {
-                    ILog logger = LogManager.GetLogger(typeof(PdfAChecker));
-                    logger.Warn(PdfAConformanceLogMessageConstant.CATALOG_SHOULD_CONTAIN_LANG_ENTRY);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
+                    logger.LogWarning(PdfAConformanceLogMessageConstant.CATALOG_SHOULD_CONTAIN_LANG_ENTRY);
                 }
             }
         }

@@ -7,7 +7,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup>
     <OutputType>library</OutputType>

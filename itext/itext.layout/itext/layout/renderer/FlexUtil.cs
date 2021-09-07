@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Geom;
 using iText.Layout.Exceptions;
 using iText.Layout.Layout;
@@ -58,7 +59,7 @@ namespace iText.Layout.Renderer {
 
         private const float FLEX_SHRINK_INITIAL_VALUE = 1F;
 
-        private static ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.FlexUtil));
+        private static ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.FlexUtil));
 
         private FlexUtil() {
         }
@@ -364,7 +365,7 @@ namespace iText.Layout.Renderer {
                         info.hypotheticalCrossSize = info.GetInnerCrossSize(result.GetOccupiedArea().GetBBox().GetHeight());
                     }
                     else {
-                        logger.Error(iText.IO.LogMessageConstant.FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL);
+                        logger.LogError(iText.IO.LogMessageConstant.FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL);
                         info.hypotheticalCrossSize = 0;
                     }
                 }

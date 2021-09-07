@@ -46,7 +46,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Util;
 using iText.Kernel.Counter.Event;
@@ -1142,7 +1143,7 @@ namespace iText.Kernel.Utils {
             catch (ArgumentException e) {
                 compareExecIsOk = false;
                 imageMagickInitError = e.Message;
-                LogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(e.Message);
+                ITextLogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).LogWarning(e.Message);
             }
             IList<int> diffPages = new List<int>();
             String differentPagesFail = null;
@@ -1491,7 +1492,7 @@ namespace iText.Kernel.Utils {
                     PdfNumber outLeftover = FlattenNumTree(outNumTree, null, outItems);
                     PdfNumber cmpLeftover = FlattenNumTree(cmpNumTree, null, cmpItems);
                     if (outLeftover != null) {
-                        LogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
+                        ITextLogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).LogWarning(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
                             );
                         if (cmpLeftover == null) {
                             if (compareResult != null && currentPath != null) {
@@ -1501,7 +1502,7 @@ namespace iText.Kernel.Utils {
                         }
                     }
                     if (cmpLeftover != null) {
-                        LogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
+                        ITextLogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).LogWarning(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
                             );
                         if (outLeftover == null) {
                             if (compareResult != null && currentPath != null) {

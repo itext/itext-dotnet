@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
@@ -172,8 +173,8 @@ namespace iText.Kernel.Font {
                             fontStream.Put(PdfName.Subtype, new PdfName("Type1C"));
                         }
                         catch (PdfException e) {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
-                            logger.Error(e.Message);
+                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
+                            logger.LogError(e.Message);
                             fontStream = null;
                         }
                     }
@@ -202,8 +203,8 @@ namespace iText.Kernel.Font {
                             fontStream = GetPdfFontStream(fontStreamBytes, new int[] { fontStreamBytes.Length });
                         }
                         catch (PdfException e) {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
-                            logger.Error(e.Message);
+                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
+                            logger.LogError(e.Message);
                             fontStream = null;
                         }
                     }

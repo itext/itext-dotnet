@@ -21,7 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
@@ -141,7 +142,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         private static bool MarkerWidthHeightAreCorrect(MarkerSvgNodeRenderer namedObject) {
-            ILog log = LogManager.GetLogger(typeof(MarkerSvgNodeRenderer));
+            ILogger log = ITextLogManager.GetLogger(typeof(MarkerSvgNodeRenderer));
             String markerWidth = namedObject.GetAttribute(SvgConstants.Attributes.MARKER_WIDTH);
             // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
             if (markerWidth == null) {
@@ -156,12 +157,12 @@ namespace iText.Svg.Renderers.Impl {
             if (markerWidth != null) {
                 float absoluteMarkerWidthValue = CssDimensionParsingUtils.ParseAbsoluteLength(markerWidth);
                 if (absoluteMarkerWidthValue == 0) {
-                    log.Warn(SvgLogMessageConstant.MARKER_WIDTH_IS_ZERO_VALUE);
+                    log.LogWarning(SvgLogMessageConstant.MARKER_WIDTH_IS_ZERO_VALUE);
                     isCorrect = false;
                 }
                 else {
                     if (absoluteMarkerWidthValue < 0) {
-                        log.Warn(SvgLogMessageConstant.MARKER_WIDTH_IS_NEGATIVE_VALUE);
+                        log.LogWarning(SvgLogMessageConstant.MARKER_WIDTH_IS_NEGATIVE_VALUE);
                         isCorrect = false;
                     }
                 }
@@ -169,12 +170,12 @@ namespace iText.Svg.Renderers.Impl {
             if (markerHeight != null) {
                 float absoluteMarkerHeightValue = CssDimensionParsingUtils.ParseAbsoluteLength(markerHeight);
                 if (absoluteMarkerHeightValue == 0) {
-                    log.Warn(SvgLogMessageConstant.MARKER_HEIGHT_IS_ZERO_VALUE);
+                    log.LogWarning(SvgLogMessageConstant.MARKER_HEIGHT_IS_ZERO_VALUE);
                     isCorrect = false;
                 }
                 else {
                     if (absoluteMarkerHeightValue < 0) {
-                        log.Warn(SvgLogMessageConstant.MARKER_HEIGHT_IS_NEGATIVE_VALUE);
+                        log.LogWarning(SvgLogMessageConstant.MARKER_HEIGHT_IS_NEGATIVE_VALUE);
                         isCorrect = false;
                     }
                 }

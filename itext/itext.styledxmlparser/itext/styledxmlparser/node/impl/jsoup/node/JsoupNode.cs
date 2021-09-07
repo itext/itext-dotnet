@@ -41,7 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.StyledXmlParser.Node;
 
@@ -89,8 +90,8 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
                 ((iText.StyledXmlParser.Node.Impl.Jsoup.Node.JsoupNode)node).parentNode = this;
             }
             else {
-                ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Node.Impl.Jsoup.Node.JsoupNode));
-                logger.Error(iText.StyledXmlParser.LogMessageConstant.ERROR_ADDING_CHILD_NODE);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Node.Impl.Jsoup.Node.JsoupNode));
+                logger.LogError(iText.StyledXmlParser.LogMessageConstant.ERROR_ADDING_CHILD_NODE);
             }
         }
 

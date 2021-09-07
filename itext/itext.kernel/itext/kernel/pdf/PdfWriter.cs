@@ -44,7 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -259,8 +260,8 @@ namespace iText.Kernel.Pdf {
                 obj = PdfNull.PDF_NULL;
             }
             if (CheckTypeOfPdfDictionary(obj, PdfName.Catalog)) {
-                ILog logger = LogManager.GetLogger(typeof(PdfReader));
-                logger.Warn(iText.IO.LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN);
+                ILogger logger = ITextLogManager.GetLogger(typeof(PdfReader));
+                logger.LogWarning(iText.IO.LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN);
                 obj = PdfNull.PDF_NULL;
             }
             PdfIndirectReference indirectReference = obj.GetIndirectReference();

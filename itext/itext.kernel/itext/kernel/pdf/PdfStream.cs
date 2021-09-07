@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
@@ -278,8 +279,8 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_OPERATE_WITH_FLUSHED_PDF_STREAM);
             }
             if (inputStream != null) {
-                LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfStream)).Warn("PdfStream was created by InputStream." + "getBytes() always returns null in this case"
-                    );
+                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfStream)).LogWarning("PdfStream was created by InputStream."
+                     + "getBytes() always returns null in this case");
                 return null;
             }
             byte[] bytes = null;

@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 
 namespace iText.IO.Source {
     /// <summary>
@@ -206,13 +207,13 @@ namespace iText.IO.Source {
                         firstThrownIOExc = ex;
                     }
                     else {
-                        ILog logger = LogManager.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
-                        logger.Error(iText.IO.LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
+                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
+                        logger.LogError(ex, iText.IO.LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED);
                     }
                 }
                 catch (Exception ex) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
-                    logger.Error(iText.IO.LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
+                    logger.LogError(ex, iText.IO.LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED);
                 }
             }
             if (firstThrownIOExc != null) {

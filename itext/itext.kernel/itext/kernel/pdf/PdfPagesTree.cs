@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
@@ -71,7 +72,7 @@ namespace iText.Kernel.Pdf {
 
         private PdfPages root;
 
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPagesTree));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPagesTree));
 
         /// <summary>Creates a PdfPages tree.</summary>
         /// <param name="pdfCatalog">
@@ -132,12 +133,12 @@ namespace iText.Kernel.Pdf {
                         pdfPage.parentPages = parents[parentIndex];
                     }
                     else {
-                        LOGGER.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                        LOGGER.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
                             , pageNum + 1));
                     }
                 }
                 else {
-                    LOGGER.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
                         , pageNum + 1));
                 }
                 pages[pageNum] = pdfPage;
@@ -277,7 +278,7 @@ namespace iText.Kernel.Pdf {
         public virtual PdfPage RemovePage(int pageNum) {
             PdfPage pdfPage = GetPage(pageNum);
             if (pdfPage.IsFlushed()) {
-                LOGGER.Warn(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
+                LOGGER.LogWarning(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
             }
             if (InternalRemovePage(--pageNum)) {
                 return pdfPage;
@@ -303,7 +304,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         protected internal virtual PdfObject GenerateTree() {
             if (pageRefs.Count == 0) {
-                LOGGER.Info(iText.IO.LogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES);
+                LOGGER.LogInformation(iText.IO.LogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES);
                 document.AddNewPage();
             }
             if (generated) {

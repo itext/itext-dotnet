@@ -57,6 +57,10 @@ namespace iText.IO.Util {
             return ((DateTime) dateTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
 
+        public static DateTime GetCalendar(DateTime dateTime) { 
+            return dateTime;
+        }
+
         public static DateTime GetCurrentTime() {
             return DateTime.Now;
         }

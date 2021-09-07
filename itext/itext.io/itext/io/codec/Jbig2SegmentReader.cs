@@ -44,7 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Source;
 
 namespace iText.IO.Codec {
@@ -474,8 +475,8 @@ namespace iText.IO.Codec {
                 os.Dispose();
             }
             catch (System.IO.IOException e) {
-                ILog logger = LogManager.GetLogger(typeof(Jbig2SegmentReader));
-                logger.Debug(e.Message);
+                ILogger logger = ITextLogManager.GetLogger(typeof(Jbig2SegmentReader));
+                logger.LogDebug(e.Message);
             }
             return streamBytes;
         }

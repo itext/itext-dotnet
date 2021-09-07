@@ -45,8 +45,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Versions.Attributes;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
@@ -55,7 +56,8 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public sealed class TypographyUtils {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TypographyUtils));
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TypographyUtils
+            ));
 
         private const String TYPOGRAPHY_PACKAGE = "iText.Typography.";
 
@@ -118,7 +120,7 @@ namespace iText.Layout.Renderer {
                 }
                 catch (Exception e) {
                     supportedScripts = null;
-                    logger.Error(e.Message);
+                    logger.LogError(e.Message);
                 }
             }
             moduleFound = supportedScripts != null;
@@ -142,7 +144,7 @@ namespace iText.Layout.Renderer {
         internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, UnicodeScript? script, Object
              typographyConfig) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+                logger.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             }
             else {
                 CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_OTF_SCRIPT, new Type[] { typeof(TrueTypeFont), typeof(GlyphLine
@@ -152,7 +154,7 @@ namespace iText.Layout.Renderer {
 
         internal static void ApplyKerning(FontProgram fontProgram, GlyphLine text) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+                logger.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             }
             else {
                 CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_KERNING, new Type[] { typeof(FontProgram), typeof(GlyphLine)
@@ -163,7 +165,7 @@ namespace iText.Layout.Renderer {
         //            Shaper.applyKerning(fontProgram, text);
         internal static byte[] GetBidiLevels(BaseDirection? baseDirection, int[] unicodeIds) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+                logger.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             }
             else {
                 byte direction;
@@ -207,7 +209,7 @@ namespace iText.Layout.Renderer {
         internal static int[] ReorderLine(IList<LineRenderer.RendererGlyph> line, byte[] lineLevels, byte[] levels
             ) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+                logger.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             }
             else {
                 if (levels == null) {
@@ -246,7 +248,7 @@ namespace iText.Layout.Renderer {
 
         internal static ICollection<UnicodeScript> GetSupportedScripts() {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+                logger.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
                 return null;
             }
             else {
@@ -256,7 +258,7 @@ namespace iText.Layout.Renderer {
 
         internal static ICollection<UnicodeScript> GetSupportedScripts(Object typographyConfig) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+                logger.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
                 return null;
             }
             else {
@@ -299,14 +301,14 @@ namespace iText.Layout.Renderer {
                 return method.Invoke(target, args);
             }
             catch (MissingMethodException) {
-                logger.Warn(MessageFormatUtil.Format("Cannot find method {0} for class {1}", methodName, className));
+                logger.LogWarning(MessageFormatUtil.Format("Cannot find method {0} for class {1}", methodName, className));
             }
             catch (TypeLoadException) {
-                logger.Warn(MessageFormatUtil.Format("Cannot find class {0}", className));
+                logger.LogWarning(MessageFormatUtil.Format("Cannot find class {0}", className));
             }
             catch (ArgumentException e) {
-                logger.Warn(MessageFormatUtil.Format("Illegal arguments passed to {0}#{1} method call: {2}", className, methodName
-                    , e.Message));
+                logger.LogWarning(MessageFormatUtil.Format("Illegal arguments passed to {0}#{1} method call: {2}", className
+                    , methodName, e.Message));
             }
             catch (Exception e) {
                 // Converting checked exceptions to unchecked RuntimeException (java-specific comment).
@@ -329,10 +331,10 @@ namespace iText.Layout.Renderer {
                 return constructor.Invoke(args);
             }
             catch (MissingMethodException) {
-                logger.Warn(MessageFormatUtil.Format("Cannot find constructor for class {0}", className));
+                logger.LogWarning(MessageFormatUtil.Format("Cannot find constructor for class {0}", className));
             }
             catch (TypeLoadException) {
-                logger.Warn(MessageFormatUtil.Format("Cannot find class {0}", className));
+                logger.LogWarning(MessageFormatUtil.Format("Cannot find class {0}", className));
             }
             catch (Exception exc) {
                 // Converting checked exceptions to unchecked RuntimeException (java-specific comment).
@@ -422,8 +424,8 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     if (type == null && fileLoadExceptionMessage != null) {
-                        ILog logger = LogManager.GetLogger(typeof(TypographyUtils));
-                        logger.Error(fileLoadExceptionMessage);
+                        ILogger logger = ITextLogManager.GetLogger(typeof(TypographyUtils));
+                        logger.LogError(fileLoadExceptionMessage);
                     }
                 }
             }

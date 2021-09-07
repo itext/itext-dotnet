@@ -44,12 +44,13 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
+using iText.IO;
 using iText.IO.Util;
 
 namespace iText.Signatures {
@@ -59,7 +60,7 @@ namespace iText.Signatures {
     /// </summary>
     public class OCSPVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.OCSPVerifier
+        protected internal static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.OCSPVerifier
             ));
 
         protected internal const String id_kp_OCSPSigning = "1.3.6.1.5.5.7.3.9";
@@ -110,7 +111,7 @@ namespace iText.Signatures {
                 }
             }
             // show how many valid OCSP responses were found
-            LOGGER.Info("Valid OCSPs found: " + validOCSPsFound);
+            LOGGER.LogInformation("Valid OCSPs found: " + validOCSPsFound);
             if (validOCSPsFound > 0) {
                 result.Add(new VerificationOK(signCert, this.GetType(), "Valid OCSPs Found: " + validOCSPsFound + (online ? 
                     " (online)" : "")));
@@ -151,7 +152,7 @@ namespace iText.Signatures {
                         issuerCert = signCert;
                     }
                     if (!SignUtils.CheckIfIssuersMatch(resp[i].GetCertID(), issuerCert)) {
-                        LOGGER.Info("OCSP: Issuers doesn't match.");
+                        LOGGER.LogInformation("OCSP: Issuers doesn't match.");
                         continue;
                     }
                 }
@@ -164,15 +165,18 @@ namespace iText.Signatures {
                 // check if the OCSP response was valid at the time of signing
                 if (resp[i].NextUpdate == null) {
                     DateTime nextUpdate = SignUtils.Add180Sec(resp[i].ThisUpdate);
-                    LOGGER.Info(MessageFormatUtil.Format("No 'next update' for OCSP Response; assuming {0}", nextUpdate));
+                    LOGGER.LogInformation(MessageFormatUtil.Format("No 'next update' for OCSP Response; assuming {0}", nextUpdate
+                        ));
                     if (signDate.After(nextUpdate)) {
-                        LOGGER.Info(MessageFormatUtil.Format("OCSP no longer valid: {0} after {1}", signDate, nextUpdate));
+                        LOGGER.LogInformation(MessageFormatUtil.Format("OCSP no longer valid: {0} after {1}", signDate, nextUpdate
+                            ));
                         continue;
                     }
                 }
                 else {
                     if (signDate.After(resp[i].NextUpdate)) {
-                        LOGGER.Info(MessageFormatUtil.Format("OCSP no longer valid: {0} after {1}", signDate, resp[i].NextUpdate));
+                        LOGGER.LogInformation(MessageFormatUtil.Format("OCSP no longer valid: {0} after {1}", signDate, resp[i].NextUpdate
+                            ));
                         continue;
                     }
                 }
@@ -259,8 +263,8 @@ namespace iText.Signatures {
                             }
                         }
                         else {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Signatures.OCSPVerifier));
-                            logger.Error("Authorized OCSP responder certificate revocation status cannot be checked");
+                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Signatures.OCSPVerifier));
+                            logger.LogError("Authorized OCSP responder certificate revocation status cannot be checked");
                         }
                     }
                 }

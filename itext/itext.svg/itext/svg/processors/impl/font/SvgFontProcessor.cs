@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font;
 using iText.IO.Util;
 using iText.Layout.Font;
@@ -76,8 +77,8 @@ namespace iText.Svg.Processors.Impl.Font {
                         }
                     }
                     if (!findSupportedSrc) {
-                        LogManager.GetLogger(typeof(iText.Svg.Processors.Impl.Font.SvgFontProcessor)).Error(MessageFormatUtil.Format
-                            (iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_FONT, fontFace));
+                        ITextLogManager.GetLogger(typeof(iText.Svg.Processors.Impl.Font.SvgFontProcessor)).LogError(MessageFormatUtil
+                            .Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_FONT, fontFace));
                     }
                 }
             }

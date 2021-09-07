@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -387,7 +388,7 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (IsNotFittingWidth(layoutContext.GetArea()) && !IsNotFittingHeight(layoutContext.GetArea())) {
-                        LogManager.GetLogger(GetType()).Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA
+                        ITextLogManager.GetLogger(GetType()).LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA
                             , "It fits by height so it will be forced placed"));
                     }
                     else {
@@ -415,10 +416,10 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Draw(DrawContext drawContext) {
-            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
+            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
             if (occupiedArea == null) {
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
-                    "Drawing won't be performed."));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                    , "Drawing won't be performed."));
                 return;
             }
             bool isTagged = drawContext.IsTaggingEnabled();
@@ -462,7 +463,7 @@ namespace iText.Layout.Renderer {
                     // TODO DEVSIX-1655 This check is necessary because, in some cases, our renderer's hierarchy may contain
                     //  a renderer from the different page that was already flushed
                     if (page.IsFlushed()) {
-                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
                             , "area clipping"));
                         clippedArea = new Rectangle(-INF / 2, -INF / 2, INF, INF);
                     }
@@ -504,8 +505,8 @@ namespace iText.Layout.Renderer {
             float? rotationAngle = this.GetProperty<float?>(Property.ROTATION_ANGLE);
             if (rotationAngle != null) {
                 if (!HasOwnProperty(Property.ROTATION_INITIAL_WIDTH) || !HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
                         , GetType().Name));
                 }
                 else {
@@ -708,8 +709,8 @@ namespace iText.Layout.Renderer {
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
                 if (!HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
                         , GetType().Name));
                 }
                 else {

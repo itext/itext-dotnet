@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -66,7 +67,7 @@ namespace iText.Svg.Renderers.Impl {
 
         private readonly IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
 
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
 
         /// <summary>
         /// Method that will set properties to be inherited by this branch renderer's
@@ -382,8 +383,8 @@ namespace iText.Svg.Renderers.Impl {
             }
             // the value for viewBox should be 4 numbers according to the viewBox documentation
             if (values.Length != VIEWBOX_VALUES_NUMBER) {
-                if (LOGGER.IsWarnEnabled) {
-                    LOGGER.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_VALUE_MUST_BE_FOUR_NUMBERS, viewBoxValues
+                if (LOGGER.IsEnabled(LogLevel.Warning)) {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_VALUE_MUST_BE_FOUR_NUMBERS, viewBoxValues
                         ));
                 }
                 return new float[] {  };
@@ -391,9 +392,9 @@ namespace iText.Svg.Renderers.Impl {
             // case when viewBox width or height is negative value is an error and
             // invalidates the ‘viewBox’ attribute (according to the viewBox documentation)
             if (values[2] < 0 || values[3] < 0) {
-                if (LOGGER.IsWarnEnabled) {
-                    LOGGER.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_AND_HEIGHT_CANNOT_BE_NEGATIVE, viewBoxValues
-                        ));
+                if (LOGGER.IsEnabled(LogLevel.Warning)) {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_AND_HEIGHT_CANNOT_BE_NEGATIVE
+                        , viewBoxValues));
                 }
                 return new float[] {  };
             }
@@ -458,8 +459,8 @@ namespace iText.Svg.Renderers.Impl {
                 // Case with zero determiner (see PDF 32000-1:2008 - 8.3.4 Transformation Matrices - NOTE 3)
                 // for example with a, b, c, d in cm equal to 0
                 stream.Put(PdfName.BBox, new PdfArray(new Rectangle(0, 0, 0, 0)));
-                ILog logger = LogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
-                logger.Warn(SvgLogMessageConstant.UNABLE_TO_GET_INVERSE_MATRIX_DUE_TO_ZERO_DETERMINANT);
+                ILogger logger = ITextLogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
+                logger.LogWarning(SvgLogMessageConstant.UNABLE_TO_GET_INVERSE_MATRIX_DUE_TO_ZERO_DETERMINANT);
                 return;
             }
             Point[] points = context.GetRootViewPort().ToPointsArray();

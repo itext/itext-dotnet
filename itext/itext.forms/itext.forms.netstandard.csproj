@@ -6,7 +6,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup>
     <OutputType>library</OutputType>
@@ -19,14 +19,14 @@
     <AssemblyName>itext.forms</AssemblyName>
     <RootNamespace />
   </PropertyGroup>
-<ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+<ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Common.Logging" Version="3.4.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itext.io\itext.io.netstandard.csproj" />

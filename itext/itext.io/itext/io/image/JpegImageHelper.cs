@@ -44,13 +44,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Colors;
 using iText.IO.Util;
 
 namespace iText.IO.Image {
     internal class JpegImageHelper {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(JpegImageHelper));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(JpegImageHelper));
 
         /// <summary>This is a type of marker.</summary>
         private const int NOT_A_MARKER = -1;
@@ -151,7 +152,7 @@ namespace iText.IO.Image {
                     image.SetProfile(IccProfile.GetInstance(ficc, image.GetColorEncodingComponentsNumber()));
                 }
                 catch (Exception e) {
-                    LOGGER.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED
+                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED
                         , e.GetType().Name, e.Message));
                 }
             }
@@ -323,7 +324,7 @@ namespace iText.IO.Image {
                                 dx = (unitsx == 2 ? (int)(dx * 2.54f + 0.5f) : dx);
                                 // make sure this is consistent with JFIF data
                                 if (image.GetDpiX() != 0 && image.GetDpiX() != dx) {
-                                    LOGGER.Debug(MessageFormatUtil.Format("Inconsistent metadata (dpiX: {0} vs {1})", image.GetDpiX(), dx));
+                                    LOGGER.LogDebug(MessageFormatUtil.Format("Inconsistent metadata (dpiX: {0} vs {1})", image.GetDpiX(), dx));
                                 }
                                 else {
                                     image.SetDpi(dx, image.GetDpiY());
@@ -333,7 +334,7 @@ namespace iText.IO.Image {
                                 dy = (unitsy == 2 ? (int)(dy * 2.54f + 0.5f) : dy);
                                 // make sure this is consistent with JFIF data
                                 if (image.GetDpiY() != 0 && image.GetDpiY() != dy) {
-                                    LOGGER.Debug(MessageFormatUtil.Format("Inconsistent metadata (dpiY: {0} vs {1})", image.GetDpiY(), dy));
+                                    LOGGER.LogDebug(MessageFormatUtil.Format("Inconsistent metadata (dpiY: {0} vs {1})", image.GetDpiY(), dy));
                                 }
                                 else {
                                     image.SetDpi(image.GetDpiX(), dx);

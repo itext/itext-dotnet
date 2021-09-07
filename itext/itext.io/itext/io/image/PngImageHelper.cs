@@ -45,7 +45,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Colors;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -193,7 +194,7 @@ namespace iText.IO.Image {
             int colorType = png.image.GetColorType();
             if (png.iccProfile != null && png.iccProfile.GetNumComponents() != GetExpectedNumberOfColorComponents(png)
                 ) {
-                LogManager.GetLogger(typeof(PngImageHelper)).Warn(iText.IO.LogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
+                ITextLogManager.GetLogger(typeof(PngImageHelper)).LogWarning(iText.IO.LogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
                     );
             }
             try {

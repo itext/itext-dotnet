@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -877,8 +878,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                         throw;
                     }
                     else {
-                        ILog logger = LogManager.GetLogger(typeof(PdfCanvasProcessor));
-                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX
+                        ILogger logger = ITextLogManager.GetLogger(typeof(PdfCanvasProcessor));
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX
                             ));
                     }
                 }
@@ -973,9 +974,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                     }
                 }
             }
-            ILog logger = LogManager.GetLogger(typeof(PdfCanvasProcessor));
-            logger.Warn(MessageFormatUtil.Format(KernelLogMessageConstant.UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE, JavaUtil.ArraysToString
-                ((Object[])operands.ToArray()), pdfColorSpace.GetPdfObject()));
+            ILogger logger = ITextLogManager.GetLogger(typeof(PdfCanvasProcessor));
+            logger.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE
+                , JavaUtil.ArraysToString((Object[])operands.ToArray()), pdfColorSpace.GetPdfObject()));
             return null;
         }
 
@@ -1177,15 +1178,15 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 PdfName dictionaryName = ((PdfName)operand1);
                 PdfDictionary properties = resources.GetResource(PdfName.Properties);
                 if (null == properties) {
-                    ILog logger = LogManager.GetLogger(typeof(PdfCanvasProcessor));
-                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
+                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfCanvasProcessor));
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
                         , PdfName.Properties));
                     return null;
                 }
                 PdfDictionary propertiesDictionary = properties.GetAsDictionary(dictionaryName);
                 if (null == propertiesDictionary) {
-                    ILog logger = LogManager.GetLogger(typeof(PdfCanvasProcessor));
-                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
+                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfCanvasProcessor));
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
                         , dictionaryName));
                     return null;
                 }

@@ -43,12 +43,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Tsp;
+using iText.IO;
 using iText.IO.Codec;
 using iText.IO.Util;
 using iText.Kernel;
@@ -74,7 +75,8 @@ namespace iText.Signatures {
         public const int DEFAULTTOKENSIZE = 4096;
 
         /// <summary>The Logger instance.</summary>
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Signatures.TSAClientBouncyCastle));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.TSAClientBouncyCastle
+            ));
 
         /// <summary>URL of the Time Stamp Authority</summary>
         protected internal String tsaURL;
@@ -209,7 +211,7 @@ namespace iText.Signatures {
             TimeStampTokenInfo tsTokenInfo = tsToken.TimeStampInfo;
             // to view details
             byte[] encoded = tsToken.GetEncoded();
-            LOGGER.Info("Timestamp generated: " + tsTokenInfo.GenTime);
+            LOGGER.LogInformation("Timestamp generated: " + tsTokenInfo.GenTime);
             if (tsaInfo != null) {
                 tsaInfo.InspectTimeStampTokenInfo(tsTokenInfo);
             }

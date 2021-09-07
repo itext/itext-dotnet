@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Font.Cmap;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -105,7 +106,7 @@ namespace iText.IO.Font {
                 this.codeSpaceRanges = cid2Code.GetCodeSpaceRanges();
             }
             catch (System.IO.IOException) {
-                LogManager.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.FAILED_TO_PARSE_ENCODING_STREAM);
+                ITextLogManager.GetLogger(GetType()).LogError(iText.IO.LogMessageConstant.FAILED_TO_PARSE_ENCODING_STREAM);
             }
         }
 

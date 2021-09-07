@@ -44,7 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
@@ -174,9 +175,9 @@ namespace iText.Kernel.Pdf.Tagging {
             PdfDictionary roleMap = GetRoleMap();
             PdfObject prevVal = roleMap.Put(ConvertRoleToPdfName(fromRole), ConvertRoleToPdfName(toRole));
             if (prevVal != null && prevVal is PdfName) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
-                logger.Warn(String.Format(iText.IO.LogMessageConstant.MAPPING_IN_STRUCT_ROOT_OVERWRITTEN, fromRole, prevVal
-                    , toRole));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
+                logger.LogWarning(String.Format(iText.IO.LogMessageConstant.MAPPING_IN_STRUCT_ROOT_OVERWRITTEN, fromRole, 
+                    prevVal, toRole));
             }
             if (roleMap.IsIndirect()) {
                 roleMap.SetModified();
@@ -494,8 +495,8 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
-                logger.Error(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
+                logger.LogError(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             if (null != description) {
                 GetDocument().GetCatalog().GetNameTree(PdfName.EmbeddedFiles).AddEntry(description, fs.GetPdfObject());

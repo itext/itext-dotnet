@@ -42,7 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
@@ -233,8 +234,8 @@ namespace iText.Layout.Renderer {
                 borders[j] = borderToAdd;
             }
             else {
-                ILog logger = LogManager.GetLogger(typeof(TableRenderer));
-                logger.Warn(iText.IO.LogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
+                ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
+                logger.LogWarning(iText.IO.LogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
             }
             return true;
         }

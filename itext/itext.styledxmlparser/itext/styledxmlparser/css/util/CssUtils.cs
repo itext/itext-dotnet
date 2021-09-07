@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.StyledXmlParser;
@@ -56,8 +57,8 @@ namespace iText.StyledXmlParser.Css.Util {
     public class CssUtils {
         private const float EPSILON = 1e-6f;
 
-        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssUtils)
-            );
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssUtils
+            ));
 
         private const int QUANTITY_OF_PARAMS_WITH_FALLBACK_OR_TYPE = 2;
 

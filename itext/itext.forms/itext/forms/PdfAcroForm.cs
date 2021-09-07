@@ -43,10 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
 using iText.Forms.Xfa;
+using iText.IO;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Geom;
@@ -126,7 +127,7 @@ namespace iText.Forms {
 
         private XfaForm xfaForm;
 
-        private static ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
+        private static ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
 
         /// <summary>Creates a PdfAcroForm as a wrapper of a dictionary.</summary>
         /// <remarks>
@@ -832,7 +833,7 @@ namespace iText.Forms {
                     }
                 }
                 else {
-                    logger.Error(iText.IO.LogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
+                    logger.LogError(iText.IO.LogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
                 }
                 PdfArray fFields = GetFields();
                 fFields.Remove(fieldObject);
@@ -1004,7 +1005,7 @@ namespace iText.Forms {
         protected internal virtual PdfArray GetFields() {
             PdfArray fields = GetPdfObject().GetAsArray(PdfName.Fields);
             if (fields == null) {
-                logger.Warn(iText.IO.LogMessageConstant.NO_FIELDS_IN_ACROFORM);
+                logger.LogWarning(iText.IO.LogMessageConstant.NO_FIELDS_IN_ACROFORM);
                 fields = new PdfArray();
                 GetPdfObject().Put(PdfName.Fields, fields);
             }
@@ -1020,12 +1021,12 @@ namespace iText.Forms {
             int index = 1;
             foreach (PdfObject field in array) {
                 if (field.IsFlushed()) {
-                    logger.Info(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED);
+                    logger.LogInformation(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED);
                     continue;
                 }
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);
                 if (formField == null) {
-                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, field.GetIndirectReference
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, field.GetIndirectReference
                         () == null ? field : field.GetIndirectReference()));
                     continue;
                 }

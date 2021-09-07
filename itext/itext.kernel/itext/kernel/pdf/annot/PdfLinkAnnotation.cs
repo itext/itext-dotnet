@@ -41,7 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
@@ -61,7 +62,7 @@ namespace iText.Kernel.Pdf.Annot {
     /// to be performed. See also ISO-320001 12.5.6.5, "Link Annotations".
     /// </remarks>
     public class PdfLinkAnnotation : PdfAnnotation {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfLinkAnnotation
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfLinkAnnotation
             ));
 
         /// <summary>Highlight modes.</summary>
@@ -156,11 +157,11 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetDestination(PdfObject destination) {
             if (GetPdfObject().ContainsKey(PdfName.A)) {
                 GetPdfObject().Remove(PdfName.A);
-                logger.Warn(iText.IO.LogMessageConstant.DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET);
+                logger.LogWarning(iText.IO.LogMessageConstant.DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET);
             }
             if (destination.IsArray() && ((PdfArray)destination).Get(0).IsNumber()) {
-                LogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfLinkAnnotation)).Warn(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE
-                    );
+                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfLinkAnnotation)).LogWarning(iText.IO.LogMessageConstant
+                    .INVALID_DESTINATION_TYPE);
             }
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.Dest, destination);
         }
@@ -260,7 +261,7 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetAction(PdfAction action) {
             if (GetDestinationObject() != null) {
                 RemoveDestination();
-                logger.Warn(iText.IO.LogMessageConstant.ACTION_WAS_SET_TO_LINK_ANNOTATION_WITH_DESTINATION);
+                logger.LogWarning(iText.IO.LogMessageConstant.ACTION_WAS_SET_TO_LINK_ANNOTATION_WITH_DESTINATION);
             }
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.A, action.GetPdfObject());
         }

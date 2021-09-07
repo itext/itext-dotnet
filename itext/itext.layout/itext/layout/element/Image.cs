@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.IO.Image;
 using iText.Kernel;
 using iText.Kernel.Pdf.Canvas.Wmf;
@@ -463,8 +464,8 @@ namespace iText.Layout.Element {
             if (HasProperty(Property.AUTO_SCALE_WIDTH) && HasProperty(Property.AUTO_SCALE_HEIGHT) && autoScale && ((bool
                 )this.GetProperty<bool?>(Property.AUTO_SCALE_WIDTH) || (bool)this.GetProperty<bool?>(Property.AUTO_SCALE_HEIGHT
                 ))) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Element.Image));
-                logger.Warn(iText.IO.LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Element.Image));
+                logger.LogWarning(iText.IO.LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
             }
             SetProperty(Property.AUTO_SCALE, autoScale);
             return this;

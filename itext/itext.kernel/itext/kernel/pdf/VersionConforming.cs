@@ -41,7 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 
 namespace iText.Kernel.Pdf {
     public class VersionConforming {
@@ -53,13 +54,13 @@ namespace iText.Kernel.Pdf {
 
         public const String DEPRECATED_XFA_FORMS = "XFA is deprecated in PDF 2.0. The XFA form will not be written to the document";
 
-        private static readonly ILog logger = LogManager.GetLogger(typeof(VersionConforming));
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(VersionConforming));
 
         public static bool ValidatePdfVersionForDictEntry(PdfDocument document, PdfVersion expectedVersion, PdfName
              entryKey, PdfName dictType) {
             if (document != null && document.GetPdfVersion().CompareTo(expectedVersion) < 0) {
-                logger.Warn(String.Format(iText.IO.LogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, entryKey
-                    , dictType, expectedVersion, document.GetPdfVersion()));
+                logger.LogWarning(String.Format(iText.IO.LogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, 
+                    entryKey, dictType, expectedVersion, document.GetPdfVersion()));
                 return true;
             }
             else {
@@ -70,7 +71,7 @@ namespace iText.Kernel.Pdf {
         public static bool ValidatePdfVersionForDeprecatedFeatureLogWarn(PdfDocument document, PdfVersion expectedVersion
             , String deprecatedFeatureLogMessage) {
             if (document.GetPdfVersion().CompareTo(expectedVersion) >= 0) {
-                logger.Warn(deprecatedFeatureLogMessage);
+                logger.LogWarning(deprecatedFeatureLogMessage);
                 return true;
             }
             else {
@@ -81,7 +82,7 @@ namespace iText.Kernel.Pdf {
         public static bool ValidatePdfVersionForDeprecatedFeatureLogError(PdfDocument document, PdfVersion expectedVersion
             , String deprecatedFeatureLogMessage) {
             if (document.GetPdfVersion().CompareTo(expectedVersion) >= 0) {
-                logger.Error(deprecatedFeatureLogMessage);
+                logger.LogError(deprecatedFeatureLogMessage);
                 return true;
             }
             else {

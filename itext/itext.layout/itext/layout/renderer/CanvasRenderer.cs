@@ -41,7 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.IO;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Layout;
@@ -88,8 +89,8 @@ namespace iText.Layout.Renderer {
 
         public override void AddChild(IRenderer renderer) {
             if (true.Equals(GetPropertyAsBoolean(Property.FULL))) {
-                LogManager.GetLogger(typeof(iText.Layout.Renderer.CanvasRenderer)).Warn(iText.IO.LogMessageConstant.CANVAS_ALREADY_FULL_ELEMENT_WILL_BE_SKIPPED
-                    );
+                ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.CanvasRenderer)).LogWarning(iText.IO.LogMessageConstant
+                    .CANVAS_ALREADY_FULL_ELEMENT_WILL_BE_SKIPPED);
             }
             else {
                 base.AddChild(renderer);
