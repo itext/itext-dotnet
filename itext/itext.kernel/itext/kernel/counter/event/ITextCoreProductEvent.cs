@@ -29,7 +29,7 @@ using iText.Kernel.Actions.Data;
 
 namespace iText.Kernel.Counter.Event {
     /// <summary>Class represents events registered in iText core module.</summary>
-    public class ITextCoreEvent : AbstractProductProcessITextEvent {
+    public class ITextCoreProductEvent : AbstractProductProcessITextEvent {
         /// <summary>Process pdf event type.</summary>
         public const String PROCESS_PDF = "process-pdf";
 
@@ -43,8 +43,8 @@ namespace iText.Kernel.Counter.Event {
         /// defines when the event should be confirmed to notify that the
         /// associated process has finished successfully
         /// </param>
-        private ITextCoreEvent(SequenceId sequenceId, IMetaInfo metaInfo, String eventType, EventConfirmationType 
-            confirmationType)
+        private ITextCoreProductEvent(SequenceId sequenceId, IMetaInfo metaInfo, String eventType, EventConfirmationType
+             confirmationType)
             : base(sequenceId, ITextCoreProductData.GetInstance(), metaInfo, confirmationType) {
             this.eventType = eventType;
         }
@@ -58,9 +58,10 @@ namespace iText.Kernel.Counter.Event {
         /// associated process has finished successfully
         /// </param>
         /// <returns>the process pdf event</returns>
-        public static iText.Kernel.Counter.Event.ITextCoreEvent CreateProcessPdfEvent(SequenceId sequenceId, IMetaInfo
-             metaInfo, EventConfirmationType confirmationType) {
-            return new iText.Kernel.Counter.Event.ITextCoreEvent(sequenceId, metaInfo, PROCESS_PDF, confirmationType);
+        public static iText.Kernel.Counter.Event.ITextCoreProductEvent CreateProcessPdfEvent(SequenceId sequenceId
+            , IMetaInfo metaInfo, EventConfirmationType confirmationType) {
+            return new iText.Kernel.Counter.Event.ITextCoreProductEvent(sequenceId, metaInfo, PROCESS_PDF, confirmationType
+                );
         }
 
         public override String GetEventType() {

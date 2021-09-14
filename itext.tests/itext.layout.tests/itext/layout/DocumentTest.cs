@@ -64,7 +64,7 @@ namespace iText.Layout {
                     .GetDocumentIdWrapper());
                 // Second event was linked by adding block element method
                 NUnit.Framework.Assert.AreEqual(2, events.Count);
-                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreEvent);
+                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
                 NUnit.Framework.Assert.IsTrue(events[1] is TestProductEvent);
             }
         }
@@ -80,7 +80,7 @@ namespace iText.Layout {
                 IList<AbstractProductProcessITextEvent> events = CONFIGURATION_ACCESS.GetPublicEvents(doc.GetPdfDocument()
                     .GetDocumentIdWrapper());
                 NUnit.Framework.Assert.AreEqual(1, events.Count);
-                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreEvent);
+                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
             }
         }
 
@@ -96,7 +96,7 @@ namespace iText.Layout {
                     .GetDocumentIdWrapper());
                 // Second event was linked by adding block element
                 NUnit.Framework.Assert.AreEqual(2, events.Count);
-                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreEvent);
+                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
                 NUnit.Framework.Assert.IsTrue(events[1] is TestProductEvent);
             }
         }

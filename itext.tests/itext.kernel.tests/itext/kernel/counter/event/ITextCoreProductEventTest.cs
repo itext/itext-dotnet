@@ -48,13 +48,13 @@ using iText.Kernel.Actions.Ecosystem;
 using iText.Test;
 
 namespace iText.Kernel.Counter.Event {
-    public class ITextCoreEventTest : ExtendedITextTest {
+    public class ITextCoreProductEventTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void OpenDocumentEventTest() {
             SequenceId sequenceId = new SequenceId();
-            ITextCoreEvent @event = ITextCoreEvent.CreateProcessPdfEvent(sequenceId, new TestMetaInfo("meta data"), EventConfirmationType
-                .ON_CLOSE);
-            NUnit.Framework.Assert.AreEqual(ITextCoreEvent.PROCESS_PDF, @event.GetEventType());
+            ITextCoreProductEvent @event = ITextCoreProductEvent.CreateProcessPdfEvent(sequenceId, new TestMetaInfo("meta data"
+                ), EventConfirmationType.ON_CLOSE);
+            NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, @event.GetEventType());
             NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
             NUnit.Framework.Assert.AreEqual(EventConfirmationType.ON_CLOSE, @event.GetConfirmationType());
             NUnit.Framework.Assert.AreEqual(sequenceId, @event.GetSequenceId());

@@ -231,7 +231,7 @@ namespace iText.Layout {
                 }
                 // Second event was linked by adding block element method
                 NUnit.Framework.Assert.AreEqual(2, events.Count);
-                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreEvent);
+                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
                 NUnit.Framework.Assert.IsTrue(events[1] is TestProductEvent);
             }
         }
@@ -252,7 +252,7 @@ namespace iText.Layout {
                 }
                 // Second event was linked by adding block element method
                 NUnit.Framework.Assert.AreEqual(2, events.Count);
-                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreEvent);
+                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
                 NUnit.Framework.Assert.IsTrue(events[1] is TestProductEvent);
             }
         }
