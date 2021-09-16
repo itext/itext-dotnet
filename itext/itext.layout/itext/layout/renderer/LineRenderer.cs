@@ -1590,7 +1590,7 @@ namespace iText.Layout.Renderer {
             return normalizedChildWidth;
         }
 
-        internal class RendererGlyph {
+        public class RendererGlyph {
             public Glyph glyph;
 
             public TextRenderer renderer;
