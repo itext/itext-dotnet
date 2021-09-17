@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Actions;
 using iText.Commons.Actions.Confirmations;
 using iText.Commons.Actions.Data;
 using iText.Commons.Actions.Sequence;
@@ -37,7 +38,7 @@ namespace iText.Commons.Actions.Producer {
         [NUnit.Framework.Test]
         public virtual void EmptyEventsProducerLineTest() {
             NUnit.Framework.Assert.That(() =>  {
-                ProducerBuilder.ModifyProducer(null, null);
+                ProducerBuilder.ModifyProducer((IList<AbstractProductProcessITextEvent>)null, null);
             }
             , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(CommonsExceptionMessageConstant.NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT))
 ;

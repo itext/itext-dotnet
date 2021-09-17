@@ -26,16 +26,21 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Actions;
 using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Processors;
 using iText.Commons.Exceptions;
 using iText.Commons.Logs;
 using iText.Commons.Utils;
 
 namespace iText.Commons.Actions.Producer {
     /// <summary>Class is used for producer line building.</summary>
-    public sealed class ProducerBuilder {
+    public sealed class ProducerBuilder : AbstractITextConfigurationEvent {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.Producer.ProducerBuilder
             ));
+
+        private static readonly iText.Commons.Actions.Producer.ProducerBuilder INSTANCE = new iText.Commons.Actions.Producer.ProducerBuilder
+            ();
 
         private const String CURRENT_DATE = "currentDate";
 
@@ -76,31 +81,48 @@ namespace iText.Commons.Actions.Producer {
 
         /// <summary>Modifies an old producer line according to events registered for the document.</summary>
         /// <remarks>
-        /// Modifies an old producer line according to events registered for the document. Format of the
-        /// new producer line will be defined by the first event in the list. Placeholder will be
-        /// replaced and merged all together
-        /// </remarks>
-        /// <param name="events">
-        /// list of events wrapped with
+        /// Modifies an old producer line according to events registered for the document.
+        /// Events can be either wrapped with
         /// <see cref="iText.Commons.Actions.Confirmations.ConfirmedEventWrapper"/>
-        /// registered for
-        /// the document
-        /// </param>
+        /// or not.
+        /// Format of the new producer line will be defined by the first event in the list.
+        /// Placeholder will be replaced and merged all together
+        /// </remarks>
+        /// <param name="events">list of events registered for the document</param>
         /// <param name="oldProducer">
-        /// is an old producer line. If <c>null</c> or empty, will be replaced
+        /// old producer line. If <c>null</c> or empty, will be replaced
         /// with a new one. Otherwise new line will be attached with
         /// <c>modified using</c> prefix. If old producer line already contains
         /// <c>modified using</c> substring, it will be overriden with a new one
         /// </param>
         /// <returns>modified producer line</returns>
-        public static String ModifyProducer(IList<ConfirmedEventWrapper> events, String oldProducer) {
-            String newProducer = BuildProducer(events);
+        public static String ModifyProducer<_T0>(IList<_T0> events, String oldProducer)
+            where _T0 : AbstractProductProcessITextEvent {
+            IList<ConfirmedEventWrapper> confirmedEvents = new List<ConfirmedEventWrapper>();
+            if (events != null) {
+                foreach (AbstractProductProcessITextEvent @event in events) {
+                    if (@event is ConfirmedEventWrapper) {
+                        confirmedEvents.Add((ConfirmedEventWrapper)@event);
+                    }
+                    else {
+                        ITextProductEventProcessor processor = INSTANCE.GetActiveProcessor(@event.GetProductName());
+                        confirmedEvents.Add(new ConfirmedEventWrapper(@event, processor.GetUsageType(), processor.GetProducer()));
+                    }
+                }
+            }
+            String newProducer = BuildProducer(confirmedEvents);
             if (oldProducer == null || String.IsNullOrEmpty(oldProducer)) {
                 return newProducer;
             }
             else {
                 return oldProducer + MODIFIED_USING + newProducer;
             }
+        }
+
+        /// <summary>Configuration events for util internal purposes are not expected to be sent.</summary>
+        protected internal override void DoAction() {
+            throw new InvalidOperationException("Configuration events for util internal purposes are not expected to be sent"
+                );
         }
 
         private static String BuildProducer(IList<ConfirmedEventWrapper> events) {
