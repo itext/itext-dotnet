@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Utils;
-using iText.IO;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Properties {

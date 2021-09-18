@@ -22,7 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Actions.Data;
 using iText.Commons.Logs;
 using iText.Commons.Utils;
@@ -31,7 +32,7 @@ namespace iText.Commons.Actions {
     /// <summary>Abstract class which defines statistics event.</summary>
     /// <remarks>Abstract class which defines statistics event. Only for internal usage.</remarks>
     public abstract class AbstractStatisticsEvent : AbstractProductITextEvent {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Commons.Actions.AbstractStatisticsEvent
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.AbstractStatisticsEvent
             ));
 
         /// <seealso>AbstractProductITextEvent#AbstractProductITextEvent(ProductData).</seealso>
@@ -54,7 +55,8 @@ namespace iText.Commons.Actions {
         /// <see cref="AbstractStatisticsAggregator"/>
         /// </returns>
         public virtual AbstractStatisticsAggregator CreateStatisticsAggregatorFromName(String statisticsName) {
-            LOGGER.Warn(MessageFormatUtil.Format(CommonsLogMessageConstant.INVALID_STATISTICS_NAME, statisticsName));
+            LOGGER.LogWarning(MessageFormatUtil.Format(CommonsLogMessageConstant.INVALID_STATISTICS_NAME, statisticsName
+                ));
             return null;
         }
 

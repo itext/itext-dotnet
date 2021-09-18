@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Commons;
 using Microsoft.Extensions.Logging;
 using iText.IO;
 using iText.Commons.Utils;

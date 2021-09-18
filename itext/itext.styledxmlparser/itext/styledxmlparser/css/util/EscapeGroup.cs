@@ -21,8 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Utils;
-using iText.IO;
 
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Class to store escape characters and their processing logic.</summary>

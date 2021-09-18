@@ -44,8 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Utils;
-using iText.IO;
 
 namespace iText.IO.Source {
     public class PdfTokenizer : IDisposable {

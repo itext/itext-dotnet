@@ -23,10 +23,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Utils;
-using iText.IO;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.Layout.Properties;

@@ -44,7 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
 using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.StyledXmlParser;

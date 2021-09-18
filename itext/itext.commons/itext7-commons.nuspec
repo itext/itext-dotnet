@@ -18,10 +18,10 @@
     <tags>itext itext7 itextsharp c# .net csharp</tags>
     <dependencies>
       <group targetFramework="net461">
-        <dependency id="Common.Logging" version="3.4.1" />
+        <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
       </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="Common.Logging" version="3.4.1" />
+        <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
       </group>
     </dependencies>
   </metadata>

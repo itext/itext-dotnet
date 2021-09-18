@@ -44,8 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Utils;
-using iText.IO;
 using iText.IO.Colors;
 using iText.IO.Font;
 using iText.IO.Image;

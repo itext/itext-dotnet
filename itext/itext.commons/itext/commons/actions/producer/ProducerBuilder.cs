@@ -24,7 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Actions.Confirmations;
 using iText.Commons.Exceptions;
 using iText.Commons.Logs;
@@ -33,7 +34,7 @@ using iText.Commons.Utils;
 namespace iText.Commons.Actions.Producer {
     /// <summary>Class is used for producer line building.</summary>
     public sealed class ProducerBuilder {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Commons.Actions.Producer.ProducerBuilder
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.Producer.ProducerBuilder
             ));
 
         private const String CURRENT_DATE = "currentDate";
@@ -134,8 +135,8 @@ namespace iText.Commons.Actions.Producer {
                 }
                 IPlaceholderPopulator populator = PLACEHOLDER_POPULATORS.Get(placeholderName);
                 if (populator == null) {
-                    LOGGER.Info(MessageFormatUtil.Format(CommonsLogMessageConstant.UNKNOWN_PLACEHOLDER_WAS_IGNORED, placeholderName
-                        ));
+                    LOGGER.LogInformation(MessageFormatUtil.Format(CommonsLogMessageConstant.UNKNOWN_PLACEHOLDER_WAS_IGNORED, 
+                        placeholderName));
                 }
                 else {
                     builder.Append(populator.Populate(events, parameter));

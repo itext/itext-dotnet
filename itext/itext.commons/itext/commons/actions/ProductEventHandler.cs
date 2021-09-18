@@ -24,7 +24,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Actions.Confirmations;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Processors;
@@ -39,7 +40,7 @@ namespace iText.Commons.Actions {
         internal static readonly iText.Commons.Actions.ProductEventHandler INSTANCE = new iText.Commons.Actions.ProductEventHandler
             ();
 
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Commons.Actions.ProductEventHandler
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.ProductEventHandler
             ));
 
         private readonly ConcurrentDictionary<String, ITextProductEventProcessor> processors = new ConcurrentDictionary
@@ -138,7 +139,7 @@ namespace iText.Commons.Actions {
                         (), productEventProcessor.GetProducer());
                 }
                 else {
-                    LOGGER.Warn(MessageFormatUtil.Format(CommonsLogMessageConstant.UNREPORTED_EVENT, confirmedEvent.GetProductName
+                    LOGGER.LogWarning(MessageFormatUtil.Format(CommonsLogMessageConstant.UNREPORTED_EVENT, confirmedEvent.GetProductName
                         (), confirmedEvent.GetEventType()));
                 }
             }

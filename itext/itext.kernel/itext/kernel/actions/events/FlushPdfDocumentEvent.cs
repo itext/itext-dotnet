@@ -23,13 +23,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Confirmations;
 using iText.Commons.Actions.Processors;
 using iText.Commons.Actions.Producer;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Utils;
-using iText.IO;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 

@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {

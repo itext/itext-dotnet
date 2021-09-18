@@ -44,8 +44,8 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Utils;
-using iText.IO;
 using iText.StyledXmlParser;
 
 namespace iText.StyledXmlParser.Css.Util {

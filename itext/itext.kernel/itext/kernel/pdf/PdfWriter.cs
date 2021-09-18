@@ -45,8 +45,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Utils;
-using iText.IO;
 using iText.IO.Source;
 
 namespace iText.Kernel.Pdf {

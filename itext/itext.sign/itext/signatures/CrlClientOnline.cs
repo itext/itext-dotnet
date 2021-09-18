@@ -46,8 +46,8 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.X509;
+using iText.Commons;
 using iText.Commons.Utils;
-using iText.IO;
 
 namespace iText.Signatures {
     /// <summary>

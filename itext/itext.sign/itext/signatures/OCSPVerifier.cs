@@ -50,8 +50,8 @@ using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
+using iText.Commons;
 using iText.Commons.Utils;
-using iText.IO;
 
 namespace iText.Signatures {
     /// <summary>

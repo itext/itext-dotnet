@@ -46,7 +46,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Versions.Attributes;
-using iText.IO;
+using iText.Commons;
 using iText.Kernel.Actions.Data;
 
 namespace iText.Kernel {
