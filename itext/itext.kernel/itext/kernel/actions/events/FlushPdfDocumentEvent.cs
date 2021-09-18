@@ -22,13 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Confirmations;
 using iText.Commons.Actions.Processors;
 using iText.Commons.Actions.Producer;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Utils;
+using iText.IO;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 
@@ -39,7 +40,7 @@ namespace iText.Kernel.Actions.Events {
     /// was flushed.
     /// </summary>
     public sealed class FlushPdfDocumentEvent : AbstractITextConfigurationEvent {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Actions.Events.FlushPdfDocumentEvent
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Actions.Events.FlushPdfDocumentEvent
             ));
 
         private readonly WeakReference document;
@@ -70,8 +71,8 @@ namespace iText.Kernel.Actions.Events {
             }
             foreach (String product in products) {
                 ITextProductEventProcessor processor = GetActiveProcessor(product);
-                if (processor == null && LOGGER.IsWarnEnabled) {
-                    LOGGER.Warn(MessageFormatUtil.Format(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED, product));
+                if (processor == null && LOGGER.IsEnabled(LogLevel.Warning)) {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED, product));
                 }
             }
             String oldProducer = pdfDocument.GetDocumentInfo().GetProducer();
@@ -88,8 +89,8 @@ namespace iText.Kernel.Actions.Events {
                     confirmedEvents.Add((ConfirmedEventWrapper)@event);
                 }
                 else {
-                    LOGGER.Warn(MessageFormatUtil.Format(KernelLogMessageConstant.UNCONFIRMED_EVENT, @event.GetProductName(), 
-                        @event.GetEventType()));
+                    LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNCONFIRMED_EVENT, @event.GetProductName
+                        (), @event.GetEventType()));
                 }
             }
             return confirmedEvents;

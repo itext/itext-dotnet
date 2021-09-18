@@ -49,9 +49,8 @@ using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Tsp;
-using iText.IO;
-using iText.IO.Codec;
 using iText.Commons.Utils;
+using iText.IO;
 using iText.Kernel;
 using iText.Signatures.Exceptions;
 

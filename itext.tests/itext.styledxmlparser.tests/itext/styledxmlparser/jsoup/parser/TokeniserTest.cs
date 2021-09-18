@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Text;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Jsoup.Select;
 using iText.Test;
@@ -187,7 +187,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         [NUnit.Framework.Test]
         public virtual void Cp1252SubstitutionTable() {
             for (int i = 0; i < Tokeniser.win1252Extensions.Length; i++) {
-                String s = iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { (byte)(i + Tokeniser.win1252ExtensionsStart
+                String s = iText.Commons.Utils.JavaUtil.GetStringForBytes(new byte[] { (byte)(i + Tokeniser.win1252ExtensionsStart
                     ) }, "Windows-1252");
                 NUnit.Framework.Assert.AreEqual(1, s.Length);
                 // some of these characters are illegal

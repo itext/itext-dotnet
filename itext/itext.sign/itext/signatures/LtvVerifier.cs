@@ -50,8 +50,8 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Utils;
-using iText.IO;
 using iText.Forms;
+using iText.IO;
 using iText.Kernel.Pdf;
 
 namespace iText.Signatures {

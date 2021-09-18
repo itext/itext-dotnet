@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using iText.IO;
 using iText.Commons.Utils;
+using iText.IO;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node;

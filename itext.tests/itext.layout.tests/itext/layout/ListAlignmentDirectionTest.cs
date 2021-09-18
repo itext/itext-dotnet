@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;

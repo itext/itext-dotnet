@@ -44,7 +44,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         private static readonly IList<iText.StyledXmlParser.Jsoup.Nodes.Element> EmptyChildren = JavaCollectionsUtil
             .EmptyList<iText.StyledXmlParser.Jsoup.Nodes.Element>();
 
-        private static readonly Regex ClassSplit = iText.IO.Util.StringUtil.RegexCompile("\\s+");
+        private static readonly Regex ClassSplit = iText.Commons.Utils.StringUtil.RegexCompile("\\s+");
 
         private static readonly String BaseUriKey = iText.StyledXmlParser.Jsoup.Nodes.Attributes.InternalKey("baseUri"
             );
@@ -1748,7 +1748,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             bool inClass = false;
             int start = 0;
             for (int i = 0; i < len; i++) {
-                if (iText.Events.Utils.TextUtil.IsWhiteSpace(classAttr[i])) {
+                if (iText.IO.Util.TextUtil.IsWhiteSpace(classAttr[i])) {
                     if (inClass) {
                         // white space ends a class name, compare it with the requested one, ignore case
                         if (i - start == wantLen && classAttr.RegionMatches(true, start, className, 0, wantLen)) {

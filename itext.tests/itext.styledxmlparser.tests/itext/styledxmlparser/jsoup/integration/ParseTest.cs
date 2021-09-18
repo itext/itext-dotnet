@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.IO.Compression;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Jsoup.Parser;
@@ -277,7 +278,7 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
             else {
                 bytes = File.ReadAllBytes(file.FullName);
             }
-            return iText.IO.Util.JavaUtil.GetStringForBytes(bytes);
+            return JavaUtil.GetStringForBytes(bytes);
         }
     }
 }
