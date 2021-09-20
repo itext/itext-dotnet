@@ -164,8 +164,15 @@ namespace iText.Commons.Utils {
             return AppDomain.CurrentDomain.BaseDirectory;
         }
 
+        /// <summary>
         /// Deletes a file and returns whether the operation succeeded.
-        /// Node that only *files* are supported, not directories.
+        /// </summary>
+        /// <remarks>
+        /// Deletes a file and returns whether the operation succeeded.
+        /// Note that only *files* are supported, not directories.
+        /// </remarks>
+        /// <param name="file">file to be deleted</param>
+        /// <returns>true if file was deleted successfully, false otherwise</returns>
         public static bool DeleteFile(FileInfo file) {
             try {
                 file.Delete();
@@ -175,6 +182,11 @@ namespace iText.Commons.Utils {
             }
         }
         
+        /// <summary>
+        /// Returns an URL of the parent directory for the resource.
+        /// </summary>
+        /// <param name="url">of resource</param>
+        /// <returns>parent directory path| the same path if a catalog`s url is passed;</returns>
         public static String ParentDirectory(Uri url) {
             return new Uri(url, ".").ToString();
         }

@@ -35,8 +35,10 @@ namespace iText.Commons.Actions {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.AbstractStatisticsEvent
             ));
 
-        /// <seealso cref="AbstractProductITextEvent.AbstractProductITextEvent(iText.Commons.Actions.Data.ProductData)
-        ///     "/>
+        /// <summary>Creates instance of abstract statistics iText event based on passed product data.</summary>
+        /// <remarks>Creates instance of abstract statistics iText event based on passed product data. Only for internal usage.
+        ///     </remarks>
+        /// <param name="productData">is a description of the product which has generated an event</param>
         protected internal AbstractStatisticsEvent(ProductData productData)
             : base(productData) {
         }
@@ -49,7 +51,7 @@ namespace iText.Commons.Actions {
         /// <param name="statisticsName">
         /// name of statistics based on which aggregator will be created.
         /// Shall be one of those returned from
-        /// <see>this#getStatisticsNames()</see>
+        /// <see cref="GetStatisticsNames()"/>
         /// </param>
         /// <returns>
         /// new instance of
