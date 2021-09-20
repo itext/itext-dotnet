@@ -45,7 +45,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
-using Versions.Attributes;
 using iText.Commons;
 using iText.Kernel.Actions.Data;
 
@@ -313,12 +312,9 @@ namespace iText.Kernel {
             String classFullName = null;
 
             Assembly kernelAssembly = typeof(Version).GetAssembly();
-            Attribute keyVersionAttr = kernelAssembly.GetCustomAttribute(typeof(KeyVersionAttribute));
-            if (keyVersionAttr is KeyVersionAttribute) {
-                String keyVersion = ((KeyVersionAttribute)keyVersionAttr).KeyVersion;
-                String format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
-                classFullName = String.Format(format, classPartialName, keyVersion);
-            }
+            String keyVersion = "3.1.5.0";
+            String format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
+            classFullName = String.Format(format, classPartialName, keyVersion);
 
             Type type = null;
             if (classFullName != null) {
