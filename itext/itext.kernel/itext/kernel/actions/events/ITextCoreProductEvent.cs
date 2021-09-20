@@ -27,7 +27,7 @@ using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Sequence;
 using iText.Kernel.Actions.Data;
 
-namespace iText.Kernel.Counter.Event {
+namespace iText.Kernel.Actions.Events {
     /// <summary>Class represents events registered in iText core module.</summary>
     public sealed class ITextCoreProductEvent : AbstractProductProcessITextEvent {
         /// <summary>Process pdf event type.</summary>
@@ -58,9 +58,9 @@ namespace iText.Kernel.Counter.Event {
         /// associated process has finished successfully
         /// </param>
         /// <returns>the process pdf event</returns>
-        public static iText.Kernel.Counter.Event.ITextCoreProductEvent CreateProcessPdfEvent(SequenceId sequenceId
+        public static iText.Kernel.Actions.Events.ITextCoreProductEvent CreateProcessPdfEvent(SequenceId sequenceId
             , IMetaInfo metaInfo, EventConfirmationType confirmationType) {
-            return new iText.Kernel.Counter.Event.ITextCoreProductEvent(sequenceId, metaInfo, PROCESS_PDF, confirmationType
+            return new iText.Kernel.Actions.Events.ITextCoreProductEvent(sequenceId, metaInfo, PROCESS_PDF, confirmationType
                 );
         }
 

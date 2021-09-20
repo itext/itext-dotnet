@@ -25,7 +25,7 @@ using iText.Commons.Actions;
 using iText.Commons.Actions.Sequence;
 using iText.IO.Source;
 using iText.Kernel;
-using iText.Kernel.Counter.Event;
+using iText.Kernel.Actions.Events;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;

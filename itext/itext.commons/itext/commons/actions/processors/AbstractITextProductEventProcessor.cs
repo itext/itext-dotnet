@@ -20,14 +20,31 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Test;
+using System;
+using iText.Commons.Actions;
+using iText.Commons.Exceptions;
 
-namespace iText.Kernel.Counter {
-    public class StandardOutputEventCounterTest : ExtendedITextTest {
-        [NUnit.Framework.Test]
-        public virtual void StandardEventCounterFactoryTest() {
-            StandardOutputEventCounterFactory counterFactory = new StandardOutputEventCounterFactory();
-            NUnit.Framework.Assert.IsTrue(counterFactory.GetCounter(GetType()) is StandardOutputEventCounter);
+namespace iText.Commons.Actions.Processors {
+    public abstract class AbstractITextProductEventProcessor : ITextProductEventProcessor {
+        private readonly String productName;
+
+        public AbstractITextProductEventProcessor(String productName) {
+            if (productName == null) {
+                throw new ArgumentException(CommonsExceptionMessageConstant.PRODUCT_NAME_CAN_NOT_BE_NULL);
+            }
+            this.productName = productName;
+        }
+
+        public abstract void OnEvent(AbstractProductProcessITextEvent @event);
+
+        public abstract String GetUsageType();
+
+        public virtual String GetProducer() {
+            return "iText\u00ae ${usedProducts:P V (T 'version')} \u00a9${copyrightSince}-${copyrightTo} iText Group NV";
+        }
+
+        public virtual String GetProductName() {
+            return productName;
         }
     }
 }

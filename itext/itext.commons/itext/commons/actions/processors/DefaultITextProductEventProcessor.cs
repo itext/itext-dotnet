@@ -21,37 +21,71 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Actions;
-using iText.Commons.Exceptions;
+using iText.Commons.Actions.Confirmations;
+using iText.Commons.Utils;
 
 namespace iText.Commons.Actions.Processors {
     /// <summary>Defines a default strategy of product event processing.</summary>
-    public class DefaultITextProductEventProcessor : ITextProductEventProcessor {
-        private readonly String productName;
+    public class DefaultITextProductEventProcessor : AbstractITextProductEventProcessor {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.Processors.DefaultITextProductEventProcessor
+            ));
+
+        private static readonly byte[] messageForLogging = Convert.FromBase64String("WW91IGFyZSB1c2luZyBpVGV4dCB1bmRlciB0aGUgQUdQTC4KCklmIHRoaXMgaXMgeW9"
+             + "1ciBpbnRlbnRpb24sIHlvdSBoYXZlIHB1Ymxpc2hlZCB5b3VyIG93biBzb3VyY2UgY2" + "9kZSBhcyBBR1BMIHNvZnR3YXJlIHRvby4KUGxlYXNlIGxldCB1cyBrbm93IHdoZXJlI"
+             + "HRvIGZpbmQgeW91ciBzb3VyY2UgY29kZSBieSBzZW5kaW5nIGEgbWFpbCB0byBhZ3Bs" + "QGl0ZXh0cGRmLmNvbQpXZSdkIGJlIGhvbm9yZWQgdG8gYWRkIGl0IHRvIG91ciBsaXN"
+             + "0IG9mIEFHUEwgcHJvamVjdHMgYnVpbHQgb24gdG9wIG9mIGlUZXh0IDcKYW5kIHdlJ2" + "xsIGV4cGxhaW4gaG93IHRvIHJlbW92ZSB0aGlzIG1lc3NhZ2UgZnJvbSB5b3VyIGVyc"
+             + "m9yIGxvZ3MuCgpJZiB0aGlzIHdhc24ndCB5b3VyIGludGVudGlvbiwgeW91IGFyZSBw" + "cm9iYWJseSB1c2luZyBpVGV4dCBpbiBhIG5vbi1mcmVlIGVudmlyb25tZW50LgpJbiB"
+             + "0aGlzIGNhc2UsIHBsZWFzZSBjb250YWN0IHVzIGJ5IGZpbGxpbmcgb3V0IHRoaXMgZm" + "9ybTogaHR0cDovL2l0ZXh0cGRmLmNvbS9zYWxlcwpJZiB5b3UgYXJlIGEgY3VzdG9tZ"
+             + "XIsIHdlJ2xsIGV4cGxhaW4gaG93IHRvIGluc3RhbGwgeW91ciBsaWNlbnNlIGtleSB0" + "byBhdm9pZCB0aGlzIG1lc3NhZ2UuCklmIHlvdSdyZSBub3QgYSBjdXN0b21lciwgd2U"
+             + "nbGwgZXhwbGFpbiB0aGUgYmVuZWZpdHMgb2YgYmVjb21pbmcgYSBjdXN0b21lci4=");
+
+        private static readonly long[] REPEAT = new long[] { 10000L, 5000L, 1000L };
+
+        private static readonly int MAX_LVL = REPEAT.Length - 1;
+
+        private readonly Object Lock = new Object();
+
+        private readonly AtomicLong counter = new AtomicLong(0);
+
+        private readonly AtomicLong level = new AtomicLong(0);
+
+        private readonly AtomicLong repeatLevel;
 
         /// <summary>Creates an instance of product event processor.</summary>
         /// <param name="productName">is a product name</param>
-        public DefaultITextProductEventProcessor(String productName) {
-            if (productName == null) {
-                throw new ArgumentException(CommonsExceptionMessageConstant.PRODUCT_NAME_CAN_NOT_BE_NULL);
+        public DefaultITextProductEventProcessor(String productName)
+            : base(productName) {
+            repeatLevel = new AtomicLong(REPEAT[(int)level.Get()]);
+        }
+
+        public override void OnEvent(AbstractProductProcessITextEvent @event) {
+            if (!(@event is ConfirmEvent)) {
+                return;
             }
-            this.productName = productName;
+            bool isNeededToLogMessage = false;
+            lock (Lock) {
+                if (counter.IncrementAndGet() > repeatLevel.Get()) {
+                    counter.Set(0);
+                    if (level.IncrementAndGet() > MAX_LVL) {
+                        level.Set(MAX_LVL);
+                    }
+                    repeatLevel.Set(REPEAT[(int)level.Get()]);
+                    isNeededToLogMessage = true;
+                }
+            }
+            if (isNeededToLogMessage) {
+                String message = iText.Commons.Utils.JavaUtil.GetStringForBytes(messageForLogging, iText.Commons.Utils.EncodingUtil.ISO_8859_1
+                    );
+                LOGGER.LogInformation(message);
+                System.Console.Out.WriteLine(message);
+            }
         }
 
-        public virtual void OnEvent(AbstractProductProcessITextEvent @event) {
-        }
-
-        // TODO: DEVSIX-5341 provide appropriate logic if any
-        public virtual String GetProductName() {
-            return productName;
-        }
-
-        public virtual String GetUsageType() {
+        public override String GetUsageType() {
             return "AGPL";
-        }
-
-        public virtual String GetProducer() {
-            return "iText\u00ae ${usedProducts:P V (T 'version')} \u00a9${copyrightSince}-${copyrightTo} iText Group NV";
         }
     }
 }

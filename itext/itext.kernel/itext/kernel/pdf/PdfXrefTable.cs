@@ -49,7 +49,6 @@ using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel;
-using iText.Kernel.Actions.Data;
 
 namespace iText.Kernel.Pdf {
     /// <summary>A representation of a cross-referenced table of a PDF document.</summary>
@@ -474,14 +473,14 @@ namespace iText.Kernel.Pdf {
         protected internal static void WriteKeyInfo(PdfDocument document) {
             PdfWriter writer = document.GetWriter();
             FingerPrint fingerPrint = document.GetFingerPrint();
-            String platform = " for .NET";
-            VersionInfo versionInfo = document.GetVersionInfo();
-            String k = versionInfo.GetKey();
-            if (k == null) {
-                k = "iText";
-            }
-            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, ITextCoreProductData.GetInstance().GetVersion
-                (), platform));
+            //TODO DEVSIX-5712 in the scope of this ticket we will discuss, what information we would write.
+            //String platform = "";
+            //VersionInfo versionInfo = document.getVersionInfo();
+            //String k = versionInfo.getKey();
+            //if (k == null) {
+            //    k = "iText";
+            //}
+            //writer.writeString(MessageFormatUtil.format("%{0}-{1}{2}\n", k, versionInfo.getRelease(), platform));
             foreach (ProductInfo productInfo in fingerPrint.GetProducts()) {
                 writer.WriteString(MessageFormatUtil.Format("%{0}\n", productInfo));
             }

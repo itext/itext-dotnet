@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -41,11 +40,34 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
+using iText.Commons.Actions;
+using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Sequence;
+using iText.Kernel.Actions.Data;
+using iText.Kernel.Actions.Ecosystem;
+using iText.Test;
 
-namespace iText.Kernel.Counter.Event {
-    /// <summary>Interface representing the counted event</summary>
-    public interface IEvent {
-        String GetEventType();
+namespace iText.Kernel.Actions.Events {
+    public class ITextCoreProductEventTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void OpenDocumentEventTest() {
+            SequenceId sequenceId = new SequenceId();
+            ITextCoreProductEvent @event = ITextCoreProductEvent.CreateProcessPdfEvent(sequenceId, new TestMetaInfo("meta data"
+                ), EventConfirmationType.ON_CLOSE);
+            NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, @event.GetEventType());
+            NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
+            NUnit.Framework.Assert.AreEqual(EventConfirmationType.ON_CLOSE, @event.GetConfirmationType());
+            NUnit.Framework.Assert.AreEqual(sequenceId, @event.GetSequenceId());
+            NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetPublicProductName(), @event.GetProductData
+                ().GetPublicProductName());
+            NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetProductName(), @event.GetProductData
+                ().GetProductName());
+            NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetVersion(), @event.GetProductData().GetVersion
+                ());
+            NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetSinceCopyrightYear(), @event.GetProductData
+                ().GetSinceCopyrightYear());
+            NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetToCopyrightYear(), @event.GetProductData
+                ().GetToCopyrightYear());
+        }
     }
 }

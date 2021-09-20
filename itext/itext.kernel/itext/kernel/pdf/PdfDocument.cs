@@ -53,8 +53,6 @@ using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Events;
-using iText.Kernel.Counter;
-using iText.Kernel.Counter.Event;
 using iText.Kernel.Crypto;
 using iText.Kernel.Events;
 using iText.Kernel.Exceptions;
@@ -152,8 +150,6 @@ namespace iText.Kernel.Pdf {
         protected internal TagStructureContext tagStructureContext;
 
         private SequenceId documentId;
-
-        private VersionInfo versionInfo = iText.Kernel.Version.GetInstance().GetInfo();
 
         /// <summary>Yet not copied link annotations from the other documents.</summary>
         /// <remarks>
@@ -299,7 +295,6 @@ namespace iText.Kernel.Pdf {
                 AddCustomMetadataExtensions(xmpMeta);
                 try {
                     xmpMeta.SetProperty(XMPConst.NS_DC, PdfConst.Format, "application/pdf");
-                    xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, versionInfo.GetVersion());
                     SetXmpMetadata(xmpMeta);
                 }
                 catch (XMPException) {
@@ -1987,7 +1982,6 @@ namespace iText.Kernel.Pdf {
                 ITextCoreProductEvent @event = ITextCoreProductEvent.CreateProcessPdfEvent(this.GetDocumentIdWrapper(), properties
                     .metaInfo, writer == null ? EventConfirmationType.ON_DEMAND : EventConfirmationType.ON_CLOSE);
                 EventManager.GetInstance().OnEvent(@event);
-                EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, properties.metaInfo, GetType());
                 bool embeddedStreamsSavedOnReading = false;
                 if (reader != null) {
                     if (reader.pdfDocument != null) {
@@ -2272,12 +2266,6 @@ namespace iText.Kernel.Pdf {
 
         internal virtual bool DoesStreamBelongToEmbeddedFile(PdfStream stream) {
             return encryptedEmbeddedStreamsHandler.IsStreamStoredAsEmbedded(stream);
-        }
-
-        /// <summary>Gets iText version info.</summary>
-        /// <returns>iText version info.</returns>
-        internal VersionInfo GetVersionInfo() {
-            return versionInfo;
         }
 
         internal virtual bool HasAcroForm() {
