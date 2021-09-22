@@ -40,34 +40,37 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel;
+using iText.Commons.Actions.Data;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
     public class FingerPrintTest : ExtendedITextTest {
-        private ProductInfo productInfo;
+        private ProductData productData;
 
-        private ProductInfo productInfo2;
+        private ProductData productData2;
+
+        private ProductData duplicateProductData;
 
         [NUnit.Framework.SetUp]
         public virtual void BeforeTest() {
-            this.productInfo = new ProductInfo("pdfProduct", 1, 0, 0, true);
-            this.productInfo2 = new ProductInfo("pdfProduct2", 1, 0, 0, true);
+            this.productData = new ProductData("pdfProduct", "pdfProduct", "7.0.0", 1900, 2000);
+            this.productData2 = new ProductData("pdfProduct2", "pdfProduct2", "7.0.0", 1900, 2000);
+            this.duplicateProductData = new ProductData("pdfProduct", "pdfProduct", "7.0.0", 1900, 2000);
         }
 
         [NUnit.Framework.Test]
         public virtual void NormalAddTest() {
             FingerPrint fingerPrint = new FingerPrint();
-            NUnit.Framework.Assert.IsTrue(fingerPrint.RegisterProduct(productInfo));
-            NUnit.Framework.Assert.IsTrue(fingerPrint.RegisterProduct(productInfo2));
+            NUnit.Framework.Assert.IsTrue(fingerPrint.RegisterProduct(productData));
+            NUnit.Framework.Assert.IsTrue(fingerPrint.RegisterProduct(productData2));
             NUnit.Framework.Assert.AreEqual(2, fingerPrint.GetProducts().Count);
         }
 
         [NUnit.Framework.Test]
         public virtual void DuplicateTest() {
             FingerPrint fingerPrint = new FingerPrint();
-            fingerPrint.RegisterProduct(productInfo);
-            NUnit.Framework.Assert.IsFalse(fingerPrint.RegisterProduct(productInfo));
+            fingerPrint.RegisterProduct(productData);
+            NUnit.Framework.Assert.IsFalse(fingerPrint.RegisterProduct(duplicateProductData));
         }
     }
 }

@@ -79,5 +79,27 @@ namespace iText.Commons.Actions.Data {
         public int GetToCopyrightYear() {
             return toCopyrightYear;
         }
+
+        public override bool Equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || GetType() != o.GetType()) {
+                return false;
+            }
+            iText.Commons.Actions.Data.ProductData other = (iText.Commons.Actions.Data.ProductData)o;
+            return Object.Equals(publicProductName, other.publicProductName) && Object.Equals(productName, other.productName
+                ) && Object.Equals(version, other.version) && sinceCopyrightYear == other.sinceCopyrightYear && toCopyrightYear
+                 == other.toCopyrightYear;
+        }
+
+        public override int GetHashCode() {
+            int result = publicProductName != null ? publicProductName.GetHashCode() : 0;
+            result += 31 * result + (productName != null ? productName.GetHashCode() : 0);
+            result += 31 * result + (version != null ? version.GetHashCode() : 0);
+            result += 31 * result + sinceCopyrightYear;
+            result += 31 * result + toCopyrightYear;
+            return result;
+        }
     }
 }

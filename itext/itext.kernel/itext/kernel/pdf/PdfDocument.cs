@@ -47,6 +47,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Data;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Utils;
 using iText.IO.Source;
@@ -1860,10 +1861,10 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Registers a product for debugging purposes.</summary>
-        /// <param name="productInfo">product to be registered.</param>
+        /// <param name="productData">product to be registered.</param>
         /// <returns>true if the product hadn't been registered before.</returns>
-        public virtual bool RegisterProduct(ProductInfo productInfo) {
-            return this.fingerPrint.RegisterProduct(productInfo);
+        public virtual bool RegisterProduct(ProductData productData) {
+            return this.fingerPrint.RegisterProduct(productData);
         }
 
         /// <summary>Returns the object containing the registered products.</summary>

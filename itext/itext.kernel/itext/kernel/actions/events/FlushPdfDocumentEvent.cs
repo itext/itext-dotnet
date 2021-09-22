@@ -64,6 +64,7 @@ namespace iText.Kernel.Actions.Events {
             }
             ICollection<String> products = new HashSet<String>();
             foreach (AbstractProductProcessITextEvent @event in events) {
+                pdfDocument.GetFingerPrint().RegisterProduct(@event.GetProductData());
                 if (@event.GetConfirmationType() == EventConfirmationType.ON_CLOSE) {
                     EventManager.GetInstance().OnEvent(new ConfirmEvent(pdfDocument.GetDocumentIdWrapper(), @event));
                 }
