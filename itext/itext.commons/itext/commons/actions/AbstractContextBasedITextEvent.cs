@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Data;
+using iText.Commons.Exceptions;
 
 namespace iText.Commons.Actions {
     /// <summary>Represents a context-based event.</summary>
@@ -32,7 +33,7 @@ namespace iText.Commons.Actions {
     /// Only for internal usage.
     /// </remarks>
     public abstract class AbstractContextBasedITextEvent : AbstractProductITextEvent {
-        private readonly IMetaInfo metaInfo;
+        private IMetaInfo metaInfo;
 
         /// <summary>Creates an event containing auxiliary meta data.</summary>
         /// <param name="productData">is a description of the product which has generated an event</param>
@@ -42,16 +43,25 @@ namespace iText.Commons.Actions {
             this.metaInfo = metaInfo;
         }
 
+        /// <summary>Obtains the current event context class.</summary>
+        /// <returns>context class</returns>
+        public virtual Type GetClassFromContext() {
+            return this.GetType();
+        }
+
+        /// <summary>Sets meta info.</summary>
+        /// <param name="metaInfo">meta info</param>
+        public virtual void SetMetaInfo(IMetaInfo metaInfo) {
+            if (this.metaInfo != null) {
+                throw new InvalidOperationException(CommonsExceptionMessageConstant.META_INFO_SHOULDNT_BE_NULL);
+            }
+            this.metaInfo = metaInfo;
+        }
+
         /// <summary>Obtains stored meta info associated with the event.</summary>
         /// <returns>meta info</returns>
         internal virtual IMetaInfo GetMetaInfo() {
             return metaInfo;
-        }
-
-        /// <summary>Obtains a current event context class.</summary>
-        /// <returns>context class</returns>
-        public virtual Type GetClassFromContext() {
-            return this.GetType();
         }
     }
 }

@@ -35,11 +35,15 @@ namespace iText.Commons.Exceptions {
         /// </description></item>
         /// </list>
         /// </remarks>
-        public const String ELEMENT_ALREADY_HAS_IDENTIFIER = "Element already has sequence id: {0}, new id {1} will be ignored";
+        public const String ELEMENT_ALREADY_HAS_IDENTIFIER = "Element already has sequence id: {0}, new id {1} " +
+             "will be ignored";
 
-        public const String INVALID_USAGE_CONFIGURATION_FORBIDDEN = "Invalid usage of placeholder \"{0}\": any configuration is forbidden";
+        public const String INVALID_USAGE_CONFIGURATION_FORBIDDEN = "Invalid usage of placeholder \"{0}\": any " +
+             "configuration is forbidden";
 
         public const String INVALID_USAGE_FORMAT_REQUIRED = "Invalid usage of placeholder \"{0}\": format is required";
+
+        public const String META_INFO_SHOULDNT_BE_NULL = "Meta info shouldn't be null";
 
         public const String NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT = "No events were registered for the document!";
 
