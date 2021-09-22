@@ -22,10 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Commons.Actions {
     /// <summary>Base marker interface for any generated event of any source.</summary>
-    /// <remarks>
-    /// Base marker interface for any generated event of any source.
-    /// <para />TODO: DEVSIX-5311 rename it IEvent when the oldest mechanism is deleted
-    /// </remarks>
-    public interface IBaseEvent {
+    public interface IEvent {
     }
 }

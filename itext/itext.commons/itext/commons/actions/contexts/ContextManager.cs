@@ -56,22 +56,14 @@ namespace iText.Commons.Actions.Contexts {
 
         static ContextManager() {
             iText.Commons.Actions.Contexts.ContextManager local = new iText.Commons.Actions.Contexts.ContextManager();
-            local.RegisterGenericContextForProducts(NamespaceConstant.ITEXT_CORE_NAMESPACES, JavaCollectionsUtil.SingletonList
-                (NamespaceConstant.ITEXT), JavaCollectionsUtil.Singleton(ProductNameConstant.ITEXT_CORE));
-            local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_DEBUG), JavaCollectionsUtil
-                .SingletonList(NamespaceConstant.PDF_DEBUG), JavaCollectionsUtil.EmptyList<String>());
-            local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_HTML), JavaCollectionsUtil
-                .SingletonList(NamespaceConstant.PDF_HTML), JavaCollectionsUtil.Singleton(ProductNameConstant.PDF_HTML
-                ));
-            local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_INVOICE), 
-                JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_INVOICE), JavaCollectionsUtil.EmptyList<String
-                >());
-            local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_SWEEP), JavaCollectionsUtil
-                .SingletonList(NamespaceConstant.PDF_SWEEP), JavaCollectionsUtil.Singleton(ProductNameConstant.PDF_SWEEP
-                ));
-            local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_TESSERACT4
-                ), JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_TESSERACT4), JavaCollectionsUtil.Singleton
-                (ProductNameConstant.PDF_OCR_TESSERACT4));
+            local.RegisterGenericContext(NamespaceConstant.ITEXT_CORE_NAMESPACES, JavaCollectionsUtil.Singleton(ProductNameConstant
+                .ITEXT_CORE));
+            local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_HTML), JavaCollectionsUtil
+                .Singleton(ProductNameConstant.PDF_HTML));
+            local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_SWEEP), JavaCollectionsUtil
+                .Singleton(ProductNameConstant.PDF_SWEEP));
+            local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_TESSERACT4), JavaCollectionsUtil
+                .Singleton(ProductNameConstant.PDF_OCR_TESSERACT4));
             INSTANCE = local;
         }
 
@@ -137,28 +129,9 @@ namespace iText.Commons.Actions.Contexts {
             return null;
         }
 
-        // TODO DEVSIX-5311 consider renaming to be in sync with renamed registerGenericContextForProducts
-        internal virtual void UnregisterGenericContextForProducts(ICollection<String> namespaces) {
+        internal virtual void UnregisterContext(ICollection<String> namespaces) {
             foreach (String @namespace in namespaces) {
-                UnregisterContext(@namespace);
-            }
-        }
-
-        // TODO DEVSIX-5311 rename into registerGenericContext (currently we cann't rename it as
-        //  the old method with the same arguments but different logic is used for old mechanism)
-        internal virtual void RegisterGenericContextForProducts(ICollection<String> namespaces, ICollection<String
-            > products) {
-            RegisterGenericContextForProducts(namespaces, JavaCollectionsUtil.EmptyList<String>(), products);
-        }
-
-        // TODO DEVSIX-5311 This method is needed for similar working of new and old license mechanism,
-        //  should be moved to single properly method
-        private void RegisterGenericContextForProducts(ICollection<String> namespaces, ICollection<String> eventIds
-            , ICollection<String> products) {
-            GenericContext context = new GenericContext(products);
-            foreach (String @namespace in namespaces) {
-                //Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces
-                RegisterContext(@namespace.ToLowerInvariant(), context);
+                contextMappings.JRemove(@namespace);
             }
         }
 
@@ -169,17 +142,12 @@ namespace iText.Commons.Actions.Contexts {
             return null;
         }
 
-        // TODO DEVSIX-5311 This method is used for old logic of license mechanism, will be removed
-        private void RegisterGenericContext(ICollection<String> namespaces, ICollection<String> eventIds) {
-            RegisterGenericContextForProducts(namespaces, eventIds, JavaCollectionsUtil.EmptyList<String>());
-        }
-
-        private void RegisterContext(String @namespace, IContext context) {
-            contextMappings.Put(@namespace, context);
-        }
-
-        private void UnregisterContext(String @namespace) {
-            contextMappings.JRemove(@namespace);
+        internal virtual void RegisterGenericContext(ICollection<String> namespaces, ICollection<String> products) {
+            GenericContext context = new GenericContext(products);
+            foreach (String @namespace in namespaces) {
+                //Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces
+                contextMappings.Put(@namespace.ToLowerInvariant(), context);
+            }
         }
 
         private class LengthComparator : IComparer<String> {

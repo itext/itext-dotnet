@@ -98,10 +98,10 @@ namespace iText.Kernel.Pdf.Statistics {
             NUnit.Framework.Assert.AreEqual(1, numberOfPagesEvents[2].GetNumberOfPages());
         }
 
-        private class NumberOfPagesStatisticsHandler : IBaseEventHandler {
+        private class NumberOfPagesStatisticsHandler : IEventHandler {
             private IList<NumberOfPagesStatisticsEvent> numberOfPagesEvents = new List<NumberOfPagesStatisticsEvent>();
 
-            public virtual void OnEvent(IBaseEvent @event) {
+            public virtual void OnEvent(IEvent @event) {
                 if (!(@event is NumberOfPagesStatisticsEvent)) {
                     return;
                 }

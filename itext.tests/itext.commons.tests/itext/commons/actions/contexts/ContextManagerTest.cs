@@ -53,19 +53,19 @@ namespace iText.Commons.Actions.Contexts {
             String innerNamespaces = NamespaceConstant.PDF_HTML.ToLowerInvariant();
             NUnit.Framework.Assert.IsTrue(innerNamespaces.StartsWith(outerNamespaces));
             ContextManager managerOuterBeforeInner = new ContextManager();
-            managerOuterBeforeInner.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(outerNamespaces
-                ), JavaCollectionsUtil.EmptyList<String>());
-            managerOuterBeforeInner.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(innerNamespaces
-                ), JavaCollectionsUtil.EmptyList<String>());
+            managerOuterBeforeInner.RegisterGenericContext(JavaCollectionsUtil.SingletonList(outerNamespaces), JavaCollectionsUtil
+                .EmptyList<String>());
+            managerOuterBeforeInner.RegisterGenericContext(JavaCollectionsUtil.SingletonList(innerNamespaces), JavaCollectionsUtil
+                .EmptyList<String>());
             NUnit.Framework.Assert.AreEqual(outerNamespaces, managerOuterBeforeInner.GetRecognisedNamespace(outerNamespaces
                 ));
             NUnit.Framework.Assert.AreEqual(innerNamespaces, managerOuterBeforeInner.GetRecognisedNamespace(innerNamespaces
                 ));
             ContextManager managerInnerBeforeOuter = new ContextManager();
-            managerInnerBeforeOuter.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(innerNamespaces
-                ), JavaCollectionsUtil.EmptyList<String>());
-            managerInnerBeforeOuter.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(outerNamespaces
-                ), JavaCollectionsUtil.EmptyList<String>());
+            managerInnerBeforeOuter.RegisterGenericContext(JavaCollectionsUtil.SingletonList(innerNamespaces), JavaCollectionsUtil
+                .EmptyList<String>());
+            managerInnerBeforeOuter.RegisterGenericContext(JavaCollectionsUtil.SingletonList(outerNamespaces), JavaCollectionsUtil
+                .EmptyList<String>());
             NUnit.Framework.Assert.AreEqual(outerNamespaces, managerInnerBeforeOuter.GetRecognisedNamespace(outerNamespaces
                 ));
             NUnit.Framework.Assert.AreEqual(innerNamespaces, managerInnerBeforeOuter.GetRecognisedNamespace(innerNamespaces
@@ -83,10 +83,9 @@ namespace iText.Commons.Actions.Contexts {
             String testNamespace = "com.hello.world";
             ContextManager manager = new ContextManager();
             NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespace));
-            manager.RegisterGenericContextForProducts(JavaUtil.ArraysAsList(testNamespace), JavaUtil.ArraysAsList("myProduct"
-                ));
+            manager.RegisterGenericContext(JavaUtil.ArraysAsList(testNamespace), JavaUtil.ArraysAsList("myProduct"));
             NUnit.Framework.Assert.AreEqual(testNamespace, manager.GetRecognisedNamespace(testNamespace + ".MyClass"));
-            manager.UnregisterGenericContextForProducts(JavaUtil.ArraysAsList(testNamespace));
+            manager.UnregisterContext(JavaUtil.ArraysAsList(testNamespace));
             NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespace));
         }
 

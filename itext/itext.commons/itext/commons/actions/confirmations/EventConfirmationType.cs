@@ -32,7 +32,7 @@ namespace iText.Commons.Actions.Confirmations {
         /// <summary>
         /// The successful execution of the process associated with the event should be confirmed by the
         /// second invocation of the
-        /// <see cref="EventManager.OnEvent(IBaseEvent)"/>
+        /// <see cref="EventManager.OnEvent(IEvent)"/>
         /// method.
         /// </summary>
         ON_DEMAND,

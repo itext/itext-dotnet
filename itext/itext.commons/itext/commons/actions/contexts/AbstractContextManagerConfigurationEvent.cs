@@ -35,11 +35,11 @@ namespace iText.Commons.Actions.Contexts {
 
         protected internal virtual void RegisterGenericContext(ICollection<String> namespaces, ICollection<String>
              products) {
-            ContextManager.GetInstance().RegisterGenericContextForProducts(namespaces, products);
+            ContextManager.GetInstance().RegisterGenericContext(namespaces, products);
         }
 
-        protected internal virtual void UnregisterGenericContext(ICollection<String> namespaces) {
-            ContextManager.GetInstance().UnregisterGenericContextForProducts(namespaces);
+        protected internal virtual void UnregisterContext(ICollection<String> namespaces) {
+            ContextManager.GetInstance().UnregisterContext(namespaces);
         }
     }
 }

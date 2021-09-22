@@ -24,7 +24,7 @@ using iText.Commons.Actions.Contexts;
 
 namespace iText.Commons.Actions {
     /// <summary>Base class for events handling depending on the context.</summary>
-    public abstract class AbstractContextBasedEventHandler : IBaseEventHandler {
+    public abstract class AbstractContextBasedEventHandler : IEventHandler {
         private readonly IContext defaultContext;
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace iText.Commons.Actions {
         /// <see cref="OnAcceptedEvent(AbstractContextBasedITextEvent)"/>.
         /// </summary>
         /// <param name="event">to handle</param>
-        public void OnEvent(IBaseEvent @event) {
+        public void OnEvent(IEvent @event) {
             if (!(@event is AbstractContextBasedITextEvent)) {
                 return;
             }
