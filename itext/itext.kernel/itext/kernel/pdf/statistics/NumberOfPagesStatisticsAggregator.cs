@@ -85,7 +85,7 @@ namespace iText.Kernel.Pdf.Statistics {
             }
             lock (Lock) {
                 long? documentsOfThisRange = numberOfDocuments.Get(range);
-                long? currentValue = documentsOfThisRange == null ? 1L : documentsOfThisRange.Value + 1L;
+                long? currentValue = documentsOfThisRange == null ? 1L : (documentsOfThisRange.Value + 1L);
                 numberOfDocuments.Put(range, currentValue);
             }
         }

@@ -49,7 +49,7 @@ namespace iText.Commons.Actions.Contexts {
     /// <summary>
     /// Generic context that allows
     /// <see cref="iText.Commons.Actions.AbstractContextBasedITextEvent"/>
-    /// based on the whitelist of supported events
+    /// based on the whitelist of supported events.
     /// </summary>
     public class GenericContext : IContext {
         private readonly ICollection<String> supportedProducts = new HashSet<String>();

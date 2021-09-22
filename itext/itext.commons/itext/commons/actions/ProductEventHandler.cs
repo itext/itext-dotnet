@@ -107,6 +107,10 @@ namespace iText.Commons.Actions {
             return JavaCollectionsUtil.UnmodifiableMap(new Dictionary<String, ITextProductEventProcessor>(processors));
         }
 
+        internal void ClearProcessors() {
+            processors.Clear();
+        }
+
         internal IList<AbstractProductProcessITextEvent> GetEvents(SequenceId id) {
             lock (events) {
                 IList<AbstractProductProcessITextEvent> listOfEvents = events.Get(id);

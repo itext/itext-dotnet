@@ -72,10 +72,8 @@ namespace iText.Commons.Actions {
             if (caughtExceptions.Count == 1) {
                 throw caughtExceptions[0];
             }
-            else {
-                if (!caughtExceptions.IsEmpty()) {
-                    throw new AggregatedException(AggregatedException.ERROR_DURING_EVENT_PROCESSING, caughtExceptions);
-                }
+            if (!caughtExceptions.IsEmpty()) {
+                throw new AggregatedException(AggregatedException.ERROR_DURING_EVENT_PROCESSING, caughtExceptions);
             }
         }
 

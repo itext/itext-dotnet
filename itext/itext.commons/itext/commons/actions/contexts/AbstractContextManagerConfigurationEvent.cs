@@ -29,7 +29,7 @@ namespace iText.Commons.Actions.Contexts {
     /// <remarks>Class is recommended for internal usage. Represents system configuration events.</remarks>
     public abstract class AbstractContextManagerConfigurationEvent : AbstractITextConfigurationEvent {
         /// <summary>Creates an instance of context manager configuration event.</summary>
-        public AbstractContextManagerConfigurationEvent()
+        protected internal AbstractContextManagerConfigurationEvent()
             : base() {
         }
 

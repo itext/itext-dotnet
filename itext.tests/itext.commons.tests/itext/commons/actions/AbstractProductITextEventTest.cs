@@ -20,23 +20,23 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Commons.Actions.Contexts;
+using System;
+using iText.Commons.Actions.Data;
+using iText.Test;
 
-namespace iText.Layout.Renderer {
-    /// <summary>Class to store metaInfo that will be used for layout renderers.</summary>
-    public class MetaInfoContainer {
-        private readonly IMetaInfo metaInfo;
-
-        /// <summary>Creates MetaInfoContainer instance with provided meta info.</summary>
-        /// <param name="metaInfo">the meta info</param>
-        public MetaInfoContainer(IMetaInfo metaInfo) {
-            this.metaInfo = metaInfo;
+namespace iText.Commons.Actions {
+    public class AbstractProductITextEventTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void NullProductDataTest() {
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => new _AbstractProductITextEvent_36
+                (null));
+            NUnit.Framework.Assert.AreEqual("ProductData shouldn't be null.", exception.Message);
         }
 
-        /// <summary>Return the IMetaInfo object.</summary>
-        /// <returns>returns IMetaInfo</returns>
-        internal virtual IMetaInfo GetMetaInfo() {
-            return metaInfo;
+        private sealed class _AbstractProductITextEvent_36 : AbstractProductITextEvent {
+            public _AbstractProductITextEvent_36(ProductData baseArg1)
+                : base(baseArg1) {
+            }
         }
     }
 }

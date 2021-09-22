@@ -32,7 +32,7 @@ namespace iText.Commons.Exceptions {
     public class ITextException : Exception {
         /// <summary>Creates a new ITextException with no error message and cause.</summary>
         public ITextException()
-            : base() {
+            : base(CommonsExceptionMessageConstant.UNKNOWN_ITEXT_EXCEPTION) {
         }
 
         /// <summary>Creates a new ITextException.</summary>

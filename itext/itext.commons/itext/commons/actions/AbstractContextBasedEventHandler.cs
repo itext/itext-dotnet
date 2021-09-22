@@ -32,7 +32,7 @@ namespace iText.Commons.Actions {
         /// contexts.
         /// </summary>
         /// <param name="onUnknownContext">is a fallback for events within unknown context</param>
-        public AbstractContextBasedEventHandler(IContext onUnknownContext)
+        protected internal AbstractContextBasedEventHandler(IContext onUnknownContext)
             : base() {
             this.defaultContext = onUnknownContext;
         }

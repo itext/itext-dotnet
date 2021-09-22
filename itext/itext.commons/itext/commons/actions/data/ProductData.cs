@@ -62,7 +62,7 @@ namespace iText.Commons.Actions.Data {
             return productName;
         }
 
-        /// <summary>Getter for a version of the product</summary>
+        /// <summary>Getter for a version of the product.</summary>
         /// <returns>version of the product</returns>
         public String GetVersion() {
             return version;
@@ -74,7 +74,7 @@ namespace iText.Commons.Actions.Data {
             return sinceCopyrightYear;
         }
 
-        /// <summary>Getter for the last year of copyright period</summary>
+        /// <summary>Getter for the last year of copyright period.</summary>
         /// <returns>the last year of copyright</returns>
         public int GetToCopyrightYear() {
             return toCopyrightYear;

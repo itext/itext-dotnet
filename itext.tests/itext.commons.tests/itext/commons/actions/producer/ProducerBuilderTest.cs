@@ -38,6 +38,15 @@ namespace iText.Commons.Actions.Producer {
         [NUnit.Framework.Test]
         public virtual void EmptyEventsProducerLineTest() {
             NUnit.Framework.Assert.That(() =>  {
+                ProducerBuilder.ModifyProducer(JavaCollectionsUtil.EmptyList<AbstractProductProcessITextEvent>(), null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(CommonsExceptionMessageConstant.NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NullEventsProducerLineTest() {
+            NUnit.Framework.Assert.That(() =>  {
                 ProducerBuilder.ModifyProducer((IList<AbstractProductProcessITextEvent>)null, null);
             }
             , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(CommonsExceptionMessageConstant.NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT))

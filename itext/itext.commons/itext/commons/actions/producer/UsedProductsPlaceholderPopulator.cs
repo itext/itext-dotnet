@@ -66,6 +66,10 @@ namespace iText.Commons.Actions.Producer {
 
         private const String PRODUCTS_SEPARATOR = ", ";
 
+        public UsedProductsPlaceholderPopulator() {
+        }
+
+        // Empty constructor.
         /// <summary>
         /// Builds a replacement for a placeholder <c>usedProducts</c> in accordance with the
         /// registered events and provided format.
@@ -184,21 +188,21 @@ namespace iText.Commons.Actions.Producer {
                 }
                 UsedProductsPlaceholderPopulator.ProductRepresentation that = (UsedProductsPlaceholderPopulator.ProductRepresentation
                     )o;
-                if (GetProductName() != null ? !GetProductName().Equals(that.GetProductName()) : that.GetProductName() != 
-                    null) {
+                if (GetProductName() == null ? that.GetProductName() != null : !GetProductName().Equals(that.GetProductName
+                    ())) {
                     return false;
                 }
-                if (GetProductUsageType() != null ? !GetProductUsageType().Equals(that.GetProductUsageType()) : that.GetProductUsageType
-                    () != null) {
+                if (GetProductUsageType() == null ? that.GetProductUsageType() != null : !GetProductUsageType().Equals(that
+                    .GetProductUsageType())) {
                     return false;
                 }
-                return GetVersion() != null ? GetVersion().Equals(that.GetVersion()) : that.GetVersion() == null;
+                return GetVersion() == null ? that.GetVersion() == null : GetVersion().Equals(that.GetVersion());
             }
 
             public override int GetHashCode() {
-                int result = GetProductName() != null ? GetProductName().GetHashCode() : 0;
-                result = 31 * result + (GetProductUsageType() != null ? GetProductUsageType().GetHashCode() : 0);
-                result = 31 * result + (GetVersion() != null ? GetVersion().GetHashCode() : 0);
+                int result = GetProductName() == null ? 0 : GetProductName().GetHashCode();
+                result = 31 * result + (GetProductUsageType() == null ? 0 : GetProductUsageType().GetHashCode());
+                result = 31 * result + (GetVersion() == null ? 0 : GetVersion().GetHashCode());
                 return result;
             }
         }

@@ -146,14 +146,13 @@ namespace iText.Commons.Actions.Producer {
                 String placeholder = matcher.Group(1);
                 int delimiterPosition = placeholder.IndexOf(FORMAT_DELIMITER);
                 String placeholderName;
-                String parameter;
-                if (placeholder.IndexOf(FORMAT_DELIMITER) != -1) {
-                    placeholderName = placeholder.JSubstring(0, delimiterPosition);
-                    parameter = placeholder.Substring(delimiterPosition + 1);
+                String parameter = null;
+                if (placeholder.IndexOf(FORMAT_DELIMITER) == -1) {
+                    placeholderName = placeholder;
                 }
                 else {
-                    placeholderName = placeholder;
-                    parameter = null;
+                    placeholderName = placeholder.JSubstring(0, delimiterPosition);
+                    parameter = placeholder.Substring(delimiterPosition + 1);
                 }
                 IPlaceholderPopulator populator = PLACEHOLDER_POPULATORS.Get(placeholderName);
                 if (populator == null) {

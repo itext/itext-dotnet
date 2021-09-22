@@ -49,7 +49,7 @@ using iText.Commons.Utils;
 namespace iText.Signatures {
     /// <summary>An exception that is thrown when something is wrong with a certificate.</summary>
     public class VerificationException : GeneralSecurityException {
-        /// <summary>Creates a VerificationException</summary>
+        /// <summary>Creates a VerificationException.</summary>
         /// <param name="cert">is a failed certificate</param>
         /// <param name="message">is a reason of failure</param>
         public VerificationException(X509Certificate cert, String message)

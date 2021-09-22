@@ -24,7 +24,7 @@ namespace iText.Commons.Actions {
     /// <summary>The interface for an event handler.</summary>
     /// <remarks>
     /// The interface for an event handler.
-    /// TODO: DEVSIX-5311 rename it IEventHandler when the oldest mechanism is deleted
+    /// <para />TODO: DEVSIX-5311 rename it IEventHandler when the oldest mechanism is deleted
     /// </remarks>
     public interface IBaseEventHandler {
         /// <summary>Handles the event.</summary>

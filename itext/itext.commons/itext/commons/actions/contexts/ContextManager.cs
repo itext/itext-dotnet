@@ -78,7 +78,7 @@ namespace iText.Commons.Actions.Contexts {
         internal ContextManager() {
         }
 
-        /// <summary>Gets the singleton instance of this class</summary>
+        /// <summary>Gets the singleton instance of this class.</summary>
         /// <returns>
         /// the
         /// <see cref="ContextManager"/>
@@ -102,7 +102,7 @@ namespace iText.Commons.Actions.Contexts {
         /// if the class is unknown.
         /// </returns>
         public virtual IContext GetContext(Type clazz) {
-            return clazz != null ? GetContext(clazz.FullName) : null;
+            return clazz == null ? null : GetContext(clazz.FullName);
         }
 
         /// <summary>Gets the context associated with the passed class object.</summary>
@@ -137,6 +137,13 @@ namespace iText.Commons.Actions.Contexts {
             return null;
         }
 
+        // TODO DEVSIX-5311 consider renaming to be in sync with renamed registerGenericContextForProducts
+        internal virtual void UnregisterGenericContextForProducts(ICollection<String> namespaces) {
+            foreach (String @namespace in namespaces) {
+                UnregisterContext(@namespace);
+            }
+        }
+
         // TODO DEVSIX-5311 rename into registerGenericContext (currently we cann't rename it as
         //  the old method with the same arguments but different logic is used for old mechanism)
         internal virtual void RegisterGenericContextForProducts(ICollection<String> namespaces, ICollection<String
@@ -144,10 +151,14 @@ namespace iText.Commons.Actions.Contexts {
             RegisterGenericContextForProducts(namespaces, JavaCollectionsUtil.EmptyList<String>(), products);
         }
 
-        // TODO DEVSIX-5311 consider renaming to be in sync with renamed registerGenericContextForProducts
-        internal virtual void UnregisterGenericContextForProducts(ICollection<String> namespaces) {
+        // TODO DEVSIX-5311 This method is needed for similar working of new and old license mechanism,
+        //  should be moved to single properly method
+        private void RegisterGenericContextForProducts(ICollection<String> namespaces, ICollection<String> eventIds
+            , ICollection<String> products) {
+            GenericContext context = new GenericContext(products);
             foreach (String @namespace in namespaces) {
-                UnregisterContext(@namespace);
+                //Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces
+                RegisterContext(@namespace.ToLowerInvariant(), context);
             }
         }
 
@@ -163,17 +174,6 @@ namespace iText.Commons.Actions.Contexts {
             RegisterGenericContextForProducts(namespaces, eventIds, JavaCollectionsUtil.EmptyList<String>());
         }
 
-        // TODO DEVSIX-5311 This method is needed for similar working of new and old license mechanism,
-        //  should be moved to single properly method
-        private void RegisterGenericContextForProducts(ICollection<String> namespaces, ICollection<String> eventIds
-            , ICollection<String> products) {
-            GenericContext context = new GenericContext(products);
-            foreach (String @namespace in namespaces) {
-                //Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces
-                RegisterContext(@namespace.ToLowerInvariant(), context);
-            }
-        }
-
         private void RegisterContext(String @namespace, IContext context) {
             contextMappings.Put(@namespace, context);
         }
@@ -184,12 +184,12 @@ namespace iText.Commons.Actions.Contexts {
 
         private class LengthComparator : IComparer<String> {
             public virtual int Compare(String o1, String o2) {
-                int lengthComparison = -JavaUtil.IntegerCompare(o1.Length, o2.Length);
-                if (0 != lengthComparison) {
-                    return lengthComparison;
+                int lengthComparison = JavaUtil.IntegerCompare(o2.Length, o1.Length);
+                if (0 == lengthComparison) {
+                    return string.CompareOrdinal(o1, o2);
                 }
                 else {
-                    return string.CompareOrdinal(o1, o2);
+                    return lengthComparison;
                 }
             }
         }

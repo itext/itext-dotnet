@@ -36,7 +36,7 @@ namespace iText.Commons.Actions {
         /// to wrap
         /// </param>
         /// <param name="confirmationType">event confirmation type</param>
-        public AbstractEventWrapper(AbstractProductProcessITextEvent @event, EventConfirmationType confirmationType
+        protected internal AbstractEventWrapper(AbstractProductProcessITextEvent @event, EventConfirmationType confirmationType
             )
             : base(@event.GetSequenceId(), @event.GetProductData(), @event.GetMetaInfo(), confirmationType) {
             this.@event = @event;
@@ -58,8 +58,8 @@ namespace iText.Commons.Actions {
         /// to wrap
         /// </param>
         /// <param name="confirmationType">event confirmation type</param>
-        public AbstractEventWrapper(SequenceId updatedSequenceId, AbstractProductProcessITextEvent @event, EventConfirmationType
-             confirmationType)
+        protected internal AbstractEventWrapper(SequenceId updatedSequenceId, AbstractProductProcessITextEvent @event
+            , EventConfirmationType confirmationType)
             : base(updatedSequenceId, @event.GetProductData(), @event.GetMetaInfo(), confirmationType) {
             this.@event = @event;
         }

@@ -29,7 +29,7 @@ using iText.Kernel.Actions.Data;
 
 namespace iText.Kernel.Counter.Event {
     /// <summary>Class represents events registered in iText core module.</summary>
-    public class ITextCoreProductEvent : AbstractProductProcessITextEvent {
+    public sealed class ITextCoreProductEvent : AbstractProductProcessITextEvent {
         /// <summary>Process pdf event type.</summary>
         public const String PROCESS_PDF = "process-pdf";
 

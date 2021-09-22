@@ -28,7 +28,7 @@ namespace iText.Commons.Actions.Data {
     /// <see cref="ProductData"/>
     /// related to iText commons module.
     /// </summary>
-    public class CommonsProductData {
+    public sealed class CommonsProductData {
         private const String COMMONS_PUBLIC_PRODUCT_NAME = "Commons";
 
         private const String COMMONS_PRODUCT_NAME = "commons";
@@ -42,6 +42,10 @@ namespace iText.Commons.Actions.Data {
         private static readonly ProductData COMMONS_PRODUCT_DATA = new ProductData(COMMONS_PUBLIC_PRODUCT_NAME, COMMONS_PRODUCT_NAME
             , COMMONS_VERSION, COMMONS_COPYRIGHT_SINCE, COMMONS_COPYRIGHT_TO);
 
+        private CommonsProductData() {
+        }
+
+        // Empty constructor for util class
         /// <summary>
         /// Getter for an instance of
         /// <see cref="ProductData"/>

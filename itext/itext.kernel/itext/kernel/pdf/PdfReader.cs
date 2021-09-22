@@ -1452,20 +1452,16 @@ namespace iText.Kernel.Pdf {
         /// <param name="byteSource">the source to check</param>
         /// <returns>a tokeniser that is guaranteed to start at the PDF header</returns>
         private static PdfTokenizer GetOffsetTokeniser(IRandomAccessSource byteSource, bool closeStream) {
-            iText.IO.IOException possibleException = null;
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(byteSource));
             int offset;
             try {
                 offset = tok.GetHeaderOffset();
             }
             catch (iText.IO.IOException ex) {
-                possibleException = ex;
-                throw possibleException;
-            }
-            finally {
-                if (possibleException != null && closeStream) {
+                if (closeStream) {
                     tok.Close();
                 }
+                throw;
             }
             if (offset != 0) {
                 IRandomAccessSource offsetSource = new WindowRandomAccessSource(byteSource, offset);

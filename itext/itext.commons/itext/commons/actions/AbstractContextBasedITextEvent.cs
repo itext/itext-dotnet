@@ -37,7 +37,7 @@ namespace iText.Commons.Actions {
         /// <summary>Creates an event containing auxiliary meta data.</summary>
         /// <param name="productData">is a description of the product which has generated an event</param>
         /// <param name="metaInfo">is an auxiliary meta info</param>
-        public AbstractContextBasedITextEvent(ProductData productData, IMetaInfo metaInfo)
+        protected internal AbstractContextBasedITextEvent(ProductData productData, IMetaInfo metaInfo)
             : base(productData) {
             this.metaInfo = metaInfo;
         }

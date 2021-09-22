@@ -79,6 +79,10 @@ namespace iText.Commons.Actions.Producer {
         private static readonly ICollection<String> ALLOWED_PATTERNS = new HashSet<String>(JavaUtil.ArraysAsList("dd"
             , "MM", "MMM", "MMMM", "yy", "yyyy", "ss", "mm", "HH"));
 
+        public CurrentDatePlaceholderPopulator() {
+        }
+
+        // Empty constructor.
         /// <summary>
         /// Builds a replacement for a placeholder <c>currentDate</c> in accordance with the
         /// provided format.

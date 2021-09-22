@@ -27,6 +27,8 @@ namespace iText.Commons.Utils {
     /// <summary>Utility class for work with collections.</summary>
     /// <remarks>Utility class for work with collections. Not for public use.</remarks>
     public sealed class MapUtil {
+        private const int HASH_MULTIPLIER = 31;
+
         private MapUtil() {
         }
 
@@ -117,8 +119,8 @@ namespace iText.Commons.Utils {
             foreach (KeyValuePair<K, V> entry in m1) {
                 K key = entry.Key;
                 V value = entry.Value;
-                hash = 31 * hash + (key == null ? 0 : key.GetHashCode());
-                hash = 31 * hash + (value == null ? 0 : value.GetHashCode());
+                hash = HASH_MULTIPLIER * hash + (key == null ? 0 : key.GetHashCode());
+                hash = HASH_MULTIPLIER * hash + (value == null ? 0 : value.GetHashCode());
             }
             return hash;
         }

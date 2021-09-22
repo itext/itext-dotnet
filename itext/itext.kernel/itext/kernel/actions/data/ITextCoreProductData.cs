@@ -30,7 +30,7 @@ namespace iText.Kernel.Actions.Data {
     /// <see cref="iText.Commons.Actions.Data.ProductData"/>
     /// related to iText core module.
     /// </summary>
-    public class ITextCoreProductData {
+    public sealed class ITextCoreProductData {
         private const String CORE_PUBLIC_PRODUCT_NAME = "Core";
 
         private const String CORE_VERSION = "7.2.0-SNAPSHOT";
@@ -42,6 +42,10 @@ namespace iText.Kernel.Actions.Data {
         private static readonly ProductData ITEXT_PRODUCT_DATA = new ProductData(CORE_PUBLIC_PRODUCT_NAME, ProductNameConstant
             .ITEXT_CORE, CORE_VERSION, CORE_COPYRIGHT_SINCE, CORE_COPYRIGHT_TO);
 
+        private ITextCoreProductData() {
+        }
+
+        // Empty constructor.
         /// <summary>
         /// Getter for an instance of
         /// <see cref="iText.Commons.Actions.Data.ProductData"/>

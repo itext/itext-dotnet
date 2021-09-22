@@ -50,8 +50,8 @@ namespace iText.Commons.Actions {
         /// defines when the event should be confirmed to notify that the
         /// associated process has finished successfully
         /// </param>
-        public AbstractProductProcessITextEvent(SequenceId sequenceId, ProductData productData, IMetaInfo metaInfo
-            , EventConfirmationType confirmationType)
+        protected internal AbstractProductProcessITextEvent(SequenceId sequenceId, ProductData productData, IMetaInfo
+             metaInfo, EventConfirmationType confirmationType)
             : base(productData, metaInfo) {
             this.sequenceId = new WeakReference(sequenceId);
             this.confirmationType = confirmationType;
@@ -65,7 +65,7 @@ namespace iText.Commons.Actions {
         /// defines when the event should be confirmed to notify that the
         /// associated process has finished successfully
         /// </param>
-        public AbstractProductProcessITextEvent(ProductData productData, IMetaInfo metaInfo, EventConfirmationType
+        protected internal AbstractProductProcessITextEvent(ProductData productData, IMetaInfo metaInfo, EventConfirmationType
              confirmationType)
             : this(null, productData, metaInfo, confirmationType) {
         }

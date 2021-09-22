@@ -25,7 +25,7 @@ using System.Collections.Generic;
 namespace iText.Layout.Element {
     /// <summary>The interface represents abstract layout element and provides an access to its children.</summary>
     public interface IAbstractElement : IElement {
-        /// <summary>Gets the child elements of this elements</summary>
+        /// <summary>Gets the child elements of this elements.</summary>
         /// <returns>a list of children</returns>
         IList<IElement> GetChildren();
     }

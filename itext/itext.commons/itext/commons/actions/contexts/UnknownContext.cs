@@ -46,20 +46,20 @@ using iText.Commons.Actions;
 namespace iText.Commons.Actions.Contexts {
     /// <summary>
     /// The fallback
-    /// <see cref="IContext"/>
+    /// <see cref="IContext"/>.
     /// </summary>
     public class UnknownContext : IContext {
         /// <summary>
         /// The
         /// <see cref="IContext"/>
-        /// that forbids all events
+        /// that forbids all events.
         /// </summary>
         public static readonly IContext RESTRICTIVE = new iText.Commons.Actions.Contexts.UnknownContext(false);
 
         /// <summary>
         /// The
         /// <see cref="IContext"/>
-        /// that allows all events
+        /// that allows all events.
         /// </summary>
         public static readonly IContext PERMISSIVE = new iText.Commons.Actions.Contexts.UnknownContext(true);
 

@@ -46,7 +46,7 @@ namespace iText.Commons.Actions {
         /// on passed product data. Only for internal usage.
         /// </remarks>
         /// <param name="productData">is a description of the product which has generated an event</param>
-        public AbstractProductITextEvent(ProductData productData)
+        protected internal AbstractProductITextEvent(ProductData productData)
             : base() {
             if (productData == null) {
                 // IllegalStateException is thrown because AbstractProductITextEvent for internal usage

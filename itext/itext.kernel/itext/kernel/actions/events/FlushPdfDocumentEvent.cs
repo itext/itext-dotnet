@@ -59,10 +59,10 @@ namespace iText.Kernel.Actions.Events {
                 return;
             }
             IList<AbstractProductProcessITextEvent> events = GetEvents(pdfDocument.GetDocumentIdWrapper());
-            ICollection<String> products = new HashSet<String>();
             if (events == null || events.IsEmpty()) {
                 return;
             }
+            ICollection<String> products = new HashSet<String>();
             foreach (AbstractProductProcessITextEvent @event in events) {
                 if (@event.GetConfirmationType() == EventConfirmationType.ON_CLOSE) {
                     EventManager.GetInstance().OnEvent(new ConfirmEvent(pdfDocument.GetDocumentIdWrapper(), @event));

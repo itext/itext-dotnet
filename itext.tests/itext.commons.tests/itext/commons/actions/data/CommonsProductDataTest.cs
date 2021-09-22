@@ -20,23 +20,18 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Commons.Actions.Contexts;
+using iText.Test;
 
-namespace iText.Layout.Renderer {
-    /// <summary>Class to store metaInfo that will be used for layout renderers.</summary>
-    public class MetaInfoContainer {
-        private readonly IMetaInfo metaInfo;
-
-        /// <summary>Creates MetaInfoContainer instance with provided meta info.</summary>
-        /// <param name="metaInfo">the meta info</param>
-        public MetaInfoContainer(IMetaInfo metaInfo) {
-            this.metaInfo = metaInfo;
-        }
-
-        /// <summary>Return the IMetaInfo object.</summary>
-        /// <returns>returns IMetaInfo</returns>
-        internal virtual IMetaInfo GetMetaInfo() {
-            return metaInfo;
+namespace iText.Commons.Actions.Data {
+    public class CommonsProductDataTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void GetInstanceTest() {
+            ProductData commonsProductData = CommonsProductData.GetInstance();
+            NUnit.Framework.Assert.AreEqual("Commons", commonsProductData.GetPublicProductName());
+            NUnit.Framework.Assert.AreEqual("commons", commonsProductData.GetProductName());
+            NUnit.Framework.Assert.AreEqual("7.2.0-SNAPSHOT", commonsProductData.GetVersion());
+            NUnit.Framework.Assert.AreEqual(2000, commonsProductData.GetSinceCopyrightYear());
+            NUnit.Framework.Assert.AreEqual(2021, commonsProductData.GetToCopyrightYear());
         }
     }
 }

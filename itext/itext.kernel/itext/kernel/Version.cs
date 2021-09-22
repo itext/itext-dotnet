@@ -73,7 +73,7 @@ namespace iText.Kernel {
         /// iText is a registered trademark by iText Group NV.
         /// Please don't change this constant.
         /// </remarks>
-        private const String iTextProductName = "iText\u00ae";
+        private const String iTextProductName = "iText®";
 
         /// <summary>This String contains the iText version as shown in the producer line.</summary>
         /// <remarks>
@@ -82,8 +82,8 @@ namespace iText.Kernel {
         /// iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
-        private static readonly String producerLine = iTextProductName + " " + ITextCoreProductData.GetInstance().
-            GetVersion() + " \u00a92000-2021 iText Group NV";
+        private static readonly String PRODUCER_LINE = iTextProductName + " " + ITextCoreProductData.GetInstance()
+            .GetVersion() + " ©2000-2021 iText Group NV";
 
         /// <summary>The version info;</summary>
         private readonly VersionInfo info;
@@ -285,7 +285,7 @@ namespace iText.Kernel {
         }
 
         private static iText.Kernel.Version InitDefaultLicensedVersion(String ownerName, String key) {
-            String producer = producerLine + " (" + ownerName;
+            String producer = PRODUCER_LINE + " (" + ownerName;
             if (!key.ToLowerInvariant().StartsWith("trial")) {
                 producer += "; licensed version)";
             }
@@ -296,7 +296,7 @@ namespace iText.Kernel {
         }
 
         private static iText.Kernel.Version InitAGPLVersion(Exception cause, String key) {
-            String producer = producerLine + AGPL;
+            String producer = PRODUCER_LINE + AGPL;
             bool expired = cause != null && cause.Message != null && cause.Message.Contains("expired");
             return InitVersion(producer, key, expired);
         }

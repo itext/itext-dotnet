@@ -320,12 +320,10 @@ namespace iText.StyledXmlParser.Css.Util {
                 if (@params.Count > QUANTITY_OF_PARAMS_WITH_FALLBACK_OR_TYPE) {
                     return null;
                 }
-                else {
-                    if (@params.Count == QUANTITY_OF_PARAMS_WITH_FALLBACK_OR_TYPE) {
-                        typeOfAttribute = ExtractTypeOfAttribute(@params[1]);
-                        if (typeOfAttribute == null) {
-                            return null;
-                        }
+                if (@params.Count == QUANTITY_OF_PARAMS_WITH_FALLBACK_OR_TYPE) {
+                    typeOfAttribute = ExtractTypeOfAttribute(@params[1]);
+                    if (typeOfAttribute == null) {
+                        return null;
                     }
                 }
                 String attributeName = @params[0];

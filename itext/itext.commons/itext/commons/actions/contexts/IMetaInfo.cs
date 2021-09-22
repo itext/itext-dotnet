@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Commons.Actions.Contexts {
-    /// <summary>The meta info that can holds information about instance that throws the event</summary>
+    /// <summary>The meta info that can holds information about instance that throws the event.</summary>
     public interface IMetaInfo {
     }
 }

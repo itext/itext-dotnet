@@ -87,7 +87,7 @@ namespace iText.Kernel.Pdf.Statistics {
             }
             lock (Lock) {
                 long? documentsOfThisRange = numberOfDocuments.Get(range);
-                long? currentValue = documentsOfThisRange == null ? 1L : documentsOfThisRange.Value + 1L;
+                long? currentValue = documentsOfThisRange == null ? 1L : (documentsOfThisRange.Value + 1L);
                 numberOfDocuments.Put(range, currentValue);
             }
         }
@@ -113,9 +113,9 @@ namespace iText.Kernel.Pdf.Statistics {
             if (!(aggregator is SizeOfPdfStatisticsAggregator)) {
                 return;
             }
-            IDictionary<String, long?> numberOfDocuments = ((SizeOfPdfStatisticsAggregator)aggregator).numberOfDocuments;
+            IDictionary<String, long?> amountOfDocuments = ((SizeOfPdfStatisticsAggregator)aggregator).numberOfDocuments;
             lock (Lock) {
-                MapUtil.Merge(this.numberOfDocuments, numberOfDocuments, (el1, el2) => {
+                MapUtil.Merge(this.numberOfDocuments, amountOfDocuments, (el1, el2) => {
                     if (el2 == null) {
                         return el1;
                     }

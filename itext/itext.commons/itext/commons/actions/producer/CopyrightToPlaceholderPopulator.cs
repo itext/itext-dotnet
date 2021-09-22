@@ -34,6 +34,10 @@ namespace iText.Commons.Actions.Producer {
     /// product creation the latest <c>copyrightTo</c> year is picked as a resulting value
     /// </remarks>
     internal class CopyrightToPlaceholderPopulator : IPlaceholderPopulator {
+        public CopyrightToPlaceholderPopulator() {
+        }
+
+        // Empty constructor.
         /// <summary>
         /// Builds a replacement for a placeholder <c>copyrightTo</c> in accordance with the
         /// registered events.

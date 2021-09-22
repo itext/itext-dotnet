@@ -38,7 +38,7 @@ namespace iText.Commons.Actions {
 
         /// <summary>Creates an instance of abstract iText event.</summary>
         /// <remarks>Creates an instance of abstract iText event. Only for internal usage.</remarks>
-        public AbstractITextEvent() {
+        protected internal AbstractITextEvent() {
             bool isUnknown = true;
             foreach (String @namespace in INTERNAL_PACKAGES.Keys) {
                 if (this.GetType().FullName.StartsWith(@namespace)) {
