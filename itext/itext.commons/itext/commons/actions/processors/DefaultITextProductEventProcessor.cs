@@ -30,10 +30,7 @@ using iText.Commons.Utils;
 namespace iText.Commons.Actions.Processors {
     /// <summary>Defines a default strategy of product event processing.</summary>
     public class DefaultITextProductEventProcessor : AbstractITextProductEventProcessor {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.Processors.DefaultITextProductEventProcessor
-            ));
-
-        private static readonly byte[] messageForLogging = Convert.FromBase64String("WW91IGFyZSB1c2luZyBpVGV4dCB1bmRlciB0aGUgQUdQTC4KCklmIHRoaXMgaXMgeW9"
+        internal static readonly byte[] MESSAGE_FOR_LOGGING = Convert.FromBase64String("WW91IGFyZSB1c2luZyBpVGV4dCB1bmRlciB0aGUgQUdQTC4KCklmIHRoaXMgaXMgeW9"
              + "1ciBpbnRlbnRpb24sIHlvdSBoYXZlIHB1Ymxpc2hlZCB5b3VyIG93biBzb3VyY2UgY2" + "9kZSBhcyBBR1BMIHNvZnR3YXJlIHRvby4KUGxlYXNlIGxldCB1cyBrbm93IHdoZXJlI"
              + "HRvIGZpbmQgeW91ciBzb3VyY2UgY29kZSBieSBzZW5kaW5nIGEgbWFpbCB0byBhZ3Bs" + "QGl0ZXh0cGRmLmNvbQpXZSdkIGJlIGhvbm9yZWQgdG8gYWRkIGl0IHRvIG91ciBsaXN"
              + "0IG9mIEFHUEwgcHJvamVjdHMgYnVpbHQgb24gdG9wIG9mIGlUZXh0IDcKYW5kIHdlJ2" + "xsIGV4cGxhaW4gaG93IHRvIHJlbW92ZSB0aGlzIG1lc3NhZ2UgZnJvbSB5b3VyIGVyc"
@@ -41,6 +38,9 @@ namespace iText.Commons.Actions.Processors {
              + "0aGlzIGNhc2UsIHBsZWFzZSBjb250YWN0IHVzIGJ5IGZpbGxpbmcgb3V0IHRoaXMgZm" + "9ybTogaHR0cDovL2l0ZXh0cGRmLmNvbS9zYWxlcwpJZiB5b3UgYXJlIGEgY3VzdG9tZ"
              + "XIsIHdlJ2xsIGV4cGxhaW4gaG93IHRvIGluc3RhbGwgeW91ciBsaWNlbnNlIGtleSB0" + "byBhdm9pZCB0aGlzIG1lc3NhZ2UuCklmIHlvdSdyZSBub3QgYSBjdXN0b21lciwgd2U"
              + "nbGwgZXhwbGFpbiB0aGUgYmVuZWZpdHMgb2YgYmVjb21pbmcgYSBjdXN0b21lci4=");
+
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.Processors.DefaultITextProductEventProcessor
+            ));
 
         private static readonly long[] REPEAT = new long[] { 10000L, 5000L, 1000L };
 
@@ -58,7 +58,7 @@ namespace iText.Commons.Actions.Processors {
         /// <param name="productName">is a product name</param>
         public DefaultITextProductEventProcessor(String productName)
             : base(productName) {
-            repeatLevel = new AtomicLong(REPEAT[(int)level.Get()]);
+            repeatLevel = new AtomicLong(AcquireRepeatLevel((int)level.Get()));
         }
 
         public override void OnEvent(AbstractProductProcessITextEvent @event) {
@@ -72,12 +72,12 @@ namespace iText.Commons.Actions.Processors {
                     if (level.IncrementAndGet() > MAX_LVL) {
                         level.Set(MAX_LVL);
                     }
-                    repeatLevel.Set(REPEAT[(int)level.Get()]);
+                    repeatLevel.Set(AcquireRepeatLevel((int)level.Get()));
                     isNeededToLogMessage = true;
                 }
             }
             if (isNeededToLogMessage) {
-                String message = iText.Commons.Utils.JavaUtil.GetStringForBytes(messageForLogging, iText.Commons.Utils.EncodingUtil.ISO_8859_1
+                String message = iText.Commons.Utils.JavaUtil.GetStringForBytes(MESSAGE_FOR_LOGGING, iText.Commons.Utils.EncodingUtil.ISO_8859_1
                     );
                 LOGGER.LogInformation(message);
                 System.Console.Out.WriteLine(message);
@@ -86,6 +86,10 @@ namespace iText.Commons.Actions.Processors {
 
         public override String GetUsageType() {
             return "AGPL";
+        }
+
+        internal virtual long AcquireRepeatLevel(int lvl) {
+            return REPEAT[lvl];
         }
     }
 }

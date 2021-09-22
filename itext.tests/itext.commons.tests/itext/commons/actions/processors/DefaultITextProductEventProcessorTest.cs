@@ -21,18 +21,71 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Data;
+using iText.Commons.Actions.Sequence;
+using iText.Commons.Ecosystem;
 using iText.Commons.Exceptions;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Commons.Actions.Processors {
     public class DefaultITextProductEventProcessorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ConstructorWithNullProductNameTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                new DefaultITextProductEventProcessor(null);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new DefaultITextProductEventProcessor
+                (null));
+            NUnit.Framework.Assert.AreEqual(CommonsExceptionMessageConstant.PRODUCT_NAME_CAN_NOT_BE_NULL, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("{0} you are probably {1}", LogLevel = LogLevelConstants.INFO)]
+        public virtual void MessageIsLoggedTest() {
+            DefaultITextProductEventProcessorTest.TestDefaultITextProductEventProcessor testProcessor = new DefaultITextProductEventProcessorTest.TestDefaultITextProductEventProcessor
+                ();
+            ITextTestEvent e = new ITextTestEvent(new SequenceId(), CommonsProductData.GetInstance(), null, "test event"
+                );
+            NUnit.Framework.Assert.DoesNotThrow(() => testProcessor.OnEvent(new ConfirmEvent(e)));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("{0} you are probably {1}", LogLevel = LogLevelConstants.INFO, Count = 4)]
+        public virtual void MessageIsLoggedThreeTimesTest() {
+            int iterationsNumber = 15;
+            // "1" correspond to expected iterations with log messages:
+            // 1 0 0 0 0
+            // 0 1 0 0 0
+            // 1 0 0 0 1
+            DefaultITextProductEventProcessorTest.TestDefaultITextProductEventProcessor testProcessor = new DefaultITextProductEventProcessorTest.TestDefaultITextProductEventProcessor
+                ();
+            ITextTestEvent e = new ITextTestEvent(new SequenceId(), CommonsProductData.GetInstance(), null, "test event"
+                );
+            for (int i = 0; i < iterationsNumber; ++i) {
+                NUnit.Framework.Assert.DoesNotThrow(() => testProcessor.OnEvent(new ConfirmEvent(e)));
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(CommonsExceptionMessageConstant.PRODUCT_NAME_CAN_NOT_BE_NULL))
-;
+        }
+
+        private class TestDefaultITextProductEventProcessor : DefaultITextProductEventProcessor {
+            public TestDefaultITextProductEventProcessor()
+                : base("test product") {
+            }
+
+            internal override long AcquireRepeatLevel(int lvl) {
+                switch (lvl) {
+                    case 0: {
+                        return 0;
+                    }
+
+                    case 1: {
+                        return 5;
+                    }
+
+                    case 2: {
+                        return 3;
+                    }
+                }
+                return 0;
+            }
         }
     }
 }
