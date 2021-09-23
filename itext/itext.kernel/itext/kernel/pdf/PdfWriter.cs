@@ -55,9 +55,6 @@ namespace iText.Kernel.Pdf {
 
         private static readonly byte[] endobj = ByteUtils.GetIsoBytes("\nendobj\n");
 
-        // For internal usage only
-        private PdfOutputStream duplicateStream = null;
-
         protected internal WriterProperties properties;
 
         /// <summary>Currently active object stream.</summary>
@@ -97,9 +94,6 @@ namespace iText.Kernel.Pdf {
         public PdfWriter(Stream os, WriterProperties properties)
             : base(new CountOutputStream(FileUtil.WrapWithBufferedOutputStream(os))) {
             this.properties = properties;
-            if (properties.debugMode) {
-                duplicateStream = new PdfOutputStream(new ByteArrayOutputStream());
-            }
         }
 
         /// <summary>Create a PdfWriter writing to the passed filename and with default writer properties.</summary>
