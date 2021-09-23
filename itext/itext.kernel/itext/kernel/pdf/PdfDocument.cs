@@ -620,7 +620,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void AddEventHandler(String type, IEventHandler handler) {
+        public virtual void AddEventHandler(String type, iText.Kernel.Events.IEventHandler handler) {
             eventDispatcher.AddEventHandler(type, handler);
         }
 
@@ -640,7 +640,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void RemoveEventHandler(String type, IEventHandler handler) {
+        public virtual void RemoveEventHandler(String type, iText.Kernel.Events.IEventHandler handler) {
             eventDispatcher.RemoveEventHandler(type, handler);
         }
 

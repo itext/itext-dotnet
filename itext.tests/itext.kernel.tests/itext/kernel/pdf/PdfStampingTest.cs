@@ -1224,7 +1224,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        internal class WatermarkEventHandler : IEventHandler {
+        internal class WatermarkEventHandler : iText.Kernel.Events.IEventHandler {
             public virtual void HandleEvent(iText.Kernel.Events.Event @event) {
                 PdfDocumentEvent pdfEvent = (PdfDocumentEvent)@event;
                 PdfPage page = pdfEvent.GetPage();
