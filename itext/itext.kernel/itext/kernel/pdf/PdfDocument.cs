@@ -82,7 +82,7 @@ namespace iText.Kernel.Pdf {
         /// Default page size.
         /// New page by default will be created with this size.
         /// </remarks>
-        protected internal PageSize defaultPageSize = PageSize.Default;
+        private PageSize defaultPageSize = PageSize.DEFAULT;
 
         protected internal EventDispatcher eventDispatcher = new EventDispatcher();
 
@@ -608,13 +608,21 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets default page size.</summary>
-        /// <returns>default page size.</returns>
+        /// <remarks>
+        /// Gets default page size.
+        /// New pages by default are created with this size.
+        /// </remarks>
+        /// <returns>default page size</returns>
         public virtual PageSize GetDefaultPageSize() {
             return defaultPageSize;
         }
 
         /// <summary>Sets default page size.</summary>
-        /// <param name="pageSize">page size to be set as default.</param>
+        /// <remarks>
+        /// Sets default page size.
+        /// New pages by default will be created with this size.
+        /// </remarks>
+        /// <param name="pageSize">page size to be set as default</param>
         public virtual void SetDefaultPageSize(PageSize pageSize) {
             defaultPageSize = pageSize;
         }
@@ -922,7 +930,11 @@ namespace iText.Kernel.Pdf {
         /// Specifies that document shall contain tag structure.
         /// See ISO 32000-1, section 14.8 "Tagged PDF"
         /// </remarks>
-        /// <returns>this PdfDocument</returns>
+        /// <returns>
+        /// this
+        /// <see cref="PdfDocument"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfDocument SetTagged() {
             CheckClosingStatus();
             if (structTreeRoot == null) {

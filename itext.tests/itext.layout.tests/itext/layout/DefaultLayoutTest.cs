@@ -79,7 +79,7 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph("Hello. I am a paragraph. I want you to process me correctly");
-            document.Add(p).Add(p).Add(new AreaBreak(PageSize.Default)).Add(p);
+            document.Add(p).Add(p).Add(new AreaBreak(PageSize.DEFAULT)).Add(p);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -93,7 +93,7 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
             document.Add(new Paragraph(new Text(str).SetBackgroundColor(ColorConstants.RED)).SetBackgroundColor(ColorConstants
-                .GREEN)).Add(new Paragraph(str)).Add(new AreaBreak(PageSize.Default)).Add(new Paragraph(str));
+                .GREEN)).Add(new Paragraph(str)).Add(new AreaBreak(PageSize.DEFAULT)).Add(new Paragraph(str));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -241,7 +241,7 @@ namespace iText.Layout {
             byte[] bytes = baos.ToArray();
             baos.Dispose();
             PdfDocument newDoc = new PdfDocument(new PdfReader(new MemoryStream(bytes)));
-            NUnit.Framework.Assert.IsTrue(PageSize.Default.EqualsWithEpsilon(newDoc.GetPage(1).GetPageSize()));
+            NUnit.Framework.Assert.IsTrue(PageSize.DEFAULT.EqualsWithEpsilon(newDoc.GetPage(1).GetPageSize()));
             newDoc.Close();
         }
 

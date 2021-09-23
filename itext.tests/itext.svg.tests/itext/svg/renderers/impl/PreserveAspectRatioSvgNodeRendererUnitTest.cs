@@ -30,7 +30,7 @@ using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
     public class PreserveAspectRatioSvgNodeRendererUnitTest : ExtendedITextTest {
-        private static readonly Rectangle VIEWPORT_VALUE = PageSize.Default;
+        private static readonly Rectangle VIEWPORT_VALUE = PageSize.DEFAULT;
 
         private static readonly float[] VIEWBOX_VALUES = new float[] { 0, 0, 300, 400 };
 
