@@ -33,5 +33,32 @@ namespace iText.Commons.Actions.Data {
             NUnit.Framework.Assert.AreEqual(1900, productData.GetSinceCopyrightYear());
             NUnit.Framework.Assert.AreEqual(2100, productData.GetToCopyrightYear());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualsTest() {
+            ProductData a = new ProductData("publicProductName", "productName", "1.2", 1900, 2100);
+            ProductData b = new ProductData("publicProductName", "productName", "1.2", 1900, 2100);
+            NUnit.Framework.Assert.AreEqual(a, a);
+            NUnit.Framework.Assert.AreEqual(a, b);
+            NUnit.Framework.Assert.AreEqual(b, a);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotEqualsTest() {
+            ProductData a = new ProductData("publicProductName", "productName", "1.2", 1900, 2100);
+            ProductData d = new ProductData("publicProductName", "productName", "1.2", 1910, 2110);
+            NUnit.Framework.Assert.AreNotEqual(a, d);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HashCodeTest() {
+            ProductData a = new ProductData("publicProductName", "productName", "1.2", 1900, 2100);
+            ProductData b = new ProductData("publicProductName", "productName", "1.2", 1900, 2100);
+            NUnit.Framework.Assert.AreEqual(a, b);
+            NUnit.Framework.Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+            int h1 = a.GetHashCode();
+            int h2 = a.GetHashCode();
+            NUnit.Framework.Assert.AreEqual(h1, h2);
+        }
     }
 }
