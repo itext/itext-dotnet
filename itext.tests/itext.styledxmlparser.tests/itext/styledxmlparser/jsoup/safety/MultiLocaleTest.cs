@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
 using iText.Test;

@@ -182,7 +182,7 @@ namespace iText.Kernel.XMP.Impl {
         /// <param name="src">the source string.</param>
         /// <returns>the base64-encoded string.</returns>
         public static String Encode(String src) {
-            return iText.IO.Util.JavaUtil.GetStringForBytes(Encode(src.GetBytes()));
+            return iText.Commons.Utils.JavaUtil.GetStringForBytes(Encode(src.GetBytes()));
         }
 
         /// <summary>Decode the given byte[].</summary>
@@ -234,7 +234,7 @@ namespace iText.Kernel.XMP.Impl {
         /// <param name="src">the base64-encoded string.</param>
         /// <returns>the decoded string.</returns>
         public static String Decode(String src) {
-            return iText.IO.Util.JavaUtil.GetStringForBytes(Decode(src.GetBytes()));
+            return iText.Commons.Utils.JavaUtil.GetStringForBytes(Decode(src.GetBytes()));
         }
     }
 }

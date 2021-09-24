@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
-using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -876,6 +876,31 @@ namespace iText.Layout {
             fc.SetFontWeight((short)700);
             NUnit.Framework.Assert.AreEqual("OpenSans-Light", new FontSelector(set.GetFonts(), fontFamilies, fc).BestMatch
                 ().GetDescriptor().GetFontName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontCharacteristicIsUnmodifiedTest() {
+            FontSet set = GetOpenSansFontSet();
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("OpenSans italic");
+            fontFamilies.Add("OpenSans bold");
+            FontCharacteristics fc = new FontCharacteristics();
+            FontCharacteristics expectedFc = new FontCharacteristics(fc);
+            // previously font characteristics might have been updated while sorting fonts
+            new FontSelector(set.GetFonts(), fontFamilies, fc);
+            NUnit.Framework.Assert.AreEqual(expectedFc, fc);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontCharacteristicsNullTest() {
+            FontSet set = GetOpenSansFontSet();
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("test");
+            FontCharacteristics fc = null;
+            FontSelector fontSelector = new FontSelector(set.GetFonts(), fontFamilies, fc);
+            // We expect default font characteristics to be used, e.g. as a result regular font must be the best
+            NUnit.Framework.Assert.AreEqual("OpenSans-Regular", fontSelector.BestMatch().GetDescriptor().GetFontName()
+                );
         }
 
         private void CheckSelector(ICollection<FontInfo> fontInfoCollection, String fontFamily, String expectedNormal

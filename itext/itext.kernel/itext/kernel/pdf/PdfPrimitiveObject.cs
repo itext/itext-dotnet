@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using Microsoft.Extensions.Logging;
-using iText.IO;
-using iText.IO.Util;
+using iText.Commons;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf {
     public abstract class PdfPrimitiveObject : PdfObject {

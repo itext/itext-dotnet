@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Select;
 using iText.Test;
@@ -1203,7 +1203,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             toMove.Add(div3);
             toMove.Add(div4);
             body.InsertChildren(0, toMove);
-            String result = iText.IO.Util.StringUtil.ReplaceAll(doc.ToString(), "\\s+", "");
+            String result = iText.Commons.Utils.StringUtil.ReplaceAll(doc.ToString(), "\\s+", "");
             NUnit.Framework.Assert.AreEqual("<body><div3>Check</div3><div4></div4><div1></div1><div2></div2></body>", 
                 result);
         }

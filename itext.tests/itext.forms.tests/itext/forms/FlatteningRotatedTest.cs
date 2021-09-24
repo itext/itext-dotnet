@@ -41,8 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Commons.Utils;
 using iText.Forms.Fields;
-using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;

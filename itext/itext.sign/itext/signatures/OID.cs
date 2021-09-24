@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Commons.Utils;
 
 namespace iText.Signatures {
     /// <summary>Class containing all the OID values used by iText.</summary>

@@ -30,7 +30,7 @@ namespace iText.Kernel.Pdf.Filters {
         public virtual void DecodingTestStatic() {
             byte[] bytes = new byte[] { (byte)0x80, 0x0B, 0x60, 0x50, 0x22, 0x0C, 0x0C, (byte)0x85, 0x01 };
             String expectedResult = "-----A---B";
-            String decoded = iText.IO.Util.JavaUtil.GetStringForBytes(LZWDecodeFilter.LZWDecode(bytes));
+            String decoded = iText.Commons.Utils.JavaUtil.GetStringForBytes(LZWDecodeFilter.LZWDecode(bytes));
             NUnit.Framework.Assert.AreEqual(expectedResult, decoded);
         }
 
@@ -39,8 +39,8 @@ namespace iText.Kernel.Pdf.Filters {
             byte[] bytes = new byte[] { (byte)0x80, 0x0B, 0x60, 0x50, 0x22, 0x0C, 0x0C, (byte)0x85, 0x01 };
             String expectedResult = "-----A---B";
             LZWDecodeFilter filter = new LZWDecodeFilter();
-            String decoded = iText.IO.Util.JavaUtil.GetStringForBytes(filter.Decode(bytes, null, new PdfDictionary(), 
-                new PdfDictionary()));
+            String decoded = iText.Commons.Utils.JavaUtil.GetStringForBytes(filter.Decode(bytes, null, new PdfDictionary
+                (), new PdfDictionary()));
             NUnit.Framework.Assert.AreEqual(expectedResult, decoded);
         }
     }

@@ -42,8 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -140,7 +140,7 @@ namespace iText.Pdfa {
             Rectangle rect = new Rectangle(100, 100, 100, 100);
             PdfAnnotation annot = new PdfWidgetAnnotation(rect);
             annot.SetFlag(PdfAnnotation.PRINT);
-            PdfStream s = new PdfStream("Hello World".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            PdfStream s = new PdfStream("Hello World".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             annot.SetDownAppearance(new PdfDictionary());
             annot.SetNormalAppearance(s);
             page.AddAnnotation(annot);

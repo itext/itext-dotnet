@@ -44,7 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Commons.Actions.Sequence;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
@@ -63,7 +64,7 @@ namespace iText.Layout {
     /// implementations.
     /// </remarks>
     /// <typeparam name="T">this type</typeparam>
-    public abstract class ElementPropertyContainer<T> : IPropertyContainer
+    public abstract class ElementPropertyContainer<T> : AbstractIdentifiableElement, IPropertyContainer
         where T : IPropertyContainer {
         protected internal IDictionary<int, Object> properties = new Dictionary<int, Object>();
 

@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Util;
@@ -196,7 +196,7 @@ namespace iText.StyledXmlParser.Css.Font {
         /// <summary>Class that defines a font face source.</summary>
         public class CssFontFaceSrc {
             /// <summary>The UrlPattern used to compose a source path.</summary>
-            public static readonly Regex UrlPattern = iText.IO.Util.StringUtil.RegexCompile("^((local)|(url))\\(((\'[^\']*\')|(\"[^\"]*\")|([^\'\"\\)]*))\\)( format\\(((\'[^\']*\')|(\"[^\"]*\")|([^\'\"\\)]*))\\))?$"
+            public static readonly Regex UrlPattern = iText.Commons.Utils.StringUtil.RegexCompile("^((local)|(url))\\(((\'[^\']*\')|(\"[^\"]*\")|([^\'\"\\)]*))\\)( format\\(((\'[^\']*\')|(\"[^\"]*\")|([^\'\"\\)]*))\\))?$"
                 );
 
             /// <summary>The Constant TypeGroup.</summary>
@@ -252,7 +252,7 @@ namespace iText.StyledXmlParser.Css.Font {
             /// object
             /// </returns>
             public static CssFontFace.CssFontFaceSrc Create(String src) {
-                Matcher m = iText.IO.Util.Matcher.Match(UrlPattern, src);
+                Matcher m = iText.Commons.Utils.Matcher.Match(UrlPattern, src);
                 if (!m.Matches()) {
                     return null;
                 }

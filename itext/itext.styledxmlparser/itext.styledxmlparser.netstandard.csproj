@@ -31,7 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itext.io\itext.io.netstandard.csproj" />
-	<ProjectReference Include="..\itext.kernel\itext.kernel.netstandard.csproj" />
+    <ProjectReference Include="..\itext.kernel\itext.kernel.netstandard.csproj" />
     <ProjectReference Include="..\itext.layout\itext.layout.netstandard.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -23,9 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;

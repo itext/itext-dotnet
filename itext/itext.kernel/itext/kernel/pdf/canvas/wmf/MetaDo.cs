@@ -575,10 +575,10 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                         }
                         String s;
                         try {
-                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
+                            s = iText.Commons.Utils.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
                         }
                         catch (ArgumentException) {
-                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
+                            s = iText.Commons.Utils.JavaUtil.GetStringForBytes(text, 0, k);
                         }
                         OutputText(x, y, flag, x1, y1, x2, y2, s);
                         break;
@@ -597,10 +597,10 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                         }
                         String s;
                         try {
-                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
+                            s = iText.Commons.Utils.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
                         }
                         catch (ArgumentException) {
-                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
+                            s = iText.Commons.Utils.JavaUtil.GetStringForBytes(text, 0, k);
                         }
                         count = count + 1 & 0xfffe;
                         @in.Skip(count - k);

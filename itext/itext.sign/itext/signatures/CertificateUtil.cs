@@ -189,7 +189,7 @@ namespace iText.Signatures {
         /// <returns>a human-readable String</returns>
         private static String GetStringFromGeneralName(Asn1Object names) {
             Asn1TaggedObject taggedObject = (Asn1TaggedObject)names;
-            return iText.IO.Util.JavaUtil.GetStringForBytes(Asn1OctetString.GetInstance(taggedObject, false).GetOctets
+            return iText.Commons.Utils.JavaUtil.GetStringForBytes(Asn1OctetString.GetInstance(taggedObject, false).GetOctets
                 (), "ISO-8859-1");
         }
     }

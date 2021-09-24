@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
 using iText.IO.Util;

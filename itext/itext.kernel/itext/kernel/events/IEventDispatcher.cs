@@ -49,7 +49,7 @@ namespace iText.Kernel.Events {
         /// <summary>Adds new event handler.</summary>
         /// <param name="type">a type of event to be handled</param>
         /// <param name="handler">event handler</param>
-        void AddEventHandler(String type, IEventHandler handler);
+        void AddEventHandler(String type, iText.Kernel.Events.IEventHandler handler);
 
         /// <summary>Dispatches an event.</summary>
         /// <param name="event">
@@ -94,7 +94,7 @@ namespace iText.Kernel.Events {
         /// event handler
         /// <see cref="IEventHandler"/>
         /// </param>
-        void RemoveEventHandler(String type, IEventHandler handler);
+        void RemoveEventHandler(String type, iText.Kernel.Events.IEventHandler handler);
 
         /// <summary>Remove all event handlers.</summary>
         void RemoveAllHandlers();

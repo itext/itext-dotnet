@@ -24,7 +24,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Parser;
 using iText.StyledXmlParser.Jsoup.Select;
@@ -387,8 +387,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             Stream @is = new MemoryStream(input.GetBytes(System.Text.Encoding.ASCII));
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@is, null, "http://example.com");
             doc.OutputSettings().EscapeMode(Entities.EscapeMode.xhtml);
-            String output = iText.IO.Util.JavaUtil.GetStringForBytes(doc.Html().GetBytes(doc.OutputSettings().Charset(
-                )), doc.OutputSettings().Charset());
+            String output = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.Html().GetBytes(doc.OutputSettings().Charset
+                ()), doc.OutputSettings().Charset());
             NUnit.Framework.Assert.IsFalse(output.Contains("?"));
             NUnit.Framework.Assert.IsTrue(output.Contains("&#xa0;") || output.Contains("&nbsp;"));
         }

@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
     public class CMapContentParser {

@@ -47,7 +47,8 @@ using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
-using iText.IO;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Util;
 
 namespace iText.Signatures {

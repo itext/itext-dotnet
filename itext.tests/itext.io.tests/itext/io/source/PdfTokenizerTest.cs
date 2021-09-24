@@ -41,7 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.IO.Source {
@@ -55,7 +55,7 @@ namespace iText.IO.Source {
             PdfTokenizer.TokenType[] expectedTypes = new PdfTokenizer.TokenType[] { PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType
                 .Number, PdfTokenizer.TokenType.EndOfFile };
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.Seek(0);
             tok.NextValidToken();
@@ -78,7 +78,7 @@ namespace iText.IO.Source {
         public virtual void GetLongValueTest() {
             String data = "21474836470";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Number, tok.GetTokenType());
@@ -89,7 +89,7 @@ namespace iText.IO.Source {
         public virtual void GetIntValueTest() {
             String data = "15";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Number, tok.GetTokenType());
@@ -100,7 +100,7 @@ namespace iText.IO.Source {
         public virtual void GetPositionTest() {
             String data = "/Name1 70";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             NUnit.Framework.Assert.AreEqual(0, tok.GetPosition());
             tok.NextValidToken();
@@ -113,7 +113,7 @@ namespace iText.IO.Source {
         public virtual void LengthTest() {
             String data = "/Name1";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             NUnit.Framework.Assert.AreEqual(6, tok.Length());
         }
@@ -122,7 +122,7 @@ namespace iText.IO.Source {
         public virtual void LengthTwoTokenTest() {
             String data = "/Name1 15";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             NUnit.Framework.Assert.AreEqual(9, tok.Length());
         }
@@ -131,18 +131,18 @@ namespace iText.IO.Source {
         public virtual void ReadTest() {
             String data = "/Name1 15";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             byte[] read = new byte[] { (byte)tok.Read(), (byte)tok.Read(), (byte)tok.Read(), (byte)tok.Read(), (byte)tok
                 .Read(), (byte)tok.Read(), (byte)tok.Read() };
-            NUnit.Framework.Assert.AreEqual("/Name1 ", iText.IO.Util.JavaUtil.GetStringForBytes(read));
+            NUnit.Framework.Assert.AreEqual("/Name1 ", iText.Commons.Utils.JavaUtil.GetStringForBytes(read));
         }
 
         [NUnit.Framework.Test]
         public virtual void ReadStringFullTest() {
             String data = "/Name1 15";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             NUnit.Framework.Assert.AreEqual(data, tok.ReadString(data.Length));
         }
@@ -151,7 +151,7 @@ namespace iText.IO.Source {
         public virtual void ReadStringShortTest() {
             String data = "/Name1 15";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             NUnit.Framework.Assert.AreEqual("/Name", tok.ReadString(5));
         }
@@ -160,7 +160,7 @@ namespace iText.IO.Source {
         public virtual void ReadStringLongerThenDataTest() {
             String data = "/Name1 15";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             NUnit.Framework.Assert.AreEqual(data, tok.ReadString(data.Length + 10));
         }
@@ -169,7 +169,7 @@ namespace iText.IO.Source {
         public virtual void ReadFullyPartThenReadStringTest() {
             String data = "/Name1 15";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.ReadFully(new byte[6]);
             NUnit.Framework.Assert.AreEqual(" 15", tok.ReadString(data.Length));
@@ -179,7 +179,7 @@ namespace iText.IO.Source {
         public virtual void ReadFullyThenReadStringTest() {
             String data = "/Name1 15";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.ReadFully(new byte[7]);
             NUnit.Framework.Assert.AreEqual("15", tok.ReadString(data.Length));
@@ -189,35 +189,35 @@ namespace iText.IO.Source {
         public virtual void GetDecodedStringContentTest() {
             String data = "/Name1 15";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.NextToken();
-            NUnit.Framework.Assert.AreEqual("Name1", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetDecodedStringContent
+            NUnit.Framework.Assert.AreEqual("Name1", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetDecodedStringContent
                 ()));
             tok.NextToken();
-            NUnit.Framework.Assert.AreEqual("15", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetDecodedStringContent
+            NUnit.Framework.Assert.AreEqual("15", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetDecodedStringContent
                 ()));
             tok.NextToken();
-            NUnit.Framework.Assert.AreEqual("", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetDecodedStringContent()
-                ));
+            NUnit.Framework.Assert.AreEqual("", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetDecodedStringContent
+                ()));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetDecodedStringContentHexTest() {
             String data = "<736f6d652068657820737472696e67>";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.NextToken();
             NUnit.Framework.Assert.IsTrue(tok.IsHexString());
-            NUnit.Framework.Assert.AreEqual("some hex string", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetDecodedStringContent
+            NUnit.Framework.Assert.AreEqual("some hex string", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetDecodedStringContent
                 ()));
         }
 
         [NUnit.Framework.Test]
         public virtual void ThrowErrorTest() {
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource("/Name1".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource("/Name1".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => tok.ThrowError(iText.IO.IOException
                 .ErrorAtFilePointer1, 0));
@@ -257,18 +257,18 @@ namespace iText.IO.Source {
         public virtual void TokenValueEqualsToTest() {
             String data = "SomeString";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.NextToken();
-            NUnit.Framework.Assert.IsTrue(tok.TokenValueEqualsTo(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1))
-                );
+            NUnit.Framework.Assert.IsTrue(tok.TokenValueEqualsTo(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
+                )));
         }
 
         [NUnit.Framework.Test]
         public virtual void TokenValueEqualsToNullTest() {
             String data = "SomeString";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.NextToken();
             NUnit.Framework.Assert.IsFalse(tok.TokenValueEqualsTo(null));
@@ -278,10 +278,10 @@ namespace iText.IO.Source {
         public virtual void TokenValueEqualsToNotSameStringTest() {
             String data = "SomeString";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.NextToken();
-            NUnit.Framework.Assert.IsFalse(tok.TokenValueEqualsTo((data + "s").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            NUnit.Framework.Assert.IsFalse(tok.TokenValueEqualsTo((data + "s").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 )));
         }
 
@@ -289,10 +289,10 @@ namespace iText.IO.Source {
         public virtual void TokenValueEqualsToNotCaseSensitiveStringTest() {
             String data = "SomeString";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.NextToken();
-            NUnit.Framework.Assert.IsFalse(tok.TokenValueEqualsTo("Somestring".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            NUnit.Framework.Assert.IsFalse(tok.TokenValueEqualsTo("Somestring".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 )));
         }
 
@@ -317,82 +317,93 @@ namespace iText.IO.Source {
             String data = "<</Size 70.%comment\n" + "/Value#20 .1" + "/Root 46 0 R" + "/Info 44 0 R" + "/ID[<736f6d652068657820737472696e672>(some simple string )<8C2547D58D4BD2C6F3D32B830BE3259D2>-70.1--0.2]"
                  + "/Name1 --15" + "/Prev ---116.23 >>";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.StartDic, tok.GetTokenType());
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Name, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("Size", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
+            NUnit.Framework.Assert.AreEqual("Size", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent(
+                )));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Number, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("70.", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
+            NUnit.Framework.Assert.AreEqual("70.", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent()
+                ));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Name, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("Value#20", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent())
+            NUnit.Framework.Assert.AreEqual("Value#20", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent
+                ()));
+            tok.NextValidToken();
+            NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Number, tok.GetTokenType());
+            NUnit.Framework.Assert.AreEqual(".1", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent())
                 );
             tok.NextValidToken();
-            NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Number, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual(".1", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
-            tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Name, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("Root", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
+            NUnit.Framework.Assert.AreEqual("Root", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent(
+                )));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Ref, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("46 0 R", "" + tok.GetObjNr() + " " + tok.GetGenNr() + " " + iText.IO.Util.JavaUtil.GetStringForBytes
+            NUnit.Framework.Assert.AreEqual("46 0 R", "" + tok.GetObjNr() + " " + tok.GetGenNr() + " " + iText.Commons.Utils.JavaUtil.GetStringForBytes
                 (tok.GetByteContent()));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Name, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("Info", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
+            NUnit.Framework.Assert.AreEqual("Info", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent(
+                )));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Ref, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("44 0 R", "" + tok.GetObjNr() + " " + tok.GetGenNr() + " " + iText.IO.Util.JavaUtil.GetStringForBytes
+            NUnit.Framework.Assert.AreEqual("44 0 R", "" + tok.GetObjNr() + " " + tok.GetGenNr() + " " + iText.Commons.Utils.JavaUtil.GetStringForBytes
                 (tok.GetByteContent()));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Name, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("ID", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
+            NUnit.Framework.Assert.AreEqual("ID", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent())
+                );
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.StartArray, tok.GetTokenType());
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.String, tok.GetTokenType());
             NUnit.Framework.Assert.IsTrue(tok.IsHexString());
-            NUnit.Framework.Assert.AreEqual("736f6d652068657820737472696e672", iText.IO.Util.JavaUtil.GetStringForBytes
+            NUnit.Framework.Assert.AreEqual("736f6d652068657820737472696e672", iText.Commons.Utils.JavaUtil.GetStringForBytes
                 (tok.GetByteContent()));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.String, tok.GetTokenType());
             NUnit.Framework.Assert.IsFalse(tok.IsHexString());
-            NUnit.Framework.Assert.AreEqual("some simple string ", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent
-                ()));
+            NUnit.Framework.Assert.AreEqual("some simple string ", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.
+                GetByteContent()));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.String, tok.GetTokenType());
             NUnit.Framework.Assert.IsTrue(tok.IsHexString());
-            NUnit.Framework.Assert.AreEqual("8C2547D58D4BD2C6F3D32B830BE3259D2", iText.IO.Util.JavaUtil.GetStringForBytes
+            NUnit.Framework.Assert.AreEqual("8C2547D58D4BD2C6F3D32B830BE3259D2", iText.Commons.Utils.JavaUtil.GetStringForBytes
                 (tok.GetByteContent()));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Number, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("-70.1", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
+            NUnit.Framework.Assert.AreEqual("-70.1", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent
+                ()));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Number, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("-0.2", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
+            NUnit.Framework.Assert.AreEqual("-0.2", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent(
+                )));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.EndArray, tok.GetTokenType());
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Name, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("Name1", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
+            NUnit.Framework.Assert.AreEqual("Name1", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent
+                ()));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Number, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("0", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
+            NUnit.Framework.Assert.AreEqual("0", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent()));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Name, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("Prev", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
+            NUnit.Framework.Assert.AreEqual("Prev", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent(
+                )));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(PdfTokenizer.TokenType.Number, tok.GetTokenType());
-            NUnit.Framework.Assert.AreEqual("-116.23", iText.IO.Util.JavaUtil.GetStringForBytes(tok.GetByteContent()));
+            NUnit.Framework.Assert.AreEqual("-116.23", iText.Commons.Utils.JavaUtil.GetStringForBytes(tok.GetByteContent
+                ()));
         }
 
         private void CheckTokenTypes(String data, params PdfTokenizer.TokenType[] expectedTypes) {
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             for (int i = 0; i < expectedTypes.Length; i++) {
                 tok.NextValidToken();
@@ -402,7 +413,7 @@ namespace iText.IO.Source {
 
         private void CheckTokenValues(String data, params byte[][] expectedValues) {
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             for (int i = 0; i < expectedValues.Length; i++) {
                 tok.NextValidToken();

@@ -81,6 +81,7 @@ namespace iText.Test {
             if (template.Contains("{") && template.Contains("}"))
             {
                 String templateWithoutParameters = Regex.Replace(Regex.Escape(template).Replace("''", "'"), "\\\\\\{[0-9]+?\\}", "(.)*?");
+                templateWithoutParameters = "^" + templateWithoutParameters + "$";
                 return Regex.IsMatch(message, templateWithoutParameters, RegexOptions.Singleline);
             }
 

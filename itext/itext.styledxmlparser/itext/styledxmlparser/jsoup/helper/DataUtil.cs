@@ -45,6 +45,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Nodes;
@@ -53,7 +54,7 @@ using iText.StyledXmlParser.Jsoup.Select;
 namespace iText.StyledXmlParser.Jsoup.Helper {
     /// <summary>Internal static utilities for handling data.</summary>
     public sealed class DataUtil {
-        private static readonly Regex charsetPattern = iText.IO.Util.StringUtil.RegexCompile("(?i)\\bcharset=\\s*(?:[\"'])?([^\\s,;\"']*)"
+        private static readonly Regex charsetPattern = iText.Commons.Utils.StringUtil.RegexCompile("(?i)\\bcharset=\\s*(?:\"|')?([^\\s,;\"']*)"
             );
 
         public static readonly System.Text.Encoding UTF_8 = EncodingUtil.GetEncoding("UTF-8");
@@ -219,7 +220,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
                 foundCharset = ValidateCharset(foundCharset);
                 if (foundCharset != null && !foundCharset.EqualsIgnoreCase(defaultCharsetName)) {
                     // need to re-decode. (case insensitive check here to match how validate works)
-                    foundCharset = iText.IO.Util.StringUtil.ReplaceAll(foundCharset.Trim(), "[\"']", "");
+                    foundCharset = iText.Commons.Utils.StringUtil.ReplaceAll(foundCharset.Trim(), "[\"']", "");
                     charsetName = foundCharset;
                     doc = null;
                 }
@@ -282,7 +283,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             if (contentType == null) {
                 return null;
             }
-            Matcher m = iText.IO.Util.Matcher.Match(charsetPattern, contentType);
+            Matcher m = Matcher.Match(charsetPattern, contentType);
             if (m.Find()) {
                 String charset = m.Group(1).Trim();
                 charset = charset.Replace("charset=", "");
@@ -295,7 +296,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             if (cs == null || cs.Length == 0) {
                 return null;
             }
-            cs = iText.IO.Util.StringUtil.ReplaceAll(cs.Trim(), "[\"']", "");
+            cs = iText.Commons.Utils.StringUtil.ReplaceAll(cs.Trim(), "[\"']", "");
             if (PortUtil.CharsetIsSupported(cs)) {
                 return cs;
             }

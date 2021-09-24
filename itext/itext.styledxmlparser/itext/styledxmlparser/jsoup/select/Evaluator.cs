@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Nodes;
@@ -255,7 +255,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return element.HasAttr(key) && iText.IO.Util.Matcher.Match(pattern, element.Attr(key)).Find();
+                return element.HasAttr(key) && iText.Commons.Utils.Matcher.Match(pattern, element.Attr(key)).Find();
             }
 
             public override String ToString() {
@@ -679,7 +679,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                Matcher m = iText.IO.Util.Matcher.Match(pattern, element.OwnText());
+                Matcher m = iText.Commons.Utils.Matcher.Match(pattern, element.OwnText());
                 return m.Find();
             }
 
@@ -720,7 +720,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
              element) {
-            Matcher m = iText.IO.Util.Matcher.Match(pattern, element.Text());
+            Matcher m = iText.Commons.Utils.Matcher.Match(pattern, element.Text());
             return m.Find();
         }
 

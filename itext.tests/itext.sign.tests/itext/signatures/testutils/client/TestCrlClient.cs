@@ -44,7 +44,7 @@ using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel;
 using iText.Signatures;
 using iText.Signatures.Testutils.Builder;

@@ -46,9 +46,9 @@ using System.IO;
 using System.Text;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
+using iText.Commons.Utils;
 using iText.Forms;
 using iText.IO.Image;
-using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -448,8 +448,8 @@ namespace iText.Signatures.Sign {
             PdfStream stream = acroForm.GetField("Signature1").GetWidgets()[0].GetNormalAppearanceObject().GetAsDictionary
                 (PdfName.Resources).GetAsDictionary(PdfName.XObject).GetAsStream(new PdfName("FRM")).GetAsDictionary(PdfName
                 .Resources).GetAsDictionary(PdfName.XObject).GetAsStream(new PdfName("n2"));
-            String[] streamContents = iText.IO.Util.StringUtil.Split(iText.IO.Util.JavaUtil.GetStringForBytes(stream.GetBytes
-                ()), "\\s");
+            String[] streamContents = iText.Commons.Utils.StringUtil.Split(iText.Commons.Utils.JavaUtil.GetStringForBytes
+                (stream.GetBytes()), "\\s");
             String fontSize = null;
             for (int i = 1; i < streamContents.Length; i++) {
                 if ("Tf".Equals(streamContents[i])) {

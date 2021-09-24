@@ -106,13 +106,16 @@
   <ItemGroup>
     <Compile Include="itext\kernel\**\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\KeyVersionAttribute.cs" />
     <Compile Include="KernelExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itext.io\itext.io.csproj">
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
       <Name>itext.io</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itext.commons\itext.commons.csproj">
+      <Project>{339569D2-3BA2-41CC-972C-70B05E4C4FCD}</Project>
+      <Name>itext.commons</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

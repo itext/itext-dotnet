@@ -137,6 +137,7 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
+            LinkRenderToDocument(resultRenderer, document.GetPdfDocument());
             Transform transformProp = resultRenderer.GetProperty<Transform>(Property.TRANSFORM);
             if (!waitingDrawingElements.Contains(resultRenderer)) {
                 ProcessWaitingDrawing(resultRenderer, transformProp, waitingDrawingElements);

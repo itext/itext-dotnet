@@ -111,6 +111,10 @@
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
       <Name>itext.io</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\itext\itext.commons\itext.commons.csproj">
+      <Project>{339569D2-3BA2-41CC-972C-70B05E4C4FCD}</Project>
+      <Name>itext.commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.csproj">
       <Project>{4E7819E8-7555-4E2E-9A01-D8718A2CFDDA}</Project>
       <Name>itext.kernel</Name>

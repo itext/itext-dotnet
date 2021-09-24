@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Parser;
 using iText.StyledXmlParser.Jsoup.Select;

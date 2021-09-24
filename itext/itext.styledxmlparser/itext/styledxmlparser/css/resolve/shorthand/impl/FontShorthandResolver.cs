@@ -44,8 +44,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using iText.IO;
-using iText.IO.Util;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Util;
@@ -96,8 +96,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             String fontSizeValue = null;
             String lineHeightValue = null;
             String fontFamilyValue = null;
-            IList<String> properties = GetFontProperties(iText.IO.Util.StringUtil.ReplaceAll(shorthandExpression, "\\s*,\\s*"
-                , ","));
+            IList<String> properties = GetFontProperties(iText.Commons.Utils.StringUtil.ReplaceAll(shorthandExpression
+                , "\\s*,\\s*", ","));
             foreach (String value in properties) {
                 int slashSymbolIndex = value.IndexOf('/');
                 if (CommonCssConstants.ITALIC.Equals(value) || CommonCssConstants.OBLIQUE.Equals(value)) {

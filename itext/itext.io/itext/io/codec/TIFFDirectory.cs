@@ -264,7 +264,7 @@ namespace iText.IO.Codec {
                                     while (index < count && bvalues[index++] != 0) {
                                     }
                                     // When we encountered zero, means one string has ended
-                                    v.Add(iText.IO.Util.JavaUtil.GetStringForBytes(bvalues, prevIndex, (index - prevIndex)));
+                                    v.Add(iText.Commons.Utils.JavaUtil.GetStringForBytes(bvalues, prevIndex, (index - prevIndex)));
                                     prevIndex = index;
                                 }
                                 count = v.Count;

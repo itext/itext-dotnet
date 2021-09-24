@@ -45,7 +45,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Colors;
 using iText.IO.Util;
 
@@ -231,7 +232,7 @@ namespace iText.IO.Image {
                             byteappe[k] = (byte)jpegStream.Read();
                         }
                         if (byteappe.Length >= 12) {
-                            String appe = iText.IO.Util.JavaUtil.GetStringForBytes(byteappe, 0, 5, "ISO-8859-1");
+                            String appe = iText.Commons.Utils.JavaUtil.GetStringForBytes(byteappe, 0, 5, "ISO-8859-1");
                             if (appe.Equals("Adobe")) {
                                 image.SetInverted(true);
                             }
@@ -245,7 +246,7 @@ namespace iText.IO.Image {
                             byteapp2[k] = (byte)jpegStream.Read();
                         }
                         if (byteapp2.Length >= 14) {
-                            String app2 = iText.IO.Util.JavaUtil.GetStringForBytes(byteapp2, 0, 11, "ISO-8859-1");
+                            String app2 = iText.Commons.Utils.JavaUtil.GetStringForBytes(byteapp2, 0, 11, "ISO-8859-1");
                             if (app2.Equals("ICC_PROFILE")) {
                                 int order = byteapp2[12] & 0xff;
                                 int count = byteapp2[13] & 0xff;

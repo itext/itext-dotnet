@@ -104,6 +104,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\itext.commons\itext.commons.csproj">
+      <Project>{339569D2-3BA2-41CC-972C-70B05E4C4FCD}</Project>
+      <Name>itext.commons</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="resources\AdobeGlyphList.txt">
       <LogicalName>iText.IO.Font.AdobeGlyphList.txt</LogicalName>
     </EmbeddedResource>

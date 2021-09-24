@@ -48,7 +48,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using iText.IO.Util.Collections;
+using iText.Commons.Utils.Collections;
 
 namespace iText.Layout {
     internal static class LayoutExtensions {

@@ -45,6 +45,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Constants;
 using iText.IO.Util;
@@ -214,7 +215,7 @@ namespace iText.IO.Font {
                 p.Load(resource);
                 foreach (KeyValuePair<Object, Object> entry in p) {
                     String value = (String)entry.Value;
-                    String[] splitValue = iText.IO.Util.StringUtil.Split(value, " ");
+                    String[] splitValue = iText.Commons.Utils.StringUtil.Split(value, " ");
                     ICollection<String> set = new HashSet<String>();
                     foreach (String s in splitValue) {
                         if (s.Length != 0) {

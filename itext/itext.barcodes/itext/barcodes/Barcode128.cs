@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.Barcodes.Exceptions;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;

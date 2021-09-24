@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Commons.Utils;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
     /// <summary>Base combining (and, or) evaluator.</summary>

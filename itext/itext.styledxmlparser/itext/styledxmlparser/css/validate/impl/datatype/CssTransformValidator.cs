@@ -57,7 +57,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
             if (CommonCssConstants.NONE.Equals(objectString)) {
                 return true;
             }
-            String[] components = iText.IO.Util.StringUtil.Split(objectString, "\\)");
+            String[] components = iText.Commons.Utils.StringUtil.Split(objectString, "\\)");
             foreach (String component in components) {
                 if (!IsValidComponent(component)) {
                     return false;
@@ -78,7 +78,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
             }
             if (CommonCssConstants.MATRIX.Equals(function) || CommonCssConstants.SCALE.Equals(function) || CommonCssConstants
                 .SCALE_X.Equals(function) || CommonCssConstants.SCALE_Y.Equals(function)) {
-                String[] arg = iText.IO.Util.StringUtil.Split(args, ",");
+                String[] arg = iText.Commons.Utils.StringUtil.Split(args, ",");
                 if (arg.Length == 6 && CommonCssConstants.MATRIX.Equals(function) || (arg.Length == 1 || arg.Length == 2) 
                     && CommonCssConstants.SCALE.Equals(function) || arg.Length == 1 && (CommonCssConstants.SCALE_X.Equals(
                     function) || CommonCssConstants.SCALE_Y.Equals(function))) {
@@ -100,7 +100,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
             else {
                 if (CommonCssConstants.TRANSLATE.Equals(function) || CommonCssConstants.TRANSLATE_X.Equals(function) || CommonCssConstants
                     .TRANSLATE_Y.Equals(function)) {
-                    String[] arg = iText.IO.Util.StringUtil.Split(args, ",");
+                    String[] arg = iText.Commons.Utils.StringUtil.Split(args, ",");
                     if ((arg.Length == 1 || arg.Length == 2 && CommonCssConstants.TRANSLATE.Equals(function))) {
                         foreach (String a in arg) {
                             if (!IsValidForTranslate(a)) {
@@ -137,7 +137,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
                     else {
                         if (CommonCssConstants.SKEW.Equals(function) || CommonCssConstants.SKEW_X.Equals(function) || CommonCssConstants
                             .SKEW_Y.Equals(function)) {
-                            String[] arg = iText.IO.Util.StringUtil.Split(args, ",");
+                            String[] arg = iText.Commons.Utils.StringUtil.Split(args, ",");
                             if ((arg.Length == 1) || (arg.Length == 2 && CommonCssConstants.SKEW.Equals(function))) {
                                 for (int k = 0; k < arg.Length; k++) {
                                     try {

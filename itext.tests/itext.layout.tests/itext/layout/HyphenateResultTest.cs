@@ -121,7 +121,7 @@ namespace iText.Layout {
         }
 
         private void TestHyphenateResult(String lang, String testWorld, int[] expectedHyphenatePoints) {
-            String[] parts = iText.IO.Util.StringUtil.Split(lang, "_");
+            String[] parts = iText.Commons.Utils.StringUtil.Split(lang, "_");
             lang = parts[0];
             String country = (parts.Length == 2) ? parts[1] : null;
             HyphenationConfig config = new HyphenationConfig(lang, country, 3, 3);

@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.IO.Util;
+using iText.Commons.Utils;
 
 namespace iText.IO.Codec {
     /// <summary>General purpose LZW String Table.</summary>

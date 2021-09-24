@@ -42,8 +42,8 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using iText.IO;
-using iText.IO.Util;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {

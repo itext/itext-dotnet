@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO;
 using iText.Test;
 
@@ -289,7 +290,7 @@ namespace iText.IO.Util {
                     NUnit.Framework.Assert.IsTrue(result);
                     NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(diff));
                     System.Console.Out.Flush();
-                    String output = iText.IO.Util.JavaUtil.GetStringForBytes(baos.ToArray()).Trim();
+                    String output = iText.Commons.Utils.JavaUtil.GetStringForBytes(baos.ToArray()).Trim();
                     // This check is implemented in such a peculiar way because of .NET autoporting
                     NUnit.Framework.Assert.AreEqual('0', output[output.Length - 1]);
                     if (output.Length > 1) {

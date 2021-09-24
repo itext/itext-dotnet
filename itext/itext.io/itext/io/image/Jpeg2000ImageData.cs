@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
 
 namespace iText.IO.Image {
     public class Jpeg2000ImageData : ImageData {

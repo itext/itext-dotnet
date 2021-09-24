@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Commons.Utils;
 
 namespace iText.IO.Util {
     /// <summary>A hash map that uses primitive ints for the key rather than objects.</summary>

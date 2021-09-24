@@ -32,6 +32,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Utils;
 using iText.Kernel.XMP.Options;

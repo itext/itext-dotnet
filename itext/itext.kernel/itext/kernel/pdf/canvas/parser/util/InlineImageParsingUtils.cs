@@ -156,20 +156,18 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             }
             if (colorSpaceDic != null) {
                 PdfArray colorSpace = colorSpaceDic.GetAsArray(colorSpaceName);
-                if (colorSpace != null) {
-                    if (PdfName.Indexed.Equals(colorSpace.GetAsName(0))) {
-                        return 1;
-                    }
-                    else {
-                        if (PdfName.ICCBased.Equals(colorSpace.GetAsName(0))) {
-                            return colorSpace.GetAsStream(1).GetAsNumber(PdfName.N).IntValue();
-                        }
-                    }
-                }
-                else {
+                if (colorSpace == null) {
                     PdfName tempName = colorSpaceDic.GetAsName(colorSpaceName);
                     if (tempName != null) {
                         return GetComponentsPerPixel(tempName, colorSpaceDic);
+                    }
+                }
+                else {
+                    if (PdfName.Indexed.Equals(colorSpace.GetAsName(0))) {
+                        return 1;
+                    }
+                    if (PdfName.ICCBased.Equals(colorSpace.GetAsName(0))) {
+                        return colorSpace.GetAsStream(1).GetAsNumber(PdfName.N).IntValue();
                     }
                 }
             }

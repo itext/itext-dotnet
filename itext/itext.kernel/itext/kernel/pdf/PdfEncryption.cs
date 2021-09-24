@@ -46,8 +46,8 @@ using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto;
 using iText.Kernel.Crypto.Securityhandler;
@@ -361,7 +361,7 @@ namespace iText.Kernel.Pdf {
             long time = SystemUtil.GetTimeBasedSeed();
             long mem = SystemUtil.GetFreeMemory();
             String s = time + "+" + mem + "+" + (seq++);
-            return md5.Digest(s.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            return md5.Digest(s.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
         }
 
         /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>

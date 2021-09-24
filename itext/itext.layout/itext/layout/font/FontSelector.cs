@@ -42,8 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Font;
-using iText.IO.Util;
 
 namespace iText.Layout.Font {
     /// <summary>Sort given set of fonts according to font name and style.</summary>
@@ -132,9 +132,6 @@ namespace iText.Layout.Font {
                 for (int i = 0; i < fontFamilies.Count && res == 0; i++) {
                     FontCharacteristics fc = fontStyles[i];
                     String fontFamily = fontFamilies[i];
-                    if ("monospace".EqualsIgnoreCase(fontFamily)) {
-                        fc.SetMonospaceFlag(true);
-                    }
                     bool isLastFontFamilyToBeProcessed = i == fontFamilies.Count - 1;
                     res = CharacteristicsSimilarity(fontFamily, fc, o2, isLastFontFamilyToBeProcessed) - CharacteristicsSimilarity
                         (fontFamily, fc, o1, isLastFontFamilyToBeProcessed);
@@ -142,19 +139,23 @@ namespace iText.Layout.Font {
                 return res;
             }
 
-            private static FontCharacteristics ParseFontStyle(String fontFamily, FontCharacteristics fc) {
-                if (fc == null) {
-                    fc = new FontCharacteristics();
+            private static FontCharacteristics ParseFontStyle(String fontFamily, FontCharacteristics defaultFc) {
+                if (defaultFc == null) {
+                    defaultFc = new FontCharacteristics();
                 }
-                if (fc.IsUndefined()) {
+                FontCharacteristics parsedFc = new FontCharacteristics(defaultFc);
+                if (parsedFc.IsUndefined()) {
+                    if ("monospace".EqualsIgnoreCase(fontFamily)) {
+                        parsedFc.SetMonospaceFlag(true);
+                    }
                     if (fontFamily.Contains("bold")) {
-                        fc.SetBoldFlag(true);
+                        parsedFc.SetBoldFlag(true);
                     }
                     if (fontFamily.Contains("italic") || fontFamily.Contains("oblique")) {
-                        fc.SetItalicFlag(true);
+                        parsedFc.SetItalicFlag(true);
                     }
                 }
-                return fc;
+                return parsedFc;
             }
 
             /// <summary>

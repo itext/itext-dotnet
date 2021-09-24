@@ -45,6 +45,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using iText.Commons.Utils;
 using iText.IO;
 
 namespace iText.IO.Util {
@@ -77,7 +78,8 @@ namespace iText.IO.Util {
 
         private const String PAGE_NUMBER_PATTERN = "%03d";
 
-        private static readonly Regex PAGE_LIST_REGEX = iText.IO.Util.StringUtil.RegexCompile("^(\\d+,)*\\d+$");
+        private static readonly Regex PAGE_LIST_REGEX = iText.Commons.Utils.StringUtil.RegexCompile("^(\\d+,)*\\d+$"
+            );
 
         private String gsExec;
 
@@ -209,7 +211,7 @@ namespace iText.IO.Util {
         }
 
         internal static bool ValidatePageList(String pageList) {
-            return null == pageList || iText.IO.Util.Matcher.Match(PAGE_LIST_REGEX, pageList).Matches();
+            return null == pageList || iText.Commons.Utils.Matcher.Match(PAGE_LIST_REGEX, pageList).Matches();
         }
 
         internal static bool ValidateImageFilePattern(String imageFilePattern) {

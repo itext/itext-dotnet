@@ -44,8 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfName : PdfPrimitiveObject, IComparable<iText.Kernel.Pdf.PdfName> {
@@ -1982,7 +1982,8 @@ namespace iText.Kernel.Pdf {
 
         public override String ToString() {
             if (content != null) {
-                return "/" + iText.IO.Util.JavaUtil.GetStringForBytes(content, iText.IO.Util.EncodingUtil.ISO_8859_1);
+                return "/" + iText.Commons.Utils.JavaUtil.GetStringForBytes(content, iText.Commons.Utils.EncodingUtil.ISO_8859_1
+                    );
             }
             else {
                 return "/" + GetValue();

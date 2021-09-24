@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Util;
+using iText.Commons.Utils;
 
 namespace iText.Barcodes.Qrcode {
     /// <summary>See ISO 18004:2006 Annex D.</summary>

@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -145,7 +145,7 @@ namespace iText.Kernel.Utils {
                     PdfString alt = (structElemKid).GetAlt();
                     if (alt != null) {
                         @out.Write("<alt><![CDATA[");
-                        @out.Write(iText.IO.Util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""));
+                        @out.Write(iText.Commons.Utils.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""));
                         @out.Write("]]></alt>" + Environment.NewLine);
                     }
                     InspectKids(structElemKid.GetKids());

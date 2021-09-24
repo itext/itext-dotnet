@@ -259,7 +259,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        private class ParagraphAdderHandler : IEventHandler {
+        private class ParagraphAdderHandler : iText.Kernel.Events.IEventHandler {
             public virtual void HandleEvent(iText.Kernel.Events.Event @event) {
                 PdfDocumentEvent docEvent = (PdfDocumentEvent)@event;
                 PdfPage page = docEvent.GetPage();
@@ -275,7 +275,7 @@ namespace iText.Layout {
             }
         }
 
-        private class PageRemoverHandler : IEventHandler {
+        private class PageRemoverHandler : iText.Kernel.Events.IEventHandler {
             public virtual void HandleEvent(iText.Kernel.Events.Event @event) {
                 PdfDocumentEvent docEvent = (PdfDocumentEvent)@event;
                 PdfPage page = docEvent.GetPage();

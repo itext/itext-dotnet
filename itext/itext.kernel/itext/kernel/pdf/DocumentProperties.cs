@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel.Counter.Event;
+using iText.Commons.Actions.Contexts;
 
 namespace iText.Kernel.Pdf {
     public class DocumentProperties {
@@ -57,9 +57,9 @@ namespace iText.Kernel.Pdf {
         /// <summary>Sets document meta info.</summary>
         /// <remarks>
         /// Sets document meta info. This meta info will be passed to the
-        /// <see cref="iText.Kernel.Counter.EventCounter"/>
+        /// <see cref="com.itextpdf.kernel.counter.EventCounter"/>
         /// with
-        /// <see cref="iText.Kernel.Counter.Event.CoreEvent"/>
+        /// <see cref="com.itextpdf.kernel.counter.event.CoreEvent"/>
         /// and can be used to determine event origin.
         /// </remarks>
         /// <param name="metaInfo">meta info to set</param>

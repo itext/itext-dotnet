@@ -45,7 +45,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Colors.Gradients;
@@ -2361,6 +2362,24 @@ namespace iText.Layout.Renderer {
                 ancestor = parent;
             }
             return isFirstOnRootArea;
+        }
+
+        /// <summary>Gets pdf document from root renderers.</summary>
+        /// <returns>PdfDocument, or null if there are no document</returns>
+        internal virtual PdfDocument GetPdfDocument() {
+            RootRenderer renderer = GetRootRenderer();
+            if (renderer is DocumentRenderer) {
+                Document document = ((DocumentRenderer)renderer).document;
+                return document.GetPdfDocument();
+            }
+            else {
+                if (renderer is CanvasRenderer) {
+                    return ((CanvasRenderer)renderer).canvas.GetPdfDocument();
+                }
+                else {
+                    return null;
+                }
+            }
         }
 
         internal virtual RootRenderer GetRootRenderer() {

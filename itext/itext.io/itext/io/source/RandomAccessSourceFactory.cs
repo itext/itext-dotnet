@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Net;
+using iText.Commons.Utils;
 using iText.IO.Util;
 
 namespace iText.IO.Source

@@ -59,7 +59,7 @@ namespace iText.Kernel.Pdf {
             // hex string parse and check
             String testHexString = "<0D0A09557365729073204775696465>";
             factory = new RandomAccessSourceFactory();
-            tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(testHexString.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(testHexString.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.NextToken();
             pdfString = new PdfString(tok.GetByteContent(), tok.IsHexString());
@@ -67,34 +67,34 @@ namespace iText.Kernel.Pdf {
             String testUnicodeString = "ΑΒΓΗ€•♣⋅";
             pdfString = new PdfString(PdfEncodings.ConvertToBytes(testUnicodeString, PdfEncodings.UNICODE_BIG), false);
             NUnit.Framework.Assert.AreEqual(testUnicodeString, pdfString.ToUnicodeString());
-            pdfString = new PdfString("FEFF041F04400438043204350442".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1), 
-                true);
+            pdfString = new PdfString("FEFF041F04400438043204350442".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
+                ), true);
             NUnit.Framework.Assert.AreEqual("\u041F\u0440\u0438\u0432\u0435\u0442", pdfString.ToUnicodeString());
-            pdfString = new PdfString("FEFF041F04400438043204350442".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1), 
-                false);
+            pdfString = new PdfString("FEFF041F04400438043204350442".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
+                ), false);
             NUnit.Framework.Assert.AreEqual("FEFF041F04400438043204350442", pdfString.ToUnicodeString());
             String specialCharacter = "\r\n\t\\n\\r\\t\\f";
-            pdfString = new PdfString(specialCharacter.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1), false);
+            pdfString = new PdfString(specialCharacter.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1), false);
             NUnit.Framework.Assert.AreEqual("\n\t\n\r\t\f", pdfString.ToUnicodeString());
             String symbol = "\u0001\u0004\u0006\u000E\u001F";
-            pdfString = new PdfString(symbol.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1), false);
+            pdfString = new PdfString(symbol.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1), false);
             NUnit.Framework.Assert.AreEqual(symbol, pdfString.ToUnicodeString());
             String testString1 = "These\\\n two\\\r strings\\\n are the same";
-            pdfString = new PdfString(testString1.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1), false);
+            pdfString = new PdfString(testString1.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1), false);
             NUnit.Framework.Assert.AreEqual("These two strings are the same", pdfString.GetValue());
             String testString2 = "This string contains \\245two octal characters\\307";
-            pdfString = new PdfString(testString2.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1), false);
+            pdfString = new PdfString(testString2.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1), false);
             NUnit.Framework.Assert.AreEqual("This string contains \u00A5two octal characters\u00C7", pdfString.GetValue
                 ());
             String testString3 = "\\0053";
-            pdfString = new PdfString(testString3.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1), false);
+            pdfString = new PdfString(testString3.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1), false);
             NUnit.Framework.Assert.AreEqual("\u00053", pdfString.GetValue());
             String testString4 = "\\053";
-            pdfString = new PdfString(testString4.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1), false);
+            pdfString = new PdfString(testString4.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1), false);
             NUnit.Framework.Assert.AreEqual("+", pdfString.GetValue());
             byte[] b = new byte[] { (byte)46, (byte)56, (byte)40 };
             pdfString = new PdfString(b, false);
-            NUnit.Framework.Assert.AreEqual(iText.IO.Util.JavaUtil.GetStringForBytes(b), pdfString.GetValue());
+            NUnit.Framework.Assert.AreEqual(iText.Commons.Utils.JavaUtil.GetStringForBytes(b), pdfString.GetValue());
         }
 
         [NUnit.Framework.Test]
@@ -122,7 +122,7 @@ namespace iText.Kernel.Pdf {
             String data = "<</Size 70." + "/Value#20 .1" + "/Root 46 0 R" + "/Info 44 0 R" + "/ID[<736f6d652068657820737472696e672>(some simple string )<8C2547D58D4BD2C6F3D32B830BE3259D2>-70.1--0.2]"
                  + "/Name1 --15" + "/Prev ---116.23 >>";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.StartDic);

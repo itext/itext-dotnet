@@ -23,7 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Util;
 
 namespace iText.StyledXmlParser.Resolver.Resource {

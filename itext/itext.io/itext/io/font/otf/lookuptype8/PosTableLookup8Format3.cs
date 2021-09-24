@@ -21,8 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Font.Otf;
-using iText.IO.Util;
 
 namespace iText.IO.Font.Otf.Lookuptype8 {
     /// <summary>Chained Contexts Positioning Format 3: Coverage-based Glyph Contexts</summary>

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
@@ -57,7 +57,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         private IList<CharacterRenderInfo> parseResult = new List<CharacterRenderInfo>();
 
         public RegexBasedLocationExtractionStrategy(String regex) {
-            this.pattern = iText.IO.Util.StringUtil.RegexCompile(regex);
+            this.pattern = iText.Commons.Utils.StringUtil.RegexCompile(regex);
         }
 
         public RegexBasedLocationExtractionStrategy(Regex pattern) {
@@ -71,7 +71,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             // process parse results
             IList<IPdfTextLocation> retval = new List<IPdfTextLocation>();
             CharacterRenderInfo.StringConversionInfo txt = CharacterRenderInfo.MapString(parseResult);
-            Matcher mat = iText.IO.Util.Matcher.Match(pattern, txt.text);
+            Matcher mat = iText.Commons.Utils.Matcher.Match(pattern, txt.text);
             while (mat.Find()) {
                 int? startIndex = GetStartIndex(txt.indexMap, mat.Start(), txt.text);
                 int? endIndex = GetEndIndex(txt.indexMap, mat.End() - 1);

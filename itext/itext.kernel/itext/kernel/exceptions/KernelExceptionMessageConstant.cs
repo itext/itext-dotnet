@@ -25,6 +25,8 @@ using System;
 namespace iText.Kernel.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class KernelExceptionMessageConstant {
+        public const String AMOUNT_OF_BYTES_LESS_THAN_ZERO = "Amount of bytes in the PDF document cannot be less than zero";
+
         public const String ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE = "Annotation shall have reference to page.";
 
         public const String APPEND_MODE_REQUIRES_A_DOCUMENT_WITHOUT_ERRORS_EVEN_IF_RECOVERY_IS_POSSIBLE = "Append "
@@ -316,6 +318,8 @@ namespace iText.Kernel.Exceptions {
         public const String NOT_A_WMF_IMAGE = "Not a WMF image.";
 
         public const String NO_VALID_ENCRYPTION_MODE = "No valid encryption mode.";
+
+        public const String NUMBER_OF_PAGES_CAN_NOT_BE_NEGATIVE = "Number of pages can not be negative.";
 
         public const String NUMBER_OF_BOOLEANS_IN_THE_ARRAY_DOES_NOT_CORRESPOND_WITH_THE_NUMBER_OF_FIELDS = "The "
              + "number of booleans in the array doesn't correspond with the number of fields.";

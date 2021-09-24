@@ -113,6 +113,10 @@
       <Project>{F9880DC4-F015-4413-AF86-66D0E9512774}</Project>
       <Name>itext.pdftest</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\itext\itext.commons\itext.commons.csproj">
+      <Project>{339569D2-3BA2-41CC-972C-70B05E4C4FCD}</Project>
+      <Name>itext.commons</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -213,7 +213,7 @@ namespace iText.Kernel.Pdf.Canvas {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
-            PdfSpecialCs.Indexed indexed = new PdfSpecialCs.Indexed(PdfName.DeviceRGB, 255, new PdfString(iText.IO.Util.JavaUtil.GetStringForBytes
+            PdfSpecialCs.Indexed indexed = new PdfSpecialCs.Indexed(PdfName.DeviceRGB, 255, new PdfString(iText.Commons.Utils.JavaUtil.GetStringForBytes
                 (bytes, "UTF-8")));
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(new Indexed(indexed, 85)).Rectangle(50, 500, 50, 50).Fill();
@@ -232,7 +232,7 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(new float[] { 0, 1 }), new PdfArray(new float
-                [] { 0, 1, 0, 1, 0, 1 }), "{0 0}".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+                [] { 0, 1, 0, 1, 0, 1 }), "{0 0}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             PdfSpecialCs.Separation separation = new PdfSpecialCs.Separation("MyRed", new PdfDeviceCs.Rgb(), function);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(new Separation(separation, 0.25f)).Rectangle(50, 500, 50, 50).Fill();
@@ -251,7 +251,7 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(new float[] { 0, 1, 0, 1 }), new PdfArray(
-                new float[] { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+                new float[] { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             List<String> tmpArray = new List<String>(2);
             tmpArray.Add("MyRed");
             tmpArray.Add("MyGreen");
@@ -422,7 +422,7 @@ namespace iText.Kernel.Pdf.Canvas {
             byte[] pageContentStreamBytes = canvas.GetContentStream().GetBytes();
             canvas.Release();
             document.Close();
-            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, System.Text.Encoding
+            String contentStreamString = iText.Commons.Utils.JavaUtil.GetStringForBytes(pageContentStreamBytes, System.Text.Encoding
                 .ASCII);
             int p1Count = CountSubstringOccurrences(contentStreamString, "/P1 scn");
             int p2Count = CountSubstringOccurrences(contentStreamString, "/P2 scn");
@@ -462,7 +462,7 @@ namespace iText.Kernel.Pdf.Canvas {
             byte[] pageContentStreamBytes = canvas.GetContentStream().GetBytes();
             canvas.Release();
             document.Close();
-            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, System.Text.Encoding
+            String contentStreamString = iText.Commons.Utils.JavaUtil.GetStringForBytes(pageContentStreamBytes, System.Text.Encoding
                 .ASCII);
             int p1Count = CountSubstringOccurrences(contentStreamString, "/P1 scn");
             int p2Count = CountSubstringOccurrences(contentStreamString, "/P2 scn");

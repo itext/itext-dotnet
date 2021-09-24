@@ -133,7 +133,7 @@ namespace iText.Kernel.Pdf {
         public virtual void SimpleStampingMetadataLeaveUnchanged() {
             String inputFile = sourceFolder + "cmp_metadata_pdf_20_changed_append.pdf";
             String outFile = destinationFolder + "metadata_pdf_20_unchanged_stamper.pdf";
-            String cmpFile = sourceFolder + "cmp_metadata_pdf_20_changed_append.pdf";
+            String cmpFile = sourceFolder + "cmp_metadata_pdf_20_unchanged_append.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outFile), new StampingProperties
                 ());
             String author = document.GetDocumentInfo().GetAuthor();

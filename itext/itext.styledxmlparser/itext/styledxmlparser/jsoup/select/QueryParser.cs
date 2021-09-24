@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Parser;
@@ -413,7 +413,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                                 }
                                 else {
                                     if (cq.MatchChomp("~=")) {
-                                        evals.Add(new Evaluator.AttributeWithValueMatching(key, iText.IO.Util.StringUtil.RegexCompile(cq.Remainder
+                                        evals.Add(new Evaluator.AttributeWithValueMatching(key, iText.Commons.Utils.StringUtil.RegexCompile(cq.Remainder
                                             ())));
                                     }
                                     else {
@@ -446,15 +446,15 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         }
 
         //pseudo selectors :first-child, :last-child, :nth-child, ...
-        private static readonly Regex NTH_AB = iText.IO.Util.StringUtil.RegexCompile("(([+-])?(\\d+)?)n(\\s*([+-])?\\s*\\d+)?"
+        private static readonly Regex NTH_AB = iText.Commons.Utils.StringUtil.RegexCompile("(([+-])?(\\d+)?)n(\\s*([+-])?\\s*\\d+)?"
             , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
-        private static readonly Regex NTH_B = iText.IO.Util.StringUtil.RegexCompile("([+-])?(\\d+)");
+        private static readonly Regex NTH_B = iText.Commons.Utils.StringUtil.RegexCompile("([+-])?(\\d+)");
 
         private void CssNthChild(bool backwards, bool ofType) {
             String argS = Normalizer.Normalize(tq.ChompTo(")"));
-            Matcher mAB = iText.IO.Util.Matcher.Match(NTH_AB, argS);
-            Matcher mB = iText.IO.Util.Matcher.Match(NTH_B, argS);
+            Matcher mAB = iText.Commons.Utils.Matcher.Match(NTH_AB, argS);
+            Matcher mB = iText.Commons.Utils.Matcher.Match(NTH_B, argS);
             int a;
             int b;
             if ("odd".Equals(argS)) {
@@ -546,10 +546,10 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             // don't unescape, as regex bits will be escaped
             Validate.NotEmpty(regex, ":matches(regex) query must not be empty");
             if (own) {
-                evals.Add(new Evaluator.MatchesOwn(iText.IO.Util.StringUtil.RegexCompile(regex)));
+                evals.Add(new Evaluator.MatchesOwn(iText.Commons.Utils.StringUtil.RegexCompile(regex)));
             }
             else {
-                evals.Add(new MatchesElement(iText.IO.Util.StringUtil.RegexCompile(regex)));
+                evals.Add(new MatchesElement(iText.Commons.Utils.StringUtil.RegexCompile(regex)));
             }
         }
 

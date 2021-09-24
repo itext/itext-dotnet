@@ -42,8 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Font.Otf;
-using iText.IO.Util;
 
 namespace iText.IO.Font.Otf.Lookuptype6 {
     /// <summary>Chaining Contextual Substitution Subtable: Class-based Chaining Context Glyph Substitution</summary>

@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using iText.IO;
-using iText.IO.Util;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Selector;
 using iText.StyledXmlParser.Css.Util;
@@ -95,7 +95,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                     propertiesStr = propertiesStr.Substring(pos + 1);
                     pos = GetSemicolonPosition(propertiesStr, 0);
                 }
-                if (!String.IsNullOrEmpty(iText.IO.Util.StringUtil.ReplaceAll(propertiesStr, "[\\n\\r\\t ]", ""))) {
+                if (!String.IsNullOrEmpty(iText.Commons.Utils.StringUtil.ReplaceAll(propertiesStr, "[\\n\\r\\t ]", ""))) {
                     String[] propertySplit = SplitCssProperty(propertiesStr);
                     if (propertySplit != null) {
                         declarations.Add(new CssDeclaration(propertySplit[0], propertySplit[1]));
@@ -131,7 +131,7 @@ namespace iText.StyledXmlParser.Css.Parse {
             IList<CssDeclaration> declarations = ParsePropertyDeclarations(propertiesStr);
             IList<CssRuleSet> ruleSets = new List<CssRuleSet>();
             //check for rules like p, {…}
-            String[] selectors = iText.IO.Util.StringUtil.Split(selectorStr, ",");
+            String[] selectors = iText.Commons.Utils.StringUtil.Split(selectorStr, ",");
             for (int i = 0; i < selectors.Length; i++) {
                 selectors[i] = CssUtils.RemoveDoubleSpacesAndTrim(selectors[i]);
                 if (selectors[i].Length == 0) {

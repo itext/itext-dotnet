@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using Microsoft.Extensions.Logging;
-using iText.IO;
-using iText.IO.Util;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
@@ -407,7 +407,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 return null;
             }
             UnitValue[] cornerRadii = new UnitValue[2];
-            String[] props = iText.IO.Util.StringUtil.Split(specificBorderRadius, "\\s+");
+            String[] props = iText.Commons.Utils.StringUtil.Split(specificBorderRadius, "\\s+");
             cornerRadii[0] = ParseLengthValueToPt(props[0], emValue, remValue);
             cornerRadii[1] = 2 == props.Length ? ParseLengthValueToPt(props[1], emValue, remValue) : cornerRadii[0];
             return cornerRadii;

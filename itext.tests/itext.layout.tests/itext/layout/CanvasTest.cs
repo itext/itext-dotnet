@@ -41,27 +41,36 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using System.IO;
+using iText.Commons.Actions;
+using iText.Commons.Actions.Sequence;
+using iText.Kernel.Actions.Events;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
+using iText.Layout.Testutil;
 using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class CanvasTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly TestConfigurationEvent CONFIGURATION_ACCESS = new TestConfigurationEvent();
+
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/CanvasTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/CanvasTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -69,8 +78,8 @@ namespace iText.Layout {
             )]
         public virtual void CanvasNoPageLinkTest() {
             String testName = "canvasNoPageLinkTest";
-            String @out = destinationFolder + testName + ".pdf";
-            String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+            String @out = DESTINATION_FOLDER + testName + ".pdf";
+            String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
             PdfPage page = pdf.AddNewPage();
             Rectangle pageSize = page.GetPageSize();
@@ -82,14 +91,14 @@ namespace iText.Layout {
                 ().SetFontColor(ColorConstants.BLUE)));
             canvas.Close();
             pdf.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void CanvasWithPageLinkTest() {
             String testName = "canvasWithPageLinkTest";
-            String @out = destinationFolder + testName + ".pdf";
-            String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+            String @out = DESTINATION_FOLDER + testName + ".pdf";
+            String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
             PdfPage page = pdf.AddNewPage();
             Rectangle pageSize = page.GetPageSize();
@@ -100,14 +109,14 @@ namespace iText.Layout {
                 ().SetFontColor(ColorConstants.BLUE)));
             canvas.Close();
             pdf.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void CanvasWithPageEnableTaggingTest01() {
             String testName = "canvasWithPageEnableTaggingTest01";
-            String @out = destinationFolder + testName + ".pdf";
-            String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+            String @out = DESTINATION_FOLDER + testName + ".pdf";
+            String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
             pdf.SetTagged();
             PdfPage page = pdf.AddNewPage();
@@ -119,7 +128,7 @@ namespace iText.Layout {
                 ().SetFontColor(ColorConstants.BLUE)));
             canvas.Close();
             pdf.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -128,8 +137,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.LogMessageConstant.PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED)]
         public virtual void CanvasWithPageEnableTaggingTest02() {
             String testName = "canvasWithPageEnableTaggingTest02";
-            String @out = destinationFolder + testName + ".pdf";
-            String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+            String @out = DESTINATION_FOLDER + testName + ".pdf";
+            String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
             pdf.SetTagged();
             PdfPage page = pdf.AddNewPage();
@@ -143,14 +152,14 @@ namespace iText.Layout {
                 ().SetFontColor(ColorConstants.BLUE)));
             canvas.Close();
             pdf.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void ElementWithAbsolutePositioningInCanvasTest() {
             String testName = "elementWithAbsolutePositioningInCanvas";
-            String @out = destinationFolder + testName + ".pdf";
-            String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+            String @out = DESTINATION_FOLDER + testName + ".pdf";
+            String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             using (PdfDocument pdf = new PdfDocument(new PdfWriter(@out))) {
                 pdf.AddNewPage();
                 iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(pdf.GetFirstPage()), new Rectangle(120, 
@@ -162,7 +171,7 @@ namespace iText.Layout {
                 canvas.Add(divWithPosition);
                 canvas.Close();
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -170,8 +179,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.LogMessageConstant.CANVAS_ALREADY_FULL_ELEMENT_WILL_BE_SKIPPED)]
         public virtual void ParentElemWithAbsolPositionKidNotSuitCanvasTest() {
             String testName = "parentElemWithAbsolPositionKidNotSuitCanvas";
-            String @out = destinationFolder + testName + ".pdf";
-            String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+            String @out = DESTINATION_FOLDER + testName + ".pdf";
+            String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             using (PdfDocument pdf = new PdfDocument(new PdfWriter(@out))) {
                 pdf.AddNewPage();
                 iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(pdf.GetFirstPage()), new Rectangle(120, 
@@ -183,15 +192,15 @@ namespace iText.Layout {
                 canvas.Add(divWithPosition);
                 canvas.Close();
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void NestedElementWithAbsolutePositioningInCanvasTest() {
             //TODO: DEVSIX-4820 (NullPointerException on processing absolutely positioned elements in small canvas area)
             String testName = "nestedElementWithAbsolutePositioningInCanvas";
-            String @out = destinationFolder + testName + ".pdf";
-            String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+            String @out = DESTINATION_FOLDER + testName + ".pdf";
+            String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             using (PdfDocument pdf = new PdfDocument(new PdfWriter(@out))) {
                 pdf.AddNewPage();
                 iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(pdf.GetFirstPage()), new Rectangle(120, 
@@ -203,7 +212,49 @@ namespace iText.Layout {
                 NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => canvas.Add(notFittingDiv));
                 canvas.Close();
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddBlockElemMethodLinkingTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                pdfDocument.AddNewPage();
+                SequenceId sequenceId = new SequenceId();
+                EventManager.GetInstance().OnEvent(new TestProductEvent(sequenceId));
+                IBlockElement blockElement = new Paragraph("some text");
+                SequenceIdManager.SetSequenceId((AbstractIdentifiableElement)blockElement, sequenceId);
+                IList<AbstractProductProcessITextEvent> events;
+                using (iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfDocument.GetPage(1), new Rectangle(0, 0, 200
+                    , 200))) {
+                    canvas.Add(blockElement);
+                    events = CONFIGURATION_ACCESS.GetPublicEvents(canvas.GetPdfDocument().GetDocumentIdWrapper());
+                }
+                // Second event was linked by adding block element method
+                NUnit.Framework.Assert.AreEqual(2, events.Count);
+                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
+                NUnit.Framework.Assert.IsTrue(events[1] is TestProductEvent);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddImageElemMethodLinkingTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                pdfDocument.AddNewPage();
+                SequenceId sequenceId = new SequenceId();
+                EventManager.GetInstance().OnEvent(new TestProductEvent(sequenceId));
+                Image image = new Image(new PdfFormXObject(new Rectangle(10, 10)));
+                SequenceIdManager.SetSequenceId(image, sequenceId);
+                IList<AbstractProductProcessITextEvent> events;
+                using (iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfDocument.GetPage(1), new Rectangle(0, 0, 200
+                    , 200))) {
+                    canvas.Add(image);
+                    events = CONFIGURATION_ACCESS.GetPublicEvents(canvas.GetPdfDocument().GetDocumentIdWrapper());
+                }
+                // Second event was linked by adding block element method
+                NUnit.Framework.Assert.AreEqual(2, events.Count);
+                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
+                NUnit.Framework.Assert.IsTrue(events[1] is TestProductEvent);
+            }
         }
     }
 }

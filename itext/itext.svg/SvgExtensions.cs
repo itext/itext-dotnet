@@ -46,6 +46,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using iText.IO.Util;
 using System.Reflection;
+using iText.Commons.Utils;
 
 internal static class SvgExtensions {
     public static String Name(this Encoding e) {

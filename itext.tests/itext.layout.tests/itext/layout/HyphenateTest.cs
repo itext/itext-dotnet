@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Layout.Hyphenation;
 using iText.Test;
 
@@ -132,7 +132,7 @@ namespace iText.Layout {
         }
 
         private void TryHyphenate(String lang, String testWorld, bool shouldPass) {
-            String[] parts = iText.IO.Util.StringUtil.Split(lang, "_");
+            String[] parts = iText.Commons.Utils.StringUtil.Split(lang, "_");
             lang = parts[0];
             String country = (parts.Length == 2) ? parts[1] : null;
             HyphenationConfig config = new HyphenationConfig(lang, country, 3, 3);

@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Codec;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
@@ -254,7 +254,6 @@ namespace iText.Kernel.Pdf.Xobject {
                     TIFFField cmpField = cmpDir.GetField(tag);
                     TIFFField resultField = resultDir.GetField(tag);
                     if (tag == TIFFConstants.TIFFTAG_SOFTWARE) {
-                        CompareSoftwareVersion(cmpField, resultField);
                     }
                     else {
                         CompareFields(cmpField, resultField);
@@ -262,14 +261,6 @@ namespace iText.Kernel.Pdf.Xobject {
                 }
                 CompareImageData(cmpDir, resultDir, cmpBytes, resultBytes);
             }
-        }
-
-        private void CompareSoftwareVersion(TIFFField cmpField, TIFFField resultField) {
-            byte[] versionBytes = resultField.GetAsString(0).GetBytes(System.Text.Encoding.ASCII);
-            //drop last always zero byte
-            byte[] versionToCompare = SubArray(versionBytes, 0, versionBytes.Length - 2);
-            NUnit.Framework.Assert.AreEqual(iText.Kernel.Version.GetInstance().GetVersion().GetBytes(System.Text.Encoding
-                .ASCII), versionToCompare);
         }
 
         private void CompareFields(TIFFField cmpField, TIFFField resultField) {

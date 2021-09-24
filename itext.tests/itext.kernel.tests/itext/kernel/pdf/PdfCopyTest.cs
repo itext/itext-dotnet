@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -129,7 +129,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 0; i < 5; i++) {
                 byte[] bytes = pdfDocument.GetPage(i + 1).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + (i * 2 + 1).ToString() + "\n", iText.IO.Util.JavaUtil.GetStringForBytes
+                NUnit.Framework.Assert.AreEqual("%page " + (i * 2 + 1).ToString() + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
                     (bytes));
             }
             pdfDocument.Close();

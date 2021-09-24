@@ -60,7 +60,7 @@ namespace iText.StyledXmlParser.Util {
                  + "\"Puritan\", Free Sans\n" + "Puritan\n" + "\"Puritan 2.0\"\n" + "-\n" + "'Puritan' FreeSans\n" + "-\n"
                  + "Pur itan\n" + "-\n" + "Pur it an\"\n" + "-\n" + "\"Free Sans\n" + "-\n" + "Pur it an'\n" + "-\n" +
                  "'Free Sans\n" + "-";
-            String[] splitFontFamilies = iText.IO.Util.StringUtil.Split(fontFamilies, "\n");
+            String[] splitFontFamilies = iText.Commons.Utils.StringUtil.Split(fontFamilies, "\n");
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < splitFontFamilies.Length; i += 2) {
                 IList<String> fontFamily = FontFamilySplitterUtil.SplitFontFamily(splitFontFamilies[i]);

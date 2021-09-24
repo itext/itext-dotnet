@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Helper;
 
@@ -278,7 +279,7 @@ namespace iText.StyledXmlParser.Jsoup.Internal {
             return true;
         }
 
-        private static Regex extraDotSegmentsPattern = iText.IO.Util.StringUtil.RegexCompile("^/((\\.{1,2}/)+)");
+        private static Regex extraDotSegmentsPattern = iText.Commons.Utils.StringUtil.RegexCompile("^/((\\.{1,2}/)+)");
 
         /// <summary>Create a new absolute URL, from a provided existing absolute URL and a relative URL component.</summary>
         /// <param name="base">the existing absolute base URL</param>

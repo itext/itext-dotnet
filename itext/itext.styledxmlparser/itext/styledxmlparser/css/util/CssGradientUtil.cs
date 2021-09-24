@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel.Colors.Gradients;
 using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
@@ -219,7 +219,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         private static StrategyBasedLinearGradientBuilder.GradientStrategy ParseDirection(String argument) {
-            String[] elementsList = iText.IO.Util.StringUtil.Split(argument, "\\s+");
+            String[] elementsList = iText.Commons.Utils.StringUtil.Split(argument, "\\s+");
             if (elementsList.Length < 2) {
                 throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING
                     , argument));

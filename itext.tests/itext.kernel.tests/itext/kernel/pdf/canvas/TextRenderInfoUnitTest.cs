@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -97,7 +97,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String widths = "759 613 584 682 583 944 828 580 682 388 388 388 1000 1000 416 528" + " 429 432 520 465 489 477 576 344 411 520 298 878 600 484 503 446 451 468"
                  + " 361 572 484 715 571 490 465";
             PdfArray widthsArray = new PdfArray();
-            foreach (String w in iText.IO.Util.StringUtil.Split(widths, " ")) {
+            foreach (String w in iText.Commons.Utils.StringUtil.Split(widths, " ")) {
                 widthsArray.Add(new PdfNumber(Convert.ToInt32(w, System.Globalization.CultureInfo.InvariantCulture)));
             }
             fontDict.Put(PdfName.Widths, widthsArray);

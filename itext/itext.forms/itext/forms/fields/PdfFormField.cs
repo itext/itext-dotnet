@@ -46,16 +46,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields.Borders;
 using iText.Forms.Util;
-using iText.IO;
-using iText.IO.Codec;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -2111,7 +2110,8 @@ namespace iText.Forms.Fields {
             }
             else {
                 if (value is PdfStream) {
-                    return iText.IO.Util.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes(), System.Text.Encoding.UTF8);
+                    return iText.Commons.Utils.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes(), System.Text.Encoding.
+                        UTF8);
                 }
                 else {
                     if (value is PdfName) {

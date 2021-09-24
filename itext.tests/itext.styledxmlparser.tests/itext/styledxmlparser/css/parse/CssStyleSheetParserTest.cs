@@ -159,7 +159,7 @@ namespace iText.StyledXmlParser.Css.Parse {
 
         private String GetCssFileContents(String filePath) {
             byte[] bytes = StreamUtil.InputStreamToArray(new FileStream(filePath, FileMode.Open, FileAccess.Read));
-            String content = iText.IO.Util.JavaUtil.GetStringForBytes(bytes);
+            String content = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes);
             content = content.Trim();
             content = content.Replace("\r\n", "\n");
             return content;

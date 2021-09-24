@@ -47,7 +47,7 @@ namespace iText.StyledXmlParser.Jsoup {
     /// <summary>Text utils to ease testing</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class TextUtil {
-        internal static Regex stripper = iText.IO.Util.StringUtil.RegexCompile("\\r?\\n\\s*");
+        internal static Regex stripper = iText.Commons.Utils.StringUtil.RegexCompile("\\r?\\n\\s*");
 
         public static String StripNewlines(String text)
         {

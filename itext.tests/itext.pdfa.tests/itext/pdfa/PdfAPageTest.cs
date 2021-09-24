@@ -185,7 +185,7 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        internal class EndPageEventHandler : IEventHandler {
+        internal class EndPageEventHandler : iText.Kernel.Events.IEventHandler {
             private int counter = 0;
 
             internal EndPageEventHandler() {

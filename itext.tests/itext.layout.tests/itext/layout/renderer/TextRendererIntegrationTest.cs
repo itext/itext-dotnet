@@ -63,7 +63,7 @@ namespace iText.Layout.Renderer {
             // UTF-8 encoding table and Unicode characters
             byte[] bUtf16A = new byte[] { (byte)0xd8, (byte)0x40, (byte)0xdc, (byte)0x0b };
             // This String is U+2000B
-            String strUtf16A = iText.IO.Util.JavaUtil.GetStringForBytes(bUtf16A, "UTF-16BE");
+            String strUtf16A = iText.Commons.Utils.JavaUtil.GetStringForBytes(bUtf16A, "UTF-16BE");
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", PdfEncodings.IDENTITY_H);
             doc.Add(new Paragraph(strUtf16A).SetFont(font));
             doc.Close();

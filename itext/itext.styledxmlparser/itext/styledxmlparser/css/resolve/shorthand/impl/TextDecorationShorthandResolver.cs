@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 
@@ -46,7 +46,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             }
             //regexp for separating line by spaces that are not inside the parentheses, so rgb()
             // and hsl() color declarations are parsed correctly
-            String[] props = iText.IO.Util.StringUtil.Split(shorthandExpression, "\\s+(?![^\\(]*\\))");
+            String[] props = iText.Commons.Utils.StringUtil.Split(shorthandExpression, "\\s+(?![^\\(]*\\))");
             IList<String> textDecorationLineValues = new List<String>();
             String textDecorationStyleValue = null;
             String textDecorationColorValue = null;

@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using iText.IO;
-using iText.IO.Util;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Util;
@@ -69,7 +69,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY, 
                     CommonCssConstants.PLACE_ITEMS, shorthandExpression);
             }
-            String[] placeItemsProps = iText.IO.Util.StringUtil.Split(shorthandExpression, " ");
+            String[] placeItemsProps = iText.Commons.Utils.StringUtil.Split(shorthandExpression, " ");
             switch (placeItemsProps.Length) {
                 case 1: {
                     return ResolveShorthandWithOneWord(placeItemsProps[0]);

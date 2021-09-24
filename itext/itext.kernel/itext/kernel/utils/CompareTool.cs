@@ -47,10 +47,11 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
+using iText.Commons.Actions.Contexts;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Util;
-using iText.Kernel.Counter.Event;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -92,9 +93,9 @@ namespace iText.Kernel.Utils {
 
         private const String IGNORED_AREAS_PREFIX = "ignored_areas_";
 
-        private const String VERSION_REGEXP = "(iText\u00ae( pdfX(FA|fa)| DITO)?|iTextSharp\u2122) (\\d+\\.)+\\d+(-SNAPSHOT)?";
+        private const String VERSION_REGEXP = "(\\d+\\.)+\\d+(-SNAPSHOT)?";
 
-        private const String VERSION_REPLACEMENT = "iText\u00ae <version>";
+        private const String VERSION_REPLACEMENT = "<version>";
 
         private const String COPYRIGHT_REGEXP = "\u00a9\\d+-\\d+ iText Group NV";
 
@@ -269,7 +270,7 @@ namespace iText.Kernel.Utils {
 
         /// <summary>
         /// Sets
-        /// <see cref="iText.Kernel.Counter.Event.IMetaInfo"/>
+        /// <see cref="iText.Commons.Actions.Contexts.IMetaInfo"/>
         /// info that will be used for both read and written documents creation.
         /// </summary>
         /// <param name="metaInfo">meta info to set</param>
@@ -1055,8 +1056,8 @@ namespace iText.Kernel.Utils {
         }
 
         internal virtual String ConvertProducerLine(String producer) {
-            return iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.StringUtil.ReplaceAll(producer, VERSION_REGEXP, VERSION_REPLACEMENT
-                ), COPYRIGHT_REGEXP, COPYRIGHT_REPLACEMENT);
+            return iText.Commons.Utils.StringUtil.ReplaceAll(iText.Commons.Utils.StringUtil.ReplaceAll(producer, VERSION_REGEXP
+                , VERSION_REPLACEMENT), COPYRIGHT_REGEXP, COPYRIGHT_REPLACEMENT);
         }
 
         private void Init(String outPdf, String cmpPdf) {
@@ -1762,14 +1763,14 @@ namespace iText.Kernel.Utils {
                 int rCmp = Math.Min(cmpStreamBytes.Length, firstDifferenceOffset + diffBytesAreaR);
                 int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
                 int rOut = Math.Min(outStreamBytes.Length, firstDifferenceOffset + diffBytesAreaR);
-                String cmpByte = iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes[firstDifferenceOffset
-                    ] }, iText.IO.Util.EncodingUtil.ISO_8859_1);
-                String cmpByteNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.JavaUtil.GetStringForBytes(cmpStreamBytes
-                    , lCmp, rCmp - lCmp, iText.IO.Util.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
-                String outByte = iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes[firstDifferenceOffset
-                    ] }, iText.IO.Util.EncodingUtil.ISO_8859_1);
-                String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.JavaUtil.GetStringForBytes(outStreamBytes
-                    , lOut, rOut - lOut, iText.IO.Util.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
+                String cmpByte = iText.Commons.Utils.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes[firstDifferenceOffset
+                    ] }, iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+                String cmpByteNeighbours = iText.Commons.Utils.StringUtil.ReplaceAll(iText.Commons.Utils.JavaUtil.GetStringForBytes
+                    (cmpStreamBytes, lCmp, rCmp - lCmp, iText.Commons.Utils.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
+                String outByte = iText.Commons.Utils.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes[firstDifferenceOffset
+                    ] }, iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+                String outBytesNeighbours = iText.Commons.Utils.StringUtil.ReplaceAll(iText.Commons.Utils.JavaUtil.GetStringForBytes
+                    (outStreamBytes, lOut, rOut - lOut, iText.Commons.Utils.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
                 bytesDifference = MessageFormatUtil.Format("First bytes difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different bytes: {5}"
                     , JavaUtil.IntegerToString(Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours, outByte
                     , outBytesNeighbours, numberOfDifferentBytes);
@@ -1894,10 +1895,10 @@ namespace iText.Kernel.Utils {
                 int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
                 int rOut = Math.Min(outString.Length, firstDifferenceOffset + diffBytesAreaR);
                 String cmpByte = cmpString[firstDifferenceOffset].ToString();
-                String cmpByteNeighbours = iText.IO.Util.StringUtil.ReplaceAll(cmpString.JSubstring(lCmp, rCmp), NEW_LINES
+                String cmpByteNeighbours = iText.Commons.Utils.StringUtil.ReplaceAll(cmpString.JSubstring(lCmp, rCmp), NEW_LINES
                     , " ");
                 String outByte = outString[firstDifferenceOffset].ToString();
-                String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(outString.JSubstring(lOut, rOut), NEW_LINES
+                String outBytesNeighbours = iText.Commons.Utils.StringUtil.ReplaceAll(outString.JSubstring(lOut, rOut), NEW_LINES
                     , " ");
                 stringDifference = MessageFormatUtil.Format("First characters difference is encountered at index {0}.\nExpected: {1} ({2}).\nFound: {3} ({4}).\nTotal number of different characters: {5}"
                     , JavaUtil.IntegerToString(Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours, outByte
@@ -2042,7 +2043,7 @@ namespace iText.Kernel.Utils {
             throw new ArgumentException("PdfLinkAnnotation comparison: Page not found.");
         }
 
-        private class PngFileFilter : iText.IO.Util.FileUtil.IFileFilter {
+        private class PngFileFilter : iText.Commons.Utils.FileUtil.IFileFilter {
             private String currentOutPdfName;
 
             public PngFileFilter(String currentOutPdfName) {
@@ -2057,7 +2058,7 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private class CmpPngFileFilter : iText.IO.Util.FileUtil.IFileFilter {
+        private class CmpPngFileFilter : iText.Commons.Utils.FileUtil.IFileFilter {
             private String currentCmpPdfName;
 
             public CmpPngFileFilter(String currentCmpPdfName) {
@@ -2072,7 +2073,7 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private class DiffPngFileFilter : iText.IO.Util.FileUtil.IFileFilter {
+        private class DiffPngFileFilter : iText.Commons.Utils.FileUtil.IFileFilter {
             private String differenceImagePrefix;
 
             public DiffPngFileFilter(String differenceImagePrefix) {

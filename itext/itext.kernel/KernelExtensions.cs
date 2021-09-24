@@ -48,10 +48,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
-using iText.IO.Util.Collections;
+using iText.Commons.Utils;
+using iText.Commons.Utils.Collections;
 using Org.BouncyCastle.Crypto;
 
 internal static class KernelExtensions {
@@ -337,6 +338,46 @@ internal static class KernelExtensions {
         if (key != null) {
             col[key] = value;
         }
+    }
+
+    public static TValue Get<TKey, TValue>(this ConditionalWeakTable<TKey, TValue > table, TKey key) where
+        TKey: class where TValue: class
+    {
+        TValue value = default(TValue);
+        if (key != null)
+        {
+            table.TryGetValue(key, out value);
+        }
+
+        return value;
+    }
+
+    public static TValue Put<TKey, TValue>(this ConditionalWeakTable<TKey, TValue> table, TKey key, TValue value)
+        where TKey : class where TValue : class
+    {
+        TValue oldVal = table.Get(key);
+        if (oldVal != null)
+        {
+            table.Remove(key);
+        }
+        table.Add(key, value);
+        return oldVal;
+    }
+
+    public static TValue JRemove<TKey, TValue>(this ConditionalWeakTable<TKey, TValue> table, TKey key)
+        where TKey : class where TValue : class
+    {
+        TValue value;
+        table.TryGetValue(key, out value);
+        table.Remove(key);
+
+        return value;
+    }
+
+    public static bool ContainsKey<TKey, TValue>(this ConditionalWeakTable<TKey, TValue> table, TKey key)
+        where TKey : class where TValue : class
+    {
+        return table.Get(key) != null;
     }
 
     public static bool Contains<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {

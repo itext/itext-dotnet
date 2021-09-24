@@ -45,9 +45,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfWriter : PdfOutputStream {
@@ -95,7 +95,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public PdfWriter(Stream os, WriterProperties properties)
-            : base(FileUtil.WrapWithBufferedOutputStream(os)) {
+            : base(new CountOutputStream(FileUtil.WrapWithBufferedOutputStream(os))) {
             this.properties = properties;
             if (properties.debugMode) {
                 duplicateStream = new PdfOutputStream(new ByteArrayOutputStream());

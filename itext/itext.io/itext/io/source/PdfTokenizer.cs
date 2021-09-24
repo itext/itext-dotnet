@@ -44,8 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using iText.IO;
-using iText.IO.Util;
+using iText.Commons;
+using iText.Commons.Utils;
 
 namespace iText.IO.Source {
     public class PdfTokenizer : IDisposable {
@@ -185,7 +185,7 @@ namespace iText.IO.Source {
         }
 
         public virtual String GetStringValue() {
-            return iText.IO.Util.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer(), 0, outBuf.Size());
+            return iText.Commons.Utils.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer(), 0, outBuf.Size());
         }
 
         public virtual byte[] GetDecodedStringContent() {
@@ -311,17 +311,17 @@ namespace iText.IO.Source {
                                 System.Diagnostics.Debug.Assert(n2 != null);
                                 type = PdfTokenizer.TokenType.Ref;
                                 try {
-                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
+                                    reference = Convert.ToInt32(iText.Commons.Utils.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
                                         );
-                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
+                                    generation = Convert.ToInt32(iText.Commons.Utils.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
                                         );
                                 }
                                 catch (Exception) {
                                     //warn about incorrect reference number
                                     //Exception: NumberFormatException for java, FormatException or OverflowException for .NET
                                     ILogger logger = ITextLogManager.GetLogger(typeof(PdfTokenizer));
-                                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.IO.Util.JavaUtil.GetStringForBytes
-                                        (n1), iText.IO.Util.JavaUtil.GetStringForBytes(n2)));
+                                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.Commons.Utils.JavaUtil.GetStringForBytes
+                                        (n1), iText.Commons.Utils.JavaUtil.GetStringForBytes(n2)));
                                     reference = -1;
                                     generation = 0;
                                 }
@@ -331,9 +331,9 @@ namespace iText.IO.Source {
                                 if (TokenValueEqualsTo(Obj)) {
                                     System.Diagnostics.Debug.Assert(n2 != null);
                                     type = PdfTokenizer.TokenType.Obj;
-                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
+                                    reference = Convert.ToInt32(iText.Commons.Utils.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
                                         );
-                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
+                                    generation = Convert.ToInt32(iText.Commons.Utils.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
                                         );
                                     return;
                                 }

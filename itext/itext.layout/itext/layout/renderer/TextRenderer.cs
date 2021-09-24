@@ -45,13 +45,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
+using iText.Commons.Actions.Contexts;
+using iText.Commons.Actions.Sequence;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
@@ -686,6 +690,10 @@ namespace iText.Layout.Renderer {
             UpdateFontAndText();
             UnicodeScript? script = this.GetProperty<UnicodeScript?>(Property.FONT_SCRIPT);
             if (!otfFeaturesApplied && TypographyUtils.IsPdfCalligraphAvailable() && text.start < text.end) {
+                PdfDocument pdfDocument = GetPdfDocument();
+                SequenceId sequenceId = pdfDocument == null ? null : pdfDocument.GetDocumentIdWrapper();
+                MetaInfoContainer metaInfoContainer = this.GetProperty<MetaInfoContainer>(Property.META_INFO);
+                IMetaInfo metaInfo = metaInfoContainer == null ? null : metaInfoContainer.GetMetaInfo();
                 if (HasOtfFont()) {
                     Object typographyConfig = this.GetProperty<Object>(Property.TYPOGRAPHY_CONFIG);
                     ICollection<UnicodeScript> supportedScripts = null;
@@ -744,7 +752,8 @@ namespace iText.Layout.Renderer {
                             // from text renderers (see LineRenderer#applyOtf).
                             SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
                         }
-                        TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, scriptsRange.script, typographyConfig);
+                        TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, scriptsRange.script, typographyConfig, sequenceId
+                            , metaInfo);
                         delta += text.end - scriptsRange.rangeEnd;
                         scriptsRange.rangeEnd = shapingRangeStart = text.end;
                     }
@@ -754,7 +763,7 @@ namespace iText.Layout.Renderer {
                 FontKerning fontKerning = (FontKerning)this.GetProperty<FontKerning?>(Property.FONT_KERNING, FontKerning.NO
                     );
                 if (fontKerning == FontKerning.YES) {
-                    TypographyUtils.ApplyKerning(font.GetFontProgram(), text);
+                    TypographyUtils.ApplyKerning(font.GetFontProgram(), text, sequenceId, metaInfo);
                 }
                 otfFeaturesApplied = true;
             }
@@ -890,7 +899,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_953();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_961();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -952,8 +961,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_953 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_953() {
+        private sealed class _IGlyphLineFilter_961 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_961() {
             }
 
             public bool Accept(Glyph glyph) {

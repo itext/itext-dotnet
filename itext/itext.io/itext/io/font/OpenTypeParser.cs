@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.IO.Util;

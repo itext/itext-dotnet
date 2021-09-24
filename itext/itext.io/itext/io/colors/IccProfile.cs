@@ -163,7 +163,7 @@ namespace iText.IO.Colors {
         public static String GetIccColorSpaceName(byte[] data) {
             String colorSpace;
             try {
-                colorSpace = iText.IO.Util.JavaUtil.GetStringForBytes(data, 16, 4, "US-ASCII");
+                colorSpace = iText.Commons.Utils.JavaUtil.GetStringForBytes(data, 16, 4, "US-ASCII");
             }
             catch (ArgumentException e) {
                 throw new iText.IO.IOException(iText.IO.IOException.InvalidIccProfile, e);
@@ -177,7 +177,7 @@ namespace iText.IO.Colors {
         public static String GetIccDeviceClass(byte[] data) {
             String deviceClass;
             try {
-                deviceClass = iText.IO.Util.JavaUtil.GetStringForBytes(data, 12, 4, "US-ASCII");
+                deviceClass = iText.Commons.Utils.JavaUtil.GetStringForBytes(data, 12, 4, "US-ASCII");
             }
             catch (ArgumentException e) {
                 throw new iText.IO.IOException(iText.IO.IOException.InvalidIccProfile, e);

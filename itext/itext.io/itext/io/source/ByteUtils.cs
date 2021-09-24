@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
 using iText.IO.Util;
 
 namespace iText.IO.Source {
@@ -147,7 +147,7 @@ namespace iText.IO.Source {
                     logger.LogError(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN);
                     d = 0;
                 }
-                byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+                byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                     );
                 if (buffer != null) {
                     buffer.Prepend(result);

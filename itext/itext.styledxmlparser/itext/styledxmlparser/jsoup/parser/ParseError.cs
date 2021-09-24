@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.IO.Util;
+using iText.Commons.Utils;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>A Parse Error records an error in the input HTML that occurs in either the tokenisation or the tree building phase.

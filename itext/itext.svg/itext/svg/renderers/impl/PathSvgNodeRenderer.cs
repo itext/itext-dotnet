@@ -44,7 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Svg;
@@ -74,8 +74,8 @@ namespace iText.Svg.Renderers.Impl {
         /// </remarks>
         private const String INVALID_OPERATOR_REGEX = "(?:(?![mzlhvcsqtae])\\p{L})";
 
-        private static Regex invalidRegexPattern = iText.IO.Util.StringUtil.RegexCompile(INVALID_OPERATOR_REGEX, System.Text.RegularExpressions.RegexOptions.IgnoreCase
-            );
+        private static Regex invalidRegexPattern = iText.Commons.Utils.StringUtil.RegexCompile(INVALID_OPERATOR_REGEX
+            , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
         /// <summary>
         /// The regular expression to split the <a href="https://www.w3.org/tr/svg/paths.html#pathdata">PathData attribute of
@@ -101,8 +101,8 @@ namespace iText.Svg.Renderers.Impl {
         /// Elliptical Arc Curve: A, a
         /// ClosePath: Z, z
         /// </remarks>
-        private static readonly Regex SPLIT_PATTERN = iText.IO.Util.StringUtil.RegexCompile("(?=[mlhvcsqtaz])", System.Text.RegularExpressions.RegexOptions.IgnoreCase
-            );
+        private static readonly Regex SPLIT_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile("(?=[mlhvcsqtaz])"
+            , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
         /// <summary>
         /// The
@@ -329,7 +329,7 @@ namespace iText.Svg.Renderers.Impl {
             ICollection<String> parsedResults = ParsePathOperations();
             IList<IPathShape> shapes = new List<IPathShape>();
             foreach (String parsedResult in parsedResults) {
-                String[] pathProperties = iText.IO.Util.StringUtil.Split(parsedResult, " +");
+                String[] pathProperties = iText.Commons.Utils.StringUtil.Split(parsedResult, " +");
                 IPathShape previousShape = shapes.Count == 0 ? null : shapes[shapes.Count - 1];
                 IList<IPathShape> operatorShapes = ProcessPathOperator(pathProperties, previousShape);
                 shapes.AddAll(operatorShapes);
@@ -345,7 +345,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         internal virtual bool ContainsInvalidAttributes(String attributes) {
-            return iText.IO.Util.Matcher.Match(invalidRegexPattern, attributes).Find();
+            return iText.Commons.Utils.Matcher.Match(invalidRegexPattern, attributes).Find();
         }
 
         internal virtual ICollection<String> ParsePathOperations() {
@@ -413,7 +413,7 @@ namespace iText.Svg.Renderers.Impl {
         /// 300", "z"}
         /// </summary>
         internal static String[] SplitPathStringIntoOperators(String path) {
-            return iText.IO.Util.StringUtil.Split(SPLIT_PATTERN, path);
+            return iText.Commons.Utils.StringUtil.Split(SPLIT_PATTERN, path);
         }
 
         private static bool EndsWithNonWhitespace(StringBuilder sb) {

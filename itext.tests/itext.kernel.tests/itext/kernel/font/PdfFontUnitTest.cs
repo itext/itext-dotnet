@@ -480,9 +480,9 @@ namespace iText.Kernel.Font {
             NUnit.Framework.Assert.AreEqual(fontName, onlySubsetFontName);
             NUnit.Framework.Assert.AreEqual(fontName, onlyEmbeddedFontName);
             NUnit.Framework.Assert.AreEqual(fontName, justFontName);
-            Regex prefixPattern = iText.IO.Util.StringUtil.RegexCompile("^[A-Z]{6}\\+FontTest$");
-            NUnit.Framework.Assert.IsTrue(iText.IO.Util.Matcher.Match(prefixPattern, embeddedSubsetFontName).Matches()
-                );
+            Regex prefixPattern = iText.Commons.Utils.StringUtil.RegexCompile("^[A-Z]{6}\\+FontTest$");
+            NUnit.Framework.Assert.IsTrue(iText.Commons.Utils.Matcher.Match(prefixPattern, embeddedSubsetFontName).Matches
+                ());
         }
 
         [NUnit.Framework.Test]

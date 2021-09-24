@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Util;
+using iText.Commons.Utils;
 
 namespace iText.StyledXmlParser.Util {
     /// <summary>Utility class for white-space handling methods that are used both in pdfHTML and the iText-core SVG module

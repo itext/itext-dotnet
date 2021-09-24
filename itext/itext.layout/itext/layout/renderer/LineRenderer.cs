@@ -45,10 +45,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
+using iText.Commons.Actions.Contexts;
+using iText.Commons.Actions.Sequence;
+using iText.Commons.Utils;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
@@ -1535,8 +1539,17 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                levels = unicodeIdsReorderingList.Count > 0 ? TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToIntArray
-                    (unicodeIdsReorderingList)) : null;
+                if (unicodeIdsReorderingList.Count > 0) {
+                    PdfDocument pdfDocument = GetPdfDocument();
+                    SequenceId sequenceId = pdfDocument == null ? null : pdfDocument.GetDocumentIdWrapper();
+                    MetaInfoContainer metaInfoContainer = this.GetProperty<MetaInfoContainer>(Property.META_INFO);
+                    IMetaInfo metaInfo = metaInfoContainer == null ? null : metaInfoContainer.GetMetaInfo();
+                    levels = TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToIntArray(unicodeIdsReorderingList), sequenceId
+                        , metaInfo);
+                }
+                else {
+                    levels = null;
+                }
             }
         }
 
@@ -1577,7 +1590,7 @@ namespace iText.Layout.Renderer {
             return normalizedChildWidth;
         }
 
-        internal class RendererGlyph {
+        public class RendererGlyph {
             public Glyph glyph;
 
             public TextRenderer renderer;

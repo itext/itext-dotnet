@@ -287,7 +287,7 @@ namespace iText.Pdfa.Checker {
                 transformArray[i * 2 + 1] = 1;
             }
             PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(transformArray), new PdfArray(new float[] 
-                { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+                { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             PdfDictionary currentColorSpaces = new PdfDictionary();
             //TODO DEVSIX-4203 should not cause an IndexOutOfBoundException.
             // Should throw PdfAConformanceException as Colorants dictionary always must be present

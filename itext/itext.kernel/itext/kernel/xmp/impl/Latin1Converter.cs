@@ -172,7 +172,7 @@ namespace iText.Kernel.XMP.Impl {
                         return new byte[] { 0x20 };
                     }
                     // interpret byte as Windows Cp1252 char
-                    return iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { ch }, "cp1252").GetBytes("UTF-8");
+                    return iText.Commons.Utils.JavaUtil.GetStringForBytes(new byte[] { ch }, "cp1252").GetBytes("UTF-8");
                 }
             }
             catch (ArgumentException) {

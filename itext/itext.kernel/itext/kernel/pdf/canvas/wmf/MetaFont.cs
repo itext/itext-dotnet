@@ -141,10 +141,10 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                 name[k] = (byte)c;
             }
             try {
-                faceName = iText.IO.Util.JavaUtil.GetStringForBytes(name, 0, k, "Cp1252");
+                faceName = iText.Commons.Utils.JavaUtil.GetStringForBytes(name, 0, k, "Cp1252");
             }
             catch (ArgumentException) {
-                faceName = iText.IO.Util.JavaUtil.GetStringForBytes(name, 0, k);
+                faceName = iText.Commons.Utils.JavaUtil.GetStringForBytes(name, 0, k);
             }
             faceName = faceName.ToLowerInvariant();
         }

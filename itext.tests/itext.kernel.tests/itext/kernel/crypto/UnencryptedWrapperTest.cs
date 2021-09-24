@@ -80,7 +80,7 @@ namespace iText.Kernel.Crypto {
 
         [NUnit.Framework.Test]
         public virtual void ExtractStandardEncryptedDocumentTest() {
-            ExtractEncrypted("standardEncryptedDocument.pdf", "standardUnencryptedWrapper.pdf", "World".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            ExtractEncrypted("standardEncryptedDocument.pdf", "standardUnencryptedWrapper.pdf", "World".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ));
         }
 

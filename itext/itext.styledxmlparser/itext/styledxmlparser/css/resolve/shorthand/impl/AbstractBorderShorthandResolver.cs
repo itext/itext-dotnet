@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using iText.IO;
-using iText.IO.Util;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Util;
@@ -81,7 +81,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 return JavaUtil.ArraysAsList(new CssDeclaration(widthPropName, shorthandExpression), new CssDeclaration(stylePropName
                     , shorthandExpression), new CssDeclaration(colorPropName, shorthandExpression));
             }
-            String[] props = iText.IO.Util.StringUtil.Split(shorthandExpression, "\\s+");
+            String[] props = iText.Commons.Utils.StringUtil.Split(shorthandExpression, "\\s+");
             String borderColorValue = null;
             String borderStyleValue = null;
             String borderWidthValue = null;

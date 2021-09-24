@@ -160,12 +160,12 @@ namespace iText.Kernel.Pdf {
             pdfDoc.GetDocumentInfo().GetPdfObject().Remove(PdfName.ModDate);
             PdfPage page = pdfDoc.AddNewPage();
             page.Flush();
-            pdfDoc.SetXmpMetadata("abc".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            pdfDoc.SetXmpMetadata("abc".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             pdfDoc.Close();
             PdfReader reader = new PdfReader(new MemoryStream(fos.ToArray()));
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual("abc".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1), pdfDocument.GetXmpMetadata
+            NUnit.Framework.Assert.AreEqual("abc".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1), pdfDocument.GetXmpMetadata
                 ());
             NUnit.Framework.Assert.IsNotNull(pdfDocument.GetPage(1));
             reader.Close();
@@ -199,7 +199,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPath));
             PdfPage page = pdfDoc.AddNewPage();
             page.Flush();
-            pdfDoc.SetXmpMetadata(xmp.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            pdfDoc.SetXmpMetadata(xmp.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(outPath, cmpPath, destinationFolder, "diff_" + 

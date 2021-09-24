@@ -44,8 +44,8 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
-using iText.IO;
-using iText.IO.Util;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser;
 
 namespace iText.StyledXmlParser.Css.Util {
@@ -86,7 +86,8 @@ namespace iText.StyledXmlParser.Css.Util {
                             i = AppendQuotedString(sb, str, i);
                         }
                         else {
-                            if ((str[i] == 'u' || str[i] == 'U') && iText.IO.Util.Matcher.Match(URL_PATTERN, str.Substring(i)).Find()) {
+                            if ((str[i] == 'u' || str[i] == 'U') && iText.Commons.Utils.Matcher.Match(URL_PATTERN, str.Substring(i)).Find
+                                ()) {
                                 sb.Append(str.JSubstring(i, i + 4).ToLowerInvariant());
                                 i = AppendUrlContent(sb, str, i + 4);
                             }

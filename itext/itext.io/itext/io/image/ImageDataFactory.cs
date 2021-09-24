@@ -46,6 +46,7 @@ using System.Collections.Generic;
 #if !NETSTANDARD2_0
 using System.Drawing;
 #endif // !NETSTANDARD2_0
+using iText.Commons.Utils;
 using iText.IO.Codec;
 using iText.IO.Util;
 

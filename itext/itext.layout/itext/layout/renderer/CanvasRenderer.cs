@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using Microsoft.Extensions.Logging;
-using iText.IO;
+using iText.Commons;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Layout;
@@ -99,6 +99,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
+            LinkRenderToDocument(resultRenderer, canvas.GetPdfDocument());
             Transform transformProp = resultRenderer.GetProperty<Transform>(Property.TRANSFORM);
             if (!waitingDrawingElements.Contains(resultRenderer)) {
                 ProcessWaitingDrawing(resultRenderer, transformProp, waitingDrawingElements);

@@ -133,7 +133,7 @@ namespace iText.Svg.Utils {
                     TextLeafSvgNodeRenderer leafRend = (TextLeafSvgNodeRenderer)child;
                     //Process text
                     String toProcess = leafRend.GetAttribute(SvgConstants.Attributes.TEXT_CONTENT);
-                    toProcess = iText.IO.Util.StringUtil.ReplaceAll(toProcess, "\\s+", " ");
+                    toProcess = iText.Commons.Utils.StringUtil.ReplaceAll(toProcess, "\\s+", " ");
                     toProcess = WhiteSpaceUtil.CollapseConsecutiveSpaces(toProcess);
                     if (performLeadingTrim) {
                         //Trim leading white spaces
@@ -154,7 +154,7 @@ namespace iText.Svg.Utils {
         /// <param name="s">string to check</param>
         /// <returns>true if the string only contains whitespace characters, false otherwise</returns>
         public static bool IsOnlyWhiteSpace(String s) {
-            String trimmedText = iText.IO.Util.StringUtil.ReplaceAll(s, "\\s+", " ");
+            String trimmedText = iText.Commons.Utils.StringUtil.ReplaceAll(s, "\\s+", " ");
             //Trim leading whitespace
             trimmedText = iText.Svg.Utils.SvgTextUtil.TrimLeadingWhitespace(trimmedText);
             //Trim trailing whitespace

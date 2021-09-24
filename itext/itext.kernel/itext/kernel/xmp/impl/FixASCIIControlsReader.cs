@@ -28,7 +28,7 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System.IO;
-using iText.IO.Util;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.XMP.Impl {
     /// <since>22.08.2006</since>
@@ -57,7 +57,7 @@ namespace iText.Kernel.XMP.Impl {
         private int digits = 0;
 
         /// <summary>The look-ahead size is 6 at maximum (&amp;#xAB;)</summary>
-        /// <seealso cref="iText.IO.Util.PushbackReader.PushbackReader(System.IO.TextReader, int)"/>
+        /// <seealso cref="iText.Commons.Utils.PushbackReader.PushbackReader(System.IO.TextReader, int)"/>
         /// <param name="input">a Reader</param>
         public FixASCIIControlsReader(TextReader input)
             : base(input, BUFFER_SIZE) {
@@ -76,7 +76,7 @@ namespace iText.Kernel.XMP.Impl {
                     char c = ProcessChar(readAheadBuffer[readAhead]);
                     if (state == STATE_START) {
                         // replace control chars with space
-                        if (Utils.IsControlChar(c)) {
+                        if (iText.Kernel.XMP.Impl.Utils.IsControlChar(c)) {
                             c = ' ';
                         }
                         cbuf[pos++] = c;
@@ -160,7 +160,7 @@ namespace iText.Kernel.XMP.Impl {
                     }
                     else {
                         // sequence too long
-                        if (ch == ';' && Utils.IsControlChar((char)control)) {
+                        if (ch == ';' && iText.Kernel.XMP.Impl.Utils.IsControlChar((char)control)) {
                             state = STATE_START;
                             return (char)control;
                         }
@@ -184,7 +184,7 @@ namespace iText.Kernel.XMP.Impl {
                     }
                     else {
                         // sequence too long
-                        if (ch == ';' && Utils.IsControlChar((char)control)) {
+                        if (ch == ';' && iText.Kernel.XMP.Impl.Utils.IsControlChar((char)control)) {
                             state = STATE_START;
                             return (char)control;
                         }
