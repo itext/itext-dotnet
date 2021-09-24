@@ -45,7 +45,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.IO.Image;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;

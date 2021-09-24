@@ -49,7 +49,6 @@ using iText.Commons.Utils;
 using iText.IO.Colors;
 using iText.IO.Font;
 using iText.IO.Image;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;

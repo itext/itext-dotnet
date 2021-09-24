@@ -45,7 +45,6 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -952,7 +951,7 @@ namespace iText.Kernel.Pdf {
             try {
                 document.GetPdfObject(3093);
             }
-            catch (iText.IO.IOException) {
+            catch (iText.IO.Exceptions.IOException) {
                 exception = true;
             }
             NUnit.Framework.Assert.IsTrue(exception);
@@ -1479,7 +1478,7 @@ namespace iText.Kernel.Pdf {
             try {
                 PdfReader reader = new PdfReader(nonPdfFileName);
             }
-            catch (iText.IO.IOException) {
+            catch (iText.IO.Exceptions.IOException) {
                 exceptionThrown = true;
                 // File should be available for writing
                 Stream stream = FileUtil.GetFileOutputStream(nonPdfFileName);
@@ -1841,7 +1840,7 @@ namespace iText.Kernel.Pdf {
                 PdfReader pdfReader = new PdfReader(sourceFolder + "startxrefNotFound.pdf");
                 pdfReader.ReadXref();
             }
-            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>().With.Message.EqualTo(KernelExceptionMessageConstant.PDF_STARTXREF_NOT_FOUND))
+            , NUnit.Framework.Throws.InstanceOf<iText.IO.Exceptions.IOException>().With.Message.EqualTo(KernelExceptionMessageConstant.PDF_STARTXREF_NOT_FOUND))
 ;
         }
 
@@ -1852,8 +1851,8 @@ namespace iText.Kernel.Pdf {
             //Later in the test we will need to delete a file. Since we do not want to delete it from sources, we will
             // copy it to destination folder.
             FileInfo copiedFile = CopyFileForTest(fileName, copiedFileName);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => new PdfReader(fileName));
-            NUnit.Framework.Assert.AreEqual(iText.IO.IOException.PdfHeaderNotFound, e.Message);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => new PdfReader(fileName));
+            NUnit.Framework.Assert.AreEqual(iText.IO.Exceptions.IOException.PdfHeaderNotFound, e.Message);
             //This check is meaningfull only on Windows, since on other OS the fact of a stream being open doesn't
             // prevent the stream from being deleted.
             NUnit.Framework.Assert.IsTrue(FileUtil.DeleteFile(copiedFile));
@@ -1864,7 +1863,7 @@ namespace iText.Kernel.Pdf {
             String fileName = sourceFolder + "emptyPdf.pdf";
             using (Stream pdfStream = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
                 IRandomAccessSource randomAccessSource = new RandomAccessSourceFactory().CreateSource(pdfStream);
-                Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => new PdfReader(randomAccessSource
+                Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => new PdfReader(randomAccessSource
                     , new ReaderProperties()));
                 //An exception would be thrown, if stream is closed.
                 NUnit.Framework.Assert.AreEqual(-1, pdfStream.Read());

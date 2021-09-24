@@ -87,7 +87,7 @@ namespace iText.IO.Image {
                 return TIFFDirectory.GetNumDirectories(raf);
             }
             catch (Exception e) {
-                throw new iText.IO.IOException(iText.IO.IOException.TiffImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TiffImageException, e);
             }
         }
 

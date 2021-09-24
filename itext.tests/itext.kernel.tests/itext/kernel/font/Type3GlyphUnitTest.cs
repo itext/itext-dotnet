@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using iText.IO.Image;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
 

@@ -96,7 +96,7 @@ namespace iText.IO.Font.Cmap {
             IDictionary<String, CMapObject> dic = new Dictionary<String, CMapObject>();
             while (true) {
                 if (!NextValidToken()) {
-                    throw new iText.IO.IOException("Unexpected end of file.");
+                    throw new iText.IO.Exceptions.IOException("Unexpected end of file.");
                 }
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
                     break;
@@ -105,17 +105,17 @@ namespace iText.IO.Font.Cmap {
                     continue;
                 }
                 if (tokeniser.GetTokenType() != PdfTokenizer.TokenType.Name) {
-                    throw new iText.IO.IOException("Dictionary key {0} is not a name.").SetMessageParams(tokeniser.GetStringValue
-                        ());
+                    throw new iText.IO.Exceptions.IOException("Dictionary key {0} is not a name.").SetMessageParams(tokeniser.
+                        GetStringValue());
                 }
                 String name = tokeniser.GetStringValue();
                 CMapObject obj = ReadObject();
                 if (obj.IsToken()) {
                     if (obj.ToString().Equals(">>")) {
-                        tokeniser.ThrowError(iText.IO.IOException.UnexpectedGtGt);
+                        tokeniser.ThrowError(iText.IO.Exceptions.IOException.UnexpectedGtGt);
                     }
                     if (obj.ToString().Equals("]")) {
-                        tokeniser.ThrowError(iText.IO.IOException.UnexpectedCloseBracket);
+                        tokeniser.ThrowError(iText.IO.Exceptions.IOException.UnexpectedCloseBracket);
                     }
                 }
                 dic.Put(name, obj);
@@ -135,7 +135,7 @@ namespace iText.IO.Font.Cmap {
                         break;
                     }
                     if (obj.ToString().Equals(">>")) {
-                        tokeniser.ThrowError(iText.IO.IOException.UnexpectedGtGt);
+                        tokeniser.ThrowError(iText.IO.Exceptions.IOException.UnexpectedGtGt);
                     }
                 }
                 array.Add(obj);

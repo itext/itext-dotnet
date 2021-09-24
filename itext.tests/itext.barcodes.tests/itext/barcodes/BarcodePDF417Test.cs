@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.Barcodes.Exceptions;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;

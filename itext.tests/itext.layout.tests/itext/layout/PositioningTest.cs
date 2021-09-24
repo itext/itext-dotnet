@@ -42,8 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Image;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;

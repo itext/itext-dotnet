@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
@@ -42,16 +42,18 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Forms.Xfdf {
-    public class XfdfException : Exception {
-        public XfdfException(String message)
-            : base(message) {
+namespace iText.IO.Exceptions {
+    /// <summary>This file is a helper class for internal usage only.</summary>
+    /// <remarks>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that its API and functionality may be changed in future.
+    /// </remarks>
+    public sealed class ExceptionUtil {
+        private ExceptionUtil() {
         }
 
-        /// <summary>Message in case one tries to add attribute with null name or value</summary>
-        public const String ATTRIBUTE_NAME_OR_VALUE_MISSING = "Attribute name or value are missing";
-
-        /// <summary>Message in case one tries to add annotation without indicating the page it belongs to</summary>
-        public const String PAGE_IS_MISSING = "Required Page attribute is missing.";
+        public static bool IsOutOfRange(Exception e) {
+            return e is IndexOutOfRangeException || e is ArgumentOutOfRangeException;
+        }
     }
 }

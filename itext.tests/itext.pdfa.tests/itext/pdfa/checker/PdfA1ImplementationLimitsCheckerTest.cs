@@ -48,7 +48,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Function;
 using iText.Kernel.Pdf.Xobject;
-using iText.Pdfa;
+using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa.Checker {

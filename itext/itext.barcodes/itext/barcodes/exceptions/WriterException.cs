@@ -1,7 +1,8 @@
 /*
+
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
-Authors: iText Software.
+Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -41,19 +42,24 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Commons.Exceptions;
 
-namespace iText.IO.Util {
-    /// <summary>This file is a helper class for internal usage only.</summary>
-    /// <remarks>
-    /// This file is a helper class for internal usage only.
-    /// Be aware that its API and functionality may be changed in future.
-    /// </remarks>
-    public sealed class ExceptionUtil {
-        private ExceptionUtil() {
+namespace iText.Barcodes.Exceptions {
+    /// <summary>
+    /// A base class which covers the range of exceptions which may occur when encoding a barcode using
+    /// the Writer framework.
+    /// </summary>
+    /// <author>dswitkin@google.com (Daniel Switkin)</author>
+    public sealed class WriterException : ITextException {
+        /// <summary>Creates a WriterException.</summary>
+        public WriterException()
+            : base() {
         }
 
-        public static bool IsOutOfRange(Exception e) {
-            return e is IndexOutOfRangeException || e is ArgumentOutOfRangeException;
+        /// <summary>Creates a WriterException with a message.</summary>
+        /// <param name="message">message of the exception</param>
+        public WriterException(String message)
+            : base(message) {
         }
     }
 }

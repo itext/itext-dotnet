@@ -45,6 +45,7 @@ using System;
 using System.IO;
 using iText.IO.Util;
 using iText.Kernel.Pdf.Xobject;
+using iText.StyledXmlParser.Exceptions;
 using iText.Test;
 using iText.Test.Attributes;
 using NUnit.Framework;

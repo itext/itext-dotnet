@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Xml;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;
 
 namespace iText.Forms.Xfdf

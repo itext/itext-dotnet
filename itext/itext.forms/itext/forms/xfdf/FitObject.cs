@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Forms.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Forms.Xfdf {

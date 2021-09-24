@@ -45,7 +45,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Layout.Exceptions;
 

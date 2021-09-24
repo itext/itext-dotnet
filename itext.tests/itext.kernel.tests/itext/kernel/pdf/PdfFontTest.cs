@@ -1020,7 +1020,7 @@ namespace iText.Kernel.Pdf {
                     ));
                 FontProgramFactory.CreateType1Font(null, pfb);
             }
-            catch (iText.IO.IOException e) {
+            catch (iText.IO.Exceptions.IOException e) {
                 message = e.Message;
             }
             NUnit.Framework.Assert.AreEqual("Invalid afm or pfm font file.", message);
@@ -1033,11 +1033,11 @@ namespace iText.Kernel.Pdf {
             try {
                 FontProgramFactory.CreateType1Font(font, null);
             }
-            catch (iText.IO.IOException e) {
+            catch (iText.IO.Exceptions.IOException e) {
                 message = e.Message;
             }
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException._1IsNotAnAfmOrPfmFontFile, font
-                ), message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException._1IsNotAnAfmOrPfmFontFile
+                , font), message);
         }
 
         [NUnit.Framework.Test]

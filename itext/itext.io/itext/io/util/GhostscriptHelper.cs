@@ -46,7 +46,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using iText.Commons.Utils;
-using iText.IO;
+using iText.IO.Exceptions;
 
 namespace iText.IO.Util {
     /// <summary>A utility class that is used as an interface to run 3rd-party tool Ghostscript.</summary>

@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iText.Commons.Utils;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
@@ -163,7 +162,7 @@ namespace iText.Kernel.Utils {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnknownIOException, e);
             }
         }
 
@@ -188,7 +187,7 @@ namespace iText.Kernel.Utils {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnknownIOException, e);
                 }
             }
         }
@@ -222,7 +221,7 @@ namespace iText.Kernel.Utils {
                 @out.Write(EscapeXML(tagContent, true));
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnknownIOException, e);
             }
         }
 

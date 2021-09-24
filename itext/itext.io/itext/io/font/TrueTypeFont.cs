@@ -160,7 +160,7 @@ namespace iText.IO.Font {
             }
             catch (System.IO.IOException e) {
                 fontStreamBytes = null;
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
             return fontStreamBytes;
         }
@@ -207,7 +207,7 @@ namespace iText.IO.Font {
                 return fontParser.GetSubset(glyphs, subset);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
         }
 

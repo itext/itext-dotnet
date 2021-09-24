@@ -112,11 +112,12 @@ namespace iText.IO.Image {
         public static ImageData Create(int width, int height, bool reverseBits, int typeCCITT, int parameters, byte
             [] data, int[] transparency) {
             if (transparency != null && transparency.Length != 2) {
-                throw new iText.IO.IOException(iText.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
+                    );
             }
             if (typeCCITT != RawImageData.CCITTG4 && typeCCITT != RawImageData.CCITTG3_1D && typeCCITT != RawImageData
                 .CCITTG3_2D) {
-                throw new iText.IO.IOException(iText.IO.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
                     );
             }
             if (reverseBits) {
@@ -142,7 +143,8 @@ namespace iText.IO.Image {
         public static ImageData Create(int width, int height, int components, int bpc, byte[] data, int[] transparency
             ) {
             if (transparency != null && transparency.Length != components * 2) {
-                throw new iText.IO.IOException(iText.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
+                    );
             }
             if (components == 1 && bpc == 1) {
                 byte[] g4 = CCITTG4Encoder.Compress(data, width, height);
@@ -153,10 +155,10 @@ namespace iText.IO.Image {
             image.height = height;
             image.width = width;
             if (components != 1 && components != 3 && components != 4) {
-                throw new iText.IO.IOException(iText.IO.IOException.ComponentsMustBe1_3Or4);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ComponentsMustBe1_3Or4);
             }
             if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8) {
-                throw new iText.IO.IOException(iText.IO.IOException.BitsPerComponentMustBe1_2_4or8);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.BitsPerComponentMustBe1_2_4or8);
             }
             image.colorEncodingComponentsNumber = components;
             image.bpc = bpc;
@@ -486,7 +488,7 @@ namespace iText.IO.Image {
                 }
 
                 default: {
-                    throw new iText.IO.IOException(iText.IO.IOException.ImageFormatCannotBeRecognized);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ImageFormatCannotBeRecognized);
                 }
             }
         }
@@ -537,7 +539,7 @@ namespace iText.IO.Image {
                 }
 
                 default: {
-                    throw new iText.IO.IOException(iText.IO.IOException.ImageFormatCannotBeRecognized);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ImageFormatCannotBeRecognized);
                 }
             }
         }

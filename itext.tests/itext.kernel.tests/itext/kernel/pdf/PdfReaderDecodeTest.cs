@@ -143,7 +143,7 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void OverriddenMemoryHandlerAllStreamsAreSuspiciousTest() {
-            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_193();
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_194();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(20);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties
                 ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
@@ -160,8 +160,8 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private sealed class _MemoryLimitsAwareHandler_193 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_193() {
+        private sealed class _MemoryLimitsAwareHandler_194 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_194() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
@@ -173,7 +173,7 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void OverriddenMemoryHandlerNoStreamsAreSuspiciousTest() {
-            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_228();
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_229();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(20);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties
                 ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
@@ -189,8 +189,8 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private sealed class _MemoryLimitsAwareHandler_228 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_228() {
+        private sealed class _MemoryLimitsAwareHandler_229 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_229() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {

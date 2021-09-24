@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -43,17 +42,34 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Barcodes.Qrcode {
-    /// <summary>
-    /// Thrown when an exception occurs during Reed-Solomon decoding, such as when
-    /// there are too many errors to correct.
-    /// </summary>
-    /// <author>Sean Owen</author>
-    internal sealed class ReedSolomonException : Exception {
-        /// <summary>Creates a ReedSolomonException with a message.</summary>
-        /// <param name="message">the message of the exception</param>
-        public ReedSolomonException(String message)
+namespace iText.Kernel.Exceptions {
+    /// <summary>Exception class for exceptions occurred during decompressed pdf streams processing.</summary>
+    public class MemoryLimitsAwareException : PdfException {
+        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
+        /// <param name="message">the detail message.</param>
+        public MemoryLimitsAwareException(String message)
             : base(message) {
+        }
+
+        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
+        public MemoryLimitsAwareException(Exception cause)
+            : this(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION, cause) {
+        }
+
+        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
+        public MemoryLimitsAwareException(String message, Exception cause)
+            : base(message, cause) {
         }
     }
 }

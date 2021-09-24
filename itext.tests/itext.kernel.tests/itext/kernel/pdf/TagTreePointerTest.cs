@@ -43,9 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Exceptions;
 using iText.IO.Font.Constants;
-using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;

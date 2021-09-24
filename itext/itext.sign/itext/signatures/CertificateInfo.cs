@@ -48,7 +48,7 @@ using System.IO;
 using System.Text;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.X509;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>

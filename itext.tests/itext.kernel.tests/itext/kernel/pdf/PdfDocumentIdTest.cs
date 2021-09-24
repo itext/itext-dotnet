@@ -45,7 +45,7 @@ using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using iText.IO.Source;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Canvas;
 using iText.Test;
 using iText.Test.Attributes;

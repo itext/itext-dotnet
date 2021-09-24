@@ -161,8 +161,8 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void ImageWithInvalidMaskTest() {
             ImageData mask = ImageDataFactory.Create(sourceFolder + "mask.png");
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => mask.MakeMask());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException.ThisImageCanNotBeAnImageMask
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => mask.MakeMask());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ThisImageCanNotBeAnImageMask
                 ), e.Message);
         }
     }

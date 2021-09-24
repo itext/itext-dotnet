@@ -86,7 +86,7 @@ namespace iText.IO.Font {
                     String resourcePath = FontResources.AFMS + afmPath + ".afm";
                     resource = ResourceUtil.GetResourceStream(resourcePath);
                     if (resource == null) {
-                        throw new iText.IO.IOException("{0} was not found as resource.").SetMessageParams(resourcePath);
+                        throw new iText.IO.Exceptions.IOException("{0} was not found as resource.").SetMessageParams(resourcePath);
                     }
                     MemoryStream stream = new MemoryStream();
                     int read;
@@ -120,7 +120,8 @@ namespace iText.IO.Font {
                             return new RandomAccessFileOrArray(sourceFactory.CreateSource(ba.ToArray()));
                         }
                         else {
-                            throw new iText.IO.IOException(iText.IO.IOException._1IsNotAnAfmOrPfmFontFile).SetMessageParams(afmPath);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1IsNotAnAfmOrPfmFontFile).SetMessageParams
+                                (afmPath);
                         }
                     }
                 }
@@ -136,7 +137,7 @@ namespace iText.IO.Font {
                                 Pfm2afm.Convert(rf, ba);
                             }
                             catch (Exception) {
-                                throw new iText.IO.IOException("Invalid afm or pfm font file.");
+                                throw new iText.IO.Exceptions.IOException("Invalid afm or pfm font file.");
                             }
                             finally {
                                 rf.Close();
@@ -145,7 +146,7 @@ namespace iText.IO.Font {
                         }
                     }
                     else {
-                        throw new iText.IO.IOException("Invalid afm or pfm font file.");
+                        throw new iText.IO.Exceptions.IOException("Invalid afm or pfm font file.");
                     }
                 }
             }

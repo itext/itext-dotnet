@@ -44,7 +44,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;

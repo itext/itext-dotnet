@@ -44,6 +44,7 @@ using System;
 using System.IO;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
+using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa {

@@ -338,7 +338,7 @@ namespace iText.IO.Font {
                 return BuildNewFile(j);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
             finally {
                 try {

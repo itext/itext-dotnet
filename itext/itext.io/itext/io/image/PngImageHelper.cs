@@ -176,7 +176,7 @@ namespace iText.IO.Image {
                 ProcessPng(pngStream, png);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.PngImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PngImageException, e);
             }
             finally {
                 if (pngStream != null) {
@@ -304,7 +304,7 @@ namespace iText.IO.Image {
                 png.image.SetXYRatio(png.XYRatio);
             }
             catch (Exception e) {
-                throw new iText.IO.IOException(iText.IO.IOException.PngImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PngImageException, e);
             }
         }
 
@@ -630,7 +630,7 @@ namespace iText.IO.Image {
 
                     default: {
                         // Error -- uknown filter type
-                        throw new iText.IO.IOException(iText.IO.IOException.UnknownPngFilter);
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnknownPngFilter);
                     }
                 }
                 ProcessPixels(curr, xOffset, xStep, dstY, passWidth, png);

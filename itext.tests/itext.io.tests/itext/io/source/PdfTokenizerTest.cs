@@ -219,10 +219,10 @@ namespace iText.IO.Source {
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource("/Name1".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => tok.ThrowError(iText.IO.IOException
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => tok.ThrowError(iText.IO.Exceptions.IOException
                 .ErrorAtFilePointer1, 0));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException.ErrorAtFilePointer1, 0), e.Message
-                );
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ErrorAtFilePointer1
+                , 0), e.Message);
         }
 
         [NUnit.Framework.Test]

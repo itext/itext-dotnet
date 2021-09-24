@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -42,22 +41,18 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Util;
+using iText.Commons.Exceptions;
 
-namespace iText.IO {
-    /// <summary>Class containing constants to be used in exceptions in the IO module.</summary>
-    public sealed class IoExceptionMessage {
-        public const String COMPARE_COMMAND_IS_NOT_SPECIFIED = "ImageMagick comparison command is not specified. Set the "
-             + ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE + " environment variable with the CLI command which can run the ImageMagic comparison. See BUILDING.MD in the root of the repository for more details.";
+namespace iText.Forms.Exceptions {
+    public class XfdfException : ITextException {
+        public XfdfException(String message)
+            : base(message) {
+        }
 
-        public const String COMPARE_COMMAND_SPECIFIED_INCORRECTLY = "ImageMagick comparison command specified incorrectly. Set the "
-             + ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE + " environment variable with the CLI command which can run the ImageMagic comparison. See BUILDING.MD in the root of the repository for more details.";
+        /// <summary>Message in case one tries to add attribute with null name or value</summary>
+        public const String ATTRIBUTE_NAME_OR_VALUE_MISSING = "Attribute name or value are missing";
 
-        public const String GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED = "Ghostscript command is not specified or specified incorrectly. Set the "
-             + GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE + " environment variable to a CLI command that can run the Ghostscript application. See BUILDING.MD in the root of the repository for more details.";
-
-        public const String GHOSTSCRIPT_FAILED = "GhostScript failed for <filename>";
-
-        public const String CANNOT_OPEN_OUTPUT_DIRECTORY = "Cannot open output directory for <filename>";
+        /// <summary>Message in case one tries to add annotation without indicating the page it belongs to</summary>
+        public const String PAGE_IS_MISSING = "Required Page attribute is missing.";
     }
 }

@@ -229,10 +229,12 @@ namespace iText.IO.Image {
 
         public virtual void SetImageMask(iText.IO.Image.ImageData imageMask) {
             if (this.mask) {
-                throw new iText.IO.IOException(iText.IO.IOException.ImageMaskCannotContainAnotherImageMask);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ImageMaskCannotContainAnotherImageMask
+                    );
             }
             if (!imageMask.mask) {
-                throw new iText.IO.IOException(iText.IO.IOException.ImageIsNotMaskYouMustCallImageDataMakeMask);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ImageIsNotMaskYouMustCallImageDataMakeMask
+                    );
             }
             this.imageMask = imageMask;
         }
@@ -243,7 +245,7 @@ namespace iText.IO.Image {
 
         public virtual void MakeMask() {
             if (!CanBeMask()) {
-                throw new iText.IO.IOException(iText.IO.IOException.ThisImageCanNotBeAnImageMask);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ThisImageCanNotBeAnImageMask);
             }
             mask = true;
         }

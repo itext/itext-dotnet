@@ -63,7 +63,8 @@ namespace iText.IO.Font {
             InitializeCidFontNameAndStyle(fontName);
             IDictionary<String, Object> fontDesc = CidFontProperties.GetAllFonts().Get(fontNames.GetFontName());
             if (fontDesc == null) {
-                throw new iText.IO.IOException("There is no such predefined font: {0}").SetMessageParams(fontName);
+                throw new iText.IO.Exceptions.IOException("There is no such predefined font: {0}").SetMessageParams(fontName
+                    );
             }
             InitializeCidFontProperties(fontDesc);
         }

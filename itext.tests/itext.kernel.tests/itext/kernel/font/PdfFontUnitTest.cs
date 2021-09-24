@@ -26,7 +26,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;

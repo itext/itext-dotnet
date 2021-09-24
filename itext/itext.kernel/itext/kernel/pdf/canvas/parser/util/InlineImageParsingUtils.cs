@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filters;

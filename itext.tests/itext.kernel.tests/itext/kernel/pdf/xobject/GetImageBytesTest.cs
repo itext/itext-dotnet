@@ -167,9 +167,9 @@ namespace iText.Kernel.Pdf.Xobject {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
             GetImageBytesTest.ImageExtractor listener = new GetImageBytesTest.ImageExtractor(this);
             PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => processor.ProcessPageContent
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => processor.ProcessPageContent
                 (pdfDocument.GetPage(1)));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException.ExpectedTrailingZeroBitsForByteAlignedLines
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ExpectedTrailingZeroBitsForByteAlignedLines
                 ), e.Message);
         }
 

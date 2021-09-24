@@ -48,7 +48,6 @@ using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.IO.Source;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
@@ -1050,7 +1049,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 ImageDataFactory.CreateGifFrame(baos.ToArray(), 3);
                 NUnit.Framework.Assert.Fail("IOException expected");
             }
-            catch (iText.IO.IOException) {
+            catch (iText.IO.Exceptions.IOException) {
             }
         }
 

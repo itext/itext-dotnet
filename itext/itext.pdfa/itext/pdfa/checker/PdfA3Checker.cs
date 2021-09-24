@@ -47,6 +47,7 @@ using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Pdfa;
+using iText.Pdfa.Exceptions;
 
 namespace iText.Pdfa.Checker {
     /// <summary>

@@ -46,7 +46,6 @@ using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;

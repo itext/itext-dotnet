@@ -41,37 +41,15 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel;
-using iText.Kernel.Exceptions;
+using iText.Commons.Exceptions;
 
-namespace iText.Kernel.Pdf {
-    /// <summary>Exception class for exceptions occurred during decompressed pdf streams processing.</summary>
-    public class MemoryLimitsAwareException : PdfException {
-        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
-        /// <param name="message">the detail message.</param>
-        public MemoryLimitsAwareException(String message)
-            : base(message) {
-        }
-
-        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
-        /// <param name="cause">
-        /// the cause (which is saved for later retrieval by
-        /// <see cref="System.Exception.InnerException()"/>
-        /// method).
-        /// </param>
-        public MemoryLimitsAwareException(Exception cause)
-            : this(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION, cause) {
-        }
-
-        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
-        /// <param name="message">the detail message.</param>
-        /// <param name="cause">
-        /// the cause (which is saved for later retrieval by
-        /// <see cref="System.Exception.InnerException()"/>
-        /// method).
-        /// </param>
-        public MemoryLimitsAwareException(String message, Exception cause)
-            : base(message, cause) {
+namespace iText.Forms.Exceptions {
+    public class AttributeNotFoundException : ITextException {
+        /// <summary>The exception thrown when the attribute with given name is not found in the object attributes list.
+        ///     </summary>
+        /// <param name="attribute">the name of missing attribute.</param>
+        public AttributeNotFoundException(String attribute)
+            : base("Required attribute " + attribute + " is not found") {
         }
     }
 }

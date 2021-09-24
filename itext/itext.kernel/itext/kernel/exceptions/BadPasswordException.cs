@@ -43,21 +43,25 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Barcodes.Qrcode {
-    /// <summary>
-    /// A base class which covers the range of exceptions which may occur when encoding a barcode using
-    /// the Writer framework.
-    /// </summary>
-    /// <author>dswitkin@google.com (Daniel Switkin)</author>
-    public sealed class WriterException : Exception {
-        /// <summary>Creates a WriterException.</summary>
-        public WriterException()
-            : base() {
+namespace iText.Kernel.Exceptions {
+    /// <summary>Bad password exception.</summary>
+    public class BadPasswordException : PdfException {
+        public const String PdfReaderNotOpenedWithOwnerPassword = "PdfReader is not opened with owner password";
+
+        /// <summary>Creates a new BadPasswordException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
+        public BadPasswordException(String message, Exception cause)
+            : base(message, cause) {
         }
 
-        /// <summary>Creates a WriterException with a message.</summary>
-        /// <param name="message">message of the exception</param>
-        public WriterException(String message)
+        /// <summary>Creates a new BadPasswordException.</summary>
+        /// <param name="message">the detail message.</param>
+        public BadPasswordException(String message)
             : base(message) {
         }
     }

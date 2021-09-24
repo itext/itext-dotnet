@@ -45,7 +45,6 @@ using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
-using iText.Kernel;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 

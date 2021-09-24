@@ -50,5 +50,16 @@ namespace iText.Commons.Exceptions {
         public ITextException(Exception cause)
             : base(CommonsExceptionMessageConstant.UNKNOWN_ITEXT_EXCEPTION, cause) {
         }
+
+        /// <summary>Creates a new ITextException.</summary>
+        /// <param name="message">the detail message</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method)
+        /// </param>
+        public ITextException(String message, Exception cause)
+            : base(message, cause) {
+        }
     }
 }

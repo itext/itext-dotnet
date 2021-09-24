@@ -277,7 +277,7 @@ namespace iText.IO.Font {
                 LOGGER.LogTrace(MessageFormatUtil.Format("Registered {0}", path));
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(e);
+                throw new iText.IO.Exceptions.IOException(e);
             }
         }
 

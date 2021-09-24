@@ -52,7 +52,6 @@ using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
 using iText.IO.Source;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
@@ -712,7 +711,7 @@ namespace iText.Kernel.Font {
                             try {
                                 ttfBytes = ttf.GetSubset(usedGlyphs, subset);
                             }
-                            catch (iText.IO.IOException) {
+                            catch (iText.IO.Exceptions.IOException) {
                                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
                                 logger.LogWarning(iText.IO.LogMessageConstant.FONT_SUBSET_ISSUE);
                                 ttfBytes = null;

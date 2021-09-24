@@ -50,6 +50,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.XMP;
 using iText.Pdfa.Checker;
+using iText.Pdfa.Exceptions;
 
 namespace iText.Pdfa {
     /// <summary>
@@ -68,7 +69,7 @@ namespace iText.Pdfa {
     /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
     /// ) to ensure that the PDF/A standard is followed.
     /// This class will throw exceptions, mostly
-    /// <see cref="PdfAConformanceException"/>
+    /// <see cref="iText.Pdfa.Exceptions.PdfAConformanceException"/>
     /// ,
     /// and thus refuse to output a PDF/A file if at any point the document does not
     /// adhere to the PDF/A guidelines specified by the

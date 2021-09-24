@@ -42,28 +42,22 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel;
+using iText.IO.Util;
 
-namespace iText.Kernel.Crypto {
-    /// <summary>Bad password exception.</summary>
-    public class BadPasswordException : PdfException {
-        public const String PdfReaderNotOpenedWithOwnerPassword = "PdfReader is not opened with owner password";
+namespace iText.IO.Exceptions {
+    /// <summary>Class containing constants to be used in exceptions in the IO module.</summary>
+    public sealed class IoExceptionMessage {
+        public const String COMPARE_COMMAND_IS_NOT_SPECIFIED = "ImageMagick comparison command is not specified. Set the "
+             + ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE + " environment variable with the CLI command which can run the ImageMagic comparison. See BUILDING.MD in the root of the repository for more details.";
 
-        /// <summary>Creates a new BadPasswordException.</summary>
-        /// <param name="message">the detail message.</param>
-        /// <param name="cause">
-        /// the cause (which is saved for later retrieval by
-        /// <see cref="System.Exception.InnerException()"/>
-        /// method).
-        /// </param>
-        public BadPasswordException(String message, Exception cause)
-            : base(message, cause) {
-        }
+        public const String COMPARE_COMMAND_SPECIFIED_INCORRECTLY = "ImageMagick comparison command specified incorrectly. Set the "
+             + ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE + " environment variable with the CLI command which can run the ImageMagic comparison. See BUILDING.MD in the root of the repository for more details.";
 
-        /// <summary>Creates a new BadPasswordException.</summary>
-        /// <param name="message">the detail message.</param>
-        public BadPasswordException(String message)
-            : base(message) {
-        }
+        public const String GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED = "Ghostscript command is not specified or specified incorrectly. Set the "
+             + GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE + " environment variable to a CLI command that can run the Ghostscript application. See BUILDING.MD in the root of the repository for more details.";
+
+        public const String GHOSTSCRIPT_FAILED = "GhostScript failed for <filename>";
+
+        public const String CANNOT_OPEN_OUTPUT_DIRECTORY = "Cannot open output directory for <filename>";
     }
 }

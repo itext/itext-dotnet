@@ -465,19 +465,19 @@ namespace iText.Layout.Renderer {
             Document doc = new Document(pdfDoc);
             Text text = new Text("If getNextRenderer() is not overridden and text overflows to the next line," + " then customizations are not applied. "
                 );
-            text.SetNextRenderer(new _TextRenderer_739(text));
+            text.SetNextRenderer(new _TextRenderer_738(text));
             doc.Add(new Paragraph(text));
             text = new Text("If getNextRenderer() is overridden and text overflows to the next line, " + "then customizations are applied. "
                 );
-            text.SetNextRenderer(new _TextRenderer_755(text));
+            text.SetNextRenderer(new _TextRenderer_754(text));
             doc.Add(new Paragraph(text));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));
         }
 
-        private sealed class _TextRenderer_739 : TextRenderer {
-            public _TextRenderer_739(Text baseArg1)
+        private sealed class _TextRenderer_738 : TextRenderer {
+            public _TextRenderer_738(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -488,8 +488,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_755 : TextRenderer {
-            public _TextRenderer_755(Text baseArg1)
+        private sealed class _TextRenderer_754 : TextRenderer {
+            public _TextRenderer_754(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -583,7 +583,7 @@ namespace iText.Layout.Renderer {
                 longTextBuilder.Append("Дзень добры, свет! Hallo Welt! ");
             }
             iText.Layout.Element.Text text = new iText.Layout.Element.Text(longTextBuilder.ToString());
-            text.SetNextRenderer(new _TextRenderer_890(text));
+            text.SetNextRenderer(new _TextRenderer_889(text));
             doc.Add(new Paragraph(text));
             text.SetNextRenderer(new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer(text));
             doc.Add(new Paragraph(text));
@@ -592,8 +592,8 @@ namespace iText.Layout.Renderer {
                 ));
         }
 
-        private sealed class _TextRenderer_890 : TextRenderer {
-            public _TextRenderer_890(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_889 : TextRenderer {
+            public _TextRenderer_889(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 

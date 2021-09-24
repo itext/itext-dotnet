@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Commons.Utils;
-using iText.IO;
+using iText.IO.Exceptions;
 
 namespace iText.IO.Util {
     /// <summary>A utility class that is used as an interface to run 3rd-party tool ImageMagick.</summary>

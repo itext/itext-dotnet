@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 
 using System.IO;
 using System.Xml;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Utils
 {

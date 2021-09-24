@@ -43,12 +43,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Exceptions;
 using iText.Commons.Utils;
-using iText.Kernel.Exceptions;
 
-namespace iText.Kernel {
+namespace iText.Kernel.Exceptions {
     /// <summary>Exception class for exceptions in kernel module.</summary>
-    public class PdfException : Exception {
+    public class PdfException : ITextException {
         /// <summary>Object for more details</summary>
         protected internal Object @object;
 
@@ -116,7 +116,7 @@ namespace iText.Kernel {
         /// <summary>Sets additional params for Exception message.</summary>
         /// <param name="messageParams">additional params.</param>
         /// <returns>object itself.</returns>
-        public virtual iText.Kernel.PdfException SetMessageParams(params Object[] messageParams) {
+        public virtual iText.Kernel.Exceptions.PdfException SetMessageParams(params Object[] messageParams) {
             this.messageParams = new List<Object>();
             this.messageParams.AddAll(messageParams);
             return this;

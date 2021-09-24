@@ -49,7 +49,7 @@ using iText.Forms;
 using iText.Forms.Fields;
 using iText.IO.Font;
 using iText.IO.Source;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
 

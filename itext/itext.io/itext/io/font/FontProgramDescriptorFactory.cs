@@ -156,7 +156,7 @@ namespace iText.IO.Font {
                         );
                 }
                 catch (FormatException nfe) {
-                    throw new iText.IO.IOException(nfe.Message, nfe);
+                    throw new iText.IO.Exceptions.IOException(nfe.Message, nfe);
                 }
                 OpenTypeParser parser = new OpenTypeParser(ttcName, ttcIndex);
                 FontProgramDescriptor descriptor = FetchOpenTypeFontDescriptor(parser);

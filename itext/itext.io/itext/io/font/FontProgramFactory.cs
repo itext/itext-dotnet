@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Woff2;
 using iText.IO.Source;
@@ -230,7 +231,7 @@ namespace iText.IO.Font {
                                         fontProgram = WoffConverter.Convert(fontProgram);
                                     }
                                     catch (ArgumentException woffException) {
-                                        throw new iText.IO.IOException(iText.IO.IOException.InvalidWoffFile, woffException);
+                                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidWoffFile, woffException);
                                     }
                                 }
                                 else {
@@ -239,7 +240,8 @@ namespace iText.IO.Font {
                                         fontProgram = Woff2Converter.Convert(fontProgram);
                                     }
                                     catch (FontCompressionException woff2Exception) {
-                                        throw new iText.IO.IOException(iText.IO.IOException.InvalidWoff2File, woff2Exception);
+                                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidWoff2File, woff2Exception
+                                            );
                                     }
                                 }
                                 fontBuilt = new TrueTypeFont(fontProgram);
@@ -256,7 +258,7 @@ namespace iText.IO.Font {
                                         fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
                                     }
                                     catch (FormatException nfe) {
-                                        throw new iText.IO.IOException(nfe.Message, nfe);
+                                        throw new iText.IO.Exceptions.IOException(nfe.Message, nfe);
                                     }
                                 }
                             }
@@ -266,10 +268,11 @@ namespace iText.IO.Font {
             }
             if (fontBuilt == null) {
                 if (name != null) {
-                    throw new iText.IO.IOException(iText.IO.IOException.TypeOfFont1IsNotRecognized).SetMessageParams(name);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TypeOfFont1IsNotRecognized).SetMessageParams
+                        (name);
                 }
                 else {
-                    throw new iText.IO.IOException(iText.IO.IOException.TypeOfFontIsNotRecognized);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TypeOfFontIsNotRecognized);
                 }
             }
             return cached ? FontCache.SaveFont(fontBuilt, fontKey) : fontBuilt;
@@ -553,7 +556,7 @@ namespace iText.IO.Font {
                 (path));
             int bufLen = (int)raf.Length();
             if (bufLen < raf.Length()) {
-                throw new iText.IO.IOException(MessageFormatUtil.Format("Source data from \"{0}\" is bigger than byte array can hold."
+                throw new iText.IO.Exceptions.IOException(MessageFormatUtil.Format("Source data from \"{0}\" is bigger than byte array can hold."
                     , path));
             }
             byte[] buf = new byte[bufLen];

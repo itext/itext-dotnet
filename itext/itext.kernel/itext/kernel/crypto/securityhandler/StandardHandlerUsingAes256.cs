@@ -50,7 +50,6 @@ using Org.BouncyCastle.Security;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
