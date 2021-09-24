@@ -25,7 +25,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
 using iText.Commons.Utils;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;

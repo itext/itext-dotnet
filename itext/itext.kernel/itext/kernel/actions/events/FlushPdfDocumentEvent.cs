@@ -26,10 +26,12 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Data;
 using iText.Commons.Actions.Processors;
 using iText.Commons.Actions.Producer;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Utils;
+using iText.Kernel.Actions.Data;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 
@@ -60,6 +62,10 @@ namespace iText.Kernel.Actions.Events {
             }
             IList<AbstractProductProcessITextEvent> events = GetEvents(pdfDocument.GetDocumentIdWrapper());
             if (events == null || events.IsEmpty()) {
+                ProductData productData = ITextCoreProductData.GetInstance();
+                String noEventProducer = "iText\u00ae \u00a9" + productData.GetSinceCopyrightYear() + "-" + productData.GetToCopyrightYear
+                    () + " iText Group NV (no registered products)";
+                pdfDocument.GetDocumentInfo().SetProducer(noEventProducer);
                 return;
             }
             ICollection<String> products = new HashSet<String>();

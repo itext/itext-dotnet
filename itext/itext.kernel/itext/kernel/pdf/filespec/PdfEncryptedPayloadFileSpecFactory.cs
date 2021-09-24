@@ -45,7 +45,6 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Kernel.Exceptions;
-using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filespec {

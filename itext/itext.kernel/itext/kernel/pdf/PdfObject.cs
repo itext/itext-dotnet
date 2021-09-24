@@ -44,8 +44,6 @@ address: sales@itextpdf.com
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Kernel.Exceptions;
-using iText.Kernel.Crypto;
-using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     public abstract class PdfObject {
