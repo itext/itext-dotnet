@@ -93,7 +93,7 @@ namespace iText.IO.Image {
 
         public override bool CanImageBeInline() {
             ILogger logger = ITextLogManager.GetLogger(typeof(ImageData));
-            logger.LogWarning(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
+            logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
             return false;
         }
     }

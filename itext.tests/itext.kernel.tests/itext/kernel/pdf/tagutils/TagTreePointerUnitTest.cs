@@ -63,7 +63,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ENCOUNTERED_INVALID_MCR)]
         public virtual void CannotMoveToKidMcrTest02() {
             NUnit.Framework.Assert.That(() =>  {
                 PdfDocument pdfDoc = CreateTestDocument();

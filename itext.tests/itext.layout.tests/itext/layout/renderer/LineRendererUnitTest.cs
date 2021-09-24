@@ -74,7 +74,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 4)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 4)]
         public virtual void AdjustChildPositionsAfterReorderingTestWithPercentMargins01() {
             Document dummyDocument = CreateDummyDocument();
             IRenderer dummy1 = CreateLayoutedTextRenderer("Hello", dummyDocument);
@@ -109,7 +109,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED)]
         public virtual void InlineBlockWithBigMinWidth01() {
             Document dummyDocument = CreateDummyDocument();
             LineRenderer lineRenderer = (LineRenderer)new LineRenderer().SetParent(dummyDocument.GetRenderer());

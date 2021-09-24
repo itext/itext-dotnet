@@ -163,8 +163,8 @@ namespace iText.Layout.Renderer {
             if (spaceBefore != null) {
                 if (!spaceBefore.IsPointValue()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .MARGIN_TOP));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.MARGIN_TOP));
                 }
                 if (0 != spaceBefore.GetValue()) {
                     attributes.Put(PdfName.SpaceBefore, new PdfNumber(spaceBefore.GetValue()));
@@ -174,8 +174,8 @@ namespace iText.Layout.Renderer {
             if (spaceAfter != null) {
                 if (!spaceAfter.IsPointValue()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .MARGIN_BOTTOM));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.MARGIN_BOTTOM));
                 }
                 if (0 != spaceAfter.GetValue()) {
                     attributes.Put(PdfName.SpaceAfter, new PdfNumber(spaceAfter.GetValue()));
@@ -185,8 +185,8 @@ namespace iText.Layout.Renderer {
             if (startIndent != null) {
                 if (!startIndent.IsPointValue()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .MARGIN_LEFT));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.MARGIN_LEFT));
                 }
                 if (0 != startIndent.GetValue()) {
                     attributes.Put(PdfName.StartIndent, new PdfNumber(startIndent.GetValue()));
@@ -196,8 +196,8 @@ namespace iText.Layout.Renderer {
             if (endIndent != null) {
                 if (!endIndent.IsPointValue()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .MARGIN_RIGHT));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.MARGIN_RIGHT));
                 }
                 if (0 != endIndent.GetValue()) {
                     attributes.Put(PdfName.EndIndent, new PdfNumber(endIndent.GetValue()));
@@ -258,8 +258,8 @@ namespace iText.Layout.Renderer {
                 UnitValue fontSize = renderer.GetPropertyAsUnitValue(Property.FONT_SIZE);
                 if (!fontSize.IsPointValue()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .FONT_SIZE));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.FONT_SIZE));
                 }
                 Underline underline = null;
                 if (underlines is IList && ((IList)underlines).Count > 0 && ((IList)underlines)[0] is Underline) {
@@ -308,23 +308,23 @@ namespace iText.Layout.Renderer {
                 ), renderer.GetPropertyAsUnitValue(Property.PADDING_LEFT) };
             if (!paddingsUV[0].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_TOP));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_TOP));
             }
             if (!paddingsUV[1].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_RIGHT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_RIGHT));
             }
             if (!paddingsUV[2].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_BOTTOM));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_BOTTOM));
             }
             if (!paddingsUV[3].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_LEFT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_LEFT));
             }
             float[] paddings = new float[] { paddingsUV[0].GetValue(), paddingsUV[1].GetValue(), paddingsUV[2].GetValue
                 (), paddingsUV[3].GetValue() };

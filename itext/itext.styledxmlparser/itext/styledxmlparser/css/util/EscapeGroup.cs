@@ -95,7 +95,7 @@ namespace iText.StyledXmlParser.Css.Util {
                     if (nextCharacter == closeCharacter) {
                         --counter;
                         if (counter < 0) {
-                            LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INCORRECT_CHARACTER_SEQUENCE
+                            LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INCORRECT_CHARACTER_SEQUENCE
                                 ));
                             counter = 0;
                         }

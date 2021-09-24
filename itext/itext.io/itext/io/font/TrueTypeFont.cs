@@ -298,7 +298,7 @@ namespace iText.IO.Font {
                 int index = cmap.Get(charCode)[0];
                 if (index >= numOfGlyphs) {
                     ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Font.TrueTypeFont));
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames
+                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames
                         ().GetFontName(), index));
                     continue;
                 }

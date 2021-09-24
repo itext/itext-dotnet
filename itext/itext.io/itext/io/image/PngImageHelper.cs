@@ -195,7 +195,7 @@ namespace iText.IO.Image {
             int colorType = png.image.GetColorType();
             if (png.iccProfile != null && png.iccProfile.GetNumComponents() != GetExpectedNumberOfColorComponents(png)
                 ) {
-                ITextLogManager.GetLogger(typeof(PngImageHelper)).LogWarning(iText.IO.LogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
+                ITextLogManager.GetLogger(typeof(PngImageHelper)).LogWarning(iText.IO.Logs.IoLogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
                     );
             }
             try {

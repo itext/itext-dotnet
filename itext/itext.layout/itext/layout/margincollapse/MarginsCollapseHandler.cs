@@ -512,8 +512,8 @@ namespace iText.Layout.Margincollapse {
             UnitValue padding = renderer.GetModelElement().GetProperty<UnitValue>(Property.PADDING_TOP);
             if (null != padding && !padding.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_TOP));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_TOP));
             }
             return padding != null && padding.GetValue() > 0;
         }
@@ -522,8 +522,8 @@ namespace iText.Layout.Margincollapse {
             UnitValue padding = renderer.GetModelElement().GetProperty<UnitValue>(Property.PADDING_BOTTOM);
             if (null != padding && !padding.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_BOTTOM));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_BOTTOM));
             }
             return padding != null && padding.GetValue() > 0;
         }
@@ -550,8 +550,8 @@ namespace iText.Layout.Margincollapse {
             UnitValue marginUV = renderer.GetModelElement().GetProperty<UnitValue>(Property.MARGIN_TOP);
             if (null != marginUV && !marginUV.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_TOP));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_TOP));
             }
             // TODO Concerning "renderer instanceof CellRenderer" check: may be try to apply more general solution in future
             return marginUV != null && !(renderer is CellRenderer) ? marginUV.GetValue() : 0;
@@ -569,8 +569,8 @@ namespace iText.Layout.Margincollapse {
             UnitValue marginUV = renderer.GetModelElement().GetProperty<UnitValue>(Property.MARGIN_BOTTOM);
             if (null != marginUV && !marginUV.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_TOP));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_TOP));
             }
             // TODO Concerning "renderer instanceof CellRenderer" check: may be try to apply more general solution in future
             return marginUV != null && !(renderer is CellRenderer) ? marginUV.GetValue() : 0;

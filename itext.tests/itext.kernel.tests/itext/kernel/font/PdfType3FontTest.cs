@@ -33,7 +33,7 @@ namespace iText.Kernel.Font {
         private const float EPS = 1e-4f;
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void AddDifferentGlyphsInConstructorTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
@@ -65,7 +65,7 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void AddAlreadyExistingGlyphTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
@@ -93,7 +93,7 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void SetFontStretchTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
@@ -109,7 +109,7 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void SetPdfFontFlagsTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
@@ -124,7 +124,7 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void GlyphWithUnicodeBiggerThan32CannotBeEncodedTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
@@ -137,7 +137,7 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void ContainsGlyphTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
@@ -165,7 +165,7 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void FlushExceptionTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
@@ -180,7 +180,7 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void FillFontDescriptorTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
@@ -208,7 +208,7 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void NoCharProcsTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
@@ -217,7 +217,7 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void NoEncodingTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
@@ -228,7 +228,7 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void NoDifferenceTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());

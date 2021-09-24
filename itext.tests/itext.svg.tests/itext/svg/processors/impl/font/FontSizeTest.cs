@@ -65,7 +65,8 @@ namespace iText.Svg.Processors.Impl.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+            )]
         public virtual void FontSize02Test() {
             String name = "fontSizeTest02";
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, name);

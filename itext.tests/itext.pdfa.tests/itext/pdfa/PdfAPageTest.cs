@@ -47,6 +47,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Pdfa.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 using iText.Test.Pdfa;

@@ -294,7 +294,7 @@ namespace iText.Kernel.Pdf.Tagging {
                             String srcMapping = mappingEntry.Key + " -> " + mappingEntry.Value;
                             String destMapping = mappingEntry.Key + " -> " + destRoleMap.Get(mappingEntry.Key);
                             ILogger logger = ITextLogManager.GetLogger(typeof(StructureTreeCopier));
-                            logger.LogWarning(String.Format(iText.IO.LogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_ALREADY_EXIST
+                            logger.LogWarning(String.Format(iText.IO.Logs.IoLogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_ALREADY_EXIST
                                 , srcMapping, destMapping));
                         }
                     }
@@ -501,7 +501,7 @@ namespace iText.Kernel.Pdf.Tagging {
                         }
                         else {
                             ILogger logger = ITextLogManager.GetLogger(typeof(StructureTreeCopier));
-                            logger.LogWarning(String.Format(iText.IO.LogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_INVALID
+                            logger.LogWarning(String.Format(iText.IO.Logs.IoLogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_INVALID
                                 , entry.Key.ToString()));
                             continue;
                         }

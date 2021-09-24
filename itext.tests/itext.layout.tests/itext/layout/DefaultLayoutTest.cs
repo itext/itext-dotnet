@@ -151,7 +151,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void AddParagraphOnShortPage1() {
             String outFileName = destinationFolder + "addParagraphOnShortPage1.pdf";
             String cmpFileName = sourceFolder + "cmp_addParagraphOnShortPage1.pdf";
@@ -170,7 +170,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void AddParagraphOnShortPage2() {
             String outFileName = destinationFolder + "addParagraphOnShortPage2.pdf";
             String cmpFileName = sourceFolder + "cmp_addParagraphOnShortPage2.pdf";
@@ -186,7 +186,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void AddWordOnShortPageTest01() {
             String outFileName = destinationFolder + "addWordOnShortPageTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_addWordOnShortPageTest01.pdf";
@@ -246,8 +246,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES, LogLevel = LogLevelConstants
-            .INFO)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES, LogLevel
+             = LogLevelConstants.INFO)]
         public virtual void CloseEmptyDocumentWithRemovingPageEventOnAddingPageTest() {
             String outFileName = destinationFolder + "closeEmptyDocumentWithRemovingEventTest.pdf";
             String cmpFileName = sourceFolder + "cmp_closeEmptyDocumentWithRemovingEventTest.pdf";

@@ -89,7 +89,7 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void MergeDocumentOutlinesWithNullDestinationTest01() {
             String resultFile = destinationFolder + "mergeDocumentOutlinesWithNullDestinationTest01.pdf";
             String filename = sourceFolder + "null_dest_outline.pdf";
@@ -132,7 +132,7 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void MergeDocumentTest03() {
             String filename = sourceFolder + "pdf_open_parameters.pdf";
             String filename1 = sourceFolder + "iphone_user_guide.pdf";
@@ -162,8 +162,8 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
-        [LogMessage(iText.IO.LogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING, Count = 2)]
         public virtual void MergeDocumentTest04() {
             String filename = sourceFolder + "pdf_open_parameters.pdf";
             String filename1 = sourceFolder + "iphone_user_guide.pdf";
@@ -226,7 +226,7 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Count = 2)]
         public virtual void MergeOutlinesNamedDestinations() {
             String filename = sourceFolder + "outlinesNamedDestinations.pdf";
             String resultFile = destinationFolder + "mergeOutlinesNamedDestinations.pdf";
@@ -250,7 +250,7 @@ namespace iText.Kernel.Utils {
 
         [NUnit.Framework.Test]
         // TODO DEVSIX-1743. Update cmp file after fix
-        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void MergeWithAcroFormsTest() {
             String pdfAcro1 = sourceFolder + "pdfSource1.pdf";
             String pdfAcro2 = sourceFolder + "pdfSource2.pdf";
@@ -265,7 +265,7 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES, Count = 3)]
         public virtual void MergePdfWithOCGTest() {
             String pdfWithOCG1 = sourceFolder + "sourceOCG1.pdf";
             String pdfWithOCG2 = sourceFolder + "sourceOCG2.pdf";
@@ -281,7 +281,7 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES)]
         public virtual void MergePdfWithComplexOCGTest() {
             String pdfWithOCG1 = sourceFolder + "sourceOCG1.pdf";
             String pdfWithOCG2 = sourceFolder + "pdfWithComplexOCG.pdf";
@@ -295,7 +295,7 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES)]
         public virtual void MergeTwoPagePdfWithComplexOCGTest() {
             String pdfWithOCG1 = sourceFolder + "sourceOCG1.pdf";
             String pdfWithOCG2 = sourceFolder + "twoPagePdfWithComplexOCGTest.pdf";

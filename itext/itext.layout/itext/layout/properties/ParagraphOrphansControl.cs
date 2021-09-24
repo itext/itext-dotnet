@@ -87,12 +87,12 @@ namespace iText.Layout.Properties {
             ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Properties.ParagraphOrphansControl));
             if (renderer.GetOccupiedArea() != null && renderer.GetLines() != null) {
                 int pageNumber = renderer.GetOccupiedArea().GetPageNumber();
-                String warnText = MessageFormatUtil.Format(iText.IO.LogMessageConstant.ORPHANS_CONSTRAINT_VIOLATED, pageNumber
-                    , minOrphans, renderer.GetLines().Count, message);
+                String warnText = MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ORPHANS_CONSTRAINT_VIOLATED, 
+                    pageNumber, minOrphans, renderer.GetLines().Count, message);
                 logger.LogWarning(warnText);
             }
             else {
-                logger.LogWarning(iText.IO.LogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD);
             }
         }
     }

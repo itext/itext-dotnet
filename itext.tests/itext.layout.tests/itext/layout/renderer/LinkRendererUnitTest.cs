@@ -29,7 +29,7 @@ using iText.Test.Attributes;
 namespace iText.Layout.Renderer {
     public class LinkRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
             LinkRenderer linkRenderer = new _LinkRenderer_47(new Link("test", new PdfLinkAnnotation(new Rectangle(0, 0
                 ))));

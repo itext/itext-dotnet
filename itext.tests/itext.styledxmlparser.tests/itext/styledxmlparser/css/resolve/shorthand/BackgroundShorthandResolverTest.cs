@@ -94,7 +94,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashInvalidSizeTest1() {
             String shorthandExpression = "50px/50";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -106,7 +106,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashInvalidSizeTest2() {
             String shorthandExpression = "50px/repeat";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -118,7 +118,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashInvalidSizeTest3() {
             String shorthandExpression = "50px/left";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -130,7 +130,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             )]
         public virtual void BackgroundWithSlashInvalidSizeTest4() {
             String shorthandExpression = "50px/url(img.jpg)";
@@ -143,7 +143,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             )]
         public virtual void BackgroundWithSlashInvalidSizeTest5() {
             String shorthandExpression = "50px/";
@@ -156,7 +156,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void BackgroundWithAnotherShorthandFailedTest() {
             String shorthandExpression = "no-repeat left right";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -168,7 +168,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashInvalidPositionTest1() {
             String shorthandExpression = "50/50px";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -180,7 +180,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashInvalidPositionTest2() {
             String shorthandExpression = "cover/50px";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -192,7 +192,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashInvalidPositionTest3() {
             String shorthandExpression = "repeat/50px";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -204,7 +204,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             )]
         public virtual void BackgroundWithSlashInvalidPositionTest4() {
             String shorthandExpression = "url(img.jpg)/50px";
@@ -217,7 +217,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             )]
         public virtual void BackgroundWithSlashInvalidPositionTest5() {
             String shorthandExpression = "/50px";
@@ -230,7 +230,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             , Count = 3)]
         public virtual void BackgroundIncorrectPositionTest() {
             IShorthandResolver backgroundResolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.BACKGROUND
@@ -258,7 +258,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             )]
         public virtual void BackgroundWithMultiSlashFailedOnSizeTest1() {
             String shorthandExpression = "50px 5px/25px 5";
@@ -271,7 +271,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             )]
         public virtual void BackgroundWithMultiSlashFailedOnSizeTest2() {
             String shorthandExpression = "50px 5px/25px left";
@@ -284,7 +284,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             )]
         public virtual void BackgroundWithMultiSlashFailedOnPositionTest1() {
             String shorthandExpression = "50 5px/25px 5%";
@@ -297,7 +297,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             )]
         public virtual void BackgroundWithMultiSlashFailedOnPositionTest2() {
             String shorthandExpression = "cover 5px/25px 5%";
@@ -310,7 +310,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             )]
         public virtual void BackgroundWithTwoSlashesTest1() {
             String shorthandExpression = "5px/25px 5%/20px";
@@ -323,7 +323,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithTwoSlashesTest2() {
             String shorthandExpression = "5px/25px/5%";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -374,7 +374,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashAndSpaceIncorrectTest1() {
             String shorthandExpression = "repeat / 25px";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -386,7 +386,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashAndSpaceIncorrectTest2() {
             String shorthandExpression = "5px / repeat";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -398,7 +398,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashAndSpaceIncorrectTest3() {
             String shorthandExpression = "5px /repeat";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -410,7 +410,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashAndSpaceIncorrectTest4() {
             String shorthandExpression = "5px/ repeat-y";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -422,7 +422,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashAndSpaceIncorrectTest5() {
             String shorthandExpression = "repeat-x/ 20px";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -434,7 +434,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void BackgroundWithSlashAndSpaceIncorrectTest6() {
             String shorthandExpression = "no-repeat /20px";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -446,7 +446,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             )]
         public virtual void BackgroundWithSlashAndSpaceIncorrectTest7() {
             String shorthandExpression = "20px /";
@@ -459,7 +459,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
             )]
         public virtual void BackgroundWithSlashAndSpaceIncorrectTest8() {
             String shorthandExpression = "/ 20px";
@@ -489,7 +489,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+            )]
         public virtual void BackgroundEmptyShorthandTest() {
             String shorthandExpression = "";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -501,7 +502,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+            )]
         public virtual void BackgroundEmptyShorthandWithSpaceTest() {
             String shorthandExpression = " ";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -513,7 +515,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+            )]
         public virtual void MultiBackgroundEmptyShorthandTest1() {
             String shorthandExpression = "none,,none";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -525,7 +528,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+            )]
         public virtual void MultiBackgroundEmptyShorthandTest2() {
             String shorthandExpression = "none,none,";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -537,7 +541,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+            )]
         public virtual void MultiBackgroundEmptyShorthandTest3() {
             String shorthandExpression = ",none,none";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -549,7 +554,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+            )]
         public virtual void MultiBackgroundEmptyShorthandWithSpaceTest() {
             String shorthandExpression = "none, ,none";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -574,7 +580,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ONLY_THE_LAST_BACKGROUND_CAN_INCLUDE_BACKGROUND_COLOR
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ONLY_THE_LAST_BACKGROUND_CAN_INCLUDE_BACKGROUND_COLOR
             )]
         public virtual void BackgroundColorNotLastTest() {
             String shorthandExpression = "url('img.gif') red, url('img2.gif')";
@@ -615,7 +621,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void BackgroundDoubleColorTest() {
             String shorthandExpression = "url('img.gif'), url('img2.gif') red blue";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());
@@ -641,7 +647,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void BackgroundDoubleImageTest() {
             String shorthandExpression = "url('img.gif'), url('img2.gif') url('img3.gif')";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(new List<String>());

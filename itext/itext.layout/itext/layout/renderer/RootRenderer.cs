@@ -162,7 +162,8 @@ namespace iText.Layout.Renderer {
                                     ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
                                     result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
                                     ILogger logger = ITextLogManager.GetLogger(typeof(RootRenderer));
-                                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""
+                                        ));
                                 }
                             }
                             else {
@@ -221,7 +222,8 @@ namespace iText.Layout.Renderer {
                     if (true.Equals(renderer.GetProperty<bool?>(Property.KEEP_WITH_NEXT))) {
                         if (true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
                             ILogger logger = ITextLogManager.GetLogger(typeof(RootRenderer));
-                            logger.LogWarning(iText.IO.LogMessageConstant.ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED);
+                            logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED
+                                );
                             ShrinkCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
                         }
                         else {
@@ -469,7 +471,7 @@ namespace iText.Layout.Renderer {
                 }
                 if (!ableToProcessKeepWithNext) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(RootRenderer));
-                    logger.LogWarning(iText.IO.LogMessageConstant.RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT);
+                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT);
                     ShrinkCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
                         );
                 }
@@ -513,7 +515,8 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
                 ILogger logger = ITextLogManager.GetLogger(typeof(RootRenderer));
                 if (logger.IsEnabled(LogLevel.Warning)) {
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""
+                        ));
                 }
                 return true;
             }
@@ -540,7 +543,7 @@ namespace iText.Layout.Renderer {
             toDisableKeepTogether.GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
             ILogger logger = ITextLogManager.GetLogger(typeof(RootRenderer));
             if (logger.IsEnabled(LogLevel.Warning)) {
-                logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
+                logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
                     ));
             }
             if (!rendererIsFloat) {

@@ -101,7 +101,7 @@ namespace iText.Kernel.Colors {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.COLORANT_INTENSITIES_INVALID, Count = 14)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.COLORANT_INTENSITIES_INVALID, Count = 14)]
         public virtual void InvalidConstructorArgumentsTest() {
             NUnit.Framework.Assert.AreEqual(0, GetSumOfColorValues(new DeviceRgb(-2f, 0f, 0f)), 0.001f);
             NUnit.Framework.Assert.AreEqual(0, GetSumOfColorValues(new DeviceRgb(0f, -2f, 0f)), 0.001f);

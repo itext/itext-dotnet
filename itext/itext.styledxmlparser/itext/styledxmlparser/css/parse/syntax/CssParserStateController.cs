@@ -409,7 +409,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         private bool IsCurrentRuleSupported() {
             bool isSupported = nestedAtRules.IsEmpty() || SUPPORTED_RULES.Contains(nestedAtRules.Peek().GetRuleName());
             if (!isSupported) {
-                ITextLogManager.GetLogger(GetType()).LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
+                ITextLogManager.GetLogger(GetType()).LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
                     .RULE_IS_NOT_SUPPORTED, nestedAtRules.Peek().GetRuleName()));
             }
             return isSupported;

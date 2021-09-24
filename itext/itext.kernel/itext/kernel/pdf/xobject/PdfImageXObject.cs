@@ -441,19 +441,19 @@ namespace iText.Kernel.Pdf.Xobject {
                 if (colorSpaceObject != null) {
                     PdfColorSpace cs = PdfColorSpace.MakeColorSpace(colorSpaceObject);
                     if (cs == null) {
-                        ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.LogMessageConstant
+                        ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
                             .IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE);
                     }
                     else {
                         if (cs is PdfSpecialCs.Indexed) {
                             PdfColorSpace baseCs = ((PdfSpecialCs.Indexed)cs).GetBaseCs();
                             if (baseCs == null) {
-                                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.LogMessageConstant
+                                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
                                     .IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE);
                             }
                             else {
                                 if (baseCs.GetNumberOfComponents() != iccProfile.GetNumComponents()) {
-                                    ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.LogMessageConstant
+                                    ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
                                         .IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE
                                         );
                                     iccProfileShouldBeApplied = false;
@@ -469,7 +469,7 @@ namespace iText.Kernel.Pdf.Xobject {
                         }
                         else {
                             if (cs.GetNumberOfComponents() != iccProfile.GetNumComponents()) {
-                                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.LogMessageConstant
+                                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
                                     .IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_COLOR_SPACE);
                                 iccProfileShouldBeApplied = false;
                             }

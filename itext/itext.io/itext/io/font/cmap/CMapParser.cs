@@ -165,7 +165,7 @@ namespace iText.IO.Font.Cmap {
             }
             catch (Exception) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(CMapParser));
-                logger.LogError(iText.IO.LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
             }
             finally {
                 inp.Close();

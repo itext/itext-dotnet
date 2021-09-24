@@ -157,7 +157,7 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.OCSP_STATUS_IS_REVOKED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_REVOKED)]
         public virtual void OcspStatusIsRevokedTest() {
             RevokedStatus status = new RevokedStatus(DateTimeUtil.GetCurrentUtcTime().AddDays(-20), Org.BouncyCastle.Asn1.Ocsp.OcspResponseStatus.Successful
                 );
@@ -168,7 +168,7 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.OCSP_STATUS_IS_UNKNOWN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_UNKNOWN)]
         public virtual void OcspStatusIsUnknownTest() {
             UnknownStatus status = new UnknownStatus();
             TestOcspResponseBuilder responseBuilder = CreateBuilder(status);

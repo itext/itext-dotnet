@@ -199,7 +199,7 @@ namespace iText.Kernel.Pdf.Action {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.SOME_TARGET_FIELDS_ARE_NOT_SET_OR_INCORRECT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOME_TARGET_FIELDS_ARE_NOT_SET_OR_INCORRECT)]
         public virtual void GetAnnotationSetAsStringNotAvailableTest() {
             using (PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 String namedDestination = "namedDestination";

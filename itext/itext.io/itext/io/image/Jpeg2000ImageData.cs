@@ -100,7 +100,7 @@ namespace iText.IO.Image {
 
         public override bool CanImageBeInline() {
             ILogger logger = ITextLogManager.GetLogger(typeof(ImageData));
-            logger.LogWarning(iText.IO.LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER);
+            logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER);
             return false;
         }
 

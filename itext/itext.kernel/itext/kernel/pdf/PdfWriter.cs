@@ -255,7 +255,7 @@ namespace iText.Kernel.Pdf {
             }
             if (CheckTypeOfPdfDictionary(obj, PdfName.Catalog)) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(PdfReader));
-                logger.LogWarning(iText.IO.LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN);
                 obj = PdfNull.PDF_NULL;
             }
             PdfIndirectReference indirectReference = obj.GetIndirectReference();

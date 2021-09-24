@@ -192,7 +192,7 @@ namespace iText.IO.Font {
                 for (int k = 0; k < 3; ++k) {
                     if (raf.Read() != 0x80) {
                         ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
-                        logger.LogError(iText.IO.LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
+                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
                         return null;
                     }
                     if (raf.Read() != PFB_TYPES[k]) {

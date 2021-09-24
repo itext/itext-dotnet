@@ -107,7 +107,7 @@ namespace iText.IO.Source {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN)]
         public virtual void WriteNanTest() {
             double d = double.NaN;
             byte[] actuals = ByteUtils.GetIsoBytes(d);
@@ -119,7 +119,7 @@ namespace iText.IO.Source {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN)]
         public virtual void WriteNanHighPrecisionTest() {
             double d = double.NaN;
             byte[] actuals = ByteUtils.GetIsoBytes(d, null, true);

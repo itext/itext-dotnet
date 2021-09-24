@@ -148,7 +148,7 @@ namespace iText.Kernel.Font {
         internal static void FillFontDescriptor(iText.Kernel.Font.DocType1Font font, PdfDictionary fontDesc) {
             if (fontDesc == null) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(FontUtil));
-                logger.LogWarning(iText.IO.LogMessageConstant.FONT_DICTIONARY_WITH_NO_FONT_DESCRIPTOR);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.FONT_DICTIONARY_WITH_NO_FONT_DESCRIPTOR);
                 return;
             }
             PdfNumber v = fontDesc.GetAsNumber(PdfName.Ascent);

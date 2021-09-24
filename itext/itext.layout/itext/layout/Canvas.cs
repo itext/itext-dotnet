@@ -197,7 +197,7 @@ namespace iText.Layout {
         public virtual void EnableAutoTagging(PdfPage page) {
             if (IsCanvasOfPage() && this.page != page) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Canvas));
-                logger.LogError(iText.IO.LogMessageConstant.PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED);
             }
             this.page = page;
         }

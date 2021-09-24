@@ -231,12 +231,12 @@ namespace iText.Kernel.Pdf {
             }
             if (reference.CheckState(PdfObject.MUST_BE_FLUSHED)) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
-                logger.LogError(iText.IO.LogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE);
                 return;
             }
             if (reference.CheckState(PdfObject.FLUSHED)) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfXrefTable));
-                logger.LogError(iText.IO.LogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE);
                 return;
             }
             reference.SetState(PdfObject.FREE).SetState(PdfObject.MODIFIED);

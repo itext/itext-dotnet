@@ -118,7 +118,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         //TODO DEVSIX-3307
-        [LogMessage(iText.IO.LogMessageConstant.FONT_SUBSET_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FONT_SUBSET_ISSUE)]
         public virtual void SurrogatePairCombingFullSurrs() {
             String outFileName = destinationFolder + "surrogatePairCombingFullSurrs.pdf";
             String cmpFileName = sourceFolder + "cmp_" + "surrogatePairCombingFullSurrs.pdf";
@@ -144,7 +144,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         //TODO DEVSIX-3307
-        [LogMessage(iText.IO.LogMessageConstant.FONT_SUBSET_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FONT_SUBSET_ISSUE)]
         public virtual void SurrogatePairCombingFullSurrsWithNoSurrs() {
             String outFileName = destinationFolder + "surrogatePairCombingFullSurrsWithNoSurrs.pdf";
             String cmpFileName = sourceFolder + "cmp_" + "surrogatePairCombingFullSurrsWithNoSurrs.pdf";

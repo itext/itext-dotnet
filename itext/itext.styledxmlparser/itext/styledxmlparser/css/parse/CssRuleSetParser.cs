@@ -143,8 +143,8 @@ namespace iText.StyledXmlParser.Css.Parse {
                     ruleSets.Add(new CssRuleSet(new CssSelector(currentSelectorStr), declarations));
                 }
                 catch (Exception exc) {
-                    logger.LogError(exc, MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.ERROR_PARSING_CSS_SELECTOR
-                        , currentSelectorStr));
+                    logger.LogError(exc, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
+                        .ERROR_PARSING_CSS_SELECTOR, currentSelectorStr));
                     //if any separated selector has errors, all others become invalid.
                     //in this case we just clear map, it is the easies way to support this.
                     declarations.Clear();
@@ -168,7 +168,7 @@ namespace iText.StyledXmlParser.Css.Parse {
             String[] result = new String[2];
             int position = property.IndexOf(":", StringComparison.Ordinal);
             if (position < 0) {
-                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                     , property.Trim()));
                 return null;
             }

@@ -204,7 +204,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE)]
         public virtual void FreeARefInWrongWayTest01() {
             String @out = "freeARefInWrongWayTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + @out));
@@ -232,7 +232,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 2)]
         public virtual void FreeARefInWrongWayTest02() {
             String @out = "freeARefInWrongWayTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + @out));
@@ -265,7 +265,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE)]
         public virtual void FreeARefInWrongWayTest03() {
             String @out = "freeARefInWrongWayTest03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + @out));
@@ -297,7 +297,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE)]
         public virtual void FreeARefInWrongWayTest04() {
             String @out = "freeARefInWrongWayTest04.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + @out));
@@ -503,7 +503,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void CorruptedDocIndRefToFree01() {
             String src = "corruptedDocIndRefToFree.pdf";
             String @out = "corruptedDocIndRefToFree01.pdf";

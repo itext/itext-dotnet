@@ -59,8 +59,8 @@ namespace iText.Kernel.Pdf {
         public static bool ValidatePdfVersionForDictEntry(PdfDocument document, PdfVersion expectedVersion, PdfName
              entryKey, PdfName dictType) {
             if (document != null && document.GetPdfVersion().CompareTo(expectedVersion) < 0) {
-                logger.LogWarning(String.Format(iText.IO.LogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, 
-                    entryKey, dictType, expectedVersion, document.GetPdfVersion()));
+                logger.LogWarning(String.Format(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY
+                    , entryKey, dictType, expectedVersion, document.GetPdfVersion()));
                 return true;
             }
             else {

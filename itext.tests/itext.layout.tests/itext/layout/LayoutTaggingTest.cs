@@ -97,7 +97,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageTest01.pdf"));
             pdfDocument.SetTagged();
@@ -766,7 +766,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT)]
         public virtual void NotAsciiCharTest() {
             //TODO update cmp-file after DEVSIX-3335 fixed
             PdfWriter writer = new PdfWriter(destinationFolder + "notAsciiCharTest.pdf");
@@ -786,7 +786,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         //TODO update cmp-file after DEVSIX-3351 fixed
-        [LogMessage(iText.IO.LogMessageConstant.XOBJECT_HAS_NO_STRUCT_PARENTS)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XOBJECT_HAS_NO_STRUCT_PARENTS)]
         public virtual void CheckParentTreeIfFormXObjectTaggedTest() {
             String outFileName = destinationFolder + "checkParentTreeIfFormXObjectTaggedTest.pdf";
             String cmpPdf = sourceFolder + "cmp_checkParentTreeIfFormXObjectTaggedTest.pdf";

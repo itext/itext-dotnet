@@ -1160,7 +1160,7 @@ namespace iText.Signatures {
                     }
                     else {
                         ILogger logger = ITextLogManager.GetLogger(typeof(PdfSigner));
-                        logger.LogError(iText.IO.LogMessageConstant.UNKNOWN_DIGEST_METHOD);
+                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_DIGEST_METHOD);
                     }
                 }
             }

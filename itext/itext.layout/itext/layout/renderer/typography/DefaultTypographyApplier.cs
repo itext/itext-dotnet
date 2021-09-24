@@ -46,45 +46,45 @@ namespace iText.Layout.Renderer.Typography {
 
         public override bool ApplyOtfScript(TrueTypeFont font, GlyphLine glyphLine, UnicodeScript? script, Object 
             configurator, SequenceId id, IMetaInfo metaInfo) {
-            LOGGER.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             return base.ApplyOtfScript(font, glyphLine, script, configurator, id, metaInfo);
         }
 
         public override ICollection<UnicodeScript> GetSupportedScripts() {
-            LOGGER.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             return base.GetSupportedScripts();
         }
 
         public override ICollection<UnicodeScript> GetSupportedScripts(Object configurator) {
-            LOGGER.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             return base.GetSupportedScripts(configurator);
         }
 
         public override bool ApplyKerning(FontProgram fontProgram, GlyphLine text, SequenceId sequenceId, IMetaInfo
              metaInfo) {
-            LOGGER.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             return base.ApplyKerning(fontProgram, text, sequenceId, metaInfo);
         }
 
         public override byte[] GetBidiLevels(BaseDirection? baseDirection, int[] unicodeIds, SequenceId sequenceId
             , IMetaInfo metaInfo) {
-            LOGGER.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             return base.GetBidiLevels(baseDirection, unicodeIds, sequenceId, metaInfo);
         }
 
         public override int[] ReorderLine(IList<LineRenderer.RendererGlyph> line, byte[] lineLevels, byte[] levels
             ) {
-            LOGGER.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             return base.ReorderLine(line, lineLevels, levels);
         }
 
         public override IList<int> GetPossibleBreaks(String str) {
-            LOGGER.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             return base.GetPossibleBreaks(str);
         }
 
         public override IDictionary<String, byte[]> LoadShippedFonts() {
-            LOGGER.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             return base.LoadShippedFonts();
         }
     }

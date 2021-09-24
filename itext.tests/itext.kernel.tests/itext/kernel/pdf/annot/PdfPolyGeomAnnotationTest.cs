@@ -81,7 +81,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED)]
         public virtual void SetAndGetVerticesFloatArrayLogMessageTest() {
             PdfDictionary dict = new PdfDictionary();
             dict.Put(PdfName.Path, new PdfString(""));
@@ -101,7 +101,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED)]
         public virtual void SetAndGetVerticesPdfArrayLogMessageTest() {
             PdfDictionary dict = new PdfDictionary();
             dict.Put(PdfName.Path, new PdfString(""));
@@ -145,7 +145,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.IF_PATH_IS_SET_VERTICES_SHALL_NOT_BE_PRESENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.IF_PATH_IS_SET_VERTICES_SHALL_NOT_BE_PRESENT)]
         public virtual void SetAndGetPathLogMessageTest() {
             PdfPolyGeomAnnotation pdfPolyGeomAnnotation = new PdfPolygonAnnotation(new PdfDictionary());
             pdfPolyGeomAnnotation.SetVertices(new float[] { 1, 1, 1, 1 });

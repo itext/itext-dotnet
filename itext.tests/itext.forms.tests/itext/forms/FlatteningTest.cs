@@ -71,7 +71,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY)]
         public virtual void FormFlatteningTestWithoutNEntry() {
             String filename = "formFlatteningTestWithoutNEntry";
             String src = sourceFolder + filename + ".pdf";

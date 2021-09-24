@@ -149,7 +149,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
         public virtual void CreateEmptyDocumentWithAbcXmp() {
             MemoryStream fos = new MemoryStream();
             PdfWriter writer = new PdfWriter(fos);

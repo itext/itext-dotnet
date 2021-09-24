@@ -249,7 +249,8 @@ namespace iText.Svg.Css.Impl {
                 IStylesContainer parentNode = (IStylesContainer)element.ParentNode();
                 IDictionary<String, String> parentStyles = parentNode.GetStyles();
                 if (parentStyles == null && !(parentNode is IElementNode)) {
-                    LOGGER.LogError(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES);
+                    LOGGER.LogError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_RESOLVING_PARENT_STYLES
+                        );
                 }
                 if (parentStyles != null) {
                     parentFontSizeStr = parentStyles.Get(SvgConstants.Attributes.FONT_SIZE);
@@ -286,7 +287,8 @@ namespace iText.Svg.Css.Impl {
                     xlinkValue = this.resourceResolver.ResolveAgainstBaseUri(attr.GetValue()).ToExternalForm();
                 }
                 catch (UriFormatException mue) {
-                    LOGGER.LogError(mue, iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL);
+                    LOGGER.LogError(mue, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL
+                        );
                 }
             }
             attributesMap.Put(attr.GetKey(), xlinkValue);
@@ -339,7 +341,8 @@ namespace iText.Svg.Css.Impl {
                                 }
                             }
                             catch (Exception exc) {
-                                LOGGER.LogError(exc, iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE);
+                                LOGGER.LogError(exc, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE
+                                    );
                             }
                         }
                     }

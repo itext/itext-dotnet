@@ -154,7 +154,7 @@ namespace iText.Kernel.Colors.Gradients {
                     shadingTransform.Concatenate(gradientTransformation);
                 }
                 catch (NoninvertibleTransformException) {
-                    ITextLogManager.GetLogger(GetType()).LogError(iText.IO.LogMessageConstant.UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION
+                    ITextLogManager.GetLogger(GetType()).LogError(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION
                         );
                 }
             }

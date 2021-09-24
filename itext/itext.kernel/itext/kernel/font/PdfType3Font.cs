@@ -153,7 +153,7 @@ namespace iText.Kernel.Font {
             PdfDictionary encoding = fontDictionary.GetAsDictionary(PdfName.Encoding);
             PdfArray differences = encoding != null ? encoding.GetAsArray(PdfName.Differences) : null;
             if (charProcsDic == null || differences == null) {
-                ITextLogManager.GetLogger(GetType()).LogWarning(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE
+                ITextLogManager.GetLogger(GetType()).LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE
                     );
             }
             FillFontDescriptor(fontDictionary.GetAsDictionary(PdfName.FontDescriptor));
@@ -359,7 +359,7 @@ namespace iText.Kernel.Font {
                 if (GetPdfObject().GetIndirectReference() != null && GetPdfObject().GetIndirectReference().GetDocument().IsTagged
                     ()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType3Font));
-                    logger.LogWarning(iText.IO.LogMessageConstant.TYPE3_FONT_ISSUE_TAGGED_PDF);
+                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_ISSUE_TAGGED_PDF);
                 }
             }
             return null;

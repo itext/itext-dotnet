@@ -95,7 +95,7 @@ namespace iText.Kernel.Colors {
                 1 ? 1 : (b > 0 ? b : 0) }) {
             if (r > 1 || r < 0 || g > 1 || g < 0 || b > 1 || b < 0) {
                 ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceRgb));
-                LOGGER.LogWarning(iText.IO.LogMessageConstant.COLORANT_INTENSITIES_INVALID);
+                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.COLORANT_INTENSITIES_INVALID);
             }
         }
 
@@ -115,7 +115,7 @@ namespace iText.Kernel.Colors {
             : this(color.R, color.G, color.B) {
             if (color.A != 255) {
                 ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceRgb));
-                LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_ALPHA_CHANNEL_IS_IGNORED, color.A));
+                LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COLOR_ALPHA_CHANNEL_IS_IGNORED, color.A));
             }
         }
 

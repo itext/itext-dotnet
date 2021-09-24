@@ -320,7 +320,7 @@ namespace iText.IO.Source {
                                     //warn about incorrect reference number
                                     //Exception: NumberFormatException for java, FormatException or OverflowException for .NET
                                     ILogger logger = ITextLogManager.GetLogger(typeof(PdfTokenizer));
-                                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.Commons.Utils.JavaUtil.GetStringForBytes
+                                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.Commons.Utils.JavaUtil.GetStringForBytes
                                         (n1), iText.Commons.Utils.JavaUtil.GetStringForBytes(n2)));
                                     reference = -1;
                                     generation = 0;

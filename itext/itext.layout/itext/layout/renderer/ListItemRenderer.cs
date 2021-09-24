@@ -95,7 +95,7 @@ namespace iText.Layout.Renderer {
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                     , "Drawing won't be performed."));
                 return;
             }
@@ -147,8 +147,8 @@ namespace iText.Layout.Renderer {
                             UnitValue marginRightUV = this.GetPropertyAsUnitValue(Property.MARGIN_RIGHT);
                             if (!marginRightUV.IsPointValue()) {
                                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
-                                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                                    .MARGIN_RIGHT));
+                                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                    , Property.MARGIN_RIGHT));
                             }
                             x -= marginRightUV.GetValue();
                         }
@@ -156,8 +156,8 @@ namespace iText.Layout.Renderer {
                             UnitValue marginLeftUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
                             if (!marginLeftUV.IsPointValue()) {
                                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
-                                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                                    .MARGIN_LEFT));
+                                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                    , Property.MARGIN_LEFT));
                             }
                             x += marginLeftUV.GetValue();
                         }
@@ -342,8 +342,8 @@ namespace iText.Layout.Renderer {
             if (listItemFont != null && fontSize != null) {
                 if (!fontSize.IsPointValue()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .FONT_SIZE));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.FONT_SIZE));
                 }
                 float[] ascenderDescender = TextRenderer.CalculateAscenderDescender(listItemFont);
                 return new float[] { fontSize.GetValue() * ascenderDescender[0] / TextRenderer.TEXT_SPACE_COEFF, fontSize.

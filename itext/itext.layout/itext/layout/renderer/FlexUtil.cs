@@ -365,7 +365,7 @@ namespace iText.Layout.Renderer {
                         info.hypotheticalCrossSize = info.GetInnerCrossSize(result.GetOccupiedArea().GetBBox().GetHeight());
                     }
                     else {
-                        logger.LogError(iText.IO.LogMessageConstant.FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL);
+                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL);
                         info.hypotheticalCrossSize = 0;
                     }
                 }

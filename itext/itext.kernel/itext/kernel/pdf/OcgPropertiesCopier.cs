@@ -79,7 +79,8 @@ namespace iText.Kernel.Pdf {
                     .D), toOcProperties, toDocument);
             }
             catch (Exception ex) {
-                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCG_COPYING_ERROR, ex.ToString()));
+                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCG_COPYING_ERROR, ex.ToString
+                    ()));
             }
         }
 
@@ -237,7 +238,7 @@ namespace iText.Kernel.Pdf {
                 toOcProperties.GetAsArray(PdfName.OCGs).Add(toOcg);
             }
             if (hasConflictingNames) {
-                LOGGER.LogWarning(iText.IO.LogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES);
+                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES);
             }
         }
 

@@ -153,7 +153,7 @@ namespace iText.IO.Image {
                     image.SetProfile(IccProfile.GetInstance(ficc, image.GetColorEncodingComponentsNumber()));
                 }
                 catch (Exception e) {
-                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED
+                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED
                         , e.GetType().Name, e.Message));
                 }
             }

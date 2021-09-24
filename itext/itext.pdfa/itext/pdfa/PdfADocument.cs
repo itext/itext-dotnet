@@ -51,6 +51,7 @@ using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.XMP;
 using iText.Pdfa.Checker;
 using iText.Pdfa.Exceptions;
+using iText.Pdfa.Logs;
 
 namespace iText.Pdfa {
     /// <summary>
@@ -256,7 +257,7 @@ namespace iText.Pdfa {
                 }
                 catch (XMPException exc) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
-                    logger.LogError(exc, iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
+                    logger.LogError(exc, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
                 }
             }
         }
@@ -272,7 +273,7 @@ namespace iText.Pdfa {
             }
             catch (XMPException e) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
-                logger.LogError(e, iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
+                logger.LogError(e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
             }
         }
 

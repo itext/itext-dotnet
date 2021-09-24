@@ -162,7 +162,7 @@ namespace iText.IO.Font.Cmap {
                 }
                 else {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Cmap.CMapToUnicode));
-                    logger.LogWarning(iText.IO.LogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
+                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
                 }
             }
         }

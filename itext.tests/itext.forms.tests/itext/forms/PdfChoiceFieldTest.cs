@@ -122,7 +122,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY, Count = 2)]
         public virtual void MultiSelectByValueTest() {
             String outPdf = destinationFolder + "multiSelectByValueTest.pdf";
             String cmpPdf = sourceFolder + "cmp_multiSelectByValueTest.pdf";
@@ -160,7 +160,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY)]
         public virtual void MultiSelectByValueRemoveIKeyTest() {
             String srcPdf = sourceFolder + "listWithPreselectedValue.pdf";
             String outPdf = destinationFolder + "selectByValueRemoveIKeyTest.pdf";

@@ -112,7 +112,7 @@ namespace iText.StyledXmlParser.Css.Util {
             int end = CssUtils.FindNextUnescapedChar(source, endQuoteSymbol, start + 1);
             if (end == -1) {
                 end = source.Length;
-                ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
+                ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
                     .QUOTE_IS_NOT_CLOSED_IN_CSS_EXPRESSION, source));
             }
             else {
@@ -140,7 +140,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 else {
                     curr = CssUtils.FindNextUnescapedChar(source, ')', curr);
                     if (curr == -1) {
-                        ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
+                        ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
                             .URL_IS_NOT_CLOSED_IN_CSS_EXPRESSION, source));
                         return source.Length;
                     }
@@ -152,7 +152,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 }
             }
             else {
-                ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
+                ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
                     .URL_IS_EMPTY_IN_CSS_EXPRESSION, source));
                 return source.Length;
             }

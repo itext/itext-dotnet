@@ -323,11 +323,11 @@ namespace iText.IO.Image {
         public virtual bool CanImageBeInline() {
             ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Image.ImageData));
             if (imageSize > 4096) {
-                logger.LogWarning(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
                 return false;
             }
             if (imageMask != null) {
-                logger.LogWarning(iText.IO.LogMessageConstant.IMAGE_HAS_MASK);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_MASK);
                 return false;
             }
             return true;

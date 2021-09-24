@@ -84,7 +84,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.OCG_COPYING_ERROR, LogLevel = LogLevelConstants.ERROR)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCG_COPYING_ERROR, LogLevel = LogLevelConstants.ERROR)]
         public virtual void AttemptToCopyInvalidOCGTest() {
             byte[] fromDocBytes;
             using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -219,7 +219,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES)]
         public virtual void CopyOCGsWithConflictNamesTest() {
             byte[] fromDocBytes;
             using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {

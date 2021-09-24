@@ -199,7 +199,7 @@ namespace iText.Layout.Renderer {
                                 int rowspan = (int)currentRow[col].GetPropertyAsInteger(Property.ROWSPAN) - rowspansToDeduct[col];
                                 if (rowspan < 1) {
                                     ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
-                                    logger.LogWarning(iText.IO.LogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
+                                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
                                     rowspan = 1;
                                 }
                                 currentRow[col].SetProperty(Property.ROWSPAN, rowspan);
@@ -229,7 +229,7 @@ namespace iText.Layout.Renderer {
                             rows.JRemoveAt(row - rowspansToDeduct[0]);
                             SetFinishRow(finishRow - 1);
                             ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
-                            logger.LogWarning(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
+                            logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
                         }
                         else {
                             for (int i = 0; i < numberOfColumns; i++) {

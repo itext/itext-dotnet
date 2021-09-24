@@ -826,7 +826,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED)]
         public virtual void ApplyLinkAnnotationFlushedPageTest() {
             AbstractRenderer abstractRenderer = new DivRenderer(new Div());
             abstractRenderer.occupiedArea = new LayoutArea(1, new Rectangle(100, 100));

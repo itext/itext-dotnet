@@ -48,7 +48,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     ), new CssDeclaration(CommonCssConstants.BACKGROUND_POSITION_Y, shorthandExpression));
             }
             if (String.IsNullOrEmpty(shorthandExpression.Trim())) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
                     , CommonCssConstants.BACKGROUND_POSITION));
                 return new List<CssDeclaration>();
             }
@@ -57,12 +57,12 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             IDictionary<String, String> values = new Dictionary<String, String>();
             foreach (IList<String> props in propsList) {
                 if (props.IsEmpty()) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
                         , CommonCssConstants.BACKGROUND_POSITION));
                     return new List<CssDeclaration>();
                 }
                 if (!ParsePositionShorthand(props, values)) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                         , shorthandExpression));
                     return new List<CssDeclaration>();
                 }
@@ -81,7 +81,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
 
         private static bool CheckProperty(IDictionary<String, String> resolvedProps, String key) {
             if (!CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(key, resolvedProps.Get(key)))) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                     , resolvedProps.Get(key)));
                 return false;
             }

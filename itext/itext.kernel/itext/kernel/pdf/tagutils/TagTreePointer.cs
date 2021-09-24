@@ -686,7 +686,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             PdfStructElem parent = (PdfStructElem)GetCurrentStructElem().GetParent();
             if (parent.IsFlushed()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagTreePointer));
-                logger.LogWarning(iText.IO.LogMessageConstant.ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT);
                 MoveToRoot();
             }
             else {

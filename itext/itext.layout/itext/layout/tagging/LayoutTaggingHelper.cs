@@ -194,7 +194,7 @@ namespace iText.Layout.Tagging {
             TagTreePointer existingArtifactTag = new TagTreePointer(document);
             if (context.GetWaitingTagsManager().TryMovePointerToWaitingTag(existingArtifactTag, hintKey)) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
-                logger.LogError(iText.IO.LogMessageConstant.ALREADY_TAGGED_HINT_MARKED_ARTIFACT);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ALREADY_TAGGED_HINT_MARKED_ARTIFACT);
                 context.GetWaitingTagsManager().RemoveWaitingState(hintKey);
                 if (immediateFlush) {
                     existingArtifactTag.FlushParentsIfAllKidsFlushed();
@@ -399,7 +399,7 @@ namespace iText.Layout.Tagging {
             }
             if (kidHintKey.IsFinished()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
-                logger.LogError(iText.IO.LogMessageConstant.CANNOT_REPLACE_FINISHED_HINT);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.CANNOT_REPLACE_FINISHED_HINT);
                 // If kidHintKey is finished you won't be able to add it anywhere after replacing is ended.
                 // If kidHintKey might be finished, use moveKidHint instead.
                 // replaceKidHint should be used when parent might be finished.
@@ -411,7 +411,7 @@ namespace iText.Layout.Tagging {
                 int i = RemoveParentHint(newKidKey);
                 if (i == RETVAL_PARENT_AND_KID_FINISHED || i == RETVAL_NO_PARENT && newKidKey.IsFinished()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
-                    logger.LogError(iText.IO.LogMessageConstant.CANNOT_MOVE_FINISHED_HINT);
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.CANNOT_MOVE_FINISHED_HINT);
                     continue;
                 }
                 kidsToBeAdded.Add(newKidKey);
@@ -428,14 +428,14 @@ namespace iText.Layout.Tagging {
             ) {
             if (newParent.IsFinished()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
-                logger.LogError(iText.IO.LogMessageConstant.CANNOT_MOVE_HINT_TO_FINISHED_PARENT);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.CANNOT_MOVE_HINT_TO_FINISHED_PARENT);
                 return -1;
             }
             int removeRes = RemoveParentHint(hintKeyOfKidToMove);
             if (removeRes == RETVAL_PARENT_AND_KID_FINISHED || removeRes == RETVAL_NO_PARENT && hintKeyOfKidToMove.IsFinished
                 ()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
-                logger.LogError(iText.IO.LogMessageConstant.CANNOT_MOVE_FINISHED_HINT);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.CANNOT_MOVE_FINISHED_HINT);
                 return -1;
             }
             AddKidsHint(newParent, JavaCollectionsUtil.SingletonList<TaggingHintKey>(hintKeyOfKidToMove), insertIndex, 
@@ -489,7 +489,7 @@ namespace iText.Layout.Tagging {
             }
             if (!skipFinishedChecks && parentKey.IsFinished()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
-                logger.LogError(iText.IO.LogMessageConstant.CANNOT_ADD_HINTS_TO_FINISHED_PARENT);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.CANNOT_ADD_HINTS_TO_FINISHED_PARENT);
                 return;
             }
             IList<TaggingHintKey> kidsHint = kidsHints.Get(parentKey);
@@ -511,7 +511,7 @@ namespace iText.Layout.Tagging {
                 }
                 if (!skipFinishedChecks && kidKey.IsFinished()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
-                    logger.LogError(iText.IO.LogMessageConstant.CANNOT_ADD_FINISHED_HINT_AS_A_NEW_KID_HINT);
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.CANNOT_ADD_FINISHED_HINT_AS_A_NEW_KID_HINT);
                     continue;
                 }
                 if (insertIndex > -1) {
@@ -546,7 +546,7 @@ namespace iText.Layout.Tagging {
         private bool CreateSingleTag(TaggingHintKey hintKey, TagTreePointer tagPointer) {
             if (hintKey.IsFinished()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Tagging.LayoutTaggingHelper));
-                logger.LogError(iText.IO.LogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT);
                 return false;
             }
             if (IsNonAccessibleHint(hintKey)) {

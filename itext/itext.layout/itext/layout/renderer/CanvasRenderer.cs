@@ -89,7 +89,7 @@ namespace iText.Layout.Renderer {
 
         public override void AddChild(IRenderer renderer) {
             if (true.Equals(GetPropertyAsBoolean(Property.FULL))) {
-                ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.CanvasRenderer)).LogWarning(iText.IO.LogMessageConstant
+                ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.CanvasRenderer)).LogWarning(iText.IO.Logs.IoLogMessageConstant
                     .CANVAS_ALREADY_FULL_ELEMENT_WILL_BE_SKIPPED);
             }
             else {

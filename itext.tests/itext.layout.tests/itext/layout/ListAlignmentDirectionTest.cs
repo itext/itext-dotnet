@@ -98,7 +98,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 8)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 8)]
         public virtual void AlignmentDirectionTest() {
             // TODO DEVSIX-5727 direction of the first list-item should define the symbol indent's side. Once the issue
             // is fixed, the corresponding cmps should be updated.

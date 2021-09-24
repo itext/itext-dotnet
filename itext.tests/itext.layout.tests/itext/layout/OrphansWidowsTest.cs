@@ -48,14 +48,14 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD)]
         public virtual void PrematureCallOfHandleViolatedOrphans() {
             ParagraphOrphansControl orphansControl = new ParagraphOrphansControl(2);
             orphansControl.HandleViolatedOrphans(new ParagraphRenderer(new Paragraph()), "");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD)]
         public virtual void PrematureCallOfHandleViolatedWidows() {
             ParagraphWidowsControl widowsControl = new ParagraphWidowsControl(2, 1, false);
             widowsControl.HandleViolatedWidows(new ParagraphRenderer(new Paragraph()), "");
@@ -77,7 +77,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ORPHANS_CONSTRAINT_VIOLATED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ORPHANS_CONSTRAINT_VIOLATED)]
         public virtual void ViolatedOrphans() {
             RunMinThreeOrphansTest("violatedOrphans", 1, true, false);
         }
@@ -98,13 +98,13 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED)]
         public virtual void ViolatedWidowsInabilityToFix() {
             RunMinThreeWidowsTest("violatedWidowsInabilityToFix", 1, false, false);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED)]
         public virtual void ViolatedWidowsForcedPlacement() {
             RunMinThreeWidowsTest("violatedWidowsForcedPlacement", 1, true, true);
         }
@@ -181,13 +181,13 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void MaxHeightLimitCausesOrphans() {
             RunMaxHeightLimit("maxHeightLimitCausesOrphans", true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void MaxHeightLimitCausesWidows() {
             RunMaxHeightLimit("maxHeightLimitCausesWidows", false);
         }
@@ -208,13 +208,13 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void DivSizeCausesOrphans() {
             RunDivSize("divSizeCausesOrphans", true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void DivSizeCausesWidows() {
             RunDivSize("divSizeCausesWidows", false);
         }
@@ -230,13 +230,13 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherLargeParagraphOrphans() {
             RunKeepTogether("keepTogetherLargeParagraphOrphans", true, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherLargeParagraphWidows() {
             RunKeepTogether("keepTogetherLargeParagraphWidows", false, true);
         }
@@ -252,14 +252,14 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void HugeInlineImageOrphans() {
             RunHugeInlineImage("hugeInlineImageOrphans", true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
-        [LogMessage(iText.IO.LogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED)]
         public virtual void HugeInlineImageWidows() {
             RunHugeInlineImage("hugeInlineImageWidows", false);
         }
@@ -330,7 +330,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED)]
         public virtual void TwoLinesParagraphMin3Widows() {
             RunOrphansWidowsBiggerThanLinesCount("twoLinesParagraphMin3Widows", false, false);
         }

@@ -45,21 +45,21 @@ using System;
 namespace iText.Kernel.Logs {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class KernelLogMessageConstant {
-        public const String DCTDECODE_FILTER_DECODING = "DCTDecode filter decoding into the " + "bit map is not supported. The stream data would be left in JPEG baseline format";
+        public const String DCTDECODE_FILTER_DECODING = "DCTDecode filter decoding into the bit map is not supported. The stream data would be left in JPEG "
+             + "baseline format";
 
         public const String FEATURE_IS_NOT_SUPPORTED = "Exception was thrown: {0}. The feature {1} is probably not supported by your XML processor.";
 
         public const String FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY = "Full compression mode requested in append mode but the original document has cross-reference table, "
              + "not cross-reference stream. " + "Falling back to cross-reference table in appended document and switching full compression off";
 
-        public const String FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY = "Full compression mode was " 
-            + "requested to be switched off in append mode but the original document has cross-reference stream, not "
-             + "cross-reference table. Falling back to cross-reference stream in appended document and switching full "
-             + "compression on";
+        public const String FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY = "Full compression mode was requested to be switched off in append mode but the original document has "
+             + "cross-reference stream, not cross-reference table. Falling back to cross-reference stream in " + "appended document and switching full compression on";
 
-        public const String JPXDECODE_FILTER_DECODING = "JPXDecode filter decoding into the " + "bit map is not supported. The stream data would be left in JPEG2000 format";
+        public const String JPXDECODE_FILTER_DECODING = "JPXDecode filter decoding into the bit map is not supported. The stream data would be left in JPEG2000 "
+             + "format";
 
-        public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} " + "color space";
+        public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} color space";
 
         /// <summary>
         /// Message warns about unexpected product name which was mentioned as involved into PDF
@@ -86,7 +86,8 @@ namespace iText.Kernel.Logs {
         /// </description></item>
         /// </list>
         /// </remarks>
-        public const String UNCONFIRMED_EVENT = "Event for the product {0} with type {1} was reported " + "but was not confirmed. Probably appropriate process fail";
+        public const String UNCONFIRMED_EVENT = "Event for the product {0} with type {1} was reported but was not confirmed. Probably appropriate process "
+             + "fail";
 
         private KernelLogMessageConstant() {
         }

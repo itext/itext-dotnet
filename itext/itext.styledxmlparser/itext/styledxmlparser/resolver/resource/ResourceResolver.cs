@@ -186,11 +186,11 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 }
             }
             if (IsDataSrc(src)) {
-                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI
+                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI
                     , src));
             }
             else {
-                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
+                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
                     , uriResolver.GetBaseUri(), src));
             }
             return null;
@@ -213,7 +213,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 return retriever.GetByteArrayByUrl(url);
             }
             catch (Exception e) {
-                logger.LogError(e, MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                logger.LogError(e, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
                     , uriResolver.GetBaseUri(), src));
                 return null;
             }
@@ -232,7 +232,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 return retriever.GetInputStreamByUrl(url);
             }
             catch (Exception e) {
-                logger.LogError(e, MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                logger.LogError(e, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
                     , uriResolver.GetBaseUri(), src));
                 return null;
             }

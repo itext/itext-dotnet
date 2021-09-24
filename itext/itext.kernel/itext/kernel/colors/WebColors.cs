@@ -264,7 +264,7 @@ namespace iText.Kernel.Colors {
                         }
                         else {
                             ILogger logger = ITextLogManager.GetLogger(typeof(WebColors));
-                            logger.LogError(iText.IO.LogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);
+                            logger.LogError(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);
                         }
                     }
                 }

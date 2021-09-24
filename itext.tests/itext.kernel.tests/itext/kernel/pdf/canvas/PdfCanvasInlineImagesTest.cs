@@ -45,10 +45,10 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_MASK)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_MASK)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
         public virtual void InlineImagesTest01() {
             String filename = "inlineImages01.pdf";
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
@@ -74,10 +74,10 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_MASK)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_MASK)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
         public virtual void InlineImagesTest02() {
             String filename = "inlineImages02.pdf";
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));

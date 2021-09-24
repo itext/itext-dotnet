@@ -346,7 +346,7 @@ namespace iText.Kernel.Pdf.Annot {
                     PdfAnnotation annotation = MakeAnnotation(popupObject);
                     if (!(annotation is PdfPopupAnnotation)) {
                         ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfMarkupAnnotation));
-                        logger.LogWarning(iText.IO.LogMessageConstant.POPUP_ENTRY_IS_NOT_POPUP_ANNOTATION);
+                        logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.POPUP_ENTRY_IS_NOT_POPUP_ANNOTATION);
                         return null;
                     }
                     popup = (PdfPopupAnnotation)annotation;
