@@ -86,7 +86,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < 4; i++) {
                 PdfPage page = document.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.AddXObjectFittedIntoRectangle(images[i], PageSize.Default);
+                canvas.AddXObjectFittedIntoRectangle(images[i], PageSize.DEFAULT);
                 page.Flush();
             }
             PdfPage page_1 = document.AddNewPage();

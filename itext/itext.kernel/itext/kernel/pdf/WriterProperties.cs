@@ -57,8 +57,6 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         protected internal bool smartMode;
 
-        protected internal bool debugMode;
-
         protected internal bool addXmpMetadata;
 
         protected internal bool addUAXmpMetadata;
@@ -75,7 +73,6 @@ namespace iText.Kernel.Pdf {
 
         public WriterProperties() {
             smartMode = false;
-            debugMode = false;
             addUAXmpMetadata = false;
             compressionLevel = CompressionConstants.DEFAULT_COMPRESSION;
             isFullCompression = null;
@@ -337,22 +334,6 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetModifiedDocumentId(PdfString modifiedDocumentId) {
             this.modifiedDocumentId = modifiedDocumentId;
-            return this;
-        }
-
-        /// <summary>This activates debug mode with pdfDebug tool.</summary>
-        /// <remarks>
-        /// This activates debug mode with pdfDebug tool.
-        /// It causes additional overhead of duplicating document bytes into memory, so use it careful.
-        /// NEVER use it in production or in any other cases except pdfDebug.
-        /// </remarks>
-        /// <returns>
-        /// this
-        /// <see cref="WriterProperties"/>
-        /// instance
-        /// </returns>
-        public virtual iText.Kernel.Pdf.WriterProperties UseDebugMode() {
-            this.debugMode = true;
             return this;
         }
 

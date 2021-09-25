@@ -61,7 +61,7 @@ namespace iText.Svg.Renderers {
         }
 
         public virtual void Convert(String svg, String output) {
-            Convert(svg, output, PageSize.Default);
+            Convert(svg, output, PageSize.DEFAULT);
         }
 
         public virtual void Convert(String svg, String output, PageSize size) {
@@ -114,7 +114,7 @@ namespace iText.Svg.Renderers {
         }
 
         public virtual void ConvertAndCompare(String src, String dest, String fileName) {
-            ConvertAndCompare(src, dest, fileName, PageSize.Default);
+            ConvertAndCompare(src, dest, fileName, PageSize.DEFAULT);
         }
 
         public virtual void ConvertAndCompare(String src, String dest, String fileName, PageSize size) {
