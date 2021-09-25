@@ -43,8 +43,6 @@ namespace iText.Commons.Exceptions {
 
         public const String INVALID_USAGE_FORMAT_REQUIRED = "Invalid usage of placeholder \"{0}\": format is required";
 
-        public const String META_INFO_SHOULDNT_BE_NULL = "Meta info shouldn't be null";
-
         public const String NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT = "No events were registered for the document!";
 
         public const String PATTERN_CONTAINS_OPEN_QUOTATION = "Pattern contains open quotation!";
