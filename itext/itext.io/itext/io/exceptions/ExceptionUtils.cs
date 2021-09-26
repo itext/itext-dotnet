@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
@@ -41,37 +41,19 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel;
-using iText.Kernel.Exceptions;
 
-namespace iText.Kernel.Pdf {
-    /// <summary>Exception class for exceptions occurred during decompressed pdf streams processing.</summary>
-    public class MemoryLimitsAwareException : PdfException {
-        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
-        /// <param name="message">the detail message.</param>
-        public MemoryLimitsAwareException(String message)
-            : base(message) {
+namespace iText.IO.Exceptions {
+    /// <summary>This file is a helper class for internal usage only.</summary>
+    /// <remarks>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that its API and functionality may be changed in future.
+    /// </remarks>
+    public sealed class ExceptionUtil {
+        private ExceptionUtil() {
         }
 
-        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
-        /// <param name="cause">
-        /// the cause (which is saved for later retrieval by
-        /// <see cref="System.Exception.InnerException()"/>
-        /// method).
-        /// </param>
-        public MemoryLimitsAwareException(Exception cause)
-            : this(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION, cause) {
-        }
-
-        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
-        /// <param name="message">the detail message.</param>
-        /// <param name="cause">
-        /// the cause (which is saved for later retrieval by
-        /// <see cref="System.Exception.InnerException()"/>
-        /// method).
-        /// </param>
-        public MemoryLimitsAwareException(String message, Exception cause)
-            : base(message, cause) {
+        public static bool IsOutOfRange(Exception e) {
+            return e is IndexOutOfRangeException || e is ArgumentOutOfRangeException;
         }
     }
 }

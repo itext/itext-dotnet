@@ -290,7 +290,7 @@ namespace iText.Layout.Borders {
             , float verticalRadius1, float horizontalRadius2, float verticalRadius2, Border.Side defaultSide, float
              borderWidthBefore, float borderWidthAfter) {
             ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Borders.Border));
-            logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.METHOD_IS_NOT_IMPLEMENTED_BY_DEFAULT_OTHER_METHOD_WILL_BE_USED
+            logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.METHOD_IS_NOT_IMPLEMENTED_BY_DEFAULT_OTHER_METHOD_WILL_BE_USED
                 , "Border#draw(PdfCanvas, float, float, float, float, float, float, float, float, Side, float, float", 
                 "Border#draw(PdfCanvas, float, float, float, float, Side, float, float)"));
             Draw(canvas, x1, y1, x2, y2, defaultSide, borderWidthBefore, borderWidthAfter);

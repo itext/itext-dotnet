@@ -208,7 +208,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="MemoryLimitsAwareHandler"/>
         /// instance.
         /// </returns>
-        /// <seealso cref="MemoryLimitsAwareException"/>
+        /// <seealso cref="iText.Kernel.Exceptions.MemoryLimitsAwareException"/>
         internal virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler ConsiderBytesOccupiedByDecompressedPdfStream(long
              numOfOccupiedBytes) {
             if (considerCurrentPdfStream && memoryUsedForCurrentPdfStreamDecompression < numOfOccupiedBytes) {
@@ -243,7 +243,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="MemoryLimitsAwareHandler"/>
         /// instance.
         /// </returns>
-        /// <seealso cref="MemoryLimitsAwareException"/>
+        /// <seealso cref="iText.Kernel.Exceptions.MemoryLimitsAwareException"/>
         internal virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler EndDecompressedPdfStreamProcessing() {
             allMemoryUsedForDecompression += memoryUsedForCurrentPdfStreamDecompression;
             if (allMemoryUsedForDecompression > maxSizeOfDecompressedPdfStreamsSum) {

@@ -95,8 +95,8 @@ namespace iText.IO.Font.Otf {
             }
             catch (System.IO.IOException e) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Otf.OtfClass));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OPENTYPE_GDEF_TABLE_ERROR, e.Message)
-                    );
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OPENTYPE_GDEF_TABLE_ERROR, e.Message
+                    ));
                 otfClass = null;
             }
             return otfClass;

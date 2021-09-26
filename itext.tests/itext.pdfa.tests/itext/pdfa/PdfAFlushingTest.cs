@@ -48,6 +48,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Pdfa.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 

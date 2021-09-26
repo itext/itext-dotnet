@@ -42,16 +42,17 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Forms.Xfdf {
-    public class XfdfException : Exception {
-        public XfdfException(String message)
-            : base(message) {
+namespace iText.Pdfa.Logs {
+    /// <summary>Class containing constants to be used in logging.</summary>
+    public class PdfALogMessageConstant {
+        public const String PDFA_PAGE_FLUSHING_WAS_NOT_PERFORMED = "Page flushing was not performed. Pages flushing in PDF/A mode works only with explicit calls to "
+             + "PdfPage#flush(boolean) with flushResourcesContentStreams argument set to true";
+
+        public const String PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED = "Object flushing was not performed. Object in PDF/A mode can only be flushed if the document is closed or "
+             + "if this object has already been checked for compliance with PDF/A rules.";
+
+        private PdfALogMessageConstant() {
         }
-
-        /// <summary>Message in case one tries to add attribute with null name or value</summary>
-        public const String ATTRIBUTE_NAME_OR_VALUE_MISSING = "Attribute name or value are missing";
-
-        /// <summary>Message in case one tries to add annotation without indicating the page it belongs to</summary>
-        public const String PAGE_IS_MISSING = "Required Page attribute is missing.";
+        //Private constructor will prevent the instantiation of this class directly
     }
 }

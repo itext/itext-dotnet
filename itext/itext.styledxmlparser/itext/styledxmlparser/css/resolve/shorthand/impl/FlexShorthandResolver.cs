@@ -73,12 +73,12 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     .FLEX_SHRINK, "0"), new CssDeclaration(CommonCssConstants.FLEX_BASIS, CommonCssConstants.AUTO));
             }
             if (CssTypesValidationUtils.ContainsInitialOrInheritOrUnset(shorthandExpression)) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                    .FLEX, shorthandExpression);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    , CommonCssConstants.FLEX, shorthandExpression);
             }
             if (String.IsNullOrEmpty(shorthandExpression)) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY, 
-                    CommonCssConstants.FLEX, shorthandExpression);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                    , CommonCssConstants.FLEX, shorthandExpression);
             }
             String[] flexProps = iText.Commons.Utils.StringUtil.Split(shorthandExpression, " ");
             IList<CssDeclaration> resolvedProperties;
@@ -99,8 +99,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 }
 
                 default: {
-                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                        .FLEX, shorthandExpression);
+                    return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , CommonCssConstants.FLEX, shorthandExpression);
                 }
             }
             if (!resolvedProperties.IsEmpty()) {
@@ -123,8 +123,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     return resolvedProperties;
                 }
                 else {
-                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                        .FLEX_GROW, firstProperty);
+                    return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , CommonCssConstants.FLEX_GROW, firstProperty);
                 }
             }
         }
@@ -146,8 +146,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                         return resolvedProperties;
                     }
                     else {
-                        return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                            .FLEX_BASIS, secondProperty);
+                        return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                            , CommonCssConstants.FLEX_BASIS, secondProperty);
                     }
                 }
             }
@@ -160,12 +160,12 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                         resolvedProperties.Add(flexGrowDeclaration);
                         return resolvedProperties;
                     }
-                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                        .FLEX_GROW, secondProperty);
+                    return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , CommonCssConstants.FLEX_GROW, secondProperty);
                 }
                 else {
-                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                        .FLEX_SHRINK, secondProperty);
+                    return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , CommonCssConstants.FLEX_SHRINK, secondProperty);
                 }
             }
         }
@@ -178,15 +178,15 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 resolvedProperties.Add(flexGrowDeclaration);
                 CssDeclaration flexShrinkDeclaration = new CssDeclaration(CommonCssConstants.FLEX_SHRINK, secondProperty);
                 if (!CssDeclarationValidationMaster.CheckDeclaration(flexShrinkDeclaration)) {
-                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                        .FLEX_SHRINK, secondProperty);
+                    return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , CommonCssConstants.FLEX_SHRINK, secondProperty);
                 }
                 else {
                     resolvedProperties.Add(flexShrinkDeclaration);
                     CssDeclaration flexBasisDeclaration = new CssDeclaration(CommonCssConstants.FLEX_BASIS, thirdProperty);
                     if (!CssDeclarationValidationMaster.CheckDeclaration(flexBasisDeclaration)) {
-                        return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                            .FLEX_BASIS, thirdProperty);
+                        return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                            , CommonCssConstants.FLEX_BASIS, thirdProperty);
                     }
                     else {
                         resolvedProperties.Add(flexBasisDeclaration);
@@ -201,15 +201,15 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     resolvedProperties.Add(flexGrowDeclaration);
                     CssDeclaration flexShrinkDeclaration = new CssDeclaration(CommonCssConstants.FLEX_SHRINK, thirdProperty);
                     if (!CssDeclarationValidationMaster.CheckDeclaration(flexShrinkDeclaration)) {
-                        return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                            .FLEX_SHRINK, thirdProperty);
+                        return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                            , CommonCssConstants.FLEX_SHRINK, thirdProperty);
                     }
                     else {
                         resolvedProperties.Add(flexShrinkDeclaration);
                         CssDeclaration flexBasisDeclaration = new CssDeclaration(CommonCssConstants.FLEX_BASIS, firstProperty);
                         if (!CssDeclarationValidationMaster.CheckDeclaration(flexBasisDeclaration)) {
-                            return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                                .FLEX_BASIS, firstProperty);
+                            return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                                , CommonCssConstants.FLEX_BASIS, firstProperty);
                         }
                         else {
                             resolvedProperties.Add(flexBasisDeclaration);
@@ -218,8 +218,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     }
                 }
                 else {
-                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                        .FLEX_GROW, secondProperty);
+                    return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , CommonCssConstants.FLEX_GROW, secondProperty);
                 }
             }
         }

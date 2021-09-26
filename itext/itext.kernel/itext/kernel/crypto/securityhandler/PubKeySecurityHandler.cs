@@ -51,7 +51,6 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 

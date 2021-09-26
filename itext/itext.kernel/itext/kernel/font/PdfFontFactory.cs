@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 

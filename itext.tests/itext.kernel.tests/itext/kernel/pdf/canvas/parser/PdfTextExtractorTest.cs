@@ -51,7 +51,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfTextExtractorTest/";
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
         public virtual void NoSpecifiedDictionaryInPropertiesTest() {
             String inFile = sourceFolder + "noSpecifiedDictionaryInProperties.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
@@ -62,7 +62,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
         public virtual void NoPropertiesInResourcesTest() {
             String inFile = sourceFolder + "noPropertiesInResources.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {

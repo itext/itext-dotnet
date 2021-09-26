@@ -45,7 +45,6 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -319,7 +318,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void InvalidIndirect() {
             String filename = sourceFolder + "invalidIndirect.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -659,7 +658,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, Count = 1)]
         public virtual void CorrectSimpleDoc1() {
             String filename = sourceFolder + "correctSimpleDoc1.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -686,7 +685,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, Count = 1)]
         public virtual void CorrectSimpleDoc3() {
             String filename = sourceFolder + "correctSimpleDoc3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -700,8 +699,8 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void CorrectSimpleDoc4() {
             String filename = sourceFolder + "correctSimpleDoc4.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -720,7 +719,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest01() {
             String filename = sourceFolder + "OnlyTrailer.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -786,7 +785,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest05() {
             String filename = sourceFolder + "CompressionWrongShift.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -818,7 +817,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 2)]
         public virtual void FixPdfTest07() {
             String filename = sourceFolder + "XRefSectionWithFreeReferences1.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -834,7 +833,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest08() {
             String filename = sourceFolder + "XRefSectionWithFreeReferences2.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -854,7 +853,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest09() {
             String filename = sourceFolder + "XRefSectionWithFreeReferences3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -874,7 +873,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
         public virtual void FixPdfTest10() {
             String filename = sourceFolder + "XRefSectionWithFreeReferences4.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -895,7 +894,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest11() {
             String filename = sourceFolder + "XRefSectionWithoutSize.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -912,7 +911,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest12() {
             String filename = sourceFolder + "XRefWithBreaks.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -929,7 +928,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void FixPdfTest13() {
             String filename = sourceFolder + "XRefWithInvalidGenerations1.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -952,7 +951,7 @@ namespace iText.Kernel.Pdf {
             try {
                 document.GetPdfObject(3093);
             }
-            catch (iText.IO.IOException) {
+            catch (iText.IO.Exceptions.IOException) {
                 exception = true;
             }
             NUnit.Framework.Assert.IsTrue(exception);
@@ -971,7 +970,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void FixPdfTest14() {
             String filename = sourceFolder + "XRefWithInvalidGenerations2.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -987,7 +986,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest15() {
             String filename = sourceFolder + "XRefWithInvalidGenerations3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1021,7 +1020,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest17() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1038,7 +1037,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest18() {
             String filename = sourceFolder + "noXrefAndTrailerWithInfo.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1132,7 +1131,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void AppendModeWith10PagesFix1() {
             String filename = sourceFolder + "10PagesDocumentAppendedFix1.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1154,7 +1153,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void AppendModeWith10PagesFix2() {
             String filename = sourceFolder + "10PagesDocumentAppendedFix2.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1356,7 +1355,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void FreeReferencesTest() {
             String filename = sourceFolder + "freeReferences.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
@@ -1421,9 +1420,9 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
-        [LogMessage(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ENCOUNTERED_INVALID_MCR)]
         public virtual void WrongTagStructureFlushingTest() {
             //wrong /Pg number
             String source = sourceFolder + "wrongTagStructureFlushingTest.pdf";
@@ -1437,8 +1436,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-2649")]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void WrongStructureFlushingTest() {
             //TODO: update after DEVSIX-2649 fix
             //wrong /key number
@@ -1459,7 +1458,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void HugeInvalidIndRefObjNumberTest() {
             String filename = sourceFolder + "hugeIndRefObjNum.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1479,7 +1478,7 @@ namespace iText.Kernel.Pdf {
             try {
                 PdfReader reader = new PdfReader(nonPdfFileName);
             }
-            catch (iText.IO.IOException) {
+            catch (iText.IO.Exceptions.IOException) {
                 exceptionThrown = true;
                 // File should be available for writing
                 Stream stream = FileUtil.GetFileOutputStream(nonPdfFileName);
@@ -1512,12 +1511,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasRebuiltXrefReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader hasRebuiltXrefReader = new _PdfReader_1754(filename);
+            PdfReader hasRebuiltXrefReader = new _PdfReader_1753(filename);
             ReadingNotCompletedTest(hasRebuiltXrefReader);
         }
 
-        private sealed class _PdfReader_1754 : PdfReader {
-            public _PdfReader_1754(String baseArg1)
+        private sealed class _PdfReader_1753 : PdfReader {
+            public _PdfReader_1753(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1538,12 +1537,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasHybridXrefReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader hasHybridXrefPdfReader = new _PdfReader_1777(filename);
+            PdfReader hasHybridXrefPdfReader = new _PdfReader_1776(filename);
             ReadingNotCompletedTest(hasHybridXrefPdfReader);
         }
 
-        private sealed class _PdfReader_1777 : PdfReader {
-            public _PdfReader_1777(String baseArg1)
+        private sealed class _PdfReader_1776 : PdfReader {
+            public _PdfReader_1776(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1563,12 +1562,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasXrefStmReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader hasXrefStmReader = new _PdfReader_1800(filename);
+            PdfReader hasXrefStmReader = new _PdfReader_1799(filename);
             ReadingNotCompletedTest(hasXrefStmReader);
         }
 
-        private sealed class _PdfReader_1800 : PdfReader {
-            public _PdfReader_1800(String baseArg1)
+        private sealed class _PdfReader_1799 : PdfReader {
+            public _PdfReader_1799(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1588,12 +1587,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasFixedXrefReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader hasFixedXrefReader = new _PdfReader_1823(filename);
+            PdfReader hasFixedXrefReader = new _PdfReader_1822(filename);
             ReadingNotCompletedTest(hasFixedXrefReader);
         }
 
-        private sealed class _PdfReader_1823 : PdfReader {
-            public _PdfReader_1823(String baseArg1)
+        private sealed class _PdfReader_1822 : PdfReader {
+            public _PdfReader_1822(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1613,12 +1612,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetLastXrefReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader getLastXrefReader = new _PdfReader_1846(filename);
+            PdfReader getLastXrefReader = new _PdfReader_1845(filename);
             ReadingNotCompletedTest(getLastXrefReader);
         }
 
-        private sealed class _PdfReader_1846 : PdfReader {
-            public _PdfReader_1846(String baseArg1)
+        private sealed class _PdfReader_1845 : PdfReader {
+            public _PdfReader_1845(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1639,12 +1638,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetPermissionsReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader getPermissionsReader = new _PdfReader_1869(filename);
+            PdfReader getPermissionsReader = new _PdfReader_1868(filename);
             ReadingNotCompletedTest(getPermissionsReader);
         }
 
-        private sealed class _PdfReader_1869 : PdfReader {
-            public _PdfReader_1869(String baseArg1)
+        private sealed class _PdfReader_1868 : PdfReader {
+            public _PdfReader_1868(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1665,12 +1664,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void IsOpenedWithFullPReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader isOpenedWithFullPReader = new _PdfReader_1894(filename);
+            PdfReader isOpenedWithFullPReader = new _PdfReader_1893(filename);
             ReadingNotCompletedTest(isOpenedWithFullPReader);
         }
 
-        private sealed class _PdfReader_1894 : PdfReader {
-            public _PdfReader_1894(String baseArg1)
+        private sealed class _PdfReader_1893 : PdfReader {
+            public _PdfReader_1893(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1691,12 +1690,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetCryptoModeReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader getCryptoModeReader = new _PdfReader_1917(filename);
+            PdfReader getCryptoModeReader = new _PdfReader_1916(filename);
             ReadingNotCompletedTest(getCryptoModeReader);
         }
 
-        private sealed class _PdfReader_1917 : PdfReader {
-            public _PdfReader_1917(String baseArg1)
+        private sealed class _PdfReader_1916 : PdfReader {
+            public _PdfReader_1916(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1717,12 +1716,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ComputeUserPasswordReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader computeUserPasswordReader = new _PdfReader_1942(filename);
+            PdfReader computeUserPasswordReader = new _PdfReader_1941(filename);
             ReadingNotCompletedTest(computeUserPasswordReader);
         }
 
-        private sealed class _PdfReader_1942 : PdfReader {
-            public _PdfReader_1942(String baseArg1)
+        private sealed class _PdfReader_1941 : PdfReader {
+            public _PdfReader_1941(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1743,12 +1742,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetOriginalFileIdReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader getOriginalFileIdReader = new _PdfReader_1965(filename);
+            PdfReader getOriginalFileIdReader = new _PdfReader_1964(filename);
             ReadingNotCompletedTest(getOriginalFileIdReader);
         }
 
-        private sealed class _PdfReader_1965 : PdfReader {
-            public _PdfReader_1965(String baseArg1)
+        private sealed class _PdfReader_1964 : PdfReader {
+            public _PdfReader_1964(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1769,12 +1768,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetModifiedFileIdReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader getModifiedFileIdReader = new _PdfReader_1988(filename);
+            PdfReader getModifiedFileIdReader = new _PdfReader_1987(filename);
             ReadingNotCompletedTest(getModifiedFileIdReader);
         }
 
-        private sealed class _PdfReader_1988 : PdfReader {
-            public _PdfReader_1988(String baseArg1)
+        private sealed class _PdfReader_1987 : PdfReader {
+            public _PdfReader_1987(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1794,12 +1793,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void IsEncryptedReadingNotCompletedTest() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader isEncryptedReader = new _PdfReader_2011(filename);
+            PdfReader isEncryptedReader = new _PdfReader_2010(filename);
             ReadingNotCompletedTest(isEncryptedReader);
         }
 
-        private sealed class _PdfReader_2011 : PdfReader {
-            public _PdfReader_2011(String baseArg1)
+        private sealed class _PdfReader_2010 : PdfReader {
+            public _PdfReader_2010(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1841,7 +1840,7 @@ namespace iText.Kernel.Pdf {
                 PdfReader pdfReader = new PdfReader(sourceFolder + "startxrefNotFound.pdf");
                 pdfReader.ReadXref();
             }
-            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>().With.Message.EqualTo(KernelExceptionMessageConstant.PDF_STARTXREF_NOT_FOUND))
+            , NUnit.Framework.Throws.InstanceOf<iText.IO.Exceptions.IOException>().With.Message.EqualTo(KernelExceptionMessageConstant.PDF_STARTXREF_NOT_FOUND))
 ;
         }
 
@@ -1852,8 +1851,9 @@ namespace iText.Kernel.Pdf {
             //Later in the test we will need to delete a file. Since we do not want to delete it from sources, we will
             // copy it to destination folder.
             FileInfo copiedFile = CopyFileForTest(fileName, copiedFileName);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => new PdfReader(fileName));
-            NUnit.Framework.Assert.AreEqual(iText.IO.IOException.PdfHeaderNotFound, e.Message);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => new PdfReader(fileName
+                ));
+            NUnit.Framework.Assert.AreEqual(iText.IO.Exceptions.IOException.PdfHeaderNotFound, e.Message);
             //This check is meaningfull only on Windows, since on other OS the fact of a stream being open doesn't
             // prevent the stream from being deleted.
             NUnit.Framework.Assert.IsTrue(FileUtil.DeleteFile(copiedFile));
@@ -1864,7 +1864,7 @@ namespace iText.Kernel.Pdf {
             String fileName = sourceFolder + "emptyPdf.pdf";
             using (Stream pdfStream = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
                 IRandomAccessSource randomAccessSource = new RandomAccessSourceFactory().CreateSource(pdfStream);
-                Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => new PdfReader(randomAccessSource
+                Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => new PdfReader(randomAccessSource
                     , new ReaderProperties()));
                 //An exception would be thrown, if stream is closed.
                 NUnit.Framework.Assert.AreEqual(-1, pdfStream.Read());

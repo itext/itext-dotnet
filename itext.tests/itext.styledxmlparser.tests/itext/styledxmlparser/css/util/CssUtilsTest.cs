@@ -197,7 +197,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INCORRECT_CHARACTER_SEQUENCE)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INCORRECT_CHARACTER_SEQUENCE)]
         public virtual void SplitStringWithCommaTest() {
             NUnit.Framework.Assert.AreEqual(new List<String>(), CssUtils.SplitStringWithComma(null));
             NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "value2", "value3"), CssUtils.SplitStringWithComma

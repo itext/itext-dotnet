@@ -444,7 +444,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest17() {
             String testName = "tableTest17.pdf";
             String outFileName = destinationFolder + testName;
@@ -467,7 +467,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest18() {
             String testName = "tableTest18.pdf";
             String outFileName = destinationFolder + testName;
@@ -491,7 +491,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest19() {
             String testName = "tableTest19.pdf";
             String outFileName = destinationFolder + testName;
@@ -516,7 +516,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest20() {
             String testName = "tableTest20.pdf";
             String outFileName = destinationFolder + testName;
@@ -538,7 +538,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest21() {
             String testName = "tableTest21.pdf";
             String outFileName = destinationFolder + testName;
@@ -836,7 +836,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void ToLargeElementWithKeepTogetherPropertyInTableTest01() {
             String testName = "toLargeElementWithKeepTogetherPropertyInTableTest01.pdf";
@@ -862,7 +862,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void ToLargeElementInTableTest01() {
             String testName = "toLargeElementInTableTest01.pdf";
@@ -973,7 +973,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void SplitTableOnShortPage() {
             String testName = "splitTableOnShortPage.pdf";
@@ -1090,7 +1090,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 3)]
         [NUnit.Framework.Test]
         public virtual void TableWithSetHeightProperties01() {
             String testName = "tableWithSetHeightProperties01.pdf";
@@ -1154,7 +1154,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 3)]
         [NUnit.Framework.Test]
         public virtual void TableWithSetHeightProperties02() {
             String testName = "tableWithSetHeightProperties02.pdf";
@@ -1331,7 +1331,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void BigFooterTest01() {
             String testName = "bigFooterTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -1349,7 +1349,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void BigFooterTest02() {
             String testName = "bigFooterTest02.pdf";
             String outFileName = destinationFolder + testName;
@@ -1449,7 +1449,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void TableWithIncompleteFooter() {
             String testName = "tableWithIncompleteFooter.pdf";
             String outFileName = destinationFolder + testName;
@@ -1468,8 +1468,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
-        [LogMessage(iText.IO.LogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void TableWithCustomRendererTest01() {
             String testName = "tableWithCustomRendererTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -1648,8 +1648,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void TableNothingResultTest() {
             String testName = "tableNothingResultTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -1774,7 +1774,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void FixedPositionTest01() {
             String testName = "fixedPositionTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -1804,7 +1804,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void NestedTableLostContent() {
             // When the test was created, only first line of text was displayed on the first page
             String testName = "nestedTableLostContent.pdf";
@@ -1829,7 +1829,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void NestedTableMinMaxWidthException() {
             // When the test was created, an exception was thrown due to min-max width calculations for an inner table.
             // At some point isOriginalNonSplitRenderer was true for a parent renderer but false for the inner table renderer
@@ -2036,7 +2036,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void SplitTableMinMaxWidthTest01() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document doc = new Document(pdfDoc);
@@ -2577,7 +2577,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InfiniteLoopOnUnfitCellAndBigRowspanTest() {
             String testName = "infiniteLoopOnUnfitCellAndBigRowspanTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -2604,8 +2604,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
-        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void FirstRowNotFitBigRowspanTest() {
             String testName = "firstRowNotFitBigRowspanTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -2675,7 +2675,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void BigRowSpanTooFarNothingTest() {
             // TODO DEVSIX-5250 The first column should be fully red
             String filename = "bigRowSpanTooFarNothingTest.pdf";

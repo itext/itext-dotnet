@@ -177,7 +177,7 @@ namespace iText.StyledXmlParser.Css {
             }
             else {
                 ILogger logger = ITextLogManager.GetLogger(typeof(ICssResolver));
-                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                     , cssDeclaration));
             }
         }

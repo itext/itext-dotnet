@@ -55,8 +55,8 @@ namespace iText.IO.Image {
                 // Test a more specific entry point
                 ImageDataFactory.CreateJpeg2000(UrlUtil.ToURL(sourceFolder + "WP_20140410_001.JP2"));
             }
-            catch (iText.IO.IOException e) {
-                NUnit.Framework.Assert.AreEqual(iText.IO.IOException.UnsupportedBoxSizeEqEq0, e.Message);
+            catch (iText.IO.Exceptions.IOException e) {
+                NUnit.Framework.Assert.AreEqual(iText.IO.Exceptions.IOException.UnsupportedBoxSizeEqEq0, e.Message);
             }
         }
 

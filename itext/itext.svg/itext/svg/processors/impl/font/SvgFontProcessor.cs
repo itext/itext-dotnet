@@ -78,7 +78,8 @@ namespace iText.Svg.Processors.Impl.Font {
                     }
                     if (!findSupportedSrc) {
                         ITextLogManager.GetLogger(typeof(iText.Svg.Processors.Impl.Font.SvgFontProcessor)).LogError(MessageFormatUtil
-                            .Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_FONT, fontFace));
+                            .Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_FONT, fontFace
+                            ));
                     }
                 }
             }

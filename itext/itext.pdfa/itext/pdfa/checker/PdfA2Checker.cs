@@ -57,7 +57,8 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
-using iText.Pdfa;
+using iText.Pdfa.Exceptions;
+using iText.Pdfa.Logs;
 
 namespace iText.Pdfa.Checker {
     /// <summary>
@@ -146,7 +147,7 @@ namespace iText.Pdfa.Checker {
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
                     PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new _CanvasGraphicsState_192(extGStateDict);
+                    CanvasGraphicsState gState = new _CanvasGraphicsState_191(extGStateDict);
                     CheckExtGState(gState, contentStream);
                 }
                 else {
@@ -158,8 +159,8 @@ namespace iText.Pdfa.Checker {
             base.CheckColor(color, currentColorSpaces, fill, contentStream);
         }
 
-        private sealed class _CanvasGraphicsState_192 : CanvasGraphicsState {
-            public _CanvasGraphicsState_192(PdfDictionary extGStateDict) {
+        private sealed class _CanvasGraphicsState_191 : CanvasGraphicsState {
+            public _CanvasGraphicsState_191(PdfDictionary extGStateDict) {
                 this.extGStateDict = extGStateDict;
  {
                     this.UpdateFromExtGState(new PdfExtGState(extGStateDict));

@@ -26,7 +26,7 @@ using System.Collections.Generic;
 
 namespace iText.Commons.Actions {
     /// <summary>Abstract class which defines events only for internal usage.</summary>
-    public abstract class AbstractITextEvent : IBaseEvent {
+    public abstract class AbstractITextEvent : IEvent {
         private const String ONLY_FOR_INTERNAL_USE = "AbstractITextEvent is only for internal usage.";
 
         private static readonly IDictionary<String, Object> INTERNAL_PACKAGES = new ConcurrentDictionary<String, Object

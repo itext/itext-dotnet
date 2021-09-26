@@ -31,7 +31,7 @@ using iText.Test.Attributes;
 namespace iText.Forms.Xfdf {
     public class XfdfReaderUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
         public virtual void XfdfSquareAnnotationWithoutFringe() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             pdfDocument.AddNewPage();

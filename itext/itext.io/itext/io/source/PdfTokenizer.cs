@@ -228,7 +228,7 @@ namespace iText.IO.Source {
             if (idx < 0) {
                 idx = str.IndexOf("%FDF-", StringComparison.Ordinal);
                 if (idx < 0) {
-                    throw new iText.IO.IOException(iText.IO.IOException.PdfHeaderNotFound, this);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PdfHeaderNotFound, this);
                 }
             }
             return idx;
@@ -239,7 +239,7 @@ namespace iText.IO.Source {
             String str = ReadString(1024);
             int idx = str.IndexOf("%PDF-", StringComparison.Ordinal);
             if (idx != 0) {
-                throw new iText.IO.IOException(iText.IO.IOException.PdfHeaderNotFound, this);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PdfHeaderNotFound, this);
             }
             return str.JSubstring(idx + 1, idx + 8);
         }
@@ -249,7 +249,7 @@ namespace iText.IO.Source {
             String str = ReadString(1024);
             int idx = str.IndexOf("%FDF-", StringComparison.Ordinal);
             if (idx != 0) {
-                throw new iText.IO.IOException(iText.IO.IOException.FdfStartxrefNotFound, this);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.FdfStartxrefNotFound, this);
             }
         }
 
@@ -270,7 +270,7 @@ namespace iText.IO.Source {
                 // 9 = "startxref".length()
                 pos = pos - arrLength + 9;
             }
-            throw new iText.IO.IOException(iText.IO.IOException.PdfStartxrefNotFound, this);
+            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PdfStartxrefNotFound, this);
         }
 
         public virtual void NextValidToken() {
@@ -320,7 +320,7 @@ namespace iText.IO.Source {
                                     //warn about incorrect reference number
                                     //Exception: NumberFormatException for java, FormatException or OverflowException for .NET
                                     ILogger logger = ITextLogManager.GetLogger(typeof(PdfTokenizer));
-                                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.Commons.Utils.JavaUtil.GetStringForBytes
+                                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.Commons.Utils.JavaUtil.GetStringForBytes
                                         (n1), iText.Commons.Utils.JavaUtil.GetStringForBytes(n2)));
                                     reference = -1;
                                     generation = 0;
@@ -395,7 +395,7 @@ namespace iText.IO.Source {
                 case '>': {
                     ch = file.Read();
                     if (ch != '>') {
-                        ThrowError(iText.IO.IOException.GtNotExpected);
+                        ThrowError(iText.IO.Exceptions.IOException.GtNotExpected);
                     }
                     type = PdfTokenizer.TokenType.EndDic;
                     break;
@@ -437,7 +437,7 @@ namespace iText.IO.Source {
                         v1 = file.Read();
                     }
                     if (v1 < 0 || v2 < 0) {
-                        ThrowError(iText.IO.IOException.ErrorReadingString);
+                        ThrowError(iText.IO.Exceptions.IOException.ErrorReadingString);
                     }
                     break;
                 }
@@ -483,7 +483,7 @@ namespace iText.IO.Source {
                         outBuf.Append(ch);
                     }
                     if (ch == -1) {
-                        ThrowError(iText.IO.IOException.ErrorReadingString);
+                        ThrowError(iText.IO.Exceptions.IOException.ErrorReadingString);
                     }
                     break;
                 }
@@ -766,8 +766,8 @@ namespace iText.IO.Source {
         /// <param name="error">message.</param>
         /// <param name="messageParams">error params.</param>
         public virtual void ThrowError(String error, params Object[] messageParams) {
-            throw new iText.IO.IOException(iText.IO.IOException.ErrorAtFilePointer1, new iText.IO.IOException(error).SetMessageParams
-                (messageParams)).SetMessageParams(file.GetPosition());
+            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ErrorAtFilePointer1, new iText.IO.Exceptions.IOException
+                (error).SetMessageParams(messageParams)).SetMessageParams(file.GetPosition());
         }
 
         /// <summary>

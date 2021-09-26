@@ -77,7 +77,7 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void BlockWithSetHeightProperties01() {
             String outFileName = destinationFolder + "blockWithSetHeightProperties01.pdf";
@@ -125,7 +125,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void BlockWithSetHeightProperties02() {
             String outFileName = destinationFolder + "blockWithSetHeightProperties02.pdf";
@@ -177,7 +177,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 3)]
         [NUnit.Framework.Test]
         public virtual void BlockWithSetHeightProperties03() {
             //Relative height declaration tests
@@ -260,7 +260,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 3)]
         [NUnit.Framework.Test]
         public virtual void BlockWithSetHeightProperties04() {
             //Relative height declaration tests

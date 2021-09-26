@@ -46,7 +46,8 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
-using iText.Pdfa;
+using iText.Pdfa.Exceptions;
+using iText.Pdfa.Logs;
 
 namespace iText.Pdfa.Checker {
     /// <summary>

@@ -1493,8 +1493,8 @@ namespace iText.Kernel.Utils {
                     PdfNumber outLeftover = FlattenNumTree(outNumTree, null, outItems);
                     PdfNumber cmpLeftover = FlattenNumTree(cmpNumTree, null, cmpItems);
                     if (outLeftover != null) {
-                        ITextLogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).LogWarning(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
-                            );
+                        ITextLogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).LogWarning(iText.IO.Logs.IoLogMessageConstant
+                            .NUM_TREE_SHALL_NOT_END_WITH_KEY);
                         if (cmpLeftover == null) {
                             if (compareResult != null && currentPath != null) {
                                 compareResult.AddError(currentPath, "Number tree unexpectedly ends with a key");
@@ -1503,8 +1503,8 @@ namespace iText.Kernel.Utils {
                         }
                     }
                     if (cmpLeftover != null) {
-                        ITextLogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).LogWarning(iText.IO.LogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY
-                            );
+                        ITextLogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).LogWarning(iText.IO.Logs.IoLogMessageConstant
+                            .NUM_TREE_SHALL_NOT_END_WITH_KEY);
                         if (outLeftover == null) {
                             if (compareResult != null && currentPath != null) {
                                 compareResult.AddError(currentPath, "Number tree was expected to end with a key (although it is invalid according to the specification), but ended with a value"

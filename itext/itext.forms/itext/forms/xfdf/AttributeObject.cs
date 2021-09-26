@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Forms.Exceptions;
 
 namespace iText.Forms.Xfdf {
     /// <summary>Represents the attribute of any XFDF element.</summary>

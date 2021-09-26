@@ -126,7 +126,8 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, Count = 1)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, 
+            Count = 1)]
         public virtual void NoFillRectangleTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "noFillRectangle");
         }

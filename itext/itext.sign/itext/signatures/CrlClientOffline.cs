@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.X509;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>

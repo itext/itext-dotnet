@@ -26,7 +26,7 @@ using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.Commons.Utils;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;

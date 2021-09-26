@@ -67,8 +67,8 @@ namespace iText.StyledXmlParser.Css.Util {
         public virtual void ParseResolutionInvalidUnit() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssDimensionParsingUtils
                 .ParseResolution("10incorrectUnit"));
-            NUnit.Framework.Assert.AreEqual(iText.StyledXmlParser.LogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE, 
-                e.Message);
+            NUnit.Framework.Assert.AreEqual(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -115,7 +115,8 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 1)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+            , Count = 1)]
         public virtual void ParseAbsoluteLengthFromUnknownType() {
             String value = "10pateekes";
             float actual = CssDimensionParsingUtils.ParseAbsoluteLength(value, "pateekes");

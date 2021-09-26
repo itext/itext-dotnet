@@ -45,8 +45,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
@@ -127,7 +127,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX, Count = 1)]
         public virtual void TestNoninvertibleMatrix() {
             String fileName = "noninvertibleMatrix.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + fileName));

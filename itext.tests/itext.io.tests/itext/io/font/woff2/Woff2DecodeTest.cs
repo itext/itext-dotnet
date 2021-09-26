@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.IO.Exceptions;
 using iText.Test;
 
 namespace iText.IO.Font.Woff2 {

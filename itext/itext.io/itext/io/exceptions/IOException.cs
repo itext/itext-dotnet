@@ -43,11 +43,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Exceptions;
 using iText.Commons.Utils;
 
-namespace iText.IO {
+namespace iText.IO.Exceptions {
     /// <summary>Exception class for exceptions in io module.</summary>
-    public class IOException : Exception {
+    public class IOException : ITextException {
         public const String AllFillBitsPrecedingEolCodeMustBe0 = "All fill bits preceding eol code must be 0.";
 
         public const String BadEndiannessTag0x4949Or0x4d4d = "Bad endianness tag: 0x4949 or 0x4d4d.";
@@ -324,7 +325,7 @@ namespace iText.IO {
         /// <summary>Sets additional params for Exception message.</summary>
         /// <param name="messageParams">additional params.</param>
         /// <returns>object itself.</returns>
-        public virtual iText.IO.IOException SetMessageParams(params Object[] messageParams) {
+        public virtual iText.IO.Exceptions.IOException SetMessageParams(params Object[] messageParams) {
             this.messageParams = new List<Object>();
             this.messageParams.AddAll(messageParams);
             return this;

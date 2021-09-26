@@ -186,8 +186,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                 mappingRole += "not standard role";
             }
             ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.RootTagNormalizer));
-            logger.LogWarning(String.Format(iText.IO.LogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING, origRootTagNs, mappingRole
-                ));
+            logger.LogWarning(String.Format(iText.IO.Logs.IoLogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING, origRootTagNs
+                , mappingRole));
         }
     }
 }

@@ -344,7 +344,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_DESTINATION_TYPE)]
         public virtual void RemoteGoToNotValidExplicitDestinationTest() {
             String cmpFile = sourceFolder + "cmp_remoteGoToNotValidExplicitDestinationTest.pdf";
             String outFile = destinationFolder + "remoteGoToNotValidExplicitDestinationTest.pdf";

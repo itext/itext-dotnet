@@ -78,7 +78,8 @@ namespace iText.IO.Font {
         /// <param name="ttcPath">the path of the collection</param>
         public TrueTypeCollection(String ttcPath) {
             if (!FileUtil.FileExists(ttcPath)) {
-                throw new iText.IO.IOException(iText.IO.IOException.FontFile1NotFound).SetMessageParams(ttcPath);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.FontFile1NotFound).SetMessageParams
+                    (ttcPath);
             }
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(ttcPath));
             this.ttcPath = ttcPath;
@@ -90,7 +91,8 @@ namespace iText.IO.Font {
         /// <returns>TrueTypeFont</returns>
         public virtual FontProgram GetFontByTccIndex(int ttcIndex) {
             if (ttcIndex > TTCSize - 1) {
-                throw new iText.IO.IOException(iText.IO.IOException.TtcIndexDoesNotExistInThisTtcFile);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TtcIndexDoesNotExistInThisTtcFile
+                    );
             }
             if (ttcPath != null) {
                 return FontProgramFactory.CreateFont(ttcPath, ttcIndex, cached);
@@ -129,7 +131,7 @@ namespace iText.IO.Font {
         private void InitFontSize() {
             String mainTag = raf.ReadString(4, PdfEncodings.WINANSI);
             if (!mainTag.Equals("ttcf")) {
-                throw new iText.IO.IOException(iText.IO.IOException.InvalidTtcFile);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidTtcFile);
             }
             raf.SkipBytes(4);
             TTCSize = raf.ReadInt();

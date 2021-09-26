@@ -235,7 +235,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
-                logger.LogWarning(iText.IO.LogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
             }
             return true;
         }

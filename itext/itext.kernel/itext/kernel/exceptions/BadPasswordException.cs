@@ -1,7 +1,8 @@
 /*
+
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
-Authors: iText Software.
+Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -42,13 +43,26 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Forms.Xfdf {
-    public class AttributeNotFoundException : Exception {
-        /// <summary>The exception thrown when the attribute with given name is not found in the object attributes list.
-        ///     </summary>
-        /// <param name="attribute">the name of missing attribute.</param>
-        public AttributeNotFoundException(String attribute)
-            : base("Required attribute " + attribute + " is not found") {
+namespace iText.Kernel.Exceptions {
+    /// <summary>Bad password exception.</summary>
+    public class BadPasswordException : PdfException {
+        public const String PdfReaderNotOpenedWithOwnerPassword = "PdfReader is not opened with owner password";
+
+        /// <summary>Creates a new BadPasswordException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
+        public BadPasswordException(String message, Exception cause)
+            : base(message, cause) {
+        }
+
+        /// <summary>Creates a new BadPasswordException.</summary>
+        /// <param name="message">the detail message.</param>
+        public BadPasswordException(String message)
+            : base(message) {
         }
     }
 }

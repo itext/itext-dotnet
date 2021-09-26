@@ -149,8 +149,8 @@ namespace iText.Signatures {
                     LOGGER.LogInformation("Added CRL found at: " + urlt);
                 }
                 catch (Exception e) {
-                    LOGGER.LogInformation(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_DISTRIBUTION_POINT, e.Message
-                        ));
+                    LOGGER.LogInformation(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_DISTRIBUTION_POINT
+                        , e.Message));
                 }
             }
             return ar;

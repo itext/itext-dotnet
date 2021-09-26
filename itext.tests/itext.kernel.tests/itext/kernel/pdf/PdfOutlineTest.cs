@@ -44,7 +44,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
@@ -145,7 +144,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 36)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 36)]
         public virtual void RemovePageWithOutlinesTest() {
             // TODO DEVSIX-1643: destinations are not removed along with page
             String filename = "removePageWithOutlinesTest.pdf";
@@ -265,7 +264,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void CopyPagesWithOutlines() {
             PdfReader reader = new PdfReader(SOURCE_FOLDER + "iphone_user_guide.pdf");
             PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "copyPagesWithOutlines01.pdf");

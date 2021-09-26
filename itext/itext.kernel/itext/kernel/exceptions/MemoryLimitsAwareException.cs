@@ -42,18 +42,34 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.IO.Util {
-    /// <summary>This file is a helper class for internal usage only.</summary>
-    /// <remarks>
-    /// This file is a helper class for internal usage only.
-    /// Be aware that its API and functionality may be changed in future.
-    /// </remarks>
-    public sealed class ExceptionUtil {
-        private ExceptionUtil() {
+namespace iText.Kernel.Exceptions {
+    /// <summary>Exception class for exceptions occurred during decompressed pdf streams processing.</summary>
+    public class MemoryLimitsAwareException : PdfException {
+        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
+        /// <param name="message">the detail message.</param>
+        public MemoryLimitsAwareException(String message)
+            : base(message) {
         }
 
-        public static bool IsOutOfRange(Exception e) {
-            return e is IndexOutOfRangeException || e is ArgumentOutOfRangeException;
+        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
+        public MemoryLimitsAwareException(Exception cause)
+            : this(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION, cause) {
+        }
+
+        /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
+        public MemoryLimitsAwareException(String message, Exception cause)
+            : base(message, cause) {
         }
     }
 }

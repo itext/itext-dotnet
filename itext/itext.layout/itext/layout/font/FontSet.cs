@@ -148,7 +148,7 @@ namespace iText.Layout.Font {
             }
             if (fontProgram is Type3Font) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Font.FontSet));
-                logger.LogError(iText.IO.LogMessageConstant.TYPE3_FONT_CANNOT_BE_ADDED);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_CANNOT_BE_ADDED);
                 return false;
             }
             FontInfo fi = FontInfo.Create(fontProgram, encoding, alias, unicodeRange);

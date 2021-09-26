@@ -42,8 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Image;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -151,7 +151,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 1)]
         public virtual void FixedPositioningTest03() {
             String outFileName = destinationFolder + "fixedPositioningTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest03.pdf";
@@ -173,7 +173,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 1)]
         public virtual void FixedPositioningTest04() {
             String outFileName = destinationFolder + "fixedPositioningTest04.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest04.pdf";

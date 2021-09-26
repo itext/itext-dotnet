@@ -62,7 +62,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfNoFields() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFields.pdf", 
                 FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfNoFields.pdf", 
@@ -78,7 +78,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
         public virtual void XfdfNoFieldsNoFAttributes() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFieldsNoFAttributes.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfNoFieldsNoFAttributes.pdf"
@@ -94,7 +94,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfNoFieldsNoIdsAttributes() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFieldsNoIdsAttributes.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfNoFieldsNoIdsAttributes.pdf"
@@ -110,7 +110,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfWithFieldsWithValue() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfWithFieldsWithValue.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfWithFieldsWithValue.pdf"
@@ -126,8 +126,8 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT)]
         public virtual void XfdfValueRichText() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfValueRichText.pdf"
@@ -144,8 +144,8 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT, Count = 3)]
         public virtual void XfdfHierarchyFieldsTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "hierarchy_fields.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "hierarchy_fields.pdf"
@@ -161,8 +161,8 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT, Count = 3)]
         public virtual void XfdfWithFieldsWithValueParentAndChild() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfWithFieldsWithValueParentAndChild.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfWithFieldsWithValueParentAndChild.pdf"
@@ -178,7 +178,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE)]
         public virtual void XfdfAnnotationHighlightedText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationHighlightedText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationHighlightedText.pdf"
@@ -194,7 +194,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationUnderlineText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlineText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationUnderlineText.pdf"
@@ -210,7 +210,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationUnderlineTextRectWithTwoCoords() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf"
@@ -226,7 +226,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationUnderlinePopupAllFlags() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf"
@@ -242,7 +242,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationText.pdf"
@@ -258,7 +258,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationStrikeout() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationStrikeout.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationStrikeout.pdf"
@@ -274,7 +274,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationSquigglyText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationSquigglyText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationSquigglyText.pdf"
@@ -290,9 +290,9 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 2)]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED)]
         public virtual void XfdfAnnotationLine() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationLine.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationLine.pdf"
@@ -308,7 +308,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationCircle() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCircle.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCircle.pdf"
@@ -324,7 +324,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationSquare() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationSquare.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationSquare.pdf"
@@ -340,7 +340,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationCaret() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCaret.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCaret.pdf"
@@ -356,7 +356,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationPolygon() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationPolygon.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationPolygon.pdf"
@@ -372,7 +372,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationPolyline() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationPolyline.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationPolyline.pdf"
@@ -388,7 +388,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationStamp() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationStamp.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationStamp.pdf"
@@ -404,7 +404,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationInk() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationInk.pdf"
@@ -421,7 +421,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationFreeText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationFreeText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationFreeText.pdf"
@@ -437,7 +437,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationFileAttachment() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationFileAttachment.pdf"
@@ -454,7 +454,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationSound() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationSound.pdf"
@@ -471,7 +471,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationLink() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationLink.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationLink.pdf"
@@ -487,7 +487,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationRedact() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationRedact.pdf"
@@ -504,7 +504,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationProjection() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationProjection.pdf"
@@ -521,7 +521,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationLinkAllParams() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationLinkAllParams.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationLinkAllParams.pdf"
@@ -537,8 +537,8 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE)]
         public virtual void XfdfAnnotationReplaceText() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationReplaceText.pdf"
@@ -555,9 +555,9 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 5)]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 5)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED)]
         public virtual void XfdfAnnotationArrow() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationArrow.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationArrow.pdf"
@@ -573,7 +573,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationCallout() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCallout.pdf"
@@ -590,8 +590,8 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 3)]
         public virtual void XfdfAnnotationCloud() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCloud.pdf"
@@ -608,8 +608,8 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 3)]
         public virtual void XfdfAnnotationCloudNested() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCloudNested.pdf"
@@ -626,7 +626,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationTextBoxAllParams() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationTextBoxAllParams.pdf"
@@ -643,7 +643,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfJavaScriptForms() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfJavaScriptForms.pdf"
@@ -660,7 +660,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfFormsFieldParams() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfFormsFieldParams.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfFormsFieldParams.pdf"
@@ -676,7 +676,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationAttrColor() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationAttrColor.pdf"
@@ -693,7 +693,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationAttrFlagsOpacity() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationAttrFlagsOpacity.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationAttrFlagsOpacity.pdf"
@@ -709,8 +709,8 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 4)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 4)]
         public virtual void XfdfAnnotationAttrTitle() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationAttrTitle.pdf"
@@ -727,7 +727,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfReferenceFor3DMeasurement() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DMeasurement.pdf"
@@ -744,7 +744,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfReferenceFor3DAngular() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DAngular.pdf"
@@ -761,7 +761,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfReferenceFor3DRadial() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DRadial.pdf"
@@ -778,7 +778,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfSubelementContents() {
             //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSubelementContents.pdf"
@@ -795,7 +795,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfSubelementOverlayAppearance() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSubelementOverlayAppearance.pdf"
@@ -812,7 +812,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfButton() {
             //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfButton.pdf", FileMode.Open
@@ -829,7 +829,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfCheckBox() {
             //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCheckBox.pdf", 
@@ -846,7 +846,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfList() {
             //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfList.pdf", FileMode.Open
@@ -863,7 +863,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfDropDown() {
             //TODO DEVSIX-3215 Support richtext
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfDropDown.pdf", 

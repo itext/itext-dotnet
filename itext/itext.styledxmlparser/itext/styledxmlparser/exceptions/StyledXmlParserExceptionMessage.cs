@@ -20,8 +20,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-namespace iText.StyledXmlParser.Resolver.Resource {
-    /// <summary>Thrown when the limit on the number of bytes read was violated.</summary>
-    public class ReadingByteLimitException : System.IO.IOException {
+using System;
+
+namespace iText.StyledXmlParser.Exceptions {
+    /// <summary>Class containing constants to be used in exceptions in the SXP module.</summary>
+    public sealed class StyledXmlParserExceptionMessage {
+        public const String READING_BYTE_LIMIT_MUST_NOT_BE_LESS_ZERO = "The reading byte limit argument must not be less than zero.";
+
+        private StyledXmlParserExceptionMessage() {
+        }
     }
 }

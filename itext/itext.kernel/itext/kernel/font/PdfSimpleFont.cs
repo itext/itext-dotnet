@@ -309,8 +309,8 @@ namespace iText.Kernel.Font {
                 else {
                     ILogger logger = ITextLogManager.GetLogger(this.GetType());
                     if (logger.IsEnabled(LogLevel.Warning)) {
-                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, code
-                            ));
+                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE
+                            , code));
                     }
                     allCodesDecoded = false;
                 }

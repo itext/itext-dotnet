@@ -20,11 +20,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Data;
 using iText.Commons.Ecosystem;
-using iText.Commons.Exceptions;
 using iText.Test;
 
 namespace iText.Commons.Actions {
@@ -45,10 +43,7 @@ namespace iText.Commons.Actions {
             AbstractContextBasedITextEventTest.BasicAbstractContextBasedITextEvent e = new AbstractContextBasedITextEventTest.BasicAbstractContextBasedITextEvent
                 (CommonsProductData.GetInstance(), metaInfoBefore);
             NUnit.Framework.Assert.AreSame(metaInfoBefore, e.GetMetaInfo());
-            Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => e.SetMetaInfo(
-                metaInfoAfter));
-            NUnit.Framework.Assert.AreEqual(CommonsExceptionMessageConstant.META_INFO_SHOULDNT_BE_NULL, exception.Message
-                );
+            NUnit.Framework.Assert.IsFalse(e.SetMetaInfo(metaInfoAfter));
         }
 
         private class BasicAbstractContextBasedITextEvent : AbstractContextBasedITextEvent {

@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Util;
+using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
     /// <summary>
@@ -91,7 +92,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <returns>the limited input stream or null if the URL was filtered</returns>
         public virtual Stream GetInputStreamByUrl(Uri url) {
             if (!UrlFilter(url)) {
-                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
+                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
                     , url));
                 return null;
             }
@@ -114,7 +115,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 }
             }
             catch (ReadingByteLimitException) {
-                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT
+                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT
                     , url, resourceSizeByteLimit));
             }
             return null;

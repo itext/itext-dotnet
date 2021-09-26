@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Image;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
@@ -350,8 +350,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS, Count
-             = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS
+            , Count = 1)]
         public virtual void DocWithInvalidMapping07() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping07.pdf", 
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
@@ -391,7 +391,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
         public virtual void DocWithInvalidMapping09() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping09.pdf", 
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
@@ -406,7 +406,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
         public virtual void DocWithInvalidMapping10() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping10.pdf", 
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));

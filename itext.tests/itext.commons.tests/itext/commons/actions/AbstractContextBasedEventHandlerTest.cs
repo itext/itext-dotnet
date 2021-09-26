@@ -76,7 +76,7 @@ namespace iText.Commons.Actions {
             }
         }
 
-        private class UnknownEvent : IBaseEvent {
+        private class UnknownEvent : IEvent {
         }
     }
 }

@@ -74,7 +74,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
             )]
         public virtual void CanvasNoPageLinkTest() {
             String testName = "canvasNoPageLinkTest";
@@ -132,9 +132,9 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
             )]
-        [LogMessage(iText.IO.LogMessageConstant.PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED)]
         public virtual void CanvasWithPageEnableTaggingTest02() {
             String testName = "canvasWithPageEnableTaggingTest02";
             String @out = DESTINATION_FOLDER + testName + ".pdf";
@@ -176,7 +176,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         //TODO: DEVSIX-4820 (discuss the displaying of element with absolute position)
-        [LogMessage(iText.IO.LogMessageConstant.CANVAS_ALREADY_FULL_ELEMENT_WILL_BE_SKIPPED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CANVAS_ALREADY_FULL_ELEMENT_WILL_BE_SKIPPED)]
         public virtual void ParentElemWithAbsolPositionKidNotSuitCanvasTest() {
             String testName = "parentElemWithAbsolPositionKidNotSuitCanvas";
             String @out = DESTINATION_FOLDER + testName + ".pdf";

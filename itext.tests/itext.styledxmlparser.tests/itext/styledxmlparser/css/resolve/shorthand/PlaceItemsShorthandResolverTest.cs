@@ -69,7 +69,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, Count = 3)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, 
+            Count = 3)]
         public virtual void ContainsInitialOrInheritOrUnsetShorthandTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String containsInitialShorthand = "start initial ";
@@ -84,7 +85,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY, Count = 2)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+            , Count = 2)]
         public virtual void EmptyShorthandTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String emptyShorthand = "";
@@ -108,7 +110,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithOneInvalidAlignItemsWordTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "legacy";
@@ -117,7 +119,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithOneInvalidWordTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "invalid";
@@ -152,7 +154,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoWordsAndFirstWordIsInvalidTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "invalid self-end";
@@ -161,7 +163,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoWordsAndSecondWordIsInvalidTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "flex-start invalid";
@@ -182,7 +184,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithOneWordAlignItemsAndInvalidTwoWordsJustifyItemsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "flex-start legacy invalid";
@@ -203,7 +205,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoWordsAlignItemsAndInvalidOneWordJustifyItemsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "unsafe flex-start invalid";
@@ -212,7 +214,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithThreeWordsAndInvalidAlignItemsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "invalid safe self-end";
@@ -233,7 +235,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoWordsAlignItemsAndInvalidTwoWordsJustifyItemsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "first baseline invalid center";
@@ -242,7 +244,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithInvalidTwoWordsAlignItemsAndTwoWordsJustifyItemsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "invalid baseline legacy left";
@@ -251,7 +253,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithFiveWordsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "last baseline unsafe safe center";

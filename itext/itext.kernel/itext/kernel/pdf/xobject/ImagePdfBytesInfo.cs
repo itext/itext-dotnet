@@ -94,26 +94,28 @@ namespace iText.Kernel.Pdf.Xobject {
             MemoryStream ms = new MemoryStream();
             if (pngColorType < 0) {
                 if (bpc != 8) {
-                    throw new iText.IO.IOException(iText.IO.IOException.ColorDepthIsNotSupported).SetMessageParams(bpc);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ColorDepthIsNotSupported).SetMessageParams
+                        (bpc);
                 }
                 if (colorspace is PdfArray) {
                     PdfArray ca = (PdfArray)colorspace;
                     PdfObject tyca = ca.Get(0);
                     if (!PdfName.ICCBased.Equals(tyca)) {
-                        throw new iText.IO.IOException(iText.IO.IOException.ColorSpaceIsNotSupported).SetMessageParams(tyca.ToString
-                            ());
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported).SetMessageParams
+                            (tyca.ToString());
                     }
                     PdfStream pr = (PdfStream)ca.Get(1);
                     int n = pr.GetAsNumber(PdfName.N).IntValue();
                     if (n != 4) {
-                        throw new iText.IO.IOException(iText.IO.IOException.NValueIsNotSupported).SetMessageParams(n);
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.NValueIsNotSupported).SetMessageParams
+                            (n);
                     }
                     icc = pr.GetBytes();
                 }
                 else {
                     if (!PdfName.DeviceCMYK.Equals(colorspace)) {
-                        throw new iText.IO.IOException(iText.IO.IOException.ColorSpaceIsNotSupported).SetMessageParams(colorspace.
-                            ToString());
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported).SetMessageParams
+                            (colorspace.ToString());
                     }
                 }
                 stride = 4 * width;

@@ -41,10 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Commons.Exceptions;
 
 namespace iText.StyledXmlParser.Exceptions {
     /// <summary>Runtime exception that gets thrown if something goes wrong in the HTML to PDF conversion.</summary>
-    public class StyledXMLParserException : Exception {
+    public class StyledXMLParserException : ITextException {
         /// <summary>The Constant INVALID_GRADIENT_VALUE.</summary>
         public const String INVALID_GRADIENT_FUNCTION_ARGUMENTS_LIST = "Invalid gradient function arguments list: {0}";
 

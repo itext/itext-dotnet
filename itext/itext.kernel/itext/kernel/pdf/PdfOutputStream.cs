@@ -46,7 +46,6 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Filters;
@@ -182,7 +181,7 @@ namespace iText.Kernel.Pdf {
                 PdfObject value = pdfDictionary.Get(key, false);
                 if (value == null) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE
                         , key));
                     value = PdfNull.PDF_NULL;
                 }
@@ -212,14 +211,14 @@ namespace iText.Kernel.Pdf {
             }
             if (indirectReference.IsFree()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
-                logger.LogError(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE);
                 Write(PdfNull.PDF_NULL);
             }
             else {
                 if (indirectReference.refersTo == null && (indirectReference.CheckState(PdfObject.MODIFIED) || indirectReference
                     .GetReader() == null || !(indirectReference.GetOffset() > 0 || indirectReference.GetIndex() >= 0))) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
-                    logger.LogError(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT
                         );
                     Write(PdfNull.PDF_NULL);
                 }

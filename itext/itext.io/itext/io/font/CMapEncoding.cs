@@ -107,7 +107,8 @@ namespace iText.IO.Font {
                 this.codeSpaceRanges = cid2Code.GetCodeSpaceRanges();
             }
             catch (System.IO.IOException) {
-                ITextLogManager.GetLogger(GetType()).LogError(iText.IO.LogMessageConstant.FAILED_TO_PARSE_ENCODING_STREAM);
+                ITextLogManager.GetLogger(GetType()).LogError(iText.IO.Logs.IoLogMessageConstant.FAILED_TO_PARSE_ENCODING_STREAM
+                    );
             }
         }
 

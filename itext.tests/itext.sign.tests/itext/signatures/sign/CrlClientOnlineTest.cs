@@ -122,7 +122,8 @@ namespace iText.Signatures.Sign {
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://www.example.com/crl/test.crl", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://www.example.com/crl/test.crl", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO
+            )]
         public virtual void UnreachableCrlDistributionPointTest() {
             CrlClientOnline crlClientOnline = new CrlClientOnline("http://www.example.com/crl/test.crl");
             X509Certificate checkCert = new X509MockCertificate();
@@ -135,7 +136,8 @@ namespace iText.Signatures.Sign {
         [LogMessage("Looking for CRL for certificate ", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Found CRL url: http://www.example.com/crl/test.crl", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://www.example.com/crl/test.crl", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO
+            )]
         public virtual void UnreachableCrlDistributionPointFromCertChainTest() {
             CrlClientOnline crlClientOnline = new CrlClientOnline();
             X509Certificate checkCert = new X509MockCertificate();

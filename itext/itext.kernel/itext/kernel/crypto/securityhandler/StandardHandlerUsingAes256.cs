@@ -50,7 +50,6 @@ using Org.BouncyCastle.Security;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -245,7 +244,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     ) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Crypto.Securityhandler.StandardHandlerUsingAes256
                         ));
-                    logger.LogError(iText.IO.LogMessageConstant.ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY
                         );
                 }
                 this.permissions = permissionsDecoded;

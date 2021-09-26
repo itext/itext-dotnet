@@ -203,14 +203,14 @@ namespace iText.Layout.Renderer {
             UnitValue leftMargin = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
             if (!leftMargin.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_LEFT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_LEFT));
             }
             UnitValue topMargin = this.GetPropertyAsUnitValue(Property.MARGIN_TOP);
             if (!topMargin.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_TOP));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_TOP));
             }
             if (0 != leftMargin.GetValue() || 0 != topMargin.GetValue()) {
                 TranslateImage(leftMargin.GetValue(), topMargin.GetValue(), t);
@@ -248,7 +248,7 @@ namespace iText.Layout.Renderer {
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                     , "Drawing won't be performed."));
                 return;
             }

@@ -43,8 +43,6 @@ address: sales@itextpdf.com
 */
 using Microsoft.Extensions.Logging;
 using iText.Commons;
-using iText.Kernel;
-using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
@@ -168,7 +166,7 @@ namespace iText.Kernel.Pdf {
                 if (document != null) {
                     if (document.IsAppendMode() && !IsModified()) {
                         ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
-                        logger.LogInformation(iText.IO.LogMessageConstant.PDF_OBJECT_FLUSHING_NOT_PERFORMED);
+                        logger.LogInformation(iText.IO.Logs.IoLogMessageConstant.PDF_OBJECT_FLUSHING_NOT_PERFORMED);
                         return;
                     }
                     document.CheckIsoConformance(this, IsoKey.PDF_OBJECT);
@@ -370,7 +368,7 @@ namespace iText.Kernel.Pdf {
             // In case ForbidRelease flag is set, release will not be performed.
             if (IsReleaseForbidden()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
-                logger.LogWarning(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET);
             }
             else {
                 if (indirectReference != null && indirectReference.GetReader() != null && !indirectReference.CheckState(FLUSHED

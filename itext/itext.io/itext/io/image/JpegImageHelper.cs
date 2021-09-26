@@ -120,7 +120,7 @@ namespace iText.IO.Image {
                 ProcessParameters(jpegStream, errorID, image);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.JpegImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.JpegImageException, e);
             }
             finally {
                 if (jpegStream != null) {
@@ -153,7 +153,7 @@ namespace iText.IO.Image {
                     image.SetProfile(IccProfile.GetInstance(ficc, image.GetColorEncodingComponentsNumber()));
                 }
                 catch (Exception e) {
-                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED
+                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED
                         , e.GetType().Name, e.Message));
                 }
             }
@@ -176,14 +176,15 @@ namespace iText.IO.Image {
         private static void ProcessParameters(Stream jpegStream, String errorID, ImageData image) {
             byte[][] icc = null;
             if (jpegStream.Read() != 0xFF || jpegStream.Read() != 0xD8) {
-                throw new iText.IO.IOException(iText.IO.IOException._1IsNotAValidJpegFile).SetMessageParams(errorID);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1IsNotAValidJpegFile).SetMessageParams
+                    (errorID);
             }
             bool firstPass = true;
             int len;
             while (true) {
                 int v = jpegStream.Read();
                 if (v < 0) {
-                    throw new iText.IO.IOException(iText.IO.IOException.PrematureEofWhileReadingJpeg);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PrematureEofWhileReadingJpeg);
                 }
                 if (v == 0xFF) {
                     int marker = jpegStream.Read();
@@ -197,7 +198,8 @@ namespace iText.IO.Image {
                         byte[] bcomp = new byte[JFIF_ID.Length];
                         int r = jpegStream.Read(bcomp);
                         if (r != bcomp.Length) {
-                            throw new iText.IO.IOException(iText.IO.IOException._1CorruptedJfifMarker).SetMessageParams(errorID);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1CorruptedJfifMarker).SetMessageParams
+                                (errorID);
                         }
                         bool found = true;
                         for (int k = 0; k < bcomp.Length; ++k) {
@@ -349,7 +351,8 @@ namespace iText.IO.Image {
                     if (markertype == VALID_MARKER) {
                         StreamUtil.Skip(jpegStream, 2);
                         if (jpegStream.Read() != 0x08) {
-                            throw new iText.IO.IOException(iText.IO.IOException._1MustHave8BitsPerComponent).SetMessageParams(errorID);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1MustHave8BitsPerComponent).SetMessageParams
+                                (errorID);
                         }
                         image.SetHeight(GetShort(jpegStream));
                         image.SetWidth(GetShort(jpegStream));
@@ -359,8 +362,8 @@ namespace iText.IO.Image {
                     }
                     else {
                         if (markertype == UNSUPPORTED_MARKER) {
-                            throw new iText.IO.IOException(iText.IO.IOException._1UnsupportedJpegMarker2).SetMessageParams(errorID, JavaUtil.IntegerToString
-                                (marker));
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1UnsupportedJpegMarker2).SetMessageParams
+                                (errorID, JavaUtil.IntegerToString(marker));
                         }
                         else {
                             if (markertype != NOPARAM_MARKER) {

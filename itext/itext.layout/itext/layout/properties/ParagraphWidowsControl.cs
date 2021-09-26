@@ -135,12 +135,12 @@ namespace iText.Layout.Properties {
             ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Properties.ParagraphWidowsControl));
             if (widowsRenderer.GetOccupiedArea() != null && widowsRenderer.GetLines() != null) {
                 int pageNumber = widowsRenderer.GetOccupiedArea().GetPageNumber();
-                String warnText = MessageFormatUtil.Format(iText.IO.LogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED, pageNumber
-                    , minWidows, widowsRenderer.GetLines().Count, message);
+                String warnText = MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED, 
+                    pageNumber, minWidows, widowsRenderer.GetLines().Count, message);
                 logger.LogWarning(warnText);
             }
             else {
-                logger.LogWarning(iText.IO.LogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD);
             }
         }
     }

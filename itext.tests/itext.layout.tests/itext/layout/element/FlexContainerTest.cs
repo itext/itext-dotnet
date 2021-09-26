@@ -182,7 +182,7 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Ignore = true)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Ignore = true)]
         public virtual void FlexContainerDifferentChildrenDontFitHorizontallyTest() {
             // TODO DEVSIX-5042 HEIGHT property is ignored when FORCED_PLACEMENT is true
             String outFileName = destinationFolder + "flexContainerDifferentChildrenDontFitHorizontallyTest" + comparisonPdfId

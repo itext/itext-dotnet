@@ -48,7 +48,6 @@ using iText.IO.Font.Otf;
 using iText.IO.Image;
 using iText.IO.Source;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;

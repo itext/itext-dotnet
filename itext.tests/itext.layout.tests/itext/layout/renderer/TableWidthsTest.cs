@@ -74,7 +74,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.SUM_OF_TABLE_COLUMNS_IS_GREATER_THAN_100, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SUM_OF_TABLE_COLUMNS_IS_GREATER_THAN_100, Count = 2)]
         public virtual void TestSumOfColumnsIsGreaterThan100() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document doc = new Document(pdfDoc);

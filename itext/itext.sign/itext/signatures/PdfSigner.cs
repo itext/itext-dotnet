@@ -55,7 +55,7 @@ using iText.Forms;
 using iText.Forms.Fields;
 using iText.IO.Source;
 using iText.IO.Util;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -1160,7 +1160,7 @@ namespace iText.Signatures {
                     }
                     else {
                         ILogger logger = ITextLogManager.GetLogger(typeof(PdfSigner));
-                        logger.LogError(iText.IO.LogMessageConstant.UNKNOWN_DIGEST_METHOD);
+                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_DIGEST_METHOD);
                     }
                 }
             }

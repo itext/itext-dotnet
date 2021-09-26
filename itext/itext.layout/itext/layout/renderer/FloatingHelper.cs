@@ -138,13 +138,13 @@ namespace iText.Layout.Renderer {
             UnitValue[] margins = tableRenderer.GetMargins();
             if (!margins[1].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.FloatingHelper));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_RIGHT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_RIGHT));
             }
             if (!margins[3].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.FloatingHelper));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_LEFT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_LEFT));
             }
             AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, tableWidth + margins[1].GetValue()
                  + margins[3].GetValue(), FloatPropertyValue.LEFT.Equals(floatPropertyValue));

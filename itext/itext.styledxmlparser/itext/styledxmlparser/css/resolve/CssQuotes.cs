@@ -112,7 +112,8 @@ namespace iText.StyledXmlParser.Css.Resolve {
                 }
                 else {
                     ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Resolve.CssQuotes)).LogError(MessageFormatUtil.
-                        Format(iText.StyledXmlParser.LogMessageConstant.QUOTES_PROPERTY_INVALID, quotesString));
+                        Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.QUOTES_PROPERTY_INVALID, quotesString
+                        ));
                 }
             }
             return fallbackToDefault ? CreateDefaultQuotes() : null;

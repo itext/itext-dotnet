@@ -106,7 +106,7 @@ namespace iText.IO.Image {
                 image.data = p.GetData(true);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.Jbig2ImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Jbig2ImageException, e);
             }
         }
     }

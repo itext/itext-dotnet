@@ -74,7 +74,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         // The first message for the case when the FormField is null,
         // the second message when the FormField is a indirect reference to null.
-        [LogMessage(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, Count = 2)]
         public virtual void NullFormFieldTest() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "nullFormField.pdf"));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
@@ -408,7 +408,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.NO_FIELDS_IN_ACROFORM)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.NO_FIELDS_IN_ACROFORM)]
         public virtual void AcroFieldDictionaryNoFields() {
             String outPdf = destinationFolder + "acroFieldDictionaryNoFields.pdf";
             String cmpPdf = sourceFolder + "cmp_acroFieldDictionaryNoFields.pdf";
@@ -681,7 +681,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT)]
         public virtual void NoMaxLenWithSetCombFlagTest() {
             String outPdf = destinationFolder + "noMaxLenWithSetCombFlagTest.pdf";
             String cmpPdf = sourceFolder + "cmp_noMaxLenWithSetCombFlagTest.pdf";
@@ -805,7 +805,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT, Count = 2)]
         public virtual void RegenerateMaxLenCombTest() {
             String srcPdf = sourceFolder + "regenerateMaxLenCombTest.pdf";
             String outPdf = destinationFolder + "regenerateMaxLenCombTest.pdf";
@@ -860,7 +860,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD)]
         public virtual void PdfWithDifferentFieldsTest() {
             String fileName = destinationFolder + "pdfWithDifferentFieldsTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));

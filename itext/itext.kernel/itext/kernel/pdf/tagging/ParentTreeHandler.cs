@@ -46,7 +46,6 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
@@ -152,7 +151,7 @@ namespace iText.Kernel.Pdf.Tagging {
             PdfIndirectReference mcrPageIndRef = mcr.GetPageIndirectReference();
             if (mcrPageIndRef == null || (!(mcr is PdfObjRef) && mcr.GetMcid() < 0)) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
-                logger.LogError(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ENCOUNTERED_INVALID_MCR);
                 return;
             }
             ParentTreeHandler.PageMcrsContainer pageMcrs = pageToPageMcrs.Get(mcrPageIndRef);
@@ -182,7 +181,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 else {
                     // TODO DEVSIX-3351 an error is thrown here because right now no /StructParents will be created.
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
-                    logger.LogError(iText.IO.LogMessageConstant.XOBJECT_HAS_NO_STRUCT_PARENTS);
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.XOBJECT_HAS_NO_STRUCT_PARENTS);
                 }
                 pageMcrs.PutXObjectMcr(stmIndRef, mcr);
                 if (registeringOnInit) {

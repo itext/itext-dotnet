@@ -46,7 +46,7 @@ using iText.Test.Attributes;
 namespace iText.Kernel.Pdf {
     public class PdfNumberTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN)]
         public virtual void TestNaN() {
             PdfNumber number = new PdfNumber(double.NaN);
             // code for "0"

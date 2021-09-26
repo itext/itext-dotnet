@@ -20,14 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
-
-namespace iText.StyledXmlParser {
-    /// <summary>Class containing constants to be used in exceptions in the SXP module.</summary>
-    public sealed class StyledXmlParserExceptionMessage {
-        public const String READING_BYTE_LIMIT_MUST_NOT_BE_LESS_ZERO = "The reading byte limit argument must not be less than zero.";
-
-        private StyledXmlParserExceptionMessage() {
-        }
+namespace iText.Commons.Actions {
+    /// <summary>Base marker interface for any generated event of any source.</summary>
+    public interface IEvent {
     }
 }

@@ -91,7 +91,8 @@ namespace iText.IO.Codec {
         /// <returns>The decoded data</returns>
         public virtual byte[] Decode(byte[] data, byte[] uncompData, int h) {
             if (data[0] == (byte)0x00 && data[1] == (byte)0x01) {
-                throw new iText.IO.IOException(iText.IO.IOException.Tiff50StyleLzwCodesAreNotSupported);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Tiff50StyleLzwCodesAreNotSupported
+                    );
             }
             InitializeStringTable();
             this.data = data;

@@ -121,8 +121,8 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI, LogLevel
-             = LogLevelConstants.ERROR)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+            , LogLevel = LogLevelConstants.ERROR)]
         public virtual void SvgCssResolverInvalidNameStylesheetTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupLink = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf(SvgConstants.Tags.LINK), "");

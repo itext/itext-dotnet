@@ -44,7 +44,6 @@ using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
@@ -154,7 +153,7 @@ namespace iText.Kernel.Pdf.Filespec {
 
         public static PdfFileSpec Wrap(PdfDictionary dictionary) {
             if (!PdfName.EncryptedPayload.Equals(dictionary.GetAsName(PdfName.AFRelationship))) {
-                ITextLogManager.GetLogger(typeof(PdfEncryptedPayloadFileSpecFactory)).LogError(iText.IO.LogMessageConstant
+                ITextLogManager.GetLogger(typeof(PdfEncryptedPayloadFileSpecFactory)).LogError(iText.IO.Logs.IoLogMessageConstant
                     .ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_AFRELATIONSHIP_FILED_EQUAL_TO_ENCRYPTED_PAYLOAD);
             }
             PdfDictionary ef = dictionary.GetAsDictionary(PdfName.EF);

@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
@@ -64,7 +63,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ENCOUNTERED_INVALID_MCR)]
         public virtual void CannotMoveToKidMcrTest02() {
             NUnit.Framework.Assert.That(() =>  {
                 PdfDocument pdfDoc = CreateTestDocument();

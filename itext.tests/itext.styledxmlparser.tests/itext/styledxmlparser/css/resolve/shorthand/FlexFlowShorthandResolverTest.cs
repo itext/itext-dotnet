@@ -69,7 +69,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, Count = 3)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, 
+            Count = 3)]
         public virtual void ContainsInitialOrInheritOrUnsetShorthandTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String containsInitialShorthand = "row initial ";
@@ -84,7 +85,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY, Count = 2)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+            , Count = 2)]
         public virtual void EmptyShorthandTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String emptyShorthand = "";
@@ -120,7 +122,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, Count = 1)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, 
+            Count = 1)]
         public virtual void ShorthandWithOneInvalidValueTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String shorthand = "invalid";
@@ -151,7 +154,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoDirectionValuesTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String shorthand = "column-reverse row";
@@ -160,7 +163,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoWrapValuesTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String shorthand = "nowrap wrap-reverse";
@@ -169,7 +172,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoValuesAndSecondIsInvalidTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String shorthand = "column-reverse invalid";

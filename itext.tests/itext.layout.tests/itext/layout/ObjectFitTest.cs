@@ -149,7 +149,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ContainWithRotationObjectsFitTest() {
             // TODO DEVSIX-4286 object-fit property combined with rotation is not processed correctly
             String outFileName = destinationFolder + "objectFit_test_with_rotation.pdf";

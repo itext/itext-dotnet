@@ -26,7 +26,6 @@ using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Filespec;
@@ -40,7 +39,7 @@ namespace iText.Kernel.Pdf {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfDocumentUnitTest/";
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void GetFontWithDirectFontDictionaryTest() {
             PdfDictionary initialFontDict = new PdfDictionary();
             initialFontDict.Put(PdfName.Subtype, PdfName.Type3);
@@ -89,7 +88,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES, Count = 3)]
         public virtual void CopyPagesWithOCGSameName() {
             IList<IList<String>> ocgNames = new List<IList<String>>();
             IList<String> ocgNames1 = new List<String>();
@@ -146,7 +145,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.OCG_COPYING_ERROR, LogLevel = LogLevelConstants.ERROR)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCG_COPYING_ERROR, LogLevel = LogLevelConstants.ERROR)]
         public virtual void CopyPagesFlushedResources() {
             byte[] docBytes;
             using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {

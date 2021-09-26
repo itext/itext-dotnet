@@ -63,15 +63,15 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void OverridenMemoryHandler() {
             MemoryLimitsAwareHandler defaultHandler = new MemoryLimitsAwareHandler();
-            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_75();
+            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_76();
             PdfArray filters = new PdfArray();
             filters.Add(PdfName.FlateDecode);
             NUnit.Framework.Assert.IsFalse(defaultHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
             NUnit.Framework.Assert.IsTrue(customHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
         }
 
-        private sealed class _MemoryLimitsAwareHandler_75 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_75() {
+        private sealed class _MemoryLimitsAwareHandler_76 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_76() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {

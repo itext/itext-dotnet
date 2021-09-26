@@ -42,22 +42,24 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Util;
+using iText.Commons.Exceptions;
 
-namespace iText.IO {
-    /// <summary>Class containing constants to be used in exceptions in the IO module.</summary>
-    public sealed class IoExceptionMessage {
-        public const String COMPARE_COMMAND_IS_NOT_SPECIFIED = "ImageMagick comparison command is not specified. Set the "
-             + ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE + " environment variable with the CLI command which can run the ImageMagic comparison. See BUILDING.MD in the root of the repository for more details.";
+namespace iText.Barcodes.Exceptions {
+    /// <summary>
+    /// A base class which covers the range of exceptions which may occur when encoding a barcode using
+    /// the Writer framework.
+    /// </summary>
+    /// <author>dswitkin@google.com (Daniel Switkin)</author>
+    public sealed class WriterException : ITextException {
+        /// <summary>Creates a WriterException.</summary>
+        public WriterException()
+            : base() {
+        }
 
-        public const String COMPARE_COMMAND_SPECIFIED_INCORRECTLY = "ImageMagick comparison command specified incorrectly. Set the "
-             + ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE + " environment variable with the CLI command which can run the ImageMagic comparison. See BUILDING.MD in the root of the repository for more details.";
-
-        public const String GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED = "Ghostscript command is not specified or specified incorrectly. Set the "
-             + GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE + " environment variable to a CLI command that can run the Ghostscript application. See BUILDING.MD in the root of the repository for more details.";
-
-        public const String GHOSTSCRIPT_FAILED = "GhostScript failed for <filename>";
-
-        public const String CANNOT_OPEN_OUTPUT_DIRECTORY = "Cannot open output directory for <filename>";
+        /// <summary>Creates a WriterException with a message.</summary>
+        /// <param name="message">message of the exception</param>
+        public WriterException(String message)
+            : base(message) {
+        }
     }
 }

@@ -45,7 +45,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.IO.Image;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
@@ -465,7 +465,7 @@ namespace iText.Layout.Element {
                 )this.GetProperty<bool?>(Property.AUTO_SCALE_WIDTH) || (bool)this.GetProperty<bool?>(Property.AUTO_SCALE_HEIGHT
                 ))) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Element.Image));
-                logger.LogWarning(iText.IO.LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
             }
             SetProperty(Property.AUTO_SCALE, autoScale);
             return this;

@@ -88,7 +88,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             foreach (String value in props) {
                 if (CommonCssConstants.INITIAL.Equals(value) || CommonCssConstants.INHERIT.Equals(value)) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(AbstractBorderShorthandResolver));
-                    logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                         , shorthandExpression));
                     return JavaCollectionsUtil.EmptyList<CssDeclaration>();
                 }

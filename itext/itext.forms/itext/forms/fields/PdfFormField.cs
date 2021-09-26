@@ -55,8 +55,8 @@ using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -3049,7 +3049,7 @@ namespace iText.Forms.Fields {
             else {
                 if (this.GetFieldFlag(PdfTextFormField.FF_COMB)) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
                         ));
                 }
                 modelCanvas.ShowTextAligned(CreateParagraphForTextFieldValue(value).AddStyle(paragraphStyle).SetPaddings(0
@@ -3948,7 +3948,7 @@ namespace iText.Forms.Fields {
             else {
                 //Avoid NPE when handling corrupt pdfs
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                logger.LogError(iText.IO.LogMessageConstant.INCORRECT_PAGEROTATION);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.INCORRECT_PAGEROTATION);
                 matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
             }
             //Apply field rotation
@@ -4143,7 +4143,7 @@ namespace iText.Forms.Fields {
                         }
                         else {
                             ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                            logger.LogError(iText.IO.LogMessageConstant.UNSUPPORTED_COLOR_IN_DA);
+                            logger.LogError(iText.IO.Logs.IoLogMessageConstant.UNSUPPORTED_COLOR_IN_DA);
                         }
                     }
                 }

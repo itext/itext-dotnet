@@ -673,7 +673,8 @@ namespace iText.IO.Codec {
                             DecodeT6();
                         }
                         else {
-                            throw new iText.IO.IOException(iText.IO.IOException.UnknownCompressionType1).SetMessageParams(compression);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnknownCompressionType1).SetMessageParams
+                                (compression);
                         }
                     }
                 }

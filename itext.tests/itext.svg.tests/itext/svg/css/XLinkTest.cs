@@ -52,7 +52,7 @@ using iText.Test.Attributes;
 namespace iText.Svg.Css {
     public class XLinkTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL)]
         public virtual void SvgCssResolveMalformedXlinkTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupImage = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("image"), "");

@@ -44,7 +44,8 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI
+            )]
         public virtual void IncorrectImageWithDataTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "incorrectImageWithData");
         }

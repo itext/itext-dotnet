@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -791,8 +790,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                     else {
                         nsStr = StandardNamespaces.GetDefault();
                     }
-                    logger.LogWarning(String.Format(iText.IO.LogMessageConstant.EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD, firstKid
-                        .GetRole().GetValue(), nsStr));
+                    logger.LogWarning(String.Format(iText.IO.Logs.IoLogMessageConstant.EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD
+                        , firstKid.GetRole().GetValue(), nsStr));
                 }
                 if (resolvedMapping == null || !StandardNamespaces.PDF_1_7.Equals(resolvedMapping.GetNamespace().GetNamespaceName
                     ())) {
@@ -810,8 +809,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         private String ComposeTooMuchTransitiveMappingsException(String role, PdfNamespace @namespace) {
-            return ComposeExceptionBasedOnNamespacePresence(role, @namespace, iText.IO.LogMessageConstant.CANNOT_RESOLVE_ROLE_TOO_MUCH_TRANSITIVE_MAPPINGS
-                , iText.IO.LogMessageConstant.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS);
+            return ComposeExceptionBasedOnNamespacePresence(role, @namespace, iText.IO.Logs.IoLogMessageConstant.CANNOT_RESOLVE_ROLE_TOO_MUCH_TRANSITIVE_MAPPINGS
+                , iText.IO.Logs.IoLogMessageConstant.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS);
         }
 
         private void InitRegisteredNamespaces() {

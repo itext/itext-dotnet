@@ -212,8 +212,8 @@ namespace iText.Layout.Renderer {
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .FONT_SIZE));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.FONT_SIZE));
             }
             float textRise = (float)this.GetPropertyAsFloat(Property.TEXT_RISE);
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
@@ -772,7 +772,7 @@ namespace iText.Layout.Renderer {
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                     , "Drawing won't be performed."));
                 return;
             }
@@ -807,8 +807,8 @@ namespace iText.Layout.Renderer {
                 UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
                 if (!fontSize.IsPointValue()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .FONT_SIZE));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.FONT_SIZE));
                 }
                 TransparentColor fontColor = GetPropertyAsTransparentColor(Property.FONT_COLOR);
                 int? textRenderingMode = this.GetProperty<int?>(Property.TEXT_RENDERING_MODE);
@@ -899,7 +899,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_961();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_964();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -961,8 +961,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_961 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_961() {
+        private sealed class _IGlyphLineFilter_964 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_964() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1010,8 +1010,8 @@ namespace iText.Layout.Renderer {
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .FONT_SIZE));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.FONT_SIZE));
             }
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
             float? wordSpacing = this.GetPropertyAsFloat(Property.WORD_SPACING);
@@ -1477,8 +1477,8 @@ namespace iText.Layout.Renderer {
             UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .FONT_SIZE));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.FONT_SIZE));
             }
             return GetGlyphLineWidth(line, fontSize.GetValue(), (float)this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING
                 , 1f), this.GetPropertyAsFloat(Property.CHARACTER_SPACING), this.GetPropertyAsFloat(Property.WORD_SPACING
@@ -1601,7 +1601,8 @@ namespace iText.Layout.Renderer {
         protected internal virtual iText.Layout.Renderer.TextRenderer CreateCopy(GlyphLine gl, PdfFont font) {
             if (typeof(iText.Layout.Renderer.TextRenderer) != this.GetType()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN
+                    ));
             }
             iText.Layout.Renderer.TextRenderer copy = new iText.Layout.Renderer.TextRenderer(this);
             copy.SetProcessedGlyphLineAndFont(gl, font);
@@ -1778,7 +1779,7 @@ namespace iText.Layout.Renderer {
                     newFont = ResolveFirstPdfFont();
                     if (!String.IsNullOrEmpty(strToBeConverted)) {
                         ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                        logger.LogError(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
+                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
                     }
                 }
                 GlyphLine newText = newFont.CreateGlyphLine(strToBeConverted);

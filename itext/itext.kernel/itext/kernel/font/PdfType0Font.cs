@@ -52,7 +52,6 @@ using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
 using iText.IO.Source;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
@@ -143,7 +142,7 @@ namespace iText.Kernel.Font {
                     if (toUnicodeCMap == null) {
                         toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(PdfEncodings.IDENTITY_H);
                         ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNKNOWN_CMAP, uniMap));
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_CMAP, uniMap));
                     }
                 }
                 fontProgram = DocTrueTypeFont.CreateFontProgram(cidFont, toUnicodeCMap);
@@ -191,7 +190,7 @@ namespace iText.Kernel.Font {
                     cidFontType = CID_FONT_TYPE_2;
                 }
                 else {
-                    ITextLogManager.GetLogger(GetType()).LogError(iText.IO.LogMessageConstant.FAILED_TO_DETERMINE_CID_FONT_SUBTYPE
+                    ITextLogManager.GetLogger(GetType()).LogError(iText.IO.Logs.IoLogMessageConstant.FAILED_TO_DETERMINE_CID_FONT_SUBTYPE
                         );
                 }
             }
@@ -583,8 +582,8 @@ namespace iText.Kernel.Font {
                             codeLength++) {
                             failedCodes.Append((int)charCodesSequence[i + codeLength - 1]).Append(" ");
                         }
-                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, failedCodes
-                            .ToString()));
+                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE
+                            , failedCodes.ToString()));
                     }
                     i += codeSpaceMatchedLength - 1;
                 }
@@ -712,9 +711,9 @@ namespace iText.Kernel.Font {
                             try {
                                 ttfBytes = ttf.GetSubset(usedGlyphs, subset);
                             }
-                            catch (iText.IO.IOException) {
+                            catch (iText.IO.Exceptions.IOException) {
                                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                                logger.LogWarning(iText.IO.LogMessageConstant.FONT_SUBSET_ISSUE);
+                                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.FONT_SUBSET_ISSUE);
                                 ttfBytes = null;
                             }
                         }

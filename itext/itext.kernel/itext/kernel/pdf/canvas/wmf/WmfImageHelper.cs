@@ -45,7 +45,6 @@ using System;
 using System.IO;
 using iText.IO.Image;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;

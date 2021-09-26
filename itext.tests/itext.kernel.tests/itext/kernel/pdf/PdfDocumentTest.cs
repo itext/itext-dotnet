@@ -44,8 +44,8 @@ using System;
 using System.IO;
 using iText.IO.Image;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
@@ -305,7 +305,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE)]
         public virtual void TestFreeReference() {
             PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "freeReference.pdf", new WriterProperties().SetFullCompressionMode
                 (false));
@@ -430,8 +430,8 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS, LogLevel = LogLevelConstants
-            .WARN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS, LogLevel = 
+            LogLevelConstants.WARN)]
         public virtual void RemovePageWithInvalidOutlineTest() {
             String source = SOURCE_FOLDER + "invalid_outline.pdf";
             String destination = DESTINATION_FOLDER + "invalid_outline.pdf";
@@ -445,7 +445,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED, LogLevel = LogLevelConstants
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED, LogLevel = LogLevelConstants
             .ERROR)]
         public virtual void OpenDocumentWithInvalidCatalogVersionTest() {
             using (PdfReader reader = new PdfReader(SOURCE_FOLDER + "sample-with-invalid-catalog-version.pdf")) {
@@ -460,8 +460,8 @@ namespace iText.Kernel.Pdf {
             using (PdfReader reader = new PdfReader(SOURCE_FOLDER + "sample-with-invalid-catalog-version.pdf").SetStrictnessLevel
                 (PdfReader.StrictnessLevel.CONSERVATIVE)) {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
-                NUnit.Framework.Assert.AreEqual(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED, e.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED, 
+                    e.Message);
             }
         }
 

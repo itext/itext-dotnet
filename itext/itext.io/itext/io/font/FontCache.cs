@@ -268,7 +268,7 @@ namespace iText.IO.Font {
                 CMapParser.ParseCid(name, cmap, new CMapLocationResource());
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
             return cmap;
         }

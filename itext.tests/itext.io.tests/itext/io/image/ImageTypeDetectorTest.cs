@@ -60,7 +60,8 @@ namespace iText.IO.Image {
         [NUnit.Framework.Test]
         public virtual void TestNullUrl() {
             Uri url = UrlUtil.ToURL("not existing path");
-            NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => ImageTypeDetector.DetectImageType(url));
+            NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageTypeDetector.DetectImageType
+                (url));
         }
 
         [NUnit.Framework.Test]
@@ -97,7 +98,7 @@ namespace iText.IO.Image {
         public virtual void TestStreamClosed() {
             Stream stream = new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".wmf", FileMode.Open, FileAccess.Read);
             stream.Dispose();
-            // A common exception is expected instead of com.itextpdf.io.IOException, because in .NET
+            // A common exception is expected instead of com.itextpdf.io.exceptions.IOException, because in .NET
             // the thrown exception is different
             NUnit.Framework.Assert.Catch(typeof(Exception), () => ImageTypeDetector.DetectImageType(stream));
         }

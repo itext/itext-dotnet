@@ -95,7 +95,8 @@ namespace iText.StyledXmlParser.Css {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.QUOTE_IS_NOT_CLOSED_IN_CSS_EXPRESSION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.QUOTE_IS_NOT_CLOSED_IN_CSS_EXPRESSION
+            )]
         public virtual void ParseBase64SrcTest() {
             CssStyleSheet styleSheet = CssStyleSheetParser.Parse(new FileStream(sourceFolder + "srcs2.css", FileMode.Open
                 , FileAccess.Read));

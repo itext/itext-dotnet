@@ -446,8 +446,8 @@ namespace iText.Layout.Renderer {
                         );
                     if (!marginToSetUV.IsPointValue()) {
                         ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ListRenderer));
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, marginToSet
-                            ));
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                            , marginToSet));
                     }
                     float calculatedMargin = marginToSetUV.GetValue();
                     if ((ListSymbolPosition)GetListItemOrListProperty(childRenderer, this, Property.LIST_SYMBOL_POSITION) == ListSymbolPosition

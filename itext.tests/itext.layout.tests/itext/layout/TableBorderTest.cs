@@ -85,7 +85,7 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1124")]
         public virtual void IncompleteTableTest01() {
@@ -139,7 +139,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         public virtual void IncompleteTableTest03() {
             fileName = "incompleteTableTest03.pdf";
             Document doc = CreateDocument();
@@ -154,7 +154,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void IncompleteTableTest04() {
             fileName = "incompleteTableTest04.pdf";
             Document doc = CreateDocument();
@@ -569,7 +569,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InfiniteLoopTest01() {
             fileName = "infiniteLoopTest01.pdf";
             Document doc = CreateDocument();
@@ -694,7 +694,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SplitCellsTest03() {
             fileName = "splitCellsTest03.pdf";
             Document doc = CreateDocument();
@@ -1158,7 +1158,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
         public virtual void TableWithHeaderFooterTest06() {
             fileName = "tableWithHeaderFooterTest06.pdf";
             Document doc = CreateDocument();
@@ -1188,7 +1188,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
         public virtual void TableWithHeaderFooterTest06A() {
             fileName = "tableWithHeaderFooterTest06A.pdf";
             outFileName = destinationFolder + fileName;
@@ -1220,7 +1220,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
         public virtual void TableWithHeaderFooterTest06B() {
             fileName = "tableWithHeaderFooterTest06B.pdf";
             outFileName = destinationFolder + fileName;
@@ -1675,7 +1675,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void TableWithHeaderFooterTest20() {
             fileName = "tableWithHeaderFooterTest20.pdf";
             Document doc = CreateDocument();
@@ -1693,7 +1693,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SplitRowspanKeepTogetherTest() {
             fileName = "splitRowspanKeepTogetherTest.pdf";
             Document doc = CreateDocument();
@@ -1720,8 +1720,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 4)]
-        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 4)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, Count = 2)]
         public virtual void ForcedPlacementTest01() {
             fileName = "forcedPlacementTest01.pdf";
             Document doc = CreateDocument();

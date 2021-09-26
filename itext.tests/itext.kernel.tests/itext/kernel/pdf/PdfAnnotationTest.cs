@@ -157,7 +157,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET)]
         public virtual void LinkAnnotationActionDestinationTest() {
             String fileName = "linkAnnotationActionDestinationTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + fileName, FileMode.Create
@@ -325,7 +325,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.EMBEDDED_GO_TO_DESTINATION_NOT_SPECIFIED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.EMBEDDED_GO_TO_DESTINATION_NOT_SPECIFIED)]
         public virtual void NoFileAttachmentTargetTest() {
             String fileName = "noFileAttachmentTargetTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + fileName));

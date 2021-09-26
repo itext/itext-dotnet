@@ -388,8 +388,8 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (IsNotFittingWidth(layoutContext.GetArea()) && !IsNotFittingHeight(layoutContext.GetArea())) {
-                        ITextLogManager.GetLogger(GetType()).LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA
-                            , "It fits by height so it will be forced placed"));
+                        ITextLogManager.GetLogger(GetType()).LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant
+                            .ELEMENT_DOES_NOT_FIT_AREA, "It fits by height so it will be forced placed"));
                     }
                     else {
                         if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
@@ -418,7 +418,7 @@ namespace iText.Layout.Renderer {
         public override void Draw(DrawContext drawContext) {
             ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
             if (occupiedArea == null) {
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                     , "Drawing won't be performed."));
                 return;
             }
@@ -463,7 +463,7 @@ namespace iText.Layout.Renderer {
                     // TODO DEVSIX-1655 This check is necessary because, in some cases, our renderer's hierarchy may contain
                     //  a renderer from the different page that was already flushed
                     if (page.IsFlushed()) {
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
                             , "area clipping"));
                         clippedArea = new Rectangle(-INF / 2, -INF / 2, INF, INF);
                     }
@@ -506,7 +506,7 @@ namespace iText.Layout.Renderer {
             if (rotationAngle != null) {
                 if (!HasOwnProperty(Property.ROTATION_INITIAL_WIDTH) || !HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
                         , GetType().Name));
                 }
                 else {
@@ -710,7 +710,7 @@ namespace iText.Layout.Renderer {
             if (angle != null) {
                 if (!HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
                         , GetType().Name));
                 }
                 else {

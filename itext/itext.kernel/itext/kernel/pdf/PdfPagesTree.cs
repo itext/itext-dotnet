@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
@@ -133,12 +132,12 @@ namespace iText.Kernel.Pdf {
                         pdfPage.parentPages = parents[parentIndex];
                     }
                     else {
-                        LOGGER.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                        LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
                             , pageNum + 1));
                     }
                 }
                 else {
-                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
                         , pageNum + 1));
                 }
                 pages[pageNum] = pdfPage;
@@ -278,7 +277,7 @@ namespace iText.Kernel.Pdf {
         public virtual PdfPage RemovePage(int pageNum) {
             PdfPage pdfPage = GetPage(pageNum);
             if (pdfPage.IsFlushed()) {
-                LOGGER.LogWarning(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
+                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
             }
             if (InternalRemovePage(--pageNum)) {
                 return pdfPage;
@@ -304,7 +303,8 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         protected internal virtual PdfObject GenerateTree() {
             if (pageRefs.Count == 0) {
-                LOGGER.LogInformation(iText.IO.LogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES);
+                LOGGER.LogInformation(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES
+                    );
                 document.AddNewPage();
             }
             if (generated) {

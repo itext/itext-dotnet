@@ -22,13 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Commons.Actions {
     /// <summary>The interface for an event handler.</summary>
-    /// <remarks>
-    /// The interface for an event handler.
-    /// <para />TODO: DEVSIX-5311 rename it IEventHandler when the oldest mechanism is deleted
-    /// </remarks>
-    public interface IBaseEventHandler {
+    public interface IEventHandler {
         /// <summary>Handles the event.</summary>
         /// <param name="event">to handle</param>
-        void OnEvent(IBaseEvent @event);
+        void OnEvent(IEvent @event);
     }
 }

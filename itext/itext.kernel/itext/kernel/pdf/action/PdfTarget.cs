@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -250,7 +249,7 @@ namespace iText.Kernel.Pdf.Action {
             }
             if (null == resultAnnotation) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfTarget));
-                logger.LogError(iText.IO.LogMessageConstant.SOME_TARGET_FIELDS_ARE_NOT_SET_OR_INCORRECT);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.SOME_TARGET_FIELDS_ARE_NOT_SET_OR_INCORRECT);
             }
             return resultAnnotation;
         }

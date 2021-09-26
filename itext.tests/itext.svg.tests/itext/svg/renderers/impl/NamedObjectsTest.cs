@@ -51,7 +51,7 @@ using iText.Test.Attributes;
 namespace iText.Svg.Renderers.Impl {
     public class NamedObjectsTest : SvgIntegrationTest {
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.RULE_IS_NOT_SUPPORTED)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RULE_IS_NOT_SUPPORTED)]
         public virtual void AddNamedObject() {
             INode parsedSvg = SvgConverter.Parse(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
                 .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/NamedObjectsTest/names.svg", FileMode.Open

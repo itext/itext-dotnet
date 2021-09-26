@@ -777,7 +777,7 @@ namespace iText.Layout.Renderer {
 
         private void Warn100percent() {
             ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableWidths));
-            logger.LogWarning(iText.IO.LogMessageConstant.SUM_OF_TABLE_COLUMNS_IS_GREATER_THAN_100);
+            logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.SUM_OF_TABLE_COLUMNS_IS_GREATER_THAN_100);
         }
 
         private float[] ExtractWidths() {
@@ -792,7 +792,7 @@ namespace iText.Layout.Renderer {
             }
             if (actualWidth > tableWidth + MinMaxWidthUtils.GetEps() * widths.Length) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableWidths));
-                logger.LogWarning(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH);
             }
             return columnWidths;
         }
@@ -910,13 +910,13 @@ namespace iText.Layout.Renderer {
                             UnitValue[] paddings = cell.GetPaddings();
                             if (!paddings[1].IsPointValue()) {
                                 ILogger logger = ITextLogManager.GetLogger(typeof(TableWidths));
-                                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                                    .PADDING_LEFT));
+                                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                    , Property.PADDING_LEFT));
                             }
                             if (!paddings[3].IsPointValue()) {
                                 ILogger logger = ITextLogManager.GetLogger(typeof(TableWidths));
-                                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                                    .PADDING_RIGHT));
+                                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                    , Property.PADDING_RIGHT));
                             }
                             widthValue.SetValue(widthValue.GetValue() + paddings[1].GetValue() + paddings[3].GetValue());
                         }

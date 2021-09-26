@@ -135,7 +135,7 @@ namespace iText.IO.Font {
                 return (char)(i & 0xff);
             }
             catch (Exception e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
         }
 
@@ -144,7 +144,7 @@ namespace iText.IO.Font {
                 return buf.ReadChar();
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
         }
 
@@ -166,7 +166,7 @@ namespace iText.IO.Font {
                 return buf.ReadShort();
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
         }
 
@@ -175,7 +175,7 @@ namespace iText.IO.Font {
                 return buf.ReadInt();
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
         }
 
@@ -410,7 +410,7 @@ namespace iText.IO.Font {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
                 }
             }
             //System.err.println("finished range emit");

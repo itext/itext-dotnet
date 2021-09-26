@@ -87,13 +87,13 @@ namespace iText.IO.Image {
                 return sr.NumberOfPages();
             }
             catch (Exception e) {
-                throw new iText.IO.IOException(iText.IO.IOException.Jbig2ImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Jbig2ImageException, e);
             }
         }
 
         public override bool CanImageBeInline() {
             ILogger logger = ITextLogManager.GetLogger(typeof(ImageData));
-            logger.LogWarning(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
+            logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
             return false;
         }
     }

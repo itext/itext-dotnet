@@ -40,8 +40,8 @@ namespace iText.Commons.Actions {
         [NUnit.Framework.Test]
         public virtual void ThrowSomeExceptionsTest() {
             EventManager eventManager = EventManager.GetInstance();
-            IBaseEventHandler handler1 = new EventManagerTest.ThrowArithmeticExpHandler();
-            IBaseEventHandler handler2 = new EventManagerTest.ThrowIllegalArgumentExpHandler();
+            IEventHandler handler1 = new EventManagerTest.ThrowArithmeticExpHandler();
+            IEventHandler handler2 = new EventManagerTest.ThrowIllegalArgumentExpHandler();
             eventManager.Register(handler1);
             eventManager.Register(handler2);
             SequenceId sequenceId = new SequenceId();
@@ -63,7 +63,7 @@ namespace iText.Commons.Actions {
         [NUnit.Framework.Test]
         public virtual void ThrowOneUncheckedExceptionsTest() {
             EventManager eventManager = EventManager.GetInstance();
-            IBaseEventHandler handler1 = new EventManagerTest.ThrowArithmeticExpHandler();
+            IEventHandler handler1 = new EventManagerTest.ThrowArithmeticExpHandler();
             eventManager.Register(handler1);
             try {
                 SequenceId sequenceId = new SequenceId();
@@ -81,7 +81,7 @@ namespace iText.Commons.Actions {
         [NUnit.Framework.Test]
         public virtual void ConfigureHandlersTest() {
             EventManager eventManager = EventManager.GetInstance();
-            IBaseEventHandler handler = new EventManagerTest.ThrowArithmeticExpHandler();
+            IEventHandler handler = new EventManagerTest.ThrowArithmeticExpHandler();
             NUnit.Framework.Assert.IsFalse(eventManager.IsRegistered(handler));
             eventManager.Register(handler);
             NUnit.Framework.Assert.IsTrue(eventManager.IsRegistered(handler));
@@ -90,14 +90,14 @@ namespace iText.Commons.Actions {
             NUnit.Framework.Assert.IsFalse(eventManager.Unregister(handler));
         }
 
-        private class ThrowArithmeticExpHandler : IBaseEventHandler {
-            public virtual void OnEvent(IBaseEvent @event) {
+        private class ThrowArithmeticExpHandler : IEventHandler {
+            public virtual void OnEvent(IEvent @event) {
                 throw new ArithmeticException("ThrowArithmeticExpHandler");
             }
         }
 
-        private class ThrowIllegalArgumentExpHandler : IBaseEventHandler {
-            public virtual void OnEvent(IBaseEvent @event) {
+        private class ThrowIllegalArgumentExpHandler : IEventHandler {
+            public virtual void OnEvent(IEvent @event) {
                 throw new ArgumentException("ThrowIllegalArgumentExpHandler");
             }
         }

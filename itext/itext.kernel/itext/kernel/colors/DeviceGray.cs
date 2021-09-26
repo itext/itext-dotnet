@@ -70,7 +70,7 @@ namespace iText.Kernel.Colors {
             : base(new PdfDeviceCs.Gray(), new float[] { value > 1 ? 1 : (value > 0 ? value : 0) }) {
             if (value > 1 || value < 0) {
                 ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceGray));
-                LOGGER.LogWarning(iText.IO.LogMessageConstant.COLORANT_INTENSITIES_INVALID);
+                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.COLORANT_INTENSITIES_INVALID);
             }
         }
 

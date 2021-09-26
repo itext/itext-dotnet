@@ -31,7 +31,8 @@ using iText.Test.Attributes;
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
     public class FlexShorthandResolverTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY, Count = 2)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+            , Count = 2)]
         public virtual void EmptyShorthandTest() {
             String emptyShorthand = "";
             IShorthandResolver resolver = new FlexShorthandResolver();
@@ -117,7 +118,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, Count = 3)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, 
+            Count = 3)]
         public virtual void ContainsInitialOrInheritOrUnsetShorthandTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String containsInitialShorthand = "1 initial 50px";
@@ -160,7 +162,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithOneInvalidValueTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String shorthand = "5pixels";
@@ -211,7 +213,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoUnitValuesTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String shorthand = "5px 7px";
@@ -220,7 +222,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithOneUnitlessAndOneInvalidValuesTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String shorthand = "5 invalid";
@@ -229,7 +231,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoValuesAndFirstIsInvalidTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String shorthand = "invalid 5px";
@@ -266,7 +268,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithThreeUnitlessValuesTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String shorthand = "5 7 10";
@@ -275,7 +277,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithOneUnitlessOneUnitAndOneUnitlessValuesTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String shorthand = "5 7px 10";
@@ -284,7 +286,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithThreeUnitValuesTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String shorthand = "5px 7px 10px";
@@ -293,7 +295,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithOneUnitOneUnitlessAndOneUnitValuesTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String shorthand = "5px 7 10px";
@@ -302,7 +304,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithThreeValuesAndFirstIsInvalidTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String shorthand = "invalid 7 10";
@@ -311,7 +313,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithFourValuesTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String shorthand = "5 7 10 13";

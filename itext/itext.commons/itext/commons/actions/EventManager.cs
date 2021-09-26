@@ -36,7 +36,7 @@ namespace iText.Commons.Actions {
         private static readonly iText.Commons.Actions.EventManager INSTANCE = new iText.Commons.Actions.EventManager
             ();
 
-        private readonly ICollection<IBaseEventHandler> handlers = new LinkedHashSet<IBaseEventHandler>();
+        private readonly ICollection<IEventHandler> handlers = new LinkedHashSet<IEventHandler>();
 
         private EventManager() {
             handlers.Add(ProductEventHandler.INSTANCE);
@@ -50,9 +50,9 @@ namespace iText.Commons.Actions {
 
         /// <summary>Handles the event.</summary>
         /// <param name="event">to handle</param>
-        public void OnEvent(IBaseEvent @event) {
+        public void OnEvent(IEvent @event) {
             IList<Exception> caughtExceptions = new List<Exception>();
-            foreach (IBaseEventHandler handler in handlers) {
+            foreach (IEventHandler handler in handlers) {
                 try {
                     handler.OnEvent(@event);
                 }
@@ -79,11 +79,11 @@ namespace iText.Commons.Actions {
 
         /// <summary>
         /// Add new
-        /// <see cref="IBaseEventHandler"/>
+        /// <see cref="IEventHandler"/>
         /// to the event handling process.
         /// </summary>
         /// <param name="handler">is a handler to add</param>
-        public void Register(IBaseEventHandler handler) {
+        public void Register(IEventHandler handler) {
             if (handler != null) {
                 handlers.Add(handler);
             }
@@ -92,7 +92,7 @@ namespace iText.Commons.Actions {
         /// <summary>Check if the handler was registered for event handling process.</summary>
         /// <param name="handler">is a handler to check</param>
         /// <returns>true if handler has been already registered and false otherwise</returns>
-        public bool IsRegistered(IBaseEventHandler handler) {
+        public bool IsRegistered(IEventHandler handler) {
             if (handler != null) {
                 return handlers.Contains(handler);
             }
@@ -105,7 +105,7 @@ namespace iText.Commons.Actions {
         /// true if the handler had been registered previously and was removed. False if the
         /// handler was not found among registered handlers
         /// </returns>
-        public bool Unregister(IBaseEventHandler handler) {
+        public bool Unregister(IEventHandler handler) {
             if (handler != null) {
                 return handlers.Remove(handler);
             }

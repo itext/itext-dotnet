@@ -1574,7 +1574,7 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual void AddAssociatedFile(PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfAnnotation));
-                logger.LogError(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null) {

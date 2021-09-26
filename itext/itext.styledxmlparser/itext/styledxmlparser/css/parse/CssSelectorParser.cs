@@ -192,8 +192,8 @@ namespace iText.StyledXmlParser.Css.Parse {
                 else {
                     ICssSelectorItem pseudoClassSelectorItem = CssPseudoClassSelectorItem.Create(pseudoSelector.Substring(1));
                     if (pseudoClassSelectorItem == null) {
-                        throw new ArgumentException(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNSUPPORTED_PSEUDO_CSS_SELECTOR
-                            , pseudoSelector));
+                        throw new ArgumentException(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
+                            .UNSUPPORTED_PSEUDO_CSS_SELECTOR, pseudoSelector));
                     }
                     selectorItems.Add(pseudoClassSelectorItem);
                 }

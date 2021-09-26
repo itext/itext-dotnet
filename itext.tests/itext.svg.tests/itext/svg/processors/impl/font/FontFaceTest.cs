@@ -170,7 +170,7 @@ namespace iText.Svg.Processors.Impl.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FONT_SUBSET_ISSUE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FONT_SUBSET_ISSUE)]
         public virtual void W3cProblemTest04() {
             //TODO(DEVSIX-5756): silently omitted, decompression should fail. Browser loads font but don't draw glyph.
             //See HeaderFlavor002Test in io for decompression details

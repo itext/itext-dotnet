@@ -513,7 +513,7 @@ namespace iText.Layout.Renderer {
                 Rectangle backgroundArea = GetBackgroundArea(ApplyMargins(bBox, false));
                 if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.LogInformation(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES
+                    logger.LogInformation(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES
                         , "background"));
                 }
                 else {
@@ -612,7 +612,7 @@ namespace iText.Layout.Renderer {
             }
             if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogInformation(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES
+                logger.LogInformation(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES
                     , "background-image"));
             }
             else {
@@ -977,7 +977,7 @@ namespace iText.Layout.Renderer {
                 Rectangle bBox = GetBorderAreaBBox();
                 if (bBox.GetWidth() < 0 || bBox.GetHeight() < 0) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, "border"
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, "border"
                         ));
                     return;
                 }
@@ -1661,8 +1661,8 @@ namespace iText.Layout.Renderer {
             UnitValue value = this.GetProperty<UnitValue>(property);
             if (pointOnly && value.GetUnitType() == UnitValue.POINT) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, property
-                    ));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , property));
             }
             if (value != null) {
                 if (value.GetUnitType() == UnitValue.PERCENT) {
@@ -1739,23 +1739,23 @@ namespace iText.Layout.Renderer {
         protected internal virtual Rectangle ApplyMargins(Rectangle rect, UnitValue[] margins, bool reverse) {
             if (!margins[TOP_SIDE].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_TOP));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_TOP));
             }
             if (!margins[RIGHT_SIDE].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_RIGHT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_RIGHT));
             }
             if (!margins[BOTTOM_SIDE].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_BOTTOM));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_BOTTOM));
             }
             if (!margins[LEFT_SIDE].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_LEFT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_LEFT));
             }
             return rect.ApplyMargins(margins[TOP_SIDE].GetValue(), margins[RIGHT_SIDE].GetValue(), margins[BOTTOM_SIDE
                 ].GetValue(), margins[LEFT_SIDE].GetValue(), reverse);
@@ -1796,23 +1796,23 @@ namespace iText.Layout.Renderer {
         protected internal virtual Rectangle ApplyPaddings(Rectangle rect, UnitValue[] paddings, bool reverse) {
             if (!paddings[0].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_TOP));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_TOP));
             }
             if (!paddings[1].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_RIGHT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_RIGHT));
             }
             if (!paddings[2].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_BOTTOM));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_BOTTOM));
             }
             if (!paddings[3].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_LEFT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_LEFT));
             }
             return rect.ApplyMargins(paddings[0].GetValue(), paddings[1].GetValue(), paddings[2].GetValue(), paddings[
                 3].GetValue(), reverse);
@@ -1870,7 +1870,7 @@ namespace iText.Layout.Renderer {
             }
             catch (Exception) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                     , "Absolute positioning might be applied incorrectly."));
             }
         }
@@ -1895,7 +1895,7 @@ namespace iText.Layout.Renderer {
                 if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                     String logMessageArg = "Property.DESTINATION, which specifies this element location as destination, see ElementPropertyContainer.setDestination.";
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
                         , logMessageArg));
                     return;
                 }
@@ -1936,7 +1936,7 @@ namespace iText.Layout.Renderer {
                 int pageNumber = occupiedArea.GetPageNumber();
                 if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
                     String logMessageArg = "Property.LINK_ANNOTATION, which specifies a link associated with this element content area, see com.itextpdf.layout.element.Link.";
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
                         , logMessageArg));
                     return;
                 }
@@ -1951,7 +1951,7 @@ namespace iText.Layout.Renderer {
                 // TODO DEVSIX-1655 This check is necessary because, in some cases, our renderer's hierarchy may contain
                 //  a renderer from the different page that was already flushed
                 if (page.IsFlushed()) {
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
                         , "link annotation applying"));
                 }
                 else {
@@ -2008,7 +2008,7 @@ namespace iText.Layout.Renderer {
             if (wasHeightClipped) {
                 // if height was clipped, max height exists and can be resolved
                 ILogger logger = ITextLogManager.GetLogger(typeof(BlockRenderer));
-                logger.LogWarning(iText.IO.LogMessageConstant.CLIP_ELEMENT);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT);
                 if (enlargeOccupiedAreaOnHeightWasClipped) {
                     float? maxHeight = RetrieveMaxHeight();
                     splitRenderer.occupiedArea.GetBBox().MoveDown((float)maxHeight - usedHeight).SetHeight((float)maxHeight);
@@ -2182,7 +2182,7 @@ namespace iText.Layout.Renderer {
                     }
                     catch (NullReferenceException) {
                         ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                             , "Some of the children might not end up aligned horizontally."));
                     }
                 }
@@ -2852,7 +2852,7 @@ namespace iText.Layout.Renderer {
         internal virtual bool LogWarningIfGetNextRendererNotOverridden(Type baseClass, Type rendererClass) {
             if (baseClass != rendererClass) {
                 ILogger logger = ITextLogManager.GetLogger(baseClass);
-                logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN
+                logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN
                     ));
                 return false;
             }

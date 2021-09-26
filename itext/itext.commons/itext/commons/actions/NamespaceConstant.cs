@@ -62,9 +62,7 @@ namespace iText.Commons.Actions {
         public const String CORE_SVG = ITEXT + ".Svg";
 
         //Addons
-        public const String PDF_DEBUG = ITEXT + ".PdfDebug";
         public const String PDF_HTML = ITEXT + ".Html2pdf";
-        public const String PDF_INVOICE = ITEXT + ".Zugferd";
         public const String PDF_SWEEP = ITEXT + ".PdfCleanup";
         public const String PDF_OCR = ITEXT + ".Pdfocr";
         public const String PDF_OCR_TESSERACT4 = PDF_OCR + ".Tesseract4";

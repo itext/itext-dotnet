@@ -144,7 +144,7 @@ namespace iText.StyledXmlParser.Css.Resolve {
             String defaultVal = defaultValues.Get(property);
             if (defaultVal == null) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(CssDefaults));
-                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN
+                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN
                     , property));
             }
             return defaultVal;

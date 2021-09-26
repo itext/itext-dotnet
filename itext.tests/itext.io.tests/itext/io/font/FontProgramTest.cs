@@ -56,7 +56,7 @@ namespace iText.IO.Font {
         [Test]
         public virtual void ExceptionMessageTest() {
             Exception e = Assert.Catch(typeof(System.IO.IOException), () => FontProgramFactory.CreateFont(notExistingFont));
-            Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException._1NotFoundAsFileOrResource, notExistingFont), e.Message);
+            Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException._1NotFoundAsFileOrResource, notExistingFont), e.Message);
         }
 
         [Test]

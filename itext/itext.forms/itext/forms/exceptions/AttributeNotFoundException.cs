@@ -41,12 +41,15 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Commons.Exceptions;
 
-namespace iText.Pdfa {
-    /// <summary>Class containing constants to be used in logging.</summary>
-    public class PdfALogMessageConstant {
-        public const String PDFA_PAGE_FLUSHING_WAS_NOT_PERFORMED = "Page flushing was not performed. Pages flushing in PDF/A mode works only with explicit calls to PdfPage#flush(boolean) with flushResourcesContentStreams argument set to true";
-
-        public const String PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED = "Object flushing was not performed. Object in PDF/A mode can only be flushed if the document is closed or if this object has already been checked for compliance with PDF/A rules.";
+namespace iText.Forms.Exceptions {
+    public class AttributeNotFoundException : ITextException {
+        /// <summary>The exception thrown when the attribute with given name is not found in the object attributes list.
+        ///     </summary>
+        /// <param name="attribute">the name of missing attribute.</param>
+        public AttributeNotFoundException(String attribute)
+            : base("Required attribute " + attribute + " is not found") {
+        }
     }
 }

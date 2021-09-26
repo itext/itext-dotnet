@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -687,7 +686,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             PdfStructElem parent = (PdfStructElem)GetCurrentStructElem().GetParent();
             if (parent.IsFlushed()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagTreePointer));
-                logger.LogWarning(iText.IO.LogMessageConstant.ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT);
                 MoveToRoot();
             }
             else {

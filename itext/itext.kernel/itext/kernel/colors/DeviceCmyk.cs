@@ -100,7 +100,7 @@ namespace iText.Kernel.Colors {
                  1 ? 1 : (y > 0 ? y : 0), k > 1 ? 1 : (k > 0 ? k : 0) }) {
             if (c > 1 || c < 0 || m > 1 || m < 0 || y > 1 || y < 0 || k > 1 || k < 0) {
                 ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceCmyk));
-                LOGGER.LogWarning(iText.IO.LogMessageConstant.COLORANT_INTENSITIES_INVALID);
+                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.COLORANT_INTENSITIES_INVALID);
             }
         }
 

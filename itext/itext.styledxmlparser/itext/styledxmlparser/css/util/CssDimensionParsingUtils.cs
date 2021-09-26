@@ -123,7 +123,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 )) {
                 return floatValue;
             }
-            logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_METRIC_ANGLE_PARSED
+            logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_METRIC_ANGLE_PARSED
                 , unit.Equals("") ? defaultMetric : unit));
             return floatValue;
         }
@@ -231,7 +231,7 @@ namespace iText.StyledXmlParser.Css.Util {
                     }
                 }
             }
-            logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+            logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
                 , unit.Equals("") ? defaultMetric : unit));
             return (float)f;
         }
@@ -434,7 +434,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 }
                 else {
                     if (!unit.StartsWith(CommonCssConstants.DPI)) {
-                        throw new StyledXMLParserException(iText.StyledXmlParser.LogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE
+                        throw new StyledXMLParserException(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE
                             );
                     }
                 }
@@ -448,7 +448,7 @@ namespace iText.StyledXmlParser.Css.Util {
         public static float[] ParseRgbaColor(String colorValue) {
             float[] rgbaColor = WebColors.GetRGBAColor(colorValue);
             if (rgbaColor == null) {
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_NOT_PARSED, colorValue));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COLOR_NOT_PARSED, colorValue));
                 rgbaColor = new float[] { 0, 0, 0, 1 };
             }
             return rgbaColor;

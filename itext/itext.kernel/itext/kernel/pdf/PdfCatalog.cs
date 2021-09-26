@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Collection;
@@ -694,7 +693,7 @@ namespace iText.Kernel.Pdf {
                 }
                 catch (IndexOutOfRangeException) {
                     pageObj = null;
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS
                         , pageNumber));
                 }
             }

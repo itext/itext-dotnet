@@ -305,8 +305,8 @@ namespace iText.IO.Codec {
                 ra.Seek(last);
                 Jbig2SegmentReader.Jbig2Page p = pages.Get(s.page);
                 if (p == null) {
-                    throw new iText.IO.IOException("Referring to widht or height of a page we haven't seen yet: {0}").SetMessageParams
-                        (s.page);
+                    throw new iText.IO.Exceptions.IOException("Referring to widht or height of a page we haven't seen yet: {0}"
+                        ).SetMessageParams(s.page);
                 }
                 p.pageBitmapWidth = page_bitmap_width;
                 p.pageBitmapHeight = page_bitmap_height;
@@ -358,7 +358,7 @@ namespace iText.IO.Codec {
                 }
                 else {
                     if (count_of_referred_to_segments == 5 || count_of_referred_to_segments == 6) {
-                        throw new iText.IO.IOException("Count of referred-to segments has forbidden value in the header for segment {0} starting at {1}"
+                        throw new iText.IO.Exceptions.IOException("Count of referred-to segments has forbidden value in the header for segment {0} starting at {1}"
                             ).SetMessageParams(segment_number, ptr);
                     }
                 }
@@ -392,8 +392,8 @@ namespace iText.IO.Codec {
                 segment_page_association = ra.Read();
             }
             if (segment_page_association < 0) {
-                throw new iText.IO.IOException("Page {0} is invalid for segment {1} starting at {2}").SetMessageParams(segment_page_association
-                    , segment_number, ptr);
+                throw new iText.IO.Exceptions.IOException("Page {0} is invalid for segment {1} starting at {2}").SetMessageParams
+                    (segment_page_association, segment_number, ptr);
             }
             s.page = segment_page_association;
             // so we can change the page association at embedding time.
@@ -427,14 +427,15 @@ namespace iText.IO.Codec {
             byte[] refidstring = new byte[] { (byte)0x97, 0x4A, 0x42, 0x32, 0x0D, 0x0A, 0x1A, 0x0A };
             for (int i = 0; i < idstring.Length; i++) {
                 if (idstring[i] != refidstring[i]) {
-                    throw new iText.IO.IOException("File header idstring is not good at byte {0}").SetMessageParams(i);
+                    throw new iText.IO.Exceptions.IOException("File header idstring is not good at byte {0}").SetMessageParams
+                        (i);
                 }
             }
             int fileheaderflags = ra.Read();
             this.sequential = (fileheaderflags & 0x1) == 0x1;
             this.number_of_pages_known = (fileheaderflags & 0x2) == 0x0;
             if ((fileheaderflags & 0xfc) != 0x0) {
-                throw new iText.IO.IOException("File header flags bits from 2 to 7 should be 0, some not");
+                throw new iText.IO.Exceptions.IOException("File header flags bits from 2 to 7 should be 0, some not");
             }
             if (this.number_of_pages_known) {
                 this.number_of_pages = ra.ReadInt();

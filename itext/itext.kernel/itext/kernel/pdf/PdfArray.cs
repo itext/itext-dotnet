@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using iText.Kernel;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 

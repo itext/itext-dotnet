@@ -942,7 +942,7 @@ namespace iText.Layout.Renderer {
                             ) {
                             if (wasHeightClipped) {
                                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                                logger.LogWarning(iText.IO.LogMessageConstant.CLIP_ELEMENT);
+                                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT);
                                 // Process borders
                                 if (status == LayoutResult.NOTHING) {
                                     bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, true, false
@@ -997,7 +997,7 @@ namespace iText.Layout.Renderer {
                 if (lastInRow < 0 || lastRow.Length != lastInRow + (int)lastRow[lastInRow].GetPropertyAsInteger(Property.COLSPAN
                     )) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.LogWarning(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
+                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
                 }
             }
             // process footer renderer with collapsed borders
@@ -1367,14 +1367,14 @@ namespace iText.Layout.Renderer {
             UnitValue marginRightUV = this.GetPropertyAsUnitValue(Property.MARGIN_RIGHT);
             if (!marginRightUV.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_RIGHT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_RIGHT));
             }
             UnitValue marginLefttUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
             if (!marginLefttUV.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_LEFT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_LEFT));
             }
             float additionalWidth = marginLefttUV.GetValue() + marginRightUV.GetValue() + rightMaxBorder / 2 + leftMaxBorder
                  / 2;
@@ -1441,8 +1441,8 @@ namespace iText.Layout.Renderer {
                 UnitValue topMargin = this.GetPropertyAsUnitValue(Property.MARGIN_TOP);
                 if (null != topMargin && !topMargin.IsPointValue()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .MARGIN_LEFT));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.MARGIN_LEFT));
                 }
                 startY -= null == topMargin ? 0 : topMargin.GetValue();
             }
@@ -1450,8 +1450,8 @@ namespace iText.Layout.Renderer {
                 UnitValue leftMargin = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
                 if (null != leftMargin && !leftMargin.IsPointValue()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .MARGIN_LEFT));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.MARGIN_LEFT));
                 }
                 startX += +(null == leftMargin ? 0 : leftMargin.GetValue());
             }
@@ -1729,7 +1729,7 @@ namespace iText.Layout.Renderer {
                 catch (NullReferenceException) {
                     // TODO Remove try-catch when DEVSIX-1655 is resolved.
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                         , "Some of the cell's content might not end up placed correctly."));
                 }
             }
@@ -2004,24 +2004,24 @@ namespace iText.Layout.Renderer {
             UnitValue[] margins = GetMargins();
             if (!margins[1].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_RIGHT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_RIGHT));
             }
             if (!margins[3].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_LEFT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_LEFT));
             }
             UnitValue[] paddings = GetPaddings();
             if (!paddings[1].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_RIGHT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_RIGHT));
             }
             if (!paddings[3].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_LEFT));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_LEFT));
             }
             CalculateColumnWidths(layoutBox.GetWidth() - margins[1].GetValue() - margins[3].GetValue() - paddings[1].GetValue
                 () - paddings[3].GetValue());

@@ -49,7 +49,7 @@ using iText.Commons.Utils;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
 using iText.Forms.Xfa;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -833,7 +833,7 @@ namespace iText.Forms {
                     }
                 }
                 else {
-                    logger.LogError(iText.IO.LogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
                 }
                 PdfArray fFields = GetFields();
                 fFields.Remove(fieldObject);
@@ -1005,7 +1005,7 @@ namespace iText.Forms {
         protected internal virtual PdfArray GetFields() {
             PdfArray fields = GetPdfObject().GetAsArray(PdfName.Fields);
             if (fields == null) {
-                logger.LogWarning(iText.IO.LogMessageConstant.NO_FIELDS_IN_ACROFORM);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.NO_FIELDS_IN_ACROFORM);
                 fields = new PdfArray();
                 GetPdfObject().Put(PdfName.Fields, fields);
             }
@@ -1021,13 +1021,13 @@ namespace iText.Forms {
             int index = 1;
             foreach (PdfObject field in array) {
                 if (field.IsFlushed()) {
-                    logger.LogInformation(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED);
+                    logger.LogInformation(iText.IO.Logs.IoLogMessageConstant.FORM_FIELD_WAS_FLUSHED);
                     continue;
                 }
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);
                 if (formField == null) {
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, field.GetIndirectReference
-                        () == null ? field : field.GetIndirectReference()));
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, field
+                        .GetIndirectReference() == null ? field : field.GetIndirectReference()));
                     continue;
                 }
                 PdfString fieldName = formField.GetFieldName();

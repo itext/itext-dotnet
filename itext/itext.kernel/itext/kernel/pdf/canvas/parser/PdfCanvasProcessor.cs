@@ -47,7 +47,6 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
@@ -879,7 +878,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                     }
                     else {
                         ILogger logger = ITextLogManager.GetLogger(typeof(PdfCanvasProcessor));
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX
                             ));
                     }
                 }
@@ -1179,14 +1178,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 PdfDictionary properties = resources.GetResource(PdfName.Properties);
                 if (null == properties) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(PdfCanvasProcessor));
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
                         , PdfName.Properties));
                     return null;
                 }
                 PdfDictionary propertiesDictionary = properties.GetAsDictionary(dictionaryName);
                 if (null == propertiesDictionary) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(PdfCanvasProcessor));
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
                         , dictionaryName));
                     return null;
                 }

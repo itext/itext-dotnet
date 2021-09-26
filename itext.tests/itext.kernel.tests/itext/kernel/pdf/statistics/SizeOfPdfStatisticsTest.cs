@@ -108,10 +108,10 @@ namespace iText.Kernel.Pdf.Statistics {
                 ());
         }
 
-        private class SizeOfPdfStatisticsHandler : IBaseEventHandler {
+        private class SizeOfPdfStatisticsHandler : IEventHandler {
             private IList<SizeOfPdfStatisticsEvent> sizeOfPdfEvents = new List<SizeOfPdfStatisticsEvent>();
 
-            public virtual void OnEvent(IBaseEvent @event) {
+            public virtual void OnEvent(IEvent @event) {
                 if (!(@event is SizeOfPdfStatisticsEvent)) {
                     return;
                 }

@@ -42,9 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.StyledXmlParser {
+namespace iText.StyledXmlParser.Logs {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
-    public sealed class LogMessageConstant {
+    public sealed class StyledXmlParserLogMessageConstant {
         /// <summary>The Constant SHORTHAND_PROPERTY_CANNOT_BE_EMPTY.</summary>
         public const String SHORTHAND_PROPERTY_CANNOT_BE_EMPTY = "{0} shorthand property cannot be empty.";
 
@@ -54,7 +54,7 @@ namespace iText.StyledXmlParser {
         /// <summary>The Constant ERROR_ADDING_CHILD_NODE.</summary>
         public const String ERROR_ADDING_CHILD_NODE = "Error adding child node.";
 
-        /// <summary>The Constant ERROR_PARSING_COULD_NOT_MAP_NODE</summary>
+        /// <summary>The Constant ERROR_PARSING_COULD_NOT_MAP_NODE.</summary>
         public const String ERROR_PARSING_COULD_NOT_MAP_NODE = "Could not map node type: {0}";
 
         /// <summary>The Constant ERROR_PARSING_CSS_SELECTOR.</summary>
@@ -122,7 +122,8 @@ namespace iText.StyledXmlParser {
         public const String ERROR_RESOLVING_PARENT_STYLES = "Element parent styles are not resolved. Styles for current element might be incorrect.";
 
         /// <summary>Instantiates a new log message constant.</summary>
-        private LogMessageConstant() {
+        private StyledXmlParserLogMessageConstant() {
         }
+        //Private constructor will prevent the instantiation of this class directly
     }
 }

@@ -117,10 +117,10 @@ namespace iText.Signatures {
                         }
                         else {
                             if (status is RevokedStatus) {
-                                throw new System.IO.IOException(iText.IO.LogMessageConstant.OCSP_STATUS_IS_REVOKED);
+                                throw new System.IO.IOException(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_REVOKED);
                             }
                             else {
-                                throw new System.IO.IOException(iText.IO.LogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
+                                throw new System.IO.IOException(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
                             }
                         }
                     }

@@ -77,7 +77,7 @@ namespace iText.IO.Font {
                 return new iText.IO.Font.Type1Font(name, null, null, null);
             }
             else {
-                throw new iText.IO.IOException("{0} is not a standard type1 font.").SetMessageParams(name);
+                throw new iText.IO.Exceptions.IOException("{0} is not a standard type1 font.").SetMessageParams(name);
             }
         }
 
@@ -192,7 +192,7 @@ namespace iText.IO.Font {
                 for (int k = 0; k < 3; ++k) {
                     if (raf.Read() != 0x80) {
                         ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
-                        logger.LogError(iText.IO.LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
+                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
                         return null;
                     }
                     if (raf.Read() != PFB_TYPES[k]) {
@@ -360,10 +360,11 @@ namespace iText.IO.Font {
             if (!startKernPairs) {
                 String metricsPath = fontParser.GetAfmPath();
                 if (metricsPath != null) {
-                    throw new iText.IO.IOException("startcharmetrics is missing in {0}.").SetMessageParams(metricsPath);
+                    throw new iText.IO.Exceptions.IOException("startcharmetrics is missing in {0}.").SetMessageParams(metricsPath
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("startcharmetrics is missing in the metrics file.");
+                    throw new iText.IO.Exceptions.IOException("startcharmetrics is missing in the metrics file.");
                 }
             }
             avgWidth = 0;
@@ -431,10 +432,11 @@ namespace iText.IO.Font {
             if (startKernPairs) {
                 String metricsPath = fontParser.GetAfmPath();
                 if (metricsPath != null) {
-                    throw new iText.IO.IOException("endcharmetrics is missing in {0}.").SetMessageParams(metricsPath);
+                    throw new iText.IO.Exceptions.IOException("endcharmetrics is missing in {0}.").SetMessageParams(metricsPath
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("endcharmetrics is missing in the metrics file.");
+                    throw new iText.IO.Exceptions.IOException("endcharmetrics is missing in the metrics file.");
                 }
             }
             // From AdobeGlyphList:
@@ -494,20 +496,21 @@ namespace iText.IO.Font {
                 if (!endOfMetrics) {
                     String metricsPath = fontParser.GetAfmPath();
                     if (metricsPath != null) {
-                        throw new iText.IO.IOException("endfontmetrics is missing in {0}.").SetMessageParams(metricsPath);
+                        throw new iText.IO.Exceptions.IOException("endfontmetrics is missing in {0}.").SetMessageParams(metricsPath
+                            );
                     }
                     else {
-                        throw new iText.IO.IOException("endfontmetrics is missing in the metrics file.");
+                        throw new iText.IO.Exceptions.IOException("endfontmetrics is missing in the metrics file.");
                     }
                 }
             }
             if (startKernPairs) {
                 String metricsPath = fontParser.GetAfmPath();
                 if (metricsPath != null) {
-                    throw new iText.IO.IOException("endkernpairs is missing in {0}.").SetMessageParams(metricsPath);
+                    throw new iText.IO.Exceptions.IOException("endkernpairs is missing in {0}.").SetMessageParams(metricsPath);
                 }
                 else {
-                    throw new iText.IO.IOException("endkernpairs is missing in the metrics file.");
+                    throw new iText.IO.Exceptions.IOException("endkernpairs is missing in the metrics file.");
                 }
             }
             raf.Close();

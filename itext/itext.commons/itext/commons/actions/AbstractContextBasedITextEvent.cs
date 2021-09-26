@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Data;
-using iText.Commons.Exceptions;
 
 namespace iText.Commons.Actions {
     /// <summary>Represents a context-based event.</summary>
@@ -51,11 +50,13 @@ namespace iText.Commons.Actions {
 
         /// <summary>Sets meta info.</summary>
         /// <param name="metaInfo">meta info</param>
-        public virtual void SetMetaInfo(IMetaInfo metaInfo) {
+        /// <returns>true if meta info has been set, false otherwise</returns>
+        public virtual bool SetMetaInfo(IMetaInfo metaInfo) {
             if (this.metaInfo != null) {
-                throw new InvalidOperationException(CommonsExceptionMessageConstant.META_INFO_SHOULDNT_BE_NULL);
+                return false;
             }
             this.metaInfo = metaInfo;
+            return true;
         }
 
         /// <summary>Obtains stored meta info associated with the event.</summary>

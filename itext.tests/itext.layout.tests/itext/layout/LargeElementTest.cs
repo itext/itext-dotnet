@@ -42,8 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Commons.Utils;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -570,7 +570,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void LargeTableWithLayoutResultNothingTest02() {
             String testName = "largeTableWithLayoutResultNothingTest02.pdf";
             String outFileName = destinationFolder + testName;
@@ -737,7 +737,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void LargeTableWithCellBordersSplitTest() {
             String testName = "largeTableWithCellBordersSplitTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -914,7 +914,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 1)]
         public virtual void ReuseLargeTableTest01() {
             String testName = "reuseLargeTableTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -982,7 +982,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 8)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 8)]
         public virtual void LargeEmptyTableTest02() {
             String testName = "largeEmptyTableTest02.pdf";
             String outFileName = destinationFolder + testName;
@@ -1054,7 +1054,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 8)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 8)]
         public virtual void LargeEmptyTableTest02Separated() {
             String testName = "largeEmptyTableTest02Separated.pdf";
             String outFileName = destinationFolder + testName;
@@ -1128,7 +1128,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         // TODO DEVSIX-3953
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void LargeTableFooterNotFitTest() {
             String testName = "largeTableFooterNotFitTest.pdf";
             String outFileName = destinationFolder + testName;

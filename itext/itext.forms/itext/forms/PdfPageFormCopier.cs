@@ -109,8 +109,8 @@ namespace iText.Forms {
         private PdfFormField MakeFormField(PdfObject fieldDict) {
             PdfFormField field = PdfFormField.MakeFormField(fieldDict, documentTo);
             if (field == null) {
-                logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, fieldDict.
-                    GetIndirectReference()));
+                logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, fieldDict
+                    .GetIndirectReference()));
             }
             return field;
         }
@@ -211,8 +211,8 @@ namespace iText.Forms {
             if (null != newField.GetFieldName()) {
                 fullFieldName = newField.GetFieldName().ToUnicodeString();
             }
-            logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, fullFieldName
-                ));
+            logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, 
+                fullFieldName));
             PdfFormField existingField = formTo.GetField(fullFieldName);
             if (existingField.IsFlushed()) {
                 int index = 0;

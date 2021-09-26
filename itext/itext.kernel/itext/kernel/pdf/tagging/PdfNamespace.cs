@@ -312,8 +312,8 @@ namespace iText.Kernel.Pdf.Tagging {
                 if (nsNameStr == null) {
                     nsNameStr = "this";
                 }
-                logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.MAPPING_IN_NAMESPACE_OVERWRITTEN, thisNsRole
-                    , nsNameStr));
+                logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.MAPPING_IN_NAMESPACE_OVERWRITTEN
+                    , thisNsRole, nsNameStr));
             }
         }
     }

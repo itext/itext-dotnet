@@ -77,7 +77,7 @@ namespace iText.Kernel.Font {
                 }
                 catch (Exception) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(CMapToUnicode));
-                    logger.LogError(iText.IO.LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
                     cMapToUnicode = CMapToUnicode.EmptyCMapToUnicodeMap;
                 }
             }
@@ -126,7 +126,7 @@ namespace iText.Kernel.Font {
             JavaUtil.Fill(res, missingWidth);
             if (widthsArray == null) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(FontUtil));
-                logger.LogWarning(iText.IO.LogMessageConstant.FONT_DICTIONARY_WITH_NO_WIDTHS);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.FONT_DICTIONARY_WITH_NO_WIDTHS);
                 return res;
             }
             for (int i = 0; i < widthsArray.Size() && first + i < 256; i++) {

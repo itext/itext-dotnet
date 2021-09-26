@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Codec.Brotli.Dec;
+using iText.IO.Exceptions;
 
 namespace iText.IO.Font.Woff2 {
     // Library for converting WOFF2 format font files to their TTF versions.

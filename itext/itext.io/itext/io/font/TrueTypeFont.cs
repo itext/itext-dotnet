@@ -160,7 +160,7 @@ namespace iText.IO.Font {
             }
             catch (System.IO.IOException e) {
                 fontStreamBytes = null;
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
             return fontStreamBytes;
         }
@@ -207,7 +207,7 @@ namespace iText.IO.Font {
                 return fontParser.GetSubset(glyphs, subset);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
         }
 
@@ -298,7 +298,7 @@ namespace iText.IO.Font {
                 int index = cmap.Get(charCode)[0];
                 if (index >= numOfGlyphs) {
                     ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Font.TrueTypeFont));
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames
+                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames
                         ().GetFontName(), index));
                     continue;
                 }

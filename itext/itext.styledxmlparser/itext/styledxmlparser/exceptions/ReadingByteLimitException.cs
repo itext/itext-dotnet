@@ -20,12 +20,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-namespace iText.Commons.Actions {
-    /// <summary>Base marker interface for any generated event of any source.</summary>
-    /// <remarks>
-    /// Base marker interface for any generated event of any source.
-    /// <para />TODO: DEVSIX-5311 rename it IEvent when the oldest mechanism is deleted
-    /// </remarks>
-    public interface IBaseEvent {
+using iText.Commons.Exceptions;
+
+namespace iText.StyledXmlParser.Exceptions {
+    /// <summary>Thrown when the limit on the number of bytes read was violated.</summary>
+    public class ReadingByteLimitException : ITextException {
     }
 }

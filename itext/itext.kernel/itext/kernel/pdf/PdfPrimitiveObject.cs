@@ -88,7 +88,7 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
-                logger.LogWarning(iText.IO.LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
             }
             return this;
         }
@@ -99,7 +99,7 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
-                logger.LogWarning(iText.IO.LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
             }
             return this;
         }

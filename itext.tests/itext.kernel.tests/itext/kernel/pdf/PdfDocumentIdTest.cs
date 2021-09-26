@@ -45,7 +45,7 @@ using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using iText.IO.Source;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Canvas;
 using iText.Test;
 using iText.Test.Attributes;
@@ -232,7 +232,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
         public virtual void ReadPdfWithTwoNumberIdsTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithTwoNumberIds.pdf"));
             String originalId = null;
@@ -249,7 +249,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
         public virtual void ReadPdfWithOneNumberOneStringIdsTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithOneNumberOneStringIds.pdf")
                 );
@@ -267,7 +267,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
         public virtual void ReadPdfWithOneStringIdValueTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithOneStringId.pdf"));
             String originalId = null;
@@ -284,7 +284,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
         public virtual void ReadPdfWithOneNumberIdValueTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithOneNumberId.pdf"));
             String originalId = null;
@@ -301,7 +301,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
         public virtual void ReadPdfWithNoIdTest() {
             PdfReader reader = new PdfReader(sourceFolder + "pdfWithNoId.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
@@ -325,7 +325,7 @@ namespace iText.Kernel.Pdf {
             using (PdfReader reader = new PdfReader(sourceFolder + "pdfWithNoId.pdf").SetStrictnessLevel(PdfReader.StrictnessLevel
                 .CONSERVATIVE)) {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
-                NUnit.Framework.Assert.AreEqual(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED, e.Message);
+                NUnit.Framework.Assert.AreEqual(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED, e.Message);
             }
         }
         //    @Test

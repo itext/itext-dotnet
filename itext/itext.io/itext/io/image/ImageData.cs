@@ -229,10 +229,12 @@ namespace iText.IO.Image {
 
         public virtual void SetImageMask(iText.IO.Image.ImageData imageMask) {
             if (this.mask) {
-                throw new iText.IO.IOException(iText.IO.IOException.ImageMaskCannotContainAnotherImageMask);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ImageMaskCannotContainAnotherImageMask
+                    );
             }
             if (!imageMask.mask) {
-                throw new iText.IO.IOException(iText.IO.IOException.ImageIsNotMaskYouMustCallImageDataMakeMask);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ImageIsNotMaskYouMustCallImageDataMakeMask
+                    );
             }
             this.imageMask = imageMask;
         }
@@ -243,7 +245,7 @@ namespace iText.IO.Image {
 
         public virtual void MakeMask() {
             if (!CanBeMask()) {
-                throw new iText.IO.IOException(iText.IO.IOException.ThisImageCanNotBeAnImageMask);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ThisImageCanNotBeAnImageMask);
             }
             mask = true;
         }
@@ -321,11 +323,11 @@ namespace iText.IO.Image {
         public virtual bool CanImageBeInline() {
             ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Image.ImageData));
             if (imageSize > 4096) {
-                logger.LogWarning(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
                 return false;
             }
             if (imageMask != null) {
-                logger.LogWarning(iText.IO.LogMessageConstant.IMAGE_HAS_MASK);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_MASK);
                 return false;
             }
             return true;

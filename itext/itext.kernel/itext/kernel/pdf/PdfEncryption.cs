@@ -48,7 +48,6 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Crypto;
 using iText.Kernel.Crypto.Securityhandler;
 using iText.Kernel.Exceptions;

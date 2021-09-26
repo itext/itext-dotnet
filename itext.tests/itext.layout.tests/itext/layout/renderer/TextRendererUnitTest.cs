@@ -27,7 +27,7 @@ using iText.Test.Attributes;
 namespace iText.Layout.Renderer {
     public class TextRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
             TextRenderer textRenderer = new _TextRenderer_44(new Text("tet"));
             // Nothing is overridden

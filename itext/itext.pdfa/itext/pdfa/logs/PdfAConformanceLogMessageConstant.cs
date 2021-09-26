@@ -43,22 +43,26 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Barcodes.Qrcode {
-    /// <summary>
-    /// A base class which covers the range of exceptions which may occur when encoding a barcode using
-    /// the Writer framework.
-    /// </summary>
-    /// <author>dswitkin@google.com (Daniel Switkin)</author>
-    public sealed class WriterException : Exception {
-        /// <summary>Creates a WriterException.</summary>
-        public WriterException()
-            : base() {
-        }
+namespace iText.Pdfa.Logs {
+    /// <summary>Class containing pdfa conformance constants to be used in logging.</summary>
+    public sealed class PdfAConformanceLogMessageConstant {
+        public const String CATALOG_SHOULD_CONTAIN_LANG_ENTRY = "Catalog dictionary should contain lang entry";
 
-        /// <summary>Creates a WriterException with a message.</summary>
-        /// <param name="message">message of the exception</param>
-        public WriterException(String message)
-            : base(message) {
+        public const String EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC = "Embedded file shall be compliant with either ISO 19005-1 (PDF-A/1 standard) or ISO 19005-2 "
+             + "(PDF-A/2 standard). Please ensure that fact, because iText doesn't check embedded file.";
+
+        public const String EMBEDDED_FILE_SHOULD_CONTAIN_PARAMS_KEY = "Embedded file should contain params key ";
+
+        public const String FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY = "File specification dictionary should contain desc key";
+
+        public const String TEXT_ANNOTATIONS_SHOULD_SET_THE_NOZOOM_AND_NOROTATE_FLAG_BITS_OF_THE_F_KEY_TO_1 = "Text annotations should set the nozoom and norotate flag bits of the f key to 1";
+
+        public const String TINT_TRANSFORM_AND_ALTERNATE_SPACE_OF_SEPARATION_ARRAYS_IN_THE_COLORANTS_OF_DEVICE_N_SHOULD_BE_CONSISTENT_WITH_SAME_ATTRIBUTES_OF_DEVICE_N
+             = "TintTransform and alternateSpace of separation arrays in the colorants of deviceN should be consistent "
+             + "with same attributes of deviceN";
+
+        private PdfAConformanceLogMessageConstant() {
         }
+        //Private constructor will prevent the instantiation of this class directly
     }
 }

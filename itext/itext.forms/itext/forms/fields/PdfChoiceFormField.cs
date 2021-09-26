@@ -151,7 +151,7 @@ namespace iText.Forms.Fields {
             ) {
             if (optionValues.Length > 1 && !IsMultiSelect()) {
                 ILogger logger = ITextLogManager.GetLogger(this.GetType());
-                logger.LogWarning(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
             }
             PdfArray options = GetOptions();
             PdfArray indices = new PdfArray();
@@ -170,7 +170,7 @@ namespace iText.Forms.Fields {
                 else {
                     if (!(this.IsCombo() && this.IsEdit())) {
                         ILogger logger = ITextLogManager.GetLogger(this.GetType());
-                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY
+                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY
                             , element, this.GetFieldName()));
                     }
                     values.Add(new PdfString(element, PdfEncodings.UNICODE_BIG));
@@ -207,7 +207,7 @@ namespace iText.Forms.Fields {
         public virtual iText.Forms.Fields.PdfChoiceFormField SetListSelected(int[] optionNumbers) {
             if (optionNumbers.Length > 1 && !IsMultiSelect()) {
                 ILogger logger = ITextLogManager.GetLogger(this.GetType());
-                logger.LogWarning(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
             }
             PdfArray indices = new PdfArray();
             PdfArray values = new PdfArray();

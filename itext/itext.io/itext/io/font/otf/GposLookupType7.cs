@@ -110,7 +110,7 @@ namespace iText.IO.Font.Otf {
 
                 case 1:
                 case 3: {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.LogMessageConstant.GPOS_LOOKUP_SUBTABLE_FORMAT_NOT_SUPPORTED
+                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.GPOS_LOOKUP_SUBTABLE_FORMAT_NOT_SUPPORTED
                         , substFormat, 7));
                     break;
                 }
