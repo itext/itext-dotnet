@@ -42,7 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.Svg;
+using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Renderers.Factories {
@@ -51,90 +53,117 @@ namespace iText.Svg.Renderers.Factories {
     /// tags as defined in the SVG Specification.
     /// </summary>
     internal class DefaultSvgNodeRendererMapper {
+        private static readonly String CLIP_PATH_LC = SvgConstants.Tags.CLIP_PATH.ToLowerInvariant();
+
+        private static readonly String LINEAR_GRADIENT_LC = SvgConstants.Tags.LINEAR_GRADIENT.ToLowerInvariant();
+
+        private static readonly String TEXT_LEAF_LC = SvgConstants.Tags.TEXT_LEAF.ToLowerInvariant();
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="DefaultSvgNodeRendererMapper"/>
+        /// instance.
+        /// </summary>
         internal DefaultSvgNodeRendererMapper() {
         }
 
-        internal virtual IDictionary<String, Type> GetMapping() {
-            IDictionary<String, Type> result = new Dictionary<String, Type>();
-            result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.CLIP_PATH, typeof(ClipPathSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.DEFS, typeof(DefsSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.ELLIPSE, typeof(EllipseSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.G, typeof(GroupSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.IMAGE, typeof(ImageSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.LINE, typeof(LineSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.LINEAR_GRADIENT, typeof(LinearGradientSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.MARKER, typeof(MarkerSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.PATTERN, typeof(PatternSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.PATH, typeof(PathSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.POLYGON, typeof(PolygonSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.POLYLINE, typeof(PolylineSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.RECT, typeof(RectangleSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.STOP, typeof(StopSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.SVG, typeof(SvgTagSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.SYMBOL, typeof(SymbolSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.TEXT, typeof(TextSvgBranchRenderer));
-            result.Put(SvgConstants.Tags.TSPAN, typeof(TextSvgTSpanBranchRenderer));
-            result.Put(SvgConstants.Tags.USE, typeof(UseSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.TEXT_LEAF, typeof(TextLeafSvgNodeRenderer));
+        private static readonly IDictionary<String, DefaultSvgNodeRendererMapper.ISvgNodeRendererCreator> mapping;
+
+        private static readonly ICollection<String> ignored;
+
+        static DefaultSvgNodeRendererMapper() {
+            IDictionary<String, DefaultSvgNodeRendererMapper.ISvgNodeRendererCreator> result = new Dictionary<String, 
+                DefaultSvgNodeRendererMapper.ISvgNodeRendererCreator>();
+            result.Put(SvgConstants.Tags.CIRCLE, () => new CircleSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.CLIP_PATH, () => new ClipPathSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.DEFS, () => new DefsSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.ELLIPSE, () => new EllipseSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.G, () => new GroupSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.IMAGE, () => new ImageSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.LINE, () => new LineSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.LINEAR_GRADIENT, () => new LinearGradientSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.MARKER, () => new MarkerSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.PATTERN, () => new PatternSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.PATH, () => new PathSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.POLYGON, () => new PolygonSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.POLYLINE, () => new PolylineSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.RECT, () => new RectangleSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.STOP, () => new StopSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.SVG, () => new SvgTagSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.SYMBOL, () => new SymbolSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.TEXT, () => new TextSvgBranchRenderer());
+            result.Put(SvgConstants.Tags.TSPAN, () => new TextSvgTSpanBranchRenderer());
+            result.Put(SvgConstants.Tags.USE, () => new UseSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.TEXT_LEAF, () => new TextLeafSvgNodeRenderer());
             // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-            result.Put(SvgConstants.Tags.CLIP_PATH.ToLowerInvariant(), typeof(ClipPathSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.LINEAR_GRADIENT.ToLowerInvariant(), typeof(LinearGradientSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.TEXT_LEAF.ToLowerInvariant(), typeof(TextLeafSvgNodeRenderer));
-            return result;
+            result.Put(CLIP_PATH_LC, () => new ClipPathSvgNodeRenderer());
+            result.Put(LINEAR_GRADIENT_LC, () => new LinearGradientSvgNodeRenderer());
+            result.Put(TEXT_LEAF_LC, () => new TextLeafSvgNodeRenderer());
+            mapping = JavaCollectionsUtil.UnmodifiableMap(result);
+            // Not supported tags as of yet
+            ICollection<String> ignoredTags = new HashSet<String>();
+            ignoredTags.Add(SvgConstants.Tags.A);
+            ignoredTags.Add(SvgConstants.Tags.ALT_GLYPH);
+            ignoredTags.Add(SvgConstants.Tags.ALT_GLYPH_DEF);
+            ignoredTags.Add(SvgConstants.Tags.ALT_GLYPH_ITEM);
+            ignoredTags.Add(SvgConstants.Tags.COLOR_PROFILE);
+            ignoredTags.Add(SvgConstants.Tags.DESC);
+            ignoredTags.Add(SvgConstants.Tags.FE_BLEND);
+            ignoredTags.Add(SvgConstants.Tags.FE_COLOR_MATRIX);
+            ignoredTags.Add(SvgConstants.Tags.FE_COMPONENT_TRANSFER);
+            ignoredTags.Add(SvgConstants.Tags.FE_COMPOSITE);
+            ignoredTags.Add(SvgConstants.Tags.FE_COMVOLVE_MATRIX);
+            ignoredTags.Add(SvgConstants.Tags.FE_DIFFUSE_LIGHTING);
+            ignoredTags.Add(SvgConstants.Tags.FE_DISPLACEMENT_MAP);
+            ignoredTags.Add(SvgConstants.Tags.FE_DISTANT_LIGHT);
+            ignoredTags.Add(SvgConstants.Tags.FE_FLOOD);
+            ignoredTags.Add(SvgConstants.Tags.FE_FUNC_A);
+            ignoredTags.Add(SvgConstants.Tags.FE_FUNC_B);
+            ignoredTags.Add(SvgConstants.Tags.FE_FUNC_G);
+            ignoredTags.Add(SvgConstants.Tags.FE_FUNC_R);
+            ignoredTags.Add(SvgConstants.Tags.FE_GAUSSIAN_BLUR);
+            ignoredTags.Add(SvgConstants.Tags.FE_IMAGE);
+            ignoredTags.Add(SvgConstants.Tags.FE_MERGE);
+            ignoredTags.Add(SvgConstants.Tags.FE_MERGE_NODE);
+            ignoredTags.Add(SvgConstants.Tags.FE_MORPHOLOGY);
+            ignoredTags.Add(SvgConstants.Tags.FE_OFFSET);
+            ignoredTags.Add(SvgConstants.Tags.FE_POINT_LIGHT);
+            ignoredTags.Add(SvgConstants.Tags.FE_SPECULAR_LIGHTING);
+            ignoredTags.Add(SvgConstants.Tags.FE_SPOTLIGHT);
+            ignoredTags.Add(SvgConstants.Tags.FE_TILE);
+            ignoredTags.Add(SvgConstants.Tags.FE_TURBULENCE);
+            ignoredTags.Add(SvgConstants.Tags.FILTER);
+            ignoredTags.Add(SvgConstants.Tags.FONT);
+            ignoredTags.Add(SvgConstants.Tags.FONT_FACE);
+            ignoredTags.Add(SvgConstants.Tags.FONT_FACE_FORMAT);
+            ignoredTags.Add(SvgConstants.Tags.FONT_FACE_NAME);
+            ignoredTags.Add(SvgConstants.Tags.FONT_FACE_SRC);
+            ignoredTags.Add(SvgConstants.Tags.FONT_FACE_URI);
+            ignoredTags.Add(SvgConstants.Tags.FOREIGN_OBJECT);
+            ignoredTags.Add(SvgConstants.Tags.GLYPH);
+            ignoredTags.Add(SvgConstants.Tags.GLYPH_REF);
+            ignoredTags.Add(SvgConstants.Tags.HKERN);
+            ignoredTags.Add(SvgConstants.Tags.MASK);
+            ignoredTags.Add(SvgConstants.Tags.METADATA);
+            ignoredTags.Add(SvgConstants.Tags.MISSING_GLYPH);
+            ignoredTags.Add(SvgConstants.Tags.RADIAL_GRADIENT);
+            ignoredTags.Add(SvgConstants.Tags.STYLE);
+            ignoredTags.Add(SvgConstants.Tags.TITLE);
+            ignored = JavaCollectionsUtil.UnmodifiableCollection(ignoredTags);
         }
 
+        /// <summary>Gets the default SVG tags mapping.</summary>
+        /// <returns>the default SVG tags mapping</returns>
+        internal virtual IDictionary<String, DefaultSvgNodeRendererMapper.ISvgNodeRendererCreator> GetMapping() {
+            return mapping;
+        }
+
+        /// <summary>Gets the default ignored SVG tags.</summary>
+        /// <returns>default ignored SVG tags</returns>
         internal virtual ICollection<String> GetIgnoredTags() {
-            ICollection<String> ignored = new HashSet<String>();
-            // Not supported tags as of yet
-            ignored.Add(SvgConstants.Tags.A);
-            ignored.Add(SvgConstants.Tags.ALT_GLYPH);
-            ignored.Add(SvgConstants.Tags.ALT_GLYPH_DEF);
-            ignored.Add(SvgConstants.Tags.ALT_GLYPH_ITEM);
-            ignored.Add(SvgConstants.Tags.COLOR_PROFILE);
-            ignored.Add(SvgConstants.Tags.DESC);
-            ignored.Add(SvgConstants.Tags.FE_BLEND);
-            ignored.Add(SvgConstants.Tags.FE_COLOR_MATRIX);
-            ignored.Add(SvgConstants.Tags.FE_COMPONENT_TRANSFER);
-            ignored.Add(SvgConstants.Tags.FE_COMPOSITE);
-            ignored.Add(SvgConstants.Tags.FE_COMVOLVE_MATRIX);
-            ignored.Add(SvgConstants.Tags.FE_DIFFUSE_LIGHTING);
-            ignored.Add(SvgConstants.Tags.FE_DISPLACEMENT_MAP);
-            ignored.Add(SvgConstants.Tags.FE_DISTANT_LIGHT);
-            ignored.Add(SvgConstants.Tags.FE_FLOOD);
-            ignored.Add(SvgConstants.Tags.FE_FUNC_A);
-            ignored.Add(SvgConstants.Tags.FE_FUNC_B);
-            ignored.Add(SvgConstants.Tags.FE_FUNC_G);
-            ignored.Add(SvgConstants.Tags.FE_FUNC_R);
-            ignored.Add(SvgConstants.Tags.FE_GAUSSIAN_BLUR);
-            ignored.Add(SvgConstants.Tags.FE_IMAGE);
-            ignored.Add(SvgConstants.Tags.FE_MERGE);
-            ignored.Add(SvgConstants.Tags.FE_MERGE_NODE);
-            ignored.Add(SvgConstants.Tags.FE_MORPHOLOGY);
-            ignored.Add(SvgConstants.Tags.FE_OFFSET);
-            ignored.Add(SvgConstants.Tags.FE_POINT_LIGHT);
-            ignored.Add(SvgConstants.Tags.FE_SPECULAR_LIGHTING);
-            ignored.Add(SvgConstants.Tags.FE_SPOTLIGHT);
-            ignored.Add(SvgConstants.Tags.FE_TILE);
-            ignored.Add(SvgConstants.Tags.FE_TURBULENCE);
-            ignored.Add(SvgConstants.Tags.FILTER);
-            ignored.Add(SvgConstants.Tags.FONT);
-            ignored.Add(SvgConstants.Tags.FONT_FACE);
-            ignored.Add(SvgConstants.Tags.FONT_FACE_FORMAT);
-            ignored.Add(SvgConstants.Tags.FONT_FACE_NAME);
-            ignored.Add(SvgConstants.Tags.FONT_FACE_SRC);
-            ignored.Add(SvgConstants.Tags.FONT_FACE_URI);
-            ignored.Add(SvgConstants.Tags.FOREIGN_OBJECT);
-            ignored.Add(SvgConstants.Tags.GLYPH);
-            ignored.Add(SvgConstants.Tags.GLYPH_REF);
-            ignored.Add(SvgConstants.Tags.HKERN);
-            ignored.Add(SvgConstants.Tags.MASK);
-            ignored.Add(SvgConstants.Tags.METADATA);
-            ignored.Add(SvgConstants.Tags.MISSING_GLYPH);
-            ignored.Add(SvgConstants.Tags.RADIAL_GRADIENT);
-            ignored.Add(SvgConstants.Tags.STYLE);
-            ignored.Add(SvgConstants.Tags.TITLE);
             return ignored;
         }
+
+        internal delegate ISvgNodeRenderer ISvgNodeRendererCreator();
     }
 }

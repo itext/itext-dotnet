@@ -132,6 +132,9 @@ namespace iText.Layout.Font {
                 for (int i = 0; i < fontFamilies.Count && res == 0; i++) {
                     FontCharacteristics fc = fontStyles[i];
                     String fontFamily = fontFamilies[i];
+                    if ("monospace".EqualsIgnoreCase(fontFamily)) {
+                        fc.SetMonospaceFlag(true);
+                    }
                     bool isLastFontFamilyToBeProcessed = i == fontFamilies.Count - 1;
                     res = CharacteristicsSimilarity(fontFamily, fc, o2, isLastFontFamilyToBeProcessed) - CharacteristicsSimilarity
                         (fontFamily, fc, o1, isLastFontFamilyToBeProcessed);
@@ -139,23 +142,19 @@ namespace iText.Layout.Font {
                 return res;
             }
 
-            private static FontCharacteristics ParseFontStyle(String fontFamily, FontCharacteristics defaultFc) {
-                if (defaultFc == null) {
-                    defaultFc = new FontCharacteristics();
+            private static FontCharacteristics ParseFontStyle(String fontFamily, FontCharacteristics fc) {
+                if (fc == null) {
+                    fc = new FontCharacteristics();
                 }
-                FontCharacteristics parsedFc = new FontCharacteristics(defaultFc);
-                if (parsedFc.IsUndefined()) {
-                    if ("monospace".EqualsIgnoreCase(fontFamily)) {
-                        parsedFc.SetMonospaceFlag(true);
-                    }
+                if (fc.IsUndefined()) {
                     if (fontFamily.Contains("bold")) {
-                        parsedFc.SetBoldFlag(true);
+                        fc.SetBoldFlag(true);
                     }
                     if (fontFamily.Contains("italic") || fontFamily.Contains("oblique")) {
-                        parsedFc.SetItalicFlag(true);
+                        fc.SetItalicFlag(true);
                     }
                 }
-                return parsedFc;
+                return fc;
             }
 
             /// <summary>
