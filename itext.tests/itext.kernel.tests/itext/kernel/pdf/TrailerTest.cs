@@ -44,6 +44,7 @@ using System;
 using System.IO;
 using iText.Commons.Actions.Data;
 using iText.Commons.Utils;
+using iText.Kernel.Actions.Data;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
 using iText.Test;
@@ -81,27 +82,26 @@ namespace iText.Kernel.Pdf {
         }
 
         private bool DoesTrailerContainFingerprint(FileInfo file, String fingerPrint) {
-            FileStream raf = FileUtil.GetRandomAccessFile(file);
-            // put the pointer at the end of the file
-            raf.Seek(raf.Length);
-            // look for coreProductData
-            String coreProductData = "%iText-Core-7.2.0-SNAPSHOT";
-            String templine = "";
-            while (!templine.Contains(coreProductData)) {
-                templine = (char)raf.ReadByte() + templine;
-                raf.Seek(raf.Position - 2);
+            using (FileStream raf = FileUtil.GetRandomAccessFile(file)) {
+                // put the pointer at the end of the file
+                raf.Seek(raf.Length);
+                // look for coreProductData
+                String coreProductData = "%iText-Core-" + ITextCoreProductData.GetInstance().GetVersion();
+                String templine = "";
+                while (!templine.Contains(coreProductData)) {
+                    templine = (char)raf.ReadByte() + templine;
+                    raf.Seek(raf.Position - 2);
+                }
+                // look for fingerprint
+                char read = ' ';
+                templine = "";
+                while (read != '%') {
+                    read = (char)raf.ReadByte();
+                    templine = read + templine;
+                    raf.Seek(raf.Position - 2);
+                }
+                return templine.Contains(fingerPrint);
             }
-            // look for fingerprint
-            char read = ' ';
-            templine = "";
-            while (read != '%') {
-                read = (char)raf.ReadByte();
-                templine = read + templine;
-                raf.Seek(raf.Position - 2);
-            }
-            bool output = templine.Contains(fingerPrint);
-            raf.Dispose();
-            return output;
         }
     }
 }

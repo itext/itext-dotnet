@@ -473,13 +473,13 @@ namespace iText.Kernel.Pdf {
         /// <param name="document">pdfDocument to write the fingerprint to</param>
         protected internal static void WriteKeyInfo(PdfDocument document) {
             PdfWriter writer = document.GetWriter();
-            FingerPrint fingerPrint = document.GetFingerPrint();
-            if (fingerPrint.GetProducts().IsEmpty()) {
-                writer.WriteString(MessageFormatUtil.Format("%iText-{0}-no-registered-products", ITextCoreProductData.GetInstance
+            ICollection<ProductData> products = document.GetFingerPrint().GetProducts();
+            if (products.IsEmpty()) {
+                writer.WriteString(MessageFormatUtil.Format("%iText-{0}-no-registered-products\n", ITextCoreProductData.GetInstance
                     ().GetVersion()));
             }
             else {
-                foreach (ProductData productData in fingerPrint.GetProducts()) {
+                foreach (ProductData productData in products) {
                     writer.WriteString(MessageFormatUtil.Format("%iText-{0}-{1}\n", productData.GetPublicProductName(), productData
                         .GetVersion()));
                 }
