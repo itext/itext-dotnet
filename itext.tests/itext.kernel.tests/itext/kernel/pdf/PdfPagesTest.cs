@@ -462,6 +462,46 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CloseDocumentWithRecursivePagesNodeReferencesThrowsExTest() {
+            using (PdfReader reader = new PdfReader(sourceFolder + "recursivePagesNodeReference.pdf")) {
+                using (PdfWriter writer = new PdfWriter(new MemoryStream())) {
+                    PdfDocument pdfDocument = new PdfDocument(reader, writer);
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.Close());
+                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_PAGE_STRUCTURE
+                        , 2), e.Message);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetPageWithRecursivePagesNodeReferenceInAppendModeThrowExTest() {
+            using (PdfReader reader = new PdfReader(sourceFolder + "recursivePagesNodeReference.pdf")) {
+                using (PdfWriter writer = new PdfWriter(new MemoryStream())) {
+                    using (PdfDocument pdfDocument = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode())
+                        ) {
+                        NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetNumberOfPages());
+                        NUnit.Framework.Assert.IsNotNull(pdfDocument.GetPage(1));
+                        Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetPage(2));
+                        NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_PAGE_STRUCTURE
+                            , 2), e.Message);
+                    }
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CloseDocumentWithRecursivePagesNodeInAppendModeDoesNotThrowsTest() {
+            using (PdfReader reader = new PdfReader(sourceFolder + "recursivePagesNodeReference.pdf")) {
+                using (PdfWriter writer = new PdfWriter(new MemoryStream())) {
+                    using (PdfDocument pdfDocument = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode())
+                        ) {
+                        NUnit.Framework.Assert.DoesNotThrow(() => pdfDocument.Close());
+                    }
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void PageGetMediaBoxNotEnoughArgumentsTest() {
             PdfReader reader = new PdfReader(sourceFolder + "helloWorldMediaboxNotEnoughArguments.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader);
