@@ -27,11 +27,15 @@ namespace iText.Commons.Actions.Data {
         [NUnit.Framework.Test]
         public virtual void GetInstanceTest() {
             ProductData commonsProductData = CommonsProductData.GetInstance();
-            NUnit.Framework.Assert.AreEqual("Commons", commonsProductData.GetPublicProductName());
-            NUnit.Framework.Assert.AreEqual("commons", commonsProductData.GetProductName());
-            NUnit.Framework.Assert.AreEqual("7.2.0-SNAPSHOT", commonsProductData.GetVersion());
-            NUnit.Framework.Assert.AreEqual(2000, commonsProductData.GetSinceCopyrightYear());
-            NUnit.Framework.Assert.AreEqual(2021, commonsProductData.GetToCopyrightYear());
+            NUnit.Framework.Assert.AreEqual(CommonsProductData.COMMONS_PUBLIC_PRODUCT_NAME, commonsProductData.GetPublicProductName
+                ());
+            NUnit.Framework.Assert.AreEqual(CommonsProductData.COMMONS_PRODUCT_NAME, commonsProductData.GetProductName
+                ());
+            NUnit.Framework.Assert.AreEqual(CommonsProductData.COMMONS_VERSION, commonsProductData.GetVersion());
+            NUnit.Framework.Assert.AreEqual(CommonsProductData.COMMONS_COPYRIGHT_SINCE, commonsProductData.GetSinceCopyrightYear
+                ());
+            NUnit.Framework.Assert.AreEqual(CommonsProductData.COMMONS_COPYRIGHT_TO, commonsProductData.GetToCopyrightYear
+                ());
         }
     }
 }
