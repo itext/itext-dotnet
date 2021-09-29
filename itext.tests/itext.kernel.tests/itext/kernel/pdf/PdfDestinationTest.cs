@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
@@ -344,7 +344,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_DESTINATION_TYPE)]
         public virtual void RemoteGoToNotValidExplicitDestinationTest() {
             String cmpFile = sourceFolder + "cmp_remoteGoToNotValidExplicitDestinationTest.pdf";
             String outFile = destinationFolder + "remoteGoToNotValidExplicitDestinationTest.pdf";
@@ -356,6 +356,19 @@ namespace iText.Kernel.Pdf {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyNullDestination() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDocument.AddNewPage();
+                    PdfDestination copiedDestination = pdfDocument.GetCatalog().CopyDestination(null, new Dictionary<PdfPage, 
+                        PdfPage>(), pdfDocument);
+                    // We expect null to be returned if the destination to be copied is null
+                    NUnit.Framework.Assert.IsNull(copiedDestination);
+                }
+            }
         }
     }
 }

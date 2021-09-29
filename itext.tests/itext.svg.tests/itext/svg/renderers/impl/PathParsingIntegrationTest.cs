@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Test;
 using iText.Test.Attributes;
@@ -132,14 +133,14 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void Text_path_Test() {
             //TODO: update cmp-file after DEVSIX-2255
             ConvertAndCompare(sourceFolder, destinationFolder, "textpath");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void TextPathExample() {
             //TODO: update when DEVSIX-2255 implemented
             ConvertAndCompare(sourceFolder, destinationFolder, "textPathExample");

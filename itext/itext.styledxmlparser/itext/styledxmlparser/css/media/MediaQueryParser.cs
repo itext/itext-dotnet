@@ -83,7 +83,7 @@ namespace iText.StyledXmlParser.Css.Media {
         /// values
         /// </returns>
         internal static IList<MediaQuery> ParseMediaQueries(String mediaQueriesStr) {
-            String[] mediaQueryStrs = iText.IO.Util.StringUtil.Split(mediaQueriesStr, ",");
+            String[] mediaQueryStrs = iText.Commons.Utils.StringUtil.Split(mediaQueriesStr, ",");
             IList<MediaQuery> mediaQueries = new List<MediaQuery>();
             foreach (String mediaQueryStr in mediaQueryStrs) {
                 MediaQuery mediaQuery = ParseMediaQuery(mediaQueryStr);
@@ -160,7 +160,8 @@ namespace iText.StyledXmlParser.Css.Media {
             mediaExpressionsStr = mediaExpressionsStr.Trim();
             bool startsWithEnd = mediaExpressionsStr.StartsWith(MediaRuleConstants.AND);
             bool firstExpression = true;
-            String[] mediaExpressionStrs = iText.IO.Util.StringUtil.Split(mediaExpressionsStr, MediaRuleConstants.AND);
+            String[] mediaExpressionStrs = iText.Commons.Utils.StringUtil.Split(mediaExpressionsStr, MediaRuleConstants
+                .AND);
             IList<MediaExpression> expressions = new List<MediaExpression>();
             foreach (String mediaExpressionStr in mediaExpressionStrs) {
                 MediaExpression expression = ParseMediaExpression(mediaExpressionStr);

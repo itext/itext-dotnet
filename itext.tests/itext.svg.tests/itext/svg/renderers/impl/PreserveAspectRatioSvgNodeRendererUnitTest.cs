@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Svg;
 using iText.Svg.Renderers;
@@ -30,7 +30,7 @@ using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
     public class PreserveAspectRatioSvgNodeRendererUnitTest : ExtendedITextTest {
-        private static readonly Rectangle VIEWPORT_VALUE = PageSize.Default;
+        private static readonly Rectangle VIEWPORT_VALUE = PageSize.DEFAULT;
 
         private static readonly float[] VIEWBOX_VALUES = new float[] { 0, 0, 300, 400 };
 

@@ -42,8 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Util;
@@ -51,7 +52,7 @@ using iText.StyledXmlParser.Css.Validate;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     public class GapShorthandResolver : IShorthandResolver {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(GapShorthandResolver));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(GapShorthandResolver));
 
         /// <summary><inheritDoc/></summary>
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
@@ -61,14 +62,14 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     (CommonCssConstants.COLUMN_GAP, shorthandExpression));
             }
             if (CssTypesValidationUtils.ContainsInitialOrInheritOrUnset(shorthandExpression)) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                    .GAP, shorthandExpression);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    , CommonCssConstants.GAP, shorthandExpression);
             }
             if (String.IsNullOrEmpty(shorthandExpression)) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY, 
-                    CommonCssConstants.GAP, shorthandExpression);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                    , CommonCssConstants.GAP, shorthandExpression);
             }
-            String[] gapProps = iText.IO.Util.StringUtil.Split(shorthandExpression, " ");
+            String[] gapProps = iText.Commons.Utils.StringUtil.Split(shorthandExpression, " ");
             if (gapProps.Length == 1) {
                 return ResolveGapWithTwoProperties(gapProps[0], gapProps[0]);
             }
@@ -77,8 +78,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     return ResolveGapWithTwoProperties(gapProps[0], gapProps[1]);
                 }
                 else {
-                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                        .GAP, shorthandExpression);
+                    return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , CommonCssConstants.GAP, shorthandExpression);
                 }
             }
         }
@@ -86,20 +87,20 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         private IList<CssDeclaration> ResolveGapWithTwoProperties(String row, String column) {
             CssDeclaration rowGapDeclaration = new CssDeclaration(CommonCssConstants.ROW_GAP, row);
             if (!CssDeclarationValidationMaster.CheckDeclaration(rowGapDeclaration)) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                    .ROW_GAP, row);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    , CommonCssConstants.ROW_GAP, row);
             }
             CssDeclaration columnGapDeclaration = new CssDeclaration(CommonCssConstants.COLUMN_GAP, column);
             if (!CssDeclarationValidationMaster.CheckDeclaration(columnGapDeclaration)) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                    .COLUMN_GAP, column);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    , CommonCssConstants.COLUMN_GAP, column);
             }
             return JavaUtil.ArraysAsList(rowGapDeclaration, columnGapDeclaration);
         }
 
         private static IList<CssDeclaration> HandleExpressionError(String logMessage, String attribute, String shorthandExpression
             ) {
-            LOGGER.Warn(MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
+            LOGGER.LogWarning(MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
             return JavaCollectionsUtil.EmptyList<CssDeclaration>();
         }
     }

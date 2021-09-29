@@ -42,8 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Util;
@@ -51,7 +52,7 @@ using iText.StyledXmlParser.Css.Validate;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     public class PlaceItemsShorthandResolver : IShorthandResolver {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(PlaceItemsShorthandResolver));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(PlaceItemsShorthandResolver));
 
         /// <summary><inheritDoc/></summary>
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
@@ -61,14 +62,14 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     CssDeclaration(CommonCssConstants.JUSTIFY_ITEMS, shorthandExpression));
             }
             if (CssTypesValidationUtils.ContainsInitialOrInheritOrUnset(shorthandExpression)) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                    .PLACE_ITEMS, shorthandExpression);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    , CommonCssConstants.PLACE_ITEMS, shorthandExpression);
             }
             if (String.IsNullOrEmpty(shorthandExpression)) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY, 
-                    CommonCssConstants.PLACE_ITEMS, shorthandExpression);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                    , CommonCssConstants.PLACE_ITEMS, shorthandExpression);
             }
-            String[] placeItemsProps = iText.IO.Util.StringUtil.Split(shorthandExpression, " ");
+            String[] placeItemsProps = iText.Commons.Utils.StringUtil.Split(shorthandExpression, " ");
             switch (placeItemsProps.Length) {
                 case 1: {
                     return ResolveShorthandWithOneWord(placeItemsProps[0]);
@@ -88,8 +89,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 }
 
                 default: {
-                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                        .PLACE_ITEMS, shorthandExpression);
+                    return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , CommonCssConstants.PLACE_ITEMS, shorthandExpression);
                 }
             }
         }
@@ -97,8 +98,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         private IList<CssDeclaration> ResolveShorthandWithOneWord(String firstWord) {
             IList<CssDeclaration> resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord, firstWord);
             if (resolvedShorthand.IsEmpty()) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                    .PLACE_ITEMS, firstWord);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    , CommonCssConstants.PLACE_ITEMS, firstWord);
             }
             return resolvedShorthand;
         }
@@ -109,8 +110,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord + " " + secondWord, firstWord + " " + secondWord
                     );
                 if (resolvedShorthand.IsEmpty()) {
-                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                        .PLACE_ITEMS, firstWord + " " + secondWord);
+                    return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , CommonCssConstants.PLACE_ITEMS, firstWord + " " + secondWord);
                 }
             }
             return resolvedShorthand;
@@ -123,8 +124,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             if (resolvedShorthand.IsEmpty()) {
                 resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord + " " + secondWord, thirdWord);
                 if (resolvedShorthand.IsEmpty()) {
-                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                        .PLACE_ITEMS, firstWord + " " + secondWord + " " + thirdWord);
+                    return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , CommonCssConstants.PLACE_ITEMS, firstWord + " " + secondWord + " " + thirdWord);
                 }
             }
             return resolvedShorthand;
@@ -135,8 +136,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             IList<CssDeclaration> resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord + " " + secondWord, thirdWord
                  + " " + fourthWord);
             if (resolvedShorthand.IsEmpty()) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                    .PLACE_ITEMS, firstWord + " " + secondWord + " " + thirdWord + " " + fourthWord);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    , CommonCssConstants.PLACE_ITEMS, firstWord + " " + secondWord + " " + thirdWord + " " + fourthWord);
             }
             return resolvedShorthand;
         }
@@ -158,7 +159,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
 
         private static IList<CssDeclaration> HandleExpressionError(String logMessage, String attribute, String shorthandExpression
             ) {
-            LOGGER.Warn(MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
+            LOGGER.LogWarning(MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
             return JavaCollectionsUtil.EmptyList<CssDeclaration>();
         }
     }

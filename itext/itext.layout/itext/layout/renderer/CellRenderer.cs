@@ -41,12 +41,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -108,7 +109,7 @@ namespace iText.Layout.Renderer {
                     transform = transform.CreateInverse();
                 }
                 catch (NoninvertibleTransformException e) {
-                    throw new PdfException(PdfException.NoninvertibleMatrixCannotBeProcessed, e);
+                    throw new PdfException(LayoutExceptionMessageConstant.NONINVERTIBLE_MATRIX_CANNOT_BE_PROCESSED, e);
                 }
                 transform.Concatenate(new AffineTransform());
                 canvas.ConcatMatrix(transform);

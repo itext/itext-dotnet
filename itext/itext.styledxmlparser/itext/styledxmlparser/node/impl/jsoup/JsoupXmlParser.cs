@@ -42,8 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Node;
@@ -53,7 +54,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
     /// <summary>Class that uses JSoup to parse HTML.</summary>
     public class JsoupXmlParser : IXmlParser {
         /// <summary>The logger.</summary>
-        private static ILog logger = LogManager.GetLogger(typeof(JsoupXmlParser));
+        private static ILogger logger = ITextLogManager.GetLogger(typeof(JsoupXmlParser));
 
         /* (non-Javadoc)
         * @see com.itextpdf.styledxmlparser.html.IXmlParser#parse(java.io.InputStream, java.lang.String)
@@ -62,7 +63,8 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
             // Based on some brief investigations, it seems that Jsoup uses baseUri for resolving relative uri's into absolute
             // on user demand. We perform such resolving in ResourceResolver class, therefore it is not needed here.
             String baseUri = "";
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.ParseXML(xmlStream, charset, baseUri);
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xmlStream, charset, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
             INode result = WrapJsoupHierarchy(doc);
             if (result is IDocumentNode) {
                 return (IDocumentNode)result;
@@ -76,7 +78,8 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
         * @see com.itextpdf.styledxmlparser.html.IXmlParser#parse(java.lang.String)
         */
         public virtual IDocumentNode Parse(String xml) {
-            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.ParseXML(xml);
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xml, "", iText.StyledXmlParser.Jsoup.Parser.Parser.
+                XmlParser());
             INode result = WrapJsoupHierarchy(doc);
             if (result is IDocumentNode) {
                 return (IDocumentNode)result;
@@ -123,7 +126,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
                                 }
                                 else {
                                     // Ignore. We should do this to avoid redundant log message
-                                    logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.ERROR_PARSING_COULD_NOT_MAP_NODE
+                                    logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_PARSING_COULD_NOT_MAP_NODE
                                         , jsoupNode.GetType()));
                                 }
                             }

@@ -44,10 +44,15 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Actions.Contexts;
+using iText.Commons.Actions.Sequence;
+using iText.Commons.Utils;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
@@ -58,7 +63,7 @@ namespace iText.Layout.Renderer {
         // AbstractRenderer.EPS is not enough here
         private const float MIN_MAX_WIDTH_CORRECTION_EPS = 0.001f;
 
-        private static readonly ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(LineRenderer));
 
         protected internal float maxAscent;
 
@@ -334,8 +339,8 @@ namespace iText.Layout.Renderer {
                             }
                             bbox.SetWidth(inlineBlockWidth);
                             if (childBlockMinMaxWidth.GetMinWidth() > bbox.GetWidth()) {
-                                if (logger.IsWarnEnabled) {
-                                    logger.Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED);
+                                if (logger.IsEnabled(LogLevel.Warning)) {
+                                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED);
                                 }
                                 childRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
                             }
@@ -470,6 +475,9 @@ namespace iText.Layout.Renderer {
                                         );
                                     childPos = lastFittingChildRendererData.childIndex;
                                     childResult = lastFittingChildRendererData.childLayoutResult;
+                                    if (0 == childPos && LayoutResult.NOTHING == childResult.GetStatus()) {
+                                        anythingPlaced = false;
+                                    }
                                     textRendererLayoutResults.Put(childPos, childResult);
                                     MinMaxWidth textSequenceElemminMaxWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth();
                                     minChildWidth_1 = textSequenceElemminMaxWidth.GetMinWidth();
@@ -555,8 +563,8 @@ namespace iText.Layout.Renderer {
                             else {
                                 if (isInlineBlockChild && childResult.GetOverflowRenderer().GetChildRenderers().IsEmpty() && childResult.GetStatus
                                     () == LayoutResult.PARTIAL) {
-                                    if (logger.IsWarnEnabled) {
-                                        logger.Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED);
+                                    if (logger.IsEnabled(LogLevel.Warning)) {
+                                        logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED);
                                     }
                                 }
                                 else {
@@ -915,8 +923,8 @@ namespace iText.Layout.Renderer {
                 case Leading.MULTIPLIED: {
                     UnitValue fontSize = this.GetProperty<UnitValue>(Property.FONT_SIZE, UnitValue.CreatePointValue(0f));
                     if (!fontSize.IsPointValue()) {
-                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                            .FONT_SIZE));
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                            , Property.FONT_SIZE));
                     }
                     // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending on the version,
                     // the behavior id different. In one case, bottom leading indent is added for images, in the other it is not added.
@@ -946,8 +954,8 @@ namespace iText.Layout.Renderer {
                 case Leading.MULTIPLIED: {
                     UnitValue fontSize = this.GetProperty<UnitValue>(Property.FONT_SIZE, UnitValue.CreatePointValue(0f));
                     if (!fontSize.IsPointValue()) {
-                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                            .FONT_SIZE));
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                            , Property.FONT_SIZE));
                     }
                     // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending on the version,
                     // the behavior id different. In one case, bottom leading indent is added for images, in the other it is not added.
@@ -1034,22 +1042,22 @@ namespace iText.Layout.Renderer {
                     if (child is TextRenderer) {
                         currentWidth = ((TextRenderer)child).CalculateLineWidth();
                         UnitValue[] margins = ((TextRenderer)child).GetMargins();
-                        if (!margins[1].IsPointValue() && logger.IsErrorEnabled) {
-                            logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "right margin"
-                                ));
+                        if (!margins[1].IsPointValue() && logger.IsEnabled(LogLevel.Error)) {
+                            logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                , "right margin"));
                         }
-                        if (!margins[3].IsPointValue() && logger.IsErrorEnabled) {
-                            logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "left margin"
-                                ));
+                        if (!margins[3].IsPointValue() && logger.IsEnabled(LogLevel.Error)) {
+                            logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                , "left margin"));
                         }
                         UnitValue[] paddings = ((TextRenderer)child).GetPaddings();
-                        if (!paddings[1].IsPointValue() && logger.IsErrorEnabled) {
-                            logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "right padding"
-                                ));
+                        if (!paddings[1].IsPointValue() && logger.IsEnabled(LogLevel.Error)) {
+                            logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                , "right padding"));
                         }
-                        if (!paddings[3].IsPointValue() && logger.IsErrorEnabled) {
-                            logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "left padding"
-                                ));
+                        if (!paddings[3].IsPointValue() && logger.IsEnabled(LogLevel.Error)) {
+                            logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                , "left padding"));
                         }
                         currentWidth += margins[1].GetValue() + margins[3].GetValue() + paddings[1].GetValue() + paddings[3].GetValue
                             ();
@@ -1531,8 +1539,17 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                levels = unicodeIdsReorderingList.Count > 0 ? TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToIntArray
-                    (unicodeIdsReorderingList)) : null;
+                if (unicodeIdsReorderingList.Count > 0) {
+                    PdfDocument pdfDocument = GetPdfDocument();
+                    SequenceId sequenceId = pdfDocument == null ? null : pdfDocument.GetDocumentIdWrapper();
+                    MetaInfoContainer metaInfoContainer = this.GetProperty<MetaInfoContainer>(Property.META_INFO);
+                    IMetaInfo metaInfo = metaInfoContainer == null ? null : metaInfoContainer.GetMetaInfo();
+                    levels = TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToIntArray(unicodeIdsReorderingList), sequenceId
+                        , metaInfo);
+                }
+                else {
+                    levels = null;
+                }
             }
         }
 
@@ -1573,7 +1590,7 @@ namespace iText.Layout.Renderer {
             return normalizedChildWidth;
         }
 
-        internal class RendererGlyph {
+        public class RendererGlyph {
             public Glyph glyph;
 
             public TextRenderer renderer;

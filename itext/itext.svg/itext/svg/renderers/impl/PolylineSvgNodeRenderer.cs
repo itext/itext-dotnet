@@ -89,8 +89,8 @@ namespace iText.Svg.Renderers.Impl {
             }
             IList<String> points = SvgCssUtils.SplitValueList(pointsAttribute);
             if (points.Count % 2 != 0) {
-                throw new SvgProcessingException(SvgLogMessageConstant.POINTS_ATTRIBUTE_INVALID_LIST).SetMessageParams(pointsAttribute
-                    );
+                throw new SvgProcessingException(SvgExceptionMessageConstant.POINTS_ATTRIBUTE_INVALID_LIST).SetMessageParams
+                    (pointsAttribute);
             }
             this.points.Clear();
             float x;
@@ -102,7 +102,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             SetPoints(GetAttribute(SvgConstants.Attributes.POINTS));
             if (points.Count > 1) {
                 Point firstPoint = points[0];
@@ -124,7 +124,7 @@ namespace iText.Svg.Renderers.Impl {
                 return new Rectangle((float)minX, (float)minY, (float)width, (float)height);
             }
             else {
-                return base.GetObjectBoundingBox(context);
+                return null;
             }
         }
 

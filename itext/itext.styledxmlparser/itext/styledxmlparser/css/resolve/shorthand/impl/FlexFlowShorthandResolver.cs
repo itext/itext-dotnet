@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
@@ -53,7 +54,7 @@ using iText.StyledXmlParser.Css.Validate;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     public class FlexFlowShorthandResolver : IShorthandResolver {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(FlexFlowShorthandResolver));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(FlexFlowShorthandResolver));
 
         /// <summary><inheritDoc/></summary>
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
@@ -63,14 +64,14 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     CssDeclaration(CommonCssConstants.FLEX_WRAP, shorthandExpression));
             }
             if (CssTypesValidationUtils.ContainsInitialOrInheritOrUnset(shorthandExpression)) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                    .FLEX_FLOW, shorthandExpression);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    , CommonCssConstants.FLEX_FLOW, shorthandExpression);
             }
             if (String.IsNullOrEmpty(shorthandExpression)) {
-                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY, 
-                    CommonCssConstants.FLEX_FLOW, shorthandExpression);
+                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                    , CommonCssConstants.FLEX_FLOW, shorthandExpression);
             }
-            String[] flexFlowProps = iText.IO.Util.StringUtil.Split(shorthandExpression, " ");
+            String[] flexFlowProps = iText.Commons.Utils.StringUtil.Split(shorthandExpression, " ");
             IList<CssDeclaration> resolvedProperties = new List<CssDeclaration>();
             if (1 == flexFlowProps.Length) {
                 CssDeclaration flexDirectionDeclaration = new CssDeclaration(CommonCssConstants.FLEX_DIRECTION, flexFlowProps
@@ -84,8 +85,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                         resolvedProperties.Add(flexWrapDeclaration);
                     }
                     else {
-                        return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                            .FLEX_FLOW, shorthandExpression);
+                        return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                            , CommonCssConstants.FLEX_FLOW, shorthandExpression);
                     }
                 }
             }
@@ -105,21 +106,21 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                             resolvedProperties.Add(flexDirectionDeclaration);
                         }
                         else {
-                            return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                                .FLEX_DIRECTION, shorthandExpression);
+                            return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                                , CommonCssConstants.FLEX_DIRECTION, shorthandExpression);
                         }
                     }
                     if (CssDeclarationValidationMaster.CheckDeclaration(flexWrapDeclaration)) {
                         resolvedProperties.Add(flexWrapDeclaration);
                     }
                     else {
-                        return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                            .FLEX_WRAP, shorthandExpression);
+                        return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                            , CommonCssConstants.FLEX_WRAP, shorthandExpression);
                     }
                 }
                 else {
-                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
-                        .FLEX_FLOW, shorthandExpression);
+                    return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , CommonCssConstants.FLEX_FLOW, shorthandExpression);
                 }
             }
             FillUnresolvedPropertiesWithDefaultValues(resolvedProperties);
@@ -128,7 +129,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
 
         private static IList<CssDeclaration> HandleExpressionError(String logMessage, String attribute, String shorthandExpression
             ) {
-            LOGGER.Warn(MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
+            LOGGER.LogWarning(MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
             return JavaCollectionsUtil.EmptyList<CssDeclaration>();
         }
 

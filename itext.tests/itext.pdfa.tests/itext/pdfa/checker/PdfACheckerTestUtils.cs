@@ -85,8 +85,8 @@ namespace iText.Pdfa.Checker {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfOutputStream stream = new PdfOutputStream(baos);
             stream.Write(@object);
-            return "q\n" + "BT\n" + "/F1 12 Tf\n" + "36 787.96 Td\n" + iText.IO.Util.JavaUtil.GetStringForBytes(baos.ToArray
-                ()) + " Tj\n" + "ET\n" + "Q";
+            return "q\n" + "BT\n" + "/F1 12 Tf\n" + "36 787.96 Td\n" + iText.Commons.Utils.JavaUtil.GetStringForBytes(
+                baos.ToArray()) + " Tj\n" + "ET\n" + "Q";
         }
 
         private static String GetLongPlainString(int length) {

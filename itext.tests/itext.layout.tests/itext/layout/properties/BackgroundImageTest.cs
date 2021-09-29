@@ -44,8 +44,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using iText.Commons.Utils;
 using iText.IO.Image;
-using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Geom;
@@ -173,7 +173,8 @@ namespace iText.Layout.Properties {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN
+            )]
         public virtual void BackgroundImageWithLinearGradientAndTransformTest() {
             AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
                 GradientColorStop(ColorConstants.RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
@@ -223,7 +224,7 @@ namespace iText.Layout.Properties {
                     );
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePercentValue(30), null);
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -245,7 +246,7 @@ namespace iText.Layout.Properties {
                     );
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(null, UnitValue.CreatePercentValue(30));
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -268,7 +269,7 @@ namespace iText.Layout.Properties {
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePercentValue(20), UnitValue.
                     CreatePercentValue(20));
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -290,7 +291,7 @@ namespace iText.Layout.Properties {
                     );
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePointValue(15), null);
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -312,7 +313,7 @@ namespace iText.Layout.Properties {
                     );
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(null, UnitValue.CreatePointValue(20));
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -335,7 +336,7 @@ namespace iText.Layout.Properties {
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePointValue(50), UnitValue.CreatePointValue
                     (100));
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -358,7 +359,7 @@ namespace iText.Layout.Properties {
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePointValue(-1), UnitValue.CreatePointValue
                     (-1));
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -646,8 +647,8 @@ namespace iText.Layout.Properties {
             AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
                 GradientColorStop(ColorConstants.BLACK.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
                 .WHITE.GetColorValue()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(gradientBuilder
-                );
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+                (gradientBuilder).Build();
             AbstractLinearGradientBuilder topGradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_RIGHT).AddColorStop(new GradientColorStop(ColorConstants
                 .RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.GREEN.GetColorValue())).AddColorStop
@@ -662,7 +663,8 @@ namespace iText.Layout.Properties {
             ImageData image = ImageDataFactory.Create(SOURCE_FOLDER + pictureName);
             PdfFormXObject template = new PdfFormXObject(new Rectangle(image.GetWidth(), image.GetHeight()));
             PdfCanvas canvas = new PdfCanvas(template, pdfDocument);
-            canvas.AddImage(image, 0, 0, image.GetWidth(), false).Flush();
+            canvas.AddImageFittedIntoRectangle(image, new Rectangle(0, 0, image.GetWidth(), image.GetHeight()), false)
+                .Flush();
             canvas.Release();
             template.Flush();
             return template;

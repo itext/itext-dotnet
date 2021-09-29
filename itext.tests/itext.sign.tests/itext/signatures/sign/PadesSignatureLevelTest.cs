@@ -44,7 +44,7 @@ using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;

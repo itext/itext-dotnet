@@ -43,11 +43,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Colors;
 using iText.IO.Font;
 using iText.IO.Image;
-using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -56,7 +57,8 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
-using iText.Pdfa;
+using iText.Pdfa.Exceptions;
+using iText.Pdfa.Logs;
 
 namespace iText.Pdfa.Checker {
     /// <summary>
@@ -136,10 +138,6 @@ namespace iText.Pdfa.Checker {
             CheckImage(inlineImage, currentColorSpaces);
         }
 
-        public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill) {
-            CheckColor(color, currentColorSpaces, fill, null);
-        }
-
         public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
             ) {
             if (color is PatternColor) {
@@ -149,7 +147,7 @@ namespace iText.Pdfa.Checker {
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
                     PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new _CanvasGraphicsState_198(extGStateDict);
+                    CanvasGraphicsState gState = new _CanvasGraphicsState_191(extGStateDict);
                     CheckExtGState(gState, contentStream);
                 }
                 else {
@@ -161,8 +159,8 @@ namespace iText.Pdfa.Checker {
             base.CheckColor(color, currentColorSpaces, fill, contentStream);
         }
 
-        private sealed class _CanvasGraphicsState_198 : CanvasGraphicsState {
-            public _CanvasGraphicsState_198(PdfDictionary extGStateDict) {
+        private sealed class _CanvasGraphicsState_191 : CanvasGraphicsState {
+            public _CanvasGraphicsState_191(PdfDictionary extGStateDict) {
                 this.extGStateDict = extGStateDict;
  {
                     this.UpdateFromExtGState(new PdfExtGState(extGStateDict));
@@ -261,10 +259,6 @@ namespace iText.Pdfa.Checker {
                     }
                 }
             }
-        }
-
-        public override void CheckExtGState(CanvasGraphicsState extGState) {
-            CheckExtGState(extGState, null);
         }
 
         public override void CheckExtGState(CanvasGraphicsState extGState, PdfStream contentStream) {
@@ -571,8 +565,8 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 if (!fileSpec.ContainsKey(PdfName.Desc)) {
-                    ILog logger = LogManager.GetLogger(typeof(PdfAChecker));
-                    logger.Warn(PdfAConformanceLogMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
+                    logger.LogWarning(PdfAConformanceLogMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY);
                 }
                 PdfDictionary ef = fileSpec.GetAsDictionary(PdfName.EF);
                 PdfStream embeddedFile = ef.GetAsStream(PdfName.F);
@@ -581,8 +575,8 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 // iText doesn't check whether provided file is compliant to PDF-A specs.
-                ILog logger_1 = LogManager.GetLogger(typeof(PdfAChecker));
-                logger_1.Warn(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC);
+                ILogger logger_1 = ITextLogManager.GetLogger(typeof(PdfAChecker));
+                logger_1.LogWarning(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC);
             }
         }
 
@@ -986,8 +980,8 @@ namespace iText.Pdfa.Checker {
             ) {
             if (!IsAltCSIsTheSame(separation.Get(2), deviceNColorSpace) || !deviceNTintTransform.Equals(separation.Get
                 (3))) {
-                ILog logger = LogManager.GetLogger(typeof(PdfAChecker));
-                logger.Warn(PdfAConformanceLogMessageConstant.TINT_TRANSFORM_AND_ALTERNATE_SPACE_OF_SEPARATION_ARRAYS_IN_THE_COLORANTS_OF_DEVICE_N_SHOULD_BE_CONSISTENT_WITH_SAME_ATTRIBUTES_OF_DEVICE_N
+                ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
+                logger.LogWarning(PdfAConformanceLogMessageConstant.TINT_TRANSFORM_AND_ALTERNATE_SPACE_OF_SEPARATION_ARRAYS_IN_THE_COLORANTS_OF_DEVICE_N_SHOULD_BE_CONSISTENT_WITH_SAME_ATTRIBUTES_OF_DEVICE_N
                     );
             }
             CheckSeparationCS(separation);

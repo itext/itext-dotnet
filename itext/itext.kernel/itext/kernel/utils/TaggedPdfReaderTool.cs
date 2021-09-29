@@ -45,8 +45,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iText.IO.Util;
-using iText.Kernel;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
@@ -102,7 +102,7 @@ namespace iText.Kernel.Utils {
             // get the StructTreeRoot from the document
             PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
             if (structTreeRoot == null) {
-                throw new PdfException(PdfException.DocumentDoesntContainStructTreeRoot);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_DOES_NOT_CONTAIN_STRUCT_TREE_ROOT);
             }
             // Inspect the child or children of the StructTreeRoot
             InspectKids(structTreeRoot.GetKids());
@@ -144,7 +144,7 @@ namespace iText.Kernel.Utils {
                     PdfString alt = (structElemKid).GetAlt();
                     if (alt != null) {
                         @out.Write("<alt><![CDATA[");
-                        @out.Write(iText.IO.Util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""));
+                        @out.Write(iText.Commons.Utils.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""));
                         @out.Write("]]></alt>" + Environment.NewLine);
                     }
                     InspectKids(structElemKid.GetKids());
@@ -162,7 +162,7 @@ namespace iText.Kernel.Utils {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnknownIOException, e);
             }
         }
 
@@ -187,7 +187,7 @@ namespace iText.Kernel.Utils {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnknownIOException, e);
                 }
             }
         }
@@ -221,7 +221,7 @@ namespace iText.Kernel.Utils {
                 @out.Write(EscapeXML(tagContent, true));
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnknownIOException, e);
             }
         }
 

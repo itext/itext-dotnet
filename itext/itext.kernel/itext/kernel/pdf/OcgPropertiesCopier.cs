@@ -43,14 +43,16 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Font;
-using iText.IO.Util;
 using iText.Kernel.Pdf.Annot;
 
 namespace iText.Kernel.Pdf {
     internal sealed class OcgPropertiesCopier {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Pdf.OcgPropertiesCopier));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.OcgPropertiesCopier
+            ));
 
         private OcgPropertiesCopier() {
         }
@@ -77,7 +79,8 @@ namespace iText.Kernel.Pdf {
                     .D), toOcProperties, toDocument);
             }
             catch (Exception ex) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCG_COPYING_ERROR, ex.ToString()));
+                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCG_COPYING_ERROR, ex.ToString
+                    ()));
             }
         }
 
@@ -235,7 +238,7 @@ namespace iText.Kernel.Pdf {
                 toOcProperties.GetAsArray(PdfName.OCGs).Add(toOcg);
             }
             if (hasConflictingNames) {
-                LOGGER.Warn(iText.IO.LogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES);
+                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES);
             }
         }
 

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -83,7 +83,7 @@ namespace iText.Kernel.Pdf.Xobject
             
             PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
             PdfPage firstPage = pdfDocument.GetFirstPage();
-            canvas.AddXObject(image, firstPage.GetPageSize());
+            canvas.AddXObjectFittedIntoRectangle(image, firstPage.GetPageSize());
             canvas
                     .BeginText()
                     .SetTextMatrix(36, 790)
@@ -121,7 +121,7 @@ namespace iText.Kernel.Pdf.Xobject
             
             PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
             PdfPage firstPage = pdfDocument.GetFirstPage();
-            canvas.AddXObject(image, firstPage.GetPageSize());
+            canvas.AddXObjectFittedIntoRectangle(image, firstPage.GetPageSize());
             canvas
                     .BeginText()
                     .SetTextMatrix(36, 790)

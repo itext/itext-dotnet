@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Exceptions;
@@ -32,7 +33,7 @@ namespace iText.Svg.Renderers.Impl {
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for the gradient &lt;stop&gt; tag.
     /// </summary>
-    public class StopSvgNodeRenderer : NoDrawOperationSvgNodeRenderer, INoDrawSvgNodeRenderer {
+    public class StopSvgNodeRenderer : AbstractBranchSvgNodeRenderer, INoDrawSvgNodeRenderer {
         /// <summary>Evaluates the stop color offset value.</summary>
         /// <returns>the stop color offset value in [0, 1] range</returns>
         public virtual double GetOffset() {
@@ -42,7 +43,7 @@ namespace iText.Svg.Renderers.Impl {
                 offset = (double)CssDimensionParsingUtils.ParseRelativeValue(offsetAttribute, 1);
             }
             else {
-                if (CssTypesValidationUtils.IsNumericValue(offsetAttribute)) {
+                if (CssTypesValidationUtils.IsNumber(offsetAttribute)) {
                     offset = CssDimensionParsingUtils.ParseDouble(offsetAttribute);
                 }
             }
@@ -84,8 +85,12 @@ namespace iText.Svg.Renderers.Impl {
             return copy;
         }
 
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+        }
+
         protected internal override void DoDraw(SvgDrawContext context) {
-            throw new NotSupportedException(SvgLogMessageConstant.DRAW_NO_DRAW);
+            throw new NotSupportedException(SvgExceptionMessageConstant.DRAW_NO_DRAW);
         }
     }
 }

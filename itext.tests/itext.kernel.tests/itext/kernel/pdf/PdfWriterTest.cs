@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -423,8 +423,8 @@ namespace iText.Kernel.Pdf {
                 pdfDoc1.Close();
                 pdfDoc2.Close();
             }
-            NUnit.Framework.Assert.AreEqual(exceptionMessage, PdfException.CannotCopyIndirectObjectFromTheDocumentThatIsBeingWritten
-                );
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_COPY_INDIRECT_OBJECT_FROM_THE_DOCUMENT_THAT_IS_BEING_WRITTEN
+                , exceptionMessage);
         }
 
         /// <summary>Attempts to copy to copy with null document</summary>
@@ -446,7 +446,8 @@ namespace iText.Kernel.Pdf {
             finally {
                 pdfDoc.Close();
             }
-            NUnit.Framework.Assert.AreEqual(exceptionMessage, PdfException.DocumentForCopyToCannotBeNull);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_FOR_COPY_TO_CANNOT_BE_NULL, exceptionMessage
+                );
         }
 
         [NUnit.Framework.Test]

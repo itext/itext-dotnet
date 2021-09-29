@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -52,7 +53,8 @@ namespace iText.Kernel.Font {
 
         [NUnit.Framework.Test]
         public virtual void IsNotBuiltInTest() {
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSans-Regular_v.1.8.2.ttf");
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSans-Regular_v.1.8.2.ttf", PdfEncodings.WINANSI
+                );
             NUnit.Framework.Assert.IsTrue(font is PdfTrueTypeFont);
             NUnit.Framework.Assert.IsFalse(((PdfTrueTypeFont)font).IsBuiltInFont());
         }

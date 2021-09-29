@@ -33,7 +33,7 @@ using iText.Test.Attributes;
 namespace iText.Layout.Renderer {
     public class BlockRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED)]
         public virtual void ClippedAreaFlushedPageTest() {
             BlockRenderer blockRenderer = new DivRenderer(new Div());
             blockRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);

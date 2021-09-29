@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
 
@@ -232,7 +233,17 @@ namespace iText.Svg.Renderers.Impl {
             StopSvgNodeRenderer renderer = new StopSvgNodeRenderer();
             Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => renderer.DoDraw(new SvgDrawContext
                 (null, null)));
-            NUnit.Framework.Assert.AreEqual("Can't draw current SvgNodeRenderer.", e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.DRAW_NO_DRAW, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoObjectBoundingBoxTest() {
+            StopSvgNodeRenderer renderer = new StopSvgNodeRenderer();
+            NUnit.Framework.Assert.That(() =>  {
+                renderer.GetObjectBoundingBox(null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX))
+;
         }
     }
 }

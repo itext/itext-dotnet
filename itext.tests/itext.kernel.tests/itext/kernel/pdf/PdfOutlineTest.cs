@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -142,7 +144,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 36)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 36)]
         public virtual void RemovePageWithOutlinesTest() {
             // TODO DEVSIX-1643: destinations are not removed along with page
             String filename = "removePageWithOutlinesTest.pdf";
@@ -262,7 +264,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void CopyPagesWithOutlines() {
             PdfReader reader = new PdfReader(SOURCE_FOLDER + "iphone_user_guide.pdf");
             PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "copyPagesWithOutlines01.pdf");
@@ -452,6 +454,42 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, DESTINATION_FOLDER, "diff_")
                 );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConstructOutlinesNoParentTest() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDocument.AddNewPage();
+                    PdfDictionary first = new PdfDictionary();
+                    first.MakeIndirect(pdfDocument);
+                    PdfDictionary outlineDictionary = new PdfDictionary();
+                    outlineDictionary.Put(PdfName.First, first);
+                    Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetCatalog().ConstructOutlines
+                        (outlineDictionary, new Dictionary<String, PdfObject>()));
+                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_PARENT_ENTRY
+                        , first.indirectReference), exception.Message);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConstructOutlinesNoTitleTest() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDocument.AddNewPage();
+                    PdfDictionary first = new PdfDictionary();
+                    first.MakeIndirect(pdfDocument);
+                    PdfDictionary outlineDictionary = new PdfDictionary();
+                    outlineDictionary.MakeIndirect(pdfDocument);
+                    outlineDictionary.Put(PdfName.First, first);
+                    first.Put(PdfName.Parent, outlineDictionary);
+                    Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetCatalog().ConstructOutlines
+                        (outlineDictionary, new Dictionary<String, PdfObject>()));
+                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_TITLE_ENTRY
+                        , first.indirectReference), exception.Message);
+                }
+            }
         }
     }
 }

@@ -32,8 +32,8 @@ namespace iText.IO.Image {
             .CurrentContext.TestDirectory) + "/resources/itext/io/image/";
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED, LogLevel = LogLevelConstants
-            .ERROR)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED, LogLevel
+             = LogLevelConstants.ERROR)]
         public virtual void AttemptToSetInvalidIccProfileToImageTest() {
             using (FileStream fis = new FileStream(SOURCE_FOLDER + "WP_20140410_001.jpg", FileMode.Open, FileAccess.Read
                 )) {

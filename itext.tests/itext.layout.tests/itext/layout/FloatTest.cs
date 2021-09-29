@@ -502,7 +502,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 3)]
         public virtual void FloatFixedHeightContentNotFit() {
             String cmpFileName = sourceFolder + "cmp_floatFixedHeightContentNotFit.pdf";
             String outFile = destinationFolder + "floatFixedHeightContentNotFit.pdf";
@@ -706,7 +706,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ClearancePageSplitFloatNothingInRoot01() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInRoot01.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatNothingInRoot01.pdf";
@@ -776,7 +776,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ClearancePageSplitFloatNothingInBlock01() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInBlock01.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatNothingInBlock01.pdf";
@@ -904,7 +904,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void FloatsOnPageSplit01() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit01.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit01.pdf";
@@ -959,7 +959,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit04() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit04.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit04.pdf";
@@ -1044,7 +1044,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit06_03() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit06_03.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit06_03.pdf";
@@ -1114,7 +1114,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit08_02() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08_02.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit08_02.pdf";
@@ -1141,7 +1141,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit08_03() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08_03.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit08_03.pdf";
@@ -1187,7 +1187,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit10() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit10.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit10.pdf";
@@ -1208,7 +1208,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit11() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit11.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit11.pdf";
@@ -1404,7 +1404,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsKeepTogetherOnPageSplit01() {
             String cmpFileName = sourceFolder + "cmp_floatsKeepTogetherOnPageSplit01.pdf";
             String outFile = destinationFolder + "floatsKeepTogetherOnPageSplit01.pdf";
@@ -1420,7 +1420,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsKeepTogetherOnPageSplit02() {
             String cmpFileName = sourceFolder + "cmp_floatsKeepTogetherOnPageSplit02.pdf";
             String outFile = destinationFolder + "floatsKeepTogetherOnPageSplit02.pdf";
@@ -1439,7 +1439,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void FloatsKeepTogetherOnPageSplit03() {
             String cmpFileName = sourceFolder + "cmp_floatsKeepTogetherOnPageSplit03.pdf";
             String outFile = destinationFolder + "floatsKeepTogetherOnPageSplit03.pdf";
@@ -1701,7 +1701,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsFirstOnPageNotFit01() {
             String cmpFileName = sourceFolder + "cmp_floatsFirstOnPageNotFit01.pdf";
             String outFile = destinationFolder + "floatsFirstOnPageNotFit01.pdf";
@@ -1721,7 +1721,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsFirstOnPageNotFit02() {
             String cmpFileName = sourceFolder + "cmp_floatsFirstOnPageNotFit02.pdf";
             String outFile = destinationFolder + "floatsFirstOnPageNotFit02.pdf";
@@ -1741,7 +1741,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsFirstOnPageNotFit03() {
             String cmpFileName = sourceFolder + "cmp_floatsFirstOnPageNotFit03.pdf";
             String outFile = destinationFolder + "floatsFirstOnPageNotFit03.pdf";
@@ -1887,7 +1887,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsHeightFixedInBlock01() {
             String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInBlock01.pdf";
             String outFile = destinationFolder + "floatsHeightFixedInBlock01.pdf";
@@ -1903,7 +1903,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsHeightFixedInBlock02() {
             String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInBlock02.pdf";
             String outFile = destinationFolder + "floatsHeightFixedInBlock02.pdf";
@@ -1920,7 +1920,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsHeightFixedInParagraph01() {
             String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInParagraph01.pdf";
             String outFile = destinationFolder + "floatsHeightFixedInParagraph01.pdf";
@@ -1938,7 +1938,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsHeightFixedInParagraph02() {
             String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInParagraph02.pdf";
             String outFile = destinationFolder + "floatsHeightFixedInParagraph02.pdf";
@@ -1957,7 +1957,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMaxHeightFixedInBlock01() {
             String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInBlock01.pdf";
             String outFile = destinationFolder + "floatsMaxHeightFixedInBlock01.pdf";
@@ -1973,7 +1973,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMaxHeightFixedInBlock02() {
             String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInBlock02.pdf";
             String outFile = destinationFolder + "floatsMaxHeightFixedInBlock02.pdf";
@@ -1990,7 +1990,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMaxHeightFixedInParagraph01() {
             String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInParagraph01.pdf";
             String outFile = destinationFolder + "floatsMaxHeightFixedInParagraph01.pdf";
@@ -2008,7 +2008,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMaxHeightFixedInParagraph02() {
             String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInParagraph02.pdf";
             String outFile = destinationFolder + "floatsMaxHeightFixedInParagraph02.pdf";
@@ -2112,7 +2112,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMinHeightApplyingOnSplitTest02() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest02.pdf";
             String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest02.pdf";
@@ -2133,7 +2133,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMinHeightApplyingOnSplitTest03() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest03.pdf";
             String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest03.pdf";
@@ -2153,7 +2153,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void FloatsMinHeightApplyingOnSplitTest04() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest04.pdf";
             String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest04.pdf";
@@ -2180,7 +2180,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void FloatsMinHeightApplyingOnSplitTest05() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest05.pdf";
             String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest05.pdf";
@@ -2447,7 +2447,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void FloatTableTest01() {
             String cmpFileName = sourceFolder + "cmp_floatTableTest01.pdf";
             String outFile = destinationFolder + "floatTableTest01.pdf";
@@ -2472,7 +2472,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherEnoughSpaceOnNewPageWithFloatTest() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
             String outFile = destinationFolder + "keepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
@@ -2484,7 +2484,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
             String outFile = destinationFolder + "keepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
@@ -2496,7 +2496,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void KeepTogetherNotEnoughSpaceOnNewEmptyPageTest() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
             String outFile = destinationFolder + "keepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
@@ -2508,7 +2508,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void KeepTogetherNotEnoughSpaceOnNewEmptyPageShortFloatTest() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherNotEnoughSpaceOnNewEmptyPageShortFloatTest.pdf";
             String outFile = destinationFolder + "keepTogetherNotEnoughSpaceOnNewEmptyPageShortFloatTest.pdf";
@@ -2520,7 +2520,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InnerKeepTogetherEnoughSpaceOnNewPageWithFloatTest() {
             String cmpFileName = sourceFolder + "cmp_innerKeepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
             String outFile = destinationFolder + "innerKeepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
@@ -2532,7 +2532,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InnerKeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest() {
             String cmpFileName = sourceFolder + "cmp_innerKeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
             String outFile = destinationFolder + "innerKeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
@@ -2544,7 +2544,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void InnerKeepTogetherNotEnoughSpaceOnNewEmptyPageTest() {
             String cmpFileName = sourceFolder + "cmp_innerKeepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
             String outFile = destinationFolder + "innerKeepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";

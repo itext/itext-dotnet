@@ -41,11 +41,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -61,13 +63,17 @@ namespace iText.Svg.Renderers.Impl {
             return copy;
         }
 
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+        }
+
         protected internal override void DoDraw(SvgDrawContext context) {
             ResourceResolver resourceResolver = context.GetResourceResolver();
             if (resourceResolver == null || this.attributesAndStyles == null) {
                 return;
             }
             String uri = this.attributesAndStyles.Get(SvgConstants.Attributes.XLINK_HREF);
-            PdfXObject xObject = resourceResolver.RetrieveImageExtended(uri);
+            PdfXObject xObject = resourceResolver.RetrieveImage(uri);
             if (xObject == null) {
                 return;
             }
@@ -93,6 +99,13 @@ namespace iText.Svg.Renderers.Impl {
             String preserveAspectRatio = "";
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO)) {
                 preserveAspectRatio = attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO);
+            }
+            else {
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant())) {
+                    // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                    preserveAspectRatio = attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant
+                        ());
+                }
             }
             preserveAspectRatio = preserveAspectRatio.ToLowerInvariant();
             if (!SvgConstants.Values.NONE.Equals(preserveAspectRatio) && !(width == 0 || height == 0)) {
@@ -160,7 +173,7 @@ namespace iText.Svg.Renderers.Impl {
                 height = normalizedHeight;
             }
             float v = y + height;
-            currentCanvas.AddXObject(xObject, width, 0, 0, -height, x, v);
+            currentCanvas.AddXObjectWithTransformationMatrix(xObject, width, 0, 0, -height, x, v);
         }
     }
 }

@@ -48,7 +48,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Function;
 using iText.Kernel.Pdf.Xobject;
-using iText.Pdfa;
+using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa.Checker {
@@ -567,7 +567,7 @@ namespace iText.Pdfa.Checker {
                 transformArray[i * 2 + 1] = 1;
             }
             PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(transformArray), new PdfArray(new float[] 
-                { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+                { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             return new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb(), function);
         }
     }

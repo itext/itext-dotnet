@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Resolver.Resource
@@ -135,7 +136,7 @@ namespace iText.StyledXmlParser.Resolver.Resource
             {
                 throw new StyledXMLParserException(StyledXMLParserException.UnsupportedEncodingException);
             }
-            charset = iText.IO.Util.EncodingUtil.GetEncoding(enc);
+            charset = EncodingUtil.GetEncoding(enc);
             int i = 0;
             bool firstHash = true;
             int strLength = s.Length;

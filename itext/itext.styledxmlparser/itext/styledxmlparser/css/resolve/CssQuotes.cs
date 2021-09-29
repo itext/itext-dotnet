@@ -42,8 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
 
@@ -110,8 +111,9 @@ namespace iText.StyledXmlParser.Css.Resolve {
                     return new iText.StyledXmlParser.Css.Resolve.CssQuotes(quotes[0], quotes[1]);
                 }
                 else {
-                    LogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Resolve.CssQuotes)).Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
-                        .QUOTES_PROPERTY_INVALID, quotesString));
+                    ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Resolve.CssQuotes)).LogError(MessageFormatUtil.
+                        Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.QUOTES_PROPERTY_INVALID, quotesString
+                        ));
                 }
             }
             return fallbackToDefault ? CreateDefaultQuotes() : null;

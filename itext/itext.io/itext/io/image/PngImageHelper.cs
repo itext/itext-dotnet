@@ -45,7 +45,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Colors;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -174,7 +176,7 @@ namespace iText.IO.Image {
                 ProcessPng(pngStream, png);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.PngImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PngImageException, e);
             }
             finally {
                 if (pngStream != null) {
@@ -193,7 +195,7 @@ namespace iText.IO.Image {
             int colorType = png.image.GetColorType();
             if (png.iccProfile != null && png.iccProfile.GetNumComponents() != GetExpectedNumberOfColorComponents(png)
                 ) {
-                LogManager.GetLogger(typeof(PngImageHelper)).Warn(iText.IO.LogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
+                ITextLogManager.GetLogger(typeof(PngImageHelper)).LogWarning(iText.IO.Logs.IoLogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
                     );
             }
             try {
@@ -302,7 +304,7 @@ namespace iText.IO.Image {
                 png.image.SetXYRatio(png.XYRatio);
             }
             catch (Exception e) {
-                throw new iText.IO.IOException(iText.IO.IOException.PngImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PngImageException, e);
             }
         }
 
@@ -628,7 +630,7 @@ namespace iText.IO.Image {
 
                     default: {
                         // Error -- uknown filter type
-                        throw new iText.IO.IOException(iText.IO.IOException.UnknownPngFilter);
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnknownPngFilter);
                     }
                 }
                 ProcessPixels(curr, xOffset, xStep, dstY, passWidth, png);

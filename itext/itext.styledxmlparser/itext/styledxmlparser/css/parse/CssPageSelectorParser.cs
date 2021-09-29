@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css.Selector.Item;
 
 namespace iText.StyledXmlParser.Css.Parse {
@@ -53,7 +53,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         private const String PAGE_SELECTOR_PATTERN_STR = "(^-?[_a-zA-Z][\\w-]*)|(:(?i)(left|right|first|blank))";
 
         /// <summary>The pattern for page selectors.</summary>
-        private static readonly Regex selectorPattern = iText.IO.Util.StringUtil.RegexCompile(PAGE_SELECTOR_PATTERN_STR
+        private static readonly Regex selectorPattern = iText.Commons.Utils.StringUtil.RegexCompile(PAGE_SELECTOR_PATTERN_STR
             );
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// </returns>
         public static IList<ICssSelectorItem> ParseSelectorItems(String selectorItemsStr) {
             IList<ICssSelectorItem> selectorItems = new List<ICssSelectorItem>();
-            Matcher itemMatcher = iText.IO.Util.Matcher.Match(selectorPattern, selectorItemsStr);
+            Matcher itemMatcher = iText.Commons.Utils.Matcher.Match(selectorPattern, selectorItemsStr);
             while (itemMatcher.Find()) {
                 String selectorItem = itemMatcher.Group(0);
                 if (selectorItem[0] == ':') {

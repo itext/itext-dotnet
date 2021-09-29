@@ -187,8 +187,8 @@ namespace iText.Layout {
                 PdfDictionary pdfType3FontDict = (PdfDictionary)pdf.GetPdfObject(292);
                 PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont(pdfType3FontDict);
                 byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(comparedTextFile));
-                NUnit.Framework.Assert.AreEqual(iText.IO.Util.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.UTF8)
-                    , result);
+                NUnit.Framework.Assert.AreEqual(iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding
+                    .UTF8), result);
                 NUnit.Framework.Assert.AreEqual(177, pdfType3Font.GetNumberOfGlyphs());
                 NUnit.Framework.Assert.AreEqual("gA", pdfType3Font.GetFontEncoding().GetDifference(10));
                 NUnit.Framework.Assert.AreEqual(41, pdfType3Font.GetFontProgram().GetGlyphByCode(10).GetUnicode());

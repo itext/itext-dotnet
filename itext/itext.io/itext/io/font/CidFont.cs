@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
@@ -62,7 +63,8 @@ namespace iText.IO.Font {
             InitializeCidFontNameAndStyle(fontName);
             IDictionary<String, Object> fontDesc = CidFontProperties.GetAllFonts().Get(fontNames.GetFontName());
             if (fontDesc == null) {
-                throw new iText.IO.IOException("There is no such predefined font: {0}").SetMessageParams(fontName);
+                throw new iText.IO.Exceptions.IOException("There is no such predefined font: {0}").SetMessageParams(fontName
+                    );
             }
             InitializeCidFontProperties(fontDesc);
         }

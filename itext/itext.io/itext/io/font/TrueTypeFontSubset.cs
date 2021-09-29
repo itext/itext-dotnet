@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.IO.Font {
     /// <summary>Subsets a True Type font by removing the unneeded glyphs from the font.</summary>
@@ -259,7 +259,8 @@ namespace iText.IO.Font {
             rf.Seek(directoryOffset);
             int id = rf.ReadInt();
             if (id != 0x00010000) {
-                throw new iText.IO.IOException(iText.IO.IOException.NotAtTrueTypeFile).SetMessageParams(fileName);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.NotAtTrueTypeFile).SetMessageParams
+                    (fileName);
             }
             int num_tables = rf.ReadUnsignedShort();
             rf.SkipBytes(6);
@@ -276,15 +277,15 @@ namespace iText.IO.Font {
         private void ReadLoca() {
             int[] tableLocation = tableDirectory.Get("head");
             if (tableLocation == null) {
-                throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("head", fileName
-                    );
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                    ("head", fileName);
             }
             rf.Seek(tableLocation[TABLE_OFFSET] + HEAD_LOCA_FORMAT_OFFSET);
             locaShortTable = rf.ReadUnsignedShort() == 0;
             tableLocation = tableDirectory.Get("loca");
             if (tableLocation == null) {
-                throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("loca", fileName
-                    );
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                    ("loca", fileName);
             }
             rf.Seek(tableLocation[TABLE_OFFSET]);
             if (locaShortTable) {
@@ -358,8 +359,8 @@ namespace iText.IO.Font {
         private void FlatGlyphs() {
             int[] tableLocation = tableDirectory.Get("glyf");
             if (tableLocation == null) {
-                throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("glyf", fileName
-                    );
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                    ("glyf", fileName);
             }
             int glyph0 = 0;
             if (!glyphsUsed.Contains(glyph0)) {
@@ -433,10 +434,10 @@ namespace iText.IO.Font {
             byte[] buf = new byte[length];
             rf.ReadFully(buf);
             try {
-                return iText.IO.Util.JavaUtil.GetStringForBytes(buf, PdfEncodings.WINANSI);
+                return iText.Commons.Utils.JavaUtil.GetStringForBytes(buf, PdfEncodings.WINANSI);
             }
             catch (Exception e) {
-                throw new iText.IO.IOException("TrueType font", e);
+                throw new iText.IO.Exceptions.IOException("TrueType font", e);
             }
         }
 

@@ -61,14 +61,16 @@ namespace iText.Svg.Utils {
         public virtual void NoSkewXValuesTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 ("skewX()"));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void TwoSkewXValuesTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
                 ("skewX(1 2)"));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message
+                );
         }
 
         [NUnit.Framework.Test]

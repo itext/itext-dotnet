@@ -45,8 +45,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
@@ -80,8 +81,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             }
             byte[] logBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "contentStreamProcessorTest_events_log.dat"
                 ));
-            String expectedPageEventsLog = iText.IO.Util.JavaUtil.GetStringForBytes(logBytes, System.Text.Encoding.UTF8
-                );
+            String expectedPageEventsLog = iText.Commons.Utils.JavaUtil.GetStringForBytes(logBytes, System.Text.Encoding
+                .UTF8);
             NUnit.Framework.Assert.AreEqual(expectedPageEventsLog, pageEventsLog.ToString());
         }
 
@@ -126,7 +127,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX, Count = 1)]
         public virtual void TestNoninvertibleMatrix() {
             String fileName = "noninvertibleMatrix.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + fileName));

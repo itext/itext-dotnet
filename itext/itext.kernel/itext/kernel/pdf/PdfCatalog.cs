@@ -43,9 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
-using iText.Kernel;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Collection;
 using iText.Kernel.Pdf.Layer;
@@ -54,7 +55,7 @@ using iText.Kernel.Pdf.Navigation;
 namespace iText.Kernel.Pdf {
     /// <summary>The root of a document’s object hierarchy.</summary>
     public class PdfCatalog : PdfObjectWrapper<PdfDictionary> {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfCatalog));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfCatalog));
 
         private readonly PdfPagesTree pageTree;
 
@@ -106,7 +107,7 @@ namespace iText.Kernel.Pdf {
         protected internal PdfCatalog(PdfDictionary pdfObject)
             : base(pdfObject) {
             if (pdfObject == null) {
-                throw new PdfException(PdfException.DocumentHasNoPdfCatalogObject);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NO_PDF_CATALOG_OBJECT);
             }
             EnsureObjectIsAddedToDocument(pdfObject);
             GetPdfObject().Put(PdfName.Type, PdfName.Catalog);
@@ -195,8 +196,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>PdfCatalog will be flushed in PdfDocument.close().</summary>
         /// <remarks>PdfCatalog will be flushed in PdfDocument.close(). User mustn't flush PdfCatalog!</remarks>
         public override void Flush() {
-            ILog logger = LogManager.GetLogger(typeof(PdfDocument));
-            logger.Warn("PdfCatalog cannot be flushed manually");
+            ILogger logger = ITextLogManager.GetLogger(typeof(PdfDocument));
+            logger.LogWarning("PdfCatalog cannot be flushed manually");
         }
 
         /// <summary>A value specifying a destination that shall be displayed when the document is opened.</summary>
@@ -604,6 +605,9 @@ namespace iText.Kernel.Pdf {
 
         internal virtual PdfDestination CopyDestination(PdfObject dest, IDictionary<PdfPage, PdfPage> page2page, PdfDocument
              toDocument) {
+            if (null == dest) {
+                return null;
+            }
             PdfDestination d = null;
             if (dest.IsArray()) {
                 PdfObject pageObject = ((PdfArray)dest).Get(0);
@@ -689,7 +693,7 @@ namespace iText.Kernel.Pdf {
                 }
                 catch (IndexOutOfRangeException) {
                     pageObj = null;
-                    LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS
                         , pageNumber));
                 }
             }
@@ -798,25 +802,31 @@ namespace iText.Kernel.Pdf {
         /// <see cref="outlines"/>
         /// iteratively
         /// </summary>
-        private void ConstructOutlines(PdfDictionary outlineRoot, IDictionary<String, PdfObject> names) {
+        internal virtual void ConstructOutlines(PdfDictionary outlineRoot, IDictionary<String, PdfObject> names) {
             if (outlineRoot == null) {
                 return;
             }
             PdfDictionary first = outlineRoot.GetAsDictionary(PdfName.First);
             PdfDictionary current = first;
-            PdfDictionary next;
-            PdfDictionary parent;
             Dictionary<PdfDictionary, PdfOutline> parentOutlineMap = new Dictionary<PdfDictionary, PdfOutline>();
             outlines = new PdfOutline(OutlineRoot, outlineRoot, GetDocument());
             PdfOutline parentOutline = outlines;
             parentOutlineMap.Put(outlineRoot, parentOutline);
             while (current != null) {
                 first = current.GetAsDictionary(PdfName.First);
-                next = current.GetAsDictionary(PdfName.Next);
-                parent = current.GetAsDictionary(PdfName.Parent);
+                PdfDictionary next = current.GetAsDictionary(PdfName.Next);
+                PdfDictionary parent = current.GetAsDictionary(PdfName.Parent);
+                if (null == parent) {
+                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_PARENT_ENTRY
+                        , current.indirectReference));
+                }
+                PdfString title = current.GetAsString(PdfName.Title);
+                if (null == title) {
+                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_TITLE_ENTRY
+                        , current.indirectReference));
+                }
                 parentOutline = parentOutlineMap.Get(parent);
-                PdfOutline currentOutline = new PdfOutline(current.GetAsString(PdfName.Title).ToUnicodeString(), current, 
-                    parentOutline);
+                PdfOutline currentOutline = new PdfOutline(title.ToUnicodeString(), current, parentOutline);
                 AddOutlineToPage(currentOutline, current, names);
                 parentOutline.GetAllChildren().Add(currentOutline);
                 if (first != null) {

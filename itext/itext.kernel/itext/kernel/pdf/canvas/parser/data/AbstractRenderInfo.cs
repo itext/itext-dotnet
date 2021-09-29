@@ -77,7 +77,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         // check if graphics state was released
         protected internal virtual void CheckGraphicsState() {
             if (null == gs) {
-                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+                throw new InvalidOperationException(iText.IO.Logs.IoLogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
             }
         }
     }

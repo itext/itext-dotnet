@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.IO.Util;
 
@@ -118,7 +119,7 @@ namespace iText.IO.Font {
             resource.Dispose();
             foreach (Object key in p.Keys) {
                 String value = p.GetProperty((String)key);
-                String[] sp = iText.IO.Util.StringUtil.Split(value, " ");
+                String[] sp = iText.Commons.Utils.StringUtil.Split(value, " ");
                 ICollection<String> hs = new HashSet<String>();
                 foreach (String s in sp) {
                     if (s.Length > 0) {

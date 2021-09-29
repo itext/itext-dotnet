@@ -59,7 +59,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "in01.pdf"));
             // build strategy
-            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy(iText.IO.Util.StringUtil.RegexCompile
+            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy(iText.Commons.Utils.StringUtil.RegexCompile
                 ("\\{\\{Signature\\}\\}"));
             // get locations
             IList<IPdfTextLocation> locationList = new List<IPdfTextLocation>();

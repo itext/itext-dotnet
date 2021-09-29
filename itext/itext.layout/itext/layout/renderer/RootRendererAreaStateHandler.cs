@@ -39,7 +39,6 @@ namespace iText.Layout.Renderer {
             if (storedPreviousArea != null) {
                 storedNextArea = rootRenderer.currentArea;
                 rootRenderer.currentArea = storedPreviousArea;
-                rootRenderer.currentPageNumber = storedPreviousArea.GetPageNumber();
                 storedNextFloatRenderAreas = new List<Rectangle>(rootRenderer.floatRendererAreas);
                 rootRenderer.floatRendererAreas = storedPreviousFloatRenderAreas;
                 storedPreviousFloatRenderAreas = null;
@@ -52,7 +51,6 @@ namespace iText.Layout.Renderer {
         public virtual bool AttemptGoForwardToStoredNextState(RootRenderer rootRenderer) {
             if (storedNextArea != null) {
                 rootRenderer.currentArea = storedNextArea;
-                rootRenderer.currentPageNumber = storedNextArea.GetPageNumber();
                 rootRenderer.floatRendererAreas = storedNextFloatRenderAreas;
                 storedNextArea = null;
                 storedNextFloatRenderAreas = null;

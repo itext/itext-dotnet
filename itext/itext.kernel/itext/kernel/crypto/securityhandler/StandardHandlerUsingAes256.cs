@@ -43,13 +43,15 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Crypto;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
@@ -157,7 +159,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 SetAES256DicEntries(encryptionDictionary, oeKey, ueKey, aes256Perms, encryptMetadata, embeddedFilesOnly);
             }
             catch (Exception ex) {
-                throw new PdfException(PdfException.PdfEncryption, ex);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, ex);
             }
         }
 
@@ -222,7 +224,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 else {
                     hash = ComputeHash(password, uValue, VALIDATION_SALT_OFFSET, SALT_LENGTH);
                     if (!CompareArray(hash, uValue, 32)) {
-                        throw new BadPasswordException(PdfException.BadUserPassword);
+                        throw new BadPasswordException(KernelExceptionMessageConstant.BAD_USER_PASSWORD);
                     }
                     hash = ComputeHash(password, uValue, KEY_SALT_OFFSET, SALT_LENGTH);
                     AESCipherCBCnoPad ac = new AESCipherCBCnoPad(false, hash);
@@ -232,7 +234,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 AESCipherCBCnoPad ac_1 = new AESCipherCBCnoPad(false, nextObjectKey);
                 byte[] decPerms = ac_1.ProcessBlock(perms, 0, perms.Length);
                 if (decPerms[9] != (byte)'a' || decPerms[10] != (byte)'d' || decPerms[11] != (byte)'b') {
-                    throw new BadPasswordException(PdfException.BadUserPassword);
+                    throw new BadPasswordException(KernelExceptionMessageConstant.BAD_USER_PASSWORD);
                 }
                 int permissionsDecoded = (decPerms[0] & 0xff) | ((decPerms[1] & 0xff) << 8) | ((decPerms[2] & 0xff) << 16)
                      | ((decPerms[3] & 0xff) << 24);
@@ -240,8 +242,9 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 bool? encryptMetadataEntry = encryptionDictionary.GetAsBool(PdfName.EncryptMetadata);
                 if (permissionsDecoded != permissions || encryptMetadataEntry != null && encryptMetadata != encryptMetadataEntry
                     ) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Crypto.Securityhandler.StandardHandlerUsingAes256));
-                    logger.Error(iText.IO.LogMessageConstant.ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Crypto.Securityhandler.StandardHandlerUsingAes256
+                        ));
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY
                         );
                 }
                 this.permissions = permissionsDecoded;
@@ -251,7 +254,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 throw;
             }
             catch (Exception ex) {
-                throw new PdfException(PdfException.PdfEncryption, ex);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, ex);
             }
         }
 

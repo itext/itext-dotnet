@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
@@ -56,6 +58,7 @@ using iText.StyledXmlParser.Util;
 using iText.Svg;
 using iText.Svg.Css;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Processors.Impl;
 
 namespace iText.Svg.Css.Impl {
@@ -66,13 +69,16 @@ namespace iText.Svg.Css.Impl {
             (new HashSet<IStyleInheritance>(JavaUtil.ArraysAsList((IStyleInheritance)new CssInheritance(), (IStyleInheritance
             )new SvgAttributeInheritance())));
 
+        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
         private static readonly String[] ELEMENTS_INHERITING_PARENT_STYLES = new String[] { SvgConstants.Tags.MARKER
-            , SvgConstants.Tags.LINEAR_GRADIENT, SvgConstants.Tags.PATTERN };
+            , SvgConstants.Tags.LINEAR_GRADIENT, SvgConstants.Tags.LINEAR_GRADIENT.ToLowerInvariant(), SvgConstants.Tags
+            .PATTERN };
 
         private static readonly float DEFAULT_FONT_SIZE = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults
             .GetDefaultValue(SvgConstants.Attributes.FONT_SIZE));
 
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver
+            ));
 
         private CssStyleSheet css;
 
@@ -88,28 +94,6 @@ namespace iText.Svg.Css.Impl {
 
         /// <summary>The resource resolver</summary>
         private readonly ResourceResolver resourceResolver;
-
-        /// <summary>
-        /// Creates a
-        /// <see cref="SvgStyleResolver"/>
-        /// with a given default CSS.
-        /// </summary>
-        /// <param name="defaultCssStream">the default CSS</param>
-        [System.ObsoleteAttribute(@"will be removed in next major release, useSvgStyleResolver(System.IO.Stream, iText.Svg.Processors.Impl.SvgProcessorContext) instead"
-            )]
-        public SvgStyleResolver(Stream defaultCssStream)
-            : this(defaultCssStream, new SvgProcessorContext(new SvgConverterProperties())) {
-        }
-
-        /// <summary>
-        /// Creates a
-        /// <see cref="SvgStyleResolver"/>.
-        /// </summary>
-        [System.ObsoleteAttribute(@"will be removed in next major release, useSvgStyleResolver(iText.Svg.Processors.Impl.SvgProcessorContext) instead"
-            )]
-        public SvgStyleResolver()
-            : this(new SvgProcessorContext(new SvgConverterProperties())) {
-        }
 
         /// <summary>
         /// Creates a
@@ -135,7 +119,7 @@ namespace iText.Svg.Css.Impl {
                 }
             }
             catch (System.IO.IOException e) {
-                LOGGER.Warn(SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS, e);
+                LOGGER.LogWarning(e, SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS);
                 this.css = new CssStyleSheet();
             }
             this.resourceResolver = context.GetResourceResolver();
@@ -264,8 +248,9 @@ namespace iText.Svg.Css.Impl {
             if (element.ParentNode() is IStylesContainer) {
                 IStylesContainer parentNode = (IStylesContainer)element.ParentNode();
                 IDictionary<String, String> parentStyles = parentNode.GetStyles();
-                if (parentStyles == null && !(parentNode is IDocumentNode)) {
-                    LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES);
+                if (parentStyles == null && !(parentNode is IElementNode)) {
+                    LOGGER.LogError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_RESOLVING_PARENT_STYLES
+                        );
                 }
                 if (parentStyles != null) {
                     parentFontSizeStr = parentStyles.Get(SvgConstants.Attributes.FONT_SIZE);
@@ -297,12 +282,13 @@ namespace iText.Svg.Css.Impl {
         /// <param name="attributesMap">the element styles map</param>
         private void ProcessXLink(IAttribute attr, IDictionary<String, String> attributesMap) {
             String xlinkValue = attr.GetValue();
-            if (!IsStartedWithHash(xlinkValue) && !new ResourceResolver("").IsDataSrc(xlinkValue)) {
+            if (!IsStartedWithHash(xlinkValue) && !ResourceResolver.IsDataSrc(xlinkValue)) {
                 try {
                     xlinkValue = this.resourceResolver.ResolveAgainstBaseUri(attr.GetValue()).ToExternalForm();
                 }
                 catch (UriFormatException mue) {
-                    LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL, mue);
+                    LOGGER.LogError(mue, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL
+                        );
                 }
             }
             attributesMap.Put(attr.GetKey(), xlinkValue);
@@ -337,8 +323,8 @@ namespace iText.Svg.Css.Impl {
                                 styleData = ((ITextNode)currentNode.ChildNodes()[0]).WholeText();
                             }
                             CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData);
-                            //TODO (DEVSIX-2263): media query wrap
-                            //styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
+                            // TODO (DEVSIX-2263): media query wrap
+                            // styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
                             this.css.AppendCssStyleSheet(styleSheet);
                         }
                     }
@@ -355,7 +341,8 @@ namespace iText.Svg.Css.Impl {
                                 }
                             }
                             catch (Exception exc) {
-                                LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE, exc);
+                                LOGGER.LogError(exc, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE
+                                    );
                             }
                         }
                     }

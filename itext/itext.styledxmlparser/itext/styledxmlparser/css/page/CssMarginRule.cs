@@ -61,19 +61,7 @@ namespace iText.StyledXmlParser.Css.Page {
         /// </summary>
         /// <param name="ruleName">the rule name</param>
         public CssMarginRule(String ruleName)
-            : this(ruleName, "") {
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="CssMarginRule"/>
-        /// instance.
-        /// </summary>
-        /// <param name="ruleName">the rule name</param>
-        /// <param name="ruleParameters">the rule parameters</param>
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. Use CssMarginRule(System.String) instead")]
-        public CssMarginRule(String ruleName, String ruleParameters)
-            : base(ruleName, ruleParameters) {
+            : base(ruleName, "") {
         }
 
         /* (non-Javadoc)

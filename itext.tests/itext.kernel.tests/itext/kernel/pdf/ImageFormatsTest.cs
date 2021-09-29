@@ -77,25 +77,25 @@ namespace iText.Kernel.Pdf {
                 HELVETICA), 14).SetFillColor(ColorConstants.MAGENTA).ShowText("8 bit depth PNG").EndText().RestoreState
                 ();
             ImageData img = ImageDataFactory.Create(sourceFolder + "manualTransparency_8bit.png");
-            canvas.AddImage(img, 100, 780, 200, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(100, 780, 200, 292.59f), false);
             canvas.SaveState().BeginText().MoveText(316, 1150).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.
                 HELVETICA), 14).SetFillColor(ColorConstants.MAGENTA).ShowText("24 bit depth PNG").EndText().RestoreState
                 ();
             img = ImageDataFactory.Create(sourceFolder + "manualTransparency_24bit.png");
-            canvas.AddImage(img, 300, 780, 200, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(300, 780, 200, 292.59f), false);
             canvas.SaveState().BeginText().MoveText(516, 1150).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.
                 HELVETICA), 14).SetFillColor(ColorConstants.MAGENTA).ShowText("32 bit depth PNG").EndText().RestoreState
                 ();
             img = ImageDataFactory.Create(sourceFolder + "manualTransparency_32bit.png");
-            canvas.AddImage(img, 500, 780, 200, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(500, 780, 200, 292.59f), false);
             canvas.SaveState().BeginText().MoveText(116, 650).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                 ), 16).SetFillColor(ColorConstants.MAGENTA).ShowText("GIF image ").EndText().RestoreState();
             img = ImageDataFactory.Create(sourceFolder + "manualTransparency_gif.gif");
-            canvas.AddImage(img, 100, 300, 200, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(100, 300, 200, 292.59f), false);
             canvas.SaveState().BeginText().MoveText(316, 650).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                 ), 16).SetFillColor(ColorConstants.MAGENTA).ShowText("TIF image ").EndText().RestoreState();
             img = ImageDataFactory.Create(sourceFolder + "manualTransparency_tif.tif");
-            canvas.AddImage(img, 300, 300, 200, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(300, 300, 200, 292.59f), false);
             canvas.Release();
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -103,7 +103,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void Png_imageTransparancy_8bitDepthImage() {
+        public virtual void Png_imageTransparency_8bitDepthImage() {
             String outFileName = destinationFolder + "png_imageTransparancy_8bitDepthImage.pdf";
             String cmpFileName = sourceFolder + "cmp_png_imageTransparancy_8bitDepthImage.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetCompressionLevel
@@ -116,7 +116,7 @@ namespace iText.Kernel.Pdf {
                 ), 14).SetFillColor(ColorConstants.MAGENTA).ShowText("8 bit depth PNG").MoveText(0, -20).ShowText("This image should not have a black rectangle as background"
                 ).EndText().RestoreState();
             ImageData img = ImageDataFactory.Create(sourceFolder + "manualTransparency_8bit.png");
-            canvas.AddImage(img, 100, 450, 200, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(100, 450, 200, 292.59f), false);
             canvas.Release();
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -124,7 +124,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void Png_imageTransparancy_24bitDepthImage() {
+        public virtual void Png_imageTransparency_24bitDepthImage() {
             String outFileName = destinationFolder + "png_imageTransparancy_24bitDepthImage.pdf";
             String cmpFileName = sourceFolder + "cmp_png_imageTransparancy_24bitDepthImage.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetCompressionLevel
@@ -137,11 +137,11 @@ namespace iText.Kernel.Pdf {
                 ), 14).SetFillColor(ColorConstants.MAGENTA).ShowText("24 bit depth PNG").MoveText(0, -20).ShowText("This image should not have a white rectangle as background"
                 ).EndText().RestoreState();
             ImageData img = ImageDataFactory.Create(sourceFolder + "manualTransparency_24bit.png");
-            canvas.AddImage(img, 100, 450, 200, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(100, 450, 200, 292.59f), false);
             canvas.SaveState().BeginText().MoveText(116, 400).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                 ), 14).SetFillColor(ColorConstants.MAGENTA).ShowText("32 bit depth PNG").EndText().RestoreState();
             img = ImageDataFactory.Create(sourceFolder + "manualTransparency_32bit.png");
-            canvas.AddImage(img, 116, 100, 200, false);
+            canvas.AddImageFittedIntoRectangle(img, new Rectangle(116, 100, 200, 292.59f), false);
             canvas.Release();
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

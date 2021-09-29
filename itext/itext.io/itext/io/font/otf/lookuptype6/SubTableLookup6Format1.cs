@@ -42,12 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Font.Otf;
-using iText.IO.Util;
 
 namespace iText.IO.Font.Otf.Lookuptype6 {
     /// <summary>Chaining Contextual Substitution Subtable: Simple Chaining Context Glyph Substitution</summary>
-    public class SubTableLookup6Format1 : SubTableLookup6 {
+    public class SubTableLookup6Format1 : ChainingContextualTable<ContextualSubstRule> {
         private IDictionary<int, IList<ContextualSubstRule>> substMap;
 
         public SubTableLookup6Format1(OpenTypeFontTableReader openReader, int lookupFlag, IDictionary<int, IList<ContextualSubstRule

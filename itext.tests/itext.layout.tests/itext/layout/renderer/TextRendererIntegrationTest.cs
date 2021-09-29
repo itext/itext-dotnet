@@ -63,7 +63,7 @@ namespace iText.Layout.Renderer {
             // UTF-8 encoding table and Unicode characters
             byte[] bUtf16A = new byte[] { (byte)0xd8, (byte)0x40, (byte)0xdc, (byte)0x0b };
             // This String is U+2000B
-            String strUtf16A = iText.IO.Util.JavaUtil.GetStringForBytes(bUtf16A, "UTF-16BE");
+            String strUtf16A = iText.Commons.Utils.JavaUtil.GetStringForBytes(bUtf16A, "UTF-16BE");
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", PdfEncodings.IDENTITY_H);
             doc.Add(new Paragraph(strUtf16A).SetFont(font));
             doc.Close();
@@ -382,7 +382,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void MinMaxWidthWordSplitAcrossMultipleTextRenderers() {
             String outFileName = destinationFolder + "minMaxWidthWordSplitAcrossMultipleTextRenderers.pdf";
             String cmpFileName = sourceFolder + "cmp_minMaxWidthWordSplitAcrossMultipleTextRenderers.pdf";
@@ -411,7 +411,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void MinWidthForWordInMultipleTextRenderersFollowedByFloatTest() {
             String outFileName = destinationFolder + "minWidthForSpanningWordFollowedByFloat.pdf";
             String cmpFileName = sourceFolder + "cmp_minWidthForSpanningWordFollowedByFloat.pdf";
@@ -457,7 +457,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN, Count = 3)]
         public virtual void CustomTextRendererShouldOverrideGetNextRendererTest() {
             String outFileName = destinationFolder + "customTextRendererShouldOverrideGetNextRendererTest.pdf";
             String cmpFileName = sourceFolder + "cmp_customTextRendererShouldOverrideGetNextRendererTest.pdf";
@@ -505,7 +505,69 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN, Count = 8)]
+        public virtual void NbspCannotBeFitAndIsTheOnlySymbolTest() {
+            String outFileName = destinationFolder + "nbspCannotBeFitAndIsTheOnlySymbolTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndIsTheOnlySymbolTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            // No place for any symbol (page width is fully occupied by margins)
+            Document doc = new Document(pdfDocument, new PageSize(72, 1000));
+            Paragraph paragraph = new Paragraph().Add(new Text("\u00A0"));
+            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void NbspCannotBeFitAndMakesTheFirstChunkTest() {
+            String outFileName = destinationFolder + "nbspCannotBeFitAndMakesTheFirstChunkTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndMakesTheFirstChunkTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            // No place for any symbol (page width is fully occupied by margins)
+            Document doc = new Document(pdfDocument, new PageSize(72, 1000));
+            Paragraph paragraph = new Paragraph().Add(new Text("\u00A0")).Add(new Text("SecondChunk"));
+            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void NbspCannotBeFitAndIsTheFirstSymbolOfChunkTest() {
+            String outFileName = destinationFolder + "nbspCannotBeFitAndIsTheFirstSymbolOfChunkTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndIsTheFirstSymbolOfChunkTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            // No place for any symbol (page width is fully occupied by margins)
+            Document doc = new Document(pdfDocument, new PageSize(72, 1000));
+            Paragraph paragraph = new Paragraph().Add(new Text("\u00A0First"));
+            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NbspCannotBeFitAndIsTheLastSymbolOfFirstChunkTest() {
+            String outFileName = destinationFolder + "nbspCannotBeFitAndIsTheLastSymbolOfFirstChunkTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndIsTheLastSymbolOfFirstChunkTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            // No place for the second symbol
+            Document doc = new Document(pdfDocument, new PageSize(81, 1000));
+            Paragraph paragraph = new Paragraph().Add(new Text("H\u00A0")).Add(new Text("ello"));
+            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN, Count = 8)]
         public virtual void CustomTextRendererShouldOverrideCreateCopyTest() {
             String outFileName = destinationFolder + "customTextRendererShouldOverrideCreateCopyTest.pdf";
             String cmpFileName = sourceFolder + "cmp_customTextRendererShouldOverrideCreateCopyTest.pdf";
@@ -521,7 +583,7 @@ namespace iText.Layout.Renderer {
                 longTextBuilder.Append("Дзень добры, свет! Hallo Welt! ");
             }
             iText.Layout.Element.Text text = new iText.Layout.Element.Text(longTextBuilder.ToString());
-            text.SetNextRenderer(new _TextRenderer_801(text));
+            text.SetNextRenderer(new _TextRenderer_889(text));
             doc.Add(new Paragraph(text));
             text.SetNextRenderer(new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer(text));
             doc.Add(new Paragraph(text));
@@ -530,8 +592,8 @@ namespace iText.Layout.Renderer {
                 ));
         }
 
-        private sealed class _TextRenderer_801 : TextRenderer {
-            public _TextRenderer_801(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_889 : TextRenderer {
+            public _TextRenderer_889(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 

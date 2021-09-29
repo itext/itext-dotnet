@@ -42,8 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
-using iText.Kernel;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
@@ -91,7 +92,7 @@ namespace iText.Kernel.Pdf.Xobject {
                     return new PdfImageXObject(stream);
                 }
                 else {
-                    throw new NotSupportedException(PdfException.UnsupportedXObjectType);
+                    throw new NotSupportedException(KernelExceptionMessageConstant.UNSUPPORTED_XOBJECT_TYPE);
                 }
             }
         }
@@ -193,8 +194,8 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfXObject));
-                logger.Error(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfXObject));
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null) {

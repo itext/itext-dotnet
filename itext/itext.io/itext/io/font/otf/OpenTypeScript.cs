@@ -46,7 +46,7 @@ using System.Collections.Generic;
 
 namespace iText.IO.Font.Otf {
     public class OpenTypeScript {
-        public readonly String DEFAULT_SCRIPT = "DFLT";
+        public const String DEFAULT_SCRIPT = "DFLT";
 
         private OpenTypeFontTableReader openTypeReader;
 

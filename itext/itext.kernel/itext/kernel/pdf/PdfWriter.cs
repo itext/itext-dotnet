@@ -44,18 +44,16 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfWriter : PdfOutputStream {
         private static readonly byte[] obj = ByteUtils.GetIsoBytes(" obj\n");
 
         private static readonly byte[] endobj = ByteUtils.GetIsoBytes("\nendobj\n");
-
-        // For internal usage only
-        private PdfOutputStream duplicateStream = null;
 
         protected internal WriterProperties properties;
 
@@ -94,10 +92,8 @@ namespace iText.Kernel.Pdf {
         }
 
         public PdfWriter(Stream os, WriterProperties properties)
-            : base(FileUtil.WrapWithBufferedOutputStream(os)) {
+            : base(new CountOutputStream(FileUtil.WrapWithBufferedOutputStream(os))) {
             this.properties = properties;
-            if (properties.debugMode) {
-            }
         }
 
         /// <summary>Create a PdfWriter writing to the passed filename and with default writer properties.</summary>
@@ -258,8 +254,8 @@ namespace iText.Kernel.Pdf {
                 obj = PdfNull.PDF_NULL;
             }
             if (CheckTypeOfPdfDictionary(obj, PdfName.Catalog)) {
-                ILog logger = LogManager.GetLogger(typeof(PdfReader));
-                logger.Warn(iText.IO.LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN);
+                ILogger logger = ITextLogManager.GetLogger(typeof(PdfReader));
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN);
                 obj = PdfNull.PDF_NULL;
             }
             PdfIndirectReference indirectReference = obj.GetIndirectReference();

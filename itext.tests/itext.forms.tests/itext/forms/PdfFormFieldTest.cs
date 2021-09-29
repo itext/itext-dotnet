@@ -74,7 +74,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         // The first message for the case when the FormField is null,
         // the second message when the FormField is a indirect reference to null.
-        [LogMessage(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, Count = 2)]
         public virtual void NullFormFieldTest() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "nullFormField.pdf"));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
@@ -408,7 +408,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.NO_FIELDS_IN_ACROFORM)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.NO_FIELDS_IN_ACROFORM)]
         public virtual void AcroFieldDictionaryNoFields() {
             String outPdf = destinationFolder + "acroFieldDictionaryNoFields.pdf";
             String cmpPdf = sourceFolder + "cmp_acroFieldDictionaryNoFields.pdf";
@@ -681,7 +681,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT)]
         public virtual void NoMaxLenWithSetCombFlagTest() {
             String outPdf = destinationFolder + "noMaxLenWithSetCombFlagTest.pdf";
             String cmpPdf = sourceFolder + "cmp_noMaxLenWithSetCombFlagTest.pdf";
@@ -805,7 +805,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT, Count = 2)]
         public virtual void RegenerateMaxLenCombTest() {
             String srcPdf = sourceFolder + "regenerateMaxLenCombTest.pdf";
             String outPdf = destinationFolder + "regenerateMaxLenCombTest.pdf";
@@ -860,7 +860,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD)]
         public virtual void PdfWithDifferentFieldsTest() {
             String fileName = destinationFolder + "pdfWithDifferentFieldsTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
@@ -936,17 +936,20 @@ namespace iText.Forms {
             String testName = "testDaInAppendMode.pdf";
             String srcPdf = sourceFolder + testName;
             ByteArrayOutputStream outPdf = new ByteArrayOutputStream();
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf), new StampingProperties(
-                ).UseAppendMode());
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
-            PdfFormField field = form.GetField("magenta");
-            field.SetDefaultAppearance("/F1 25 Tf");
-            int objectNumer = field.GetPdfObject().GetIndirectReference().GetObjNumber();
-            pdfDoc.Close();
-            pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(outPdf.ToArray())));
-            PdfString da = ((PdfDictionary)pdfDoc.GetPdfObject(objectNumer)).GetAsString(PdfName.DA);
-            pdfDoc.Close();
-            NUnit.Framework.Assert.AreEqual("/F1 25 Tf", da.ToString());
+            int objectNumber;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf), new StampingProperties
+                ().UseAppendMode())) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+                PdfFormField field = form.GetField("magenta");
+                field.SetFontSize(35);
+                field.UpdateDefaultAppearance();
+                objectNumber = field.GetPdfObject().GetIndirectReference().GetObjNumber();
+            }
+            PdfString da;
+            using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(new MemoryStream(outPdf.ToArray())))) {
+                da = ((PdfDictionary)pdfDoc_1.GetPdfObject(objectNumber)).GetAsString(PdfName.DA);
+            }
+            NUnit.Framework.Assert.AreEqual("/F1 35 Tf 1 0 1 rg", da.ToString());
         }
 
         [NUnit.Framework.Test]

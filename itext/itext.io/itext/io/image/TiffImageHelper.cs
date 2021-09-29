@@ -85,7 +85,7 @@ namespace iText.IO.Image {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.TiffImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TiffImageException, e);
             }
         }
 
@@ -94,12 +94,12 @@ namespace iText.IO.Image {
             int page = tiff.image.GetPage();
             bool direct = tiff.image.IsDirect();
             if (page < 1) {
-                throw new iText.IO.IOException(iText.IO.IOException.PageNumberMustBeGtEq1);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PageNumberMustBeGtEq1);
             }
             try {
                 TIFFDirectory dir = new TIFFDirectory(s, page - 1);
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_TILEWIDTH)) {
-                    throw new iText.IO.IOException(iText.IO.IOException.TilesAreNotSupported);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TilesAreNotSupported);
                 }
                 int compression = TIFFConstants.COMPRESSION_NONE;
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_COMPRESSION)) {
@@ -282,7 +282,7 @@ namespace iText.IO.Image {
                                 try {
                                     decoder.DecodeT6(outBuf, im, 0, height, tiffT6Options);
                                 }
-                                catch (iText.IO.IOException e) {
+                                catch (iText.IO.Exceptions.IOException e) {
                                     if (!recoverFromImageError) {
                                         throw;
                                     }
@@ -315,7 +315,7 @@ namespace iText.IO.Image {
                 }
             }
             catch (Exception) {
-                throw new iText.IO.IOException(iText.IO.IOException.CannotReadTiffImage);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotReadTiffImage);
             }
         }
 
@@ -340,8 +340,8 @@ namespace iText.IO.Image {
                     }
 
                     default: {
-                        throw new iText.IO.IOException(iText.IO.IOException.Compression1IsNotSupported).SetMessageParams(compression
-                            );
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Compression1IsNotSupported).SetMessageParams
+                            (compression);
                     }
                 }
                 int photometric = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_PHOTOMETRIC);
@@ -356,8 +356,8 @@ namespace iText.IO.Image {
 
                     default: {
                         if (compression != TIFFConstants.COMPRESSION_OJPEG && compression != TIFFConstants.COMPRESSION_JPEG) {
-                            throw new iText.IO.IOException(iText.IO.IOException.Photometric1IsNotSupported).SetMessageParams(photometric
-                                );
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Photometric1IsNotSupported).SetMessageParams
+                                (photometric);
                         }
                         break;
                     }
@@ -381,7 +381,7 @@ namespace iText.IO.Image {
                 }
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_PLANARCONFIG) && dir.GetFieldAsLong(TIFFConstants.TIFFTAG_PLANARCONFIG
                     ) == TIFFConstants.PLANARCONFIG_SEPARATE) {
-                    throw new iText.IO.IOException(iText.IO.IOException.PlanarImagesAreNotSupported);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PlanarImagesAreNotSupported);
                 }
                 int extraSamples = 0;
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_EXTRASAMPLES)) {
@@ -405,8 +405,8 @@ namespace iText.IO.Image {
                     }
 
                     default: {
-                        throw new iText.IO.IOException(iText.IO.IOException.BitsPerSample1IsNotSupported).SetMessageParams(bitsPerSample
-                            );
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.BitsPerSample1IsNotSupported).SetMessageParams
+                            (bitsPerSample);
                     }
                 }
                 int h = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_IMAGELENGTH);
@@ -446,10 +446,11 @@ namespace iText.IO.Image {
                     if (predictorField != null) {
                         predictor = predictorField.GetAsInt(0);
                         if (predictor != 1 && predictor != 2) {
-                            throw new iText.IO.IOException(iText.IO.IOException.IllegalValueForPredictorInTiffFile);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IllegalValueForPredictorInTiffFile
+                                );
                         }
                         if (predictor == 2 && bitsPerSample != 8) {
-                            throw new iText.IO.IOException(iText.IO.IOException._1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor
                                 ).SetMessageParams(bitsPerSample);
                         }
                     }
@@ -480,7 +481,7 @@ namespace iText.IO.Image {
                     // Assume that the TIFFTAG_JPEGIFBYTECOUNT tag is optional, since it's obsolete and
                     // is often missing
                     if ((!dir.IsTagPresent(TIFFConstants.TIFFTAG_JPEGIFOFFSET))) {
-                        throw new iText.IO.IOException(iText.IO.IOException.MissingTagsForOjpegCompression);
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.MissingTagsForOjpegCompression);
                     }
                     int jpegOffset = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_JPEGIFOFFSET);
                     int jpegLength = (int)s.Length() - jpegOffset;
@@ -500,7 +501,7 @@ namespace iText.IO.Image {
                 else {
                     if (compression == TIFFConstants.COMPRESSION_JPEG) {
                         if (size.Length > 1) {
-                            throw new iText.IO.IOException(iText.IO.IOException.CompressionJpegIsOnlySupportedWithASingleStripThisImageHas1Strips
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CompressionJpegIsOnlySupportedWithASingleStripThisImageHas1Strips
                                 ).SetMessageParams(size.Length);
                         }
                         byte[] jpeg = new byte[(int)size[0]];
@@ -668,7 +669,7 @@ namespace iText.IO.Image {
                 }
             }
             catch (Exception) {
-                throw new iText.IO.IOException(iText.IO.IOException.CannotGetTiffImageColor);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotGetTiffImageColor);
             }
         }
 
@@ -711,7 +712,7 @@ namespace iText.IO.Image {
                 mzip.Write(mask, 0, mptr);
             }
             else {
-                throw new iText.IO.IOException(iText.IO.IOException.ExtraSamplesAreNotSupported);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ExtraSamplesAreNotSupported);
             }
         }
 

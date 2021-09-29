@@ -42,8 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Image;
-using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -52,6 +52,7 @@ using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa {
@@ -131,8 +132,8 @@ namespace iText.Pdfa {
             PdfCanvas canvas = new PdfCanvas(page);
             page.GetResources().SetDefaultRgb(new PdfCieBasedCs.CalRgb(new float[] { 0.3f, 0.4f, 0.5f }));
             canvas.SaveState();
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "itext.png"), 0, 0, page.GetPageSize().GetWidth() /
-                 2, false);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "itext.png"), new Rectangle(0, 0
+                , page.GetPageSize().GetWidth() / 2, page.GetPageSize().GetHeight() / 2), false);
             canvas.RestoreState();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE

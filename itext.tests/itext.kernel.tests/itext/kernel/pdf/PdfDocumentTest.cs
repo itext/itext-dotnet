@@ -44,8 +44,8 @@ using System;
 using System.IO;
 using iText.IO.Image;
 using iText.IO.Source;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
@@ -73,13 +73,15 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void MissingProducerTest() {
             String inputFile = SOURCE_FOLDER + "missingProducer.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile))) {
+            MemoryStream outputStream = new MemoryStream();
+            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outputStream))) {
                 PdfDocumentInfo documentInfo = document.GetDocumentInfo();
                 NUnit.Framework.Assert.IsNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
                 NUnit.Framework.Assert.IsNull(documentInfo.GetProducer());
             }
-            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputFile), new PdfWriter(new MemoryStream()
-                ))) {
+            MemoryStream inputStream = new MemoryStream(outputStream.ToArray());
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputStream), new PdfWriter(new MemoryStream
+                ()))) {
                 PdfDocumentInfo documentInfo = document_1.GetDocumentInfo();
                 NUnit.Framework.Assert.IsNotNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
                 NUnit.Framework.Assert.IsNotNull(document_1.GetDocumentInfo().GetProducer());
@@ -89,13 +91,15 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void NullProducerTest() {
             String inputFile = SOURCE_FOLDER + "nullProducer.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile))) {
+            MemoryStream outputStream = new MemoryStream();
+            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outputStream))) {
                 PdfDocumentInfo documentInfo = document.GetDocumentInfo();
                 NUnit.Framework.Assert.AreEqual(PdfNull.PDF_NULL, documentInfo.GetPdfObject().Get(PdfName.Producer));
                 NUnit.Framework.Assert.IsNull(documentInfo.GetProducer());
             }
-            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputFile), new PdfWriter(new MemoryStream()
-                ))) {
+            MemoryStream inputStream = new MemoryStream(outputStream.ToArray());
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputStream), new PdfWriter(new MemoryStream
+                ()))) {
                 PdfDocumentInfo documentInfo = document_1.GetDocumentInfo();
                 NUnit.Framework.Assert.IsNotNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
                 NUnit.Framework.Assert.IsNotNull(document_1.GetDocumentInfo().GetProducer());
@@ -105,14 +109,16 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void NameProducerTest() {
             String inputFile = SOURCE_FOLDER + "nameProducer.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile))) {
+            MemoryStream outputStream = new MemoryStream();
+            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outputStream))) {
                 PdfDocumentInfo documentInfo = document.GetDocumentInfo();
                 NUnit.Framework.Assert.AreEqual(new PdfName("producerAsName"), documentInfo.GetPdfObject().Get(PdfName.Producer
                     ));
                 NUnit.Framework.Assert.IsNull(documentInfo.GetProducer());
             }
-            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputFile), new PdfWriter(new MemoryStream()
-                ))) {
+            MemoryStream inputStream = new MemoryStream(outputStream.ToArray());
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputStream), new PdfWriter(new MemoryStream
+                ()))) {
                 PdfDocumentInfo documentInfo = document_1.GetDocumentInfo();
                 NUnit.Framework.Assert.IsNotNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
                 NUnit.Framework.Assert.IsNotNull(document_1.GetDocumentInfo().GetProducer());
@@ -299,7 +305,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE)]
         public virtual void TestFreeReference() {
             PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "freeReference.pdf", new WriterProperties().SetFullCompressionMode
                 (false));
@@ -323,8 +329,8 @@ namespace iText.Kernel.Pdf {
                 new StampingProperties().UseAppendMode());
             PdfPage page = pdfDocument.GetPage(1);
             PdfStream contentStream = new PdfStream();
-            String contentStr = iText.IO.Util.JavaUtil.GetStringForBytes(pdfDocument.GetPage(1).GetFirstContentStream(
-                ).GetBytes(), System.Text.Encoding.ASCII);
+            String contentStr = iText.Commons.Utils.JavaUtil.GetStringForBytes(pdfDocument.GetPage(1).GetFirstContentStream
+                ().GetBytes(), System.Text.Encoding.ASCII);
             contentStream.SetData(contentStr.Replace("/F1 16", "/F1 24").GetBytes(System.Text.Encoding.ASCII));
             page.GetPdfObject().Put(PdfName.Contents, contentStream);
             page.SetModified();
@@ -424,8 +430,8 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS, LogLevel = LogLevelConstants
-            .WARN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS, LogLevel = 
+            LogLevelConstants.WARN)]
         public virtual void RemovePageWithInvalidOutlineTest() {
             String source = SOURCE_FOLDER + "invalid_outline.pdf";
             String destination = DESTINATION_FOLDER + "invalid_outline.pdf";
@@ -439,7 +445,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED, LogLevel = LogLevelConstants
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED, LogLevel = LogLevelConstants
             .ERROR)]
         public virtual void OpenDocumentWithInvalidCatalogVersionTest() {
             using (PdfReader reader = new PdfReader(SOURCE_FOLDER + "sample-with-invalid-catalog-version.pdf")) {
@@ -454,9 +460,26 @@ namespace iText.Kernel.Pdf {
             using (PdfReader reader = new PdfReader(SOURCE_FOLDER + "sample-with-invalid-catalog-version.pdf").SetStrictnessLevel
                 (PdfReader.StrictnessLevel.CONSERVATIVE)) {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
-                NUnit.Framework.Assert.AreEqual(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED, e.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED, 
+                    e.Message);
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WidgetDaEntryRemovePageTest() {
+            // TODO DEVSIX-5760 cleaned widget left in the kids of the form field
+            // In this test widgets contain entry /DA that is not specific for widget annotation, so after removing of the
+            // page such widget is not removed from the document. See method PdfDocument#removeUnusedWidgetsFromFields
+            // to see logic of removing unused widgets.
+            // If open the output PDF in Adobe Acrobat, widgets on pages 3-4 will not be viewed. It seems to adobe bug.
+            String testName = "widgetDaEntryRemovePage.pdf";
+            String outPdf = DESTINATION_FOLDER + testName;
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "widgetWithDaEntry.pdf"), new PdfWriter
+                (outPdf));
+            pdfDocument.RemovePage(3);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName
+                , DESTINATION_FOLDER));
         }
 
         private class IgnoreTagStructurePdfDocument : PdfDocument {

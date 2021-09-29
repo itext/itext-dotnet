@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -48,7 +48,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using iText.IO.Util.Collections;
+using iText.Commons.Utils.Collections;
 
 namespace iText.Layout {
     internal static class LayoutExtensions {
@@ -70,6 +70,10 @@ namespace iText.Layout {
 
         public static void SetCharAt(this StringBuilder sb, int ind, char ch) {
             sb[ind] = ch;
+        }
+
+        public static byte[] GetBytes(this String str, Encoding encoding) {
+            return encoding.GetBytes(str);
         }
 
         public static TValue JRemove<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {

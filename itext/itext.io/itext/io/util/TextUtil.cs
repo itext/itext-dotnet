@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using iText.Commons.Utils;
 using iText.IO.Font.Otf;
 
 namespace iText.IO.Util {

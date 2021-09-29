@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
@@ -77,7 +77,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// Japanese. TextRenderInfo threw an AIOOBE for some characters.
         /// </remarks>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, Count = 2)]
         public virtual void TestUnicodeEmptyString() {
             StringBuilder sb = new StringBuilder();
             String inFile = "japanese_text.pdf";

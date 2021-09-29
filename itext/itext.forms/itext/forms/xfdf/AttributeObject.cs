@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Forms.Exceptions;
 
 namespace iText.Forms.Xfdf {
     /// <summary>Represents the attribute of any XFDF element.</summary>
@@ -54,7 +55,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="value">the value of the attribute, constrained by XML attributes specification.</param>
         public AttributeObject(String name, String value) {
             if (name == null || value == null) {
-                throw new XfdfException(XfdfConstants.ATTRIBUTE_NAME_OR_VALUE_MISSING);
+                throw new XfdfException(XfdfException.ATTRIBUTE_NAME_OR_VALUE_MISSING);
             }
             this.name = name;
             this.value = value;

@@ -21,8 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
@@ -31,7 +32,7 @@ using iText.StyledXmlParser.Exceptions;
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class for CSS dimension parsing operations.</summary>
     public sealed class CssDimensionParsingUtils {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssDimensionParsingUtils
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssDimensionParsingUtils
             ));
 
         /// <summary>
@@ -122,7 +123,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 )) {
                 return floatValue;
             }
-            logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_METRIC_ANGLE_PARSED
+            logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_METRIC_ANGLE_PARSED
                 , unit.Equals("") ? defaultMetric : unit));
             return floatValue;
         }
@@ -230,7 +231,7 @@ namespace iText.StyledXmlParser.Css.Util {
                     }
                 }
             }
-            logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+            logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
                 , unit.Equals("") ? defaultMetric : unit));
             return (float)f;
         }
@@ -292,7 +293,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <returns>the unit value</returns>
         public static UnitValue ParseLengthValueToPt(String value, float emValue, float remValue) {
             // TODO (DEVSIX-3596) Add support of 'lh' 'ch' units and viewport-relative units
-            if (CssTypesValidationUtils.IsMetricValue(value) || CssTypesValidationUtils.IsNumericValue(value)) {
+            if (CssTypesValidationUtils.IsMetricValue(value) || CssTypesValidationUtils.IsNumber(value)) {
                 return new UnitValue(UnitValue.POINT, ParseAbsoluteLength(value));
             }
             else {
@@ -406,7 +407,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 return null;
             }
             UnitValue[] cornerRadii = new UnitValue[2];
-            String[] props = iText.IO.Util.StringUtil.Split(specificBorderRadius, "\\s+");
+            String[] props = iText.Commons.Utils.StringUtil.Split(specificBorderRadius, "\\s+");
             cornerRadii[0] = ParseLengthValueToPt(props[0], emValue, remValue);
             cornerRadii[1] = 2 == props.Length ? ParseLengthValueToPt(props[1], emValue, remValue) : cornerRadii[0];
             return cornerRadii;
@@ -433,7 +434,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 }
                 else {
                     if (!unit.StartsWith(CommonCssConstants.DPI)) {
-                        throw new StyledXMLParserException(iText.StyledXmlParser.LogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE
+                        throw new StyledXMLParserException(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE
                             );
                     }
                 }
@@ -447,7 +448,7 @@ namespace iText.StyledXmlParser.Css.Util {
         public static float[] ParseRgbaColor(String colorValue) {
             float[] rgbaColor = WebColors.GetRGBAColor(colorValue);
             if (rgbaColor == null) {
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_NOT_PARSED, colorValue));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COLOR_NOT_PARSED, colorValue));
                 rgbaColor = new float[] { 0, 0, 0, 1 };
             }
             return rgbaColor;

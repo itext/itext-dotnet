@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
@@ -201,15 +202,15 @@ namespace iText.Layout.Renderer {
             occupiedArea.GetBBox().SetWidth((float)width);
             UnitValue leftMargin = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
             if (!leftMargin.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_LEFT));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_LEFT));
             }
             UnitValue topMargin = this.GetPropertyAsUnitValue(Property.MARGIN_TOP);
             if (!topMargin.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_TOP));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_TOP));
             }
             if (0 != leftMargin.GetValue() || 0 != topMargin.GetValue()) {
                 TranslateImage(leftMargin.GetValue(), topMargin.GetValue(), t);
@@ -246,9 +247,9 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
-                    "Drawing won't be performed."));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                    , "Drawing won't be performed."));
                 return;
             }
             bool isRelativePosition = IsRelativePosition();
@@ -311,8 +312,8 @@ namespace iText.Layout.Renderer {
             BeginElementOpacityApplying(drawContext);
             float renderedImageShiftX = ((float)width - renderedImageWidth) / 2;
             float renderedImageShiftY = ((float)height - renderedImageHeight) / 2;
-            canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition + deltaX + renderedImageShiftX
-                , (float)fixedYPosition + renderedImageShiftY);
+            canvas.AddXObjectWithTransformationMatrix(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition
+                 + deltaX + renderedImageShiftX, (float)fixedYPosition + renderedImageShiftY);
             EndElementOpacityApplying(drawContext);
             EndObjectFitImageClipping(canvas);
             EndTransformationIfApplied(drawContext.GetCanvas());

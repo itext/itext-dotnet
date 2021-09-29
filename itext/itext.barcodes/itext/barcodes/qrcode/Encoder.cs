@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Barcodes.Exceptions;
 
 namespace iText.Barcodes.Qrcode {
     /// <author>satorux@google.com (Satoru Takabayashi) - creator</author>

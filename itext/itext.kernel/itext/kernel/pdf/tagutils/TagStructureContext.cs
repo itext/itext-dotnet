@@ -43,9 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
-using iText.Kernel;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagging;
@@ -141,7 +142,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         public TagStructureContext(PdfDocument document, PdfVersion tagStructureTargetVersion) {
             this.document = document;
             if (!document.IsTagged()) {
-                throw new PdfException(PdfException.MustBeATaggedDocument);
+                throw new PdfException(KernelExceptionMessageConstant.MUST_BE_A_TAGGED_DOCUMENT);
             }
             waitingTagsManager = new WaitingTagsManager();
             namespaces = new LinkedHashSet<PdfDictionary>();
@@ -440,8 +441,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             int maxIters = 100;
             while (mappingResolver.CurrentRoleShallBeMappedToStandard()) {
                 if (++i > maxIters) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
-                    logger.Error(ComposeTooMuchTransitiveMappingsException(role, @namespace));
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
+                    logger.LogError(ComposeTooMuchTransitiveMappingsException(role, @namespace));
                     return null;
                 }
                 if (!mappingResolver.ResolveNextMapping()) {
@@ -722,8 +723,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                     throw new PdfException(exMessage);
                 }
                 else {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
-                    logger.Warn(exMessage);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
+                    logger.LogWarning(exMessage);
                 }
             }
         }
@@ -781,7 +782,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 IRoleMappingResolver resolvedMapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole().GetValue
                     (), firstKid.GetNamespace());
                 if (resolvedMapping == null || !resolvedMapping.CurrentRoleIsStandard()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
                     String nsStr;
                     if (firstKid.GetNamespace() != null) {
                         nsStr = firstKid.GetNamespace().GetNamespaceName();
@@ -789,8 +790,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                     else {
                         nsStr = StandardNamespaces.GetDefault();
                     }
-                    logger.Warn(String.Format(iText.IO.LogMessageConstant.EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD, firstKid
-                        .GetRole().GetValue(), nsStr));
+                    logger.LogWarning(String.Format(iText.IO.Logs.IoLogMessageConstant.EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD
+                        , firstKid.GetRole().GetValue(), nsStr));
                 }
                 if (resolvedMapping == null || !StandardNamespaces.PDF_1_7.Equals(resolvedMapping.GetNamespace().GetNamespaceName
                     ())) {
@@ -803,13 +804,13 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         private String ComposeInvalidRoleException(String role, PdfNamespace @namespace) {
-            return ComposeExceptionBasedOnNamespacePresence(role, @namespace, PdfException.RoleIsNotMappedToAnyStandardRole
-                , PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole);
+            return ComposeExceptionBasedOnNamespacePresence(role, @namespace, KernelExceptionMessageConstant.ROLE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                , KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE);
         }
 
         private String ComposeTooMuchTransitiveMappingsException(String role, PdfNamespace @namespace) {
-            return ComposeExceptionBasedOnNamespacePresence(role, @namespace, iText.IO.LogMessageConstant.CANNOT_RESOLVE_ROLE_TOO_MUCH_TRANSITIVE_MAPPINGS
-                , iText.IO.LogMessageConstant.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS);
+            return ComposeExceptionBasedOnNamespacePresence(role, @namespace, iText.IO.Logs.IoLogMessageConstant.CANNOT_RESOLVE_ROLE_TOO_MUCH_TRANSITIVE_MAPPINGS
+                , iText.IO.Logs.IoLogMessageConstant.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS);
         }
 
         private void InitRegisteredNamespaces() {
@@ -856,7 +857,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
                 else {
                     if (pageTag is PdfMcr) {
-                        throw new PdfException(PdfException.CannotRemoveTagBecauseItsParentIsFlushed);
+                        throw new PdfException(KernelExceptionMessageConstant.CANNOT_REMOVE_TAG_BECAUSE_ITS_PARENT_IS_FLUSHED);
                     }
                 }
             }

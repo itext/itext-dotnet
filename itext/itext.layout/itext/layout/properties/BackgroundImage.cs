@@ -40,7 +40,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Pdf.Xobject;
 
@@ -50,27 +49,11 @@ namespace iText.Layout.Properties {
 
         protected internal PdfXObject image;
 
-        /// <summary>
-        /// Whether the background-repeat value is not
-        /// <see cref="BackgroundRepeatValue.NO_REPEAT"/>
-        /// for X axis.
-        /// </summary>
-        [System.ObsoleteAttribute(@"replace this field with BackgroundRepeat instance")]
-        protected internal bool repeatX;
-
-        /// <summary>
-        /// Whether the background-repeat value is not
-        /// <see cref="BackgroundRepeatValue.NO_REPEAT"/>
-        /// for Y axis.
-        /// </summary>
-        [System.ObsoleteAttribute(@"replace this field with BackgroundRepeat instance")]
-        protected internal bool repeatY;
-
         protected internal AbstractLinearGradientBuilder linearGradientBuilder;
 
         private BlendMode blendMode = DEFAULT_BLEND_MODE;
 
-        private BackgroundRepeat repeat;
+        private readonly BackgroundRepeat repeat;
 
         private readonly BackgroundPosition position;
 
@@ -95,211 +78,6 @@ namespace iText.Layout.Properties {
                 (), backgroundImage.GetRepeat(), backgroundImage.GetBackgroundPosition(), backgroundImage.GetBackgroundSize
                 (), backgroundImage.GetLinearGradientBuilder(), backgroundImage.GetBlendMode(), backgroundImage.GetBackgroundClip
                 (), backgroundImage.GetBackgroundOrigin()) {
-            repeatX = backgroundImage.IsRepeatX();
-            repeatY = backgroundImage.IsRepeatY();
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="BackgroundImage"/>
-        /// instance.
-        /// </summary>
-        /// <param name="image">
-        /// background image property.
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
-        /// instance.
-        /// </param>
-        /// <param name="repeat">
-        /// background repeat property.
-        /// <see cref="BackgroundRepeat"/>
-        /// instance.
-        /// </param>
-        /// <param name="blendMode">
-        /// the image's blend mode.
-        /// <see cref="BlendMode"/>
-        /// instance.
-        /// </param>
-        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
-        public BackgroundImage(PdfImageXObject image, BackgroundRepeat repeat, BlendMode blendMode)
-            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, blendMode, BackgroundBox.BORDER_BOX
-                , BackgroundBox.PADDING_BOX) {
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="BackgroundImage"/>
-        /// instance.
-        /// </summary>
-        /// <param name="image">
-        /// background image property.
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// instance.
-        /// </param>
-        /// <param name="repeat">
-        /// background repeat property.
-        /// <see cref="BackgroundRepeat"/>
-        /// instance.
-        /// </param>
-        /// <param name="blendMode">
-        /// the image's blend mode.
-        /// <see cref="BlendMode"/>
-        /// instance.
-        /// </param>
-        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
-        public BackgroundImage(PdfFormXObject image, BackgroundRepeat repeat, BlendMode blendMode)
-            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, blendMode, BackgroundBox.BORDER_BOX
-                , BackgroundBox.PADDING_BOX) {
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="BackgroundImage"/>
-        /// instance.
-        /// </summary>
-        /// <param name="image">
-        /// background-image property.
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
-        /// instance.
-        /// </param>
-        /// <param name="repeat">
-        /// background-repeat property.
-        /// <see cref="BackgroundRepeat"/>
-        /// instance.
-        /// </param>
-        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
-        public BackgroundImage(PdfImageXObject image, BackgroundRepeat repeat)
-            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE, BackgroundBox
-                .BORDER_BOX, BackgroundBox.PADDING_BOX) {
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="BackgroundImage"/>
-        /// instance.
-        /// </summary>
-        /// <param name="image">
-        /// background-image property.
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// instance.
-        /// </param>
-        /// <param name="repeat">
-        /// background-repeat property.
-        /// <see cref="BackgroundRepeat"/>
-        /// instance.
-        /// </param>
-        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
-        public BackgroundImage(PdfFormXObject image, BackgroundRepeat repeat)
-            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE, BackgroundBox
-                .BORDER_BOX, BackgroundBox.PADDING_BOX) {
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="BackgroundImage"/>
-        /// instance.
-        /// </summary>
-        /// <param name="image">
-        /// background-image property.
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
-        /// instance.
-        /// </param>
-        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
-        public BackgroundImage(PdfImageXObject image)
-            : this(image, new BackgroundRepeat(), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE
-                , BackgroundBox.BORDER_BOX, BackgroundBox.PADDING_BOX) {
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="BackgroundImage"/>
-        /// instance.
-        /// </summary>
-        /// <param name="image">
-        /// background-image property.
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// instance.
-        /// </param>
-        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
-        public BackgroundImage(PdfFormXObject image)
-            : this(image, new BackgroundRepeat(), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE
-                , BackgroundBox.BORDER_BOX, BackgroundBox.PADDING_BOX) {
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="BackgroundImage"/>
-        /// instance.
-        /// </summary>
-        /// <param name="image">
-        /// background-image property.
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
-        /// instance.
-        /// </param>
-        /// <param name="repeatX">defines whether background is repeated in x dimension.</param>
-        /// <param name="repeatY">defines whether background is repeated in y dimension.</param>
-        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
-        public BackgroundImage(PdfImageXObject image, bool repeatX, bool repeatY)
-            : this(image, new BackgroundRepeat(repeatX ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
-                .NO_REPEAT, repeatY ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
-                .NO_REPEAT), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE, BackgroundBox.BORDER_BOX
-                , BackgroundBox.PADDING_BOX) {
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="BackgroundImage"/>
-        /// instance.
-        /// </summary>
-        /// <param name="image">
-        /// background-image property.
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// instance.
-        /// </param>
-        /// <param name="repeatX">defines whether background is repeated in x dimension.</param>
-        /// <param name="repeatY">defines whether background is repeated in y dimension.</param>
-        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
-        public BackgroundImage(PdfFormXObject image, bool repeatX, bool repeatY)
-            : this(image, new BackgroundRepeat(repeatX ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
-                .NO_REPEAT, repeatY ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
-                .NO_REPEAT), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE, BackgroundBox.BORDER_BOX
-                , BackgroundBox.PADDING_BOX) {
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="BackgroundImage"/>
-        /// instance with linear gradient.
-        /// </summary>
-        /// <param name="linearGradientBuilder">
-        /// the linear gradient builder representing the background image.
-        /// <see cref="iText.Kernel.Colors.Gradients.AbstractLinearGradientBuilder"/>
-        /// instance.
-        /// </param>
-        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
-        public BackgroundImage(AbstractLinearGradientBuilder linearGradientBuilder)
-            : this(linearGradientBuilder, DEFAULT_BLEND_MODE) {
-        }
-
-        /// <summary>
-        /// Creates a new
-        /// <see cref="BackgroundImage"/>
-        /// instance with linear gradient and custom blending mode.
-        /// </summary>
-        /// <param name="linearGradientBuilder">
-        /// the linear gradient builder representing the background image.
-        /// <see cref="iText.Kernel.Colors.Gradients.AbstractLinearGradientBuilder"/>
-        /// instance.
-        /// </param>
-        /// <param name="blendMode">
-        /// the image's blend mode.
-        /// <see cref="BlendMode"/>
-        /// instance.
-        /// </param>
-        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
-        public BackgroundImage(AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode)
-            : this(null, new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT), new BackgroundPosition
-                (), new BackgroundSize(), linearGradientBuilder, blendMode, BackgroundBox.BORDER_BOX, BackgroundBox.PADDING_BOX
-                ) {
         }
 
         public virtual PdfImageXObject GetImage() {
@@ -359,10 +137,6 @@ namespace iText.Layout.Properties {
              backgroundSize, AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode, BackgroundBox
              clip, BackgroundBox origin) {
             this.image = image;
-            if (repeat != null) {
-                this.repeatX = !repeat.IsNoRepeatOnXAxis();
-                this.repeatY = !repeat.IsNoRepeatOnYAxis();
-            }
             this.repeat = repeat;
             this.position = position;
             this.backgroundSize = backgroundSize;
@@ -391,16 +165,6 @@ namespace iText.Layout.Properties {
             return image is PdfFormXObject || image is PdfImageXObject || linearGradientBuilder != null;
         }
 
-        [Obsolete]
-        public virtual bool IsRepeatX() {
-            return repeatX;
-        }
-
-        [Obsolete]
-        public virtual bool IsRepeatY() {
-            return repeatY;
-        }
-
         /// <summary>Gets the background size property.</summary>
         /// <returns>
         /// 
@@ -423,20 +187,6 @@ namespace iText.Layout.Properties {
             return (float)image.GetHeight();
         }
 
-        /// <summary>Gets initial image width.</summary>
-        /// <returns>the initial image width</returns>
-        [System.ObsoleteAttribute(@"To be removed in 7.2. Use GetImageWidth() instead.")]
-        public virtual float GetWidth() {
-            return (float)image.GetWidth();
-        }
-
-        /// <summary>Gets initial image height.</summary>
-        /// <returns>the initial image height</returns>
-        [System.ObsoleteAttribute(@"To be removed in 7.2. Use GetImageHeight() instead.")]
-        public virtual float GetHeight() {
-            return (float)image.GetHeight();
-        }
-
         /// <summary>
         /// Gets image
         /// <see cref="BackgroundRepeat"/>
@@ -444,15 +194,6 @@ namespace iText.Layout.Properties {
         /// </summary>
         /// <returns>the image background repeat</returns>
         public virtual BackgroundRepeat GetRepeat() {
-            // Remove this if-blocks after removing repeatX and repeatY
-            if (repeatX == repeat.IsNoRepeatOnXAxis()) {
-                repeat = new BackgroundRepeat(repeatX ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
-                    .NO_REPEAT, repeat.GetYAxisRepeat());
-            }
-            if (repeatY == repeat.IsNoRepeatOnYAxis()) {
-                repeat = new BackgroundRepeat(repeat.GetXAxisRepeat(), repeatY ? BackgroundRepeat.BackgroundRepeatValue.REPEAT
-                     : BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT);
-            }
             return repeat;
         }
 

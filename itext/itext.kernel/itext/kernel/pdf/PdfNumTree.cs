@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf {
     public class PdfNumTree {

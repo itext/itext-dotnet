@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iText.Kernel.Counter.Event;
+using iText.Commons.Actions.Contexts;
 
 namespace iText.Kernel.Pdf {
     /// <summary>
@@ -189,7 +189,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Sets the
-        /// <see cref="iText.Kernel.Counter.Event.IMetaInfo"/>
+        /// <see cref="iText.Commons.Actions.Contexts.IMetaInfo"/>
         /// that will be used during
         /// <see cref="PdfDocument"/>
         /// creation.

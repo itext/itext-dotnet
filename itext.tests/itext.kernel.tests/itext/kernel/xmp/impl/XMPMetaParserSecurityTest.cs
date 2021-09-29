@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Test;

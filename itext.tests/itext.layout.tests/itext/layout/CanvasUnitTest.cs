@@ -38,18 +38,5 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual(pdfCanvas.GetDocument(), canvas.GetPdfDocument());
             NUnit.Framework.Assert.IsFalse(canvas.immediateFlush);
         }
-
-        [NUnit.Framework.Test]
-        public virtual void CanvasImmediateFlushDeprecatedConstructorTest() {
-            //TODO remove test after deprecated constructor is removed
-            PdfDocument pdf = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfPage page = pdf.AddNewPage();
-            Rectangle pageSize = page.GetPageSize();
-            PdfCanvas pdfCanvas = new PdfCanvas(page.GetLastContentStream(), page.GetResources(), pdf);
-            Rectangle rectangle = new Rectangle(0, 0);
-            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdf, rectangle, false);
-            NUnit.Framework.Assert.AreEqual(pdfCanvas.GetDocument(), canvas.GetPdfDocument());
-            NUnit.Framework.Assert.IsFalse(canvas.immediateFlush);
-        }
     }
 }

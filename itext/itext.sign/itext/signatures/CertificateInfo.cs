@@ -48,7 +48,7 @@ using System.IO;
 using System.Text;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.X509;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>
@@ -212,11 +212,11 @@ namespace iText.Signatures {
 
         /// <summary>
         /// Class for breaking up an X500 Name into it's component tokens, similar to
-        /// <see cref="iText.IO.Util.StringTokenizer"/>.
+        /// <see cref="iText.Commons.Utils.StringTokenizer"/>.
         /// </summary>
         /// <remarks>
         /// Class for breaking up an X500 Name into it's component tokens, similar to
-        /// <see cref="iText.IO.Util.StringTokenizer"/>.
+        /// <see cref="iText.Commons.Utils.StringTokenizer"/>.
         /// We need this class as some of the lightweight Java environments don't support classes such as StringTokenizer.
         /// </remarks>
         public class X509NameTokenizer {

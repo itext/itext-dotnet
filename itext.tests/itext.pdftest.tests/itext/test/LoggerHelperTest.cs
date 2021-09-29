@@ -25,6 +25,20 @@ using System;
 namespace iText.Test {
     public class LoggerHelperTest : ExtendedITextTest {
         [NUnit.Framework.Test]
+        public virtual void NotEqualMessageWithSimilarStartTest() {
+            String pattern = "There might be a message: {0} with text.";
+            String example = "There might be a message: TEMP with text. And add some other text.";
+            NUnit.Framework.Assert.IsFalse(LogListenerHelper.EqualsMessageByTemplate(example, pattern));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotEqualMessageWithSimilarEndTest() {
+            String pattern = "a message: {0} with text.";
+            String example = "There might be a message: TEMP with text.";
+            NUnit.Framework.Assert.IsFalse(LogListenerHelper.EqualsMessageByTemplate(example, pattern));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void EqualsMessageByTemplate() {
             String pattern = "There might be a message: {0}";
             String example = String.Format(pattern, "message");

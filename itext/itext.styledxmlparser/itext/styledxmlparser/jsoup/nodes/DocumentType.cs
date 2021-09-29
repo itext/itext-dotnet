@@ -3,45 +3,26 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Text;
+using iText.StyledXmlParser.Jsoup.Helper;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>
@@ -49,24 +30,67 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <c>&lt;!DOCTYPE&gt;</c>
     /// node.
     /// </summary>
-    public class DocumentType : iText.StyledXmlParser.Jsoup.Nodes.Node {
+    public class DocumentType : LeafNode {
+        public const String PUBLIC_KEY = "PUBLIC";
+
+        public const String SYSTEM_KEY = "SYSTEM";
+
         private const String NAME = "name";
 
+        private const String PUB_SYS_KEY = "pubSysKey";
+
+        // PUBLIC or SYSTEM
         private const String PUBLIC_ID = "publicId";
 
         private const String SYSTEM_ID = "systemId";
 
-        // todo: quirk mode from publicId and systemId
         /// <summary>Create a new doctype element.</summary>
         /// <param name="name">the doctype's name</param>
         /// <param name="publicId">the doctype's public ID</param>
         /// <param name="systemId">the doctype's system ID</param>
-        /// <param name="baseUri">the doctype's base URI</param>
-        public DocumentType(String name, String publicId, String systemId, String baseUri)
-            : base(baseUri) {
+        public DocumentType(String name, String publicId, String systemId) {
+            Validate.NotNull(name);
+            Validate.NotNull(publicId);
+            Validate.NotNull(systemId);
             Attr(NAME, name);
             Attr(PUBLIC_ID, publicId);
             Attr(SYSTEM_ID, systemId);
+            UpdatePubSyskey();
+        }
+
+        public virtual void SetPubSysKey(String value) {
+            if (value != null) {
+                Attr(PUB_SYS_KEY, value);
+            }
+        }
+
+        private void UpdatePubSyskey() {
+            if (Has(PUBLIC_ID)) {
+                Attr(PUB_SYS_KEY, PUBLIC_KEY);
+            }
+            else {
+                if (Has(SYSTEM_ID)) {
+                    Attr(PUB_SYS_KEY, SYSTEM_KEY);
+                }
+            }
+        }
+
+        /// <summary>Get this doctype's name (when set, or empty string)</summary>
+        /// <returns>doctype name</returns>
+        public virtual String Name() {
+            return Attr(NAME);
+        }
+
+        /// <summary>Get this doctype's Public ID (when set, or empty string)</summary>
+        /// <returns>doctype Public ID</returns>
+        public virtual String PublicId() {
+            return Attr(PUBLIC_ID);
+        }
+
+        /// <summary>Get this doctype's System ID (when set, or empty string)</summary>
+        /// <returns>doctype System ID</returns>
+        public virtual String SystemId() {
+            return Attr(SYSTEM_ID);
         }
 
         public override String NodeName() {
@@ -84,8 +108,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             if (Has(NAME)) {
                 accum.Append(" ").Append(Attr(NAME));
             }
+            if (Has(PUB_SYS_KEY)) {
+                accum.Append(" ").Append(Attr(PUB_SYS_KEY));
+            }
             if (Has(PUBLIC_ID)) {
-                accum.Append(" PUBLIC \"").Append(Attr(PUBLIC_ID)).Append('"');
+                accum.Append(" \"").Append(Attr(PUBLIC_ID)).Append('"');
             }
             if (Has(SYSTEM_ID)) {
                 accum.Append(" \"").Append(Attr(SYSTEM_ID)).Append('"');
@@ -97,7 +124,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         private bool Has(String attribute) {
-            return !iText.StyledXmlParser.Jsoup.Helper.StringUtil.IsBlank(Attr(attribute));
+            return !iText.StyledXmlParser.Jsoup.Internal.StringUtil.IsBlank(Attr(attribute));
         }
     }
 }

@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
+using iText.Barcodes.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
@@ -73,6 +75,50 @@ namespace iText.Barcodes {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BarcodeHasNoAbcdAsStartCharacterTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+                BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
+                BarcodeCodabar.GetBarsCodabar("qbcd");
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BarcodeHasNoAbcdAsStopCharacterTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+                BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
+                BarcodeCodabar.GetBarsCodabar("abcf");
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BarcodeHasNoAbcdAsStartAndStopCharacterTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+                BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
+                BarcodeCodabar.GetBarsCodabar("qbcq");
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BarcodeHasNoStartAndStopCharacterTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+                BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
+                BarcodeCodabar.GetBarsCodabar("");
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_AT_LEAST_START_AND_STOP_CHARACTER))
+;
         }
     }
 }

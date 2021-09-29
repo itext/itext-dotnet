@@ -135,7 +135,7 @@ namespace iText.IO.Font {
                 return (char)(i & 0xff);
             }
             catch (Exception e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
         }
 
@@ -144,7 +144,7 @@ namespace iText.IO.Font {
                 return buf.ReadChar();
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
         }
 
@@ -158,12 +158,7 @@ namespace iText.IO.Font {
         }
 
         internal virtual void Seek(int offset) {
-            try {
-                buf.Seek(offset);
-            }
-            catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
-            }
+            buf.Seek(offset);
         }
 
         internal virtual short GetShort() {
@@ -171,7 +166,7 @@ namespace iText.IO.Font {
                 return buf.ReadShort();
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
         }
 
@@ -180,17 +175,12 @@ namespace iText.IO.Font {
                 return buf.ReadInt();
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
             }
         }
 
         internal virtual int GetPosition() {
-            try {
-                return (int)buf.GetPosition();
-            }
-            catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
-            }
+            return (int)buf.GetPosition();
         }
 
         internal int nextIndexOffset;
@@ -420,7 +410,7 @@ namespace iText.IO.Font {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
                 }
             }
             //System.err.println("finished range emit");

@@ -44,8 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -71,9 +72,6 @@ namespace iText.Layout.Renderer {
     /// <see cref="DrawContext"/>.
     /// </remarks>
     public class ParagraphRenderer : BlockRenderer {
-        [Obsolete]
-        protected internal float previousDescent = 0;
-
         protected internal IList<LineRenderer> lines = null;
 
         /// <summary>Creates a ParagraphRenderer from its corresponding layout object.</summary>
@@ -151,7 +149,14 @@ namespace iText.Layout.Renderer {
             }
             Border[] borders = GetBorders();
             UnitValue[] paddings = GetPaddings();
-            float additionalWidth = ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
+            float parentWidth = parentBBox.GetWidth();
+            ApplyMargins(parentBBox, false);
+            ApplyBorderBox(parentBBox, borders, false);
+            if (IsFixedLayout()) {
+                parentBBox.SetX((float)this.GetPropertyAsFloat(Property.LEFT));
+            }
+            ApplyPaddings(parentBBox, paddings, false);
+            float additionalWidth = parentWidth - parentBBox.GetWidth();
             ApplyWidth(parentBBox, blockWidth, overflowX);
             wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, wasParentsHeightClipped
                 , overflowY);
@@ -440,8 +445,8 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (IsNotFittingWidth(layoutContext.GetArea()) && !IsNotFittingHeight(layoutContext.GetArea())) {
-                        LogManager.GetLogger(GetType()).Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA
-                            , "It fits by height so it will be forced placed"));
+                        ITextLogManager.GetLogger(GetType()).LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant
+                            .ELEMENT_DOES_NOT_FIT_AREA, "It fits by height so it will be forced placed"));
                     }
                     else {
                         if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {

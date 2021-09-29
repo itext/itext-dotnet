@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
@@ -137,8 +138,8 @@ namespace iText.Layout.Renderer {
                 rows[cell.GetRow() - rowRange.GetStartRow() + cell.GetRowspan() - 1][cell.GetCol()] = (CellRenderer)renderer;
             }
             else {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                logger.Error("Only CellRenderer could be added");
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                logger.LogError("Only CellRenderer could be added");
             }
         }
 
@@ -482,11 +483,14 @@ namespace iText.Layout.Renderer {
                 bool rowHasCellWithSetHeight = false;
                 // the element which was the first to cause Layout.Nothing
                 IRenderer firstCauseOfNothing = null;
-                // the width of the widest bottom border of the row
+                // In the next lines we pretend as if the current row will be the last on the current area:
+                // in this case it will be collapsed with the table's bottom border / the footer's top border
                 bordersHandler.SetFinishRow(rowRange.GetStartRow() + row);
-                Border widestRowBottomBorder = bordersHandler.GetWidestHorizontalBorder(rowRange.GetStartRow() + row + 1);
-                bordersHandler.SetFinishRow(rowRange.GetFinishRow());
+                IList<Border> rowBottomBorderIfLastOnPage = bordersHandler.GetHorizontalBorder(rowRange.GetStartRow() + row
+                     + 1);
+                Border widestRowBottomBorder = TableBorderUtil.GetWidestBorder(rowBottomBorderIfLastOnPage);
                 float widestRowBottomBorderWidth = null == widestRowBottomBorder ? 0 : widestRowBottomBorder.GetWidth();
+                bordersHandler.SetFinishRow(rowRange.GetFinishRow());
                 // if cell is in the last row on the page, its borders shouldn't collapse with the next row borders
                 while (cellProcessingQueue.Count > 0) {
                     TableRenderer.CellRendererInfo currentCellInfo = cellProcessingQueue.JRemoveFirst();
@@ -532,8 +536,39 @@ namespace iText.Layout.Renderer {
                     float[] cellIndents = bordersHandler.GetCellBorderIndents(currentCellInfo.finishRowInd, col, rowspan, colspan
                         );
                     if (!(bordersHandler is SeparatedTableBorders)) {
-                        bordersHandler.ApplyCellIndents(cellArea.GetBBox(), cellIndents[0], cellIndents[1], cellIndents[2] + widestRowBottomBorderWidth
-                            , cellIndents[3], false);
+                        // Bottom indent to be applied consists of two parts which should be summed up:
+                        // a) half of the border of the current row (in case it is the last row on the area)
+                        // b) half of the widest possible bottom border (in case it is the last row on the area)
+                        //
+                        // The following "image" demonstrates the idea: C represents some content,
+                        // 1 represents border, 0 represents not occupied space, - represents
+                        // the middle of a horizontal border, | represents vertical border
+                        // (the latter could be of customized width as well, however, for the reasons
+                        // of this comment it could omitted)
+                        // CCCCC|CCCCC
+                        // CCCCC|11111
+                        // CCCCC|11111
+                        // 11111|11111
+                        // -----|-----
+                        // 11111|11111
+                        // 00000|11111
+                        // 00000|11111
+                        //
+                        // The question arises, however: what if the top border of the cell below is wider than the
+                        // bottom border of the table. This is already considered: when considering rowHeight
+                        // the width of the real collapsed border will be added to it.
+                        // It is quite important to understand that in case it is not possible
+                        // to add any other row, the current row should be collapsed with the table's bottom
+                        // footer's top borders rather than with the next row. If it is the case, iText
+                        // will revert collapsing to the one considered in the next calculations.
+                        // Be aware that if the col-th border of rowBottomBorderIfLastOnPage is null,
+                        // cellIndents[2] might not be null: imagine a table without borders,
+                        // a cell with no border (the current cell) and a cell below with some top border.
+                        // Nevertheless, a stated above we do not need to consider cellIndents[2] here.
+                        float potentialWideCellBorder = null == rowBottomBorderIfLastOnPage[col] ? 0 : rowBottomBorderIfLastOnPage
+                            [col].GetWidth();
+                        bordersHandler.ApplyCellIndents(cellArea.GetBBox(), cellIndents[0], cellIndents[1], potentialWideCellBorder
+                             + widestRowBottomBorderWidth, cellIndents[3], false);
                     }
                     // update cell width
                     cellWidth = cellArea.GetBBox().GetWidth();
@@ -857,7 +892,13 @@ namespace iText.Layout.Renderer {
                     }
                     // Apply borders if there is no footer
                     if (null == footerRenderer) {
-                        if (0 != this.childRenderers.Count) {
+                        // If split renderer does not have any rows, it can mean two things:
+                        // - either nothing is placed and the top border, which have been already applied,
+                        // should be reverted
+                        // - or the only placed row is placed partially.
+                        // In the latter case the number of added child renderers should equal to the number of the cells
+                        // in the current row (currChildRenderers stands for it)
+                        if (!splitResult[0].rows.IsEmpty() || currChildRenderers.Count == childRenderers.Count) {
                             bordersHandler.ApplyBottomTableBorder(occupiedArea.GetBBox(), layoutBox, false);
                         }
                         else {
@@ -900,8 +941,8 @@ namespace iText.Layout.Renderer {
                         if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || wasHeightClipped
                             ) {
                             if (wasHeightClipped) {
-                                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
+                                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT);
                                 // Process borders
                                 if (status == LayoutResult.NOTHING) {
                                     bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, true, false
@@ -955,8 +996,8 @@ namespace iText.Layout.Renderer {
                 }
                 if (lastInRow < 0 || lastRow.Length != lastInRow + (int)lastRow[lastInRow].GetPropertyAsInteger(Property.COLSPAN
                     )) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
                 }
             }
             // process footer renderer with collapsed borders
@@ -1325,25 +1366,19 @@ namespace iText.Layout.Renderer {
             float minWidth = isOriginalNonSplitRenderer ? tableWidths.GetMinWidth() : maxColTotalWidth;
             UnitValue marginRightUV = this.GetPropertyAsUnitValue(Property.MARGIN_RIGHT);
             if (!marginRightUV.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_RIGHT));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_RIGHT));
             }
             UnitValue marginLefttUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
             if (!marginLefttUV.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_LEFT));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_LEFT));
             }
             float additionalWidth = marginLefttUV.GetValue() + marginRightUV.GetValue() + rightMaxBorder / 2 + leftMaxBorder
                  / 2;
             return new MinMaxWidth(minWidth, maxColTotalWidth, additionalWidth);
-        }
-
-        [System.ObsoleteAttribute(@"Will be removed in next major release (iText 7.2). The aim of this method overriding here is achieved by overriding AllowLastYLineRecursiveExtraction() method."
-            )]
-        protected internal override float? GetLastYLineRecursively() {
-            return null;
         }
 
         protected internal override bool AllowLastYLineRecursiveExtraction() {
@@ -1405,18 +1440,18 @@ namespace iText.Layout.Renderer {
             if (HasProperty(Property.MARGIN_TOP)) {
                 UnitValue topMargin = this.GetPropertyAsUnitValue(Property.MARGIN_TOP);
                 if (null != topMargin && !topMargin.IsPointValue()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .MARGIN_LEFT));
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.MARGIN_LEFT));
                 }
                 startY -= null == topMargin ? 0 : topMargin.GetValue();
             }
             if (HasProperty(Property.MARGIN_LEFT)) {
                 UnitValue leftMargin = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
                 if (null != leftMargin && !leftMargin.IsPointValue()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .MARGIN_LEFT));
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.MARGIN_LEFT));
                 }
                 startX += +(null == leftMargin ? 0 : leftMargin.GetValue());
             }
@@ -1693,9 +1728,9 @@ namespace iText.Layout.Renderer {
                 }
                 catch (NullReferenceException) {
                     // TODO Remove try-catch when DEVSIX-1655 is resolved.
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
-                        "Some of the cell's content might not end up placed correctly."));
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                        , "Some of the cell's content might not end up placed correctly."));
                 }
             }
         }
@@ -1968,25 +2003,25 @@ namespace iText.Layout.Renderer {
         internal virtual void ApplyMarginsAndPaddingsAndCalculateColumnWidths(Rectangle layoutBox) {
             UnitValue[] margins = GetMargins();
             if (!margins[1].IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(TableRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_RIGHT));
+                ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_RIGHT));
             }
             if (!margins[3].IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(TableRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_LEFT));
+                ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_LEFT));
             }
             UnitValue[] paddings = GetPaddings();
             if (!paddings[1].IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(TableRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_RIGHT));
+                ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_RIGHT));
             }
             if (!paddings[3].IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(TableRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_LEFT));
+                ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_LEFT));
             }
             CalculateColumnWidths(layoutBox.GetWidth() - margins[1].GetValue() - margins[3].GetValue() - paddings[1].GetValue
                 () - paddings[3].GetValue());

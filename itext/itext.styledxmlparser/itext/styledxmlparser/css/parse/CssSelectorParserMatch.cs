@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text.RegularExpressions;
+using iText.Commons.Utils;
 using iText.IO.Util;
 
 namespace iText.StyledXmlParser.Css.Parse {
@@ -59,7 +60,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// <param name="pattern">the pattern against which the text is being matched</param>
         public CssSelectorParserMatch(String source, Regex pattern) {
             this.source = source;
-            this.matcher = iText.IO.Util.Matcher.Match(pattern, source);
+            this.matcher = Matcher.Match(pattern, source);
             Next();
         }
 

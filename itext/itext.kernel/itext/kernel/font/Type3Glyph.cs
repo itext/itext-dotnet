@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Image;
 using iText.IO.Source;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
@@ -184,21 +184,22 @@ namespace iText.Kernel.Font {
         /// <param name="f">an element of the transformation matrix</param>
         /// <param name="inlineImage">true if to add image as in-line.</param>
         /// <returns>created Image XObject or null in case of in-line image (asInline = true).</returns>
-        public override PdfXObject AddImage(ImageData image, float a, float b, float c, float d, float e, float f, 
-            bool inlineImage) {
+        public override PdfXObject AddImageWithTransformationMatrix(ImageData image, float a, float b, float c, float
+             d, float e, float f, bool inlineImage) {
             if (!isColor && (!image.IsMask() || !(image.GetBpc() == 1 || image.GetBpc() > 0xff))) {
                 throw new PdfException("Not colorized type3 fonts accept only mask images.");
             }
-            return base.AddImage(image, a, b, c, d, e, f, inlineImage);
+            return base.AddImageWithTransformationMatrix(image, a, b, c, d, e, f, inlineImage);
         }
 
         private void FillBBFromBytes(byte[] bytes) {
-            String str = iText.IO.Util.JavaUtil.GetStringForBytes(bytes, iText.IO.Util.EncodingUtil.ISO_8859_1);
+            String str = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, iText.Commons.Utils.EncodingUtil.ISO_8859_1
+                );
             int d0Pos = str.IndexOf(D_0_STR, StringComparison.Ordinal);
             int d1Pos = str.IndexOf(D_1_STR, StringComparison.Ordinal);
             if (d0Pos != -1) {
                 isColor = true;
-                String[] bbArray = iText.IO.Util.StringUtil.Split(str.JSubstring(0, d0Pos - 1), " ");
+                String[] bbArray = iText.Commons.Utils.StringUtil.Split(str.JSubstring(0, d0Pos - 1), " ");
                 if (bbArray.Length == 2) {
                     this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture);
                 }
@@ -206,7 +207,7 @@ namespace iText.Kernel.Font {
             else {
                 if (d1Pos != -1) {
                     isColor = false;
-                    String[] bbArray = iText.IO.Util.StringUtil.Split(str.JSubstring(0, d1Pos - 1), " ");
+                    String[] bbArray = iText.Commons.Utils.StringUtil.Split(str.JSubstring(0, d1Pos - 1), " ");
                     if (bbArray.Length == 6) {
                         this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture);
                         this.llx = float.Parse(bbArray[2], System.Globalization.CultureInfo.InvariantCulture);

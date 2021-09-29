@@ -41,7 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -153,7 +153,8 @@ namespace iText.Kernel.Pdf.Collection {
             // only if value was set previously
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => item.SetPrefix(fieldName, fieldPrefix
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfException.YouMustSetAValueBeforeAddingAPrefix, e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.YOU_MUST_SET_A_VALUE_BEFORE_ADDING_A_PREFIX
+                , e.Message);
         }
 
         [NUnit.Framework.Test]

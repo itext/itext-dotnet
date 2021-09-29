@@ -124,7 +124,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             SetParameters();
             return new Rectangle(this.x, this.y, this.width, this.height);
         }

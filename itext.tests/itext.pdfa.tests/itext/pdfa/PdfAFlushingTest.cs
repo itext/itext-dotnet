@@ -48,6 +48,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Pdfa.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -76,7 +77,7 @@ namespace iText.Pdfa {
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
             imageXObject.MakeIndirect(doc);
-            canvas.AddXObject(imageXObject, new Rectangle(30, 300, 300, 300));
+            canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(30, 300, 300, 300));
             imageXObject.Flush();
             if (imageXObject.IsFlushed()) {
                 NUnit.Framework.Assert.Fail("Flushing of unchecked objects shall be forbidden.");
@@ -97,7 +98,7 @@ namespace iText.Pdfa {
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
             imageXObject.MakeIndirect(doc);
-            canvas.AddXObject(imageXObject, new Rectangle(30, 300, 300, 300));
+            canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(30, 300, 300, 300));
             PdfPage lastPage = doc.GetLastPage();
             lastPage.Flush();
             if (lastPage.IsFlushed()) {
@@ -117,7 +118,7 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
-            canvas.AddXObject(imageXObject, new Rectangle(30, 300, 300, 300));
+            canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(30, 300, 300, 300));
             PdfPage lastPage = doc.GetLastPage();
             lastPage.Flush(true);
             if (!imageXObject.IsFlushed()) {

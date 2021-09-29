@@ -43,9 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
-using iText.Kernel;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     /// <summary>
@@ -54,7 +55,9 @@ namespace iText.Kernel.Pdf {
     /// tree
     /// </summary>
     internal class PdfPagesTree {
-        private readonly int leafSize = 10;
+        internal const int DEFAULT_LEAF_SIZE = 10;
+
+        private readonly int leafSize = DEFAULT_LEAF_SIZE;
 
         private IList<PdfIndirectReference> pageRefs;
 
@@ -68,7 +71,7 @@ namespace iText.Kernel.Pdf {
 
         private PdfPages root;
 
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPagesTree));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPagesTree));
 
         /// <summary>Creates a PdfPages tree.</summary>
         /// <param name="pdfCatalog">
@@ -84,7 +87,7 @@ namespace iText.Kernel.Pdf {
             if (pdfCatalog.GetPdfObject().ContainsKey(PdfName.Pages)) {
                 PdfDictionary pages = pdfCatalog.GetPdfObject().GetAsDictionary(PdfName.Pages);
                 if (pages == null) {
-                    throw new PdfException(PdfException.InvalidPageStructurePagesPagesMustBePdfDictionary);
+                    throw new PdfException(KernelExceptionMessageConstant.INVALID_PAGE_STRUCTURE_PAGES_MUST_BE_PDF_DICTIONARY);
                 }
                 this.root = new PdfPages(0, int.MaxValue, pages, null);
                 parents.Add(this.root);
@@ -114,8 +117,8 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual PdfPage GetPage(int pageNum) {
             if (pageNum < 1 || pageNum > GetNumberOfPages()) {
-                throw new IndexOutOfRangeException(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 
-                    pageNum));
+                throw new IndexOutOfRangeException(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                    , pageNum));
             }
             --pageNum;
             PdfPage pdfPage = pages[pageNum];
@@ -129,12 +132,12 @@ namespace iText.Kernel.Pdf {
                         pdfPage.parentPages = parents[parentIndex];
                     }
                     else {
-                        LOGGER.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                        LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
                             , pageNum + 1));
                     }
                 }
                 else {
-                    LOGGER.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
                         , pageNum + 1));
                 }
                 pages[pageNum] = pdfPage;
@@ -274,7 +277,7 @@ namespace iText.Kernel.Pdf {
         public virtual PdfPage RemovePage(int pageNum) {
             PdfPage pdfPage = GetPage(pageNum);
             if (pdfPage.IsFlushed()) {
-                LOGGER.Warn(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
+                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
             }
             if (InternalRemovePage(--pageNum)) {
                 return pdfPage;
@@ -300,10 +303,12 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         protected internal virtual PdfObject GenerateTree() {
             if (pageRefs.Count == 0) {
-                throw new PdfException(PdfException.DocumentHasNoPages);
+                LOGGER.LogInformation(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES
+                    );
+                document.AddNewPage();
             }
             if (generated) {
-                throw new PdfException(PdfException.PdfPagesTreeCouldBeGeneratedOnlyOnce);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_PAGES_TREE_COULD_BE_GENERATED_ONLY_ONCE);
             }
             if (root == null) {
                 while (parents.Count != 1) {
@@ -324,7 +329,6 @@ namespace iText.Kernel.Pdf {
                                 dynamicLeafSize = leafSize;
                             }
                         }
-                        System.Diagnostics.Debug.Assert(current != null);
                         current.AddPages(pages);
                     }
                     parents = nextParents;
@@ -364,7 +368,8 @@ namespace iText.Kernel.Pdf {
             PdfPages parent = parents[parentIndex];
             PdfArray kids = parent.GetKids();
             if (kids == null) {
-                throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum + 1);
+                throw new PdfException(KernelExceptionMessageConstant.INVALID_PAGE_STRUCTURE).SetMessageParams(pageNum + 1
+                    );
             }
             int kidsCount = parent.GetCount();
             // we should handle separated pages, it means every PdfArray kids must contain either PdfPage or PdfPages,
@@ -375,7 +380,8 @@ namespace iText.Kernel.Pdf {
                 PdfDictionary page = kids.GetAsDictionary(i);
                 // null values not allowed in pages tree.
                 if (page == null) {
-                    throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum + 1);
+                    throw new PdfException(KernelExceptionMessageConstant.INVALID_PAGE_STRUCTURE).SetMessageParams(pageNum + 1
+                        );
                 }
                 PdfObject pageKids = page.Get(PdfName.Kids);
                 if (pageKids != null) {
@@ -384,7 +390,8 @@ namespace iText.Kernel.Pdf {
                     }
                     else {
                         // kids must be of type array
-                        throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum + 1);
+                        throw new PdfException(KernelExceptionMessageConstant.INVALID_PAGE_STRUCTURE).SetMessageParams(pageNum + 1
+                            );
                     }
                 }
                 if (document.GetReader().IsMemorySavingMode() && !findPdfPages && parent.GetFrom() + i != pageNum) {

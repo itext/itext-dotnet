@@ -42,8 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iText.IO.Util;
-using iText.Kernel;
+using iText.Commons.Actions.Data;
+using iText.Commons.Utils;
+using iText.Kernel.Actions.Data;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
 using iText.Test;
@@ -51,7 +52,7 @@ using iText.Test;
 namespace iText.Kernel.Pdf {
     /// <author>Michael Demey</author>
     public class TrailerTest : ExtendedITextTest {
-        private ProductInfo productInfo;
+        private ProductData productData;
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/TrailerTest/";
@@ -63,44 +64,44 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.SetUp]
         public virtual void BeforeTest() {
-            this.productInfo = new ProductInfo("pdfProduct", 1, 0, 0, true);
+            this.productData = new ProductData("pdfProduct", "pdfProduct", "1.0.0", 1900, 2000);
         }
 
         [NUnit.Framework.Test]
         public virtual void TrailerFingerprintTest() {
             FileStream fos = new FileStream(destinationFolder + "output.pdf", FileMode.Create);
             PdfDocument pdf = new PdfDocument(new PdfWriter(fos));
-            pdf.RegisterProduct(this.productInfo);
+            pdf.RegisterProduct(this.productData);
             PdfPage page = pdf.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(), 12f).ShowText("Hello World").EndText();
             pdf.Close();
             NUnit.Framework.Assert.IsTrue(DoesTrailerContainFingerprint(new FileInfo(destinationFolder + "output.pdf")
-                , productInfo.ToString()));
+                , MessageFormatUtil.Format("%iText-{0}-{1}\n", productData.GetProductName(), productData.GetVersion())
+                ));
         }
 
         private bool DoesTrailerContainFingerprint(FileInfo file, String fingerPrint) {
-            FileStream raf = FileUtil.GetRandomAccessFile(file);
-            // put the pointer at the end of the file
-            raf.Seek(raf.Length);
-            // look for startxref
-            String startxref = "startxref";
-            String templine = "";
-            while (!templine.Contains(startxref)) {
-                templine = (char)raf.ReadByte() + templine;
-                raf.Seek(raf.Position - 2);
+            using (FileStream raf = FileUtil.GetRandomAccessFile(file)) {
+                // put the pointer at the end of the file
+                raf.Seek(raf.Length);
+                // look for coreProductData
+                String coreProductData = "%iText-Core-" + ITextCoreProductData.GetInstance().GetVersion();
+                String templine = "";
+                while (!templine.Contains(coreProductData)) {
+                    templine = (char)raf.ReadByte() + templine;
+                    raf.Seek(raf.Position - 2);
+                }
+                // look for fingerprint
+                char read = ' ';
+                templine = "";
+                while (read != '%') {
+                    read = (char)raf.ReadByte();
+                    templine = read + templine;
+                    raf.Seek(raf.Position - 2);
+                }
+                return templine.Contains(fingerPrint);
             }
-            // look for fingerprint
-            char read = ' ';
-            templine = "";
-            while (read != '%') {
-                read = (char)raf.ReadByte();
-                templine = read + templine;
-                raf.Seek(raf.Position - 2);
-            }
-            bool output = templine.Contains(fingerPrint);
-            raf.Dispose();
-            return output;
         }
     }
 }

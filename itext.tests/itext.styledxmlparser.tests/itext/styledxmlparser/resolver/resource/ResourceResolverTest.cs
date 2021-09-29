@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -45,6 +45,8 @@ using System;
 using System.IO;
 using iText.IO.Util;
 using iText.Kernel.Pdf.Xobject;
+using iText.StyledXmlParser.Exceptions;
+using iText.StyledXmlParser.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 using NUnit.Framework;
@@ -98,26 +100,26 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         // Malformed resource name tests block
 
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
             LogLevel = LogLevelConstants.ERROR)]
         public virtual void RetrieveStreamByMalformedResourceNameTest() {
             String fileName = "resourceResolverTest .png";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            byte[] bytes = resourceResolver.RetrieveStream(fileName);
+            byte[] bytes = resourceResolver.RetrieveBytesFromResource(fileName);
             Assert.Null(bytes);
         }
 
         [Test]
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
+            LogLevel = LogLevelConstants.ERROR)]
         public virtual void RetrieveStyleSheetByMalformedResourceNameTest() {
-            Assert.Catch(typeof(IOException), () => {
-                String fileName = "retrieveStyl eSheetTest.css";
-                ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-                resourceResolver.RetrieveStyleSheet(fileName);
-            });
+            String fileName = "retrieveStyl eSheetTest.css";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            resourceResolver.RetrieveResourceAsInputStream(fileName);
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
             LogLevel = LogLevelConstants.ERROR)]
         public virtual void RetrieveResourceAsInputStreamByMalformedResourceNameTest() {
             String fileName = "retrieveStyl eSheetTest.css";
@@ -127,7 +129,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
             LogLevel = LogLevelConstants.ERROR)]
         public virtual void RetrieveBytesFromResourceByMalformedResourceNameTest() {
             String fileName = "retrieveStyl eSheetTest.css";
@@ -137,12 +139,12 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI,
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI,
             LogLevel = LogLevelConstants.ERROR)]
         public virtual void RetrieveImageExtendedByMalformedResourceNameTest() {
             String fileName = "retrieveStyl eSheetTest.css";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfXObject pdfXObject = resourceResolver.RetrieveImageExtended(fileName);
+            PdfXObject pdfXObject = resourceResolver.RetrieveImage(fileName);
             Assert.Null(pdfXObject);
         }
         
@@ -151,7 +153,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             String fileName = "%23%5B%5D@!$&'()+,;=._~-/styles09.css";
             Stream expected = new FileStream(baseUri + "#[]@!$&'()+,;=._~-/styles09.css", FileMode.Open, FileAccess.Read);
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Stream stream = resourceResolver.RetrieveStyleSheet(fileName);
+            Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
             Assert.NotNull(stream);
             Assert.AreEqual(expected.Read(), stream.Read());
         }
@@ -160,53 +162,44 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
         [Test]
         public virtual void IsDataSrcTest() {
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Assert.True(resourceResolver.IsDataSrc(bLogo));
-            Assert.True(resourceResolver.IsDataSrc(bLogoCorruptedData));
-            Assert.True(resourceResolver.IsDataSrc(bLogoIncorrect));
-            Assert.False(resourceResolver.IsDataSrc("https://data.com/data"));
-        }
-
-        [Test]
-        public virtual void IsImageTypeSupportedTest() {
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Assert.True(resourceResolver.IsImageTypeSupportedByImageDataFactory("resourceResolverTest.png"));
-            Assert.False(resourceResolver.IsImageTypeSupportedByImageDataFactory("test.txt"));
-            Assert.False(resourceResolver.IsImageTypeSupportedByImageDataFactory("htt://test.png"));
+            Assert.True(ResourceResolver.IsDataSrc(bLogo));
+            Assert.True(ResourceResolver.IsDataSrc(bLogoCorruptedData));
+            Assert.True(ResourceResolver.IsDataSrc(bLogoIncorrect));
+            Assert.False(ResourceResolver.IsDataSrc("https://data.com/data"));
         }
 
         // Retrieve pdfXObject tests block
 
         [Test]
-        public virtual void RetrieveImageExtendedBase64Test() {
+        public virtual void RetrieveImageBase64Test() {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfXObject image = resourceResolver.RetrieveImageExtended(bLogo);
+            PdfXObject image = resourceResolver.RetrieveImage(bLogo);
             Assert.NotNull(image);
         }
         
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI)]
-        public virtual void RetrieveImageExtendedIncorrectBase64Test() {
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI)]
+        public virtual void RetrieveImageIncorrectBase64Test() {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfXObject image = resourceResolver.RetrieveImageExtended(bLogoCorruptedData);
+            PdfXObject image = resourceResolver.RetrieveImage(bLogoCorruptedData);
             Assert.Null(image);
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI,
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI,
             LogLevel = LogLevelConstants.ERROR)]
-        public virtual void RetrieveImageExtendedCorruptedDataBase64Test() {
+        public virtual void RetrieveImageCorruptedDataBase64Test() {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfXObject image = resourceResolver.RetrieveImageExtended(bLogoCorruptedData);
+            PdfXObject image = resourceResolver.RetrieveImage(bLogoCorruptedData);
             Assert.Null(image);
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI,
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI,
             LogLevel = LogLevelConstants.ERROR)]
-        public virtual void RetrieveImageExtendedNullTest() {
+        public virtual void RetrieveImageNullTest() {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfXObject image = resourceResolver.RetrieveImageExtended(null);
+            PdfXObject image = resourceResolver.RetrieveImage(null);
             Assert.Null(image);
         }
 
@@ -214,9 +207,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         public virtual void RetrieveImageTest() {
             String fileName = "resourceResolverTest.png";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
+            PdfXObject image = resourceResolver.RetrieveImage(fileName);
             Assert.NotNull(image);
-            Assert.True(image.IdentifyImageFileExtension().EqualsIgnoreCase("png"));
         }
 
         // Retrieve byte array tests block
@@ -229,7 +221,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
             LogLevel = LogLevelConstants.ERROR)]
         public virtual void RetrieveBytesFromResourceIncorrectBase64Test() {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
@@ -238,7 +230,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
             LogLevel = LogLevelConstants.ERROR)]
         public virtual void RetrieveBytesFromResourceCorruptedDataBase64Test() {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
@@ -261,8 +253,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             String fileName = "resourceResolverTest.png";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             byte[] expected = File.ReadAllBytes(baseUri + fileName);
-            byte[] stream = resourceResolver.RetrieveStream(fileName);
-            Assert.NotNull(resourceResolver.RetrieveStream(fileName));
+            byte[] stream = resourceResolver.RetrieveBytesFromResource(fileName);
+            Assert.NotNull(resourceResolver.RetrieveBytesFromResource(fileName));
             Assert.AreEqual(expected.Length, stream.Length);
         }
 
@@ -277,7 +269,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT, LogLevel = LogLevelConstants.WARN)]
+        [LogMessage(StyledXmlParserLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT, LogLevel = LogLevelConstants.WARN)]
         public virtual void AttemptToRetrieveBytesFromResourceStyleSheetWithFilterRetrieverTest() {
             String fileName = "retrieveStyleSheetTest.css";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
@@ -287,11 +279,11 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
         
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI)]
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI)]
         public virtual void RetrieveImageWrongPathTest() {
             String fileName = "/itextpdf.com/itis.jpg";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
+            PdfXObject image = resourceResolver.RetrieveImage(fileName);
             Assert.Null(image);
         }
         
@@ -299,22 +291,20 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         public virtual void RetrieveImageRightPathTest() {
             String fileName = "itextpdf.com/itis.jpg";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
+            PdfXObject image = resourceResolver.RetrieveImage(fileName);
             Assert.NotNull(image);
-            Assert.IsTrue(image.IdentifyImageFileExtension().EqualsIgnoreCase("jpg"));
         }
 
         [Test]
         public virtual void RetrieveImagePathWithSpacesTest() {
             String fileName = "retrieveImagePathWithSpaces.jpg";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path with spaces/");
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
+            PdfXObject image = resourceResolver.RetrieveImage(fileName);
             Assert.NotNull(image);
-            Assert.IsTrue(image.IdentifyImageFileExtension().EqualsIgnoreCase("jpg"));
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI)]
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI)]
         public virtual void RetrieveBytesMalformedResourceNameTest() {
             String fileName = "resourceResolverTest .png";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
@@ -333,7 +323,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT,
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT,
             LogLevel = LogLevelConstants.WARN)]
         public virtual void AttemptToRetrieveBytesFromLocalWithResourceSizeByteLimitTest() {
             String fileName = "retrieveStyleSheetTest.css";
@@ -383,7 +373,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             String fileName = "retrieveStyleSheetTest.css";
             Stream expected = new FileStream(baseUri + fileName, FileMode.Open, FileAccess.Read);
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Stream stream = resourceResolver.RetrieveStyleSheet(fileName);
+            Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
             Assert.NotNull(stream);
             Assert.AreEqual(expected.Read(), stream.Read());
         }
@@ -399,7 +389,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT, LogLevel = LogLevelConstants.WARN)]
+        [LogMessage(StyledXmlParserLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT, LogLevel = LogLevelConstants.WARN)]
         public virtual void AttemptToRetrieveInputStreamWithFilterRetrieverTest() {
             String fileName = "retrieveStyleSheetTest.css";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
@@ -457,7 +447,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             String absolutePath = Path.Combine(baseUri, fileName).ToFile().FullName;
 
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            using (Stream stream = resourceResolver.RetrieveStyleSheet(absolutePath),
+            using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(absolutePath),
                 expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read)) {
                 Assert.NotNull(stream);
                 Assert.AreEqual(expected.Read(), stream.Read());
@@ -484,7 +474,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             String fileUrlString = url.ToExternalForm();
 
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            using (Stream stream = resourceResolver.RetrieveStyleSheet(fileUrlString),
+            using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileUrlString),
                 expected = UrlUtil.OpenStream(url)) {
                 Assert.NotNull(stream);
                 Assert.AreEqual(expected.Read(), stream.Read());

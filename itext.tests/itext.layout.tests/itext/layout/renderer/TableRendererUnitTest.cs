@@ -27,7 +27,7 @@ using iText.Test.Attributes;
 namespace iText.Layout.Renderer {
     public class TableRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
             TableRenderer tableRenderer = new _TableRenderer_44(new Table(1));
             // Nothing is overridden

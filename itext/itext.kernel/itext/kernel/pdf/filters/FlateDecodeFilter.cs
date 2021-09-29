@@ -44,35 +44,12 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.util.zlib;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {
     /// <summary>Handles FlateDecode filter.</summary>
     public class FlateDecodeFilter : MemoryLimitsAwareFilter {
-        /// <summary>Defines how the corrupted streams should be treated.</summary>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use FlateDecodeStrictFilter instead.")]
-        private bool strictDecoding = false;
-
-        /// <summary>Creates a FlateDecodeFilter.</summary>
-        public FlateDecodeFilter()
-            : this(false) {
-        }
-
-        /// <summary>Creates a FlateDecodeFilter.</summary>
-        /// <param name="strictDecoding">defines whether the decoder will try to read a corrupted stream</param>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use FlateDecodeStrictFilter instead.")]
-        public FlateDecodeFilter(bool strictDecoding) {
-            this.strictDecoding = strictDecoding;
-        }
-
-        /// <summary>Checks whether the decoder will try to read a corrupted stream (not strict) or not (strict)</summary>
-        /// <returns>true if the decoder will try to read a corrupted stream otherwise false</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use FlateDecodeStrictFilter instead.")]
-        public virtual bool IsStrictDecoding() {
-            return strictDecoding;
-        }
-
         /// <summary>A helper to flateDecode.</summary>
         /// <param name="in">the input data</param>
         /// <param name="strict">
@@ -203,7 +180,7 @@ namespace iText.Kernel.Pdf.Filters {
 
                     default: {
                         // Error -- unknown filter type
-                        throw new PdfException(PdfException.PngFilterUnknown);
+                        throw new PdfException(KernelExceptionMessageConstant.PNG_FILTER_UNKNOWN);
                     }
                 }
                 try {
@@ -225,21 +202,12 @@ namespace iText.Kernel.Pdf.Filters {
             ) {
             MemoryStream outputStream = EnableMemoryLimitsAwareHandler(streamDictionary);
             byte[] res = FlateDecodeInternal(b, true, outputStream);
-            if (res == null && !strictDecoding) {
+            if (res == null) {
                 outputStream.JReset();
                 res = FlateDecodeInternal(b, false, outputStream);
             }
             b = DecodePredictor(res, decodeParams);
             return b;
-        }
-
-        /// <summary>Defines how the corrupted streams should be treated.</summary>
-        /// <param name="strict">true if the decoder should try to read a corrupted stream otherwise false</param>
-        /// <returns>the decoder</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use FlateDecodeStrictFilter instead.")]
-        public virtual iText.Kernel.Pdf.Filters.FlateDecodeFilter SetStrictDecoding(bool strict) {
-            this.strictDecoding = strict;
-            return this;
         }
 
         /// <summary>A helper to flateDecode.</summary>

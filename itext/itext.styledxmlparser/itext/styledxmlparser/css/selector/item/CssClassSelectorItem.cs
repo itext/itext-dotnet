@@ -87,7 +87,7 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             IElementNode element = (IElementNode)node;
             String classAttr = element.GetAttribute(CommonAttributeConstants.CLASS);
             if (classAttr != null && classAttr.Length > 0) {
-                String[] classNames = iText.IO.Util.StringUtil.Split(classAttr, " ");
+                String[] classNames = iText.Commons.Utils.StringUtil.Split(classAttr, " ");
                 foreach (String currClassName in classNames) {
                     if (this.className.Equals(currClassName.Trim())) {
                         return true;

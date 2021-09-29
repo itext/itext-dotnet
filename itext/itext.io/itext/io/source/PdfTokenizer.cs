@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 
 namespace iText.IO.Source {
     public class PdfTokenizer : IDisposable {
@@ -184,7 +185,7 @@ namespace iText.IO.Source {
         }
 
         public virtual String GetStringValue() {
-            return iText.IO.Util.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer(), 0, outBuf.Size());
+            return iText.Commons.Utils.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer(), 0, outBuf.Size());
         }
 
         public virtual byte[] GetDecodedStringContent() {
@@ -227,7 +228,7 @@ namespace iText.IO.Source {
             if (idx < 0) {
                 idx = str.IndexOf("%FDF-", StringComparison.Ordinal);
                 if (idx < 0) {
-                    throw new iText.IO.IOException(iText.IO.IOException.PdfHeaderNotFound, this);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PdfHeaderNotFound, this);
                 }
             }
             return idx;
@@ -238,7 +239,7 @@ namespace iText.IO.Source {
             String str = ReadString(1024);
             int idx = str.IndexOf("%PDF-", StringComparison.Ordinal);
             if (idx != 0) {
-                throw new iText.IO.IOException(iText.IO.IOException.PdfHeaderNotFound, this);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PdfHeaderNotFound, this);
             }
             return str.JSubstring(idx + 1, idx + 8);
         }
@@ -248,7 +249,7 @@ namespace iText.IO.Source {
             String str = ReadString(1024);
             int idx = str.IndexOf("%FDF-", StringComparison.Ordinal);
             if (idx != 0) {
-                throw new iText.IO.IOException(iText.IO.IOException.FdfStartxrefNotFound, this);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.FdfStartxrefNotFound, this);
             }
         }
 
@@ -269,7 +270,7 @@ namespace iText.IO.Source {
                 // 9 = "startxref".length()
                 pos = pos - arrLength + 9;
             }
-            throw new iText.IO.IOException(iText.IO.IOException.PdfStartxrefNotFound, this);
+            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PdfStartxrefNotFound, this);
         }
 
         public virtual void NextValidToken() {
@@ -310,17 +311,17 @@ namespace iText.IO.Source {
                                 System.Diagnostics.Debug.Assert(n2 != null);
                                 type = PdfTokenizer.TokenType.Ref;
                                 try {
-                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
+                                    reference = Convert.ToInt32(iText.Commons.Utils.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
                                         );
-                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
+                                    generation = Convert.ToInt32(iText.Commons.Utils.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
                                         );
                                 }
                                 catch (Exception) {
                                     //warn about incorrect reference number
                                     //Exception: NumberFormatException for java, FormatException or OverflowException for .NET
-                                    ILog logger = LogManager.GetLogger(typeof(PdfTokenizer));
-                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.IO.Util.JavaUtil.GetStringForBytes
-                                        (n1), iText.IO.Util.JavaUtil.GetStringForBytes(n2)));
+                                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfTokenizer));
+                                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.Commons.Utils.JavaUtil.GetStringForBytes
+                                        (n1), iText.Commons.Utils.JavaUtil.GetStringForBytes(n2)));
                                     reference = -1;
                                     generation = 0;
                                 }
@@ -330,9 +331,9 @@ namespace iText.IO.Source {
                                 if (TokenValueEqualsTo(Obj)) {
                                     System.Diagnostics.Debug.Assert(n2 != null);
                                     type = PdfTokenizer.TokenType.Obj;
-                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
+                                    reference = Convert.ToInt32(iText.Commons.Utils.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
                                         );
-                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
+                                    generation = Convert.ToInt32(iText.Commons.Utils.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
                                         );
                                     return;
                                 }
@@ -394,7 +395,7 @@ namespace iText.IO.Source {
                 case '>': {
                     ch = file.Read();
                     if (ch != '>') {
-                        ThrowError(iText.IO.IOException.GtNotExpected);
+                        ThrowError(iText.IO.Exceptions.IOException.GtNotExpected);
                     }
                     type = PdfTokenizer.TokenType.EndDic;
                     break;
@@ -436,7 +437,7 @@ namespace iText.IO.Source {
                         v1 = file.Read();
                     }
                     if (v1 < 0 || v2 < 0) {
-                        ThrowError(iText.IO.IOException.ErrorReadingString);
+                        ThrowError(iText.IO.Exceptions.IOException.ErrorReadingString);
                     }
                     break;
                 }
@@ -482,7 +483,7 @@ namespace iText.IO.Source {
                         outBuf.Append(ch);
                     }
                     if (ch == -1) {
-                        ThrowError(iText.IO.IOException.ErrorReadingString);
+                        ThrowError(iText.IO.Exceptions.IOException.ErrorReadingString);
                     }
                     break;
                 }
@@ -765,14 +766,8 @@ namespace iText.IO.Source {
         /// <param name="error">message.</param>
         /// <param name="messageParams">error params.</param>
         public virtual void ThrowError(String error, params Object[] messageParams) {
-            try {
-                throw new iText.IO.IOException(iText.IO.IOException.ErrorAtFilePointer1, new iText.IO.IOException(error).SetMessageParams
-                    (messageParams)).SetMessageParams(file.GetPosition());
-            }
-            catch (System.IO.IOException) {
-                throw new iText.IO.IOException(iText.IO.IOException.ErrorAtFilePointer1, new iText.IO.IOException(error).SetMessageParams
-                    (messageParams)).SetMessageParams(error, "no position");
-            }
+            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ErrorAtFilePointer1, new iText.IO.Exceptions.IOException
+                (error).SetMessageParams(messageParams)).SetMessageParams(file.GetPosition());
         }
 
         /// <summary>
@@ -938,47 +933,6 @@ namespace iText.IO.Source {
             }
             // empty on purpose
             return null;
-        }
-
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. This inner class is not used anywhere")]
-        protected internal class ReusableRandomAccessSource : IRandomAccessSource {
-            private ByteBuffer buffer;
-
-            public ReusableRandomAccessSource(ByteBuffer buffer) {
-                if (buffer == null) {
-                    throw new ArgumentException("Passed byte buffer can not be null.");
-                }
-                this.buffer = buffer;
-            }
-
-            public virtual int Get(long offset) {
-                if (offset >= buffer.Size()) {
-                    return -1;
-                }
-                return 0xff & buffer.GetInternalBuffer()[(int)offset];
-            }
-
-            public virtual int Get(long offset, byte[] bytes, int off, int len) {
-                if (buffer == null) {
-                    throw new InvalidOperationException("Already closed");
-                }
-                if (offset >= buffer.Size()) {
-                    return -1;
-                }
-                if (offset + len > buffer.Size()) {
-                    len = (int)(buffer.Size() - offset);
-                }
-                Array.Copy(buffer.GetInternalBuffer(), (int)offset, bytes, off, len);
-                return len;
-            }
-
-            public virtual long Length() {
-                return buffer.Size();
-            }
-
-            public virtual void Close() {
-                buffer = null;
-            }
         }
 
         void System.IDisposable.Dispose() {

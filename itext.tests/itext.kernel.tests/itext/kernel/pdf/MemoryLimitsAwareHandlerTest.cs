@@ -41,7 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -63,15 +63,15 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void OverridenMemoryHandler() {
             MemoryLimitsAwareHandler defaultHandler = new MemoryLimitsAwareHandler();
-            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_75();
+            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_76();
             PdfArray filters = new PdfArray();
             filters.Add(PdfName.FlateDecode);
             NUnit.Framework.Assert.IsFalse(defaultHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
             NUnit.Framework.Assert.IsTrue(customHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
         }
 
-        private sealed class _MemoryLimitsAwareHandler_75 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_75() {
+        private sealed class _MemoryLimitsAwareHandler_76 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_76() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
@@ -111,7 +111,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private static void TestSingleStream(MemoryLimitsAwareHandler handler) {
-            String expectedExceptionMessage = PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed;
+            String expectedExceptionMessage = KernelExceptionMessageConstant.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED;
             int expectedFailureIndex = 10;
             String occuredExceptionMessage = null;
             int limit = handler.GetMaxSizeOfSingleDecompressedPdfStream();
@@ -132,7 +132,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private static void TestMultipleStreams(MemoryLimitsAwareHandler handler) {
-            String expectedExceptionMessage = PdfException.DuringDecompressionMultipleStreamsInSumOccupiedMoreMemoryThanAllowed;
+            String expectedExceptionMessage = KernelExceptionMessageConstant.DURING_DECOMPRESSION_MULTIPLE_STREAMS_IN_SUM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED;
             int expectedFailureIndex = 10;
             String occuredExceptionMessage = null;
             int i = 0;

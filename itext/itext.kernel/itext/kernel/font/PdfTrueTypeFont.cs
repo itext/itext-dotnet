@@ -43,11 +43,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
@@ -93,7 +94,7 @@ namespace iText.Kernel.Font {
                     fontProgram = FontProgramFactory.CreateFont(baseFontName.GetValue(), true);
                 }
                 catch (System.IO.IOException e) {
-                    throw new PdfException(PdfException.IoExceptionWhileCreatingFont, e);
+                    throw new PdfException(KernelExceptionMessageConstant.IO_EXCEPTION_WHILE_CREATING_FONT, e);
                 }
             }
             else {
@@ -148,20 +149,10 @@ namespace iText.Kernel.Font {
             base.Flush();
         }
 
-        /// <summary>The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
-        ///     </summary>
-        /// <remarks>
-        /// The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
-        /// This set of used glyphs is required for building width array and ToUnicode CMAP.
-        /// </remarks>
-        /// <param name="longTag">
-        /// a set of integers, which are glyph ids that denote used glyphs.
-        /// This set is updated inside of the method if needed.
-        /// </param>
-        [System.ObsoleteAttribute(@"use iText.IO.Font.TrueTypeFont.UpdateUsedGlyphs(Java.Util.SortedSet{E}, bool, System.Collections.Generic.IList{E})"
-            )]
-        protected internal virtual void AddRangeUni(ICollection<int> longTag) {
-            ((TrueTypeFont)GetFontProgram()).UpdateUsedGlyphs((SortedSet<int>)longTag, subset, subsetRanges);
+        public override bool IsBuiltWith(String fontProgram, String encoding) {
+            // Now Identity-H is default for true type fonts. However, in case of Identity-H the method from
+            // PdfType0Font would be triggered, hence we need to return false there.
+            return null != encoding && !"".Equals(encoding) && base.IsBuiltWith(fontProgram, encoding);
         }
 
         protected internal override void AddFontStream(PdfDictionary fontDescriptor) {
@@ -181,16 +172,16 @@ namespace iText.Kernel.Font {
                             fontStream.Put(PdfName.Subtype, new PdfName("Type1C"));
                         }
                         catch (PdfException e) {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
-                            logger.Error(e.Message);
+                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
+                            logger.LogError(e.Message);
                             fontStream = null;
                         }
                     }
                     else {
                         fontFileName = PdfName.FontFile2;
                         SortedSet<int> glyphs = new SortedSet<int>();
-                        for (int k = 0; k < shortTag.Length; k++) {
-                            if (shortTag[k] != 0) {
+                        for (int k = 0; k < usedGlyphs.Length; k++) {
+                            if (usedGlyphs[k] != 0) {
                                 int uni = fontEncoding.GetUnicode(k);
                                 Glyph glyph = uni > -1 ? fontProgram.GetGlyph(uni) : fontProgram.GetGlyphByCode(k);
                                 if (glyph != null) {
@@ -211,8 +202,8 @@ namespace iText.Kernel.Font {
                             fontStream = GetPdfFontStream(fontStreamBytes, new int[] { fontStreamBytes.Length });
                         }
                         catch (PdfException e) {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
-                            logger.Error(e.Message);
+                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
+                            logger.LogError(e.Message);
                             fontStream = null;
                         }
                     }

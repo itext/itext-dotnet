@@ -43,19 +43,21 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Source;
-using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser.Util;
 using iText.Kernel.Pdf.Colorspace;
-using iText.Pdfa;
+using iText.Pdfa.Exceptions;
+using iText.Pdfa.Logs;
 
 namespace iText.Pdfa.Checker {
     /// <summary>
@@ -134,10 +136,6 @@ namespace iText.Pdfa.Checker {
                 }
             }
             CheckImage(inlineImage, currentColorSpaces);
-        }
-
-        public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill) {
-            CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
         }
 
         public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream stream
@@ -226,10 +224,6 @@ namespace iText.Pdfa.Checker {
             }
         }
 
-        public override void CheckExtGState(CanvasGraphicsState extGState) {
-            CheckExtGState(extGState, null);
-        }
-
         public override void CheckExtGState(CanvasGraphicsState extGState, PdfStream contentStream) {
             if (extGState.GetTransferFunction() != null) {
                 throw new PdfAConformanceException(PdfAConformanceException.AN_EXTGSTATE_DICTIONARY_SHALL_NOT_CONTAIN_THE_TR_KEY
@@ -262,6 +256,10 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        public override void CheckFontGlyphs(PdfFont font, PdfStream contentStream) {
+        }
+
+        // This check is irrelevant for the PdfA1 checker, so the body of the method is empty
         public override void CheckRenderingIntent(PdfName intent) {
             if (intent == null) {
                 return;
@@ -295,6 +293,11 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        protected internal override void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
+            ) {
+        }
+
+        // This check is irrelevant for the PdfA1 checker, so the body of the method is empty
         protected internal override void CheckContentStream(PdfStream contentStream) {
             if (IsFullCheckMode() || contentStream.IsModified()) {
                 byte[] contentBytes = contentStream.GetBytes();
@@ -310,7 +313,7 @@ namespace iText.Pdfa.Checker {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    throw new PdfException(PdfException.CannotParseContentStream, e);
+                    throw new PdfException(PdfaExceptionMessageConstant.CANNOT_PARSE_CONTENT_STREAM, e);
                 }
             }
         }
@@ -440,8 +443,8 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 if (!catalog.ContainsKey(PdfName.Lang)) {
-                    ILog logger = LogManager.GetLogger(typeof(PdfAChecker));
-                    logger.Warn(PdfAConformanceLogMessageConstant.CATALOG_SHOULD_CONTAIN_LANG_ENTRY);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
+                    logger.LogWarning(PdfAConformanceLogMessageConstant.CATALOG_SHOULD_CONTAIN_LANG_ENTRY);
                 }
             }
         }

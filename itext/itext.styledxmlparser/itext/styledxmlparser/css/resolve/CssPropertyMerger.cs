@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 
 namespace iText.StyledXmlParser.Css.Resolve {
@@ -86,7 +86,7 @@ namespace iText.StyledXmlParser.Css.Resolve {
         /// <param name="value">the text decoration value</param>
         /// <returns>a set of normalized decoration values</returns>
         private static ICollection<String> NormalizeTextDecoration(String value) {
-            String[] parts = iText.IO.Util.StringUtil.Split(value, "\\s+");
+            String[] parts = iText.Commons.Utils.StringUtil.Split(value, "\\s+");
             // LinkedHashSet to make order invariant of JVM
             ICollection<String> merged = new LinkedHashSet<String>();
             merged.AddAll(JavaUtil.ArraysAsList(parts));

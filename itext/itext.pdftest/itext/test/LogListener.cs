@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,32 +43,35 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using Common.Logging.Simple;
+using iText.Commons;
+using iText.IO;
 using iText.Test.Attributes;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
 namespace iText.Test {
     [AttributeUsage(AttributeTargets.Class)]
     public class LogListener : TestActionAttribute {
-        private static ITextMemoryAddapter adapter;
-
-        private ILoggerFactoryAdapter defaultLogAdapter;
+        
+        private static readonly ITextTestLoggerFactory TEST_LOGGER_FACTORY;
+        
+        private ILoggerFactory defaultLoggerFactory;
 
         static LogListener() {
-            adapter = new ITextMemoryAddapter();
+            TEST_LOGGER_FACTORY = new ITextTestLoggerFactory();
         }
 
-        public override void BeforeTest(ITest testDetails) {
-            defaultLogAdapter = LogManager.Adapter;
-            LogManager.Adapter = adapter;
+        public override void BeforeTest(ITest testDetails)
+        {
+            defaultLoggerFactory = ITextLogManager.GetLoggerFactory();
+            ITextLogManager.SetLoggerFactory(TEST_LOGGER_FACTORY);
             Init(testDetails);
         }
 
         public override void AfterTest(ITest testDetails) {
             CheckLogMessages(testDetails);
-            LogManager.Adapter = defaultLogAdapter;
+            ITextLogManager.SetLoggerFactory(defaultLoggerFactory);
         }
 
         public override ActionTargets Targets {
@@ -96,11 +99,11 @@ namespace iText.Test {
         }
 
         private int Contains(LogMessageAttribute loggingStatement) {
-            IList<CapturingLoggerEvent> eventList = adapter.LoggerEvents;
+            IList<ITextTestLoggerFactory.ITextTestLogEvent> eventList = TEST_LOGGER_FACTORY.GetLogEvents();
             int index = 0;
             for (int i = 0; i < eventList.Count; i++) {
-                if (IsLevelCompatible(loggingStatement.LogLevel, eventList[i].Level) 
-                    && LogListenerHelper.EqualsMessageByTemplate(eventList[i].RenderedMessage, loggingStatement.GetMessageTemplate())) {
+                if (IsLevelCompatible(loggingStatement.LogLevel, eventList[i].logLevel) 
+                    && LogListenerHelper.EqualsMessageByTemplate(eventList[i].message, loggingStatement.GetMessageTemplate())) {
                     index++;
                 }
             }
@@ -110,13 +113,13 @@ namespace iText.Test {
         private bool IsLevelCompatible(int logMessageLevel, LogLevel eventLevel) {
             switch (logMessageLevel) {
                 case LogLevelConstants.UNKNOWN:
-                    return eventLevel >= LogLevel.Warn;
+                    return eventLevel >= LogLevel.Warning;
                 case LogLevelConstants.ERROR:
                     return eventLevel == LogLevel.Error;
                 case LogLevelConstants.WARN:
-                    return eventLevel == LogLevel.Warn;
+                    return eventLevel == LogLevel.Warning;
                 case LogLevelConstants.INFO:
-                    return eventLevel == LogLevel.Info;
+                    return eventLevel == LogLevel.Information;
                 case LogLevelConstants.DEBUG:
                     return eventLevel == LogLevel.Debug;
                 default:
@@ -125,7 +128,7 @@ namespace iText.Test {
         }
 
         private void Init(ITest testDetails) {
-            adapter.Clear();
+            TEST_LOGGER_FACTORY.Dispose();
             LogMessageAttribute[] attributes = LogListenerHelper.GetTestAttributes<LogMessageAttribute>(testDetails);
             if (attributes.Length > 0) {
                 HashSet<String> expectedTemplates = new HashSet<string>();
@@ -133,12 +136,12 @@ namespace iText.Test {
                     LogMessageAttribute logMessage = attributes[i];
                     expectedTemplates.Add(logMessage.GetMessageTemplate());
                 }
-                adapter.SetExpectedTemplates(expectedTemplates);
+                TEST_LOGGER_FACTORY.SetExpectedTemplates(expectedTemplates);
             }
         }
 
         private int GetSize() {
-            return adapter.LoggerEvents.Count;
+            return TEST_LOGGER_FACTORY.GetLogEvents().Count;
         }
     }
 }

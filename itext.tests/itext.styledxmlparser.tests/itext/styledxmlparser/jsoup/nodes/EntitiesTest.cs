@@ -3,42 +3,22 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Test;
@@ -76,6 +56,52 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         [NUnit.Framework.Test]
+        public virtual void EscapedSupplementary() {
+            String text = "\uD835\uDD59";
+            String escapedAscii = Entities.Escape(text, new OutputSettings().Charset("ascii").EscapeMode(Entities.EscapeMode
+                .@base));
+            NUnit.Framework.Assert.AreEqual("&#x1d559;", escapedAscii);
+            String escapedAsciiFull = Entities.Escape(text, new OutputSettings().Charset("ascii").EscapeMode(Entities.EscapeMode
+                .extended));
+            NUnit.Framework.Assert.AreEqual("&hopf;", escapedAsciiFull);
+            String escapedUtf = Entities.Escape(text, new OutputSettings().Charset("UTF-8").EscapeMode(Entities.EscapeMode
+                .extended));
+            NUnit.Framework.Assert.AreEqual(text, escapedUtf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnescapeMultiChars() {
+            String text = "&NestedGreaterGreater; &nGg; &nGt; &nGtv; &Gt; &gg;";
+            // gg is not combo, but 8811 could conflict with NestedGreaterGreater or others
+            String un = "≫ ⋙̸ ≫⃒ ≫̸ ≫ ≫";
+            NUnit.Framework.Assert.AreEqual(un, Entities.Unescape(text));
+            String escaped = Entities.Escape(un, new OutputSettings().Charset("ascii").EscapeMode(Entities.EscapeMode.
+                extended));
+            NUnit.Framework.Assert.AreEqual("&Gt; &Gg;&#x338; &Gt;&#x20d2; &Gt;&#x338; &Gt; &Gt;", escaped);
+            NUnit.Framework.Assert.AreEqual(un, Entities.Unescape(escaped));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Xhtml() {
+            NUnit.Framework.Assert.AreEqual(38, Entities.EscapeMode.xhtml.CodepointForName("amp"));
+            NUnit.Framework.Assert.AreEqual(62, Entities.EscapeMode.xhtml.CodepointForName("gt"));
+            NUnit.Framework.Assert.AreEqual(60, Entities.EscapeMode.xhtml.CodepointForName("lt"));
+            NUnit.Framework.Assert.AreEqual(34, Entities.EscapeMode.xhtml.CodepointForName("quot"));
+            NUnit.Framework.Assert.AreEqual("amp", Entities.EscapeMode.xhtml.NameForCodepoint(38));
+            NUnit.Framework.Assert.AreEqual("gt", Entities.EscapeMode.xhtml.NameForCodepoint(62));
+            NUnit.Framework.Assert.AreEqual("lt", Entities.EscapeMode.xhtml.NameForCodepoint(60));
+            NUnit.Framework.Assert.AreEqual("quot", Entities.EscapeMode.xhtml.NameForCodepoint(34));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetByName() {
+            NUnit.Framework.Assert.AreEqual("≫⃒", Entities.GetByName("nGt"));
+            NUnit.Framework.Assert.AreEqual("fj", Entities.GetByName("fjlig"));
+            NUnit.Framework.Assert.AreEqual("≫", Entities.GetByName("gg"));
+            NUnit.Framework.Assert.AreEqual("©", Entities.GetByName("copy"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void EscapeSupplementaryCharacter() {
             String text = new String(iText.IO.Util.TextUtil.ToChars(135361));
             String escapedAscii = Entities.Escape(text, new OutputSettings().Charset("ascii").EscapeMode(Entities.EscapeMode
@@ -87,9 +113,24 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         [NUnit.Framework.Test]
+        public virtual void NotMissingMultis() {
+            String text = "&nparsl;";
+            String un = "\u2AFD\u20E5";
+            NUnit.Framework.Assert.AreEqual(un, Entities.Unescape(text));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotMissingSupplementals() {
+            String text = "&npolint; &qfr;";
+            String un = "⨔ \uD835\uDD2E";
+            // 𝔮
+            NUnit.Framework.Assert.AreEqual(un, Entities.Unescape(text));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Unescape() {
-            String text = "Hello &amp;&LT&gt; &reg &angst; &angst &#960; &#960 &#x65B0; there &! &frac34; &copy; &COPY;";
-            NUnit.Framework.Assert.AreEqual("Hello &<> ® Å &angst π π 新 there &! ¾ © ©", Entities.Unescape(text));
+            String text = "Hello &AElig; &amp;&LT&gt; &reg &angst; &angst &#960; &#960 &#x65B0; there &! &frac34; &copy; &COPY;";
+            NUnit.Framework.Assert.AreEqual("Hello Æ &<> ® Å &angst π π 新 there &! ¾ © ©", Entities.Unescape(text));
             NUnit.Framework.Assert.AreEqual("&0987654321; &unknown", Entities.Unescape("&0987654321; &unknown"));
         }
 

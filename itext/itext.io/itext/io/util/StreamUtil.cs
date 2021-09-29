@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Source;
 
 namespace iText.IO.Util {
@@ -131,7 +132,7 @@ namespace iText.IO.Util {
                 outputStream.Write(buf.GetInternalBuffer(), 0, buf.Size());
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.CannotWriteBytes, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotWriteBytes, e);
             }
         }
 
@@ -141,7 +142,7 @@ namespace iText.IO.Util {
                 outputStream.Write(buf.GetInternalBuffer(), 0, buf.Size());
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.CannotWriteBytes, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotWriteBytes, e);
             }
         }
 

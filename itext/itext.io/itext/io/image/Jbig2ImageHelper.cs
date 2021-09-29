@@ -86,7 +86,7 @@ namespace iText.IO.Image {
                 image.SetHeight(p.pageBitmapHeight);
                 image.SetWidth(p.pageBitmapWidth);
                 image.SetBpc(1);
-                image.SetColorSpace(1);
+                image.SetColorEncodingComponentsNumber(1);
                 //TODO JBIG2 globals caching
                 byte[] globals = sr.GetGlobal(true);
                 //TODO due to the fact, that streams now may be transformed to indirect objects only on writing,
@@ -101,12 +101,12 @@ namespace iText.IO.Image {
                     image.decodeParms = decodeParms;
                 }
                 image.SetFilter("JBIG2Decode");
-                image.SetColorSpace(1);
+                image.SetColorEncodingComponentsNumber(1);
                 image.SetBpc(1);
                 image.data = p.GetData(true);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.Jbig2ImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Jbig2ImageException, e);
             }
         }
     }

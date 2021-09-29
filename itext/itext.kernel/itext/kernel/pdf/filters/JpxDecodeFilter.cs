@@ -41,8 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Common.Logging;
-using iText.Kernel;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {
@@ -52,11 +53,11 @@ namespace iText.Kernel.Pdf.Filters {
     /// (in JPEG2000 format).
     /// </remarks>
     public class JpxDecodeFilter : IFilterHandler {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(JpxDecodeFilter));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(JpxDecodeFilter));
 
         public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
             ) {
-            LOGGER.Info(KernelLogMessageConstant.JPXDECODE_FILTER_DECODING);
+            LOGGER.LogInformation(KernelLogMessageConstant.JPXDECODE_FILTER_DECODING);
             return b;
         }
     }

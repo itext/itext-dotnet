@@ -41,27 +41,34 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel.Counter.Event;
+using iText.Commons.Actions.Contexts;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// Class with additional properties for
+    /// <see cref="PdfDocument"/>
+    /// processing.
+    /// </summary>
+    /// <remarks>
+    /// Class with additional properties for
+    /// <see cref="PdfDocument"/>
+    /// processing.
+    /// Needs to be passed at document initialization.
+    /// </remarks>
     public class DocumentProperties {
         protected internal IMetaInfo metaInfo = null;
 
+        /// <summary>Default constructor, use provided setters for configuration options.</summary>
         public DocumentProperties() {
         }
 
+        /// <summary>Creates a copy of class instance.</summary>
+        /// <param name="other">the base for new class instance</param>
         public DocumentProperties(iText.Kernel.Pdf.DocumentProperties other) {
             this.metaInfo = other.metaInfo;
         }
 
         /// <summary>Sets document meta info.</summary>
-        /// <remarks>
-        /// Sets document meta info. This meta info will be passed to the
-        /// <see cref="iText.Kernel.Counter.EventCounter"/>
-        /// with
-        /// <see cref="iText.Kernel.Counter.Event.CoreEvent"/>
-        /// and can be used to determine event origin.
-        /// </remarks>
         /// <param name="metaInfo">meta info to set</param>
         /// <returns>
         /// this

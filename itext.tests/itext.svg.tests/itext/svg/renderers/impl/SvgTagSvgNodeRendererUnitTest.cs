@@ -40,11 +40,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
 
@@ -73,6 +75,16 @@ namespace iText.Svg.Renderers.Impl {
             SvgTagSvgNodeRenderer one = new SvgTagSvgNodeRenderer();
             CircleSvgNodeRenderer two = new CircleSvgNodeRenderer();
             NUnit.Framework.Assert.IsFalse(one.Equals(two));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoObjectBoundingBoxTest() {
+            SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
+            NUnit.Framework.Assert.That(() =>  {
+                renderer.GetObjectBoundingBox(null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX))
+;
         }
     }
 }

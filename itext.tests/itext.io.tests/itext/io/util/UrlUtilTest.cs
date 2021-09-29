@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Text;
+using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.IO.Util {
@@ -69,14 +70,14 @@ namespace iText.IO.Util {
             // artificial fix with subtracting the last backslash
             String expected = absolutePathRoot.Substring(0, absolutePathRoot.Length - 1) + System.IO.Path.DirectorySeparatorChar;
             FileInfo tempFile = FileUtil.CreateTempFile(destinationFolder);
-            NUnit.Framework.Assert.AreEqual(expected, FileUtil.GetParentDirectory(tempFile));
+            NUnit.Framework.Assert.AreEqual(expected, FileUtil.GetParentDirectoryUri(tempFile));
         }
 
         [NUnit.Framework.Test]
         public void NullBaseUriTest() {
             String expected = "";
             FileInfo tempFile = null;
-            NUnit.Framework.Assert.AreEqual(expected, FileUtil.GetParentDirectory(tempFile));
+            NUnit.Framework.Assert.AreEqual(expected, FileUtil.GetParentDirectoryUri(tempFile));
         }
 
         [NUnit.Framework.Test]

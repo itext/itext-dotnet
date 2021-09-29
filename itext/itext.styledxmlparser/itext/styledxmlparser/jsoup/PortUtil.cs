@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,85 +41,66 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
+using iText.Commons.Utils;
 using iText.IO.Util;
 
-namespace iText.StyledXmlParser.Jsoup {
-    internal static class PortUtil {
-        public static readonly string EscapedSingleBracket = "'";
-        public static readonly string SignedNumberFormat = ":+0;-#";
+namespace iText.StyledXmlParser.Jsoup
+{
+    internal static class PortUtil
+    {
 
-        public const int CHARACTER_MIN_SUPPLEMENTARY_CODE_POINT = 0x010000;
-
-        public static FileStream GetReadOnlyRandomAccesFile(FileInfo file) {
-            return file.Open(FileMode.Open, FileAccess.Read);
-        }
-
-        [System.ObsoleteAttribute(@"use iText.IO.Util.Matcher.Find")]
-        public static bool HasMatch(Regex pattern, String input) {
-
-            return pattern.IsMatch(input);
-        }
-
-        public static char[] ToChars(int codePoint) {
-            return char.ConvertFromUtf32(codePoint).ToCharArray();
-        }
-
-        public static int CharCount(int codePoint) {
-            return codePoint >= CHARACTER_MIN_SUPPLEMENTARY_CODE_POINT ? 2 : 1;
-        }
-
-        public static Encoding NewEncoder(Encoding charset) {
-            return charset;
-        }
-
-        public static bool CharsetIsSupported(string charset) {
-            try {
+        public static bool CharsetIsSupported(string charset)
+        {
+            try
+            {
                 var enc = EncodingUtil.GetEncoding(charset);
                 return true;
-            } catch (ArgumentException) {
+            }
+            catch (ArgumentException)
+            {
                 return false;
             }
         }
-
-        [System.ObsoleteAttribute(@"use iText.IO.Util.Matcher.Find")]
-        public static bool IsSuccessful(Match m) {
-            return m.Success;
-        }
-    }
-
-    public class IdentityComparaor<T> : EqualityComparer<T>
-    {
-        public override bool Equals(T x, T y)
+        
+        public static int ToInt32(string value, int codeBase)
         {
-            return GetHashCode(x) == GetHashCode(y) && object.ReferenceEquals(x, y);
-        }
+            if (codeBase == 2 || codeBase == 8 || codeBase == 10 || codeBase == 16)
+            {
+                return Convert.ToInt32(value, codeBase);
+            }
 
-        public override int GetHashCode(T obj)
-        {
-            return Default.GetHashCode(obj);
-        }
-    }
+            int result = 0;
+            string symbols = "0123456789abcdefghijklmnopqrstuvwxyz".Substring(0, codeBase);
+            for (int i = 0; i < value.Length; i++)
+            {
+                char ch = value[i];
+                int number = symbols.IndexOf(ch);
+                if (number == -1)
+                {
+                    throw new ArgumentException("String cannot be parsed");
+                }
 
-    public class IdentityDictionary<TKey, TValue> : Dictionary<TKey, TValue>
-    {
+                result += number * (int) Math.Pow(codeBase, value.Length - i - 1);
+            }
 
-        public IdentityDictionary() :
-            base(new IdentityComparaor<TKey>())
-        {
+            return result;
         }
 
-        public IdentityDictionary(Int32 capasity) :
-            base(capasity, new IdentityComparaor<TKey>())
+        public static string TrimControlCodes(string str)
         {
-        }
+            char[] controlCodes = new char[' ' + 1];
+            for (int i = 0; i < ' ' + 1; ++i)
+            {
+                controlCodes[i] = (char) i;
+            }
 
-        public IdentityDictionary(IDictionary<TKey, TValue> dictionary) :
-            base(dictionary, new IdentityComparaor<TKey>())
-        {
+            return str.Trim(controlCodes);
         }
     }
 }

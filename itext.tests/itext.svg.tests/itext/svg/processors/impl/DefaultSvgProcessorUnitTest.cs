@@ -49,6 +49,7 @@ using iText.Svg;
 using iText.Svg.Dummy.Processors.Impl;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Processors;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
@@ -120,7 +121,7 @@ namespace iText.Svg.Processors.Impl {
         /*
         Invalid input: null
         */
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_ADDING_CHILD_NODE)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_ADDING_CHILD_NODE)]
         public virtual void DummyProcessingTestNodeHasNullChild() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
@@ -140,7 +141,6 @@ namespace iText.Svg.Processors.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void DummyProcessingSvgTagIsNotRootOfInput() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupRandomElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
                 (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("body"), "");
@@ -175,7 +175,7 @@ namespace iText.Svg.Processors.Impl {
             ISvgConverterProperties props = new DummySvgConverterProperties();
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => processor.Process(root, props
                 ).GetRootRenderer());
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.NOROOT, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.NO_ROOT, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -229,7 +229,7 @@ namespace iText.Svg.Processors.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void DepthFirstNullRendererTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupNonExistingElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
                 (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("nonExisting"), "");

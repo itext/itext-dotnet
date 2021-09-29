@@ -43,9 +43,10 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 using System.Linq;
-using Common.Logging;
-using iText.IO.Util;
-using iText.Kernel;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Tagging {
@@ -149,8 +150,8 @@ namespace iText.Kernel.Pdf.Tagging {
         private void RegisterMcr(PdfMcr mcr, bool registeringOnInit) {
             PdfIndirectReference mcrPageIndRef = mcr.GetPageIndirectReference();
             if (mcrPageIndRef == null || (!(mcr is PdfObjRef) && mcr.GetMcid() < 0)) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
-                logger.Error(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ENCOUNTERED_INVALID_MCR);
                 return;
             }
             ParentTreeHandler.PageMcrsContainer pageMcrs = pageToPageMcrs.Get(mcrPageIndRef);
@@ -179,8 +180,8 @@ namespace iText.Kernel.Pdf.Tagging {
                 }
                 else {
                     // TODO DEVSIX-3351 an error is thrown here because right now no /StructParents will be created.
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
-                    logger.Error(iText.IO.LogMessageConstant.XOBJECT_HAS_NO_STRUCT_PARENTS);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.XOBJECT_HAS_NO_STRUCT_PARENTS);
                 }
                 pageMcrs.PutXObjectMcr(stmIndRef, mcr);
                 if (registeringOnInit) {
@@ -191,7 +192,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 if (mcr is PdfObjRef) {
                     PdfDictionary obj = ((PdfDictionary)mcr.GetPdfObject()).GetAsDictionary(PdfName.Obj);
                     if (obj == null || obj.IsFlushed()) {
-                        throw new PdfException(PdfException.WhenAddingObjectReferenceToTheTagTreeItMustBeConnectedToNotFlushedObject
+                        throw new PdfException(KernelExceptionMessageConstant.WHEN_ADDING_OBJECT_REFERENCE_TO_THE_TAG_TREE_IT_MUST_BE_CONNECTED_TO_NOT_FLUSHED_OBJECT
                             );
                     }
                     PdfNumber n = obj.GetAsNumber(PdfName.StructParent);
@@ -199,7 +200,7 @@ namespace iText.Kernel.Pdf.Tagging {
                         pageMcrs.PutObjectReferenceMcr(n.IntValue(), mcr);
                     }
                     else {
-                        throw new PdfException(PdfException.StructParentIndexNotFoundInTaggedObject);
+                        throw new PdfException(KernelExceptionMessageConstant.STRUCT_PARENT_INDEX_NOT_FOUND_IN_TAGGED_OBJECT);
                     }
                 }
                 else {
@@ -218,7 +219,8 @@ namespace iText.Kernel.Pdf.Tagging {
                 return;
             }
             if (pageDict.IsFlushed()) {
-                throw new PdfException(PdfException.CannotRemoveMarkedContentReferenceBecauseItsPageWasAlreadyFlushed);
+                throw new PdfException(KernelExceptionMessageConstant.CANNOT_REMOVE_MARKED_CONTENT_REFERENCE_BECAUSE_ITS_PAGE_WAS_ALREADY_FLUSHED
+                    );
             }
             ParentTreeHandler.PageMcrsContainer pageMcrs = pageToPageMcrs.Get(pageDict.GetIndirectReference());
             if (pageMcrs != null) {

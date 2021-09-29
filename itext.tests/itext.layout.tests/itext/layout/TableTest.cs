@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -55,11 +56,10 @@ using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
-using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
-    public class TableTest : ExtendedITextTest {
+    public class TableTest : AbstractTableTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/TableTest/";
 
@@ -141,14 +141,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + TEXT_CONTENT
                 )));
-            table.AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 2:3\n" + textContent + textContent + textContent))
-                );
-            table.AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + textContent)));
-            table.AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent)));
+            table.AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 2:3\n" + TEXT_CONTENT + TEXT_CONTENT + TEXT_CONTENT
+                )));
+            table.AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + TEXT_CONTENT)));
+            table.AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -162,12 +160,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 1:3\n"
-                 + textContent + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + textContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + textContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 3, 2\n" + textContent)));
+                 + TEXT_CONTENT + TEXT_CONTENT + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + 
+                TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + TEXT_CONTENT))).AddCell(new Cell(
+                ).Add(new Paragraph("cell 3, 2\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -181,12 +177,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
-                ))).AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 2:3\n" + textContent + textContent))).AddCell(new 
-                Cell().Add(new Paragraph("cell 2, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n"
-                 + textContent)));
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + TEXT_CONTENT
+                ))).AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 2:3\n" + TEXT_CONTENT + TEXT_CONTENT))).AddCell(
+                new Cell().Add(new Paragraph("cell 2, 1\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n"
+                 + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -200,12 +194,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 1:3\n"
-                 + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + textContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 2, 2\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 2\n"
-                 + textContent)));
+                 + TEXT_CONTENT + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + TEXT_CONTENT)))
+                .AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
+                ("cell 3, 2\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -219,17 +211,15 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add(new Paragraph("cell 1:2, 1:3\n"
-                 + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + textContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 2, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n"
-                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent))).AddCell(new 
-                Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n"
-                 + middleTextContent)));
+                 + TEXT_CONTENT + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + TEXT_CONTENT)))
+                .AddCell(new Cell().Add(new Paragraph("cell 2, 3\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
+                ("cell 3, 3\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 4, 3\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -243,16 +233,14 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" 
                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + shortTextContent))).AddCell
                 (new Cell().Add(new Paragraph("cell 1, 3\n" + middleTextContent))).AddCell(new Cell(3, 2).Add(new Paragraph
-                ("cell 2:2, 1:3\n" + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 3\n" +
-                 middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n" + middleTextContent))).AddCell
+                ("cell 2:2, 1:3\n" + TEXT_CONTENT + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 2, 3\n"
+                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n" + middleTextContent))).AddCell
                 (new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
                 ("cell 5, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent
                 ))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent)));
@@ -386,19 +374,17 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add(new Paragraph("cell 1:2, 1:3\n"
-                 + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + textContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 2, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n"
-                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent))).AddCell(new 
-                Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n"
-                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 5, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n" + middleTextContent
+                 + TEXT_CONTENT + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + TEXT_CONTENT)))
+                .AddCell(new Cell().Add(new Paragraph("cell 2, 3\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
+                ("cell 3, 3\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 4, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 5, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n" + middleTextContent
                 ))).AddCell(new Cell().Add(new Paragraph("cell 6, 2\n" + middleTextContent))).AddCell(new Cell().Add(new 
                 Paragraph("cell 6, 3\n" + middleTextContent)));
             doc.Add(table);
@@ -414,8 +400,6 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
@@ -424,12 +408,12 @@ namespace iText.Layout {
                 (new Cell().Add(new Paragraph("cell 1, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
                 ("cell 2, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + shortTextContent
                 ))).AddCell(new Cell().Add(new Paragraph("cell 2, 3\n" + middleTextContent))).AddCell(new Cell(3, 2).Add
-                (new Paragraph("cell 3:2, 1:3\n" + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n"
-                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + textContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 5, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n"
-                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 2\n" + shortTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 6, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 7, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 7, 2\n" + middleTextContent
+                (new Paragraph("cell 3:2, 1:3\n" + TEXT_CONTENT + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
+                ("cell 3, 3\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + TEXT_CONTENT))).
+                AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
+                ("cell 6, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 2\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 6, 3\n" + middleTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 7, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 7, 2\n" + middleTextContent
                 ))).AddCell(new Cell().Add(new Paragraph("cell 7, 3\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
@@ -444,12 +428,11 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
-                 + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
+            String longTextContent = "1. " + TEXT_CONTENT + "2. " + TEXT_CONTENT + "3. " + TEXT_CONTENT + "4. " + TEXT_CONTENT
+                 + "5. " + TEXT_CONTENT + "6. " + TEXT_CONTENT + "7. " + TEXT_CONTENT + "8. " + TEXT_CONTENT + "9. " +
+                 TEXT_CONTENT;
             Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + longTextContent
                 ))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + middleTextContent)).SetBorder(new SolidBorder
                 (ColorConstants.RED, 2))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + middleTextContent + middleTextContent
@@ -461,7 +444,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest17() {
             String testName = "tableTest17.pdf";
             String outFileName = destinationFolder + testName;
@@ -484,7 +467,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest18() {
             String testName = "tableTest18.pdf";
             String outFileName = destinationFolder + testName;
@@ -508,7 +491,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest19() {
             String testName = "tableTest19.pdf";
             String outFileName = destinationFolder + testName;
@@ -533,7 +516,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest20() {
             String testName = "tableTest20.pdf";
             String outFileName = destinationFolder + testName;
@@ -555,19 +538,17 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest21() {
             String testName = "tableTest21.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            doc.Add(new Paragraph(textContent));
+            doc.Add(new Paragraph(TEXT_CONTENT));
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new iText.Layout.Element.Image
                 (ImageDataFactory.Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n"
                  + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell
@@ -658,13 +639,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
-                 + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+            String longTextContent = "1. " + TEXT_CONTENT + "2. " + TEXT_CONTENT + "3. " + TEXT_CONTENT + "4. " + TEXT_CONTENT
+                 + "5. " + TEXT_CONTENT + "6. " + TEXT_CONTENT + "7. " + TEXT_CONTENT + "8. " + TEXT_CONTENT + "9. " +
+                 TEXT_CONTENT;
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + TEXT_CONTENT
                 ))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n" + longTextContent))).AddCell(new Cell().Add
                 (new Paragraph("cell 2, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n"
                  + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + middleTextContent))).AddCell
@@ -682,17 +662,16 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
-                 + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+            String longTextContent = "1. " + TEXT_CONTENT + "2. " + TEXT_CONTENT + "3. " + TEXT_CONTENT + "4. " + TEXT_CONTENT
+                 + "5. " + TEXT_CONTENT + "6. " + TEXT_CONTENT + "7. " + TEXT_CONTENT + "8. " + TEXT_CONTENT + "9. " +
+                 TEXT_CONTENT;
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + TEXT_CONTENT
                 ))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n" + longTextContent))).AddCell(new Cell().Add
-                (new Paragraph("cell 2, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 5, 1\n" + textContent)));
+                (new Paragraph("cell 2, 1\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + TEXT_CONTENT
+                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
+                ("cell 5, 1\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -706,15 +685,13 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + TEXT_CONTENT
                 ))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n" + middleTextContent))).AddCell(new Cell().Add
-                (new Paragraph("cell 2, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 5, 1\n" + textContent)));
+                (new Paragraph("cell 2, 1\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + TEXT_CONTENT
+                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
+                ("cell 5, 1\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -728,17 +705,16 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
-                 + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+            String longTextContent = "1. " + TEXT_CONTENT + "2. " + TEXT_CONTENT + "3. " + TEXT_CONTENT + "4. " + TEXT_CONTENT
+                 + "5. " + TEXT_CONTENT + "6. " + TEXT_CONTENT + "7. " + TEXT_CONTENT + "8. " + TEXT_CONTENT + "9. " +
+                 TEXT_CONTENT;
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + TEXT_CONTENT
                 ))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n" + longTextContent))).AddCell(new Cell().Add
-                (new Paragraph("cell 2, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent
-                ))).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph("cell 4, 1\n" + textContent))).AddCell(
-                new Cell().Add(new Paragraph("cell 5, 1\n" + textContent)));
+                (new Paragraph("cell 2, 1\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + TEXT_CONTENT
+                ))).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph("cell 4, 1\n" + TEXT_CONTENT))).AddCell
+                (new Cell().Add(new Paragraph("cell 5, 1\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -752,14 +728,13 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
-                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
-            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
-                 + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+            String longTextContent = "1. " + TEXT_CONTENT + "2. " + TEXT_CONTENT + "3. " + TEXT_CONTENT + "4. " + TEXT_CONTENT
+                 + "5. " + TEXT_CONTENT + "6. " + TEXT_CONTENT + "7. " + TEXT_CONTENT + "8. " + TEXT_CONTENT + "9. " +
+                 TEXT_CONTENT;
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + TEXT_CONTENT
                 ))).AddCell(new Cell(2, 1).Add(new Paragraph("cell 1, 1 and 2\n" + longTextContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 2, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n"
-                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 2\n" + textContent)));
+                ().Add(new Paragraph("cell 2, 1\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n"
+                 + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 3, 2\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -861,7 +836,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void ToLargeElementWithKeepTogetherPropertyInTableTest01() {
             String testName = "toLargeElementWithKeepTogetherPropertyInTableTest01.pdf";
@@ -887,7 +862,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void ToLargeElementInTableTest01() {
             String testName = "toLargeElementInTableTest01.pdf";
@@ -998,7 +973,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void SplitTableOnShortPage() {
             String testName = "splitTableOnShortPage.pdf";
@@ -1115,7 +1090,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 3)]
         [NUnit.Framework.Test]
         public virtual void TableWithSetHeightProperties01() {
             String testName = "tableWithSetHeightProperties01.pdf";
@@ -1179,7 +1154,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 3)]
         [NUnit.Framework.Test]
         public virtual void TableWithSetHeightProperties02() {
             String testName = "tableWithSetHeightProperties02.pdf";
@@ -1356,7 +1331,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void BigFooterTest01() {
             String testName = "bigFooterTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -1374,7 +1349,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void BigFooterTest02() {
             String testName = "bigFooterTest02.pdf";
             String outFileName = destinationFolder + testName;
@@ -1437,22 +1412,19 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorderTop(new SolidBorder(ColorConstants
                 .ORANGE, 50)).SetBorderBottom(new SolidBorder(ColorConstants.MAGENTA, 100)));
-            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
-                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Add(new AreaBreak());
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().SetPadding(0)
                 .SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border
                 .NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell
                 ().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().Add(new Paragraph("Hello"
                 ))));
-            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
-                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Add(new AreaBreak());
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetMinHeight(300).SetBorderRight
                 (new SolidBorder(ColorConstants.ORANGE, 5)).SetBorderTop(new SolidBorder(100)).SetBorderBottom(new SolidBorder
                 (ColorConstants.BLUE, 50)));
-            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
-                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -1470,15 +1442,14 @@ namespace iText.Layout {
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
-                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void TableWithIncompleteFooter() {
             String testName = "tableWithIncompleteFooter.pdf";
             String outFileName = destinationFolder + testName;
@@ -1497,8 +1468,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
-        [LogMessage(iText.IO.LogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void TableWithCustomRendererTest01() {
             String testName = "tableWithCustomRendererTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -1677,8 +1648,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void TableNothingResultTest() {
             String testName = "tableNothingResultTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -1803,7 +1774,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void FixedPositionTest01() {
             String testName = "fixedPositionTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -1833,7 +1804,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void NestedTableLostContent() {
             // When the test was created, only first line of text was displayed on the first page
             String testName = "nestedTableLostContent.pdf";
@@ -1858,7 +1829,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void NestedTableMinMaxWidthException() {
             // When the test was created, an exception was thrown due to min-max width calculations for an inner table.
             // At some point isOriginalNonSplitRenderer was true for a parent renderer but false for the inner table renderer
@@ -2065,7 +2036,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void SplitTableMinMaxWidthTest01() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document doc = new Document(pdfDoc);
@@ -2444,29 +2415,76 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Ignored because the test enters an infinite loop when closing a document. Remove ignore after fixing DEVSIX-3356"
-            )]
-        public virtual void InfiniteLoopOnUnfitCellAndBigRowspanTest() {
-            // TODO remove ignore after fixing DEVSIX-3356
-            String testName = "infiniteLoopOnUnfitCellAndBigRowspanTest.pdf";
+        public virtual void FirstRowPartiallyFitWideBottomBorderTest() {
+            String testName = "firstRowPartiallyFitWideBottomBorderTest.pdf";
             String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
-            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
-            Table table = new Table(38);
-            table.UseAllAvailableWidth();
-            table.SetFixedLayout();
-            Cell cellNum1 = new Cell(1, 1);
-            table.AddCell(cellNum1);
-            Cell cellNum2 = new Cell(2, 2);
-            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itext.png"
-                ));
-            cellNum2.Add(img);
-            table.AddCell(cellNum2);
-            Cell cellNum3 = new Cell(2, 36);
-            cellNum3.Add(new Paragraph("text"));
-            table.AddCell(cellNum3);
+            Document doc = new Document(pdfDoc, PageSize.A4);
+            Table table = new Table(1);
+            table.SetBorderBottom(new SolidBorder(ColorConstants.RED, 250));
+            Cell notFitCell = new Cell();
+            notFitCell.Add(new Paragraph("Some text which should be big enough."));
+            notFitCell.SetFontSize(100);
+            table.AddCell(notFitCell);
+            table.AddCell("row 2 col 1");
+            table.AddCell("row 2 col 2");
             doc.Add(table);
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
+            doc.Add(new AreaBreak());
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            doc.Add(table);
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CollapseWithNextRowWiderThanWithTableBorderTest() {
+            String testName = "collapseWithNextRowWiderThanWithTableBorderTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A4);
+            Table table = new Table(1);
+            Cell cell1 = new Cell();
+            cell1.Add(new Paragraph("Usual bottom border"));
+            cell1.SetHeight(300);
+            table.AddCell(cell1);
+            Cell cell2 = new Cell();
+            cell2.Add(new Paragraph("Top border: 600pt"));
+            cell2.SetBorderTop(new SolidBorder(600));
+            table.AddCell(cell2);
+            doc.Add(table);
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
+            doc.Add(new AreaBreak());
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            doc.Add(table);
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableBottomBorderWideTest() {
+            String testName = "tableBottomBorderWideTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(1).SetBorderBottom(new SolidBorder(ColorConstants.RED, 500)).AddCell(new Cell().Add
+                (new Paragraph(TEXT_CONTENT + TEXT_CONTENT + TEXT_CONTENT + TEXT_CONTENT))).AddCell(new Cell().Add(new 
+                Paragraph("Hello World")));
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            doc.Add(table);
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
@@ -2559,6 +2577,58 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void InfiniteLoopOnUnfitCellAndBigRowspanTest() {
+            String testName = "infiniteLoopOnUnfitCellAndBigRowspanTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
+            Table table = new Table(38);
+            table.UseAllAvailableWidth();
+            table.SetFixedLayout();
+            Cell cellNum1 = new Cell(1, 1);
+            table.AddCell(cellNum1);
+            Cell cellNum2 = new Cell(2, 2);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itext.png"
+                ));
+            cellNum2.Add(img);
+            table.AddCell(cellNum2);
+            Cell cellNum3 = new Cell(2, 36);
+            cellNum3.Add(new Paragraph("text"));
+            table.AddCell(cellNum3);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        public virtual void FirstRowNotFitBigRowspanTest() {
+            String testName = "firstRowNotFitBigRowspanTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A4);
+            Table table = new Table(4);
+            table.AddCell("row 1 col 1");
+            Cell notFitCell = new Cell(2, 1);
+            notFitCell.Add(new Paragraph("row 1-2 col 2"));
+            notFitCell.SetFontSize(1000);
+            table.AddCell(notFitCell);
+            Cell fitCell = new Cell(2, 2);
+            fitCell.Add(new Paragraph("row 1-2 col 3-4"));
+            table.AddCell(fitCell);
+            table.AddCell("row 2 col 1");
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void BigRowSpanTooFarFullTest() {
             // TODO DEVSIX-5250 The first column should be fully red
             String filename = "bigRowSpanTooFarFullTest.pdf";
@@ -2605,7 +2675,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void BigRowSpanTooFarNothingTest() {
             // TODO DEVSIX-5250 The first column should be fully red
             String filename = "bigRowSpanTooFarNothingTest.pdf";
@@ -2637,7 +2707,8 @@ namespace iText.Layout {
             }
 
             protected internal override PageSize AddNewPage(PageSize customPageSize) {
-                PageSize pageSize = currentPageNumber % 2 == 1 ? PageSize.A4 : PageSize.A4.Rotate();
+                int currentNumberOfPages = document.GetPdfDocument().GetNumberOfPages();
+                PageSize pageSize = currentNumberOfPages % 2 == 1 ? PageSize.A4.Rotate() : PageSize.A4;
                 pdfDoc.AddNewPage(pageSize);
                 return pageSize;
             }

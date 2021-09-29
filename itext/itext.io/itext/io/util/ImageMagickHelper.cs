@@ -42,8 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Text;
-using iText.IO;
+using iText.Commons.Utils;
+using iText.IO.Exceptions;
 
 namespace iText.IO.Util {
     /// <summary>A utility class that is used as an interface to run 3rd-party tool ImageMagick.</summary>
@@ -65,6 +65,8 @@ namespace iText.IO.Util {
         internal const String MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY = "compareExec";
 
         internal const String MAGICK_COMPARE_KEYWORD = "ImageMagick Studio LLC";
+
+        private const String TEMP_FILE_PREFIX = "itext_im_io_temp";
 
         private String compareExec;
 
@@ -126,11 +128,46 @@ namespace iText.IO.Util {
         /// <returns>boolean result of comparing: true - images are visually equal</returns>
         public virtual bool RunImageMagickImageCompare(String outImageFilePath, String cmpImageFilePath, String diffImageName
             , String fuzzValue) {
+            if (!ValidateFuzziness(fuzzValue)) {
+                throw new ArgumentException("Invalid fuzziness value: " + fuzzValue);
+            }
             fuzzValue = (fuzzValue == null) ? "" : " -metric AE -fuzz <fuzzValue>%".Replace("<fuzzValue>", fuzzValue);
-            StringBuilder currCompareParams = new StringBuilder();
-            currCompareParams.Append(fuzzValue).Append(" '").Append(outImageFilePath).Append("' '").Append(cmpImageFilePath
-                ).Append("' '").Append(diffImageName).Append("'");
-            return SystemUtil.RunProcessAndWait(compareExec, currCompareParams.ToString());
+            String replacementOutFile = null;
+            String replacementCmpFile = null;
+            String replacementDiff = null;
+            try {
+                replacementOutFile = FileUtil.CreateTempCopy(outImageFilePath, TEMP_FILE_PREFIX, null);
+                replacementCmpFile = FileUtil.CreateTempCopy(cmpImageFilePath, TEMP_FILE_PREFIX, null);
+                // ImageMagick generates difference images in .png format, therefore we can specify it.
+                // For some reason .webp comparison fails if the extension of diff image is not specified.
+                replacementDiff = FileUtil.CreateTempFile(TEMP_FILE_PREFIX, ".png").FullName;
+                String currCompareParams = fuzzValue + " '" + replacementOutFile + "' '" + replacementCmpFile + "' '" + replacementDiff
+                     + "'";
+                bool result = SystemUtil.RunProcessAndWait(compareExec, currCompareParams);
+                if (FileUtil.FileExists(replacementDiff)) {
+                    FileUtil.Copy(replacementDiff, diffImageName);
+                }
+                return result;
+            }
+            finally {
+                FileUtil.RemoveFiles(new String[] { replacementOutFile, replacementCmpFile, replacementDiff });
+            }
+        }
+
+        internal static bool ValidateFuzziness(String fuzziness) {
+            if (null == fuzziness) {
+                return true;
+            }
+            else {
+                try {
+                    return Double.Parse(fuzziness, System.Globalization.CultureInfo.InvariantCulture) >= 0;
+                }
+                catch (FormatException) {
+                    // In case of an exception the string could not be parsed to double,
+                    // therefore it is considered to be invalid.
+                    return false;
+                }
+            }
         }
     }
 }

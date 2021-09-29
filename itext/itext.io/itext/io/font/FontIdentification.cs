@@ -86,7 +86,7 @@ namespace iText.IO.Font {
         }
 
         protected internal virtual void SetPanose(byte[] panose) {
-            this.panose = iText.IO.Util.JavaUtil.GetStringForBytes(panose);
+            this.panose = iText.Commons.Utils.JavaUtil.GetStringForBytes(panose);
         }
 
         protected internal virtual void SetPanose(String panose) {

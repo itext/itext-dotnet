@@ -45,11 +45,10 @@ using System.Collections.Generic;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using iText.IO.Source;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     internal class SmartModePdfObjectsSerializer {
-        [System.NonSerialized]
         private IDigest md5;
 
         private Dictionary<SerializedObjectContent, PdfIndirectReference> serializedContentToObj = new Dictionary<

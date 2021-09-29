@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Geom;
-using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Test;
 using iText.Test.Attributes;
@@ -201,7 +201,8 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 8)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+            , Count = 8)]
         public virtual void PatternContentUnitsObjBoundBoxAbsoluteCoordTest() {
             // TODO DEVSIX-4834 support relative units in attributes of svg elements
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternContentUnitsObjBoundBoxAbsoluteCoord");
@@ -209,7 +210,8 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         //TODO DEVSIX-4834 support relative units in attributes of svg elements
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 8)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+            , Count = 8)]
         public virtual void ViewBoxAndAbsoluteCoordinatesTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxAndAbsoluteCoordinates");
         }
@@ -310,7 +312,8 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 2)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+            , Count = 2)]
         public virtual void SeveralComplexElementsInsidePatternTest() {
             // TODO DEVSIX-4834 support relative units in attributes of svg elements
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "severalComplexElementsInsidePattern");

@@ -47,8 +47,8 @@ using System.IO;
 using iText.IO.Font;
 using iText.IO.Image;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -226,7 +226,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <summary>Reads and processes all the data of the InputMeta.</summary>
         public virtual void ReadAll() {
             if (@in.ReadInt() != unchecked((int)(0x9AC6CDD7))) {
-                throw new PdfException(PdfException.NotAPlaceableWindowsMetafile);
+                throw new PdfException(KernelExceptionMessageConstant.NOT_A_PLACEABLE_WINDOWS_METAFILE);
             }
             @in.ReadWord();
             left = @in.ReadShort();
@@ -574,10 +574,10 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                         }
                         String s;
                         try {
-                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
+                            s = iText.Commons.Utils.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
                         }
                         catch (ArgumentException) {
-                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
+                            s = iText.Commons.Utils.JavaUtil.GetStringForBytes(text, 0, k);
                         }
                         OutputText(x, y, flag, x1, y1, x2, y2, s);
                         break;
@@ -596,10 +596,10 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                         }
                         String s;
                         try {
-                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
+                            s = iText.Commons.Utils.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
                         }
                         catch (ArgumentException) {
-                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
+                            s = iText.Commons.Utils.JavaUtil.GetStringForBytes(text, 0, k);
                         }
                         count = count + 1 & 0xfffe;
                         @in.Skip(count - k);
@@ -676,7 +676,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                             float height = -destHeight * bmpImage.GetHeight() / srcHeight;
                             float x = xDest - destWidth * xSrc / srcWidth;
                             float y = yDest + destHeight * ySrc / srcHeight - height;
-                            cb.AddXObject(imageXObject, new Rectangle(x, y, width, height));
+                            cb.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(x, y, width, height));
                             cb.RestoreState();
                         }
                         catch (Exception) {
@@ -838,7 +838,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <returns>the wrapped BMP</returns>
         public static byte[] WrapBMP(ImageData image) {
             if (image.GetOriginalType() != ImageType.BMP) {
-                throw new PdfException(PdfException.OnlyBmpCanBeWrappedInWmf);
+                throw new PdfException(KernelExceptionMessageConstant.ONLY_BMP_CAN_BE_WRAPPED_IN_WMF);
             }
             Stream imgIn;
             byte[] data;

@@ -21,8 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
-using iText.IO.Util;
-using iText.Kernel;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Geom {
     /// <summary>Public helper class for transforming segments and paths.</summary>
@@ -101,7 +101,7 @@ namespace iText.Kernel.Geom {
                 return newPoints;
             }
             catch (NoninvertibleTransformException e) {
-                throw new PdfException(PdfException.NoninvertibleMatrixCannotBeProcessed, e);
+                throw new PdfException(KernelExceptionMessageConstant.NONINVERTIBLE_MATRIX_CANNOT_BE_PROCESSED, e);
             }
         }
     }

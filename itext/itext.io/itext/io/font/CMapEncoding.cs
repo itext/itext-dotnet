@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Font.Cmap;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -105,7 +107,8 @@ namespace iText.IO.Font {
                 this.codeSpaceRanges = cid2Code.GetCodeSpaceRanges();
             }
             catch (System.IO.IOException) {
-                LogManager.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.FAILED_TO_PARSE_ENCODING_STREAM);
+                ITextLogManager.GetLogger(GetType()).LogError(iText.IO.Logs.IoLogMessageConstant.FAILED_TO_PARSE_ENCODING_STREAM
+                    );
             }
         }
 
@@ -161,18 +164,6 @@ namespace iText.IO.Font {
         /// <returns>true, if the CMapEncoding was built with the cmap. Otherwise false.</returns>
         public virtual bool IsBuiltWith(String cmap) {
             return Object.Equals(cmap, this.cmap);
-        }
-
-        /// <param name="cid">a CID</param>
-        /// <returns>CMAP code as an int</returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. Use GetCmapBytes(int) instead.")]
-        public virtual int GetCmapCode(int cid) {
-            if (isDirect) {
-                return cid;
-            }
-            else {
-                return ToInteger(cid2Code.Lookup(cid));
-            }
         }
 
         public virtual byte[] GetCmapBytes(int cid) {
@@ -245,15 +236,6 @@ namespace iText.IO.Font {
                 }
             }
             return false;
-        }
-
-        private static int ToInteger(byte[] bytes) {
-            int result = 0;
-            foreach (byte b in bytes) {
-                result <<= 8;
-                result += b & 0xff;
-            }
-            return result;
         }
     }
 }

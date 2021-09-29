@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
@@ -271,7 +272,7 @@ namespace iText.IO.Font {
                 return EncodingUtil.ConvertToBytes(text.ToCharArray(), encoding);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.CharacterCodeException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CharacterCodeException, e);
             }
         }
 
@@ -326,7 +327,7 @@ namespace iText.IO.Font {
                 return EncodingUtil.ConvertToBytes(new char[] { ch }, encoding);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.CharacterCodeException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CharacterCodeException, e);
             }
         }
 
@@ -383,7 +384,7 @@ namespace iText.IO.Font {
                 return EncodingUtil.ConvertToString(bytes, encoding);
             }
             catch (ArgumentException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.UnsupportedEncodingException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnsupportedEncodingException, e);
             }
         }
 

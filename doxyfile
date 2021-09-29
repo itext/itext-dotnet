@@ -32,7 +32,7 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = "iText 7 7.1.16 API"
+PROJECT_NAME           = "iText 7 7.2.0 API"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
@@ -914,12 +914,10 @@ EXCLUDE_PATTERNS       = */.git/* \
                          */bin/* \
                          */obj/* \
                          */itext.tests/* \
-                         */itext.pdftest/* \
-                         */bouncycastle/* \
+                         */itext.pdftest/* \                         
                          */itext/itext.io/itext/io/util/zlib/* \
                          */KeyVersionAttribute.cs \
-                         */TypographyVersionAttribute.cs \
-                         */LayoutRect.cs
+                         */TypographyVersionAttribute.cs \                         
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the

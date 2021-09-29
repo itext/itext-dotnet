@@ -43,12 +43,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Colors;
 using iText.IO.Font;
 using iText.IO.Image;
-using iText.IO.Util;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Colorspace;
@@ -365,7 +366,7 @@ namespace iText.Kernel.Pdf.Xobject {
             }
             stream = new PdfStream(image.GetData());
             String filter = image.GetFilter();
-            if (filter != null && "JPXDecode".Equals(filter) && image.GetColorSpace() <= 0) {
+            if (filter != null && "JPXDecode".Equals(filter) && image.GetColorEncodingComponentsNumber() <= 0) {
                 stream.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
                 image.SetBpc(0);
             }
@@ -377,7 +378,7 @@ namespace iText.Kernel.Pdf.Xobject {
             }
             if (!(image is PngImageData)) {
                 PdfName colorSpace;
-                switch (image.GetColorSpace()) {
+                switch (image.GetColorEncodingComponentsNumber()) {
                     case 1: {
                         colorSpace = PdfName.DeviceGray;
                         break;
@@ -401,7 +402,7 @@ namespace iText.Kernel.Pdf.Xobject {
             if (image.GetFilter() != null) {
                 stream.Put(PdfName.Filter, new PdfName(image.GetFilter()));
             }
-            if (image.GetColorSpace() == -1) {
+            if (image.GetColorEncodingComponentsNumber() == -1) {
                 stream.Remove(PdfName.ColorSpace);
             }
             PdfDictionary additional = null;
@@ -440,19 +441,20 @@ namespace iText.Kernel.Pdf.Xobject {
                 if (colorSpaceObject != null) {
                     PdfColorSpace cs = PdfColorSpace.MakeColorSpace(colorSpaceObject);
                     if (cs == null) {
-                        LogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).Error(iText.IO.LogMessageConstant.IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE
-                            );
+                        ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
+                            .IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE);
                     }
                     else {
                         if (cs is PdfSpecialCs.Indexed) {
                             PdfColorSpace baseCs = ((PdfSpecialCs.Indexed)cs).GetBaseCs();
                             if (baseCs == null) {
-                                LogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).Error(iText.IO.LogMessageConstant.IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE
-                                    );
+                                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
+                                    .IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE);
                             }
                             else {
                                 if (baseCs.GetNumberOfComponents() != iccProfile.GetNumComponents()) {
-                                    LogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).Error(iText.IO.LogMessageConstant.IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE
+                                    ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
+                                        .IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE
                                         );
                                     iccProfileShouldBeApplied = false;
                                 }
@@ -467,8 +469,8 @@ namespace iText.Kernel.Pdf.Xobject {
                         }
                         else {
                             if (cs.GetNumberOfComponents() != iccProfile.GetNumComponents()) {
-                                LogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).Error(iText.IO.LogMessageConstant.IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_COLOR_SPACE
-                                    );
+                                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
+                                    .IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_COLOR_SPACE);
                                 iccProfileShouldBeApplied = false;
                             }
                             else {
@@ -629,7 +631,7 @@ namespace iText.Kernel.Pdf.Xobject {
 
         private static ImageData CheckImageType(ImageData image) {
             if (image is WmfImageData) {
-                throw new PdfException(PdfException.CannotCreatePdfImageXObjectByWmfImage);
+                throw new PdfException(KernelExceptionMessageConstant.CANNOT_CREATE_PDF_IMAGE_XOBJECT_BY_WMF_IMAGE);
             }
             return image;
         }

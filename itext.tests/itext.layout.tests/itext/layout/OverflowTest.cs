@@ -271,7 +271,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED)]
         public virtual void ForcedPlacementTest02() {
             String outFileName = destinationFolder + "forcedPlacementTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_forcedPlacementTest02.pdf";

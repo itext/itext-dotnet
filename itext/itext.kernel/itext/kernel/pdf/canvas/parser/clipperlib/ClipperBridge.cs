@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 
@@ -74,7 +74,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
     /// </description></item>
     /// </list>
     /// </remarks>
-    public class ClipperBridge {
+    public sealed class ClipperBridge {
         /// <summary>
         /// Since the clipper library uses integer coordinates, we should convert
         /// our floating point numbers into fixed point numbers by multiplying by
@@ -85,8 +85,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// our floating point numbers into fixed point numbers by multiplying by
         /// this coefficient. Vary it to adjust the preciseness of the calculations.
         /// </remarks>
-        public static double floatMultiplier = Math.Pow(10, 14);
+        public static double floatMultiplier = Math
+                //TODO DEVSIX-5770 make this constant a single non-static configuration
+                .Pow(10, 14);
 
+        private ClipperBridge() {
+        }
+
+        //empty constructor
         /// <summary>
         /// Converts Clipper library
         /// <see cref="PolyTree"/>
@@ -448,42 +454,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
             if (close) {
                 path.CloseSubpath();
             }
-        }
-
-        /// <summary>
-        /// Adds rectangle path based on array of
-        /// <see cref="iText.Kernel.Geom.Point"/>
-        /// (internally converting
-        /// them by
-        /// <see cref="ConvertToLongPoints(System.Collections.Generic.IList{E})"/>
-        /// ) and adds this path to
-        /// <see cref="Clipper"/>
-        /// instance.
-        /// </summary>
-        /// <param name="clipper">
-        /// 
-        /// <see cref="Clipper"/>
-        /// instance to which the created rectangle path will be added.
-        /// </param>
-        /// <param name="rectVertices">
-        /// an array of
-        /// <see cref="iText.Kernel.Geom.Point"/>
-        /// which will be internally converted
-        /// to clipper path and added to the clipper instance.
-        /// </param>
-        /// <param name="polyType">
-        /// either
-        /// <see cref="PolyType.SUBJECT"/>
-        /// or
-        /// <see cref="PolyType.CLIP"/>
-        /// denoting whether added
-        /// path is a subject of clipping or a part of the clipping polygon.
-        /// </param>
-        [System.ObsoleteAttribute(@"use AddPolygonToClipper(Clipper, iText.Kernel.Geom.Point[], PolyType) instead."
-            )]
-        public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType polyType) {
-            clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(JavaUtil.ArraysAsList(rectVertices)
-                ))), polyType, true);
         }
     }
 }

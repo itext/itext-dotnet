@@ -19,7 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iText.IO.Util;
+using iText.Commons.Utils;
 
 namespace iText.Layout.Hyphenation {
     /// <summary>
@@ -44,7 +44,6 @@ namespace iText.Layout.Hyphenation {
         protected internal TernaryTree classmap;
 
         /// <summary>Temporary map to store interletter values on pattern loading.</summary>
-        [System.NonSerialized]
         private TernaryTree ivalues;
 
         /// <summary>Default constructor.</summary>

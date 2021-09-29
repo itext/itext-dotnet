@@ -44,8 +44,8 @@ Copyright (c) 1998-2021 iText Group NV
 using System;
 using System.IO;
 using System.Text;
+using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.IO.Font {
     /// <summary>Converts a PFM file into an AFM file.</summary>
@@ -82,7 +82,7 @@ namespace iText.IO.Font {
                     break;
                 }
             }
-            return iText.IO.Util.JavaUtil.GetStringForBytes(b, 0, k, "ISO-8859-1");
+            return iText.Commons.Utils.JavaUtil.GetStringForBytes(b, 0, k, "ISO-8859-1");
         }
 
         private String ReadString() {

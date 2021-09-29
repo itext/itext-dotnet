@@ -45,17 +45,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
+using iText.Forms.Exceptions;
 using iText.Forms.Fields.Borders;
 using iText.Forms.Util;
-using iText.IO.Codec;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.IO.Source;
-using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -95,22 +96,6 @@ namespace iText.Forms.Fields {
         /// <summary>Flag that designates, if set, that the field's contents must be obfuscated.</summary>
         public static readonly int FF_PASSWORD = MakeFieldFlag(14);
 
-        /// <summary>Size of text in form fields when font size is not explicitly set.</summary>
-        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
-        public const int DEFAULT_FONT_SIZE = 12;
-
-        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
-        public const int MIN_FONT_SIZE = 4;
-
-        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
-        public const int DA_FONT = 0;
-
-        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
-        public const int DA_SIZE = 1;
-
-        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
-        public const int DA_COLOR = 2;
-
         public const int ALIGN_LEFT = 0;
 
         public const int ALIGN_CENTER = 1;
@@ -149,10 +134,26 @@ namespace iText.Forms.Fields {
 
         public static readonly int FF_NO_EXPORT = MakeFieldFlag(3);
 
-        [System.ObsoleteAttribute(@"Will be made package-private in iText 7.2.")]
-        public const float X_OFFSET = 2;
+        /// <summary>Default padding X offset</summary>
+        internal const float X_OFFSET = 2;
 
-        protected internal static String[] typeChars = new String[] { "4", "l", "8", "u", "n", "H" };
+        /// <summary>Size of text in form fields when font size is not explicitly set.</summary>
+        internal const int DEFAULT_FONT_SIZE = 12;
+
+        /// <summary>Minimal size of text in form fields</summary>
+        internal const int MIN_FONT_SIZE = 4;
+
+        /// <summary>Index of font value in default appearance element</summary>
+        internal const int DA_FONT = 0;
+
+        /// <summary>Index of font size value in default appearance element</summary>
+        internal const int DA_SIZE = 1;
+
+        /// <summary>Index of color value in default appearance element</summary>
+        internal const int DA_COLOR = 2;
+
+        private static readonly String[] CHECKBOX_TYPE_ZAPFDINGBATS_CODE = new String[] { "4", "l", "8", "u", "n", 
+            "H" };
 
         protected internal String text;
 
@@ -2109,7 +2110,8 @@ namespace iText.Forms.Fields {
             }
             else {
                 if (value is PdfStream) {
-                    return iText.IO.Util.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes(), System.Text.Encoding.UTF8);
+                    return iText.Commons.Utils.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes(), System.Text.Encoding.
+                        UTF8);
                 }
                 else {
                     if (value is PdfName) {
@@ -2239,24 +2241,6 @@ namespace iText.Forms.Fields {
                 defaultAppearance = (PdfString)GetAcroFormKey(PdfName.DA, PdfObject.STRING);
             }
             return defaultAppearance;
-        }
-
-        /// <summary>
-        /// Sets default appearance string containing a sequence of valid page-content graphics or text state operators that
-        /// define such properties as the field's text size and color.
-        /// </summary>
-        /// <param name="defaultAppearance">a valid sequence of PDF content stream syntax</param>
-        /// <returns>the edited field</returns>
-        [System.ObsoleteAttribute(@"use UpdateDefaultAppearance() instead.")]
-        public virtual iText.Forms.Fields.PdfFormField SetDefaultAppearance(String defaultAppearance) {
-            byte[] b = defaultAppearance.GetBytes(System.Text.Encoding.UTF8);
-            for (int k = 0; k < b.Length; ++k) {
-                if (b[k] == '\n') {
-                    b[k] = 32;
-                }
-            }
-            Put(PdfName.DA, new PdfString(iText.IO.Util.JavaUtil.GetStringForBytes(b, System.Text.Encoding.UTF8)));
-            return this;
         }
 
         /// <summary>Updates DA for Variable text, Push button and choice form fields.</summary>
@@ -2445,24 +2429,6 @@ namespace iText.Forms.Fields {
         /// <param name="font">The new font to be set</param>
         /// <param name="fontSize">The new font size to be set</param>
         /// <returns>The edited PdfFormField</returns>
-        [System.ObsoleteAttribute(@"use SetFontAndSize(iText.Kernel.Font.PdfFont, float) instead.")]
-        public virtual iText.Forms.Fields.PdfFormField SetFontAndSize(PdfFont font, int fontSize) {
-            UpdateFontAndFontSize(font, fontSize);
-            RegenerateField();
-            return this;
-        }
-
-        /// <summary>
-        /// Combined setter for the <c>font</c> and <c>fontSize</c>
-        /// properties.
-        /// </summary>
-        /// <remarks>
-        /// Combined setter for the <c>font</c> and <c>fontSize</c>
-        /// properties. Regenerates the field appearance after setting the new value.
-        /// </remarks>
-        /// <param name="font">The new font to be set</param>
-        /// <param name="fontSize">The new font size to be set</param>
-        /// <returns>The edited PdfFormField</returns>
         public virtual iText.Forms.Fields.PdfFormField SetFontAndSize(PdfFont font, float fontSize) {
             UpdateFontAndFontSize(font, fontSize);
             RegenerateField();
@@ -2561,7 +2527,7 @@ namespace iText.Forms.Fields {
                 checkType = TYPE_CROSS;
             }
             this.checkType = checkType;
-            text = typeChars[checkType - 1];
+            text = CHECKBOX_TYPE_ZAPFDINGBATS_CODE[checkType - 1];
             if (pdfAConformanceLevel != null) {
                 return this;
             }
@@ -2911,7 +2877,7 @@ namespace iText.Forms.Fields {
             if (rect == null) {
                 PdfArray kids = field.GetAsArray(PdfName.Kids);
                 if (kids == null) {
-                    throw new PdfException(PdfException.WrongFormFieldAddAnnotationToTheField);
+                    throw new PdfException(FormsExceptionMessageConstant.WRONG_FORM_FIELD_ADD_ANNOTATION_TO_THE_FIELD);
                 }
                 rect = ((PdfDictionary)kids.Get(0)).GetAsArray(PdfName.Rect);
             }
@@ -2934,41 +2900,6 @@ namespace iText.Forms.Fields {
                 array.Add(new PdfString(option, PdfEncodings.UNICODE_BIG));
             }
             return array;
-        }
-
-        /// <summary>Generate default appearance, /DA key.</summary>
-        /// <param name="font">
-        /// preferred font. If
-        /// <see cref="GetFont()"/>
-        /// is not null, it will be used instead.
-        /// </param>
-        /// <param name="fontSize">
-        /// preferred font size. If
-        /// <see cref="fontSize"/>
-        /// is valid,
-        /// it will be used instead.
-        /// </param>
-        /// <param name="color">color for the DA</param>
-        /// <param name="res">resources</param>
-        /// <returns>generated string</returns>
-        [System.ObsoleteAttribute(@"use UpdateDefaultAppearance() instead.")]
-        protected internal virtual String GenerateDefaultAppearanceString(PdfFont font, float fontSize, Color color
-            , PdfResources res) {
-            PdfStream stream = new PdfStream();
-            PdfCanvas canvas = new PdfCanvas(stream, res, GetDocument());
-            canvas.SetFontAndSize(font, fontSize);
-            if (color != null) {
-                canvas.SetColor(color, true);
-            }
-            return iText.IO.Util.JavaUtil.GetStringForBytes(stream.GetBytes(), System.Text.Encoding.UTF8);
-        }
-
-        /// <summary>Gets font and font size.</summary>
-        /// <param name="asNormal">normal appearance, will be ignored.</param>
-        /// <returns>array where first index is PdfFont and the second is font name.</returns>
-        [System.ObsoleteAttribute(@"use GetFont() and GetFontSize() instead.")]
-        protected internal virtual Object[] GetFontAndSize(PdfDictionary asNormal) {
-            return new Object[] { GetFont(), GetFontSize() };
         }
 
         protected internal static Object[] SplitDAelements(String da) {
@@ -3117,8 +3048,8 @@ namespace iText.Forms.Fields {
             }
             else {
                 if (this.GetFieldFlag(PdfTextFormField.FF_COMB)) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
                         ));
                 }
                 modelCanvas.ShowTextAligned(CreateParagraphForTextFieldValue(value).AddStyle(paragraphStyle).SetPaddings(0
@@ -3126,22 +3057,6 @@ namespace iText.Forms.Fields {
             }
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());
-        }
-
-        /// <summary>Draws the visual appearance of multiline text in a form field.</summary>
-        /// <param name="rect">The location on the page for the list field</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">The size of the font, will be ignored</param>
-        /// <param name="value">The initial value</param>
-        /// <param name="appearance">The appearance</param>
-        [System.ObsoleteAttribute(@"use DrawMultiLineTextAppearance(iText.Kernel.Geom.Rectangle, iText.Kernel.Font.PdfFont, System.String, iText.Kernel.Pdf.Xobject.PdfFormXObject) instead."
-            )]
-        protected internal virtual void DrawMultiLineTextAppearance(Rectangle rect, PdfFont font, float fontSize, 
-            String value, PdfFormXObject appearance) {
-            DrawMultiLineTextAppearance(rect, font, value, appearance);
         }
 
         protected internal virtual void DrawMultiLineTextAppearance(Rectangle rect, PdfFont font, String value, PdfFormXObject
@@ -3330,25 +3245,6 @@ namespace iText.Forms.Fields {
             }
         }
 
-        /// <summary>Draws the appearance of a radio button with a specified value.</summary>
-        /// <param name="width">the width of the radio button to draw</param>
-        /// <param name="height">the height of the radio button to draw</param>
-        /// <param name="value">the value of the button</param>
-        [System.ObsoleteAttribute(@"Please, use DrawRadioAppearance(float, float, System.String) instead.")]
-        protected internal virtual void DrawPdfA1RadioAppearance(float width, float height, String value) {
-            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
-            PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
-            Rectangle rect = new Rectangle(0, 0, width, height);
-            PdfFormXObject xObject = new PdfFormXObject(rect);
-            DrawBorder(canvas, xObject, width, height);
-            DrawRadioField(canvas, rect.GetWidth(), rect.GetHeight(), !"Off".Equals(value));
-            PdfDictionary normalAppearance = new PdfDictionary();
-            normalAppearance.Put(new PdfName(value), xObject.GetPdfObject());
-            PdfWidgetAnnotation widget = GetWidgets()[0];
-            xObject.GetPdfObject().GetOutputStream().WriteBytes(stream.GetBytes());
-            widget.SetNormalAppearance(normalAppearance);
-        }
-
         /// <summary>Draws a radio button.</summary>
         /// <param name="canvas">
         /// the
@@ -3377,14 +3273,13 @@ namespace iText.Forms.Fields {
             PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
             PdfFormXObject xObjectOn = new PdfFormXObject(rect);
             DrawBorder(canvasOn, xObjectOn, width, height);
-            DrawCheckBox(canvasOn, width, height, fontSize, true);
+            DrawCheckBox(canvasOn, width, height, fontSize);
             xObjectOn.GetPdfObject().GetOutputStream().WriteBytes(streamOn.GetBytes());
             xObjectOn.GetResources().AddFont(GetDocument(), GetFont());
             PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
             PdfFormXObject xObjectOff = new PdfFormXObject(rect);
             DrawBorder(canvasOff, xObjectOff, width, height);
-            DrawCheckBox(canvasOff, width, height, fontSize, false);
             xObjectOff.GetPdfObject().GetOutputStream().WriteBytes(streamOff.GetBytes());
             xObjectOff.GetResources().AddFont(GetDocument(), GetFont());
             PdfDictionary normalAppearance = new PdfDictionary();
@@ -3446,31 +3341,6 @@ namespace iText.Forms.Fields {
             widget.SetNormalAppearance(normalAppearance);
         }
 
-        /// <summary>Draws PDF/A-1 compliant check appearance.</summary>
-        /// <param name="width">width of the checkbox</param>
-        /// <param name="height">height of the checkbox</param>
-        /// <param name="selectedValue">the selected value of the checkbox which determines the appearance of the checkbox
-        ///     </param>
-        [System.ObsoleteAttribute(@"use DrawPdfA2CheckAppearance(float, float, System.String, int) instead.")]
-        protected internal virtual void DrawPdfA1CheckAppearance(float width, float height, String selectedValue, 
-            int checkType) {
-            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
-            PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
-            Rectangle rect = new Rectangle(0, 0, width, height);
-            PdfFormXObject xObject = new PdfFormXObject(rect);
-            this.checkType = checkType;
-            DrawBorder(canvas, xObject, width, height);
-            DrawPdfACheckBox(canvas, width, height, !"Off".Equals(selectedValue));
-            xObject.GetPdfObject().GetOutputStream().WriteBytes(stream.GetBytes());
-            PdfDictionary normalAppearance = new PdfDictionary();
-            normalAppearance.Put(new PdfName(selectedValue), xObject.GetPdfObject());
-            PdfDictionary mk = new PdfDictionary();
-            mk.Put(PdfName.CA, new PdfString(text));
-            PdfWidgetAnnotation widget = GetWidgets()[0];
-            widget.Put(PdfName.MK, mk);
-            widget.SetNormalAppearance(normalAppearance);
-        }
-
         /// <summary>Draws the appearance for a push button.</summary>
         /// <param name="width">the width of the pushbutton</param>
         /// <param name="height">the width of the pushbutton</param>
@@ -3492,14 +3362,14 @@ namespace iText.Forms.Fields {
             DrawBorder(canvas, xObject, width, height);
             if (img != null) {
                 PdfImageXObject imgXObj = new PdfImageXObject(img);
-                canvas.AddXObject(imgXObj, width - borderWidth, 0, 0, height - borderWidth, borderWidth / 2, borderWidth /
-                     2);
+                canvas.AddXObjectWithTransformationMatrix(imgXObj, width - borderWidth, 0, 0, height - borderWidth, borderWidth
+                     / 2, borderWidth / 2);
                 xObject.GetResources().AddImage(imgXObj);
             }
             else {
                 if (form != null) {
-                    canvas.AddXObject(form, (height - borderWidth) / form.GetHeight(), 0, 0, (height - borderWidth) / form.GetHeight
-                        (), borderWidth / 2, borderWidth / 2);
+                    canvas.AddXObjectWithTransformationMatrix(form, (height - borderWidth) / form.GetHeight(), 0, 0, (height -
+                         borderWidth) / form.GetHeight(), borderWidth / 2, borderWidth / 2);
                     xObject.GetResources().AddForm(form);
                 }
                 else {
@@ -3509,27 +3379,6 @@ namespace iText.Forms.Fields {
             }
             xObject.GetPdfObject().GetOutputStream().WriteBytes(stream.GetBytes());
             return xObject;
-        }
-
-        /// <summary>Draws the appearance for a push button.</summary>
-        /// <param name="width">the width of the pushbutton</param>
-        /// <param name="height">the width of the pushbutton</param>
-        /// <param name="text">the text to display on the button</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontName">will be ignored.</param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <returns>
-        /// a new
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// </returns>
-        [System.ObsoleteAttribute(@"use DrawPushButtonAppearance(float, float, System.String, iText.Kernel.Font.PdfFont, float) instead."
-            )]
-        protected internal virtual PdfFormXObject DrawPushButtonAppearance(float width, float height, String text, 
-            PdfFont font, PdfName fontName, float fontSize) {
-            return DrawPushButtonAppearance(width, height, text, font, fontSize);
         }
 
         /// <summary>Performs the low-level drawing operations to draw a button object.</summary>
@@ -3574,12 +3423,7 @@ namespace iText.Forms.Fields {
         /// <param name="width">the width of the button</param>
         /// <param name="height">the width of the button</param>
         /// <param name="fontSize">the size of the font</param>
-        /// <param name="on">the boolean value of the checkbox</param>
-        protected internal virtual void DrawCheckBox(PdfCanvas canvas, float width, float height, float fontSize, 
-            bool on) {
-            if (!on) {
-                return;
-            }
+        protected internal virtual void DrawCheckBox(PdfCanvas canvas, float width, float height, float fontSize) {
             if (checkType == TYPE_CROSS) {
                 DrawingUtil.DrawCross(canvas, width, height, borderWidth);
                 return;
@@ -4103,8 +3947,8 @@ namespace iText.Forms.Fields {
             }
             else {
                 //Avoid NPE when handling corrupt pdfs
-                ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                logger.Error(iText.IO.LogMessageConstant.INCORRECT_PAGEROTATION);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.INCORRECT_PAGEROTATION);
                 matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
             }
             //Apply field rotation
@@ -4298,8 +4142,8 @@ namespace iText.Forms.Fields {
                             pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(k);
                         }
                         else {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                            logger.Error(iText.IO.LogMessageConstant.UNSUPPORTED_COLOR_IN_DA);
+                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
+                            logger.LogError(iText.IO.Logs.IoLogMessageConstant.UNSUPPORTED_COLOR_IN_DA);
                         }
                     }
                 }

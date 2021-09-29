@@ -48,7 +48,7 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
@@ -132,9 +132,9 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ExpiredAuthorizedOCSPResponderTest_atValidPeriod() {
-            DateTime ocspResponderCertStartDate = DateTimeUtil.ParseSimpleFormat("15/10/2005", "dd/MM/yyyy");
-            DateTime ocspResponderCertEndDate = DateTimeUtil.ParseSimpleFormat("15/10/2010", "dd/MM/yyyy");
-            DateTime checkDate = DateTimeUtil.ParseSimpleFormat("15/10/2008", "dd/MM/yyyy");
+            DateTime ocspResponderCertStartDate = DateTimeUtil.Parse("15/10/2005", "dd/MM/yyyy");
+            DateTime ocspResponderCertEndDate = DateTimeUtil.Parse("15/10/2010", "dd/MM/yyyy");
+            DateTime checkDate = DateTimeUtil.Parse("15/10/2008", "dd/MM/yyyy");
             bool verifyRes = VerifyAuthorizedOCSPResponderTest(ocspResponderCertStartDate, ocspResponderCertEndDate, checkDate
                 );
             NUnit.Framework.Assert.IsTrue(verifyRes);
@@ -142,8 +142,8 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ExpiredAuthorizedOCSPResponderTest_now() {
-            DateTime ocspResponderCertStartDate = DateTimeUtil.ParseSimpleFormat("15/10/2005", "dd/MM/yyyy");
-            DateTime ocspResponderCertEndDate = DateTimeUtil.ParseSimpleFormat("15/10/2010", "dd/MM/yyyy");
+            DateTime ocspResponderCertStartDate = DateTimeUtil.Parse("15/10/2005", "dd/MM/yyyy");
+            DateTime ocspResponderCertEndDate = DateTimeUtil.Parse("15/10/2010", "dd/MM/yyyy");
             DateTime checkDate = DateTimeUtil.GetCurrentUtcTime();
             NUnit.Framework.Assert.Catch(typeof(CertificateExpiredException), () => VerifyAuthorizedOCSPResponderTest(
                 ocspResponderCertStartDate, ocspResponderCertEndDate, checkDate));

@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.Kernel;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
@@ -183,7 +184,7 @@ namespace iText.Kernel.Pdf.Action {
             PdfDocument pdfDocument) {
             PdfPage page = pdfAnnotation.GetPage();
             if (null == page) {
-                throw new PdfException(PdfException.AnnotationShallHaveReferenceToPage);
+                throw new PdfException(KernelExceptionMessageConstant.ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE);
             }
             else {
                 Put(PdfName.P, new PdfNumber(pdfDocument.GetPageNumber(page) - 1));
@@ -247,8 +248,8 @@ namespace iText.Kernel.Pdf.Action {
                 }
             }
             if (null == resultAnnotation) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfTarget));
-                logger.Error(iText.IO.LogMessageConstant.SOME_TARGET_FIELDS_ARE_NOT_SET_OR_INCORRECT);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfTarget));
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.SOME_TARGET_FIELDS_ARE_NOT_SET_OR_INCORRECT);
             }
             return resultAnnotation;
         }

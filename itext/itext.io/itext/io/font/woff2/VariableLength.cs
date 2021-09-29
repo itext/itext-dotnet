@@ -13,6 +13,8 @@
 // limitations under the License.
 //
 // This is part of java port of project hosted at https://github.com/google/woff2
+using iText.IO.Exceptions;
+
 namespace iText.IO.Font.Woff2 {
     // Helper functions for woff2 variable length types: 255UInt16 and UIntBase128
     internal class VariableLength {

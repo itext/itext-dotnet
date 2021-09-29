@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iText.Kernel;
+using iText.Commons.Actions.Data;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Data container for debugging information.</summary>
@@ -52,27 +53,27 @@ namespace iText.Kernel.Pdf {
     /// logger or to the file.
     /// </remarks>
     public class FingerPrint {
-        private ICollection<ProductInfo> productInfoSet;
+        private ICollection<ProductData> productDataSet;
 
         /// <summary>Default constructor.</summary>
-        /// <remarks>Default constructor. Initializes the productInfoSet.</remarks>
+        /// <remarks>Default constructor. Initializes the productDataSet.</remarks>
         public FingerPrint() {
-            this.productInfoSet = new HashSet<ProductInfo>();
+            this.productDataSet = new LinkedHashSet<ProductData>();
         }
 
         /// <summary>Registers a product to be added to the fingerprint or other debugging info.</summary>
-        /// <param name="productInfo">ProductInfo to be added</param>
+        /// <param name="productData">ProductData to be added</param>
         /// <returns>true if the fingerprint did not already contain the specified element</returns>
-        public virtual bool RegisterProduct(ProductInfo productInfo) {
-            int initialSize = productInfoSet.Count;
-            productInfoSet.Add(productInfo);
-            return initialSize != productInfoSet.Count;
+        public virtual bool RegisterProduct(ProductData productData) {
+            int initialSize = productDataSet.Count;
+            productDataSet.Add(productData);
+            return initialSize != productDataSet.Count;
         }
 
         /// <summary>Returns the registered products.</summary>
         /// <returns>registered products.</returns>
-        public virtual ICollection<ProductInfo> GetProducts() {
-            return this.productInfoSet;
+        public virtual ICollection<ProductData> GetProducts() {
+            return JavaCollectionsUtil.UnmodifiableSet(new LinkedHashSet<ProductData>(this.productDataSet));
         }
     }
 }

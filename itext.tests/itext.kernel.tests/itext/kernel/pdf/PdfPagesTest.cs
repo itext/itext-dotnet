@@ -43,11 +43,13 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Image;
-using iText.IO.Util;
-using iText.Kernel;
+using iText.IO.Source;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Xobject;
@@ -64,8 +66,6 @@ namespace iText.Kernel.Pdf {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfPagesTest/";
 
         private static readonly PdfName PageNum = new PdfName("PageNum");
-
-        private static readonly PdfName PageNum5 = new PdfName("PageNum");
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Setup() {
@@ -185,7 +185,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
         public virtual void InsertFlushedPageTest() {
             PdfWriter writer = new PdfWriter(new MemoryStream());
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -193,11 +193,12 @@ namespace iText.Kernel.Pdf {
             page.Flush();
             pdfDoc.RemovePage(page);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.AddPage(1, page));
-            NUnit.Framework.Assert.AreEqual(PdfException.FlushedPageCannotBeAddedOrInserted, e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.FLUSHED_PAGE_CANNOT_BE_ADDED_OR_INSERTED, e
+                .Message);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
         public virtual void AddFlushedPageTest() {
             PdfWriter writer = new PdfWriter(new MemoryStream());
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -205,11 +206,12 @@ namespace iText.Kernel.Pdf {
             page.Flush();
             pdfDoc.RemovePage(page);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.AddPage(page));
-            NUnit.Framework.Assert.AreEqual(PdfException.FlushedPageCannotBeAddedOrInserted, e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.FLUSHED_PAGE_CANNOT_BE_ADDED_OR_INSERTED, e
+                .Message);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED, Count = 2)]
         public virtual void RemoveFlushedPage() {
             String filename = "removeFlushedPage.pdf";
             int pageCount = 10;
@@ -237,7 +239,7 @@ namespace iText.Kernel.Pdf {
                 pdfDocument.AddNewPage();
                 pdfDocument.GetPage(1).Flush();
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.RemovePage(1));
-                NUnit.Framework.Assert.AreEqual(PdfException.FLUSHED_PAGE_CANNOT_BE_REMOVED, e.Message);
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.FLUSHED_PAGE_CANNOT_BE_REMOVED, e.Message);
             }
         }
 
@@ -248,7 +250,7 @@ namespace iText.Kernel.Pdf {
                 pdfDocument.AddNewPage();
                 pdfDocument.GetPage(1).Flush();
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.RemovePage(1));
-                NUnit.Framework.Assert.AreEqual(PdfException.FLUSHED_PAGE_CANNOT_BE_REMOVED, e.Message);
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.FLUSHED_PAGE_CANNOT_BE_REMOVED, e.Message);
             }
         }
 
@@ -439,7 +441,7 @@ namespace iText.Kernel.Pdf {
                 PdfFormXObject pageCopy = sourcePage.CopyAsFormXObject(outputPdf);
                 PdfPage page = outputPdf.AddNewPage(PageSize.A4);
                 PdfCanvas outputCanvas = new PdfCanvas(page);
-                outputCanvas.AddXObject(pageCopy, scaleX, 0, 0, scaleY, 0, 0);
+                outputCanvas.AddXObjectWithTransformationMatrix(pageCopy, scaleX, 0, 0, scaleY, 0, 0);
                 page.Flush();
             }
             outputPdf.Close();
@@ -449,7 +451,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS, Count = 1)]
         public virtual void PageGetMediaBoxTooManyArgumentsTest() {
             PdfReader reader = new PdfReader(sourceFolder + "helloWorldMediaboxTooManyArguments.pdf");
             Rectangle expected = new Rectangle(0, 0, 375, 300);
@@ -465,8 +467,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfPage pageOne = pdfDoc.GetPage(1);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pageOne.GetPageSize());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.WRONGMEDIABOXSIZETOOFEWARGUMENTS, 3)
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.WRONG_MEDIA_BOX_SIZE_TOO_FEW_ARGUMENTS
+                , 3), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -491,6 +493,24 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader);
             document.Close();
             NUnit.Framework.Assert.IsFalse(reader.pagesAreRead);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyAnnotationWithoutSubtypeTest() {
+            using (MemoryStream baos = CreateSourceDocumentWithEmptyAnnotation(new MemoryStream())) {
+                using (PdfDocument documentToMerge = new PdfDocument(new PdfReader(new RandomAccessSourceFactory().CreateSource
+                    (baos.ToArray()), new ReaderProperties()))) {
+                    using (MemoryStream resultantBaos = new MemoryStream()) {
+                        using (PdfDocument resultantDocument = new PdfDocument(new PdfWriter(resultantBaos))) {
+                            // We do expect that the following line will not throw any NPE
+                            PdfPage copiedPage = documentToMerge.GetPage(1).CopyTo(resultantDocument);
+                            NUnit.Framework.Assert.AreEqual(1, copiedPage.GetAnnotations().Count);
+                            NUnit.Framework.Assert.IsNull(copiedPage.GetAnnotations()[0].GetSubtype());
+                            resultantDocument.AddPage(copiedPage);
+                        }
+                    }
+                }
+            }
         }
 
         [NUnit.Framework.Test]
@@ -541,7 +561,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE)]
         public virtual void BrokenPageTreeWithExcessiveLastPageTest() {
             String inFileName = sourceFolder + "brokenPageTreeNullLast.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
@@ -551,7 +571,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE)]
         public virtual void BrokenPageTreeWithExcessiveMiddlePageTest() {
             String inFileName = sourceFolder + "brokenPageTreeNullMiddle.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
@@ -561,7 +581,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE, Count = 7)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE, Count = 7)]
         public virtual void BrokenPageTreeWithExcessiveMultipleNegativePagesTest() {
             String inFileName = sourceFolder + "brokenPageTreeNullMultipleSequence.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
@@ -571,13 +591,33 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE, Count = 2)]
         public virtual void BrokenPageTreeWithExcessiveRangeNegativePagesTest() {
             String inFileName = sourceFolder + "brokenPageTreeNullRangeNegative.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
             IList<int> pages = JavaUtil.ArraysAsList(2, 4);
             ICollection<int> nullPages = new HashSet<int>(pages);
             FindAndAssertNullPages(pdfDocument, nullPages);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestPageTreeGenerationWhenFirstPdfPagesHasOnePageOnly() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            int totalPageCount = PdfPagesTree.DEFAULT_LEAF_SIZE + 4;
+            for (int i = 0; i < totalPageCount; i++) {
+                pdfDocument.AddNewPage();
+            }
+            NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetCatalog().GetPageTree().GetParents().Count);
+            NUnit.Framework.Assert.AreEqual(PdfPagesTree.DEFAULT_LEAF_SIZE, pdfDocument.GetCatalog().GetPageTree().GetParents
+                ()[0].GetCount());
+            // Leave only one page in the first pages tree
+            for (int i = PdfPagesTree.DEFAULT_LEAF_SIZE - 1; i >= 1; i--) {
+                pdfDocument.RemovePage(i);
+            }
+            NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetCatalog().GetPageTree().GetParents().Count);
+            NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetCatalog().GetPageTree().GetParents()[0].GetCount());
+            // TODO DEVSIX-5575 remove expected exception and add proper assertions
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => pdfDocument.Close());
         }
 
         private static void FindAndAssertNullPages(PdfDocument pdfDocument, ICollection<int> nullPages) {
@@ -603,7 +643,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 1; i <= pdfDocument.GetNumberOfPages(); i++) {
                 PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.IsNotNull(page);
-                PdfNumber number = page.GetAsNumber(PageNum5);
+                PdfNumber number = page.GetAsNumber(PageNum);
                 NUnit.Framework.Assert.AreEqual(i, number.IntValue(), "Page number");
             }
             NUnit.Framework.Assert.AreEqual(numOfPages, pdfDocument.GetNumberOfPages(), "Number of pages");
@@ -620,6 +660,15 @@ namespace iText.Kernel.Pdf {
                 from = parents[i].GetFrom() + parents[i].GetCount();
             }
             return -1;
+        }
+
+        private static MemoryStream CreateSourceDocumentWithEmptyAnnotation(MemoryStream baos) {
+            using (PdfDocument sourceDocument = new PdfDocument(new PdfWriter(baos))) {
+                PdfPage page = sourceDocument.AddNewPage();
+                PdfAnnotation annotation = PdfAnnotation.MakeAnnotation(new PdfDictionary());
+                page.AddAnnotation(annotation);
+                return baos;
+            }
         }
 
         private class CustomPdfReader : PdfReader {

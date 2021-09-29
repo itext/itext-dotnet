@@ -188,7 +188,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest07() {
             String outFileName = destinationFolder + "imageTest07.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest07.pdf";
@@ -206,7 +206,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest08() {
             String outFileName = destinationFolder + "imageTest08.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest08.pdf";
@@ -225,7 +225,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest09() {
             String outFileName = destinationFolder + "imageTest09.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest09.pdf";
@@ -322,7 +322,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest15() {
             String outFileName = destinationFolder + "imageTest15.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest15.pdf";
@@ -357,7 +357,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 50)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 50)]
         public virtual void ImageTest17() {
             String outFileName = destinationFolder + "imageTest17.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest17.pdf";
@@ -474,7 +474,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void ImageTest22() {
             String cmpFileName = sourceFolder + "cmp_imageTest22.pdf";
             String outFile = destinationFolder + "imageTest22.pdf";
@@ -638,7 +638,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void ImageInTableTest01() {
             String outFileName = destinationFolder + "imageInTableTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageInTableTest01.pdf";
@@ -666,7 +666,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void ImageInTableTest02() {
             String outFileName = destinationFolder + "imageInTableTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_imageInTableTest02.pdf";
@@ -779,7 +779,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
         public virtual void CreateTiffImageTest() {
             String outFileName = destinationFolder + "createTiffImageTest.pdf";
             String cmpFileName = sourceFolder + "cmp_createTiffImageTest.pdf";

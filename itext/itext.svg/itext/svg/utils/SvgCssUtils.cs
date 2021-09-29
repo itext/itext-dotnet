@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Node;
@@ -63,30 +64,12 @@ namespace iText.Svg.Utils {
             IList<String> result = new List<String>();
             if (value != null && value.Length > 0) {
                 value = value.Trim();
-                String[] list = iText.IO.Util.StringUtil.Split(value, "\\s*(,|\\s)\\s*");
+                String[] list = iText.Commons.Utils.StringUtil.Split(value, "\\s*(,|\\s)\\s*");
                 result.AddAll(JavaUtil.ArraysAsList(list));
             }
             return result;
         }
 
-        ///<summary>Converts a float pts values to pixels </summary>
-        ///<param name="v"> the value to be converted pixels</param>
-        ///<returns>float converted value pts/0.75f</returns>
-        [System.ObsoleteAttribute(@"Will be replaced by the iText.StyledXmlParser.Css.Util.CssUtils#convertPtsToPx(float) in update 7.2.")]
-        public static float ConvertPtsToPx(float v)
-        {
-            return v / 0.75f;
-        }
-        
-        ///<summary>Converts a double pts values to pixels </summary>
-        ///<param name="v"> the value to be converted pixels</param>
-        ///<returns>double converted value pts/0.75</returns>
-        [System.ObsoleteAttribute(@"Will be replaced by the iText.StyledXmlParser.Css.Util.CssUtils#convertPtsToPx(float) in update 7.2.")]
-        public static double ConvertPtsToPx(double v)
-        {
-            return v / 0.75;
-        }
-       
         ///<summary>Converts a float to a String.</summary>
         ///<param name="value">to be converted float value</param>
         ///<returns>the value in a String representation</returns>   
@@ -101,18 +84,6 @@ namespace iText.Svg.Utils {
         public static string ConvertDoubleToString(double value)
         {
             return value.ToString("G", System.Globalization.CultureInfo.InvariantCulture); ;
-        }
-
-        /// <summary>
-        /// Checks if an
-        /// <see cref="iText.StyledXmlParser.Node.IElementNode"/>
-        /// represents a style sheet link.
-        /// </summary>
-        /// <param name="headChildElement">the head child element</param>
-        /// <returns>true, if the element node represents a style sheet link</returns>
-        [System.ObsoleteAttribute(@"Will be replaced by the iText.StyledXmlParser.Css.Util.CssUtils.IsStyleSheetLink(headChildElement) in the 7.2 update")]
-        public static bool IsStyleSheetLink(IElementNode headChildElement) {
-            return CssUtils.IsStyleSheetLink(headChildElement);
         }
     }
 }

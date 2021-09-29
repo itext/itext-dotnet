@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel.Pdf.Action;
 using iText.Layout;
 using iText.Layout.Properties;
@@ -57,7 +57,7 @@ namespace iText.Layout.Element {
     /// share.
     /// </summary>
     /// <typeparam name="T">the type of the implementation</typeparam>
-    public abstract class AbstractElement<T> : ElementPropertyContainer<T>, IElement
+    public abstract class AbstractElement<T> : ElementPropertyContainer<T>, IAbstractElement
         where T : IElement {
         protected internal IRenderer nextRenderer;
 

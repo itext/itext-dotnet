@@ -54,11 +54,22 @@ namespace iText.Layout.Layout {
 
         private float textIndent;
 
+        /// <summary>Creates the context for content of a line.</summary>
+        /// <param name="area">for the content to be placed on</param>
+        /// <param name="marginsCollapseInfo">the info about margins collapsing</param>
+        /// <param name="floatedRendererAreas">
+        /// list of
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// objects
+        /// </param>
+        /// <param name="clippedHeight">indicates whether the height is clipped or not</param>
         public LineLayoutContext(LayoutArea area, MarginsCollapseInfo marginsCollapseInfo, IList<Rectangle> floatedRendererAreas
             , bool clippedHeight)
             : base(area, marginsCollapseInfo, floatedRendererAreas, clippedHeight) {
         }
 
+        /// <summary>Creates the context for content of a line.</summary>
+        /// <param name="layoutContext">the context for content layouting</param>
         public LineLayoutContext(LayoutContext layoutContext)
             : base(layoutContext.area, layoutContext.marginsCollapseInfo, layoutContext.floatRendererAreas, layoutContext
                 .clippedHeight) {

@@ -42,8 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Font.Otf;
-using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -81,7 +81,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT)]
         public virtual void SetTextException() {
             String val = "other text";
             String fontName = "Helvetica";
@@ -129,7 +129,9 @@ namespace iText.Layout.Renderer {
                 glyphLine.Add(glyph);
             }
             renderer.SetText(new GlyphLine(), pdfFont);
-            renderer.SetText(glyphLine, 1, 2);
+            glyphLine.start = 1;
+            glyphLine.end = 2;
+            renderer.SetText(glyphLine, pdfFont);
             GlyphLine actualLine = renderer.GetText();
             NUnit.Framework.Assert.IsFalse(actualLine == glyphLine);
             Glyph glyph_1 = actualLine.Get(0);
@@ -154,7 +156,7 @@ namespace iText.Layout.Renderer {
         /// not supported. Adding this support is the subject of DEVSIX-1393.
         /// </remarks>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT)]
         public virtual void SetFontAsText() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
             pdfDoc.AddNewPage();

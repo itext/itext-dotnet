@@ -48,10 +48,10 @@ namespace iText.Svg.Renderers.Factories {
     public class DefaultSvgNodeRendererFactoryTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CreateSvgNodeRenderer() {
-            ISvgNodeRendererFactory nodeRendererFactory = new DefaultSvgNodeRendererFactory(null);
+            ISvgNodeRendererFactory nodeRendererFactory = new DefaultSvgNodeRendererFactory();
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => nodeRendererFactory.CreateSvgNodeRendererForTag
                 (null, null));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TAGPARAMETERNULL, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TAG_PARAMETER_NULL, e.Message);
         }
     }
 }

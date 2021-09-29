@@ -44,9 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
-using iText.Kernel;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
@@ -173,9 +174,9 @@ namespace iText.Kernel.Pdf.Tagging {
             PdfDictionary roleMap = GetRoleMap();
             PdfObject prevVal = roleMap.Put(ConvertRoleToPdfName(fromRole), ConvertRoleToPdfName(toRole));
             if (prevVal != null && prevVal is PdfName) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
-                logger.Warn(String.Format(iText.IO.LogMessageConstant.MAPPING_IN_STRUCT_ROOT_OVERWRITTEN, fromRole, prevVal
-                    , toRole));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
+                logger.LogWarning(String.Format(iText.IO.Logs.IoLogMessageConstant.MAPPING_IN_STRUCT_ROOT_OVERWRITTEN, fromRole
+                    , prevVal, toRole));
             }
             if (roleMap.IsIndirect()) {
                 roleMap.SetModified();
@@ -459,7 +460,8 @@ namespace iText.Kernel.Pdf.Tagging {
         public virtual void Move(PdfPage fromPage, int insertBeforePage) {
             for (int i = 1; i <= GetDocument().GetNumberOfPages(); ++i) {
                 if (GetDocument().GetPage(i).IsFlushed()) {
-                    throw new PdfException(MessageFormatUtil.Format(PdfException.CannotMovePagesInPartlyFlushedDocument, i));
+                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CANNOT_MOVE_PAGES_IN_PARTLY_FLUSHED_DOCUMENT
+                        , i));
                 }
             }
             StructureTreeCopier.Move(GetDocument(), fromPage, insertBeforePage);
@@ -492,8 +494,8 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
-                logger.Error(iText.IO.LogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
+                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             if (null != description) {
                 GetDocument().GetCatalog().GetNameTree(PdfName.EmbeddedFiles).AddEntry(description, fs.GetPdfObject());
@@ -549,7 +551,7 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             if (PdfStructElem.IsStructElem(structElem)) {
                 if (GetPdfObject().GetIndirectReference() == null) {
-                    throw new PdfException(PdfException.StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren
+                    throw new PdfException(KernelExceptionMessageConstant.STRUCTURE_ELEMENT_DICTIONARY_SHALL_BE_AN_INDIRECT_OBJECT_IN_ORDER_TO_HAVE_CHILDREN
                         );
                 }
                 structElem.Put(PdfName.P, GetPdfObject());

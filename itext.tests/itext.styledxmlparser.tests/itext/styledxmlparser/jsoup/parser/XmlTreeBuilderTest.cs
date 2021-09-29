@@ -3,50 +3,30 @@ This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Integration;
 using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.StyledXmlParser.Jsoup.Select;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
@@ -75,10 +55,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         [NUnit.Framework.Test]
         public virtual void TestCommentAndDocType() {
-            String xml = "<!DOCTYPE html><!-- a comment -->One <qux />Two";
+            String xml = "<!DOCTYPE HTML><!-- a comment -->One <qux />Two";
             XmlTreeBuilder tb = new XmlTreeBuilder();
             Document doc = tb.Parse(xml, "http://foo.com/");
-            NUnit.Framework.Assert.AreEqual("<!DOCTYPE html><!-- a comment -->One <qux />Two", TextUtil.StripNewlines(
+            NUnit.Framework.Assert.AreEqual("<!DOCTYPE HTML><!-- a comment -->One <qux />Two", TextUtil.StripNewlines(
                 doc.Html()));
         }
 
@@ -116,8 +96,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             String html = "<?xml encoding='UTF-8' ?><body>One</body><!-- comment -->";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html, "", iText.StyledXmlParser.Jsoup.Parser.Parser
                 .XmlParser());
-            NUnit.Framework.Assert.AreEqual("<?xml encoding=\"UTF-8\"?> <body> One </body> <!-- comment -->", iText.StyledXmlParser.Jsoup.Helper.StringUtil
-                .NormaliseWhitespace(doc.OuterHtml()));
+            NUnit.Framework.Assert.AreEqual("<?xml encoding=\"UTF-8\"?><body>One</body><!-- comment -->", doc.OuterHtml
+                ());
             NUnit.Framework.Assert.AreEqual("#declaration", doc.ChildNode(0).NodeName());
             NUnit.Framework.Assert.AreEqual("#comment", doc.ChildNode(2).NodeName());
         }
@@ -156,7 +136,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(inStream, null, "http://example.com/", iText.StyledXmlParser.Jsoup.Parser.Parser
                 .XmlParser());
             NUnit.Framework.Assert.AreEqual("ISO-8859-1", doc.Charset().Name());
-            NUnit.Framework.Assert.AreEqual("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?> <data>äöåéü</data>", TextUtil
+            NUnit.Framework.Assert.AreEqual("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><data>äöåéü</data>", TextUtil
                 .StripNewlines(doc.Html()));
         }
 
@@ -176,12 +156,154 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CaseSensitiveDeclaration() {
+            String xml = "<?XML version='1' encoding='UTF-8' something='else'?>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xml, "", iText.StyledXmlParser.Jsoup.Parser.Parser.
+                XmlParser());
+            NUnit.Framework.Assert.AreEqual("<?XML version=\"1\" encoding=\"UTF-8\" something=\"else\"?>", doc.OuterHtml
+                ());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestCreatesValidProlog() {
             Document document = Document.CreateShell("");
             document.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml);
-            document.Charset(EncodingUtil.GetEncoding("utf-8"));
+            document.Charset(System.Text.Encoding.UTF8);
             NUnit.Framework.Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<html>\n" + " <head></head>\n"
                  + " <body></body>\n" + "</html>", document.OuterHtml());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PreservesCaseByDefault() {
+            String xml = "<CHECK>One</CHECK><TEST ID=1>Check</TEST>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xml, "", iText.StyledXmlParser.Jsoup.Parser.Parser.
+                XmlParser());
+            NUnit.Framework.Assert.AreEqual("<CHECK>One</CHECK><TEST ID=\"1\">Check</TEST>", TextUtil.StripNewlines(doc
+                .Html()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AppendPreservesCaseByDefault() {
+            String xml = "<One>One</One>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xml, "", iText.StyledXmlParser.Jsoup.Parser.Parser.
+                XmlParser());
+            Elements one = doc.Select("One");
+            one.Append("<Two ID=2>Two</Two>");
+            NUnit.Framework.Assert.AreEqual("<One>One<Two ID=\"2\">Two</Two></One>", TextUtil.StripNewlines(doc.Html()
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisablesPrettyPrintingByDefault() {
+            String xml = "\n\n<div><one>One</one><one>\n Two</one>\n</div>\n ";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xml, "", iText.StyledXmlParser.Jsoup.Parser.Parser.
+                XmlParser());
+            NUnit.Framework.Assert.AreEqual(xml, doc.Html());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CanNormalizeCase() {
+            String xml = "<TEST ID=1>Check</TEST>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xml, "", iText.StyledXmlParser.Jsoup.Parser.Parser.
+                XmlParser().Settings(ParseSettings.htmlDefault));
+            NUnit.Framework.Assert.AreEqual("<test id=\"1\">Check</test>", TextUtil.StripNewlines(doc.Html()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NormalizesDiscordantTags() {
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser().Settings
+                (ParseSettings.htmlDefault);
+            Document document = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div>test</DIV><p></p>", "", parser);
+            NUnit.Framework.Assert.AreEqual("<div>test</div><p></p>", document.Html());
+        }
+
+        // was failing -> toString() = "<div>\n test\n <p></p>\n</div>"
+        [NUnit.Framework.Test]
+        public virtual void RoundTripsCdata() {
+            String xml = "<div id=1><![CDATA[\n<html>\n <foo><&amp;]]></div>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xml, "", iText.StyledXmlParser.Jsoup.Parser.Parser.
+                XmlParser());
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.GetElementById("1");
+            NUnit.Framework.Assert.AreEqual("<html>\n <foo><&amp;", div.Text());
+            NUnit.Framework.Assert.AreEqual(0, div.Children().Count);
+            NUnit.Framework.Assert.AreEqual(1, div.ChildNodeSize());
+            // no elements, one text node
+            NUnit.Framework.Assert.AreEqual("<div id=\"1\"><![CDATA[\n<html>\n <foo><&amp;]]></div>", div.OuterHtml());
+            CDataNode cdata = (CDataNode)div.TextNodes()[0];
+            NUnit.Framework.Assert.AreEqual("\n<html>\n <foo><&amp;", cdata.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CdataPreservesWhiteSpace() {
+            String xml = "<script type=\"text/javascript\">//<![CDATA[\n\n  foo();\n//]]></script>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xml, "", iText.StyledXmlParser.Jsoup.Parser.Parser.
+                XmlParser());
+            NUnit.Framework.Assert.AreEqual(xml, doc.OuterHtml());
+            NUnit.Framework.Assert.AreEqual("//\n\n  foo();\n//", doc.SelectFirst("script").Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandlesDodgyXmlDecl() {
+            String xml = "<?xml version='1.0'><val>One</val>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(xml, "", iText.StyledXmlParser.Jsoup.Parser.Parser.
+                XmlParser());
+            NUnit.Framework.Assert.AreEqual("One", doc.Select("val").Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HandlesLTinScript() {
+            // https://github.com/jhy/jsoup/issues/1139
+            String html = "<script> var a=\"<?\"; var b=\"?>\"; </script>";
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html, "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
+            NUnit.Framework.Assert.AreEqual("<script> var a=\"<!--?\"; var b=\"?-->\"; </script>", doc.Html());
+        }
+
+        // converted from pseudo xmldecl to comment
+        [NUnit.Framework.Test]
+        public virtual void DropsDuplicateAttributes() {
+            // case sensitive, so should drop Four and Five
+            String html = "<p One=One ONE=Two one=Three One=Four ONE=Five two=Six two=Seven Two=Eight>Text</p>";
+            iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser().SetTrackErrors
+                (10);
+            Document doc = parser.ParseInput(html, "");
+            NUnit.Framework.Assert.AreEqual("<p One=\"One\" ONE=\"Two\" one=\"Three\" two=\"Six\" Two=\"Eight\">Text</p>"
+                , doc.SelectFirst("p").OuterHtml());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReaderClosedAfterParse() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("Hello", "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
+            TreeBuilder treeBuilder = doc.Parser().GetTreeBuilder();
+            NUnit.Framework.Assert.IsNull(treeBuilder.reader);
+            NUnit.Framework.Assert.IsNull(treeBuilder.tokeniser);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XmlParserEnablesXmlOutputAndEscapes() {
+            // Test that when using the XML parser, the output mode and escape mode default to XHTML entities
+            // https://github.com/jhy/jsoup/issues/1420
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p one='&lt;two&gt;&copy'>Three</p>", "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
+            NUnit.Framework.Assert.AreEqual(doc.OutputSettings().Syntax(), iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml
+                );
+            NUnit.Framework.Assert.AreEqual(doc.OutputSettings().EscapeMode(), Entities.EscapeMode.xhtml);
+            NUnit.Framework.Assert.AreEqual("<p one=\"&lt;two>©\">Three</p>", doc.Html());
+        }
+
+        // only the < should be escaped
+        [NUnit.Framework.Test]
+        public virtual void XmlSyntaxEscapesLtInAttributes() {
+            // Regardless of the entity escape mode, make sure < is escaped in attributes when in XML
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p one='&lt;two&gt;&copy'>Three</p>", "", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
+            doc.OutputSettings().EscapeMode(Entities.EscapeMode.extended);
+            doc.OutputSettings().Charset("ascii");
+            // to make sure &copy; is output
+            NUnit.Framework.Assert.AreEqual(doc.OutputSettings().Syntax(), iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml
+                );
+            NUnit.Framework.Assert.AreEqual("<p one=\"&lt;two>&copy;\">Three</p>", doc.Html());
         }
     }
 }

@@ -42,8 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iText.Kernel;
+using iText.Barcodes.Exceptions;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
@@ -103,10 +104,10 @@ namespace iText.Barcodes {
             PdfWriter writer = new PdfWriter(destinationFolder + filename);
             PdfDocument pdfDocument = new PdfDocument(writer);
             PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.AddNewPage());
-            pdfCanvas.AddXObject(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 0", 1, 1, 0), 1, 0, 0, 1, 
-                36, 791);
-            pdfCanvas.AddXObject(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 1", 1, 1, 1), 1, 0, 0, 1, 
-                36, 676);
+            pdfCanvas.AddXObjectWithTransformationMatrix(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 0"
+                , 1, 1, 0), 1, 0, 0, 1, 36, 791);
+            pdfCanvas.AddXObjectWithTransformationMatrix(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 1"
+                , 1, 1, 1), 1, 0, 0, 1, 36, 676);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -325,6 +326,43 @@ namespace iText.Barcodes {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => barcode.PlaceBarcode(canvas, null));
             NUnit.Framework.Assert.AreEqual("Invalid codeword size.", e.Message);
             NUnit.Framework.Assert.AreEqual(64, barcode.GetOptions());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LenCodewordsIsNotEnoughTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                BarcodePDF417 barcodePDF417 = new BarcodePDF417();
+                barcodePDF417.SetOptions(BarcodePDF417.PDF417_USE_RAW_CODEWORDS);
+                barcodePDF417.PaintCode();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LenCodewordsIsTooSmallTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                BarcodePDF417 barcodePDF417 = new BarcodePDF417();
+                barcodePDF417.SetOptions(BarcodePDF417.PDF417_USE_RAW_CODEWORDS);
+                // lenCodeWords should be bigger than 1
+                barcodePDF417.SetLenCodewords(0);
+                barcodePDF417.PaintCode();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LenCodewordsMoreThanMaxDataCodewordsTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                BarcodePDF417 barcodePDF417 = new BarcodePDF417();
+                barcodePDF417.SetOptions(BarcodePDF417.PDF417_USE_RAW_CODEWORDS);
+                // lenCodeWords should be smaller than MAX_DATA_CODEWORDS
+                barcodePDF417.SetLenCodewords(927);
+                barcodePDF417.PaintCode();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE))
+;
         }
 
         private PdfFormXObject CreateMacroBarcodePart(PdfDocument document, String text, float mh, float mw, int segmentId

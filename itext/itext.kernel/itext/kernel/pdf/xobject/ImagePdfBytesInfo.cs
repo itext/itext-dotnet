@@ -40,12 +40,18 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.IO;
 using iText.IO.Codec;
+using iText.Kernel.Actions.Data;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Xobject {
     internal class ImagePdfBytesInfo {
+        private static readonly String TIFFTAG_SOFTWARE_VALUE = "iText\u00ae " + ITextCoreProductData.GetInstance(
+            ).GetVersion() + " \u00a9" + ITextCoreProductData.GetInstance().GetSinceCopyrightYear() + "-" + ITextCoreProductData
+            .GetInstance().GetToCopyrightYear() + " iText Group NV";
+
         private int pngColorType;
 
         private int pngBitDepth;
@@ -88,26 +94,28 @@ namespace iText.Kernel.Pdf.Xobject {
             MemoryStream ms = new MemoryStream();
             if (pngColorType < 0) {
                 if (bpc != 8) {
-                    throw new iText.IO.IOException(iText.IO.IOException.ColorDepthIsNotSupported).SetMessageParams(bpc);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ColorDepthIsNotSupported).SetMessageParams
+                        (bpc);
                 }
                 if (colorspace is PdfArray) {
                     PdfArray ca = (PdfArray)colorspace;
                     PdfObject tyca = ca.Get(0);
                     if (!PdfName.ICCBased.Equals(tyca)) {
-                        throw new iText.IO.IOException(iText.IO.IOException.ColorSpaceIsNotSupported).SetMessageParams(tyca.ToString
-                            ());
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported).SetMessageParams
+                            (tyca.ToString());
                     }
                     PdfStream pr = (PdfStream)ca.Get(1);
                     int n = pr.GetAsNumber(PdfName.N).IntValue();
                     if (n != 4) {
-                        throw new iText.IO.IOException(iText.IO.IOException.NValueIsNotSupported).SetMessageParams(n);
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.NValueIsNotSupported).SetMessageParams
+                            (n);
                     }
                     icc = pr.GetBytes();
                 }
                 else {
                     if (!PdfName.DeviceCMYK.Equals(colorspace)) {
-                        throw new iText.IO.IOException(iText.IO.IOException.ColorSpaceIsNotSupported).SetMessageParams(colorspace.
-                            ToString());
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported).SetMessageParams
+                            (colorspace.ToString());
                     }
                 }
                 stride = 4 * width;
@@ -125,8 +133,7 @@ namespace iText.Kernel.Pdf.Xobject {
                 wr.AddField(new TiffWriter.FieldRational(TIFFConstants.TIFFTAG_XRESOLUTION, new int[] { 300, 1 }));
                 wr.AddField(new TiffWriter.FieldRational(TIFFConstants.TIFFTAG_YRESOLUTION, new int[] { 300, 1 }));
                 wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_RESOLUTIONUNIT, TIFFConstants.RESUNIT_INCH));
-                wr.AddField(new TiffWriter.FieldAscii(TIFFConstants.TIFFTAG_SOFTWARE, iText.Kernel.Version.GetInstance().GetVersion
-                    ()));
+                wr.AddField(new TiffWriter.FieldAscii(TIFFConstants.TIFFTAG_SOFTWARE, TIFFTAG_SOFTWARE_VALUE));
                 MemoryStream comp = new MemoryStream();
                 TiffWriter.CompressLZW(comp, 2, imageBytes, (int)height, 4, stride);
                 byte[] buf = comp.ToArray();

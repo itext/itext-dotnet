@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Common.Logging;
-using iText.Kernel;
-using iText.Kernel.Crypto;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     public abstract class PdfObject {
@@ -165,8 +165,8 @@ namespace iText.Kernel.Pdf {
                 PdfDocument document = GetIndirectReference().GetDocument();
                 if (document != null) {
                     if (document.IsAppendMode() && !IsModified()) {
-                        ILog logger = LogManager.GetLogger(typeof(PdfObject));
-                        logger.Info(iText.IO.LogMessageConstant.PDF_OBJECT_FLUSHING_NOT_PERFORMED);
+                        ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
+                        logger.LogInformation(iText.IO.Logs.IoLogMessageConstant.PDF_OBJECT_FLUSHING_NOT_PERFORMED);
                         return;
                     }
                     document.CheckIsoConformance(this, IsoKey.PDF_OBJECT);
@@ -175,7 +175,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.CannotFlushObject, e, this);
+                throw new PdfException(KernelExceptionMessageConstant.CANNOT_FLUSH_OBJECT, e, this);
             }
         }
 
@@ -221,7 +221,8 @@ namespace iText.Kernel.Pdf {
                 return this;
             }
             if (document.GetWriter() == null) {
-                throw new PdfException(PdfException.ThereIsNoAssociatePdfWriterForMakingIndirects);
+                throw new PdfException(KernelExceptionMessageConstant.THERE_IS_NO_ASSOCIATE_PDF_WRITER_FOR_MAKING_INDIRECTS
+                    );
             }
             if (reference == null) {
                 indirectReference = document.CreateNextIndirectReference();
@@ -302,12 +303,13 @@ namespace iText.Kernel.Pdf {
         /// <returns>copied object.</returns>
         public virtual PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
             if (document == null) {
-                throw new PdfException(PdfException.DocumentForCopyToCannotBeNull);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_FOR_COPY_TO_CANNOT_BE_NULL);
             }
             if (indirectReference != null) {
                 // TODO checkState(MUST_BE_INDIRECT) now is always false, because indirectReference != null. See also DEVSIX-602
                 if (indirectReference.GetWriter() != null || CheckState(MUST_BE_INDIRECT)) {
-                    throw new PdfException(PdfException.CannotCopyIndirectObjectFromTheDocumentThatIsBeingWritten);
+                    throw new PdfException(KernelExceptionMessageConstant.CANNOT_COPY_INDIRECT_OBJECT_FROM_THE_DOCUMENT_THAT_IS_BEING_WRITTEN
+                        );
                 }
                 if (!indirectReference.GetReader().IsOpenedWithFullPermission()) {
                     throw new BadPasswordException(BadPasswordException.PdfReaderNotOpenedWithOwnerPassword);
@@ -365,8 +367,8 @@ namespace iText.Kernel.Pdf {
         public virtual void Release() {
             // In case ForbidRelease flag is set, release will not be performed.
             if (IsReleaseForbidden()) {
-                ILog logger = LogManager.GetLogger(typeof(PdfObject));
-                logger.Warn(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET);
+                ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET);
             }
             else {
                 if (indirectReference != null && indirectReference.GetReader() != null && !indirectReference.CheckState(FLUSHED
@@ -518,7 +520,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="document">document to copy object to.</param>
         protected internal virtual void CopyContent(PdfObject from, PdfDocument document) {
             if (IsFlushed()) {
-                throw new PdfException(PdfException.CannotCopyFlushedObject, this);
+                throw new PdfException(KernelExceptionMessageConstant.CANNOT_COPY_FLUSHED_OBJECT, this);
             }
         }
 
@@ -561,7 +563,7 @@ namespace iText.Kernel.Pdf {
                 //copyTo case
                 PdfWriter writer = documentTo.GetWriter();
                 if (writer == null) {
-                    throw new PdfException(PdfException.CannotCopyToDocumentOpenedInReadingMode);
+                    throw new PdfException(KernelExceptionMessageConstant.CANNOT_COPY_TO_DOCUMENT_OPENED_IN_READING_MODE);
                 }
                 return writer.CopyObject(this, documentTo, allowDuplicating);
             }

@@ -42,8 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 
 namespace iText.StyledXmlParser.Css.Resolve {
@@ -142,8 +143,8 @@ namespace iText.StyledXmlParser.Css.Resolve {
         public static String GetDefaultValue(String property) {
             String defaultVal = defaultValues.Get(property);
             if (defaultVal == null) {
-                ILog logger = LogManager.GetLogger(typeof(CssDefaults));
-                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN
+                ILogger logger = ITextLogManager.GetLogger(typeof(CssDefaults));
+                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN
                     , property));
             }
             return defaultVal;

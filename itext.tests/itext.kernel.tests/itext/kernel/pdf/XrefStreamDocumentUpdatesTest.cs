@@ -192,7 +192,7 @@ namespace iText.Kernel.Pdf {
                 (fileName).SetCompressionLevel(CompressionConstants.NO_COMPRESSION), new StampingProperties().UseAppendMode
                 ());
             // Clear state for document info indirect reference so that there are no modified objects
-            // in the document due to which, the document will have only one href table.
+            // in the document due to which, the document will have only one xref table.
             pdfDocument.GetDocumentInfo().GetPdfObject().GetIndirectReference().ClearState(PdfObject.MODIFIED);
             pdfDocument.Close();
             PdfDocument doc = new PdfDocument(new PdfReader(fileName));

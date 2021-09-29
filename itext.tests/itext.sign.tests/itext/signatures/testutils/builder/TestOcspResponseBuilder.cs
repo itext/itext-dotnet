@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
@@ -61,19 +62,27 @@ namespace iText.Signatures.Testutils.Builder {
         private X509Certificate issuerCert;
         private ICipherParameters issuerPrivateKey;
 
-        private CertificateStatus certificateStatus = CertificateStatus.Good;
+        private CertificateStatus certificateStatus;
 
         private DateTime thisUpdate = DateTimeUtil.GetCurrentTime();
 
         private DateTime nextUpdate = DateTimeUtil.GetCurrentTime();
 
-        public TestOcspResponseBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey) {
+        public TestOcspResponseBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey,
+            CertificateStatus certificateStatus)
+        {
             this.issuerCert = issuerCert;
             this.issuerPrivateKey = issuerPrivateKey;
+            this.certificateStatus = certificateStatus;
             X509Name subjectDN = issuerCert.SubjectDN;
             thisUpdate = thisUpdate.AddDays(-1);
             nextUpdate = nextUpdate.AddDays(30);
             responseBuilder = new BasicOcspRespGenerator(new RespID(subjectDN));
+        }
+
+        public TestOcspResponseBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey)
+            : this(issuerCert, issuerPrivateKey, CertificateStatus.Good)
+        {
         }
 
         public X509Certificate GetIssuerCert() {

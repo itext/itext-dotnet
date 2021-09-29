@@ -41,8 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout;
 using iText.Layout.Properties;
@@ -510,9 +511,9 @@ namespace iText.Layout.Margincollapse {
         private static bool HasTopPadding(IRenderer renderer) {
             UnitValue padding = renderer.GetModelElement().GetProperty<UnitValue>(Property.PADDING_TOP);
             if (null != padding && !padding.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_TOP));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_TOP));
             }
             return padding != null && padding.GetValue() > 0;
         }
@@ -520,9 +521,9 @@ namespace iText.Layout.Margincollapse {
         private static bool HasBottomPadding(IRenderer renderer) {
             UnitValue padding = renderer.GetModelElement().GetProperty<UnitValue>(Property.PADDING_BOTTOM);
             if (null != padding && !padding.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .PADDING_BOTTOM));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.PADDING_BOTTOM));
             }
             return padding != null && padding.GetValue() > 0;
         }
@@ -548,9 +549,9 @@ namespace iText.Layout.Margincollapse {
         private static float GetModelTopMargin(IRenderer renderer) {
             UnitValue marginUV = renderer.GetModelElement().GetProperty<UnitValue>(Property.MARGIN_TOP);
             if (null != marginUV && !marginUV.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_TOP));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_TOP));
             }
             // TODO Concerning "renderer instanceof CellRenderer" check: may be try to apply more general solution in future
             return marginUV != null && !(renderer is CellRenderer) ? marginUV.GetValue() : 0;
@@ -567,9 +568,9 @@ namespace iText.Layout.Margincollapse {
         private static float GetModelBottomMargin(IRenderer renderer) {
             UnitValue marginUV = renderer.GetModelElement().GetProperty<UnitValue>(Property.MARGIN_BOTTOM);
             if (null != marginUV && !marginUV.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .MARGIN_TOP));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.MARGIN_TOP));
             }
             // TODO Concerning "renderer instanceof CellRenderer" check: may be try to apply more general solution in future
             return marginUV != null && !(renderer is CellRenderer) ? marginUV.GetValue() : 0;

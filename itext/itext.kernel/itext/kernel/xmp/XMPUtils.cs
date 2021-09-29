@@ -353,7 +353,7 @@ namespace iText.Kernel.XMP {
         /// <param name="buffer">the byte array to be converted</param>
         /// <returns>Returns the base64 string.</returns>
         public static String EncodeBase64(byte[] buffer) {
-            return iText.IO.Util.JavaUtil.GetStringForBytes(Base64.Encode(buffer));
+            return iText.Commons.Utils.JavaUtil.GetStringForBytes(Base64.Encode(buffer));
         }
 
         /// <summary>Decode from Base64 encoded string to raw data.</summary>

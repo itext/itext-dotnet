@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.IO.Util;
-using iText.StyledXmlParser;
+using iText.StyledXmlParser.Exceptions;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Resolver.Resource {

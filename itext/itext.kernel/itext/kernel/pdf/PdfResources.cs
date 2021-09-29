@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
@@ -399,32 +399,6 @@ namespace iText.Kernel.Pdf {
 
         protected internal virtual bool IsModified() {
             return isModified;
-        }
-
-        /// <summary>
-        /// Sets the 'modified' flag to this
-        /// <see cref="PdfResources"/>
-        /// indirect object.
-        /// </summary>
-        /// <remarks>
-        /// Sets the 'modified' flag to this
-        /// <see cref="PdfResources"/>
-        /// indirect object.
-        /// The flag denotes that the object was modified since the document opening.
-        /// </remarks>
-        /// <param name="isModified">
-        /// 
-        /// <see langword="true"/>
-        /// if this
-        /// <see cref="PdfResources"/>
-        /// indirect object has been modified,
-        /// otherwise
-        /// <see langword="false"/>.
-        /// </param>
-        /// <seealso cref="PdfObject.SetModified()"/>
-        [System.ObsoleteAttribute(@"Please use SetModified() .")]
-        protected internal virtual void SetModified(bool isModified) {
-            this.isModified = isModified;
         }
 
         /// <summary><inheritDoc/></summary>

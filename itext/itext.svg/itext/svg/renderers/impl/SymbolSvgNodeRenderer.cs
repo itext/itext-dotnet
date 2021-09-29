@@ -20,6 +20,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using iText.Kernel.Geom;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -29,6 +32,10 @@ namespace iText.Svg.Renderers.Impl {
             DeepCopyAttributesAndStyles(copy);
             DeepCopyChildren(copy);
             return copy;
+        }
+
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
         }
     }
 }

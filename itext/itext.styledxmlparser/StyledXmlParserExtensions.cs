@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -47,6 +47,7 @@ using System.Text.RegularExpressions;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Helper;
 using System.Reflection;
+using iText.Commons.Utils;
 
 internal static class StyledXmlParserExtensions {
     public static String Name(this Encoding e) {

@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.IO.Util;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.Colors.Gradients {
     /// <summary>The gradient stop color structure representing the stop color configuration.</summary>

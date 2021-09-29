@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.IO.Codec;
 using iText.IO.Source;
 
@@ -86,13 +87,13 @@ namespace iText.IO.Image {
                 return sr.NumberOfPages();
             }
             catch (Exception e) {
-                throw new iText.IO.IOException(iText.IO.IOException.Jbig2ImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Jbig2ImageException, e);
             }
         }
 
         public override bool CanImageBeInline() {
-            ILog logger = LogManager.GetLogger(typeof(ImageData));
-            logger.Warn(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
+            ILogger logger = ITextLogManager.GetLogger(typeof(ImageData));
+            logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
             return false;
         }
     }

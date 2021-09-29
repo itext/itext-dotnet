@@ -173,7 +173,7 @@ namespace iText.IO.Image {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.BmpImageException, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.BmpImageException, e);
             }
             RawImageHelper.UpdateImageAttributes(bmp.image, bmp.additional);
         }
@@ -183,7 +183,8 @@ namespace iText.IO.Image {
             if (!bmp.image.IsNoHeader()) {
                 // Start File Header
                 if (!(ReadUnsignedByte(bmp.inputStream) == 'B' && ReadUnsignedByte(bmp.inputStream) == 'M')) {
-                    throw new iText.IO.IOException(iText.IO.IOException.InvalidMagicValueForBmpFileMustBeBM);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidMagicValueForBmpFileMustBeBM
+                        );
                 }
                 // Read file size
                 bmp.bitmapFileSize = ReadDWord(bmp.inputStream);
@@ -424,7 +425,7 @@ namespace iText.IO.Image {
                         }
 
                         default: {
-                            throw new iText.IO.IOException(iText.IO.IOException.InvalidBmpFileCompression);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidBmpFileCompression);
                         }
                     }
                 }
@@ -699,7 +700,7 @@ namespace iText.IO.Image {
                         }
 
                         default: {
-                            throw new iText.IO.IOException(iText.IO.IOException.InvalidBmpFileCompression);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidBmpFileCompression);
                         }
                     }
                     return true;
@@ -718,7 +719,7 @@ namespace iText.IO.Image {
                         }
 
                         default: {
-                            throw new iText.IO.IOException(iText.IO.IOException.InvalidBmpFileCompression);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidBmpFileCompression);
                         }
                     }
                     return true;
@@ -760,7 +761,7 @@ namespace iText.IO.Image {
                         }
 
                         default: {
-                            throw new iText.IO.IOException(iText.IO.IOException.InvalidBmpFileCompression);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidBmpFileCompression);
                         }
                     }
                     return true;
@@ -779,7 +780,7 @@ namespace iText.IO.Image {
                         }
 
                         default: {
-                            throw new iText.IO.IOException(iText.IO.IOException.InvalidBmpFileCompression);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidBmpFileCompression);
                         }
                     }
                     return true;
@@ -828,7 +829,7 @@ namespace iText.IO.Image {
             while (bytesRead < sizeOfPalette) {
                 int r = bmp.inputStream.JRead(bmp.palette, bytesRead, sizeOfPalette - bytesRead);
                 if (r < 0) {
-                    throw new iText.IO.IOException(iText.IO.IOException.IncompletePalette);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IncompletePalette);
                 }
                 bytesRead += r;
             }

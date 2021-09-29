@@ -42,8 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -51,7 +52,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
-using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -66,7 +67,7 @@ namespace iText.Svg.Renderers.Impl {
 
         private readonly IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
 
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
 
         /// <summary>
         /// Method that will set properties to be inherited by this branch renderer's
@@ -135,9 +136,15 @@ namespace iText.Svg.Renderers.Impl {
         internal virtual String[] RetrieveAlignAndMeet() {
             String meetOrSlice = SvgConstants.Values.MEET;
             String align = SvgConstants.Values.DEFAULT_ASPECT_RATIO;
-            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO)) {
-                String preserveAspectRatioValue = this.attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
-                    );
+            String preserveAspectRatioValue = this.attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
+                );
+            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+            if (preserveAspectRatioValue == null) {
+                preserveAspectRatioValue = this.attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant
+                    ());
+            }
+            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO) || this.attributesAndStyles
+                .ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant())) {
                 IList<String> aspectRatioValuesSplitValues = SvgCssUtils.SplitValueList(preserveAspectRatioValue);
                 align = aspectRatioValuesSplitValues[0].ToLowerInvariant();
                 if (aspectRatioValuesSplitValues.Count > 1) {
@@ -165,8 +172,11 @@ namespace iText.Svg.Renderers.Impl {
         private void ApplyViewportTranslationCorrection(SvgDrawContext context) {
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
             AffineTransform tf = this.CalculateViewPortTranslation(context);
-            if (!tf.IsIdentity() && SvgConstants.Values.NONE.Equals(this.GetAttribute(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
-                ))) {
+            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+            bool preserveAspectRationNone = SvgConstants.Values.NONE.Equals(GetAttribute(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
+                )) || SvgConstants.Values.NONE.Equals(GetAttribute(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant
+                ()));
+            if (!tf.IsIdentity() && preserveAspectRationNone) {
                 currentCanvas.ConcatMatrix(tf);
             }
         }
@@ -359,6 +369,10 @@ namespace iText.Svg.Renderers.Impl {
                 return new float[] {  };
             }
             String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
+            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+            if (viewBoxValues == null) {
+                viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX.ToLowerInvariant());
+            }
             if (viewBoxValues == null) {
                 return new float[] {  };
             }
@@ -369,8 +383,8 @@ namespace iText.Svg.Renderers.Impl {
             }
             // the value for viewBox should be 4 numbers according to the viewBox documentation
             if (values.Length != VIEWBOX_VALUES_NUMBER) {
-                if (LOGGER.IsWarnEnabled) {
-                    LOGGER.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_VALUE_MUST_BE_FOUR_NUMBERS, viewBoxValues
+                if (LOGGER.IsEnabled(LogLevel.Warning)) {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_VALUE_MUST_BE_FOUR_NUMBERS, viewBoxValues
                         ));
                 }
                 return new float[] {  };
@@ -378,9 +392,9 @@ namespace iText.Svg.Renderers.Impl {
             // case when viewBox width or height is negative value is an error and
             // invalidates the ‘viewBox’ attribute (according to the viewBox documentation)
             if (values[2] < 0 || values[3] < 0) {
-                if (LOGGER.IsWarnEnabled) {
-                    LOGGER.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_AND_HEIGHT_CANNOT_BE_NEGATIVE, viewBoxValues
-                        ));
+                if (LOGGER.IsEnabled(LogLevel.Warning)) {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_AND_HEIGHT_CANNOT_BE_NEGATIVE
+                        , viewBoxValues));
                 }
                 return new float[] {  };
             }
@@ -445,8 +459,8 @@ namespace iText.Svg.Renderers.Impl {
                 // Case with zero determiner (see PDF 32000-1:2008 - 8.3.4 Transformation Matrices - NOTE 3)
                 // for example with a, b, c, d in cm equal to 0
                 stream.Put(PdfName.BBox, new PdfArray(new Rectangle(0, 0, 0, 0)));
-                ILog logger = LogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
-                logger.Warn(SvgLogMessageConstant.UNABLE_TO_GET_INVERSE_MATRIX_DUE_TO_ZERO_DETERMINANT);
+                ILogger logger = ITextLogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
+                logger.LogWarning(SvgLogMessageConstant.UNABLE_TO_GET_INVERSE_MATRIX_DUE_TO_ZERO_DETERMINANT);
                 return;
             }
             Point[] points = context.GetRootViewPort().ToPointsArray();

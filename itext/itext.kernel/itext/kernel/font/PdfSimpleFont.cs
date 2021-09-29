@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Constants;
@@ -61,7 +63,7 @@ namespace iText.Kernel.Font {
         protected internal bool forceWidthsOutput = false;
 
         /// <summary>The array used with single byte encodings.</summary>
-        protected internal byte[] shortTag = new byte[PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE + 1];
+        protected internal byte[] usedGlyphs = new byte[PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE + 1];
 
         /// <summary>Currently only exists for the fonts that are parsed from the document.</summary>
         /// <remarks>
@@ -186,7 +188,7 @@ namespace iText.Kernel.Font {
         public override byte[] ConvertToBytes(String text) {
             byte[] bytes = fontEncoding.ConvertToBytes(text);
             foreach (byte b in bytes) {
-                shortTag[b & 0xff] = 1;
+                usedGlyphs[b & 0xff] = 1;
             }
             return bytes;
         }
@@ -209,7 +211,7 @@ namespace iText.Kernel.Font {
                 }
                 bytes = ArrayUtil.ShortenArray(bytes, ptr);
                 foreach (byte b in bytes) {
-                    shortTag[b & 0xff] = 1;
+                    usedGlyphs[b & 0xff] = 1;
                 }
                 return bytes;
             }
@@ -231,7 +233,7 @@ namespace iText.Kernel.Font {
                     return EMPTY_BYTES;
                 }
             }
-            shortTag[bytes[0] & 0xff] = 1;
+            usedGlyphs[bytes[0] & 0xff] = 1;
             return bytes;
         }
 
@@ -253,7 +255,7 @@ namespace iText.Kernel.Font {
             }
             bytes = ArrayUtil.ShortenArray(bytes, ptr);
             foreach (byte b in bytes) {
-                shortTag[b & 0xff] = 1;
+                usedGlyphs[b & 0xff] = 1;
             }
             StreamUtil.WriteEscapedString(stream, bytes);
         }
@@ -305,9 +307,10 @@ namespace iText.Kernel.Font {
                     list.Add(glyph);
                 }
                 else {
-                    ILog logger = LogManager.GetLogger(this.GetType());
-                    if (logger.IsWarnEnabled) {
-                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, code));
+                    ILogger logger = ITextLogManager.GetLogger(this.GetType());
+                    if (logger.IsEnabled(LogLevel.Warning)) {
+                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE
+                            , code));
                     }
                     allCodesDecoded = false;
                 }
@@ -352,12 +355,12 @@ namespace iText.Kernel.Font {
             int firstChar;
             int lastChar;
             for (firstChar = 0; firstChar <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; ++firstChar) {
-                if (shortTag[firstChar] != 0) {
+                if (usedGlyphs[firstChar] != 0) {
                     break;
                 }
             }
             for (lastChar = PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; lastChar >= firstChar; --lastChar) {
-                if (shortTag[lastChar] != 0) {
+                if (usedGlyphs[lastChar] != 0) {
                     break;
                 }
             }
@@ -367,19 +370,19 @@ namespace iText.Kernel.Font {
             }
             if (!IsSubset() || !IsEmbedded()) {
                 firstChar = 0;
-                lastChar = shortTag.Length - 1;
-                for (int k = 0; k < shortTag.Length; ++k) {
+                lastChar = usedGlyphs.Length - 1;
+                for (int k = 0; k < usedGlyphs.Length; ++k) {
                     // remove unsupported by encoding values in case custom encoding.
                     // save widths information in case standard pdf encodings (winansi or macroman)
                     if (fontEncoding.CanDecode(k)) {
-                        shortTag[k] = 1;
+                        usedGlyphs[k] = 1;
                     }
                     else {
                         if (!fontEncoding.HasDifferences() && fontProgram.GetGlyphByCode(k) != null) {
-                            shortTag[k] = 1;
+                            usedGlyphs[k] = 1;
                         }
                         else {
-                            shortTag[k] = 0;
+                            usedGlyphs[k] = 0;
                         }
                     }
                 }
@@ -403,7 +406,7 @@ namespace iText.Kernel.Font {
                 PdfArray diff = new PdfArray();
                 bool gap = true;
                 for (int k = firstChar; k <= lastChar; ++k) {
-                    if (shortTag[k] != 0) {
+                    if (usedGlyphs[k] != 0) {
                         if (gap) {
                             diff.Add(new PdfNumber(k));
                             gap = false;
@@ -500,7 +503,7 @@ namespace iText.Kernel.Font {
         protected internal virtual PdfArray BuildWidthsArray(int firstChar, int lastChar) {
             PdfArray wd = new PdfArray();
             for (int k = firstChar; k <= lastChar; ++k) {
-                if (shortTag[k] == 0) {
+                if (usedGlyphs[k] == 0) {
                     wd.Add(new PdfNumber(0));
                 }
                 else {
@@ -516,15 +519,6 @@ namespace iText.Kernel.Font {
 
         protected internal virtual void SetFontProgram(T fontProgram) {
             this.fontProgram = fontProgram;
-        }
-
-        /// <summary>Gets glyph width which us ready to be written to the output file.</summary>
-        /// <param name="glyph">the glyph which widths is required to be written to the output file</param>
-        /// <returns>glyph width in glyph-space</returns>
-        [System.ObsoleteAttribute(@"This method was introduced to allow overriding of widths array entry writing to output file. It's now replaced by more specific PdfSimpleFont{T}.BuildWidthsArray(int, int) in order to avoid confusion between this method and iText.IO.Font.Otf.Glyph.GetWidth() . This method will be removed in the next major release."
-            )]
-        protected internal virtual double GetGlyphWidth(Glyph glyph) {
-            return glyph != null ? glyph.GetWidth() : 0;
         }
     }
 }

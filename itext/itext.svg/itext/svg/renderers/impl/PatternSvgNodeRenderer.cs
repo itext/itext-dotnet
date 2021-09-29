@@ -41,8 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -50,13 +51,14 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Svg;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>Implementation for the svg &lt;pattern&gt; tag.</summary>
     public class PatternSvgNodeRenderer : AbstractBranchSvgNodeRenderer, ISvgPaintServer {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(PatternSvgNodeRenderer));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(PatternSvgNodeRenderer));
 
         private const double CONVERT_COEFF = 0.75;
 
@@ -81,6 +83,10 @@ namespace iText.Svg.Renderers.Impl {
             finally {
                 context.PopPatternId();
             }
+        }
+
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
         }
 
         private PdfPattern.Tiling CreateTilingPattern(SvgDrawContext context, Rectangle objectBoundingBox) {
@@ -216,12 +222,15 @@ namespace iText.Svg.Renderers.Impl {
 
         private bool IsObjectBoundingBoxInPatternUnits() {
             String patternUnits = GetAttribute(SvgConstants.Attributes.PATTERN_UNITS);
+            if (patternUnits == null) {
+                patternUnits = GetAttribute(SvgConstants.Attributes.PATTERN_UNITS.ToLowerInvariant());
+            }
             if (SvgConstants.Values.USER_SPACE_ON_USE.Equals(patternUnits)) {
                 return false;
             }
             else {
                 if (patternUnits != null && !SvgConstants.Values.OBJECT_BOUNDING_BOX.Equals(patternUnits)) {
-                    LogManager.GetLogger(this.GetType()).Warn(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_INVALID_PATTERN_UNITS_LOG
+                    ITextLogManager.GetLogger(this.GetType()).LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_INVALID_PATTERN_UNITS_LOG
                         , patternUnits));
                 }
             }
@@ -230,12 +239,15 @@ namespace iText.Svg.Renderers.Impl {
 
         private bool IsObjectBoundingBoxInPatternContentUnits() {
             String patternContentUnits = GetAttribute(SvgConstants.Attributes.PATTERN_CONTENT_UNITS);
+            if (patternContentUnits == null) {
+                patternContentUnits = GetAttribute(SvgConstants.Attributes.PATTERN_CONTENT_UNITS.ToLowerInvariant());
+            }
             if (SvgConstants.Values.OBJECT_BOUNDING_BOX.Equals(patternContentUnits)) {
                 return true;
             }
             else {
                 if (patternContentUnits != null && !SvgConstants.Values.USER_SPACE_ON_USE.Equals(patternContentUnits)) {
-                    LogManager.GetLogger(this.GetType()).Warn(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_INVALID_PATTERN_CONTENT_UNITS_LOG
+                    ITextLogManager.GetLogger(this.GetType()).LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_INVALID_PATTERN_CONTENT_UNITS_LOG
                         , patternContentUnits));
                 }
             }
@@ -267,15 +279,15 @@ namespace iText.Svg.Renderers.Impl {
 
         private static bool XStepYStepAreValid(double xStep, double yStep) {
             if (xStep < 0 || yStep < 0) {
-                if (LOGGER.IsWarnEnabled) {
-                    LOGGER.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_WIDTH_OR_HEIGHT_IS_NEGATIVE));
+                if (LOGGER.IsEnabled(LogLevel.Warning)) {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_WIDTH_OR_HEIGHT_IS_NEGATIVE));
                 }
                 return false;
             }
             else {
                 if (xStep == 0 || yStep == 0) {
-                    if (LOGGER.IsInfoEnabled) {
-                        LOGGER.Info(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_WIDTH_OR_HEIGHT_IS_ZERO));
+                    if (LOGGER.IsEnabled(LogLevel.Information)) {
+                        LOGGER.LogInformation(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_WIDTH_OR_HEIGHT_IS_ZERO));
                     }
                     return false;
                 }
@@ -289,8 +301,8 @@ namespace iText.Svg.Renderers.Impl {
             // if viewBox width or height is zero we should disable rendering
             // of the element (according to the viewBox documentation)
             if (viewBoxValues[2] == 0 || viewBoxValues[3] == 0) {
-                if (LOGGER.IsInfoEnabled) {
-                    LOGGER.Info(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO));
+                if (LOGGER.IsEnabled(LogLevel.Information)) {
+                    LOGGER.LogInformation(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO));
                 }
                 return true;
             }
@@ -301,6 +313,9 @@ namespace iText.Svg.Renderers.Impl {
 
         private AffineTransform GetPatternTransform() {
             String patternTransform = GetAttribute(SvgConstants.Attributes.PATTERN_TRANSFORM);
+            if (patternTransform == null) {
+                patternTransform = GetAttribute(SvgConstants.Attributes.PATTERN_TRANSFORM.ToLowerInvariant());
+            }
             if (patternTransform != null && !String.IsNullOrEmpty(patternTransform)) {
                 return TransformUtils.ParseTransform(patternTransform);
             }

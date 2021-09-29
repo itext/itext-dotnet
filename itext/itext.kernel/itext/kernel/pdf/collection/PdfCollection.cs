@@ -121,17 +121,6 @@ namespace iText.Kernel.Pdf.Collection {
             return this;
         }
 
-        /// <summary>
-        /// Retrieves view as
-        /// <see cref="iText.Kernel.Pdf.PdfNumber">pdf number</see>.
-        /// </summary>
-        /// <returns>the view</returns>
-        [System.ObsoleteAttribute(@"Will always return null. The return will be changed to PdfName in 7.2. Use getPdfObject().getAsName(PdfName.View) , or one of IsViewDetails() , IsViewTile() , IsViewHidden() ."
-            )]
-        public virtual PdfNumber GetView() {
-            return GetPdfObject().GetAsNumber(PdfName.View);
-        }
-
         /// <summary>Check if view is in details mode.</summary>
         /// <returns>true if view is in details mode and false otherwise</returns>
         public virtual bool IsViewDetails() {

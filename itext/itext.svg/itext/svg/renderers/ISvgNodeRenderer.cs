@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 
 namespace iText.Svg.Renderers {
     /// <summary>
@@ -102,5 +103,14 @@ namespace iText.Svg.Renderers {
         /// <summary>Creates a deep copy of this renderer, including it's subtree of children</summary>
         /// <returns>deep copy of this renderer</returns>
         ISvgNodeRenderer CreateDeepCopy();
+
+        /// <summary>Get object bounding box.</summary>
+        /// <param name="context">
+        /// the
+        /// <see cref="SvgDrawContext"/>
+        /// context
+        /// </param>
+        /// <returns>object bounding box</returns>
+        Rectangle GetObjectBoundingBox(SvgDrawContext context);
     }
 }

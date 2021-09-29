@@ -46,7 +46,11 @@ namespace iText.Kernel.Pdf {
     /// Encryption constants for
     /// <see cref="WriterProperties.SetStandardEncryption(byte[], byte[], int, int)"/>.
     /// </summary>
-    public class EncryptionConstants {
+    public sealed class EncryptionConstants {
+        private EncryptionConstants() {
+        }
+
+        // Empty constructor
         /// <summary>Type of encryption.</summary>
         /// <remarks>Type of encryption. RC4 encryption algorithm will be used with the key length of 40 bits.</remarks>
         public const int STANDARD_ENCRYPTION_40 = 0;

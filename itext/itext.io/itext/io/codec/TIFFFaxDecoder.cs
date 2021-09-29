@@ -670,12 +670,13 @@ namespace iText.IO.Codec {
                     else {
                         // ERROR
                         if (bits == 0) {
-                            throw new iText.IO.IOException(iText.IO.IOException.InvalidCodeEncountered);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidCodeEncountered);
                         }
                         else {
                             // EOL
                             if (bits == 15) {
-                                throw new iText.IO.IOException(iText.IO.IOException.EolCodeWordEncounteredInWhiteRun);
+                                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.EolCodeWordEncounteredInWhiteRun
+                                    );
                             }
                             else {
                                 // 11 bits - 0000 0111 1111 1111 = 0x07ff
@@ -728,7 +729,8 @@ namespace iText.IO.Codec {
                         else {
                             if (bits == 15) {
                                 // EOL code
-                                throw new iText.IO.IOException(iText.IO.IOException.EolCodeWordEncounteredInWhiteRun);
+                                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.EolCodeWordEncounteredInWhiteRun
+                                    );
                             }
                             else {
                                 SetToBlack(buffer, lineOffset, bitOffset, code);
@@ -801,7 +803,7 @@ namespace iText.IO.Codec {
             fillBits = (int)((tiffT4Options & 0x04) >> 2);
             // The data must start with an EOL code
             if (ReadEOL(true) != 1) {
-                throw new iText.IO.IOException(iText.IO.IOException.FirstScanlineMustBe1dEncoded);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.FirstScanlineMustBe1dEncoded);
             }
             int lineOffset = 0;
             int bitOffset;
@@ -886,7 +888,7 @@ namespace iText.IO.Codec {
                                     UpdatePointer(7 - bits);
                                 }
                                 else {
-                                    throw new iText.IO.IOException(iText.IO.IOException.InvalidCodeEncounteredWhileDecoding2dGroup3CompressedData
+                                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidCodeEncounteredWhileDecoding2dGroup3CompressedData
                                         );
                                 }
                             }
@@ -956,7 +958,8 @@ namespace iText.IO.Codec {
                     if (bitPointer > 0) {
                         int bitsLeft = 8 - bitPointer;
                         if (NextNBits(bitsLeft) != 0) {
-                            throw new iText.IO.IOException(iText.IO.IOException.ExpectedTrailingZeroBitsForByteAlignedLines);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ExpectedTrailingZeroBitsForByteAlignedLines
+                                );
                         }
                     }
                 }
@@ -1031,7 +1034,7 @@ namespace iText.IO.Codec {
                             else {
                                 if (code == 11) {
                                     if (NextLesserThan8Bits(3) != 7) {
-                                        throw new iText.IO.IOException(iText.IO.IOException.InvalidCodeEncounteredWhileDecoding2dGroup4CompressedData
+                                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidCodeEncounteredWhileDecoding2dGroup4CompressedData
                                             );
                                     }
                                     int zeros = 0;
@@ -1182,7 +1185,7 @@ escape_break: ;
                 else {
                     // ERROR
                     if (bits == 0) {
-                        throw new iText.IO.IOException(iText.IO.IOException.InvalidCodeEncountered);
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidCodeEncountered);
                     }
                     else {
                         // EOL
@@ -1191,7 +1194,8 @@ escape_break: ;
                                 isWhite = false;
                             }
                             else {
-                                throw new iText.IO.IOException(iText.IO.IOException.EolCodeWordEncounteredInWhiteRun);
+                                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.EolCodeWordEncounteredInWhiteRun
+                                    );
                             }
                         }
                         else {
@@ -1247,7 +1251,8 @@ escape_break: ;
                     else {
                         if (bits == 15) {
                             // EOL code
-                            throw new iText.IO.IOException(iText.IO.IOException.EolCodeWordEncounteredInBlackRun);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.EolCodeWordEncounteredInBlackRun
+                                );
                         }
                         else {
                             runLength += code;
@@ -1295,7 +1300,8 @@ escape_break: ;
                     }
                 }
                 if (next12Bits != 1) {
-                    throw new iText.IO.IOException(iText.IO.IOException.ScanlineMustBeginWithEolCodeWord);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ScanlineMustBeginWithEolCodeWord
+                        );
                 }
             }
             else {
@@ -1305,7 +1311,8 @@ escape_break: ;
                     // the EOL code of 12 bits end on a byte boundary.
                     int bitsLeft = 8 - bitPointer;
                     if (NextNBits(bitsLeft) != 0) {
-                        throw new iText.IO.IOException(iText.IO.IOException.AllFillBitsPrecedingEolCodeMustBe0);
+                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.AllFillBitsPrecedingEolCodeMustBe0
+                            );
                     }
                     // If the number of bitsLeft is less than 8, then to have a 12
                     // bit EOL sequence, two more bytes are certainly going to be
@@ -1313,7 +1320,8 @@ escape_break: ;
                     // that.
                     if (bitsLeft < 4) {
                         if (NextNBits(8) != 0) {
-                            throw new iText.IO.IOException(iText.IO.IOException.AllFillBitsPrecedingEolCodeMustBe0);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.AllFillBitsPrecedingEolCodeMustBe0
+                                );
                         }
                     }
                     // There might be a random number of fill bytes with 0s, so
@@ -1323,7 +1331,8 @@ escape_break: ;
                     while ((n = NextNBits(8)) != 1) {
                         // If not all zeros
                         if (n != 0) {
-                            throw new iText.IO.IOException(iText.IO.IOException.AllFillBitsPrecedingEolCodeMustBe0);
+                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.AllFillBitsPrecedingEolCodeMustBe0
+                                );
                         }
                     }
                 }
@@ -1411,7 +1420,8 @@ escape_break: ;
                     }
                 }
                 else {
-                    throw new iText.IO.IOException(iText.IO.IOException.TiffFillOrderTagMustBeEither1Or2);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TiffFillOrderTagMustBeEither1Or2
+                        );
                 }
             }
             int bitsLeft = 8 - bitPointer;
@@ -1474,7 +1484,8 @@ escape_break: ;
                     }
                 }
                 else {
-                    throw new iText.IO.IOException(iText.IO.IOException.TiffFillOrderTagMustBeEither1Or2);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TiffFillOrderTagMustBeEither1Or2
+                        );
                 }
             }
             int bitsLeft = 8 - bitPointer;

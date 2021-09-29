@@ -22,8 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -153,7 +154,7 @@ namespace iText.Kernel.Colors.Gradients {
                     shadingTransform.Concatenate(gradientTransformation);
                 }
                 catch (NoninvertibleTransformException) {
-                    LogManager.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION
+                    ITextLogManager.GetLogger(GetType()).LogError(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION
                         );
                 }
             }

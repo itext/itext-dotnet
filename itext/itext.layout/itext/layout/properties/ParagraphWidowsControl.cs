@@ -21,8 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Properties {
@@ -131,15 +132,15 @@ namespace iText.Layout.Properties {
         /// explaining the reason for violation
         /// </param>
         public virtual void HandleViolatedWidows(ParagraphRenderer widowsRenderer, String message) {
-            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Properties.ParagraphWidowsControl));
+            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Properties.ParagraphWidowsControl));
             if (widowsRenderer.GetOccupiedArea() != null && widowsRenderer.GetLines() != null) {
                 int pageNumber = widowsRenderer.GetOccupiedArea().GetPageNumber();
-                String warnText = MessageFormatUtil.Format(iText.IO.LogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED, pageNumber
-                    , minWidows, widowsRenderer.GetLines().Count, message);
-                logger.Warn(warnText);
+                String warnText = MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED, 
+                    pageNumber, minWidows, widowsRenderer.GetLines().Count, message);
+                logger.LogWarning(warnText);
             }
             else {
-                logger.Warn(iText.IO.LogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD);
             }
         }
     }

@@ -22,13 +22,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Geom;
 using iText.Svg;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -38,9 +40,9 @@ namespace iText.Svg.Renderers.Impl {
     /// abstract implementation for gradient tags
     /// (&lt;linearGradient&gt;, &lt;radialGradient&gt;).
     /// </summary>
-    public abstract class AbstractGradientSvgNodeRenderer : NoDrawOperationSvgNodeRenderer, ISvgPaintServer {
+    public abstract class AbstractGradientSvgNodeRenderer : AbstractBranchSvgNodeRenderer, ISvgPaintServer {
         protected internal override void DoDraw(SvgDrawContext context) {
-            throw new NotSupportedException(SvgLogMessageConstant.DRAW_NO_DRAW);
+            throw new NotSupportedException(SvgExceptionMessageConstant.DRAW_NO_DRAW);
         }
 
         /// <summary>Checks whether the gradient units values are on user space on use or object bounding box</summary>
@@ -53,12 +55,16 @@ namespace iText.Svg.Renderers.Impl {
         /// </returns>
         protected internal virtual bool IsObjectBoundingBoxUnits() {
             String gradientUnits = GetAttribute(SvgConstants.Attributes.GRADIENT_UNITS);
+            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+            if (gradientUnits == null) {
+                GetAttribute(SvgConstants.Attributes.GRADIENT_UNITS.ToLowerInvariant());
+            }
             if (SvgConstants.Values.USER_SPACE_ON_USE.Equals(gradientUnits)) {
                 return false;
             }
             else {
                 if (gradientUnits != null && !SvgConstants.Values.OBJECT_BOUNDING_BOX.Equals(gradientUnits)) {
-                    LogManager.GetLogger(this.GetType()).Warn(MessageFormatUtil.Format(SvgLogMessageConstant.GRADIENT_INVALID_GRADIENT_UNITS_LOG
+                    ITextLogManager.GetLogger(this.GetType()).LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.GRADIENT_INVALID_GRADIENT_UNITS_LOG
                         , gradientUnits));
                 }
             }
@@ -73,6 +79,10 @@ namespace iText.Svg.Renderers.Impl {
         /// </returns>
         protected internal virtual AffineTransform GetGradientTransform() {
             String gradientTransform = GetAttribute(SvgConstants.Attributes.GRADIENT_TRANSFORM);
+            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+            if (gradientTransform == null) {
+                gradientTransform = GetAttribute(SvgConstants.Attributes.GRADIENT_TRANSFORM.ToLowerInvariant());
+            }
             if (gradientTransform != null && !String.IsNullOrEmpty(gradientTransform)) {
                 return TransformUtils.ParseTransform(gradientTransform);
             }
@@ -104,6 +114,9 @@ namespace iText.Svg.Renderers.Impl {
         protected internal virtual GradientSpreadMethod ParseSpreadMethod() {
             String spreadMethodValue = GetAttribute(SvgConstants.Attributes.SPREAD_METHOD);
             if (spreadMethodValue == null) {
+                spreadMethodValue = GetAttribute(SvgConstants.Attributes.SPREAD_METHOD.ToLowerInvariant());
+            }
+            if (spreadMethodValue == null) {
                 // returning svg default spread method
                 return GradientSpreadMethod.PAD;
             }
@@ -121,7 +134,7 @@ namespace iText.Svg.Renderers.Impl {
                 }
 
                 default: {
-                    LogManager.GetLogger(this.GetType()).Warn(MessageFormatUtil.Format(SvgLogMessageConstant.GRADIENT_INVALID_SPREAD_METHOD_LOG
+                    ITextLogManager.GetLogger(this.GetType()).LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.GRADIENT_INVALID_SPREAD_METHOD_LOG
                         , spreadMethodValue));
                     return GradientSpreadMethod.PAD;
                 }

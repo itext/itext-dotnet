@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
@@ -93,9 +94,9 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
-                    "Drawing won't be performed."));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                    , "Drawing won't be performed."));
                 return;
             }
             if (drawContext.IsTaggingEnabled()) {
@@ -145,18 +146,18 @@ namespace iText.Layout.Renderer {
                         if (isRtl) {
                             UnitValue marginRightUV = this.GetPropertyAsUnitValue(Property.MARGIN_RIGHT);
                             if (!marginRightUV.IsPointValue()) {
-                                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
-                                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                                    .MARGIN_RIGHT));
+                                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                    , Property.MARGIN_RIGHT));
                             }
                             x -= marginRightUV.GetValue();
                         }
                         else {
                             UnitValue marginLeftUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
                             if (!marginLeftUV.IsPointValue()) {
-                                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
-                                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                                    .MARGIN_LEFT));
+                                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                    , Property.MARGIN_LEFT));
                             }
                             x += marginLeftUV.GetValue();
                         }
@@ -340,9 +341,9 @@ namespace iText.Layout.Renderer {
             UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (listItemFont != null && fontSize != null) {
                 if (!fontSize.IsPointValue()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .FONT_SIZE));
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.FONT_SIZE));
                 }
                 float[] ascenderDescender = TextRenderer.CalculateAscenderDescender(listItemFont);
                 return new float[] { fontSize.GetValue() * ascenderDescender[0] / TextRenderer.TEXT_SPACE_COEFF, fontSize.

@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser;
 
 namespace iText.StyledXmlParser.Css.Util {
@@ -85,7 +86,8 @@ namespace iText.StyledXmlParser.Css.Util {
                             i = AppendQuotedString(sb, str, i);
                         }
                         else {
-                            if ((str[i] == 'u' || str[i] == 'U') && iText.IO.Util.Matcher.Match(URL_PATTERN, str.Substring(i)).Find()) {
+                            if ((str[i] == 'u' || str[i] == 'U') && iText.Commons.Utils.Matcher.Match(URL_PATTERN, str.Substring(i)).Find
+                                ()) {
                                 sb.Append(str.JSubstring(i, i + 4).ToLowerInvariant());
                                 i = AppendUrlContent(sb, str, i + 4);
                             }
@@ -110,7 +112,7 @@ namespace iText.StyledXmlParser.Css.Util {
             int end = CssUtils.FindNextUnescapedChar(source, endQuoteSymbol, start + 1);
             if (end == -1) {
                 end = source.Length;
-                LogManager.GetLogger(typeof(CssPropertyNormalizer)).Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
+                ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
                     .QUOTE_IS_NOT_CLOSED_IN_CSS_EXPRESSION, source));
             }
             else {
@@ -138,7 +140,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 else {
                     curr = CssUtils.FindNextUnescapedChar(source, ')', curr);
                     if (curr == -1) {
-                        LogManager.GetLogger(typeof(CssPropertyNormalizer)).Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
+                        ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
                             .URL_IS_NOT_CLOSED_IN_CSS_EXPRESSION, source));
                         return source.Length;
                     }
@@ -150,7 +152,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 }
             }
             else {
-                LogManager.GetLogger(typeof(CssPropertyNormalizer)).Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant
+                ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
                     .URL_IS_EMPTY_IN_CSS_EXPRESSION, source));
                 return source.Length;
             }

@@ -290,7 +290,7 @@ namespace iText.Svg.Converter {
         public virtual void CheckNullTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => SvgConverter.DrawOnDocument
                 ("test", null, 1));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.PARAMETER_CANNOT_BE_NULL, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.PARAMETER_CANNOT_BE_NULL, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -305,10 +305,16 @@ namespace iText.Svg.Converter {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CreateResourceResolverWithoutProcessorResultTest() {
+            ISvgConverterProperties props = new SvgConverterProperties();
+            NUnit.Framework.Assert.IsNotNull(SvgConverter.GetResourceResolver(null, props));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ResourceResolverInstanceCustomResolverTest() {
             DummySvgConverterProperties properties = new DummySvgConverterProperties();
             SvgConverterUnitTest.TestSvgProcessorResult testSvgProcessorResult = new SvgConverterUnitTest.TestSvgProcessorResult
-                (this);
+                ();
             ResourceResolver currentResolver = SvgConverter.GetResourceResolver(testSvgProcessorResult, properties);
             NUnit.Framework.Assert.IsNotNull(currentResolver);
         }
@@ -316,14 +322,13 @@ namespace iText.Svg.Converter {
         [NUnit.Framework.Test]
         public virtual void ResourceResolverInstanceCustomResolverNullPropsTest() {
             SvgConverterUnitTest.TestSvgProcessorResult testSvgProcessorResult = new SvgConverterUnitTest.TestSvgProcessorResult
-                (this);
+                ();
             ResourceResolver currentResolver = SvgConverter.GetResourceResolver(testSvgProcessorResult, null);
             NUnit.Framework.Assert.IsNotNull(currentResolver);
         }
 
-        internal class TestSvgProcessorResult : ISvgProcessorResult {
-            public TestSvgProcessorResult(SvgConverterUnitTest _enclosing) {
-                this._enclosing = _enclosing;
+        private class TestSvgProcessorResult : ISvgProcessorResult {
+            public TestSvgProcessorResult() {
             }
 
             public virtual IDictionary<String, ISvgNodeRenderer> GetNamedObjects() {
@@ -341,8 +346,6 @@ namespace iText.Svg.Converter {
             public virtual FontSet GetTempFonts() {
                 return null;
             }
-
-            private readonly SvgConverterUnitTest _enclosing;
         }
     }
 }

@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -522,9 +523,9 @@ namespace iText.Layout {
                 tabStops.Add(tabStop);
             }
             p.AddTabStops(tabStops);
-            foreach (String line in iText.IO.Util.StringUtil.Split(text, "\n")) {
-                foreach (String chunk in iText.IO.Util.StringUtil.Split(line, "\t")) {
-                    foreach (String piece in iText.IO.Util.StringUtil.Split(chunk, "#")) {
+            foreach (String line in iText.Commons.Utils.StringUtil.Split(text, "\n")) {
+                foreach (String chunk in iText.Commons.Utils.StringUtil.Split(line, "\t")) {
+                    foreach (String piece in iText.Commons.Utils.StringUtil.Split(chunk, "#")) {
                         if (!String.IsNullOrEmpty(piece)) {
                             p.Add(piece);
                         }

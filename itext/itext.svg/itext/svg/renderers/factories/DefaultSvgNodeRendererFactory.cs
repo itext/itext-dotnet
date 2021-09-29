@@ -42,10 +42,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Node;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 
@@ -57,61 +59,34 @@ namespace iText.Svg.Renderers.Factories {
     /// used by default by the entry points defined by this project.
     /// </summary>
     public class DefaultSvgNodeRendererFactory : ISvgNodeRendererFactory {
-        private IDictionary<String, Type> rendererMap = new Dictionary<String, Type>();
+        private readonly IDictionary<String, DefaultSvgNodeRendererMapper.ISvgNodeRendererCreator> rendererMap = new 
+            Dictionary<String, DefaultSvgNodeRendererMapper.ISvgNodeRendererCreator>();
 
-        private ICollection<String> ignoredTags = new HashSet<String>();
+        private readonly ICollection<String> ignoredTags = new HashSet<String>();
 
         /// <summary>
         /// Default constructor with default
         /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
         /// creation logic.
         /// </summary>
-        public DefaultSvgNodeRendererFactory()
-            : this(new DefaultSvgNodeRendererMapper()) {
-        }
-
-        /// <summary>
-        /// Constructor which allows injecting a custom
-        /// <see cref="ISvgNodeRendererMapper"/>
-        /// implementation.
-        /// </summary>
-        /// <param name="mapper">
-        /// the custom mapper implementation - if null, then we fall
-        /// back to the
-        /// <see cref="DefaultSvgNodeRendererMapper"/>
-        /// </param>
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. The user should use the customISvgNodeRendererFactory implementation (or the customDefaultSvgNodeRendererFactory extension) to create extensions of the factory."
-            )]
-        public DefaultSvgNodeRendererFactory(ISvgNodeRendererMapper mapper) {
-            if (mapper != null) {
-                rendererMap.AddAll(mapper.GetMapping());
-                ignoredTags.AddAll(mapper.GetIgnoredTags());
-            }
-            else {
-                ISvgNodeRendererMapper defaultMapper = new DefaultSvgNodeRendererMapper();
-                rendererMap.AddAll(defaultMapper.GetMapping());
-                ignoredTags.AddAll(defaultMapper.GetIgnoredTags());
-            }
+        public DefaultSvgNodeRendererFactory() {
+            DefaultSvgNodeRendererMapper defaultMapper = new DefaultSvgNodeRendererMapper();
+            rendererMap.AddAll(defaultMapper.GetMapping());
+            ignoredTags.AddAll(defaultMapper.GetIgnoredTags());
         }
 
         public virtual ISvgNodeRenderer CreateSvgNodeRendererForTag(IElementNode tag, ISvgNodeRenderer parent) {
             ISvgNodeRenderer result;
             if (tag == null) {
-                throw new SvgProcessingException(SvgLogMessageConstant.TAGPARAMETERNULL);
+                throw new SvgProcessingException(SvgExceptionMessageConstant.TAG_PARAMETER_NULL);
             }
-            try {
-                Type clazz = rendererMap.Get(tag.Name());
-                if (clazz == null) {
-                    ILog logger = LogManager.GetLogger(this.GetType());
-                    logger.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.UNMAPPEDTAG, tag.Name()));
-                    return null;
-                }
-                result = (ISvgNodeRenderer)System.Activator.CreateInstance(rendererMap.Get(tag.Name()));
+            DefaultSvgNodeRendererMapper.ISvgNodeRendererCreator svgNodeRendererCreator = rendererMap.Get(tag.Name());
+            if (svgNodeRendererCreator == null) {
+                ILogger logger = ITextLogManager.GetLogger(this.GetType());
+                logger.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.UNMAPPED_TAG, tag.Name()));
+                return null;
             }
-            catch (MissingMethodException ex) {
-                throw new SvgProcessingException(SvgLogMessageConstant.COULDNOTINSTANTIATE, ex).SetMessageParams(tag.Name(
-                    ));
-            }
+            result = svgNodeRendererCreator();
             // DefsSvgNodeRenderer should not have parental relationship with any renderer, it only serves as a storage
             if (parent != null && !(result is INoDrawSvgNodeRenderer) && !(parent is DefsSvgNodeRenderer)) {
                 result.SetParent(parent);

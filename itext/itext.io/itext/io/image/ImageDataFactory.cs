@@ -46,6 +46,7 @@ using System.Collections.Generic;
 #if !NETSTANDARD2_0
 using System.Drawing;
 #endif // !NETSTANDARD2_0
+using iText.Commons.Utils;
 using iText.IO.Codec;
 using iText.IO.Util;
 
@@ -111,11 +112,12 @@ namespace iText.IO.Image {
         public static ImageData Create(int width, int height, bool reverseBits, int typeCCITT, int parameters, byte
             [] data, int[] transparency) {
             if (transparency != null && transparency.Length != 2) {
-                throw new iText.IO.IOException(iText.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
+                    );
             }
             if (typeCCITT != RawImageData.CCITTG4 && typeCCITT != RawImageData.CCITTG3_1D && typeCCITT != RawImageData
                 .CCITTG3_2D) {
-                throw new iText.IO.IOException(iText.IO.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
                     );
             }
             if (reverseBits) {
@@ -125,7 +127,7 @@ namespace iText.IO.Image {
             image.SetTypeCcitt(typeCCITT);
             image.height = height;
             image.width = width;
-            image.colorSpace = parameters;
+            image.colorEncodingComponentsNumber = parameters;
             image.transparency = transparency;
             return image;
         }
@@ -141,7 +143,8 @@ namespace iText.IO.Image {
         public static ImageData Create(int width, int height, int components, int bpc, byte[] data, int[] transparency
             ) {
             if (transparency != null && transparency.Length != components * 2) {
-                throw new iText.IO.IOException(iText.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
+                    );
             }
             if (components == 1 && bpc == 1) {
                 byte[] g4 = CCITTG4Encoder.Compress(data, width, height);
@@ -152,12 +155,12 @@ namespace iText.IO.Image {
             image.height = height;
             image.width = width;
             if (components != 1 && components != 3 && components != 4) {
-                throw new iText.IO.IOException(iText.IO.IOException.ComponentsMustBe1_3Or4);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ComponentsMustBe1_3Or4);
             }
             if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8) {
-                throw new iText.IO.IOException(iText.IO.IOException.BitsPerComponentMustBe1_2_4or8);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.BitsPerComponentMustBe1_2_4or8);
             }
-            image.colorSpace = components;
+            image.colorEncodingComponentsNumber = components;
             image.bpc = bpc;
             image.data = data;
             image.transparency = transparency;
@@ -190,39 +193,19 @@ namespace iText.IO.Image {
         /// <param name="noHeader">Whether the image contains a header.</param>
         /// <returns>created ImageData</returns>
         public static ImageData CreateBmp(Uri url, bool noHeader) {
-            return CreateBmp(url, noHeader, 0);
-        }
-
-        /// <summary>Get a bitmap ImageData instance from the specified url.</summary>
-        /// <param name="url">location of the image.</param>
-        /// <param name="noHeader">Whether the image contains a header.</param>
-        /// <param name="size">size of the image</param>
-        /// <returns>created ImageData</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2")]
-        public static ImageData CreateBmp(Uri url, bool noHeader, int size) {
             ValidateImageType(url, ImageType.BMP);
-            ImageData image = new BmpImageData(url, noHeader, size);
+            ImageData image = new BmpImageData(url, noHeader);
             BmpImageHelper.ProcessImage(image);
             return image;
         }
 
         /// <summary>Get a bitmap ImageData instance from the provided bytes.</summary>
         /// <param name="bytes">array containing the raw image data</param>
-        /// <param name="noHeader">Whether the image contains a header</param>
-        /// <returns>created ImageData.</returns>
-        public static ImageData CreateBmp(byte[] bytes, bool noHeader) {
-            return CreateBmp(bytes, noHeader, 0);
-        }
-
-        /// <summary>Get a bitmap ImageData instance from the provided bytes.</summary>
-        /// <param name="bytes">array containing the raw image data</param>
         /// <param name="noHeader">Whether the image contains a header.</param>
-        /// <param name="size">size of the image</param>
         /// <returns>created ImageData</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2")]
-        public static ImageData CreateBmp(byte[] bytes, bool noHeader, int size) {
+        public static ImageData CreateBmp(byte[] bytes, bool noHeader) {
             if (noHeader || ImageTypeDetector.DetectImageType(bytes) == ImageType.BMP) {
-                ImageData image = new BmpImageData(bytes, noHeader, size);
+                ImageData image = new BmpImageData(bytes, noHeader);
                 BmpImageHelper.ProcessImage(image);
                 return image;
             }
@@ -505,7 +488,7 @@ namespace iText.IO.Image {
                 }
 
                 default: {
-                    throw new iText.IO.IOException(iText.IO.IOException.ImageFormatCannotBeRecognized);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ImageFormatCannotBeRecognized);
                 }
             }
         }
@@ -556,7 +539,7 @@ namespace iText.IO.Image {
                 }
 
                 default: {
-                    throw new iText.IO.IOException(iText.IO.IOException.ImageFormatCannotBeRecognized);
+                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ImageFormatCannotBeRecognized);
                 }
             }
         }

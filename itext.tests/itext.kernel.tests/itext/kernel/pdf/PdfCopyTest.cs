@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -64,8 +64,8 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
-        [LogMessage(iText.IO.LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN)]
         public virtual void CopySignedDocuments() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(sourceFolder + "hello_signed.pdf"));
             PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copySignedDocuments.pdf"));
@@ -129,7 +129,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 0; i < 5; i++) {
                 byte[] bytes = pdfDocument.GetPage(i + 1).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + (i * 2 + 1).ToString() + "\n", iText.IO.Util.JavaUtil.GetStringForBytes
+                NUnit.Framework.Assert.AreEqual("%page " + (i * 2 + 1).ToString() + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
                     (bytes));
             }
             pdfDocument.Close();
@@ -180,7 +180,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void CopyDocumentsWithFormFieldsTest() {
             String filename = sourceFolder + "fieldsOn2-sPage.pdf";
             PdfDocument sourceDoc = new PdfDocument(new PdfReader(filename));

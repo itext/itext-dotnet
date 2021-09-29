@@ -121,8 +121,8 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI, LogLevel
-             = LogLevelConstants.ERROR)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+            , LogLevel = LogLevelConstants.ERROR)]
         public virtual void SvgCssResolverInvalidNameStylesheetTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupLink = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf(SvgConstants.Tags.LINK), "");
@@ -197,7 +197,7 @@ namespace iText.Svg.Css {
             iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("style"), "");
             TextNode styleContents = new TextNode("\n" + "\tellipse{\n" + "\t\tstroke-width:1.76388889;\n" + "\t\tstroke:#da0000;\n"
-                 + "\t\tstroke-opacity:1;\n" + "\t}\n" + "  ", "");
+                 + "\t\tstroke-opacity:1;\n" + "\t}\n" + "  ");
             JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
             jSoupStyle.AddChild(new JsoupTextNode(styleContents));
             iText.StyledXmlParser.Jsoup.Nodes.Element ellipse = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
@@ -220,7 +220,7 @@ namespace iText.Svg.Css {
             iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("style"), "");
             TextNode styleContents = new TextNode("\n" + "\t@font-face{\n" + "\t\tfont-family:Courier;\n" + "\t\tsrc:url(#Super Sans);\n"
-                 + "\t}\n" + "  ", "");
+                 + "\t}\n" + "  ");
             JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
             jSoupStyle.AddChild(new JsoupTextNode(styleContents));
             SvgProcessorContext context = new SvgProcessorContext(new SvgConverterProperties());

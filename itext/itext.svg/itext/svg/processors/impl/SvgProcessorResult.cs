@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Layout.Font;
+using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Renderers;
 
@@ -57,52 +58,7 @@ namespace iText.Svg.Processors.Impl {
 
         private readonly ISvgNodeRenderer root;
 
-        [System.ObsoleteAttribute(@"Will be removed in 7.2.")]
-        private readonly FontProvider fontProvider;
-
-        [System.ObsoleteAttribute(@"Will be removed in 7.2.")]
-        private readonly FontSet tempFonts;
-
         private readonly SvgProcessorContext context;
-
-        /// <summary>
-        /// Creates new
-        /// <see cref="SvgProcessorResult"/>
-        /// entity.
-        /// </summary>
-        /// <param name="namedObjects">
-        /// a map of named-objects with their id's as
-        /// <see cref="System.String"/>
-        /// keys and
-        /// the
-        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
-        /// objects as values.
-        /// </param>
-        /// <param name="root">
-        /// a wrapped
-        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
-        /// root renderer.
-        /// </param>
-        /// <param name="fontProvider">
-        /// a
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// instance.
-        /// </param>
-        /// <param name="tempFonts">
-        /// a
-        /// <see cref="iText.Layout.Font.FontSet"/>
-        /// containing temporary fonts.
-        /// </param>
-        [System.ObsoleteAttribute(@"use SvgProcessorResult(System.Collections.Generic.IDictionary{K, V}, iText.Svg.Renderers.ISvgNodeRenderer, SvgProcessorContext) instead. Will be removed in 7.2."
-            )]
-        public SvgProcessorResult(IDictionary<String, ISvgNodeRenderer> namedObjects, ISvgNodeRenderer root, FontProvider
-             fontProvider, FontSet tempFonts) {
-            this.namedObjects = namedObjects;
-            this.root = root;
-            this.fontProvider = fontProvider;
-            this.tempFonts = tempFonts;
-            this.context = new SvgProcessorContext(new SvgConverterProperties());
-        }
 
         /// <summary>
         /// Creates new
@@ -131,9 +87,10 @@ namespace iText.Svg.Processors.Impl {
              context) {
             this.namedObjects = namedObjects;
             this.root = root;
+            if (context == null) {
+                throw new ArgumentException(SvgExceptionMessageConstant.PARAMETER_CANNOT_BE_NULL);
+            }
             this.context = context;
-            this.fontProvider = context.GetFontProvider();
-            this.tempFonts = context.GetTempFonts();
         }
 
         public virtual IDictionary<String, ISvgNodeRenderer> GetNamedObjects() {
@@ -145,11 +102,11 @@ namespace iText.Svg.Processors.Impl {
         }
 
         public virtual FontProvider GetFontProvider() {
-            return fontProvider;
+            return context.GetFontProvider();
         }
 
         public virtual FontSet GetTempFonts() {
-            return tempFonts;
+            return context.GetTempFonts();
         }
 
         /// <summary>

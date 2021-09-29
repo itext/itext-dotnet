@@ -45,7 +45,7 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
-using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
@@ -156,14 +156,14 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, LogLevel = LogLevelConstants.WARN)]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
         public virtual void ExternalStyleSheetWithFillStyleTest() {
             // TODO DEVSIX-4275 investigate why fill style not processed
             ConvertAndCompare(sourceFolder, destinationFolder, "externalStyleSheetWithFillStyleTest");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, LogLevel = LogLevelConstants.WARN)]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
         public virtual void ExternalStyleSheetWithStrokeStyleTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "externalStyleSheetWithStrokeStyleTest");
         }
@@ -206,7 +206,8 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+            )]
         public virtual void RelativeStyleInheritanceTest() {
             // TODO DEVSIX-4140 font-relative values doesn't support
             ConvertAndCompare(sourceFolder, destinationFolder, "relativeStyleInheritanceTest");

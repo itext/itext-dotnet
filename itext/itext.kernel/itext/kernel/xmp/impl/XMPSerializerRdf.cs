@@ -31,6 +31,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.XMP.Options;
 
@@ -76,7 +77,7 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>a set of all rdf attribute qualifier</summary>
 		internal static readonly ICollection<String> RDF_ATTR_QUALIFIER = new HashSet<String
-			>(iText.IO.Util.JavaUtil.ArraysAsList(XMPConst.XML_LANG, "rdf:resource",
+			>(JavaUtil.ArraysAsList(XMPConst.XML_LANG, "rdf:resource",
 			"rdf:ID", "rdf:bagID", "rdf:nodeID"));
 
 		/// <summary>the metadata object to be serialized.</summary>

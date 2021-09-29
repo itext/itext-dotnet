@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Util;
@@ -77,8 +78,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         */
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
             if (UNSUPPORTED_VALUES_OF_FONT_SHORTHAND.Contains(shorthandExpression)) {
-                ILog logger = LogManager.GetLogger(typeof(FontShorthandResolver));
-                logger.Error(MessageFormatUtil.Format("The \"{0}\" value of CSS shorthand property \"font\" is not supported"
+                ILogger logger = ITextLogManager.GetLogger(typeof(FontShorthandResolver));
+                logger.LogError(MessageFormatUtil.Format("The \"{0}\" value of CSS shorthand property \"font\" is not supported"
                     , shorthandExpression));
             }
             if (CommonCssConstants.INITIAL.Equals(shorthandExpression) || CommonCssConstants.INHERIT.Equals(shorthandExpression
@@ -95,8 +96,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             String fontSizeValue = null;
             String lineHeightValue = null;
             String fontFamilyValue = null;
-            IList<String> properties = GetFontProperties(iText.IO.Util.StringUtil.ReplaceAll(shorthandExpression, "\\s*,\\s*"
-                , ","));
+            IList<String> properties = GetFontProperties(iText.Commons.Utils.StringUtil.ReplaceAll(shorthandExpression
+                , "\\s*,\\s*", ","));
             foreach (String value in properties) {
                 int slashSymbolIndex = value.IndexOf('/');
                 if (CommonCssConstants.ITALIC.Equals(value) || CommonCssConstants.OBLIQUE.Equals(value)) {
@@ -117,7 +118,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                             }
                             else {
                                 if (FONT_SIZE_VALUES.Contains(value) || CssTypesValidationUtils.IsMetricValue(value) || CssTypesValidationUtils
-                                    .IsNumericValue(value) || CssTypesValidationUtils.IsRelativeValue(value)) {
+                                    .IsNumber(value) || CssTypesValidationUtils.IsRelativeValue(value)) {
                                     fontSizeValue = value;
                                 }
                                 else {

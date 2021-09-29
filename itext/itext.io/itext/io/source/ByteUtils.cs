@@ -42,7 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.IO.Util;
 
 namespace iText.IO.Source {
@@ -142,11 +143,11 @@ namespace iText.IO.Source {
                     }
                 }
                 if (double.IsNaN(d)) {
-                    ILog logger = LogManager.GetLogger(typeof(ByteUtils));
-                    logger.Error(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN);
+                    ILogger logger = ITextLogManager.GetLogger(typeof(ByteUtils));
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN);
                     d = 0;
                 }
-                byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+                byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                     );
                 if (buffer != null) {
                     buffer.Prepend(result);
@@ -273,8 +274,8 @@ namespace iText.IO.Source {
                     }
                     else {
                         if (double.IsNaN(d)) {
-                            ILog logger = LogManager.GetLogger(typeof(ByteUtils));
-                            logger.Error(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN);
+                            ILogger logger = ITextLogManager.GetLogger(typeof(ByteUtils));
+                            logger.LogError(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN);
                             // in java NaN casted to long results in 0, but in .NET it results in long.MIN_VALUE
                             d = 0;
                         }

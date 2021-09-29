@@ -42,8 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Selector;
 using iText.StyledXmlParser.Css.Util;
@@ -52,7 +53,7 @@ namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Utilities class to parse CSS rule sets.</summary>
     public sealed class CssRuleSetParser {
         /// <summary>The logger.</summary>
-        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Parse.CssRuleSetParser
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Parse.CssRuleSetParser
             ));
 
         /// <summary>
@@ -94,7 +95,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                     propertiesStr = propertiesStr.Substring(pos + 1);
                     pos = GetSemicolonPosition(propertiesStr, 0);
                 }
-                if (!String.IsNullOrEmpty(iText.IO.Util.StringUtil.ReplaceAll(propertiesStr, "[\\n\\r\\t ]", ""))) {
+                if (!String.IsNullOrEmpty(iText.Commons.Utils.StringUtil.ReplaceAll(propertiesStr, "[\\n\\r\\t ]", ""))) {
                     String[] propertySplit = SplitCssProperty(propertiesStr);
                     if (propertySplit != null) {
                         declarations.Add(new CssDeclaration(propertySplit[0], propertySplit[1]));
@@ -130,7 +131,7 @@ namespace iText.StyledXmlParser.Css.Parse {
             IList<CssDeclaration> declarations = ParsePropertyDeclarations(propertiesStr);
             IList<CssRuleSet> ruleSets = new List<CssRuleSet>();
             //check for rules like p, {…}
-            String[] selectors = iText.IO.Util.StringUtil.Split(selectorStr, ",");
+            String[] selectors = iText.Commons.Utils.StringUtil.Split(selectorStr, ",");
             for (int i = 0; i < selectors.Length; i++) {
                 selectors[i] = CssUtils.RemoveDoubleSpacesAndTrim(selectors[i]);
                 if (selectors[i].Length == 0) {
@@ -142,8 +143,8 @@ namespace iText.StyledXmlParser.Css.Parse {
                     ruleSets.Add(new CssRuleSet(new CssSelector(currentSelectorStr), declarations));
                 }
                 catch (Exception exc) {
-                    logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.ERROR_PARSING_CSS_SELECTOR, 
-                        currentSelectorStr), exc);
+                    logger.LogError(exc, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
+                        .ERROR_PARSING_CSS_SELECTOR, currentSelectorStr));
                     //if any separated selector has errors, all others become invalid.
                     //in this case we just clear map, it is the easies way to support this.
                     declarations.Clear();
@@ -167,7 +168,7 @@ namespace iText.StyledXmlParser.Css.Parse {
             String[] result = new String[2];
             int position = property.IndexOf(":", StringComparison.Ordinal);
             if (position < 0) {
-                logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                     , property.Trim()));
                 return null;
             }

@@ -87,6 +87,18 @@ namespace iText.Kernel.Pdf {
             return Put(PdfName.Creator, new PdfString(creator, PdfEncodings.UNICODE_BIG));
         }
 
+        /// <summary>
+        /// Sets a producer line for the
+        /// <see cref="PdfDocument"/>
+        /// described by this instance.
+        /// </summary>
+        /// <param name="producer">is a new producer line to set</param>
+        /// <returns>this instance</returns>
+        public virtual iText.Kernel.Pdf.PdfDocumentInfo SetProducer(String producer) {
+            GetPdfObject().Put(PdfName.Producer, new PdfString(producer, PdfEncodings.UNICODE_BIG));
+            return this;
+        }
+
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetTrapped(PdfName trapped) {
             return Put(PdfName.Trapped, trapped);
         }

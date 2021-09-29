@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Image;
-using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;

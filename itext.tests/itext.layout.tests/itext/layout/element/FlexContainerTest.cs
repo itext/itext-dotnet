@@ -23,8 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using iText.Commons.Utils;
 using iText.IO.Image;
-using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -182,7 +182,7 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Ignore = true)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Ignore = true)]
         public virtual void FlexContainerDifferentChildrenDontFitHorizontallyTest() {
             // TODO DEVSIX-5042 HEIGHT property is ignored when FORCED_PLACEMENT is true
             String outFileName = destinationFolder + "flexContainerDifferentChildrenDontFitHorizontallyTest" + comparisonPdfId

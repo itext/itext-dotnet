@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Collection {
@@ -244,7 +244,7 @@ namespace iText.Kernel.Pdf.Collection {
                     return new PdfNumber(Double.Parse(value.Trim(), System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
-            throw new PdfException(PdfException._1IsNotAnAcceptableValueForTheField2).SetMessageParams(value, GetPdfObject
+            throw new PdfException(KernelExceptionMessageConstant.UNACCEPTABLE_FIELD_VALUE).SetMessageParams(value, GetPdfObject
                 ().GetAsString(PdfName.N).GetValue());
         }
 

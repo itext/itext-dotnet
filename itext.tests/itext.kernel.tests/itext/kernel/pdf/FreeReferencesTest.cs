@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -101,7 +101,7 @@ namespace iText.Kernel.Pdf {
             pdfDocument.AddNewPage();
             // fix page content
             PdfStream firstPageContentStream = pdfDocument.GetPage(1).GetContentStream(0);
-            String firstPageData = iText.IO.Util.JavaUtil.GetStringForBytes(firstPageContentStream.GetBytes());
+            String firstPageData = iText.Commons.Utils.JavaUtil.GetStringForBytes(firstPageContentStream.GetBytes());
             firstPageContentStream.SetData((firstPageData.JSubstring(0, firstPageData.LastIndexOf("BT")) + "ET").GetBytes
                 ());
             firstPageContentStream.SetModified();
@@ -204,7 +204,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE)]
         public virtual void FreeARefInWrongWayTest01() {
             String @out = "freeARefInWrongWayTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + @out));
@@ -232,7 +232,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 2)]
         public virtual void FreeARefInWrongWayTest02() {
             String @out = "freeARefInWrongWayTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + @out));
@@ -265,7 +265,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE)]
         public virtual void FreeARefInWrongWayTest03() {
             String @out = "freeARefInWrongWayTest03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + @out));
@@ -297,7 +297,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ALREADY_FLUSHED_INDIRECT_OBJECT_MADE_FREE)]
         public virtual void FreeARefInWrongWayTest04() {
             String @out = "freeARefInWrongWayTest04.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + @out));
@@ -503,7 +503,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void CorruptedDocIndRefToFree01() {
             String src = "corruptedDocIndRefToFree.pdf";
             String @out = "corruptedDocIndRefToFree01.pdf";
@@ -887,8 +887,8 @@ namespace iText.Kernel.Pdf {
         }
 
         private bool CompareXrefSection(String xrefSection, String expectedSection) {
-            String[] xrefEntries = iText.IO.Util.StringUtil.Split(xrefSection, "\n");
-            String[] expectedEntries = iText.IO.Util.StringUtil.Split(expectedSection, "\n");
+            String[] xrefEntries = iText.Commons.Utils.StringUtil.Split(xrefSection, "\n");
+            String[] expectedEntries = iText.Commons.Utils.StringUtil.Split(expectedSection, "\n");
             if (xrefEntries.Length != expectedEntries.Length) {
                 return false;
             }
@@ -908,7 +908,8 @@ namespace iText.Kernel.Pdf {
 
         private String[] ExtractXrefTableAsStrings(String @out) {
             byte[] outPdfBytes = ReadFile(destinationFolder + @out);
-            String outPdfContent = iText.IO.Util.JavaUtil.GetStringForBytes(outPdfBytes, System.Text.Encoding.ASCII);
+            String outPdfContent = iText.Commons.Utils.JavaUtil.GetStringForBytes(outPdfBytes, System.Text.Encoding.ASCII
+                );
             String xrefStr = "\nxref";
             String trailerStr = "trailer";
             int xrefInd = outPdfContent.IndexOf(xrefStr, StringComparison.Ordinal);

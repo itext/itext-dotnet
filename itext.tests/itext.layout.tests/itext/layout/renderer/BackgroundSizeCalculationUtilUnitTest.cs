@@ -37,7 +37,7 @@ namespace iText.Layout.Renderer {
         public virtual void CalculateImageSizeTest() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
                 ));
-            BackgroundImage backgroundImage = new BackgroundImage(xObject);
+            BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).Build();
             float[] widthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 200f, 
                 300f);
             NUnit.Framework.Assert.AreEqual(new float[] { 45f, 45f }, widthAndHeight);
@@ -47,7 +47,7 @@ namespace iText.Layout.Renderer {
         public virtual void CalculateImageSizeWithCoverPropertyTest() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
                 ));
-            BackgroundImage backgroundImage = new BackgroundImage(xObject);
+            BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).Build();
             backgroundImage.GetBackgroundSize().SetBackgroundSizeToCover();
             float[] widthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 200f, 
                 300f);
@@ -58,7 +58,7 @@ namespace iText.Layout.Renderer {
         public virtual void CalculateSizeWithContainPropertyTest() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
                 ));
-            BackgroundImage backgroundImage = new BackgroundImage(xObject);
+            BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).Build();
             backgroundImage.GetBackgroundSize().SetBackgroundSizeToContain();
             float[] widthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 200f, 
                 300f);
@@ -68,7 +68,7 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void CalculateSizeWithContainAndImageWeightMoreThatHeightTest() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
-            BackgroundImage backgroundImage = new BackgroundImage(xObject);
+            BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).Build();
             backgroundImage.GetBackgroundSize().SetBackgroundSizeToContain();
             float[] widthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 200f, 
                 300f);
@@ -78,7 +78,7 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void CalculateSizeWithCoverAndImageWeightMoreThatHeightTest() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
-            BackgroundImage backgroundImage = new BackgroundImage(xObject);
+            BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).Build();
             backgroundImage.GetBackgroundSize().SetBackgroundSizeToCover();
             float[] widthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 200f, 
                 300f);

@@ -86,15 +86,15 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < 4; i++) {
                 PdfPage page = document.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.AddXObject(images[i], PageSize.Default);
+                canvas.AddXObjectFittedIntoRectangle(images[i], PageSize.DEFAULT);
                 page.Flush();
             }
             PdfPage page_1 = document.AddNewPage();
             PdfCanvas canvas_1 = new PdfCanvas(page_1);
-            canvas_1.AddXObject(images[0], 0, 0, 200);
-            canvas_1.AddXObject(images[1], 300, 0, 200);
-            canvas_1.AddXObject(images[2], 0, 300, 200);
-            canvas_1.AddXObject(images[3], 300, 300, 200);
+            canvas_1.AddXObjectFittedIntoRectangle(images[0], new Rectangle(0, 0, 200, 112.35f));
+            canvas_1.AddXObjectFittedIntoRectangle(images[1], new Rectangle(300, 0, 200, 112.35f));
+            canvas_1.AddXObjectFittedIntoRectangle(images[2], new Rectangle(0, 300, 200, 112.35f));
+            canvas_1.AddXObjectFittedIntoRectangle(images[3], new Rectangle(300, 300, 200, 112.35f));
             canvas_1.Release();
             page_1.Flush();
             document.Close();
@@ -104,7 +104,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
         public virtual void CreateDocumentFromImages2() {
             String destinationDocument = DESTINATION_FOLDER + "documentFromImages2.pdf";
             FileStream fos = new FileStream(destinationDocument, FileMode.Create);
@@ -113,8 +113,8 @@ namespace iText.Kernel.Pdf {
             ImageData image = ImageDataFactory.Create(SOURCE_FOLDER + "itext.jpg");
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.AddImage(image, 50, 500, 100, true);
-            canvas.AddImage(image, 200, 500, 100, false).Flush();
+            canvas.AddImageFittedIntoRectangle(image, new Rectangle(50, 500, 100, 14.16f), true);
+            canvas.AddImageFittedIntoRectangle(image, new Rectangle(200, 500, 100, 14.16f), false).Flush();
             canvas.Release();
             page.Flush();
             document.Close();
@@ -160,7 +160,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void XObjectIterativeReference() {
             // The input file contains circular references chain, see: 8 0 R -> 10 0 R -> 4 0 R -> 8 0 R.
             // Copying of such file even with smart mode is expected to be handled correctly.

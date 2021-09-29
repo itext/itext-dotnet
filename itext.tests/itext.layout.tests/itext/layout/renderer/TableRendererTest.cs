@@ -53,7 +53,7 @@ using iText.Test.Attributes;
 namespace iText.Layout.Renderer {
     public class TableRendererTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 6)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 6)]
         public virtual void CalculateColumnWidthsNotPointValue() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             Document doc = new Document(pdfDoc);

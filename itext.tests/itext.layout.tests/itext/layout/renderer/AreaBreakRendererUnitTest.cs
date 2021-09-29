@@ -117,7 +117,8 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void GetModelElementTest() {
-            AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
+            AreaBreak areaBreak = new AreaBreak();
+            AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(areaBreak);
             NUnit.Framework.Assert.IsNull(areaBreakRenderer.GetModelElement());
         }
 

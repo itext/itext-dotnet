@@ -42,8 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Util;
@@ -80,19 +81,19 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 return JavaUtil.ArraysAsList(new CssDeclaration(widthPropName, shorthandExpression), new CssDeclaration(stylePropName
                     , shorthandExpression), new CssDeclaration(colorPropName, shorthandExpression));
             }
-            String[] props = iText.IO.Util.StringUtil.Split(shorthandExpression, "\\s+");
+            String[] props = iText.Commons.Utils.StringUtil.Split(shorthandExpression, "\\s+");
             String borderColorValue = null;
             String borderStyleValue = null;
             String borderWidthValue = null;
             foreach (String value in props) {
                 if (CommonCssConstants.INITIAL.Equals(value) || CommonCssConstants.INHERIT.Equals(value)) {
-                    ILog logger = LogManager.GetLogger(typeof(AbstractBorderShorthandResolver));
-                    logger.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    ILogger logger = ITextLogManager.GetLogger(typeof(AbstractBorderShorthandResolver));
+                    logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                         , shorthandExpression));
                     return JavaCollectionsUtil.EmptyList<CssDeclaration>();
                 }
-                if (CommonCssConstants.BORDER_WIDTH_VALUES.Contains(value) || CssTypesValidationUtils.IsNumericValue(value
-                    ) || CssTypesValidationUtils.IsMetricValue(value) || CssTypesValidationUtils.IsRelativeValue(value)) {
+                if (CommonCssConstants.BORDER_WIDTH_VALUES.Contains(value) || CssTypesValidationUtils.IsNumber(value) || CssTypesValidationUtils
+                    .IsMetricValue(value) || CssTypesValidationUtils.IsRelativeValue(value)) {
                     borderWidthValue = value;
                 }
                 else {

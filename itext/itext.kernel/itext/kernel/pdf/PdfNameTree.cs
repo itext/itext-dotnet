@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf {
     public class PdfNameTree {
@@ -127,9 +128,9 @@ namespace iText.Kernel.Pdf {
                     return;
                 }
                 else {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfNameTree));
-                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, key
-                        ));
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfNameTree));
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE
+                        , key));
                 }
             }
             modified = true;

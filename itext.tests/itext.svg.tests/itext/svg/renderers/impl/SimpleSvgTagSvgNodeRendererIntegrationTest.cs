@@ -41,9 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Util;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Exceptions;
-using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Test;
 using iText.Test.Attributes;
@@ -165,7 +165,8 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 2)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+            , Count = 2)]
         public virtual void PercentInMeasurement() {
             //TODO: update after DEVSIX-2377
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "percentInMeasurement");

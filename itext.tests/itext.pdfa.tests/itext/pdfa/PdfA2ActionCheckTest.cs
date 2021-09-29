@@ -42,11 +42,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Utils;
+using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa {

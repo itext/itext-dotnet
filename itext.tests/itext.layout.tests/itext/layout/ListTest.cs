@@ -146,7 +146,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 8)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 8)]
         public virtual void AddListOnShortPage1() {
             String outFileName = destinationFolder + "addListOnShortPage1.pdf";
             String cmpFileName = sourceFolder + "cmp_addListOnShortPage1.pdf";
@@ -172,8 +172,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
-        [LogMessage(iText.IO.LogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT, Count = 6)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT, Count = 6)]
         public virtual void AddListOnShortPage2() {
             String outFileName = destinationFolder + "addListOnShortPage2.pdf";
             String cmpFileName = sourceFolder + "cmp_addListOnShortPage2.pdf";
@@ -354,7 +354,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 4)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 4)]
         [NUnit.Framework.Test]
         public virtual void ListWithSetHeightProperties01() {
             String outFileName = destinationFolder + "listWithSetHeightProperties01.pdf";
@@ -465,7 +465,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ListSymbolForcedPlacement01() {
             String outFileName = destinationFolder + "listSymbolForcedPlacement01.pdf";
             String cmpFileName = sourceFolder + "cmp_listSymbolForcedPlacement01.pdf";
@@ -484,6 +484,54 @@ namespace iText.Layout {
             // TODO DEVSIX-1655: partially not fitting list symbol not shown at all, however this might be improved
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BothSymbolIndentAndMarginAreSetTest() {
+            // There is no symbol indent in html: one uses margins for such a purpose.
+            String outFileName = destinationFolder + "bothSymbolIndentAndMarginAreSetTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_bothSymbolIndentAndMarginAreSetTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            List l = CreateTestList();
+            ListItem li = new ListItem("Only symbol indent: 50pt");
+            li.SetBackgroundColor(ColorConstants.BLUE);
+            l.Add(li);
+            li = new ListItem("Symbol indent: 50pt and margin-left: 50pt = 100pt");
+            li.SetMarginLeft(50);
+            li.SetBackgroundColor(ColorConstants.YELLOW);
+            l.Add(li);
+            document.Add(l);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED)]
+        public virtual void ListItemMarginInPercentTest() {
+            String outFileName = destinationFolder + "listItemMarginInPercentTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_listItemMarginInPercentTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            List l = CreateTestList();
+            ListItem li = new ListItem("Left margin in percent: 50%");
+            li.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePercentValue(50));
+            li.SetBackgroundColor(ColorConstants.BLUE);
+            l.Add(li);
+            document.Add(l);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        private static List CreateTestList() {
+            List l = new List();
+            l.SetWidth(300);
+            l.SetBackgroundColor(ColorConstants.RED);
+            l.SetSymbolIndent(50);
+            l.SetListSymbol("\u2022");
+            return l;
         }
     }
 }

@@ -78,7 +78,7 @@ namespace iText.Forms.Util {
             canvas.SaveState();
             canvas.ResetFillColorRgb();
             canvas.ConcatMatrix(width, 0, 0, height, moveX, moveY);
-            canvas.GetContentStream().GetOutputStream().WriteBytes(appearanceString.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+            canvas.GetContentStream().GetOutputStream().WriteBytes(appearanceString.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ));
             canvas.RestoreState();
         }

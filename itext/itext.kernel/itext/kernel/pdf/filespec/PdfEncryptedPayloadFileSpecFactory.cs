@@ -42,8 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Common.Logging;
-using iText.Kernel;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filespec {
@@ -152,22 +153,25 @@ namespace iText.Kernel.Pdf.Filespec {
 
         public static PdfFileSpec Wrap(PdfDictionary dictionary) {
             if (!PdfName.EncryptedPayload.Equals(dictionary.GetAsName(PdfName.AFRelationship))) {
-                LogManager.GetLogger(typeof(PdfEncryptedPayloadFileSpecFactory)).Error(iText.IO.LogMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_AFRELATIONSHIP_FILED_EQUAL_TO_ENCRYPTED_PAYLOAD
-                    );
+                ITextLogManager.GetLogger(typeof(PdfEncryptedPayloadFileSpecFactory)).LogError(iText.IO.Logs.IoLogMessageConstant
+                    .ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_AFRELATIONSHIP_FILED_EQUAL_TO_ENCRYPTED_PAYLOAD);
             }
             PdfDictionary ef = dictionary.GetAsDictionary(PdfName.EF);
             if (ef == null || (ef.GetAsStream(PdfName.F) == null) && (ef.GetAsStream(PdfName.UF) == null)) {
-                throw new PdfException(PdfException.EncryptedPayloadFileSpecShallHaveEFDictionary);
+                throw new PdfException(KernelExceptionMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_EF_DICTIONARY
+                    );
             }
             if (!PdfName.Filespec.Equals(dictionary.GetAsName(PdfName.Type))) {
-                throw new PdfException(PdfException.EncryptedPayloadFileSpecShallHaveTypeEqualToFilespec);
+                throw new PdfException(KernelExceptionMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_TYPE_EQUAL_TO_FILESPEC
+                    );
             }
             if (!dictionary.IsIndirect()) {
-                throw new PdfException(PdfException.EncryptedPayloadFileSpecShallBeIndirect);
+                throw new PdfException(KernelExceptionMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_BE_INDIRECT);
             }
             PdfFileSpec fileSpec = PdfFileSpec.WrapFileSpecObject(dictionary);
             if (PdfEncryptedPayload.ExtractFrom(fileSpec) == null) {
-                throw new PdfException(PdfException.EncryptedPayloadFileSpecDoesntHaveEncryptedPayloadDictionary);
+                throw new PdfException(KernelExceptionMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_DOES_NOT_HAVE_ENCRYPTED_PAYLOAD_DICTIONARY
+                    );
             }
             return fileSpec;
         }

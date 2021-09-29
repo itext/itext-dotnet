@@ -47,7 +47,7 @@ using Org.BouncyCastle;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.X509;
-using iText.IO.Codec;
+using iText.Commons.Utils;
 
 namespace iText.Signatures {
     /// <summary>

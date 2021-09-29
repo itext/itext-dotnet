@@ -44,18 +44,23 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Actions.Contexts;
+using iText.Commons.Actions.Sequence;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Font;
 using iText.Layout.Hyphenation;
 using iText.Layout.Layout;
@@ -206,9 +211,9 @@ namespace iText.Layout.Renderer {
             int currentTextPos = text.start;
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .FONT_SIZE));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.FONT_SIZE));
             }
             float textRise = (float)this.GetPropertyAsFloat(Property.TEXT_RISE);
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
@@ -685,6 +690,10 @@ namespace iText.Layout.Renderer {
             UpdateFontAndText();
             UnicodeScript? script = this.GetProperty<UnicodeScript?>(Property.FONT_SCRIPT);
             if (!otfFeaturesApplied && TypographyUtils.IsPdfCalligraphAvailable() && text.start < text.end) {
+                PdfDocument pdfDocument = GetPdfDocument();
+                SequenceId sequenceId = pdfDocument == null ? null : pdfDocument.GetDocumentIdWrapper();
+                MetaInfoContainer metaInfoContainer = this.GetProperty<MetaInfoContainer>(Property.META_INFO);
+                IMetaInfo metaInfo = metaInfoContainer == null ? null : metaInfoContainer.GetMetaInfo();
                 if (HasOtfFont()) {
                     Object typographyConfig = this.GetProperty<Object>(Property.TYPOGRAPHY_CONFIG);
                     ICollection<UnicodeScript> supportedScripts = null;
@@ -743,7 +752,8 @@ namespace iText.Layout.Renderer {
                             // from text renderers (see LineRenderer#applyOtf).
                             SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
                         }
-                        TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, scriptsRange.script, typographyConfig);
+                        TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, scriptsRange.script, typographyConfig, sequenceId
+                            , metaInfo);
                         delta += text.end - scriptsRange.rangeEnd;
                         scriptsRange.rangeEnd = shapingRangeStart = text.end;
                     }
@@ -753,7 +763,7 @@ namespace iText.Layout.Renderer {
                 FontKerning fontKerning = (FontKerning)this.GetProperty<FontKerning?>(Property.FONT_KERNING, FontKerning.NO
                     );
                 if (fontKerning == FontKerning.YES) {
-                    TypographyUtils.ApplyKerning(font.GetFontProgram(), text);
+                    TypographyUtils.ApplyKerning(font.GetFontProgram(), text, sequenceId, metaInfo);
                 }
                 otfFeaturesApplied = true;
             }
@@ -761,9 +771,9 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
-                    "Drawing won't be performed."));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                    , "Drawing won't be performed."));
                 return;
             }
             // Set up marked content before super.draw so that annotations are placed within marked content
@@ -796,9 +806,9 @@ namespace iText.Layout.Renderer {
             if (line.end > line.start || savedWordBreakAtLineEnding != null) {
                 UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
                 if (!fontSize.IsPointValue()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .FONT_SIZE));
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        , Property.FONT_SIZE));
                 }
                 TransparentColor fontColor = GetPropertyAsTransparentColor(Property.FONT_COLOR);
                 int? textRenderingMode = this.GetProperty<int?>(Property.TEXT_RENDERING_MODE);
@@ -889,7 +899,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_954();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_964();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -951,8 +961,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_954 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_954() {
+        private sealed class _IGlyphLineFilter_964 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_964() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -999,9 +1009,9 @@ namespace iText.Layout.Renderer {
             }
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .FONT_SIZE));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.FONT_SIZE));
             }
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
             float? wordSpacing = this.GetPropertyAsFloat(Property.WORD_SPACING);
@@ -1076,24 +1086,6 @@ namespace iText.Layout.Renderer {
             strToBeConverted = text;
             //strToBeConverted will be null after next method.
             UpdateFontAndText();
-        }
-
-        /// <summary>Manually sets a GlyphLine to be rendered with a specific start and end point.</summary>
-        /// <param name="text">
-        /// a
-        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
-        /// </param>
-        /// <param name="leftPos">the leftmost end of the GlyphLine</param>
-        /// <param name="rightPos">the rightmost end of the GlyphLine</param>
-        [System.ObsoleteAttribute(@"use SetText(iText.IO.Font.Otf.GlyphLine, iText.Kernel.Font.PdfFont) instead")]
-        public virtual void SetText(GlyphLine text, int leftPos, int rightPos) {
-            GlyphLine newText = new GlyphLine(text);
-            newText.start = leftPos;
-            newText.end = rightPos;
-            if (this.font != null) {
-                newText = TextPreprocessingUtil.ReplaceSpecialWhitespaceGlyphs(newText, this.font);
-            }
-            SetProcessedGlyphLineAndFont(newText, this.font);
         }
 
         /// <summary>Manually set a GlyphLine and PdfFont for rendering.</summary>
@@ -1484,9 +1476,9 @@ namespace iText.Layout.Renderer {
         protected internal virtual float CalculateLineWidth() {
             UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                    .FONT_SIZE));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.FONT_SIZE));
             }
             return GetGlyphLineWidth(line, fontSize.GetValue(), (float)this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING
                 , 1f), this.GetPropertyAsFloat(Property.CHARACTER_SPACING), this.GetPropertyAsFloat(Property.WORD_SPACING
@@ -1511,18 +1503,12 @@ namespace iText.Layout.Renderer {
                 return false;
             }
             else {
-                if (font is String || font is String[]) {
-                    if (font is String) {
-                        ILog logger = LogManager.GetLogger(typeof(AbstractRenderer));
-                        logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
-                            );
-                        IList<String> splitFontFamily = FontFamilySplitter.SplitFontFamily((String)font);
-                        font = splitFontFamily.ToArray(new String[splitFontFamily.Count]);
-                    }
+                if (font is String[]) {
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     FontSet fontSet = this.GetProperty<FontSet>(Property.FONT_SET);
                     if (provider.GetFontSet().IsEmpty() && (fontSet == null || fontSet.IsEmpty())) {
-                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
+                        throw new InvalidOperationException(LayoutExceptionMessageConstant.FONT_PROVIDER_NOT_SET_FONT_FAMILY_NOT_RESOLVED
+                            );
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList((String[])font
@@ -1546,22 +1532,6 @@ namespace iText.Layout.Renderer {
                     throw new InvalidOperationException("Invalid FONT property value type.");
                 }
             }
-        }
-
-        /// <param name="gl">
-        /// 
-        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
-        /// glyph to be set
-        /// </param>
-        /// <param name="font">
-        /// 
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// font to be set
-        /// </param>
-        [System.ObsoleteAttribute(@"use SetProcessedGlyphLineAndFont(iText.IO.Font.Otf.GlyphLine, iText.Kernel.Font.PdfFont) instead"
-            )]
-        protected internal virtual void SetGlyphLineAndFont(GlyphLine gl, PdfFont font) {
-            SetProcessedGlyphLineAndFont(gl, font);
         }
 
         protected internal virtual void SetProcessedGlyphLineAndFont(GlyphLine gl, PdfFont font) {
@@ -1630,8 +1600,9 @@ namespace iText.Layout.Renderer {
         /// </returns>
         protected internal virtual iText.Layout.Renderer.TextRenderer CreateCopy(GlyphLine gl, PdfFont font) {
             if (typeof(iText.Layout.Renderer.TextRenderer) != this.GetType()) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN
+                    ));
             }
             iText.Layout.Renderer.TextRenderer copy = new iText.Layout.Renderer.TextRenderer(this);
             copy.SetProcessedGlyphLineAndFont(gl, font);
@@ -1807,8 +1778,8 @@ namespace iText.Layout.Renderer {
                 catch (InvalidCastException) {
                     newFont = ResolveFirstPdfFont();
                     if (!String.IsNullOrEmpty(strToBeConverted)) {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                        logger.Error(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
+                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
                     }
                 }
                 GlyphLine newText = newFont.CreateGlyphLine(strToBeConverted);

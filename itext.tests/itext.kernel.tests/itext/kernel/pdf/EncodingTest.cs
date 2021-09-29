@@ -200,8 +200,8 @@ namespace iText.Kernel.Pdf {
             String fileName = "symbolTrueTypeFontWinAnsiTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
-                );
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .PREFER_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             StringBuilder str = new StringBuilder();
             for (int i = 32; i <= 65; i++) {

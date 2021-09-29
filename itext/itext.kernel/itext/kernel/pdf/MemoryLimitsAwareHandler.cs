@@ -41,7 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     /// <summary>
@@ -208,13 +208,13 @@ namespace iText.Kernel.Pdf {
         /// <see cref="MemoryLimitsAwareHandler"/>
         /// instance.
         /// </returns>
-        /// <seealso cref="MemoryLimitsAwareException"/>
+        /// <seealso cref="iText.Kernel.Exceptions.MemoryLimitsAwareException"/>
         internal virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler ConsiderBytesOccupiedByDecompressedPdfStream(long
              numOfOccupiedBytes) {
             if (considerCurrentPdfStream && memoryUsedForCurrentPdfStreamDecompression < numOfOccupiedBytes) {
                 memoryUsedForCurrentPdfStreamDecompression = numOfOccupiedBytes;
                 if (memoryUsedForCurrentPdfStreamDecompression > maxSizeOfSingleDecompressedPdfStream) {
-                    throw new MemoryLimitsAwareException(PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed
+                    throw new MemoryLimitsAwareException(KernelExceptionMessageConstant.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
                         );
                 }
             }
@@ -243,11 +243,11 @@ namespace iText.Kernel.Pdf {
         /// <see cref="MemoryLimitsAwareHandler"/>
         /// instance.
         /// </returns>
-        /// <seealso cref="MemoryLimitsAwareException"/>
+        /// <seealso cref="iText.Kernel.Exceptions.MemoryLimitsAwareException"/>
         internal virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler EndDecompressedPdfStreamProcessing() {
             allMemoryUsedForDecompression += memoryUsedForCurrentPdfStreamDecompression;
             if (allMemoryUsedForDecompression > maxSizeOfDecompressedPdfStreamsSum) {
-                throw new MemoryLimitsAwareException(PdfException.DuringDecompressionMultipleStreamsInSumOccupiedMoreMemoryThanAllowed
+                throw new MemoryLimitsAwareException(KernelExceptionMessageConstant.DURING_DECOMPRESSION_MULTIPLE_STREAMS_IN_SUM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
                     );
             }
             EnsureCurrentStreamIsReset();

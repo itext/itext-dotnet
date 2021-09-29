@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Utils;
@@ -42,28 +42,28 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET, Count = 108)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET, Count = 108)]
         public virtual void ReleaseObjectsInDocWithStructTreeRootTest() {
             SinglePdfObjectReleaseTest("releaseObjectsInDocWithStructTreeRoot.pdf", "releaseObjectsInDocWithStructTreeRoot_stamping.pdf"
                 , "releaseObjectsInDocWithStructTreeRoot_stamping_release.pdf");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET, Count = 5)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET, Count = 5)]
         public virtual void ReleaseObjectsInDocWithXfaTest() {
             SinglePdfObjectReleaseTest("releaseObjectsInDocWithXfa.pdf", "releaseObjectsInDocWithXfa_stamping.pdf", "releaseObjectsInDocWithXfa_stamping_release.pdf"
                 );
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET, Count = 3)]
         public virtual void ReleaseObjectsInSimpleDocTest() {
             SinglePdfObjectReleaseTest("releaseObjectsInSimpleDoc.pdf", "releaseObjectsInSimpleDoc_stamping.pdf", "releaseObjectsInSimpleDoc_stamping_release.pdf"
                 );
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET)]
         public virtual void ReleaseCatalogTest() {
             String srcFile = sourceFolder + "releaseObjectsInSimpleDoc.pdf";
             String release = destinationFolder + "outReleaseObjectsInSimpleDoc.pdf";
@@ -74,7 +74,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET)]
         public virtual void ReleasePagesTest() {
             String srcFile = sourceFolder + "releaseObjectsInSimpleDoc.pdf";
             String release = destinationFolder + "outReleaseObjectsInSimpleDoc.pdf";
@@ -85,7 +85,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET)]
         public virtual void ReleaseStructTreeRootTest() {
             String srcFile = sourceFolder + "releaseObjectsInDocWithStructTreeRoot.pdf";
             String release = destinationFolder + "outReleaseObjectsInDocWithStructTreeRoot.pdf";

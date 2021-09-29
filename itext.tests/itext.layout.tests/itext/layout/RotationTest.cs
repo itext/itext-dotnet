@@ -165,7 +165,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest01() {
             String outFileName = destinationFolder + "staticTextRotationTest01.pdf";
@@ -184,7 +184,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest02() {
             String outFileName = destinationFolder + "staticTextRotationTest02.pdf";
@@ -201,7 +201,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest03() {
             String outFileName = destinationFolder + "staticTextRotationTest03.pdf";
@@ -249,7 +249,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void SplitTextRotationTest02() {
             String outFileName = destinationFolder + "splitTextRotationTest02.pdf";
@@ -284,7 +284,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void RotationInfiniteLoopTest02() {
             String fileName = "rotationInfiniteLoopTest02.pdf";
@@ -299,7 +299,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         [NUnit.Framework.Test]
         public virtual void TableRotationTest02() {
             String outFileName = destinationFolder + "tableRotationTest02.pdf";
@@ -318,7 +318,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void TableRotationTest03() {
             String outFileName = destinationFolder + "tableRotationTest03.pdf";
@@ -456,7 +456,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void DivRotationTest02() {
             String outFileName = destinationFolder + "divRotationTest02.pdf";
@@ -495,7 +495,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void ListRotationTest02() {
             String outFileName = destinationFolder + "listRotationTest02.pdf";
@@ -549,7 +549,7 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
         [NUnit.Framework.Test]
         public virtual void InnerRotationTest02() {
             String outFileName = destinationFolder + "innerRotationTest02.pdf";
@@ -635,8 +635,9 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
-        [LogMessage(iText.IO.LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, Count = 
+            2)]
         public virtual void ImageInRotatedBlockTest02() {
             String outFileName = destinationFolder + "imageInRotatedBlockTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_imageInRotatedBlockTest02.pdf";

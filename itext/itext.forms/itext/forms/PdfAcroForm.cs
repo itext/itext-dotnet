@@ -43,11 +43,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
+using iText.Forms.Exceptions;
 using iText.Forms.Fields;
 using iText.Forms.Xfa;
-using iText.IO.Util;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -125,7 +127,7 @@ namespace iText.Forms {
 
         private XfaForm xfaForm;
 
-        private static ILog logger = LogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
+        private static ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
 
         /// <summary>Creates a PdfAcroForm as a wrapper of a dictionary.</summary>
         /// <remarks>
@@ -551,7 +553,6 @@ namespace iText.Forms {
         /// </remarks>
         /// <param name="appearance">a String containing a sequence of valid PDF syntax</param>
         /// <returns>current AcroForm</returns>
-        /// <seealso cref="iText.Forms.Fields.PdfFormField.SetDefaultAppearance(System.String)"/>
         public virtual iText.Forms.PdfAcroForm SetDefaultAppearance(String appearance) {
             return Put(PdfName.DA, new PdfString(appearance));
         }
@@ -735,7 +736,7 @@ namespace iText.Forms {
         /// </remarks>
         public virtual void FlattenFields() {
             if (document.IsAppendMode()) {
-                throw new PdfException(PdfException.FieldFlatteningIsNotSupportedInAppendMode);
+                throw new PdfException(FormsExceptionMessageConstant.FIELD_FLATTENING_IS_NOT_SUPPORTED_IN_APPEND_MODE);
             }
             ICollection<PdfFormField> fields;
             if (fieldsForFlattening.Count == 0) {
@@ -805,7 +806,8 @@ namespace iText.Forms {
                         xObject.Put(PdfName.Subtype, PdfName.Form);
                         Rectangle annotBBox = fieldObject.GetAsRectangle(PdfName.Rect);
                         if (page.IsFlushed()) {
-                            throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
+                            throw new PdfException(FormsExceptionMessageConstant.PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING
+                                );
                         }
                         PdfCanvas canvas = new PdfCanvas(page, !wrappedPages.Contains(page));
                         wrappedPages.Add(page);
@@ -824,14 +826,14 @@ namespace iText.Forms {
                         AffineTransform at = CalcFieldAppTransformToAnnotRect(xObject, annotBBox);
                         float[] m = new float[6];
                         at.GetMatrix(m);
-                        canvas.AddXObject(xObject, m[0], m[1], m[2], m[3], m[4], m[5]);
+                        canvas.AddXObjectWithTransformationMatrix(xObject, m[0], m[1], m[2], m[3], m[4], m[5]);
                         if (tagPointer != null) {
                             canvas.CloseTag();
                         }
                     }
                 }
                 else {
-                    logger.Error(iText.IO.LogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
                 }
                 PdfArray fFields = GetFields();
                 fFields.Remove(fieldObject);
@@ -1003,7 +1005,7 @@ namespace iText.Forms {
         protected internal virtual PdfArray GetFields() {
             PdfArray fields = GetPdfObject().GetAsArray(PdfName.Fields);
             if (fields == null) {
-                logger.Warn(iText.IO.LogMessageConstant.NO_FIELDS_IN_ACROFORM);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.NO_FIELDS_IN_ACROFORM);
                 fields = new PdfArray();
                 GetPdfObject().Put(PdfName.Fields, fields);
             }
@@ -1019,13 +1021,13 @@ namespace iText.Forms {
             int index = 1;
             foreach (PdfObject field in array) {
                 if (field.IsFlushed()) {
-                    logger.Info(iText.IO.LogMessageConstant.FORM_FIELD_WAS_FLUSHED);
+                    logger.LogInformation(iText.IO.Logs.IoLogMessageConstant.FORM_FIELD_WAS_FLUSHED);
                     continue;
                 }
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);
                 if (formField == null) {
-                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, field.GetIndirectReference
-                        () == null ? field : field.GetIndirectReference()));
+                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, field
+                        .GetIndirectReference() == null ? field : field.GetIndirectReference()));
                     continue;
                 }
                 PdfString fieldName = formField.GetFieldName();
@@ -1101,7 +1103,8 @@ namespace iText.Forms {
             PdfDictionary pageDic = annot.GetPageObject();
             if (pageDic != null) {
                 if (warnIfPageFlushed && pageDic.IsFlushed()) {
-                    throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
+                    throw new PdfException(FormsExceptionMessageConstant.PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING
+                        );
                 }
                 PdfDocument doc = pageDic.GetIndirectReference().GetDocument();
                 PdfPage widgetPage = doc.GetPage(pageDic);

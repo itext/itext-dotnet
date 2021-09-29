@@ -42,17 +42,18 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
-using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
 namespace iText.Forms.Xfdf {
     internal class XfdfReader {
-        private static ILog logger = LogManager.GetLogger(typeof(XfdfReader));
+        private static ILogger logger = ITextLogManager.GetLogger(typeof(XfdfReader));
 
         /// <summary>Merges existing XfdfObject into pdf document associated with it.</summary>
         /// <param name="xfdfObject">The object to be merged.</param>
@@ -62,14 +63,15 @@ namespace iText.Forms.Xfdf {
             ) {
             if (xfdfObject.GetF() != null && xfdfObject.GetF().GetHref() != null) {
                 if (pdfDocumentName.EqualsIgnoreCase(xfdfObject.GetF().GetHref())) {
-                    logger.Info("Xfdf href and pdf name are equal. Continue merge");
+                    logger.LogInformation("Xfdf href and pdf name are equal. Continue merge");
                 }
                 else {
-                    logger.Warn(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT);
+                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT
+                        );
                 }
             }
             else {
-                logger.Warn(iText.IO.LogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE);
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE);
             }
             //TODO DEVSIX-4026 check for ids original/modified compatability with those in pdf document
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);
@@ -94,7 +96,7 @@ namespace iText.Forms.Xfdf {
                         formFields.Get(name).SetValue(xfdfField.GetValue());
                     }
                     else {
-                        logger.Error(iText.IO.LogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT);
+                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT);
                     }
                 }
             }
@@ -275,8 +277,8 @@ namespace iText.Forms.Xfdf {
                         //XfdfConstants.LINK
                         //XfdfConstants.REDACT
                         //XfdfConstants.PROJECTION
-                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED, annotName
-                            ));
+                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED
+                            , annotName));
                         break;
                     }
                 }

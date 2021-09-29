@@ -106,7 +106,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ACTION_WAS_SET_TO_LINK_ANNOTATION_WITH_DESTINATION)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ACTION_WAS_SET_TO_LINK_ANNOTATION_WITH_DESTINATION)]
         public virtual void LinkTest03() {
             String outFileName = destinationFolder + "linkTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_linkTest03.pdf";
@@ -187,7 +187,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void RotatedLinkInnerRotation() {
             String outFileName = destinationFolder + "rotatedLinkInnerRotation.pdf";
             String cmpFileName = sourceFolder + "cmp_rotatedLinkInnerRotation.pdf";

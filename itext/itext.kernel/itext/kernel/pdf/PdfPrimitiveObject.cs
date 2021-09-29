@@ -42,8 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
-using iText.IO.Util;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf {
     public abstract class PdfPrimitiveObject : PdfObject {
@@ -86,8 +87,8 @@ namespace iText.Kernel.Pdf {
                 return base.MakeIndirect(document, reference);
             }
             else {
-                ILog logger = LogManager.GetLogger(typeof(PdfObject));
-                logger.Warn(iText.IO.LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+                ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
             }
             return this;
         }
@@ -97,8 +98,8 @@ namespace iText.Kernel.Pdf {
                 base.SetIndirectReference(indirectReference);
             }
             else {
-                ILog logger = LogManager.GetLogger(typeof(PdfObject));
-                logger.Warn(iText.IO.LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+                ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
+                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
             }
             return this;
         }
