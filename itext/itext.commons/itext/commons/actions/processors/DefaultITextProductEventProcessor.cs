@@ -80,6 +80,7 @@ namespace iText.Commons.Actions.Processors {
                 String message = iText.Commons.Utils.JavaUtil.GetStringForBytes(MESSAGE_FOR_LOGGING, iText.Commons.Utils.EncodingUtil.ISO_8859_1
                     );
                 LOGGER.LogInformation(message);
+                // System out added with purpose. This is not a debug code
                 System.Console.Out.WriteLine(message);
             }
         }

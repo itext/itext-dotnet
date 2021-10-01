@@ -55,9 +55,9 @@ namespace iText.Commons.Utils {
         
         public static double GetUtcMillisFromEpoch(DateTime? dateTime) {
             if (dateTime == null) {
-                dateTime = DateTime.Now;
+                dateTime = GetCurrentUtcTime();
             }
-            return ((DateTime) dateTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
+            return (dateTime.Value.ToUniversalTime() - GetInitial()).TotalMilliseconds;
         }
 
         public static DateTime GetCalendar(DateTime dateTime) { 
@@ -77,7 +77,7 @@ namespace iText.Commons.Utils {
         }
 
         public static long GetRelativeTime(DateTime date) {
-            return (long) (date - GetInitial()).TotalMilliseconds;
+            return (long) (date.ToUniversalTime() - GetInitial()).TotalMilliseconds;
         }
 
         /// <summary>
@@ -105,6 +105,11 @@ namespace iText.Commons.Utils {
             return date.ToString(pattern, CultureInfo.InvariantCulture);
         }
         
+        public static long GetCurrentTimeZoneOffset() {
+            TimeZone tz = TimeZone.CurrentTimeZone;
+            return (long) tz.GetUtcOffset(GetCurrentTime()).TotalMilliseconds;
+        }
+
         private static DateTime GetInitial() {
             return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }

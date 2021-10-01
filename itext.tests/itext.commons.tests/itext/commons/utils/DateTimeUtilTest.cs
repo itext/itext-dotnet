@@ -22,19 +22,49 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Test;
+using NUnit.Framework;
 
 namespace iText.Commons.Utils {
     public class DateTimeUtilTest : ExtendedITextTest {
-        [NUnit.Framework.Test]
+        
+        private const double ZERO_DELTA = 1e-6;
+        private const double ONE_SECOND_DELTA = 1000.0;
+        
+        [Test]
         public virtual void GetCurrentTest() {
             DateTime date = DateTime.Now;
-            NUnit.Framework.Assert.AreEqual(date.ToString(), DateTimeUtil.GetCurrentTime().ToString());
+            Assert.AreEqual(date.ToString(), DateTimeUtil.GetCurrentTime().ToString());
         }
 
-        [NUnit.Framework.Test]
+        [Test]
         public virtual void IsInPastTest() {
             DateTime date = new DateTime(1);
-            NUnit.Framework.Assert.IsTrue(DateTimeUtil.IsInPast(date));
+            Assert.IsTrue(DateTimeUtil.IsInPast(date));
+        }
+        
+        [Test]
+        public void ParseDateAndGetUtcMillisFromEpochTest() {
+            DateTime parsedDate = DateTimeUtil.GetCalendar(DateTimeUtil.ParseWithDefaultPattern("2020-05-05"));
+            double millisFromEpochTo2020_05_05 = DateTimeUtil.GetUtcMillisFromEpoch(parsedDate);
+
+            long offset = DateTimeUtil.GetCurrentTimeZoneOffset();
+            Assert.AreEqual(1588636800000d - offset, millisFromEpochTo2020_05_05, ZERO_DELTA);
+        }
+
+        [Test]
+        public void CompareUtcMillisFromEpochWithNullParamAndCurrentTimeTest() {
+            double getUtcMillisFromEpochWithNullParam = DateTimeUtil.GetUtcMillisFromEpoch(null);
+            double millisFromEpochToCurrentTime = DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCurrentUtcTime());
+
+            Assert.AreEqual(millisFromEpochToCurrentTime, getUtcMillisFromEpochWithNullParam, ONE_SECOND_DELTA);
+        }
+
+        [Test]
+        public void ParseDateAndGetRelativeTimeTest() {
+            long relativeTime = DateTimeUtil.GetRelativeTime(DateTimeUtil.ParseWithDefaultPattern("2020-05-05"));
+
+            long offset = DateTimeUtil.GetCurrentTimeZoneOffset();
+            Assert.AreEqual(1588636800000d - offset, relativeTime, ZERO_DELTA);
         }
     }
 }
