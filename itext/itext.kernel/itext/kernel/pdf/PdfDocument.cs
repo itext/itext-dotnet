@@ -830,7 +830,10 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                         for (int pageNum = 1; pageNum <= GetNumberOfPages(); pageNum++) {
-                            GetPage(pageNum).Flush();
+                            PdfPage page = GetPage(pageNum);
+                            if (page != null) {
+                                page.Flush();
+                            }
                         }
                         if (structTreeRoot != null) {
                             TryFlushTagStructure(false);
