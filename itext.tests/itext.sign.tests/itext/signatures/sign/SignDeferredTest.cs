@@ -115,6 +115,7 @@ namespace iText.Signatures.Sign {
             PadesSigTest.BasicCheckSignedDoc(outFileName, sigFieldName);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outFileName, cmpFileName, destinationFolder
                 , null));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
         [NUnit.Framework.Test]
@@ -157,6 +158,7 @@ namespace iText.Signatures.Sign {
             PadesSigTest.BasicCheckSignedDoc(outFileName, sigFieldName);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outFileName, cmpFileName, destinationFolder
                 , null));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
         internal static void ValidateTemplateForSignedDeferredResult(String output, String sigFieldName, PdfName filter
