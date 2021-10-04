@@ -45,6 +45,8 @@ namespace iText.Signatures.Exceptions {
 
         public const String DOCUMENT_MUST_BE_PRE_CLOSED = "Document must be preClosed.";
 
+        public const String DOCUMENT_MUST_HAVE_READER = "Document must have reader.";
+
         public const String FAILED_TO_GET_TSA_RESPONSE = "Failed to get TSA response from {0}.";
 
         public const String FIELD_ALREADY_SIGNED = "Field has been already signed.";
