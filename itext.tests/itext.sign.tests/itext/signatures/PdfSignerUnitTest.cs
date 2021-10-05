@@ -20,22 +20,41 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.IO.Source;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
+using iText.Pdfa;
+using iText.Signatures.Exceptions;
 using iText.Test;
 
 namespace iText.Signatures {
     public class PdfSignerUnitTest : ExtendedITextTest {
+        private static readonly byte[] OWNER = "owner".GetBytes();
+
+        private static readonly byte[] USER = "user".GetBytes();
+
+        private static readonly String PDFA_RESOURCES = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/pdfa/";
+
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/signatures/PdfSignerUnitTest/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void Before() {
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CreateNewSignatureFormFieldInvisibleAnnotationTest() {
-            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateDocumentWithoutWidgetAnnotation()), 
-                new ReaderProperties().SetPassword("owner".GetBytes())), new ByteArrayOutputStream(), new StampingProperties
-                ());
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateEncryptedDocumentWithoutWidgetAnnotation
+                ()), new ReaderProperties().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties()
+                );
             signer.cryptoDictionary = new PdfSignature();
             signer.appearance.SetPageRect(new Rectangle(100, 100, 0, 0));
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(signer.document, true);
@@ -48,9 +67,9 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void CreateNewSignatureFormFieldNotInvisibleAnnotationTest() {
-            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateDocumentWithoutWidgetAnnotation()), 
-                new ReaderProperties().SetPassword("owner".GetBytes())), new ByteArrayOutputStream(), new StampingProperties
-                ());
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateEncryptedDocumentWithoutWidgetAnnotation
+                ()), new ReaderProperties().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties()
+                );
             signer.cryptoDictionary = new PdfSignature();
             signer.appearance.SetPageRect(new Rectangle(100, 100, 10, 10));
             PdfSigFieldLock fieldLock = new PdfSigFieldLock();
@@ -67,13 +86,13 @@ namespace iText.Signatures {
         public virtual void PopulateExistingSignatureFormFieldInvisibleAnnotationTest() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument document = new PdfDocument(new PdfWriter(outputStream, new WriterProperties().SetStandardEncryption
-                ("user".GetBytes(), "owner".GetBytes(), 0, EncryptionConstants.STANDARD_ENCRYPTION_128)));
+                (USER, OWNER, 0, EncryptionConstants.STANDARD_ENCRYPTION_128)));
             document.AddNewPage();
             PdfWidgetAnnotation widgetAnnotation = new PdfWidgetAnnotation(new Rectangle(100, 100, 0, 0));
             document.GetPage(1).AddAnnotation(widgetAnnotation);
             document.Close();
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(outputStream.ToArray()), new ReaderProperties
-                ().SetPassword("owner".GetBytes())), new ByteArrayOutputStream(), new StampingProperties());
+                ().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties());
             signer.cryptoDictionary = new PdfSignature();
             signer.appearance.SetPageRect(new Rectangle(100, 100, 0, 0));
             widgetAnnotation = (PdfWidgetAnnotation)signer.document.GetPage(1).GetAnnotations()[0];
@@ -93,13 +112,13 @@ namespace iText.Signatures {
         public virtual void PopulateExistingSignatureFormFieldNotInvisibleAnnotationTest() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument document = new PdfDocument(new PdfWriter(outputStream, new WriterProperties().SetStandardEncryption
-                ("user".GetBytes(), "owner".GetBytes(), 0, EncryptionConstants.STANDARD_ENCRYPTION_128)));
+                (USER, OWNER, 0, EncryptionConstants.STANDARD_ENCRYPTION_128)));
             document.AddNewPage();
             PdfWidgetAnnotation widgetAnnotation = new PdfWidgetAnnotation(new Rectangle(100, 100, 0, 0));
             document.GetPage(1).AddAnnotation(widgetAnnotation);
             document.Close();
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(outputStream.ToArray()), new ReaderProperties
-                ().SetPassword("owner".GetBytes())), new ByteArrayOutputStream(), new StampingProperties());
+                ().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties());
             signer.cryptoDictionary = new PdfSignature();
             PdfSigFieldLock fieldLock = new PdfSigFieldLock();
             signer.fieldLock = fieldLock;
@@ -117,10 +136,144 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsTrue(formFieldDictionary.ContainsKey(PdfName.AP));
         }
 
-        private static byte[] CreateDocumentWithoutWidgetAnnotation() {
+        [NUnit.Framework.Test]
+        public virtual void TempFileProvidedTest() {
+            String tempFileName = "tempFile";
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimpleDocument())), new ByteArrayOutputStream
+                (), DESTINATION_FOLDER + tempFileName, new StampingProperties());
+            NUnit.Framework.Assert.IsNotNull(signer.tempFile);
+            NUnit.Framework.Assert.AreEqual(tempFileName, signer.tempFile.Name);
+            NUnit.Framework.Assert.IsNull(signer.temporaryOS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InitPdfaDocumentTest() {
+            // TODO DEVSIX-5910 The wrapped document should be recognized as Pdf/A
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimplePdfaDocument())), new ByteArrayOutputStream
+                (), new StampingProperties());
+            NUnit.Framework.Assert.IsFalse(signer.GetDocument() is PdfADocument);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SigningDateSetGetTest() {
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimplePdfaDocument())), new ByteArrayOutputStream
+                (), new StampingProperties());
+            DateTime testDate = DateTimeUtil.GetCurrentTime();
+            signer.SetSignDate(testDate);
+            NUnit.Framework.Assert.AreEqual(testDate, signer.GetSignDate());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificationLevelSetGetTest() {
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimplePdfaDocument())), new ByteArrayOutputStream
+                (), new StampingProperties());
+            NUnit.Framework.Assert.AreEqual(PdfSigner.NOT_CERTIFIED, signer.GetCertificationLevel());
+            int testLevel = PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED;
+            signer.SetCertificationLevel(testLevel);
+            NUnit.Framework.Assert.AreEqual(testLevel, signer.GetCertificationLevel());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignatureDictionarySetGetTest() {
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimplePdfaDocument())), new ByteArrayOutputStream
+                (), new StampingProperties());
+            NUnit.Framework.Assert.IsNull(signer.GetSignatureDictionary());
+            PdfSignature testSignature = new PdfSignature();
+            signer.cryptoDictionary = testSignature;
+            NUnit.Framework.Assert.AreEqual(testSignature, signer.GetSignatureDictionary());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignatureEventSetGetTest() {
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimplePdfaDocument())), new ByteArrayOutputStream
+                (), new StampingProperties());
+            NUnit.Framework.Assert.IsNull(signer.GetSignatureEvent());
+            PdfSigner.ISignatureEvent testEvent = new PdfSignerUnitTest.DummySignatureEvent(this);
+            signer.SetSignatureEvent(testEvent);
+            NUnit.Framework.Assert.AreEqual(testEvent, signer.GetSignatureEvent());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignatureFieldNameMustNotContainDotTest() {
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimplePdfaDocument())), new ByteArrayOutputStream
+                (), new StampingProperties());
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => signer.SetFieldName("name.with.dots"
+                ));
+            NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.FIELD_NAMES_CANNOT_CONTAIN_A_DOT, exception.Message
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithoutReaderCannotBeSetToSignerTest() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateSimplePdfaDocument()));
+            PdfSigner signer = new PdfSigner(reader, new ByteArrayOutputStream(), new StampingProperties());
+            PdfDocument documentWithoutReader = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => signer.SetDocument(documentWithoutReader
+                ));
+            NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.DOCUMENT_MUST_HAVE_READER, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentSetGetTest() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateSimplePdfaDocument()));
+            PdfSigner signer = new PdfSigner(reader, new ByteArrayOutputStream(), new StampingProperties());
+            PdfDocument document = signer.GetDocument();
+            NUnit.Framework.Assert.AreEqual(reader, document.GetReader());
+            PdfDocument documentWithoutReader = new PdfDocument(new PdfReader(new MemoryStream(CreateSimpleDocument())
+                ), new PdfWriter(new ByteArrayOutputStream()));
+            signer.SetDocument(documentWithoutReader);
+            NUnit.Framework.Assert.AreEqual(documentWithoutReader, signer.GetDocument());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OutputStreamSetGetTest() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateSimplePdfaDocument()));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
+            NUnit.Framework.Assert.AreEqual(outputStream, signer.originalOS);
+            ByteArrayOutputStream anotherStream = new ByteArrayOutputStream();
+            signer.SetOriginalOutputStream(anotherStream);
+            NUnit.Framework.Assert.AreEqual(anotherStream, signer.originalOS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldLockSetGetTest() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateSimplePdfaDocument()));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
+            NUnit.Framework.Assert.IsNull(signer.GetFieldLockDict());
+            PdfSigFieldLock fieldLock = new PdfSigFieldLock();
+            signer.SetFieldLockDict(fieldLock);
+            NUnit.Framework.Assert.AreEqual(fieldLock, signer.GetFieldLockDict());
+        }
+
+        private static byte[] CreateEncryptedDocumentWithoutWidgetAnnotation() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument document = new PdfDocument(new PdfWriter(outputStream, new WriterProperties().SetStandardEncryption
-                ("user".GetBytes(), "owner".GetBytes(), 0, EncryptionConstants.STANDARD_ENCRYPTION_128)));
+                (USER, OWNER, 0, EncryptionConstants.STANDARD_ENCRYPTION_128)));
+            document.AddNewPage();
+            document.Close();
+            return outputStream.ToArray();
+        }
+
+        private static byte[] CreateSimpleDocument() {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfDocument document = new PdfDocument(new PdfWriter(outputStream));
+            document.AddNewPage();
+            document.Close();
+            return outputStream.ToArray();
+        }
+
+        private static byte[] CreateSimplePdfaDocument() {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfWriter writer = new PdfWriter(outputStream);
+            Stream @is = new FileStream(PDFA_RESOURCES + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfDocument document = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, outputIntent);
+            document.SetTagged();
+            document.GetCatalog().SetLang(new PdfString("en-US"));
             document.AddNewPage();
             document.Close();
             return outputStream.ToArray();
@@ -130,6 +283,18 @@ namespace iText.Signatures {
             public ExtendedPdfSignatureFormField(PdfWidgetAnnotation widgetAnnotation, PdfDocument document)
                 : base(widgetAnnotation, document) {
             }
+        }
+
+        internal class DummySignatureEvent : PdfSigner.ISignatureEvent {
+            public virtual void GetSignatureDictionary(PdfSignature sig) {
+            }
+
+            internal DummySignatureEvent(PdfSignerUnitTest _enclosing) {
+                this._enclosing = _enclosing;
+            }
+
+            private readonly PdfSignerUnitTest _enclosing;
+            // Do nothing
         }
     }
 }

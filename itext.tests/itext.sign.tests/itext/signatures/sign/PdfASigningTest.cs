@@ -51,7 +51,9 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Test;
+using iText.Test.Pdfa;
 using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
@@ -98,6 +100,9 @@ namespace iText.Signatures.Sign {
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
                 , rect, false, false, PdfSigner.NOT_CERTIFIED, 12f);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(dest, sourceFolder + "cmp_" + fileName
+                ));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
                 , "diff_", GetTestMap(new Rectangle(67, 575, 155, 15))));
         }
@@ -139,7 +144,7 @@ namespace iText.Signatures.Sign {
 
         private static IDictionary<int, IList<Rectangle>> GetTestMap(Rectangle ignoredArea) {
             IDictionary<int, IList<Rectangle>> result = new Dictionary<int, IList<Rectangle>>();
-            result.Put(1, JavaUtil.ArraysAsList(ignoredArea));
+            result.Put(1, JavaCollectionsUtil.SingletonList(ignoredArea));
             return result;
         }
     }

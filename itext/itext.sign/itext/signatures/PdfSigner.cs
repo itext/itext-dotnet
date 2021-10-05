@@ -360,6 +360,9 @@ namespace iText.Signatures {
         /// <summary>Sets the PdfDocument.</summary>
         /// <param name="document">The PdfDocument</param>
         protected internal virtual void SetDocument(PdfDocument document) {
+            if (null == document.GetReader()) {
+                throw new ArgumentException(SignExceptionMessageConstant.DOCUMENT_MUST_HAVE_READER);
+            }
             this.document = document;
         }
 
