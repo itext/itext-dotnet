@@ -335,6 +335,22 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void StackOverflowErrorCycleReferenceOcgMergeTest() {
+            String outPdf = destinationFolder + "cycleReferenceMerged.pdf";
+            String cmpPdf = sourceFolder + "cmp_stackOverflowErrorCycleReferenceOcrMerge.pdf";
+            PdfDocument pdfWithOCG = new PdfDocument(new PdfReader(sourceFolder + "sourceOCG1.pdf"), new PdfWriter(outPdf
+                ));
+            PdfDocument pdfWithOCGToMerge = new PdfDocument(new PdfReader(sourceFolder + "stackOverflowErrorCycleReferenceOcgMerge.pdf"
+                ));
+            // problem file
+            PdfMerger merger = new PdfMerger(pdfWithOCG);
+            merger.Merge(pdfWithOCGToMerge, 1, pdfWithOCGToMerge.GetNumberOfPages());
+            pdfWithOCGToMerge.Close();
+            pdfWithOCG.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("TODO: DEVSIX-5064 (when doing merge with outlines infinite loop occurs )")]
         public virtual void MergeOutlinesWithWrongStructureTest() {
             PdfDocument inputDoc = new PdfDocument(new PdfReader(sourceFolder + "infiniteLoopInOutlineStructure.pdf"));
