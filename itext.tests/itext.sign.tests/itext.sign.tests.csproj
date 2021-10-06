@@ -134,6 +134,10 @@
       <Project>{14A163C0-0054-480D-A096-EDA51DD933EA}</Project>
       <Name>itext.sign</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\itext\itext.pdfa\itext.pdfa.csproj">
+      <Project>{9FC2F0B3-A8D2-46DA-8724-72E00E67A8FA}</Project>
+      <Name>itext.pdfa</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
