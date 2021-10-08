@@ -458,6 +458,8 @@ namespace iText.Kernel.Font {
                 if (iText.IO.Util.TextUtil.IsSurrogatePair(text, k)) {
                     val = iText.IO.Util.TextUtil.ConvertToUtf32(text, k);
                     processed += 2;
+                    // Since a pair is processed, need to skip next char as well
+                    k += 1;
                 }
                 else {
                     val = text[k];
