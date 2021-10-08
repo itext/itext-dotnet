@@ -247,6 +247,86 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual(fieldLock, signer.GetFieldLockDict());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SetFieldNameNullForDefaultSignerTest() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateSimpleDocument()));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
+            signer.SetFieldName(null);
+            NUnit.Framework.Assert.AreEqual("Signature1", signer.GetFieldName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepFieldNameAfterSetToNullTest() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateSimpleDocument()));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
+            signer.SetFieldName("test field 222");
+            signer.SetFieldName(null);
+            NUnit.Framework.Assert.AreEqual("test field 222", signer.GetFieldName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetFieldNameToFieldWithSameNameAndNoSigTest() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateDocumentWithEmptyField()));
+            PdfSigner signer = new PdfSigner(reader, new ByteArrayOutputStream(), new StampingProperties());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => signer.SetFieldName("test_field"
+                ));
+            NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.FIELD_TYPE_IS_NOT_A_SIGNATURE_FIELD_TYPE, e.Message
+                );
+            reader.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetFieldNameToSigFieldWithValueTest() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateDocumentWithSignatureWithTestValueField()));
+            PdfSigner signer = new PdfSigner(reader, new ByteArrayOutputStream(), new StampingProperties());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => signer.SetFieldName("test_field"
+                ));
+            NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.FIELD_ALREADY_SIGNED, e.Message);
+            reader.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetFieldNameToSigFieldWithoutWidgetsTest() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateDocumentWithSignatureField()));
+            PdfSigner signer = new PdfSigner(reader, new ByteArrayOutputStream(), new StampingProperties());
+            signer.SetFieldName("test_field");
+            NUnit.Framework.Assert.AreEqual("test_field", signer.GetFieldName());
+            reader.Close();
+        }
+
+        private static byte[] CreateDocumentWithEmptyField() {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputStream));
+            PdfFormField formField = PdfFormField.CreateEmptyField(pdfDocument).SetFieldName("test_field");
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            acroForm.AddField(formField);
+            pdfDocument.Close();
+            return outputStream.ToArray();
+        }
+
+        private static byte[] CreateDocumentWithSignatureWithTestValueField() {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputStream));
+            PdfFormField formField = PdfFormField.CreateSignature(pdfDocument).SetFieldName("test_field").SetValue("test_value"
+                );
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            acroForm.AddField(formField);
+            pdfDocument.Close();
+            return outputStream.ToArray();
+        }
+
+        private static byte[] CreateDocumentWithSignatureField() {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputStream));
+            PdfFormField formField = PdfFormField.CreateSignature(pdfDocument).SetFieldName("test_field");
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            acroForm.AddField(formField);
+            pdfDocument.Close();
+            return outputStream.ToArray();
+        }
+
         private static byte[] CreateEncryptedDocumentWithoutWidgetAnnotation() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument document = new PdfDocument(new PdfWriter(outputStream, new WriterProperties().SetStandardEncryption
