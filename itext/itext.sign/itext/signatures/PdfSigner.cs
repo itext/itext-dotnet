@@ -559,7 +559,7 @@ namespace iText.Signatures {
             Stream data = GetRangeStream();
             byte[] encodedSig = externalSignatureContainer.Sign(data);
             if (estimatedSize < encodedSig.Length) {
-                throw new System.IO.IOException("Not enough space");
+                throw new System.IO.IOException(SignExceptionMessageConstant.NOT_ENOUGH_SPACE);
             }
             byte[] paddedSig = new byte[estimatedSize];
             Array.Copy(encodedSig, 0, paddedSig, 0, encodedSig.Length);
@@ -976,7 +976,7 @@ namespace iText.Signatures {
                     bous.JReset();
                     os.Write(obj);
                     if (bous.Length > lit.GetBytesCount()) {
-                        throw new ArgumentException("The key is too big");
+                        throw new ArgumentException(SignExceptionMessageConstant.TOO_BIG_KEY);
                     }
                     if (tempFile == null) {
                         Array.Copy(bous.ToArray(), 0, bout, (int)lit.GetPosition(), (int)bous.Length);
@@ -1183,14 +1183,6 @@ namespace iText.Signatures {
 
         private bool IsDocumentPdf2() {
             return document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
-        }
-
-        private static StampingProperties InitStampingProperties(bool append) {
-            StampingProperties properties = new StampingProperties();
-            if (append) {
-                properties.UseAppendMode();
-            }
-            return properties;
         }
 
         /// <summary>An interface to retrieve the signature dictionary for modification.</summary>

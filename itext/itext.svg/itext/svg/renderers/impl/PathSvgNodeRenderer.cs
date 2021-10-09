@@ -74,7 +74,7 @@ namespace iText.Svg.Renderers.Impl {
         /// </remarks>
         private const String INVALID_OPERATOR_REGEX = "(?:(?![mzlhvcsqtae])\\p{L})";
 
-        private static Regex invalidRegexPattern = iText.Commons.Utils.StringUtil.RegexCompile(INVALID_OPERATOR_REGEX
+        private static readonly Regex INVALID_REGEX_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile(INVALID_OPERATOR_REGEX
             , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
         /// <summary>
@@ -345,20 +345,20 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         internal virtual bool ContainsInvalidAttributes(String attributes) {
-            return iText.Commons.Utils.Matcher.Match(invalidRegexPattern, attributes).Find();
+            return iText.Commons.Utils.Matcher.Match(INVALID_REGEX_PATTERN, attributes).Find();
         }
 
         internal virtual ICollection<String> ParsePathOperations() {
             ICollection<String> result = new List<String>();
-            String attributes = attributesAndStyles.Get(SvgConstants.Attributes.D);
-            if (attributes == null) {
-                throw new SvgProcessingException(SvgExceptionMessageConstant.PATH_OBJECT_MUST_HAVE_D_ATTRIBUTE);
+            String pathString = attributesAndStyles.Get(SvgConstants.Attributes.D);
+            if (pathString == null) {
+                pathString = "";
             }
-            if (ContainsInvalidAttributes(attributes)) {
+            if (ContainsInvalidAttributes(pathString)) {
                 throw new SvgProcessingException(SvgExceptionMessageConstant.INVALID_PATH_D_ATTRIBUTE_OPERATORS).SetMessageParams
-                    (attributes);
+                    (pathString);
             }
-            String[] operators = SplitPathStringIntoOperators(attributes);
+            String[] operators = SplitPathStringIntoOperators(pathString);
             foreach (String inst in operators) {
                 String instTrim = inst.Trim();
                 if (!String.IsNullOrEmpty(instTrim)) {

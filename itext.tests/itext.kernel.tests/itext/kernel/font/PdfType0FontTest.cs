@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.IO.Font;
+using iText.IO.Font.Otf;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -71,6 +73,17 @@ namespace iText.Kernel.Font {
             NUnit.Framework.Assert.AreEqual("Identity", cmap.GetOrdering());
             NUnit.Framework.Assert.AreEqual(0, cmap.GetSupplement());
             NUnit.Framework.Assert.AreEqual(PdfEncodings.IDENTITY_H, cmap.GetCmapName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AppendThreeSurrogatePairsTest() {
+            // this text contains three successive surrogate pairs, which should result in three glyphs
+            String textWithThreeSurrogatePairs = "\uD800\uDF10\uD800\uDF00\uD800\uDF11";
+            PdfFont type0Font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansOldItalic-Regular.ttf", PdfEncodings
+                .IDENTITY_H);
+            IList<Glyph> glyphs = new List<Glyph>();
+            type0Font.AppendGlyphs(textWithThreeSurrogatePairs, 0, textWithThreeSurrogatePairs.Length - 1, glyphs);
+            NUnit.Framework.Assert.AreEqual(3, glyphs.Count);
         }
     }
 }
