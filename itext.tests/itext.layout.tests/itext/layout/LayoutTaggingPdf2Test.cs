@@ -498,6 +498,29 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DocWithSectInPdf2() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithSectInPdf2.pdf", new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0)));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Div section = new Div();
+            section.GetAccessibilityProperties().SetRole(StandardRoles.SECT);
+            Paragraph h1 = new Paragraph("This is a header");
+            h1.GetAccessibilityProperties().SetRole("H1");
+            section.Add(h1);
+            section.Add(new Paragraph("This is a paragraph."));
+            Paragraph para = new Paragraph("This is another paragraph, ");
+            Text emphasised = new Text("with semantic emphasis!");
+            emphasised.SetUnderline();
+            emphasised.GetAccessibilityProperties().SetRole(StandardRoles.EM);
+            para.Add(emphasised);
+            section.Add(para);
+            document.Add(section);
+            document.Close();
+            CompareResult("docWithSectInPdf2");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CopyTest02() {
             PdfDocument srcPdf = new PdfDocument(new PdfReader(sourceFolder + "docSeveralNs.pdf"));
             PdfDocument outPdf = new PdfDocument(new PdfWriter(destinationFolder + "copyTest02.pdf", new WriterProperties
