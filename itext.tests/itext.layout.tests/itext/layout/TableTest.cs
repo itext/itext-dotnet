@@ -444,6 +444,31 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void WideFirstCellBorderDoesntAffectSecondCellTest() {
+            String testName = "wideFirstCellBorderDoesntAffectSecondCellTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            String longTextContent = "1. " + TEXT_CONTENT + "2. " + TEXT_CONTENT + "3. " + TEXT_CONTENT + "4. " + TEXT_CONTENT
+                 + "5. " + TEXT_CONTENT + "6. " + TEXT_CONTENT + "7. " + TEXT_CONTENT + "8. " + TEXT_CONTENT + "9. " +
+                 TEXT_CONTENT;
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
+                (new Cell().Add(new Paragraph("cell 1, 2")).SetBorder(new SolidBorder(ColorConstants.RED, 100))).AddCell
+                (new Cell().Add(new Paragraph("cell 2, 1\n" + longTextContent))).AddCell(new Cell().Add(new Paragraph(
+                "cell 2, 2\n" + longTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + longTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 2, 1\n" + longTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + longTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 2, 2\n" + longTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + longTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent)));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest17() {
             String testName = "tableTest17.pdf";
@@ -2696,6 +2721,29 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetWidthShouldBeRespectedTest() {
+            // TODO DEVSIX-5916 The first cell's width is the same as the second one's, however, it's not respected
+            String fileName = "setWidthShouldBeRespectedTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName));
+            Document doc = new Document(pdfDocument, new PageSize(842, 1400));
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(ColorConstants.GREEN, 90f));
+            Cell cell;
+            cell = new Cell().Add(new Paragraph("100pt"));
+            cell.SetBorder(new SolidBorder(ColorConstants.BLUE, 20f));
+            cell.SetWidth(100).SetMargin(0).SetPadding(0);
+            table.AddCell(cell);
+            cell = new Cell().Add(new Paragraph("100pt"));
+            cell.SetBorder(new SolidBorder(ColorConstants.RED, 120f));
+            cell.SetWidth(100).SetMargin(0).SetPadding(0);
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder));
         }
 
         private class RotatedDocumentRenderer : DocumentRenderer {

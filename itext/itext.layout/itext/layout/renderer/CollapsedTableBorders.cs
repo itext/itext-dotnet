@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
@@ -51,16 +52,26 @@ using iText.Layout.Properties;
 namespace iText.Layout.Renderer {
     internal class CollapsedTableBorders : TableBorders {
         /// <summary>
-        /// The list of the cells' borders which should be collapsed
-        /// with the first border of this TableRenderer instance, to be drawn on the area.
+        /// Horizontal borders to be collapsed with
+        /// the first-on-the-area row's cell top borders of this TableRenderer instance.
         /// </summary>
         private IList<Border> topBorderCollapseWith = new List<Border>();
 
         /// <summary>
-        /// The list of the cells' borders which should be collapsed
-        /// with the last border of this TableRenderer instance, to be drawn on the area.
+        /// Horizontal borders to be collapsed with
+        /// the last-on-the-area row's cell bottom borders of this TableRenderer instance.
         /// </summary>
         private IList<Border> bottomBorderCollapseWith = new List<Border>();
+
+        // NOTE: Currently body's top border is written at header level and footer's top border is written
+        //  at body's level, hence there is no need in the same array for vertical top borders.
+        /// <summary>
+        /// Vertical borders to be collapsed with
+        /// the last-on-the-area row's cell bottom borders of this TableRenderer instance.
+        /// </summary>
+        private IList<Border> verticalBottomBorderCollapseWith = null;
+
+        private static IComparer<Border> borderComparator = new CollapsedTableBorders.BorderComparator();
 
         // region constructors
         public CollapsedTableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders
@@ -124,6 +135,20 @@ namespace iText.Layout.Renderer {
             return indents;
         }
 
+        /// <summary>Gets vertical borders which cross the top horizontal border.</summary>
+        /// <returns>vertical borders which cross the top horizontal border</returns>
+        public virtual IList<Border> GetVerticalBordersCrossingTopHorizontalBorder() {
+            IList<Border> borders = new List<Border>(numberOfColumns + 1);
+            for (int i = 0; i <= numberOfColumns; i++) {
+                IList<Border> verticalBorder = GetVerticalBorder(i);
+                // the passed index indicates the index of the border on the page, not in the entire document
+                Border borderToAdd = startRow - largeTableIndexOffset < verticalBorder.Count ? verticalBorder[startRow - largeTableIndexOffset
+                    ] : null;
+                borders.Add(borderToAdd);
+            }
+            return borders;
+        }
+
         public override IList<Border> GetVerticalBorder(int index) {
             if (index == 0) {
                 IList<Border> borderList = TableBorderUtil.CreateAndFillBorderList(null, tableBoundingBorders[3], verticalBorders
@@ -133,7 +158,7 @@ namespace iText.Layout.Renderer {
             else {
                 if (index == numberOfColumns) {
                     IList<Border> borderList = TableBorderUtil.CreateAndFillBorderList(null, tableBoundingBorders[1], verticalBorders
-                        [0].Count);
+                        [verticalBorders.Count - 1].Count);
                     return GetCollapsedList(verticalBorders[verticalBorders.Count - 1], borderList);
                 }
                 else {
@@ -231,10 +256,14 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual iText.Layout.Renderer.CollapsedTableBorders SetBottomBorderCollapseWith(IList<Border> bottomBorderCollapseWith
-            ) {
+            , IList<Border> verticalBordersCrossingBottomBorder) {
             this.bottomBorderCollapseWith = new List<Border>();
             if (null != bottomBorderCollapseWith) {
                 this.bottomBorderCollapseWith.AddAll(bottomBorderCollapseWith);
+            }
+            this.verticalBottomBorderCollapseWith = null;
+            if (null != verticalBordersCrossingBottomBorder) {
+                this.verticalBottomBorderCollapseWith = new List<Border>(verticalBordersCrossingBottomBorder);
             }
             return this;
         }
@@ -387,94 +416,115 @@ namespace iText.Layout.Renderer {
 
         // endregion
         // region draw
-        protected internal override TableBorders DrawHorizontalBorder(int i, float startX, float y1, PdfCanvas canvas
-            , float[] countedColumnWidth) {
-            IList<Border> borders = GetHorizontalBorder(startRow + /*- largeTableIndexOffset*/ i);
+        protected internal override TableBorders DrawHorizontalBorder(PdfCanvas canvas, TableBorderDescriptor borderDescriptor
+            ) {
+            int i = borderDescriptor.GetBorderIndex();
+            float startX = borderDescriptor.GetMainCoordinateStart();
+            float y1 = borderDescriptor.GetCrossCoordinate();
+            float[] countedColumnWidth = borderDescriptor.GetMainCoordinateWidths();
+            IList<Border> horizontalBorder = GetHorizontalBorder(startRow + i);
             float x1 = startX;
             float x2 = x1 + countedColumnWidth[0];
-            if (i == 0) {
-                Border firstBorder = GetFirstVerticalBorder()[startRow - largeTableIndexOffset];
-                if (firstBorder != null) {
-                    x1 -= firstBorder.GetWidth() / 2;
-                }
-            }
-            else {
-                if (i == finishRow - startRow + 1) {
-                    Border firstBorder = GetFirstVerticalBorder()[startRow - largeTableIndexOffset + finishRow - startRow + 1 
-                        - 1];
-                    if (firstBorder != null) {
-                        x1 -= firstBorder.GetWidth() / 2;
+            for (int j = 1; j <= horizontalBorder.Count; j++) {
+                Border currentBorder = horizontalBorder[j - 1];
+                Border nextBorder = j < horizontalBorder.Count ? horizontalBorder[j] : null;
+                if (currentBorder != null) {
+                    IList<Border> crossingBordersAtStart = GetCrossingBorders(i, j - 1);
+                    float startCornerWidth = GetWidestBorderWidth(crossingBordersAtStart[1], crossingBordersAtStart[3]);
+                    IList<Border> crossingBordersAtEnd = GetCrossingBorders(i, j);
+                    float endCornerWidth = GetWidestBorderWidth(crossingBordersAtEnd[1], crossingBordersAtEnd[3]);
+                    // TODO DEVSIX-5962 Once the ticket is done, remove this workaround, which allows
+                    //  horizontal borders to win at vertical-0. Bear in mind that this workaround helps
+                    //  in standard cases, when borders are of the same width. If they are not then
+                    //  this workaround doesn't help to improve corner collapsing
+                    if (1 == j) {
+                        crossingBordersAtStart.Add(0, currentBorder);
                     }
-                }
-            }
-            int j;
-            for (j = 1; j < borders.Count; j++) {
-                Border prevBorder = borders[j - 1];
-                Border curBorder = borders[j];
-                if (prevBorder != null) {
-                    if (!prevBorder.Equals(curBorder)) {
-                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
-                        x1 = x2;
+                    if (0 == i) {
+                        if (1 != j) {
+                            crossingBordersAtStart.Add(0, crossingBordersAtStart[3]);
+                        }
+                        crossingBordersAtEnd.Add(0, crossingBordersAtEnd[3]);
                     }
+                    JavaCollectionsUtil.Sort(crossingBordersAtStart, borderComparator);
+                    JavaCollectionsUtil.Sort(crossingBordersAtEnd, borderComparator);
+                    float x1Offset = currentBorder.Equals(crossingBordersAtStart[0]) ? -startCornerWidth / 2 : startCornerWidth
+                         / 2;
+                    float x2Offset = currentBorder.Equals(crossingBordersAtEnd[0]) ? endCornerWidth / 2 : -endCornerWidth / 2;
+                    currentBorder.DrawCellBorder(canvas, x1 + x1Offset, y1, x2 + x2Offset, y1, Border.Side.NONE);
+                    x1 = x2;
                 }
                 else {
+                    // if current border is null, then just skip it's processing.
+                    // Border corners will be processed by borders which are not null.
                     x1 += countedColumnWidth[j - 1];
                     x2 = x1;
                 }
-                if (curBorder != null) {
+                if (nextBorder != null && j != horizontalBorder.Count) {
                     x2 += countedColumnWidth[j];
                 }
-            }
-            Border lastBorder = borders.Count > j - 1 ? borders[j - 1] : null;
-            if (lastBorder != null) {
-                if (i == 0) {
-                    if (GetVerticalBorder(j)[startRow - largeTableIndexOffset + i] != null) {
-                        x2 += GetVerticalBorder(j)[startRow - largeTableIndexOffset + i].GetWidth() / 2;
-                    }
-                }
-                else {
-                    if (i == finishRow - startRow + 1 && GetVerticalBorder(j).Count > startRow - largeTableIndexOffset + i - 1
-                         && GetVerticalBorder(j)[startRow - largeTableIndexOffset + i - 1] != null) {
-                        x2 += GetVerticalBorder(j)[startRow - largeTableIndexOffset + i - 1].GetWidth() / 2;
-                    }
-                }
-                lastBorder.DrawCellBorder(canvas, x1, y1, x2, y1, Border.Side.NONE);
             }
             return this;
         }
 
-        protected internal override TableBorders DrawVerticalBorder(int i, float startY, float x1, PdfCanvas canvas
-            , IList<float> heights) {
+        protected internal override TableBorders DrawVerticalBorder(PdfCanvas canvas, TableBorderDescriptor borderDescriptor
+            ) {
+            int i = borderDescriptor.GetBorderIndex();
+            float startY = borderDescriptor.GetMainCoordinateStart();
+            float x1 = borderDescriptor.GetCrossCoordinate();
+            float[] heights = borderDescriptor.GetMainCoordinateWidths();
             IList<Border> borders = GetVerticalBorder(i);
             float y1 = startY;
             float y2 = y1;
-            if (!heights.IsEmpty()) {
-                y2 = y1 - (float)heights[0];
+            if (0 != heights.Length) {
+                y2 = y1 - heights[0];
             }
-            int j;
-            for (j = 1; j < heights.Count; j++) {
-                Border prevBorder = borders[startRow - largeTableIndexOffset + j - 1];
-                Border curBorder = borders[startRow - largeTableIndexOffset + j];
-                if (prevBorder != null) {
-                    if (!prevBorder.Equals(curBorder)) {
-                        prevBorder.DrawCellBorder(canvas, x1, y1, x1, y2, Border.Side.NONE);
+            float? y1Offset = null;
+            for (int j = 1; j <= heights.Length; j++) {
+                Border currentBorder = borders[startRow - largeTableIndexOffset + j - 1];
+                Border nextBorder = j < heights.Length ? borders[startRow - largeTableIndexOffset + j] : null;
+                if (currentBorder != null) {
+                    IList<Border> crossingBordersAtStart = GetCrossingBorders(j - 1, i);
+                    float startCornerWidth = GetWidestBorderWidth(crossingBordersAtStart[0], crossingBordersAtStart[2]);
+                    // TODO DEVSIX-5962 Once the ticket is done, remove this workaround, which allows
+                    //  vertical borders to win at horizontal-0. Bear in mind that this workaround helps
+                    //  in standard cases, when borders are of the same width. If they are not then
+                    //  this workaround doesn't help to improve corner collapsing
+                    if (1 == j) {
+                        crossingBordersAtStart.Add(0, currentBorder);
+                    }
+                    JavaCollectionsUtil.Sort(crossingBordersAtStart, borderComparator);
+                    IList<Border> crossingBordersAtEnd = GetCrossingBorders(j, i);
+                    float endCornerWidth = GetWidestBorderWidth(crossingBordersAtEnd[0], crossingBordersAtEnd[2]);
+                    JavaCollectionsUtil.Sort(crossingBordersAtEnd, borderComparator);
+                    // if all the borders are equal, we need to draw them at the end
+                    if (!currentBorder.Equals(nextBorder)) {
+                        if (null == y1Offset) {
+                            y1Offset = currentBorder.Equals(crossingBordersAtStart[0]) ? startCornerWidth / 2 : -startCornerWidth / 2;
+                        }
+                        float y2Offset = currentBorder.Equals(crossingBordersAtEnd[0]) ? -endCornerWidth / 2 : endCornerWidth / 2;
+                        currentBorder.DrawCellBorder(canvas, x1, y1 + (float)y1Offset, x1, y2 + y2Offset, Border.Side.NONE);
                         y1 = y2;
+                        y1Offset = null;
+                    }
+                    else {
+                        // if current border equal the next one, we apply an optimization here, which allows us
+                        // to draw equal borders at once and not by part. Therefore for the first of such borders
+                        // we store its start offset
+                        if (null == y1Offset) {
+                            y1Offset = currentBorder.Equals(crossingBordersAtStart[0]) ? startCornerWidth / 2 : -startCornerWidth / 2;
+                        }
                     }
                 }
                 else {
-                    y1 -= (float)heights[j - 1];
+                    // if current border is null, then just skip it's processing.
+                    // Border corners will be processed by borders which are not null.
+                    y1 -= heights[j - 1];
                     y2 = y1;
                 }
-                if (curBorder != null) {
-                    y2 -= (float)heights[j];
+                if (nextBorder != null) {
+                    y2 -= heights[j];
                 }
-            }
-            if (borders.Count == 0) {
-                return this;
-            }
-            Border lastBorder = borders[startRow - largeTableIndexOffset + j - 1];
-            if (lastBorder != null) {
-                lastBorder.DrawCellBorder(canvas, x1, y1, x1, y2, Border.Side.NONE);
             }
             return this;
         }
@@ -589,11 +639,12 @@ namespace iText.Layout.Renderer {
                         rightBorderMaxWidth = GetMaxRightWidth();
                         leftBorderMaxWidth = GetMaxLeftWidth();
                     }
+                    // in case of large table and no content (Table#complete is called right after Table#flush)
                     SetTopBorderCollapseWith(((Table)currentRenderer.GetModelElement()).GetLastRowBottomBorder());
                 }
                 else {
                     SetTopBorderCollapseWith(null);
-                    SetBottomBorderCollapseWith(null);
+                    SetBottomBorderCollapseWith(null, null);
                 }
             }
             if (null != footerRenderer) {
@@ -613,7 +664,7 @@ namespace iText.Layout.Renderer {
 
         protected internal override TableBorders SkipFooter(Border[] borders) {
             SetTableBoundingBorders(borders);
-            SetBottomBorderCollapseWith(null);
+            SetBottomBorderCollapseWith(null, null);
             return this;
         }
 
@@ -627,14 +678,15 @@ namespace iText.Layout.Renderer {
             ) {
             ((iText.Layout.Renderer.CollapsedTableBorders)footerBordersHandler).SetTopBorderCollapseWith(hasContent ? 
                 GetLastHorizontalBorder() : GetTopBorderCollapseWith());
-            SetBottomBorderCollapseWith(footerBordersHandler.GetHorizontalBorder(0));
+            SetBottomBorderCollapseWith(footerBordersHandler.GetHorizontalBorder(0), ((iText.Layout.Renderer.CollapsedTableBorders
+                )footerBordersHandler).GetVerticalBordersCrossingTopHorizontalBorder());
             return this;
         }
 
         protected internal override TableBorders CollapseTableWithHeader(TableBorders headerBordersHandler, bool updateBordersHandler
             ) {
             ((iText.Layout.Renderer.CollapsedTableBorders)headerBordersHandler).SetBottomBorderCollapseWith(GetHorizontalBorder
-                (startRow));
+                (startRow), GetVerticalBordersCrossingTopHorizontalBorder());
             if (updateBordersHandler) {
                 SetTopBorderCollapseWith(headerBordersHandler.GetLastHorizontalBorder());
             }
@@ -647,6 +699,119 @@ namespace iText.Layout.Renderer {
             occupiedBox.MoveUp(topBorderMaxWidth).DecreaseHeight(topBorderMaxWidth);
             return this;
         }
+
         // endregion
+        /// <summary>
+        /// Returns the
+        /// <see cref="iText.Layout.Borders.Border"/>
+        /// instances, which intersect in the specified point.
+        /// </summary>
+        /// <remarks>
+        /// Returns the
+        /// <see cref="iText.Layout.Borders.Border"/>
+        /// instances, which intersect in the specified point.
+        /// <para />
+        /// The order of the borders: first the left one, then the top, the right and the bottom ones.
+        /// </remarks>
+        /// <param name="horizontalIndex">index of horizontal border</param>
+        /// <param name="verticalIndex">index of vertical border</param>
+        /// <returns>
+        /// a list of
+        /// <see cref="iText.Layout.Borders.Border"/>
+        /// instances, which intersect in the specified point
+        /// </returns>
+        internal virtual IList<Border> GetCrossingBorders(int horizontalIndex, int verticalIndex) {
+            IList<Border> horizontalBorder = GetHorizontalBorder(startRow + horizontalIndex);
+            IList<Border> verticalBorder = GetVerticalBorder(verticalIndex);
+            IList<Border> crossingBorders = new List<Border>(4);
+            crossingBorders.Add(verticalIndex > 0 ? horizontalBorder[verticalIndex - 1] : null);
+            crossingBorders.Add(horizontalIndex > 0 ? verticalBorder[startRow - largeTableIndexOffset + horizontalIndex
+                 - 1] : null);
+            crossingBorders.Add(verticalIndex < numberOfColumns ? horizontalBorder[verticalIndex] : null);
+            crossingBorders.Add(horizontalIndex <= finishRow - startRow ? verticalBorder[startRow - largeTableIndexOffset
+                 + horizontalIndex] : null);
+            // In case the last horizontal border on the page is specified,
+            // we need to consider a vertical border of the table's bottom part
+            // (f.e., for header it is table's body).
+            if (horizontalIndex == finishRow - startRow + 1 && null != verticalBottomBorderCollapseWith) {
+                if (IsBorderWider(verticalBottomBorderCollapseWith[verticalIndex], crossingBorders[3])) {
+                    crossingBorders[3] = verticalBottomBorderCollapseWith[verticalIndex];
+                }
+            }
+            return crossingBorders;
+        }
+
+        /// <summary>
+        /// A comparison function to compare two
+        /// <see cref="iText.Layout.Borders.Border"/>
+        /// instances.
+        /// </summary>
+        private class BorderComparator : IComparer<Border> {
+            public virtual int Compare(Border o1, Border o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+                else {
+                    if (null == o1) {
+                        return 1;
+                    }
+                    else {
+                        if (null == o2) {
+                            return -1;
+                        }
+                        else {
+                            return JavaUtil.FloatCompare(o2.GetWidth(), o1.GetWidth());
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>Gets the width of the widest border in the specified list.</summary>
+        /// <param name="borders">the borders which widths should be considered</param>
+        /// <returns>the width of the widest border in the specified list</returns>
+        private float GetWidestBorderWidth(params Border[] borders) {
+            float maxWidth = 0;
+            foreach (Border border in borders) {
+                if (null != border && maxWidth < border.GetWidth()) {
+                    maxWidth = border.GetWidth();
+                }
+            }
+            return maxWidth;
+        }
+
+        /// <summary>Compares borders and defines whether this border is wider than the other.</summary>
+        /// <remarks>
+        /// Compares borders and defines whether this border is wider than the other.
+        /// <para />
+        /// Note that by default the comparison will be strict, e.g. if this border
+        /// is of the same width as the other border, then false will be returned.
+        /// </remarks>
+        /// <param name="thisBorder">this border</param>
+        /// <param name="otherBorder">the other border to be compared with</param>
+        /// <returns>whether this border is wider than the other</returns>
+        private static bool IsBorderWider(Border thisBorder, Border otherBorder) {
+            return IsBorderWider(thisBorder, otherBorder, true);
+        }
+
+        /// <summary>Compares borders and defines whether this border is wider than the other.</summary>
+        /// <param name="thisBorder">this border</param>
+        /// <param name="otherBorder">the other border to be compared with</param>
+        /// <param name="strict">
+        /// if true, then in case this border is of the same width as the other border,
+        /// true will be returned. If false, it will be checked whether the width
+        /// of this border is strictly greater than the other border's width
+        /// </param>
+        /// <returns>whether this border is wider than the other</returns>
+        private static bool IsBorderWider(Border thisBorder, Border otherBorder, bool strict) {
+            if (null == thisBorder) {
+                return false;
+            }
+            if (null == otherBorder) {
+                return true;
+            }
+            int comparisonResult = JavaUtil.FloatCompare(thisBorder.GetWidth(), otherBorder.GetWidth());
+            return strict ? comparisonResult > 0 : comparisonResult >= 0;
+        }
     }
 }
