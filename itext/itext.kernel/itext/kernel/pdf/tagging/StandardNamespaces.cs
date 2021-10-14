@@ -83,14 +83,14 @@ namespace iText.Kernel.Pdf.Tagging {
                 , StandardRoles.QUOTE, StandardRoles.NOTE, StandardRoles.REFERENCE, StandardRoles.BIBENTRY, StandardRoles
                 .CODE)));
             STD_STRUCT_NAMESPACE_2_0_TYPES = JavaCollectionsUtil.UnmodifiableSet(new HashSet<String>(JavaUtil.ArraysAsList
-                (StandardRoles.DOCUMENT, StandardRoles.DOCUMENTFRAGMENT, StandardRoles.PART, StandardRoles.DIV, StandardRoles
-                .ASIDE, StandardRoles.TITLE, StandardRoles.SUB, StandardRoles.P, StandardRoles.H, StandardRoles.LBL, StandardRoles
-                .EM, StandardRoles.STRONG, StandardRoles.SPAN, StandardRoles.LINK, StandardRoles.ANNOT, StandardRoles.
-                FORM, StandardRoles.RUBY, StandardRoles.RB, StandardRoles.RT, StandardRoles.RP, StandardRoles.WARICHU, 
-                StandardRoles.WT, StandardRoles.WP, StandardRoles.FENOTE, StandardRoles.L, StandardRoles.LI, StandardRoles
-                .LBODY, StandardRoles.TABLE, StandardRoles.TR, StandardRoles.TH, StandardRoles.TD, StandardRoles.THEAD
-                , StandardRoles.TBODY, StandardRoles.TFOOT, StandardRoles.CAPTION, StandardRoles.FIGURE, StandardRoles
-                .FORMULA, StandardRoles.ARTIFACT)));
+                (StandardRoles.DOCUMENT, StandardRoles.DOCUMENTFRAGMENT, StandardRoles.PART, StandardRoles.SECT, StandardRoles
+                .NONSTRUCT, StandardRoles.DIV, StandardRoles.ASIDE, StandardRoles.TITLE, StandardRoles.SUB, StandardRoles
+                .P, StandardRoles.H, StandardRoles.LBL, StandardRoles.EM, StandardRoles.STRONG, StandardRoles.SPAN, StandardRoles
+                .LINK, StandardRoles.ANNOT, StandardRoles.FORM, StandardRoles.RUBY, StandardRoles.RB, StandardRoles.RT
+                , StandardRoles.RP, StandardRoles.WARICHU, StandardRoles.WT, StandardRoles.WP, StandardRoles.FENOTE, StandardRoles
+                .L, StandardRoles.LI, StandardRoles.LBODY, StandardRoles.TABLE, StandardRoles.TR, StandardRoles.TH, StandardRoles
+                .TD, StandardRoles.THEAD, StandardRoles.TBODY, StandardRoles.TFOOT, StandardRoles.CAPTION, StandardRoles
+                .FIGURE, StandardRoles.FORMULA, StandardRoles.ARTIFACT)));
         }
 
         // Hn, this type is handled in roleBelongsToStandardNamespace method
