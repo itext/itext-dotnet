@@ -483,6 +483,37 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void BorderCollapseTest02A() {
+            fileName = "borderCollapseTest02A.pdf";
+            outFileName = destinationFolder + fileName;
+            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Cell cell;
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
+            for (int i = 0; i < 3; i++) {
+                // column 1
+                cell = new Cell().Add(new Paragraph("1"));
+                cell.SetBorder(Border.NO_BORDER);
+                cell.SetPadding(0);
+                cell.SetMargin(0);
+                cell.SetHeight(50);
+                cell.SetBackgroundColor(ColorConstants.RED);
+                table.AddCell(cell);
+                // column 2
+                cell = new Cell().Add(new Paragraph("2"));
+                cell.SetPadding(0);
+                cell.SetMargin(0);
+                cell.SetBackgroundColor(ColorConstants.RED);
+                cell.SetHeight(50);
+                cell.SetBorder(i % 2 == 1 ? Border.NO_BORDER : new SolidBorder(20));
+                table.AddCell(cell);
+            }
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void BorderCollapseTest03() {
             fileName = "borderCollapseTest03.pdf";
             outFileName = destinationFolder + fileName;
@@ -995,6 +1026,20 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TableAndCellBordersCollapseTest01() {
+            // TODO DEVSIX-5834 Consider this test when deciding on the strategy:
+            //  left-bottom corner could be magenta as in Chrome
+            fileName = "tableAndCellBordersCollapseTest01.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
+            table.SetBorder(new SolidBorder(ColorConstants.GREEN, 100));
+            table.AddCell(new Cell().Add(new Paragraph("Hello World")).SetBorderBottom(new SolidBorder(ColorConstants.
+                MAGENTA, 100)));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest01() {
             fileName = "tableWithHeaderFooterTest01.pdf";
             Document doc = CreateDocument();
@@ -1029,6 +1074,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest02() {
+            // TODO DEVSIX-5864 footer's top border / body's bottom border should be drawn by footer
             fileName = "tableWithHeaderFooterTest02.pdf";
             Document doc = CreateDocument();
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 1500));
@@ -1061,6 +1107,27 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Hello").SetBorder(new SolidBorder
                 (ColorConstants.ORANGE, 2)));
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest02A() {
+            // TODO DEVSIX-5864 footer's top border / body's bottom border should be drawn by footer
+            fileName = "tableWithHeaderFooterTest02A.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 1500));
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
+            for (int i = 1; i < 2; i += 2) {
+                table.AddCell(new Cell().SetHeight(30).Add(new Paragraph("Cell" + i)).SetBorderBottom(new SolidBorder(ColorConstants
+                    .BLUE, 400)).SetBorderRight(new SolidBorder(20)));
+                table.AddCell(new Cell().SetHeight(30).Add(new Paragraph("Cell" + (i + 1))).SetBorderBottom(new SolidBorder
+                    (ColorConstants.BLUE, 100)).SetBorderLeft(new SolidBorder(20)));
+            }
+            table.AddFooterCell(new Cell().SetHeight(30).Add(new Paragraph("Footer1")).SetBorderTop(new SolidBorder(ColorConstants
+                .RED, 100)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add(new Paragraph("Footer2")).SetBorderTop(new SolidBorder(ColorConstants
+                .RED, 200)));
+            doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
 
@@ -1214,6 +1281,31 @@ namespace iText.Layout {
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
+            doc.Add(table);
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalBordersInfluenceHorizontalTopAndBottomBordersTest() {
+            fileName = "verticalBordersInfluenceHorizontalTopAndbottomBordersTest.pdf";
+            outFileName = destinationFolder + fileName;
+            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument, PageSize.A6.Rotate());
+            Table table = new Table(UnitValue.CreatePercentArray(5)).UseAllAvailableWidth();
+            Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)")).SetHeight(30).SetBorderBottom(new SolidBorder
+                (ColorConstants.RED, 20));
+            table.AddHeaderCell(cell);
+            cell = new Cell(1, 5).Add(new Paragraph("Continue on next page")).SetHeight(30).SetBorderTop(new SolidBorder
+                (ColorConstants.MAGENTA, 1));
+            table.AddFooterCell(cell);
+            for (int i = 0; i < 10; i++) {
+                table.AddCell(new Cell().SetBorderLeft(new SolidBorder(ColorConstants.BLUE, 20)).SetBorderRight(new SolidBorder
+                    (ColorConstants.BLUE, 20)).SetHeight(30).SetBorderBottom(new SolidBorder(ColorConstants.RED, 50 - 2 * 
+                    i + 1)).SetBorderTop(new SolidBorder(ColorConstants.GREEN, 50 - 2 * i + 1)).Add(new Paragraph((i + 1).
+                    ToString())));
+            }
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             CloseDocumentAndCompareOutputs(doc);
@@ -1693,6 +1785,82 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CellBorderPriorityTest() {
+            fileName = "cellBorderPriorityTest.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+            Cell cell = new Cell().Add(new Paragraph("Hello"));
+            cell.SetBorderTop(new SolidBorder(ColorConstants.RED, 50));
+            cell.SetBorderRight(new SolidBorder(ColorConstants.GREEN, 50));
+            cell.SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 50));
+            cell.SetBorderLeft(new SolidBorder(ColorConstants.BLACK, 50));
+            cell.SetHeight(100).SetWidth(100);
+            for (int i = 0; i < 9; i++) {
+                table.AddCell(cell.Clone(true));
+            }
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CellBorderPriorityTest02() {
+            fileName = "cellBorderPriorityTest02.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+            Color[] array = new Color[] { ColorConstants.RED, ColorConstants.GREEN, ColorConstants.BLUE, ColorConstants
+                .RED, ColorConstants.GREEN, ColorConstants.BLUE };
+            for (int i = 0; i < 3; i++) {
+                Cell cell = new Cell().Add(new Paragraph("Hello"));
+                cell.SetBorder(new SolidBorder(array[i], 50));
+                table.AddCell(cell);
+                cell = new Cell().Add(new Paragraph("Hello"));
+                cell.SetBorder(new SolidBorder(array[i + 1], 50));
+                table.AddCell(cell);
+                cell = new Cell().Add(new Paragraph("Hello"));
+                cell.SetBorder(new SolidBorder(array[i + 2], 50));
+                table.AddCell(cell);
+            }
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CellsBorderPriorityTest() {
+            fileName = "cellsBorderPriorityTest.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(UnitValue.CreatePercentArray(2));
+            Cell cell = new Cell().Add(new Paragraph("1"));
+            cell.SetBorder(new SolidBorder(ColorConstants.RED, 20));
+            table.AddCell(cell);
+            cell = new Cell().Add(new Paragraph("2"));
+            cell.SetBorder(new SolidBorder(ColorConstants.GREEN, 20));
+            table.AddCell(cell);
+            cell = new Cell().Add(new Paragraph("3"));
+            cell.SetBorder(new SolidBorder(ColorConstants.BLUE, 20));
+            table.AddCell(cell);
+            cell = new Cell().Add(new Paragraph("4"));
+            cell.SetBorder(new SolidBorder(ColorConstants.BLACK, 20));
+            table.AddCell(cell);
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableBorderPriorityTest() {
+            fileName = "tableBorderPriorityTest.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
+            table.SetBorderTop(new SolidBorder(ColorConstants.RED, 20));
+            table.SetBorderRight(new SolidBorder(ColorConstants.GREEN, 20));
+            table.SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 20));
+            table.SetBorderLeft(new SolidBorder(ColorConstants.BLACK, 20));
+            Cell cell = new Cell().Add(new Paragraph("Hello"));
+            table.AddCell(cell);
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SplitRowspanKeepTogetherTest() {
             fileName = "splitRowspanKeepTogetherTest.pdf";
@@ -1845,6 +2013,49 @@ namespace iText.Layout {
             doc.Add(new Paragraph("Correct result:"));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualBordersSameInstancesTest() {
+            fileName = "equalBordersSameInstancesTest.pdf";
+            Document doc = CreateDocument();
+            Border border = new SolidBorder(ColorConstants.RED, 20);
+            int colNum = 4;
+            Table table = new Table(UnitValue.CreatePercentArray(colNum)).UseAllAvailableWidth();
+            int rowNum = 4;
+            for (int i = 0; i < rowNum; i++) {
+                for (int j = 0; j < colNum; j++) {
+                    table.AddCell(new Cell().Add(new Paragraph("Cell: " + i + ", " + j)).SetBorder(border));
+                }
+            }
+            doc.Add(table);
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
+                ("Hello"))).SetBorder(new SolidBorder(ColorConstants.BLACK, 10)));
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalMiddleBorderTest() {
+            String testName = "verticalMiddleBorderTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
+            for (int i = 0; i < 4; i++) {
+                if (i % 2 == 1) {
+                    Cell cell = new Cell().Add(new Paragraph("Left Cell " + i)).SetBorderLeft(new SolidBorder(ColorConstants.GREEN
+                        , 20));
+                    table.AddCell(cell);
+                }
+                else {
+                    table.AddCell("Right cell " + i);
+                }
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
         }
 
         private Document CreateDocument() {

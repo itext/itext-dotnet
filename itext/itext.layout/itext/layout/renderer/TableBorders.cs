@@ -128,11 +128,11 @@ namespace iText.Layout.Renderer {
 
         // region abstract
         // region draw
-        protected internal abstract iText.Layout.Renderer.TableBorders DrawHorizontalBorder(int i, float startX, float
-             y1, PdfCanvas canvas, float[] countedColumnWidth);
+        protected internal abstract iText.Layout.Renderer.TableBorders DrawHorizontalBorder(PdfCanvas canvas, TableBorderDescriptor
+             borderDescriptor);
 
-        protected internal abstract iText.Layout.Renderer.TableBorders DrawVerticalBorder(int i, float startY, float
-             x1, PdfCanvas canvas, IList<float> heights);
+        protected internal abstract iText.Layout.Renderer.TableBorders DrawVerticalBorder(PdfCanvas canvas, TableBorderDescriptor
+             borderDescriptor);
 
         // endregion
         // region area occupation

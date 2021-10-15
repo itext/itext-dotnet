@@ -778,7 +778,7 @@ namespace iText.Layout.Renderer {
                         // And now, when we possess such knowledge, we are performing the second attempt, but we need to nullify results
                         // from the previous attempt
                         if (bordersHandler is CollapsedTableBorders) {
-                            ((CollapsedTableBorders)bordersHandler).SetBottomBorderCollapseWith(null);
+                            ((CollapsedTableBorders)bordersHandler).SetBottomBorderCollapseWith(null, null);
                         }
                         bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, hasContent || 0 != childRenderers.Count
                             );
@@ -1067,10 +1067,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             else {
-                // the bottom border should be processed and placed lately
-                if (0 != heights.Count) {
-                    heights[heights.Count - 1] = heights[heights.Count - 1] - bottomTableBorderWidth / 2;
-                }
                 if (null == footerRenderer) {
                     if (0 != childRenderers.Count) {
                         bordersHandler.ApplyBottomTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, false, 
@@ -1455,7 +1451,7 @@ namespace iText.Layout.Renderer {
                 }
                 startX += +(null == leftMargin ? 0 : leftMargin.GetValue());
             }
-            // process halves of the borders here
+            // process halves of horizontal bounding borders
             if (childRenderers.Count == 0) {
                 Border[] borders = bordersHandler.tableBoundingBorders;
                 if (null != borders[0]) {
@@ -1487,45 +1483,56 @@ namespace iText.Layout.Renderer {
             if (bordersHandler is CollapsedTableBorders) {
                 if (hasFooter) {
                     ((CollapsedTableBorders)bordersHandler).SetBottomBorderCollapseWith(footerRenderer.bordersHandler.GetFirstHorizontalBorder
+                        (), ((CollapsedTableBorders)footerRenderer.bordersHandler).GetVerticalBordersCrossingTopHorizontalBorder
                         ());
                 }
                 else {
                     if (isBottomTablePart) {
-                        ((CollapsedTableBorders)bordersHandler).SetBottomBorderCollapseWith(null);
+                        ((CollapsedTableBorders)bordersHandler).SetBottomBorderCollapseWith(null, null);
                     }
                 }
             }
             // we do not need to fix top border, because either this is header or the top border has been already written
             float y1 = startY;
-            if (isFooterRendererOfLargeTable) {
-                bordersHandler.DrawHorizontalBorder(0, startX, y1, drawContext.GetCanvas(), countedColumnWidth);
+            float[] heightsArray = new float[heights.Count];
+            for (int j = 0; j < heights.Count; j++) {
+                heightsArray[j] = heights[j];
             }
-            if (0 != heights.Count) {
-                y1 -= (float)heights[0];
-            }
-            for (int i = 1; i < heights.Count; i++) {
-                bordersHandler.DrawHorizontalBorder(i, startX, y1, drawContext.GetCanvas(), countedColumnWidth);
-                if (i < heights.Count) {
-                    y1 -= (float)heights[i];
-                }
-            }
-            if (!isBottomTablePart && isComplete) {
-                bordersHandler.DrawHorizontalBorder(heights.Count, startX, y1, drawContext.GetCanvas(), countedColumnWidth
-                    );
-            }
+            // draw vertical borders
             float x1 = startX;
-            if (countedColumnWidth.Length > 0) {
-                x1 += countedColumnWidth[0];
-            }
-            for (int i = 1; i < bordersHandler.GetNumberOfColumns(); i++) {
-                bordersHandler.DrawVerticalBorder(i, startY, x1, drawContext.GetCanvas(), heights);
+            for (int i = 0; i <= bordersHandler.GetNumberOfColumns(); i++) {
+                bordersHandler.DrawVerticalBorder(drawContext.GetCanvas(), new TableBorderDescriptor(i, startY, x1, heightsArray
+                    ));
                 if (i < countedColumnWidth.Length) {
                     x1 += countedColumnWidth[i];
                 }
             }
-            // Draw bounding borders. Vertical borders are the last to draw in order to collapse with header / footer
+            // draw horizontal borders
+            // draw top border
+            if (isFooterRendererOfLargeTable) {
+                bordersHandler.DrawHorizontalBorder(drawContext.GetCanvas(), new TableBorderDescriptor(0, startX, y1, countedColumnWidth
+                    ));
+            }
             if (isTopTablePart) {
-                bordersHandler.DrawHorizontalBorder(0, startX, startY, drawContext.GetCanvas(), countedColumnWidth);
+                bordersHandler.DrawHorizontalBorder(drawContext.GetCanvas(), new TableBorderDescriptor(0, startX, startY, 
+                    countedColumnWidth));
+            }
+            // draw inner borders
+            if (!heights.IsEmpty()) {
+                y1 -= (float)heights[0];
+            }
+            for (int i = 1; i < heights.Count; i++) {
+                bordersHandler.DrawHorizontalBorder(drawContext.GetCanvas(), new TableBorderDescriptor(i, startX, y1, countedColumnWidth
+                    ));
+                if (i < heights.Count) {
+                    y1 -= (float)heights[i];
+                }
+            }
+            // draw bottom border
+            // TODO DEVSIX-5867 Check hasFooter, so that two footers are not drawn
+            if (!isBottomTablePart && isComplete) {
+                bordersHandler.DrawHorizontalBorder(drawContext.GetCanvas(), new TableBorderDescriptor(heights.Count, startX
+                    , y1, countedColumnWidth));
             }
             //!isLastRendererForModelElement is a check that this is a split render. This is the case with the splitting of
             // one cell when part of the cell moves to the next page. Therefore, if such a splitting occurs, a bottom border
@@ -1533,14 +1540,9 @@ namespace iText.Layout.Renderer {
             // but this splitting, if the table does not fit on the page and the next cell is added to the next page.
             // In this case, this code should not be processed, since the border in the above code has already been drawn.
             if (isBottomTablePart && (isComplete || (!isLastRendererForModelElement && !IsEmptyTableRenderer()))) {
-                bordersHandler.DrawHorizontalBorder(heights.Count, startX, y1, drawContext.GetCanvas(), countedColumnWidth
-                    );
+                bordersHandler.DrawHorizontalBorder(drawContext.GetCanvas(), new TableBorderDescriptor(heights.Count, startX
+                    , y1, countedColumnWidth));
             }
-            // draw left
-            bordersHandler.DrawVerticalBorder(0, startY, startX, drawContext.GetCanvas(), heights);
-            // draw right
-            bordersHandler.DrawVerticalBorder(bordersHandler.GetNumberOfColumns(), startY, x1, drawContext.GetCanvas()
-                , heights);
             if (isTagged) {
                 drawContext.GetCanvas().CloseTag();
             }

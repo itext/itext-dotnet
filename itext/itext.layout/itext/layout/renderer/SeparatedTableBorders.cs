@@ -62,13 +62,13 @@ namespace iText.Layout.Renderer {
             : base(rows, numberOfColumns, tableBoundingBorders, largeTableIndexOffset) {
         }
 
-        protected internal override TableBorders DrawHorizontalBorder(int i, float startX, float y1, PdfCanvas canvas
-            , float[] countedColumnWidth) {
+        protected internal override TableBorders DrawHorizontalBorder(PdfCanvas canvas, TableBorderDescriptor borderDescriptor
+            ) {
             return this;
         }
 
-        protected internal override TableBorders DrawVerticalBorder(int i, float startY, float x1, PdfCanvas canvas
-            , IList<float> heights) {
+        protected internal override TableBorders DrawVerticalBorder(PdfCanvas canvas, TableBorderDescriptor borderDescriptor
+            ) {
             return this;
         }
 
