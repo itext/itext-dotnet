@@ -1508,38 +1508,26 @@ namespace iText.Layout.Renderer {
                 }
             }
             // draw horizontal borders
-            // draw top border
-            if (isFooterRendererOfLargeTable) {
-                bordersHandler.DrawHorizontalBorder(drawContext.GetCanvas(), new TableBorderDescriptor(0, startX, y1, countedColumnWidth
-                    ));
-            }
-            if (isTopTablePart) {
-                bordersHandler.DrawHorizontalBorder(drawContext.GetCanvas(), new TableBorderDescriptor(0, startX, startY, 
-                    countedColumnWidth));
-            }
-            // draw inner borders
-            if (!heights.IsEmpty()) {
+            bool shouldDrawTopBorder = isFooterRendererOfLargeTable || isTopTablePart;
+            // if top border is already drawn, we should decrease ordinate
+            if (!heights.IsEmpty() && !shouldDrawTopBorder) {
                 y1 -= (float)heights[0];
             }
-            for (int i = 1; i < heights.Count; i++) {
+            for (int i = shouldDrawTopBorder ? 0 : 1; i < heights.Count; i++) {
                 bordersHandler.DrawHorizontalBorder(drawContext.GetCanvas(), new TableBorderDescriptor(i, startX, y1, countedColumnWidth
                     ));
-                if (i < heights.Count) {
-                    y1 -= (float)heights[i];
-                }
+                y1 -= (float)heights[i];
             }
             // draw bottom border
-            // TODO DEVSIX-5867 Check hasFooter, so that two footers are not drawn
-            if (!isBottomTablePart && isComplete) {
-                bordersHandler.DrawHorizontalBorder(drawContext.GetCanvas(), new TableBorderDescriptor(heights.Count, startX
-                    , y1, countedColumnWidth));
-            }
+            // Note for the second condition:
             //!isLastRendererForModelElement is a check that this is a split render. This is the case with the splitting of
             // one cell when part of the cell moves to the next page. Therefore, if such a splitting occurs, a bottom border
             // should be drawn. However, this should not be done for empty renderers that are also created during splitting,
             // but this splitting, if the table does not fit on the page and the next cell is added to the next page.
             // In this case, this code should not be processed, since the border in the above code has already been drawn.
-            if (isBottomTablePart && (isComplete || (!isLastRendererForModelElement && !IsEmptyTableRenderer()))) {
+            // TODO DEVSIX-5867 Check hasFooter, so that two footers are not drawn
+            if ((!isBottomTablePart && isComplete) || (isBottomTablePart && (isComplete || (!isLastRendererForModelElement
+                 && !IsEmptyTableRenderer())))) {
                 bordersHandler.DrawHorizontalBorder(drawContext.GetCanvas(), new TableBorderDescriptor(heights.Count, startX
                     , y1, countedColumnWidth));
             }
