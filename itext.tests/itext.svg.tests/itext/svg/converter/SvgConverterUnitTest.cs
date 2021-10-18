@@ -43,8 +43,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Font;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
@@ -325,6 +327,16 @@ namespace iText.Svg.Converter {
                 ();
             ResourceResolver currentResolver = SvgConverter.GetResourceResolver(testSvgProcessorResult, null);
             NUnit.Framework.Assert.IsNotNull(currentResolver);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NullBBoxInDrawTest() {
+            NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                PdfFormXObject @object = SvgConverter.ConvertToXObject(content, doc);
+                ((PdfDictionary)@object.GetPdfObject()).Remove(PdfName.BBox);
+                SvgConverter.Draw(@object, new PdfCanvas(doc, 1), 0, 0);
+            }
+            );
         }
 
         private class TestSvgProcessorResult : ISvgProcessorResult {

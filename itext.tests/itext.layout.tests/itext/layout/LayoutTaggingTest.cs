@@ -799,7 +799,7 @@ namespace iText.Layout {
             canvas.EnableAutoTagging(page1);
             canvas.Add(new Paragraph(txt));
             PdfCanvas canvas1 = new PdfCanvas(page1);
-            canvas1.AddXObject(template, 10, 10);
+            canvas1.AddXObjectAt(template, 10, 10);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpPdf, destinationFolder, "diff"
                 ));

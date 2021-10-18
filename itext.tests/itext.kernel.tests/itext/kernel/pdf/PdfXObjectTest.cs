@@ -138,7 +138,8 @@ namespace iText.Kernel.Pdf {
             //Create page1 and add forms to the page.
             PdfPage page1 = document.AddNewPage();
             canvas = new PdfCanvas(page1);
-            canvas.AddXObject(form, 0, 0).AddXObject(form, 50, 0).AddXObject(form, 0, 50).AddXObject(form, 50, 50);
+            canvas.AddXObjectAt(form, 0, 0).AddXObjectAt(form, 50, 0).AddXObjectAt(form, 0, 50).AddXObjectAt(form, 50, 
+                50);
             canvas.Release();
             //Create form from the page1 and flush it.
             form = new PdfFormXObject(page1);
@@ -148,10 +149,10 @@ namespace iText.Kernel.Pdf {
             //Create page2 and add forms to the page.
             PdfPage page2 = document.AddNewPage();
             canvas = new PdfCanvas(page2);
-            canvas.AddXObject(form, 0, 0);
-            canvas.AddXObject(form, 0, 200);
-            canvas.AddXObject(form, 200, 0);
-            canvas.AddXObject(form, 200, 200);
+            canvas.AddXObjectAt(form, 0, 0);
+            canvas.AddXObjectAt(form, 0, 200);
+            canvas.AddXObjectAt(form, 200, 0);
+            canvas.AddXObjectAt(form, 200, 200);
             canvas.Release();
             page2.Flush();
             document.Close();

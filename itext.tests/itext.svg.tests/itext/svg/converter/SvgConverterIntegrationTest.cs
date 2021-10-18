@@ -304,7 +304,7 @@ namespace iText.Svg.Converter {
             ISvgConverterProperties props = new SvgConverterProperties();
             PdfXObject xObj = SvgConverter.ConvertToXObject(ECLIPSESVGSTRING, doc, props);
             PdfCanvas canv = new PdfCanvas(page);
-            canv.AddXObject(xObj, 0, 0);
+            canv.AddXObjectAt(xObj, 0, 0);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
@@ -320,7 +320,7 @@ namespace iText.Svg.Converter {
             ISvgConverterProperties props = new SvgConverterProperties();
             PdfXObject xObj = SvgConverter.ConvertToXObject(fis, doc, props);
             PdfCanvas canv = new PdfCanvas(page);
-            canv.AddXObject(xObj, 0, 0);
+            canv.AddXObjectAt(xObj, 0, 0);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
