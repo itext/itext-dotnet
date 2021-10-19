@@ -445,7 +445,9 @@ namespace iText.Kernel.Pdf.Tagging {
             else {
                 if (kid.IsDictionary()) {
                     PdfDictionary kidAsDict = (PdfDictionary)kid;
-                    if (copyingParams.GetObjectsToCopy().Contains(kidAsDict)) {
+                    // if element is TD and its parent is TR which was copied, then we copy it in any case
+                    if (copyingParams.GetObjectsToCopy().Contains(kidAsDict) || ShouldTableElementBeCopied(kidAsDict, copiedParent
+                        )) {
                         bool hasParent = kidAsDict.ContainsKey(PdfName.P);
                         PdfDictionary copiedKid = CopyObject(kidAsDict, destPage, parentChangePg, copyingParams);
                         if (hasParent) {
@@ -474,6 +476,11 @@ namespace iText.Kernel.Pdf.Tagging {
                 }
             }
             return null;
+        }
+
+        internal static bool ShouldTableElementBeCopied(PdfDictionary obj, PdfDictionary parent) {
+            return (PdfName.TD.Equals(obj.Get(PdfName.S)) || PdfName.TH.Equals(obj.Get(PdfName.S))) && PdfName.TR.Equals
+                (parent.Get(PdfName.S));
         }
 
         private static PdfDictionary CopyNamespaceDict(PdfDictionary srcNsDict, StructureTreeCopier.StructElemCopyingParams
