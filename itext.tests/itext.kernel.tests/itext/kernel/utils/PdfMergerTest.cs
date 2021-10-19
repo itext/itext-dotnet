@@ -379,6 +379,65 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructures(dest, cmp));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentWithColorPropertyInOutlineTest() {
+            String firstDocument = sourceFolder + "firstDocumentWithColorPropertyInOutline.pdf";
+            String secondDocument = sourceFolder + "SecondDocumentWithColorPropertyInOutline.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeOutlinesWithColorProperty.pdf";
+            String mergedPdf = destinationFolder + "mergeOutlinesWithColorProperty.pdf";
+            using (PdfDocument merged = new PdfDocument(new PdfWriter(mergedPdf))) {
+                using (PdfDocument fileA = new PdfDocument(new PdfReader(firstDocument))) {
+                    using (PdfDocument fileB = new PdfDocument(new PdfReader(secondDocument))) {
+                        PdfMerger merger = new PdfMerger(merged, false, true);
+                        merger.Merge(fileA, 1, fileA.GetNumberOfPages());
+                        merger.Merge(fileB, 1, fileB.GetNumberOfPages());
+                        merger.Close();
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedPdf, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentWithStylePropertyInOutlineTest() {
+            String firstDocument = sourceFolder + "firstDocumentWithStylePropertyInOutline.pdf";
+            String secondDocument = sourceFolder + "secondDocumentWithStylePropertyInOutline.pdf";
+            String cmpPdf = sourceFolder + "cmp_mergeOutlineWithStyleProperty.pdf";
+            String mergedPdf = destinationFolder + "mergeOutlineWithStyleProperty.pdf";
+            using (PdfDocument documentA = new PdfDocument(new PdfReader(firstDocument))) {
+                using (PdfDocument documentB = new PdfDocument(new PdfReader(secondDocument))) {
+                    using (PdfDocument merged = new PdfDocument(new PdfWriter(mergedPdf))) {
+                        PdfMerger merger = new PdfMerger(merged, false, true);
+                        merger.Merge(documentA, 1, documentA.GetNumberOfPages());
+                        merger.Merge(documentB, 1, documentB.GetNumberOfPages());
+                        merger.Close();
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedPdf, cmpPdf, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergePdfDocumentsWithCopingOutlinesTest() {
+            String firstPdfDocument = sourceFolder + "firstDocumentWithOutlines.pdf";
+            String secondPdfDocument = sourceFolder + "secondDocumentWithOutlines.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeDocumentsWithOutlines.pdf";
+            String mergedDocument = destinationFolder + "mergeDocumentsWithOutlines.pdf";
+            using (PdfDocument documentA = new PdfDocument(new PdfReader(firstPdfDocument))) {
+                using (PdfDocument documentB = new PdfDocument(new PdfReader(secondPdfDocument))) {
+                    using (PdfDocument mergedPdf = new PdfDocument(new PdfWriter(mergedDocument))) {
+                        PdfMerger merger = new PdfMerger(mergedPdf, false, true);
+                        merger.Merge(documentA, 1, documentA.GetNumberOfPages());
+                        merger.Merge(documentB, 1, documentB.GetNumberOfPages());
+                        merger.Close();
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
         private void MergePdfs(IList<FileInfo> sources, String destination) {
             PdfDocument mergedDoc = new PdfDocument(new PdfWriter(destination));
             PdfMerger merger = new PdfMerger(mergedDoc);

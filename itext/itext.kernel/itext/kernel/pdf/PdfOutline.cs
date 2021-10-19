@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Navigation;
 
 namespace iText.Kernel.Pdf {
@@ -150,6 +151,25 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
+        /// Gets color for the outline entry's text,
+        /// <c>C</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// color
+        /// <see cref="iText.Kernel.Colors.Color"/>.
+        /// </returns>
+        public virtual Color GetColor() {
+            PdfArray colorArray = content.GetAsArray(PdfName.C);
+            if (colorArray == null) {
+                return null;
+            }
+            else {
+                return Color.MakeColor(PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB), colorArray.ToFloatArray());
+            }
+        }
+
+        /// <summary>
         /// Sets text style for the outline entry’s text,
         /// <c>F</c>
         /// key.
@@ -166,6 +186,16 @@ namespace iText.Kernel.Pdf {
             if (style == FLAG_BOLD || style == FLAG_ITALIC) {
                 content.Put(PdfName.F, new PdfNumber(style));
             }
+        }
+
+        /// <summary>
+        /// Gets text style for the outline entry's text,
+        /// <c>F</c>
+        /// key.
+        /// </summary>
+        /// <returns>style value.</returns>
+        public virtual int? GetStyle() {
+            return content.GetAsInt(PdfName.F);
         }
 
         /// <summary>Gets content dictionary.</summary>
@@ -256,6 +286,13 @@ namespace iText.Kernel.Pdf {
                     content.Remove(PdfName.Count);
                 }
             }
+        }
+
+        /// <summary>Defines if the outline is open or closed.</summary>
+        /// <returns>true if open,false otherwise.</returns>
+        public virtual bool IsOpen() {
+            int? count = content.GetAsInt(PdfName.Count);
+            return count == null || count >= 0;
         }
 
         /// <summary>

@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
+using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
@@ -488,6 +489,30 @@ namespace iText.Kernel.Pdf {
                         (outlineDictionary, new Dictionary<String, PdfObject>()));
                     NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_TITLE_ENTRY
                         , first.indirectReference), exception.Message);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetOutlinePropertiesTest() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    PdfPage firstPage = pdfDocument.AddNewPage();
+                    PdfOutline rootOutline = pdfDocument.GetOutlines(true);
+                    PdfOutline outline = rootOutline.AddOutline("Outline");
+                    NUnit.Framework.Assert.IsTrue(outline.IsOpen());
+                    NUnit.Framework.Assert.IsNull(outline.GetStyle());
+                    NUnit.Framework.Assert.IsNull(outline.GetColor());
+                    outline.GetContent().Put(PdfName.C, new PdfArray(ColorConstants.BLACK.GetColorValue()));
+                    outline.GetContent().Put(PdfName.F, new PdfNumber(2));
+                    outline.GetContent().Put(PdfName.Count, new PdfNumber(4));
+                    NUnit.Framework.Assert.IsTrue(outline.IsOpen());
+                    NUnit.Framework.Assert.AreEqual(2, outline.GetStyle());
+                    NUnit.Framework.Assert.AreEqual(ColorConstants.BLACK, outline.GetColor());
+                    outline.GetContent().Put(PdfName.Count, new PdfNumber(0));
+                    NUnit.Framework.Assert.IsTrue(outline.IsOpen());
+                    outline.GetContent().Put(PdfName.Count, new PdfNumber(-5));
+                    NUnit.Framework.Assert.IsFalse(outline.IsOpen());
                 }
             }
         }
