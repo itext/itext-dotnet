@@ -357,5 +357,18 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"
                 ));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyNullDestination() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDocument.AddNewPage();
+                    PdfDestination copiedDestination = pdfDocument.GetCatalog().CopyDestination(null, new Dictionary<PdfPage, 
+                        PdfPage>(), pdfDocument);
+                    // We expect null to be returned if the destination to be copied is null
+                    NUnit.Framework.Assert.IsNull(copiedDestination);
+                }
+            }
+        }
     }
 }

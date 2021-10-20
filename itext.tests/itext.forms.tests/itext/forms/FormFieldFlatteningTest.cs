@@ -213,7 +213,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 3)]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 5)]
         public virtual void FlattenReadOnly() {
             //Logging is expected since there are duplicate field names
             //isReadOnly should be true after DEVSIX-2156

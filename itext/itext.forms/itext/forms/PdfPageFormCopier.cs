@@ -153,6 +153,7 @@ namespace iText.Forms {
              annot, PdfFormField parentField) {
             PdfString parentName = parentField.GetFieldName();
             if (!fieldsTo.ContainsKey(parentName.ToUnicodeString())) {
+                // no such field, hence we should simply add it
                 PdfFormField field = CreateParentFieldCopy(annot.GetPdfObject(), documentTo);
                 PdfArray kids = field.GetKids();
                 field.GetPdfObject().Remove(PdfName.Kids);
@@ -160,6 +161,7 @@ namespace iText.Forms {
                 field.GetPdfObject().Put(PdfName.Kids, kids);
             }
             else {
+                // it is either a field (field name will not be null) or a widget (field name is not null)
                 PdfFormField field = MakeFormField(annot.GetPdfObject());
                 if (field == null) {
                     return;
@@ -178,18 +180,36 @@ namespace iText.Forms {
                     }
                 }
                 else {
-                    if (!parentField.GetKids().Contains(field.GetPdfObject())) {
+                    if (!parentField.GetKids().Contains(field.GetPdfObject()) && formTo.GetFields().Contains(parentField.GetPdfObject
+                        ())) {
+                        // its parent is already a field of the resultant document,
+                        // hence we only need to update its children
                         HashSet<String> existingFields = new HashSet<String>();
                         GetAllFieldNames(formTo.GetFields(), existingFields);
                         AddChildToExistingParent(annot.GetPdfObject(), existingFields);
+                    }
+                    else {
+                        // its parent is not a field of the resultant document, but the latter contains
+                        // a field of the same name, therefore we should merge them (note that merging in this context
+                        // differs from merging a widget and an annotation into a single entity)
+                        PdfFormField mergedField = MergeFieldsWithTheSameName(field);
+                        // we need to add the field not to its representation (#getFormFields()), but to
+                        // /Fields entry of the acro form
+                        formTo.AddField(mergedField, toPage);
                     }
                 }
             }
         }
 
         private PdfFormField MergeFieldsWithTheSameName(PdfFormField newField) {
-            String fullFieldName = newField.GetFieldName().ToUnicodeString();
             PdfString fieldName = newField.GetPdfObject().GetAsString(PdfName.T);
+            if (null == fieldName) {
+                fieldName = newField.GetParent().GetAsString(PdfName.T);
+            }
+            String fullFieldName = fieldName.ToUnicodeString();
+            if (null != newField.GetFieldName()) {
+                fullFieldName = newField.GetFieldName().ToUnicodeString();
+            }
             logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, fullFieldName
                 ));
             PdfFormField existingField = formTo.GetField(fullFieldName);

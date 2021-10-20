@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
 using iText.IO;
 using iText.Test;
 
@@ -51,6 +52,13 @@ namespace iText.IO.Util {
 
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/io/ImageMagickHelperTest/";
+
+        // In some of the test we will check whether ImageMagick has printed something to the console.
+        // For this reason the standard output stream will be customized. In .NET, however,
+        // on the contrary to Java the name of the test gets to this stream, hence we cannot check
+        // its length against zero and need to introduce some threshold, which should be definitely
+        // less than the length of the help message.
+        private const int SYSTEM_OUT_LENGTH_LIMIT = 50;
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {
@@ -145,6 +153,156 @@ namespace iText.IO.Util {
             bool result = imageMagickHelper.RunImageMagickImageCompare(inputImage, cmpImage, diff, "2.1");
             NUnit.Framework.Assert.IsTrue(result);
             NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(diff));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OutImageCallsHelpTest() {
+            String cmpImage = SOURCE_FOLDER + "cmp_Im1_1.jpg";
+            String diff = DESTINATION_FOLDER + "diff.png";
+            String outImage = SOURCE_FOLDER + "Im1_1.jpg' -help '" + cmpImage + "' '" + diff;
+            Object storedPrintStream = System.Console.Out;
+            try {
+                using (MemoryStream baos = new MemoryStream()) {
+                    System.Console.SetOut(new FormattingStreamWriter(baos));
+                    ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
+                    // In .NET the type of the thrown exception is different, therefore we just check here that
+                    // any exception has been thrown.
+                    NUnit.Framework.Assert.Catch(typeof(Exception), () => imageMagickHelper.RunImageMagickImageCompare(outImage
+                        , cmpImage, diff));
+                    // Previously a lengthy help message was printed
+                    System.Console.Out.Flush();
+                    NUnit.Framework.Assert.IsTrue(baos.ToArray().Length < SYSTEM_OUT_LENGTH_LIMIT);
+                }
+            }
+            catch (System.IO.IOException) {
+                NUnit.Framework.Assert.Fail("No exception is excepted here.");
+            }
+            finally {
+                StandardOutUtil.RestoreStandardOut(storedPrintStream);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CmpImageCallsHelpTest() {
+            String outImage = SOURCE_FOLDER + "Im1_1.jpg";
+            String diff = DESTINATION_FOLDER + "diff.png";
+            String cmpImage = SOURCE_FOLDER + "cmp_Im1_1.jpg' -help '" + diff;
+            Object storedPrintStream = System.Console.Out;
+            try {
+                using (MemoryStream baos = new MemoryStream()) {
+                    System.Console.SetOut(new FormattingStreamWriter(baos));
+                    ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
+                    // In .NET the type of the thrown exception is different, therefore we just check here that
+                    // any exception has been thrown.
+                    NUnit.Framework.Assert.Catch(typeof(Exception), () => imageMagickHelper.RunImageMagickImageCompare(outImage
+                        , cmpImage, diff));
+                    // Previously a lengthy help message was printed
+                    System.Console.Out.Flush();
+                    NUnit.Framework.Assert.IsTrue(baos.ToArray().Length < SYSTEM_OUT_LENGTH_LIMIT);
+                }
+            }
+            catch (System.IO.IOException) {
+                NUnit.Framework.Assert.Fail("No exception is excepted here.");
+            }
+            finally {
+                StandardOutUtil.RestoreStandardOut(storedPrintStream);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FuzzinessCallsHelpTest() {
+            String outImage = SOURCE_FOLDER + "Im1_1.jpg";
+            String diff = DESTINATION_FOLDER + "diff.png";
+            String cmpImage = SOURCE_FOLDER + "cmp_Im1_1.jpg";
+            String fuzziness = "1% -help ";
+            Object storedPrintStream = System.Console.Out;
+            try {
+                using (MemoryStream baos = new MemoryStream()) {
+                    System.Console.SetOut(new FormattingStreamWriter(baos));
+                    ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
+                    // In .NET the type of the thrown exception is different, therefore we just check here that
+                    // any exception has been thrown.
+                    NUnit.Framework.Assert.Catch(typeof(Exception), () => imageMagickHelper.RunImageMagickImageCompare(outImage
+                        , cmpImage, diff, fuzziness));
+                    // Previously a lengthy help message was printed
+                    System.Console.Out.Flush();
+                    NUnit.Framework.Assert.IsTrue(baos.ToArray().Length < SYSTEM_OUT_LENGTH_LIMIT);
+                }
+            }
+            catch (System.IO.IOException) {
+                NUnit.Framework.Assert.Fail("No exception is excepted here.");
+            }
+            finally {
+                StandardOutUtil.RestoreStandardOut(storedPrintStream);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PassOutAndCmpAndDiffAsOutTest() {
+            // In this test we will pass several arguments as the first one. Previously that resulted in
+            // different rather than equal images being compared. Now we expect an exception
+            String image = SOURCE_FOLDER + "image.png";
+            String differentImage = SOURCE_FOLDER + "Im1_1.jpg";
+            String diff = DESTINATION_FOLDER + "diff_equalImages.png";
+            ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
+            NUnit.Framework.Assert.Catch(typeof(Exception), () => imageMagickHelper.RunImageMagickImageCompare(image +
+                 "' '" + differentImage + "' '" + diff, image, diff));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PassCmpAndDiffAsDiffTest() {
+            // In this test we will pass several arguments as the second one. Previously that resulted in
+            // diff being overridden (second diff was used). Now we expect an exception
+            String image = SOURCE_FOLDER + "image.png";
+            String diff = DESTINATION_FOLDER + "diff_equalImages.png";
+            String secondDiff = DESTINATION_FOLDER + "diff_secondEqualImages.png";
+            ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
+            NUnit.Framework.Assert.Catch(typeof(Exception), () => imageMagickHelper.RunImageMagickImageCompare(image, 
+                image + "' '" + secondDiff, diff));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PassFuzzinessAsOutTest() {
+            // In this test we will pass several arguments, including fuzziness, as the first one.
+            // Previously that resulted in different images being compared and the number of different bytes
+            // being printed to System.out. Now we expect an exception
+            String image = SOURCE_FOLDER + "image.png";
+            String differentImage = SOURCE_FOLDER + "Im1_1.jpg";
+            String diff = DESTINATION_FOLDER + "diff.png";
+            ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
+            NUnit.Framework.Assert.Catch(typeof(Exception), () => imageMagickHelper.RunImageMagickImageCompare(image +
+                 "' -metric AE -fuzz 1% '" + differentImage + "' '" + diff, image, diff));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareEqualsImagesAndCheckFuzzinessTest() {
+            // When fuzziness is specified, ImageMagick prints to standard output the number of different bytes.
+            // Since we compare equal images, we expect this number to be zero.
+            String image = SOURCE_FOLDER + "image.png";
+            String diff = DESTINATION_FOLDER + "diff_equalImages.png";
+            ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
+            Object storedPrintStream = System.Console.Out;
+            try {
+                using (MemoryStream baos = new MemoryStream()) {
+                    System.Console.SetOut(new FormattingStreamWriter(baos));
+                    bool result = imageMagickHelper.RunImageMagickImageCompare(image, image, diff, "1");
+                    NUnit.Framework.Assert.IsTrue(result);
+                    NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(diff));
+                    System.Console.Out.Flush();
+                    String output = iText.IO.Util.JavaUtil.GetStringForBytes(baos.ToArray()).Trim();
+                    // This check is implemented in such a peculiar way because of .NET autoporting
+                    NUnit.Framework.Assert.AreEqual('0', output[output.Length - 1]);
+                    if (output.Length > 1) {
+                        NUnit.Framework.Assert.IsFalse(char.IsDigit(output[output.Length - 2]));
+                    }
+                }
+            }
+            catch (Exception) {
+                NUnit.Framework.Assert.Fail("No exception is expected here.");
+            }
+            finally {
+                StandardOutUtil.RestoreStandardOut(storedPrintStream);
+            }
         }
     }
 }

@@ -54,27 +54,46 @@ namespace iText.Layout.Layout {
     public class LayoutContext {
         /// <summary>
         /// The
-        /// <see cref="LayoutArea">area</see>
-        /// the content to be placed on.
+        /// <see cref="LayoutArea"/>
+        /// for the content to be placed on.
         /// </summary>
         protected internal LayoutArea area;
 
+        /// <summary>The info about margins collapsing.</summary>
         protected internal MarginsCollapseInfo marginsCollapseInfo;
 
+        /// <summary>
+        /// The list of
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// objects.
+        /// </summary>
         protected internal IList<Rectangle> floatRendererAreas = new List<Rectangle>();
 
         /// <summary>Indicates whether the height is clipped or not.</summary>
         protected internal bool clippedHeight = false;
 
+        /// <summary>Creates the layout context.</summary>
+        /// <param name="area">for the content to be placed on</param>
         public LayoutContext(LayoutArea area) {
             this.area = area;
         }
 
+        /// <summary>Creates the layout context.</summary>
+        /// <param name="area">for the content to be placed on</param>
+        /// <param name="marginsCollapseInfo">the info about margins collapsing</param>
         public LayoutContext(LayoutArea area, MarginsCollapseInfo marginsCollapseInfo) {
             this.area = area;
             this.marginsCollapseInfo = marginsCollapseInfo;
         }
 
+        /// <summary>Creates the layout context.</summary>
+        /// <param name="area">for the content to be placed on</param>
+        /// <param name="marginsCollapseInfo">the info about margins collapsing</param>
+        /// <param name="floatedRendererAreas">
+        /// list of
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// objects
+        /// </param>
         public LayoutContext(LayoutArea area, MarginsCollapseInfo marginsCollapseInfo, IList<Rectangle> floatedRendererAreas
             )
             : this(area, marginsCollapseInfo) {
@@ -83,11 +102,23 @@ namespace iText.Layout.Layout {
             }
         }
 
+        /// <summary>Creates the layout context.</summary>
+        /// <param name="area">for the content to be placed on</param>
+        /// <param name="clippedHeight">indicates whether the height is clipped or not</param>
         public LayoutContext(LayoutArea area, bool clippedHeight)
             : this(area) {
             this.clippedHeight = clippedHeight;
         }
 
+        /// <summary>Creates the layout context.</summary>
+        /// <param name="area">for the content to be placed on</param>
+        /// <param name="marginsCollapseInfo">the info about margins collapsing</param>
+        /// <param name="floatedRendererAreas">
+        /// list of
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// objects
+        /// </param>
+        /// <param name="clippedHeight">indicates whether the height is clipped or not</param>
         public LayoutContext(LayoutArea area, MarginsCollapseInfo marginsCollapseInfo, IList<Rectangle> floatedRendererAreas
             , bool clippedHeight)
             : this(area, marginsCollapseInfo) {
@@ -107,10 +138,22 @@ namespace iText.Layout.Layout {
             return area;
         }
 
+        /// <summary>Gets info about margins collapsing.</summary>
+        /// <returns>the info about margins collapsing</returns>
         public virtual MarginsCollapseInfo GetMarginsCollapseInfo() {
             return marginsCollapseInfo;
         }
 
+        /// <summary>
+        /// Gets list of
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// objects.
+        /// </summary>
+        /// <returns>
+        /// list of
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// objects
+        /// </returns>
         public virtual IList<Rectangle> GetFloatRendererAreas() {
             return floatRendererAreas;
         }

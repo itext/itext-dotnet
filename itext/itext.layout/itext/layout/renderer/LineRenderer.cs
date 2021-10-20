@@ -470,6 +470,9 @@ namespace iText.Layout.Renderer {
                                         );
                                     childPos = lastFittingChildRendererData.childIndex;
                                     childResult = lastFittingChildRendererData.childLayoutResult;
+                                    if (0 == childPos && LayoutResult.NOTHING == childResult.GetStatus()) {
+                                        anythingPlaced = false;
+                                    }
                                     textRendererLayoutResults.Put(childPos, childResult);
                                     MinMaxWidth textSequenceElemminMaxWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth();
                                     minChildWidth_1 = textSequenceElemminMaxWidth.GetMinWidth();

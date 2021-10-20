@@ -156,7 +156,7 @@ namespace iText.Signatures.Testutils {
                 }
             }
             catch (Exception e) {
-                errorText.Append(e.Message).Append("\n");
+                errorText.Append(e.Message);
             }
             if (!String.IsNullOrEmpty(errorText.ToString())) {
                 return errorText.ToString();
