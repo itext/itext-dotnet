@@ -160,7 +160,7 @@ namespace iText.Barcodes {
             BarcodePDF417 barcode = new BarcodePDF417();
             barcode.SetCode(text);
             PdfFormXObject xObject = barcode.CreateFormXObject(document);
-            canvas.AddXObject(xObject, 10, 650);
+            canvas.AddXObjectAt(xObject, 10, 650);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder));

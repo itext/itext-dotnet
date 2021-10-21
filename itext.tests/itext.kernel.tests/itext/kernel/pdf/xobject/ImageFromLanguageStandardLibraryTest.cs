@@ -90,7 +90,7 @@ namespace iText.Kernel.Pdf.Xobject
                     .SetFontAndSize(PdfFontFactory.CreateFont(), 12)
                     .ShowText("Invisible image (both opaque and non opaque pixels have the same color)")
                     .EndText();
-            canvas.AddXObject(new PdfImageXObject(
+            canvas.AddXObjectAt(new PdfImageXObject(
                     ImageDataFactory.Create(CreateBinaryTransparentAWTImage(Color.Black, false, null), null)), 36, 580);
             
             PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpFile));
@@ -128,7 +128,7 @@ namespace iText.Kernel.Pdf.Xobject
                     .SetFontAndSize(PdfFontFactory.CreateFont(), 12)
                     .ShowText("Invisible image (both opaque and non opaque pixels have different colors)")
                     .EndText();
-            canvas.AddXObject(new PdfImageXObject(
+            canvas.AddXObjectAt(new PdfImageXObject(
                     ImageDataFactory.Create(CreateBinaryTransparentAWTImage(Color.Black, false, Color.FromArgb(0, Color.Red)), null)), 36, 580);
             
             PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpFile));

@@ -80,12 +80,8 @@ namespace iText.Kernel.Utils {
             merger.Merge(pdfDoc1, 1, 1);
             merger.Merge(pdfDoc2, 1, 1);
             pdfDoc3.Close();
-            CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult01.pdf", destinationFolder
-                , "diff_");
-            if (errorMessage != null) {
-                NUnit.Framework.Assert.Fail(errorMessage);
-            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_mergedResult01.pdf"
+                , destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -98,12 +94,8 @@ namespace iText.Kernel.Utils {
             resultDocument.Merge(sourceDocument, 1, 1);
             resultDocument.Close();
             sourceDocument.Close();
-            CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergeDocumentOutlinesWithNullDestinationTest01.pdf"
-                , destinationFolder, "diff_");
-            if (errorMessage != null) {
-                NUnit.Framework.Assert.Fail(errorMessage);
-            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_mergeDocumentOutlinesWithNullDestinationTest01.pdf"
+                , destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -123,12 +115,8 @@ namespace iText.Kernel.Utils {
             PdfDocument pdfDoc3 = new PdfDocument(writer1);
             PdfMerger merger = new PdfMerger(pdfDoc3).SetCloseSourceDocuments(true);
             merger.Merge(pdfDoc, 1, 1).Merge(pdfDoc1, 1, 1).Merge(pdfDoc2, 1, 1).Close();
-            CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult02.pdf", destinationFolder
-                , "diff_");
-            if (errorMessage != null) {
-                NUnit.Framework.Assert.Fail(errorMessage);
-            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_mergedResult02.pdf"
+                , destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -204,25 +192,34 @@ namespace iText.Kernel.Utils {
 
         [NUnit.Framework.Test]
         public virtual void MergeTableWithEmptyTdTest() {
-            String filename = sourceFolder + "tableWithEmptyTd.pdf";
-            String resultFile = destinationFolder + "tableWithEmptyTdResult.pdf";
-            PdfReader reader = new PdfReader(filename);
-            PdfDocument sourceDoc = new PdfDocument(reader);
-            PdfDocument output = new PdfDocument(new PdfWriter(resultFile));
-            output.SetTagged();
-            PdfMerger merger = new PdfMerger(output).SetCloseSourceDocuments(true);
-            merger.Merge(sourceDoc, 1, sourceDoc.GetNumberOfPages());
-            sourceDoc.Close();
-            reader.Close();
-            merger.Close();
-            output.Close();
-            CompareTool compareTool = new CompareTool();
-            String tagStructErrorMessage = compareTool.CompareTagStructures(resultFile, sourceFolder + "cmp_tableWithEmptyTd.pdf"
-                );
-            String errorMessage = tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
-            if (!String.IsNullOrEmpty(errorMessage)) {
-                NUnit.Framework.Assert.Fail(errorMessage);
-            }
+            MergeAndCompareTagStructures("tableWithEmptyTd.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeSplitTableWithEmptyTdTest() {
+            MergeAndCompareTagStructures("splitTableWithEmptyTd.pdf", 2, 2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeEmptyRowWithTagsTest() {
+            MergeAndCompareTagStructures("emptyRowWithTags.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        public virtual void TrInsideTdTableTest() {
+            MergeAndCompareTagStructures("trInsideTdTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TdInsideTdTableTest() {
+            MergeAndCompareTagStructures("tdInsideTdTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyTrTableTest() {
+            // TODO DEVSIX-5974 Empty tr isn't copied.
+            MergeAndCompareTagStructures("emptyTrTable.pdf", 1, 1);
         }
 
         [NUnit.Framework.Test]
@@ -363,6 +360,82 @@ namespace iText.Kernel.Utils {
             System.Console.Out.WriteLine("Merge done");
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "infiniteLoopInOutlineStructure.pdf"
                 , sourceFolder + "cmp_infiniteLoopInOutlineStructure.pdf", destinationFolder));
+        }
+
+        private static void MergeAndCompareTagStructures(String testName, int fromPage, int toPage) {
+            String src = sourceFolder + testName;
+            String dest = destinationFolder + testName;
+            String cmp = sourceFolder + "cmp_" + testName;
+            PdfReader reader = new PdfReader(src);
+            PdfDocument sourceDoc = new PdfDocument(reader);
+            PdfDocument output = new PdfDocument(new PdfWriter(dest));
+            output.SetTagged();
+            PdfMerger merger = new PdfMerger(output).SetCloseSourceDocuments(true);
+            merger.Merge(sourceDoc, fromPage, toPage);
+            sourceDoc.Close();
+            reader.Close();
+            merger.Close();
+            output.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructures(dest, cmp));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentWithColorPropertyInOutlineTest() {
+            String firstDocument = sourceFolder + "firstDocumentWithColorPropertyInOutline.pdf";
+            String secondDocument = sourceFolder + "SecondDocumentWithColorPropertyInOutline.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeOutlinesWithColorProperty.pdf";
+            String mergedPdf = destinationFolder + "mergeOutlinesWithColorProperty.pdf";
+            using (PdfDocument merged = new PdfDocument(new PdfWriter(mergedPdf))) {
+                using (PdfDocument fileA = new PdfDocument(new PdfReader(firstDocument))) {
+                    using (PdfDocument fileB = new PdfDocument(new PdfReader(secondDocument))) {
+                        PdfMerger merger = new PdfMerger(merged, false, true);
+                        merger.Merge(fileA, 1, fileA.GetNumberOfPages());
+                        merger.Merge(fileB, 1, fileB.GetNumberOfPages());
+                        merger.Close();
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedPdf, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentWithStylePropertyInOutlineTest() {
+            String firstDocument = sourceFolder + "firstDocumentWithStylePropertyInOutline.pdf";
+            String secondDocument = sourceFolder + "secondDocumentWithStylePropertyInOutline.pdf";
+            String cmpPdf = sourceFolder + "cmp_mergeOutlineWithStyleProperty.pdf";
+            String mergedPdf = destinationFolder + "mergeOutlineWithStyleProperty.pdf";
+            using (PdfDocument documentA = new PdfDocument(new PdfReader(firstDocument))) {
+                using (PdfDocument documentB = new PdfDocument(new PdfReader(secondDocument))) {
+                    using (PdfDocument merged = new PdfDocument(new PdfWriter(mergedPdf))) {
+                        PdfMerger merger = new PdfMerger(merged, false, true);
+                        merger.Merge(documentA, 1, documentA.GetNumberOfPages());
+                        merger.Merge(documentB, 1, documentB.GetNumberOfPages());
+                        merger.Close();
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedPdf, cmpPdf, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergePdfDocumentsWithCopingOutlinesTest() {
+            String firstPdfDocument = sourceFolder + "firstDocumentWithOutlines.pdf";
+            String secondPdfDocument = sourceFolder + "secondDocumentWithOutlines.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeDocumentsWithOutlines.pdf";
+            String mergedDocument = destinationFolder + "mergeDocumentsWithOutlines.pdf";
+            using (PdfDocument documentA = new PdfDocument(new PdfReader(firstPdfDocument))) {
+                using (PdfDocument documentB = new PdfDocument(new PdfReader(secondPdfDocument))) {
+                    using (PdfDocument mergedPdf = new PdfDocument(new PdfWriter(mergedDocument))) {
+                        PdfMerger merger = new PdfMerger(mergedPdf, false, true);
+                        merger.Merge(documentA, 1, documentA.GetNumberOfPages());
+                        merger.Merge(documentB, 1, documentB.GetNumberOfPages());
+                        merger.Close();
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
         }
 
         private void MergePdfs(IList<FileInfo> sources, String destination) {

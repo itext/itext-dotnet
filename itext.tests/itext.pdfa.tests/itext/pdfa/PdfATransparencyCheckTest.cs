@@ -160,13 +160,13 @@ namespace iText.Pdfa {
             PdfCanvas canvas = new PdfCanvas(form, pdfDocument);
             canvas.Rectangle(10, 10, 30, 30);
             canvas.Stroke();
-            canvas.AddXObject(form1, 0, 0);
+            canvas.AddXObjectAt(form1, 0, 0);
             canvas.Release();
             form.Flush();
             //Create page1 and add forms to the page.
             PdfPage page1 = pdfDocument.AddNewPage();
             canvas = new PdfCanvas(page1);
-            canvas.AddXObject(form, 0, 0);
+            canvas.AddXObjectAt(form, 0, 0);
             canvas.Release();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
