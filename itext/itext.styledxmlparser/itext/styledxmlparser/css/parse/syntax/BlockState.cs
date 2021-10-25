@@ -45,18 +45,17 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
     /// <see cref="IParserState"/>
     /// implementation for the block state.
     /// </summary>
-    internal class PropertiesState : IParserState {
-        // TODO rename to BLOCK
+    internal class BlockState : IParserState {
         /// <summary>The state machine that parses the CSS.</summary>
         private CssParserStateController controller;
 
         /// <summary>
         /// Creates a new
-        /// <see cref="PropertiesState"/>
+        /// <see cref="BlockState"/>
         /// instance.
         /// </summary>
         /// <param name="controller">the state machine that parses the CSS</param>
-        internal PropertiesState(CssParserStateController controller) {
+        internal BlockState(CssParserStateController controller) {
             this.controller = controller;
         }
 
