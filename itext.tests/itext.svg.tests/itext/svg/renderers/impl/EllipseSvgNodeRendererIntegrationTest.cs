@@ -49,108 +49,108 @@ using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
     public class EllipseSvgNodeRendererIntegrationTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/EllipseSvgNodeRendererIntegrationTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/svg/renderers/impl/EllipseSvgNodeRendererIntegrationTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicEllipseTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipse");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicEllipse");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseCxCyAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCxCyAbsent");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseCxCyAbsent");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseCxAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCxAbsent");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseCxAbsent");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseCxNegativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCxNegative");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseCxNegative");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseCyNegativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCyNegative");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseCyNegative");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseCyAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCyAbsent");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseCyAbsent");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseRxAbsentTest() {
             //TODO: update cmp_ when DEVSIX-3119
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRxAbsent");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseRxAbsent");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseRyAbsentTest() {
             //TODO: update cmp_ when DEVSIX-3119
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRyAbsent");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseRyAbsent");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseRxNegativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRxNegative");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseRxNegative");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseRyNegativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRyNegative");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseRyNegative");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseTranslatedTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseTranslated");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseTranslated");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseRotatedTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRotated");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseRotated");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseScaledUpTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseScaledUp");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseScaledUp");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseScaledDownTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseScaledDown");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseScaledDown");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseScaledXYTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseScaledXY");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseScaledXY");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseSkewXTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseSkewX");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseSkewX");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseSkewYTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseSkewY");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseSkewY");
         }
 
         [NUnit.Framework.Test]
         public virtual void ParseParametersAndCalculateCoordinatesWithBetterPrecisionEllipseTest() {
-            String filename = "parseParametersAndCalculateCoordinatesWithBetterPrecisionEllipseTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            String filename = "calculateCoordinatesWithBetterPrecision.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             EllipseSvgNodeRenderer ellipseRenderer = new EllipseSvgNodeRenderer();
             ellipseRenderer.SetAttribute(SvgConstants.Attributes.CX, "170.3");
@@ -175,7 +175,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void EllipseWithBigStrokeWidthTest() {
             // TODO: DEVSIX-3932 update cmp_ after fix
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseWithBigStrokeWidth");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseWithBigStrokeWidth");
         }
     }
 }
