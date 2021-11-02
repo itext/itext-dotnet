@@ -2746,6 +2746,30 @@ namespace iText.Layout {
                  + "cmp_" + fileName, destinationFolder));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void TableRelayoutTest() {
+            // TODO: update assertion DEVSIX-5983
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                using (Document doc = new Document(pdfDoc)) {
+                    float width = 142f;
+                    Table table = new Table(1);
+                    table.SetWidth(width);
+                    table.SetFixedLayout();
+                    Cell cell = new Cell();
+                    cell.SetWidth(width);
+                    cell.Add(new Paragraph("Testing, FinancialProfessional Associate atgeorgewashington.gmail.com"));
+                    table.AddCell(cell);
+                    LayoutResult result = table.CreateRendererSubTree().SetParent(doc.GetRenderer()).Layout(new LayoutContext(
+                        new LayoutArea(1, new Rectangle(0, 0, 10000, 10000.0F))));
+                    Rectangle tableRect = result.GetOccupiedArea().GetBBox();
+                    result = table.CreateRendererSubTree().SetParent(doc.GetRenderer()).Layout(new LayoutContext(new LayoutArea
+                        (1, new Rectangle(0, 0, 10000, 10000.0F))));
+                    Rectangle tableRectRelayout = result.GetOccupiedArea().GetBBox();
+                    NUnit.Framework.Assert.IsFalse(tableRect.EqualsWithEpsilon(tableRectRelayout));
+                }
+            }
+        }
+
         private class RotatedDocumentRenderer : DocumentRenderer {
             private readonly PdfDocument pdfDoc;
 
