@@ -43,6 +43,7 @@ namespace iText.Commons.Utils {
         }
         
         [Test]
+		[NUnit.Framework.Ignore("DEVSIX-6043 - Unignore this tests after the specified ticket will be resolved")]
         public void ParseDateAndGetUtcMillisFromEpochTest() {
             DateTime parsedDate = DateTimeUtil.GetCalendar(DateTimeUtil.ParseWithDefaultPattern("2020-05-05"));
             double millisFromEpochTo2020_05_05 = DateTimeUtil.GetUtcMillisFromEpoch(parsedDate);
@@ -60,6 +61,7 @@ namespace iText.Commons.Utils {
         }
 
         [Test]
+		[NUnit.Framework.Ignore("DEVSIX-6043 - Unignore this tests after the specified ticket will be resolved")]
         public void ParseDateAndGetRelativeTimeTest() {
             long relativeTime = DateTimeUtil.GetRelativeTime(DateTimeUtil.ParseWithDefaultPattern("2020-05-05"));
 
