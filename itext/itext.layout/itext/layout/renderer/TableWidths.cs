@@ -881,47 +881,52 @@ namespace iText.Layout.Renderer {
 
         private static readonly UnitValue ZeroWidth = UnitValue.CreatePointValue(0);
 
+        /// <summary>Gets width of the cell, adding paddings and extra spacing if necessary.</summary>
+        /// <param name="cell">
+        /// renderer from which width will be taken.
+        /// Note that this method will not change original width of the element.
+        /// </param>
+        /// <param name="zeroIsValid">defines if 0 width is valid</param>
+        /// <returns>increased width of the renderer</returns>
         private UnitValue GetCellWidth(CellRenderer cell, bool zeroIsValid) {
-            UnitValue widthValue = cell.GetProperty<UnitValue>(Property.WIDTH);
+            UnitValue widthValue = new UnitValue(cell.GetProperty(Property.WIDTH, UnitValue.CreatePointValue(-1)));
             //zero has special meaning in fixed layout, we shall not add padding to zero value
-            if (widthValue == null || widthValue.GetValue() < 0) {
+            if (widthValue.GetValue() < -AbstractRenderer.EPS) {
                 return null;
             }
+            if (widthValue.GetValue() < AbstractRenderer.EPS) {
+                return zeroIsValid ? ZeroWidth : null;
+            }
             else {
-                if (widthValue.GetValue() == 0) {
-                    return zeroIsValid ? ZeroWidth : null;
+                if (widthValue.IsPercentValue()) {
+                    return widthValue;
                 }
                 else {
-                    if (widthValue.IsPercentValue()) {
-                        return widthValue;
-                    }
-                    else {
-                        widthValue = ResolveMinMaxCollision(cell, widthValue);
-                        if (!AbstractRenderer.IsBorderBoxSizing(cell)) {
-                            Border[] borders = cell.GetBorders();
-                            if (borders[1] != null) {
-                                widthValue.SetValue(widthValue.GetValue() + ((tableRenderer.bordersHandler is SeparatedTableBorders) ? borders
-                                    [1].GetWidth() : borders[1].GetWidth() / 2));
-                            }
-                            if (borders[3] != null) {
-                                widthValue.SetValue(widthValue.GetValue() + ((tableRenderer.bordersHandler is SeparatedTableBorders) ? borders
-                                    [3].GetWidth() : borders[3].GetWidth() / 2));
-                            }
-                            UnitValue[] paddings = cell.GetPaddings();
-                            if (!paddings[1].IsPointValue()) {
-                                ILogger logger = ITextLogManager.GetLogger(typeof(TableWidths));
-                                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
-                                    , Property.PADDING_LEFT));
-                            }
-                            if (!paddings[3].IsPointValue()) {
-                                ILogger logger = ITextLogManager.GetLogger(typeof(TableWidths));
-                                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
-                                    , Property.PADDING_RIGHT));
-                            }
-                            widthValue.SetValue(widthValue.GetValue() + paddings[1].GetValue() + paddings[3].GetValue());
+                    widthValue = ResolveMinMaxCollision(cell, widthValue);
+                    if (!AbstractRenderer.IsBorderBoxSizing(cell)) {
+                        Border[] borders = cell.GetBorders();
+                        if (borders[1] != null) {
+                            widthValue.SetValue(widthValue.GetValue() + ((tableRenderer.bordersHandler is SeparatedTableBorders) ? borders
+                                [1].GetWidth() : borders[1].GetWidth() / 2));
                         }
-                        return widthValue;
+                        if (borders[3] != null) {
+                            widthValue.SetValue(widthValue.GetValue() + ((tableRenderer.bordersHandler is SeparatedTableBorders) ? borders
+                                [3].GetWidth() : borders[3].GetWidth() / 2));
+                        }
+                        UnitValue[] paddings = cell.GetPaddings();
+                        if (!paddings[1].IsPointValue()) {
+                            ILogger logger = ITextLogManager.GetLogger(typeof(TableWidths));
+                            logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                , Property.PADDING_LEFT));
+                        }
+                        if (!paddings[3].IsPointValue()) {
+                            ILogger logger = ITextLogManager.GetLogger(typeof(TableWidths));
+                            logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                                , Property.PADDING_RIGHT));
+                        }
+                        widthValue.SetValue(widthValue.GetValue() + paddings[1].GetValue() + paddings[3].GetValue());
                     }
+                    return widthValue;
                 }
             }
         }
