@@ -44,12 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using iText.Commons;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -106,8 +104,6 @@ namespace iText.Signatures {
 
         /// <summary>The crypto dictionary.</summary>
         protected internal PdfSignature cryptoDictionary;
-
-        private PdfName digestMethod;
 
         /// <summary>Holds value of property signatureEvent.</summary>
         protected internal PdfSigner.ISignatureEvent signatureEvent;
@@ -494,7 +490,6 @@ namespace iText.Signatures {
             dic.SetDate(new PdfDate(GetSignDate()));
             // time-stamp will over-rule this
             cryptoDictionary = dic;
-            digestMethod = GetHashAlgorithmNameInCompatibleForPdfForm(hashAlgorithm);
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
             exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
             PreClose(exc);
@@ -1047,7 +1042,6 @@ namespace iText.Signatures {
             reference.Put(PdfName.TransformMethod, PdfName.DocMDP);
             reference.Put(PdfName.Type, PdfName.SigRef);
             reference.Put(PdfName.TransformParams, transformParams);
-            SetDigestParamToSigRefIfNeeded(reference);
             reference.Put(PdfName.Data, document.GetTrailer().Get(PdfName.Root));
             PdfArray types = new PdfArray();
             types.Add(reference);
@@ -1074,7 +1068,6 @@ namespace iText.Signatures {
             reference.Put(PdfName.TransformMethod, PdfName.FieldMDP);
             reference.Put(PdfName.Type, PdfName.SigRef);
             reference.Put(PdfName.TransformParams, transformParams);
-            SetDigestParamToSigRefIfNeeded(reference);
             reference.Put(PdfName.Data, document.GetTrailer().Get(PdfName.Root));
             PdfArray types = crypto.GetPdfObject().GetAsArray(PdfName.Reference);
             if (types == null) {
@@ -1143,42 +1136,6 @@ namespace iText.Signatures {
                 }
             }
             return pageNumber;
-        }
-
-        private void SetDigestParamToSigRefIfNeeded(PdfDictionary reference) {
-            if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_1_6) < 0) {
-                // Don't really know what to say about this if-clause code.
-                // Let's leave it, assuming that it is reasoned in some very specific way, until opposite is not proven.
-                reference.Put(PdfName.DigestValue, new PdfString("aa"));
-                PdfArray loc = new PdfArray();
-                loc.Add(new PdfNumber(0));
-                loc.Add(new PdfNumber(0));
-                reference.Put(PdfName.DigestLocation, loc);
-                reference.Put(PdfName.DigestMethod, PdfName.MD5);
-            }
-            else {
-                if (IsDocumentPdf2()) {
-                    if (digestMethod != null) {
-                        reference.Put(PdfName.DigestMethod, digestMethod);
-                    }
-                    else {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(PdfSigner));
-                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_DIGEST_METHOD);
-                    }
-                }
-            }
-        }
-
-        private PdfName GetHashAlgorithmNameInCompatibleForPdfForm(String hashAlgorithm) {
-            PdfName pdfCompatibleName = null;
-            String hashAlgOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
-            if (hashAlgOid != null) {
-                String hashAlgorithmNameInCompatibleForPdfForm = DigestAlgorithms.GetDigest(hashAlgOid);
-                if (hashAlgorithmNameInCompatibleForPdfForm != null) {
-                    pdfCompatibleName = new PdfName(hashAlgorithmNameInCompatibleForPdfForm);
-                }
-            }
-            return pdfCompatibleName;
         }
 
         private bool IsDocumentPdf2() {
