@@ -695,7 +695,6 @@ namespace iText.Layout.Element {
             return this;
         }
 
-        //TODO when rendering starts, make sure, that last row is not empty.
         /// <summary>Adds a new cell to the table.</summary>
         /// <remarks>
         /// Adds a new cell to the table. The implementation decides for itself which

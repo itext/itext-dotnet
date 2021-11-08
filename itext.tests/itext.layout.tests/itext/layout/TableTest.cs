@@ -1695,6 +1695,181 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void TableWithEmptyLastRowTest() {
+            String testName = "tableWithEmptyLastRowTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            StartSeveralEmptyRows(table);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING)]
+        public virtual void TableWithEmptyRowsBetweenFullRowsTest() {
+            String testName = "tableWithEmptyRowsBetweenFullRowsTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            StartSeveralEmptyRows(table);
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING, Count = 2
+            )]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void TableWithEmptyRowAfterJustOneCellTest() {
+            String testName = "tableWithEmptyRowAfterJustOneCellTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(3);
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j <= i; j++) {
+                    table.AddCell(new Cell().Add(new Paragraph("Hello")));
+                }
+                StartSeveralEmptyRows(table);
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING, Count = 39
+            )]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void TableWithAlternatingRowsTest() {
+            String testName = "tableWithAlternatingRowsTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            for (int i = 0; i < 40; i++) {
+                table.AddCell(new Cell().Add(new Paragraph("Hello")));
+                table.AddCell(new Cell().Add(new Paragraph("World")));
+                StartSeveralEmptyRows(table);
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColoredTableWithColoredCellsTest() {
+            String testName = "coloredTableWithColoredCellsTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.SetBackgroundColor(ColorConstants.RED);
+            for (int i = 0; i < 40; i++) {
+                table.AddCell(new Cell().Add(new Paragraph("Hello")).SetBackgroundColor(ColorConstants.GREEN));
+                table.StartNewRow();
+            }
+            table.AddCell(new Cell().Add(new Paragraph("Hello")).SetBackgroundColor(ColorConstants.GREEN));
+            table.AddCell(new Cell().Add(new Paragraph("World")).SetBackgroundColor(ColorConstants.GREEN));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING, Count = 2
+            )]
+        public virtual void TableWithEmptyRowsAndSeparatedBordersTest() {
+            String testName = "tableWithEmptyRowsAndSeparatedBordersTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            StartSeveralEmptyRows(table);
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        // TODO DEVSIX-6020:Border-collapsing doesn't work in case startNewRow has been called
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING)]
+        public virtual void TableWithCollapsedBordersTest() {
+            String testName = "tableWithCollapsedBordersTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hello")).SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 
+                10)));
+            table.AddCell(new Cell().Add(new Paragraph("World")).SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 
+                10)));
+            StartSeveralEmptyRows(table);
+            table.AddCell(new Cell().Add(new Paragraph("Hello")).SetBorderTop(new SolidBorder(ColorConstants.RED, 20))
+                );
+            table.AddCell(new Cell().Add(new Paragraph("World")).SetBorderTop(new SolidBorder(ColorConstants.RED, 20))
+                );
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void TableWithCollapsedBordersAndFooterTest() {
+            String testName = "tableWithCollapsedBordersAndFooterTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hello")).SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 
+                10)));
+            table.AddCell(new Cell().Add(new Paragraph("World")).SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 
+                10)));
+            StartSeveralEmptyRows(table);
+            table.AddFooterCell(new Cell().Add(new Paragraph("Hello")).SetBorderTop(new SolidBorder(ColorConstants.RED
+                , 20)));
+            table.AddFooterCell(new Cell().Add(new Paragraph("World")).SetBorderTop(new SolidBorder(ColorConstants.RED
+                , 20)));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void AutoLayoutTest01() {
             String testName = "autoLayoutTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -2744,6 +2919,12 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
                  + "cmp_" + fileName, destinationFolder));
+        }
+
+        //creates 2 empty lines, where 2 is random number
+        private static void StartSeveralEmptyRows(Table table) {
+            table.StartNewRow();
+            table.StartNewRow();
         }
 
         [NUnit.Framework.Test]

@@ -120,6 +120,81 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void LargeTableWithEmptyLastRowTest() {
+            String testName = "largeTableWithEmptyLastRowTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true);
+            doc.Add(table);
+            for (int i = 0; i < 20; i++) {
+                for (int j = 0; j < 5; j++) {
+                    table.AddCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("Cell {0}, {1}", i + 1, j + 1))));
+                }
+                if (i % 10 == 0) {
+                    table.Flush();
+                }
+            }
+            table.StartNewRow();
+            table.Complete();
+            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
+                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        //TODO DEVSIX-6025 Unexpected NPE, when trying to flush after starting new row
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
+        public virtual void FlushingLargeTableAfterStartingNewRowTest() {
+            String testName = "flushingLargeTableAfterStartingNewRowTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true);
+            doc.Add(table);
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            table.StartNewRow();
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => table.Flush());
+            table.Complete();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void LargeTableWithCollapsedFooterTest() {
+            String testName = "largeTableWithCollapsedFooterTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(5), true);
+            doc.Add(table);
+            for (int i = 0; i < 20; i++) {
+                for (int j = 0; j < 5; j++) {
+                    table.AddCell(new Cell().Add(new Paragraph(MessageFormatUtil.Format("Cell {0}, {1}", i + 1, j + 1))));
+                }
+                if (i % 10 == 0) {
+                    table.Flush();
+                }
+            }
+            table.StartNewRow();
+            Cell cell = new Cell(1, 5).Add(new Paragraph("Collapsed footer"));
+            table.AddFooterCell(cell);
+            table.Complete();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void LargeTableWithHeaderFooterTest01A() {
             String testName = "largeTableWithHeaderFooterTest01A.pdf";
             String outFileName = destinationFolder + testName;
