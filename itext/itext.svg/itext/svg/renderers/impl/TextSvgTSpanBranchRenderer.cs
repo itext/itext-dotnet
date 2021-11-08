@@ -59,6 +59,12 @@ namespace iText.Svg.Renderers.Impl {
             return GetParent().GetObjectBoundingBox(context);
         }
 
+        public override ISvgNodeRenderer CreateDeepCopy() {
+            TextSvgBranchRenderer copy = new iText.Svg.Renderers.Impl.TextSvgTSpanBranchRenderer();
+            FillCopy(copy);
+            return copy;
+        }
+
         protected internal override void DoDraw(SvgDrawContext context) {
             if (GetChildren().Count > 0) {
                 // if branch has no children, don't do anything

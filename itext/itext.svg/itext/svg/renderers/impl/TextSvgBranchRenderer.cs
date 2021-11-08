@@ -91,9 +91,13 @@ namespace iText.Svg.Renderers.Impl {
 
         public override ISvgNodeRenderer CreateDeepCopy() {
             iText.Svg.Renderers.Impl.TextSvgBranchRenderer copy = new iText.Svg.Renderers.Impl.TextSvgBranchRenderer();
+            FillCopy(copy);
+            return copy;
+        }
+
+        internal virtual void FillCopy(iText.Svg.Renderers.Impl.TextSvgBranchRenderer copy) {
             DeepCopyAttributesAndStyles(copy);
             DeepCopyChildren(copy);
-            return copy;
         }
 
         public void AddChild(ISvgTextNodeRenderer child) {
