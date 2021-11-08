@@ -20,8 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
-using iText.Svg.Exceptions;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
@@ -29,11 +27,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void NoObjectBoundingBoxTest() {
             MarkerSvgNodeRenderer renderer = new MarkerSvgNodeRenderer();
-            NUnit.Framework.Assert.That(() =>  {
-                renderer.GetObjectBoundingBox(null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX))
-;
+            NUnit.Framework.Assert.IsNull(renderer.GetObjectBoundingBox(null));
         }
     }
 }

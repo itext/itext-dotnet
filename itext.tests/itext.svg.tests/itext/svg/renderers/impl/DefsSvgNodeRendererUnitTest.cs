@@ -44,7 +44,6 @@ using System;
 using System.IO;
 using iText.StyledXmlParser.Node;
 using iText.Svg.Converter;
-using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Test;
@@ -91,11 +90,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void NoObjectBoundingBoxTest() {
             DefsSvgNodeRenderer renderer = new DefsSvgNodeRenderer();
-            NUnit.Framework.Assert.That(() =>  {
-                renderer.GetObjectBoundingBox(null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX))
-;
+            NUnit.Framework.Assert.IsNull(renderer.GetObjectBoundingBox(null));
         }
     }
 }

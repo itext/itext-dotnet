@@ -47,7 +47,6 @@ using iText.Kernel.Pdf.Xobject;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
-using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -64,7 +63,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+            return null;
         }
 
         protected internal override void DoDraw(SvgDrawContext context) {
