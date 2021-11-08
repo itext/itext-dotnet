@@ -123,7 +123,12 @@ namespace iText.Svg.Renderers.Impl {
                 )) {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
                 //TODO(DEVSIX-2507): Support for glyph by glyph handling of x, y and rotate
-                currentCanvas.MoveText(context.GetTextMove()[0], context.GetTextMove()[1]);
+                if (context.GetPreviousElementTextMove() == null) {
+                    currentCanvas.MoveText(context.GetTextMove()[0], context.GetTextMove()[1]);
+                }
+                else {
+                    currentCanvas.MoveText(context.GetPreviousElementTextMove()[0], context.GetPreviousElementTextMove()[1]);
+                }
                 currentCanvas.ShowText(this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT));
             }
         }
