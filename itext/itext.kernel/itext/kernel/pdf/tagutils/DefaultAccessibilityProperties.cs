@@ -47,6 +47,13 @@ using iText.Commons.Utils;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Tagutils {
+    /// <summary>The class represents a default accessibility properties which correspond specified role.</summary>
+    /// <remarks>
+    /// The class represents a default accessibility properties which correspond specified role. Accessibility
+    /// properties are used to define properties of
+    /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem">structure elements</see>
+    /// in Tagged PDF documents.
+    /// </remarks>
     public class DefaultAccessibilityProperties : AccessibilityProperties {
         protected internal String role;
 
@@ -68,6 +75,12 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         protected internal IList<TagTreePointer> refs = new List<TagTreePointer>();
 
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="DefaultAccessibilityProperties"/>
+        /// instance based on structure element role.
+        /// </summary>
+        /// <param name="role">the structure element role</param>
         public DefaultAccessibilityProperties(String role) {
             this.role = role;
         }

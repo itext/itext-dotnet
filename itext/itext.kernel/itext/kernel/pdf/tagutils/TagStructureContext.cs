@@ -176,6 +176,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             return this;
         }
 
+        /// <summary>Gets the version of the PDF standard to which the tag structure shall adhere.</summary>
+        /// <returns>the tag structure target version</returns>
         public virtual PdfVersion GetTagStructureTargetVersion() {
             return tagStructureTargetVersion;
         }
@@ -414,7 +416,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="IRoleMappingResolver.GetRole()"/>
         /// and
         /// <see cref="IRoleMappingResolver.GetNamespace()"/>
-        /// methods calls which correspond to the mapping of the given role; or null if the given role is not mapped to the standard or domain-specific one.
+        /// methods calls which correspond to the mapping of the given role;
+        /// or null if the given role is not mapped to the standard or domain-specific one.
         /// </summary>
         /// <param name="role">a role in the given namespace which mapping is to be resolved.</param>
         /// <param name="namespace">
