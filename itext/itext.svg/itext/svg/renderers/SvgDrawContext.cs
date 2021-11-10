@@ -81,6 +81,8 @@ namespace iText.Svg.Renderers {
 
         private float[] textMove = new float[] { 0.0f, 0.0f };
 
+        private float[] previousElementTextMove;
+
         /// <summary>Create an instance of the context that is used to store information when converting SVG.</summary>
         /// <param name="resourceResolver">
         /// instance of
@@ -334,6 +336,14 @@ namespace iText.Svg.Renderers {
         /// <summary>Pops the last template id from the stack.</summary>
         public virtual void PopPatternId() {
             this.patternIds.Pop();
+        }
+
+        public virtual void SetPreviousElementTextMove(float[] previousElementTextMove) {
+            this.previousElementTextMove = previousElementTextMove;
+        }
+
+        public virtual float[] GetPreviousElementTextMove() {
+            return previousElementTextMove;
         }
     }
 }

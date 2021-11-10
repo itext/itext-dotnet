@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
-using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Dummy.Renderers.Impl {
@@ -93,7 +92,7 @@ namespace iText.Svg.Dummy.Renderers.Impl {
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+            return null;
         }
     }
 }

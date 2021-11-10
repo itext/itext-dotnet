@@ -86,7 +86,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+            return null;
         }
 
         protected internal override void DoDraw(SvgDrawContext context) {

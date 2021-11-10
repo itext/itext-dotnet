@@ -95,6 +95,7 @@ namespace iText.Svg.Exceptions {
 
         public const String QUADRATIC_CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x1 y1 x y)+ parameters are expected for quadratic curves. Got: {0}";
 
+        [Obsolete]
         public const String RENDERER_WITHOUT_OBJECT_BOUNDING_BOX = "The renderer has no object bounding box.";
 
         public const String ROOT_SVG_NO_BBOX = "The root svg tag needs to have a bounding box defined.";

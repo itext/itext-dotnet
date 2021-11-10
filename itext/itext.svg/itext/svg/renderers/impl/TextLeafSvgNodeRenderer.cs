@@ -48,7 +48,6 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Svg;
-using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -115,7 +114,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+            return null;
         }
 
         protected internal override void DoDraw(SvgDrawContext context) {
@@ -123,7 +122,12 @@ namespace iText.Svg.Renderers.Impl {
                 )) {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
                 //TODO(DEVSIX-2507): Support for glyph by glyph handling of x, y and rotate
-                currentCanvas.MoveText(context.GetTextMove()[0], context.GetTextMove()[1]);
+                if (context.GetPreviousElementTextMove() == null) {
+                    currentCanvas.MoveText(context.GetTextMove()[0], context.GetTextMove()[1]);
+                }
+                else {
+                    currentCanvas.MoveText(context.GetPreviousElementTextMove()[0], context.GetPreviousElementTextMove()[1]);
+                }
                 currentCanvas.ShowText(this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT));
             }
         }
