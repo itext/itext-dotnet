@@ -2617,6 +2617,9 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+        /// <summary>Sets the border style for the field.</summary>
+        /// <param name="style">the new border style.</param>
+        /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetBorderStyle(PdfDictionary style) {
             GetWidgets()[0].SetBorderStyle(style);
             RegenerateField();
@@ -2868,10 +2871,31 @@ namespace iText.Forms.Fields {
             return true;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// that owns that form field.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// that owns that form field.
+        /// </returns>
         protected internal virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
         }
 
+        /// <summary>
+        /// Gets a
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// that matches the current size and position of this form field.
+        /// </summary>
+        /// <param name="field">current form field.</param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// that matches the current size and position of this form field.
+        /// </returns>
         protected internal virtual Rectangle GetRect(PdfDictionary field) {
             PdfArray rect = field.GetAsArray(PdfName.Rect);
             if (rect == null) {
@@ -2884,6 +2908,18 @@ namespace iText.Forms.Fields {
             return rect != null ? rect.ToRectangle() : null;
         }
 
+        /// <summary>
+        /// Convert
+        /// <see cref="System.String"/>
+        /// multidimensional array of combo box or list options to
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>.
+        /// </summary>
+        /// <param name="options">Two-dimensional array of options.</param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// that contains all the options.
+        /// </returns>
         protected internal static PdfArray ProcessOptions(String[][] options) {
             PdfArray array = new PdfArray();
             foreach (String[] option in options) {
@@ -2894,6 +2930,18 @@ namespace iText.Forms.Fields {
             return array;
         }
 
+        /// <summary>
+        /// Convert
+        /// <see cref="System.String"/>
+        /// array of combo box or list options to
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>.
+        /// </summary>
+        /// <param name="options">array of options.</param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// that contains all the options.
+        /// </returns>
         protected internal static PdfArray ProcessOptions(String[] options) {
             PdfArray array = new PdfArray();
             foreach (String option in options) {
