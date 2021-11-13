@@ -31,6 +31,8 @@ namespace iText.Commons.Actions.Data {
 
         private readonly String version;
 
+        private readonly String minimalCompatibleLicenseKeyVersion;
+
         private readonly int sinceCopyrightYear;
 
         private readonly int toCopyrightYear;
@@ -42,10 +44,23 @@ namespace iText.Commons.Actions.Data {
         /// <param name="sinceCopyrightYear">is the first year of a product development</param>
         /// <param name="toCopyrightYear">is a last year of a product development</param>
         public ProductData(String publicProductName, String productName, String version, int sinceCopyrightYear, int
-             toCopyrightYear) {
+             toCopyrightYear)
+            : this(publicProductName, productName, version, null, sinceCopyrightYear, toCopyrightYear) {
+        }
+
+        /// <summary>Creates a new instance of product data.</summary>
+        /// <param name="publicProductName">is a product name</param>
+        /// <param name="productName">is a technical name of the product</param>
+        /// <param name="version">is a version of the product</param>
+        /// <param name="minimalCompatibleLicenseKeyVersion">is a minimal compatible version of licensekey library</param>
+        /// <param name="sinceCopyrightYear">is the first year of a product development</param>
+        /// <param name="toCopyrightYear">is a last year of a product development</param>
+        public ProductData(String publicProductName, String productName, String version, String minimalCompatibleLicenseKeyVersion
+            , int sinceCopyrightYear, int toCopyrightYear) {
             this.publicProductName = publicProductName;
             this.productName = productName;
             this.version = version;
+            this.minimalCompatibleLicenseKeyVersion = minimalCompatibleLicenseKeyVersion;
             this.sinceCopyrightYear = sinceCopyrightYear;
             this.toCopyrightYear = toCopyrightYear;
         }
@@ -78,6 +93,12 @@ namespace iText.Commons.Actions.Data {
         /// <returns>the last year of copyright</returns>
         public int GetToCopyrightYear() {
             return toCopyrightYear;
+        }
+
+        /// <summary>Getter for the minimal compatible licensekey version.</summary>
+        /// <returns>minimal compatible version of licensekey library.</returns>
+        public String GetMinCompatibleLicensingModuleVersion() {
+            return minimalCompatibleLicenseKeyVersion;
         }
 
         public override bool Equals(Object o) {
