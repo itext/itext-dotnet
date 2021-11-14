@@ -47,6 +47,7 @@ using Org.BouncyCastle.X509;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
 using iText.Test.Signutils;
@@ -81,6 +82,8 @@ namespace iText.Signatures.Sign {
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.Timestamp(testTsa, "timestampSig1");
             PadesSigTest.BasicCheckSignedDoc(destinationFolder + "timestampTest01.pdf", "timestampSig1");
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, sourceFolder + "cmp_timestampTest01.pdf"
+                ));
         }
         //        TimeStampToken tsWrong = new TimeStampResponse(Files.readAllBytes(Paths.get("c:\\Users\\yulian\\Desktop\\myTs"))).getTimeStampToken();
         //
