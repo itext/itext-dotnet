@@ -267,5 +267,21 @@ namespace iText.Kernel.Utils {
                 }
             }
         }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 10)]
+        public virtual void SplitByPageCountTest() {
+            String inputFileName = sourceFolder + "iphone_user_guide.pdf";
+            using (PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName))) {
+                PdfSplitter splitter = new PdfSplitter(inputPdfDoc);
+                int pagesCount = inputPdfDoc.GetNumberOfPages();
+                int pagesCountInSplitDoc = 13;
+                IList<PdfDocument> splitDocuments = splitter.SplitByPageCount(pagesCountInSplitDoc);
+                foreach (PdfDocument doc in splitDocuments) {
+                    doc.Close();
+                }
+                NUnit.Framework.Assert.AreEqual(pagesCount / pagesCountInSplitDoc, splitDocuments.Count);
+            }
+        }
     }
 }

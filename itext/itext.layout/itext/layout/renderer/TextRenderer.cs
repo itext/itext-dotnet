@@ -899,7 +899,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_964();
+                GlyphLine.IGlyphLineFilter filter = new TextRenderer.CustomGlyphLineFilter();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -958,15 +958,6 @@ namespace iText.Layout.Renderer {
                     taggingHelper.FinishTaggingHint(this);
                 }
                 taggingHelper.RestoreAutoTaggingPointerPosition(this);
-            }
-        }
-
-        private sealed class _IGlyphLineFilter_964 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_964() {
-            }
-
-            public bool Accept(Glyph glyph) {
-                return !iText.Layout.Renderer.TextRenderer.NoPrint(glyph);
             }
         }
 
@@ -1931,6 +1922,12 @@ namespace iText.Layout.Renderer {
             internal ScriptRange(UnicodeScript? script, int rangeEnd) {
                 this.script = script;
                 this.rangeEnd = rangeEnd;
+            }
+        }
+
+        private sealed class CustomGlyphLineFilter : GlyphLine.IGlyphLineFilter {
+            public bool Accept(Glyph glyph) {
+                return !NoPrint(glyph);
             }
         }
     }
