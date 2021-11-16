@@ -878,6 +878,21 @@ namespace iText.Layout {
                 ().GetDescriptor().GetFontName());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void MonospaceFontIsNotSelectedInPreferenceToTestFamilyTest() {
+            //TODO DEVSIX-6077 FontSelector: iText checks monospaceness before looking at font-family
+            FontSet set = new FontSet();
+            set.AddFont(StandardFonts.COURIER);
+            set.AddFont(StandardFonts.HELVETICA);
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("test");
+            fontFamilies.Add("monospace");
+            FontCharacteristics fc = new FontCharacteristics();
+            //Expected font is Courier
+            NUnit.Framework.Assert.AreEqual("Helvetica", new FontSelector(set.GetFonts(), fontFamilies, fc).BestMatch(
+                ).GetDescriptor().GetFontName());
+        }
+
         private void CheckSelector(ICollection<FontInfo> fontInfoCollection, String fontFamily, String expectedNormal
             , String expectedBold, String expectedItalic, String expectedBoldItalic) {
             IList<String> fontFamilies = new List<String>();

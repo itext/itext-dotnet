@@ -220,10 +220,10 @@ namespace iText.Kernel.XMP {
                         bool debug = false;
                         // Adobe XMP Core 5.0-jc001 DEBUG-<branch>.<changelist>, 2009 Jan 28 15:22:38-CET
                         String message = "Adobe XMP Core 5.1.0-jc003";
-                        versionInfo = new _XMPVersionInfo_266(major, minor, micro, debug, engBuild, message);
+                        versionInfo = new XMPMetaFactory.XMPVersionInfoImpl(major, minor, micro, engBuild, debug, message);
                     }
                     catch (Exception e) {
-                        // EMTPY, severe error would be detected during the tests
+                        // empty, severe error would be detected during the tests
                         System.Console.Out.WriteLine(e);
                     }
                 }
@@ -231,13 +231,25 @@ namespace iText.Kernel.XMP {
             }
         }
 
-        private sealed class _XMPVersionInfo_266 : XMPVersionInfo {
-            public _XMPVersionInfo_266(int major, int minor, int micro, bool debug, int engBuild, String message) {
+        private sealed class XMPVersionInfoImpl : XMPVersionInfo {
+            private readonly int major;
+
+            private readonly int minor;
+
+            private readonly int micro;
+
+            private readonly int engBuild;
+
+            private readonly bool debug;
+
+            private readonly String message;
+
+            public XMPVersionInfoImpl(int major, int minor, int micro, int engBuild, bool debug, String message) {
                 this.major = major;
                 this.minor = minor;
                 this.micro = micro;
-                this.debug = debug;
                 this.engBuild = engBuild;
+                this.debug = debug;
                 this.message = message;
             }
 
@@ -268,18 +280,6 @@ namespace iText.Kernel.XMP {
             public override String ToString() {
                 return message;
             }
-
-            private readonly int major;
-
-            private readonly int minor;
-
-            private readonly int micro;
-
-            private readonly bool debug;
-
-            private readonly int engBuild;
-
-            private readonly String message;
         }
     }
 }
