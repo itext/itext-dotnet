@@ -40,7 +40,4 @@
     <ProjectReference Include="..\itext.layout\itext.layout.netstandard.csproj" />
     <ProjectReference Include="..\itext.styledxmlparser\itext.styledxmlparser.netstandard.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-  </ItemGroup>
 </Project>

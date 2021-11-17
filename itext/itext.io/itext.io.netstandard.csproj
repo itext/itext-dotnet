@@ -87,7 +87,6 @@
 	  <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <ProjectReference Include="..\itext.commons\itext.commons.netstandard.csproj" />
   </ItemGroup>
 </Project>
