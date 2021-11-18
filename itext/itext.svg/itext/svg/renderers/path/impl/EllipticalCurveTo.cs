@@ -275,7 +275,7 @@ namespace iText.Svg.Renderers.Path.Impl {
                     double startAngl = 0;
                     double extent = 0;
                     // round the difference, to catch edge cases with floating point math around the value 180
-                    long deltaTheta = (long)Math.Abs(Math.Round(theta2 - theta1));
+                    long deltaTheta = (long)Math.Abs(MathematicUtil.Round(theta2 - theta1));
                     //both points are on the ellipse, but is this the middle, looked for?
                     if (largeArc) {
                         //turn more than 180 degrees
