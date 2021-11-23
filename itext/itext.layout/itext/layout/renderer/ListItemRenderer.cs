@@ -129,7 +129,7 @@ namespace iText.Layout.Renderer {
             base.Draw(drawContext);
             // It will be null in case of overflow (only the "split" part will contain symbol renderer.
             if (symbolRenderer != null && !symbolAddedInside) {
-                bool isRtl = BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION));
+                bool isRtl = BaseDirection.RIGHT_TO_LEFT == this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION);
                 symbolRenderer.SetParent(this);
                 float x = isRtl ? occupiedArea.GetBBox().GetRight() : occupiedArea.GetBBox().GetLeft();
                 ListSymbolPosition symbolPosition = (ListSymbolPosition)ListRenderer.GetListItemOrListProperty(this, parent
@@ -226,7 +226,9 @@ namespace iText.Layout.Renderer {
                 else {
                     symbolRenderer.Move(dxPosition, 0);
                 }
-                if (symbolRenderer.GetOccupiedArea().GetBBox().GetRight() > parent.GetOccupiedArea().GetBBox().GetLeft()) {
+                if (!isRtl && symbolRenderer.GetOccupiedArea().GetBBox().GetRight() > parent.GetOccupiedArea().GetBBox().GetLeft
+                    () || isRtl && symbolRenderer.GetOccupiedArea().GetBBox().GetLeft() < parent.GetOccupiedArea().GetBBox
+                    ().GetRight()) {
                     BeginElementOpacityApplying(drawContext);
                     symbolRenderer.Draw(drawContext);
                     EndElementOpacityApplying(drawContext);
