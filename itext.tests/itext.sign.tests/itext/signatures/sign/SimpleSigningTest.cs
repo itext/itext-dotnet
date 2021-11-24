@@ -96,6 +96,41 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SignWithoutPKeyTest() {
+            String srcFile = SOURCE_FOLDER + "emptySignatureWithoutPKey.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_signedWithoutPKey.pdf";
+            String outPdf = DESTINATION_FOLDER + "signedWithoutPKey.pdf";
+            Rectangle rect = new Rectangle(36, 648, 200, 100);
+            String fieldName = "Signature1";
+            Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1"
+                , "TestCity", rect, false, false, PdfSigner.NOT_CERTIFIED, 12f);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                , GetTestMap(rect)));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignWithTempFileTest() {
+            String srcFile = SOURCE_FOLDER + "simpleDocument.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_signedWithTempFile.pdf";
+            String outPdf = DESTINATION_FOLDER + "signedWithTempFile.pdf";
+            String tempFileName = "tempFile";
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFile), new PdfWriter(outPdf), DESTINATION_FOLDER + tempFileName
+                , new StampingProperties());
+            Rectangle rect = new Rectangle(36, 648, 200, 100);
+            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            signer.SetFieldName("Signature1");
+            // Creating the appearance
+            CreateAppearance(signer, "Test 1", "TestCity", false, rect, 12f);
+            // Creating the signature
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                , GetTestMap(rect)));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+        }
+
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode, int certificationLevel, float? fontSize
@@ -108,14 +143,7 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
             signer.SetCertificationLevel(certificationLevel);
             // Creating the appearance
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
-                ).SetReuseAppearance(setReuseAppearance);
-            if (rectangleForNewField != null) {
-                appearance.SetPageRect(rectangleForNewField);
-            }
-            if (fontSize != null) {
-                appearance.SetLayer2FontSize((float)fontSize);
-            }
+            CreateAppearance(signer, reason, location, setReuseAppearance, rectangleForNewField, fontSize);
             signer.SetFieldName(name);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
@@ -126,6 +154,18 @@ namespace iText.Signatures.Sign {
             IDictionary<int, IList<Rectangle>> result = new Dictionary<int, IList<Rectangle>>();
             result.Put(1, JavaUtil.ArraysAsList(ignoredArea));
             return result;
+        }
+
+        private static void CreateAppearance(PdfSigner signer, String reason, String location, bool setReuseAppearance
+            , Rectangle rectangleForNewField, float? fontSize) {
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
+                ).SetReuseAppearance(setReuseAppearance);
+            if (rectangleForNewField != null) {
+                appearance.SetPageRect(rectangleForNewField);
+            }
+            if (fontSize != null) {
+                appearance.SetLayer2FontSize((float)fontSize);
+            }
         }
     }
 }
