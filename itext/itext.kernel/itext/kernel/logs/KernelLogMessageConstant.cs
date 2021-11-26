@@ -45,6 +45,9 @@ using System;
 namespace iText.Kernel.Logs {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class KernelLogMessageConstant {
+        public const String CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP = "Document outline dictionary is corrupted: some outline (PDF object: \"{0}\") has wrong first/next link "
+             + "entry. Next outlines in this dictionary will be unprocessed.";
+
         public const String DCTDECODE_FILTER_DECODING = "DCTDecode filter decoding into the bit map is not supported. The stream data would be left in JPEG "
              + "baseline format";
 

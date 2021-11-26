@@ -166,6 +166,9 @@ namespace iText.Kernel.Exceptions {
              = "Content stream must not invoke operators that specify colors or other color related parameters in "
              + "the graphics state.";
 
+        public const String CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP = "Document outline dictionary is corrupted: some outline (PDF object: \"{0}\") has wrong first/next link "
+             + "entry.";
+
         public const String CORRUPTED_OUTLINE_NO_PARENT_ENTRY = "Document outline is corrupted: some outline (PDF object: \"{0}\") lacks the required parent entry.";
 
         public const String CORRUPTED_OUTLINE_NO_TITLE_ENTRY = "Document outline is corrupted: some outline (PDF object: \"{0}\") lacks the required title entry.";

@@ -44,8 +44,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
+using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -200,7 +202,19 @@ namespace iText.Kernel.Pdf {
             String filename = "updateOutlineTitleInvalidParentLink.pdf";
             PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => pdfDoc.GetOutlines(false));
+            PdfOutline outlines = pdfDoc.GetOutlines(true);
+            PdfOutline firstOutline = outlines.GetAllChildren()[0];
+            PdfOutline secondOutline = outlines.GetAllChildren()[1];
+            try {
+                NUnit.Framework.Assert.AreEqual(2, outlines.GetAllChildren().Count);
+                NUnit.Framework.Assert.AreEqual("First Page", firstOutline.GetTitle());
+                NUnit.Framework.Assert.AreEqual(outlines, firstOutline.GetParent());
+                NUnit.Framework.Assert.AreEqual("Second Page", secondOutline.GetTitle());
+                NUnit.Framework.Assert.AreEqual(outlines, secondOutline.GetParent());
+            }
+            finally {
+                pdfDoc.Close();
+            }
         }
 
         [NUnit.Framework.Test]
@@ -466,10 +480,10 @@ namespace iText.Kernel.Pdf {
                     first.MakeIndirect(pdfDocument);
                     PdfDictionary outlineDictionary = new PdfDictionary();
                     outlineDictionary.Put(PdfName.First, first);
-                    Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetCatalog().ConstructOutlines
-                        (outlineDictionary, new Dictionary<String, PdfObject>()));
-                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_PARENT_ENTRY
-                        , first.indirectReference), exception.Message);
+                    outlineDictionary.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
+                    first.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
+                    NUnit.Framework.Assert.DoesNotThrow(() => pdfDocument.GetCatalog().ConstructOutlines(outlineDictionary, new 
+                        Dictionary<String, PdfObject>()));
                 }
             }
         }
@@ -494,6 +508,58 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CheckParentOfOutlinesTest() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDocument.GetCatalog().SetPageMode(PdfName.UseOutlines);
+                    PdfPage firstPage = pdfDocument.AddNewPage();
+                    PdfOutline rootOutline = pdfDocument.GetOutlines(false);
+                    PdfOutline firstOutline = rootOutline.AddOutline("First outline");
+                    PdfOutline firstSubOutline = firstOutline.AddOutline("First suboutline");
+                    PdfOutline secondSubOutline = firstOutline.AddOutline("Second suboutline");
+                    PdfOutline secondOutline = rootOutline.AddOutline("SecondOutline");
+                    firstOutline.AddDestination(PdfExplicitDestination.CreateFit(firstPage));
+                    PdfOutline resultedRoot = pdfDocument.GetOutlines(true);
+                    NUnit.Framework.Assert.AreEqual(2, resultedRoot.GetAllChildren().Count);
+                    NUnit.Framework.Assert.AreEqual(resultedRoot, resultedRoot.GetAllChildren()[0].GetParent());
+                    NUnit.Framework.Assert.AreEqual(resultedRoot, resultedRoot.GetAllChildren()[1].GetParent());
+                    PdfOutline resultedFirstOutline = resultedRoot.GetAllChildren()[0];
+                    NUnit.Framework.Assert.AreEqual(2, resultedFirstOutline.GetAllChildren().Count);
+                    NUnit.Framework.Assert.AreEqual(resultedFirstOutline, resultedFirstOutline.GetAllChildren()[0].GetParent()
+                        );
+                    NUnit.Framework.Assert.AreEqual(resultedFirstOutline, resultedFirstOutline.GetAllChildren()[1].GetParent()
+                        );
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckNestedOutlinesParentTest() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDocument.GetCatalog().SetPageMode(PdfName.UseOutlines);
+                    PdfPage firstPage = pdfDocument.AddNewPage();
+                    PdfOutline rootOutline = pdfDocument.GetOutlines(false);
+                    PdfOutline firstOutline = rootOutline.AddOutline("First outline");
+                    PdfOutline secondOutline = firstOutline.AddOutline("Second outline");
+                    PdfOutline thirdOutline = secondOutline.AddOutline("Third outline");
+                    firstOutline.AddDestination(PdfExplicitDestination.CreateFit(firstPage));
+                    PdfOutline resultedRoot = pdfDocument.GetOutlines(true);
+                    NUnit.Framework.Assert.AreEqual(1, resultedRoot.GetAllChildren().Count);
+                    NUnit.Framework.Assert.AreEqual(resultedRoot, resultedRoot.GetAllChildren()[0].GetParent());
+                    PdfOutline resultedFirstOutline = resultedRoot.GetAllChildren()[0];
+                    NUnit.Framework.Assert.AreEqual(1, resultedFirstOutline.GetAllChildren().Count);
+                    NUnit.Framework.Assert.AreEqual(resultedFirstOutline, resultedFirstOutline.GetAllChildren()[0].GetParent()
+                        );
+                    PdfOutline resultedSecondOutline = resultedFirstOutline.GetAllChildren()[0];
+                    NUnit.Framework.Assert.AreEqual(1, resultedSecondOutline.GetAllChildren().Count);
+                    NUnit.Framework.Assert.AreEqual(resultedSecondOutline, resultedSecondOutline.GetAllChildren()[0].GetParent
+                        ());
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SetOutlinePropertiesTest() {
             using (MemoryStream baos = new MemoryStream()) {
                 using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
@@ -513,6 +579,135 @@ namespace iText.Kernel.Pdf {
                     NUnit.Framework.Assert.IsTrue(outline.IsOpen());
                     outline.GetContent().Put(PdfName.Count, new PdfNumber(-5));
                     NUnit.Framework.Assert.IsFalse(outline.IsOpen());
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP)]
+        public virtual void CheckPossibleInfiniteLoopWithSameNextAndPrevLinkTest() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDocument.AddNewPage();
+                    PdfDictionary first = new PdfDictionary();
+                    first.MakeIndirect(pdfDocument);
+                    PdfDictionary second = new PdfDictionary();
+                    second.MakeIndirect(pdfDocument);
+                    PdfDictionary outlineDictionary = new PdfDictionary();
+                    outlineDictionary.MakeIndirect(pdfDocument);
+                    outlineDictionary.Put(PdfName.First, first);
+                    outlineDictionary.Put(PdfName.Last, second);
+                    first.Put(PdfName.Parent, outlineDictionary);
+                    second.Put(PdfName.Parent, outlineDictionary);
+                    first.Put(PdfName.Next, second);
+                    first.Put(PdfName.Prev, second);
+                    second.Put(PdfName.Next, first);
+                    second.Put(PdfName.Prev, first);
+                    outlineDictionary.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
+                    first.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
+                    second.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
+                    NUnit.Framework.Assert.DoesNotThrow(() => pdfDocument.GetCatalog().ConstructOutlines(outlineDictionary, new 
+                        Dictionary<String, PdfObject>()));
+                    PdfOutline resultedOutline = pdfDocument.GetOutlines(false);
+                    NUnit.Framework.Assert.AreEqual(2, resultedOutline.GetAllChildren().Count);
+                    NUnit.Framework.Assert.AreEqual(resultedOutline.GetAllChildren()[1].GetParent(), resultedOutline.GetAllChildren
+                        ()[0].GetParent());
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP)]
+        public virtual void CheckPossibleInfiniteLoopWithSameFirstAndLastLinkTest() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDocument.AddNewPage();
+                    PdfDictionary first = new PdfDictionary();
+                    first.MakeIndirect(pdfDocument);
+                    PdfDictionary outlineDictionary = new PdfDictionary();
+                    outlineDictionary.MakeIndirect(pdfDocument);
+                    outlineDictionary.Put(PdfName.First, first);
+                    first.Put(PdfName.Parent, outlineDictionary);
+                    first.Put(PdfName.First, outlineDictionary);
+                    first.Put(PdfName.Last, outlineDictionary);
+                    outlineDictionary.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
+                    first.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
+                    NUnit.Framework.Assert.DoesNotThrow(() => pdfDocument.GetCatalog().ConstructOutlines(outlineDictionary, new 
+                        Dictionary<String, PdfObject>()));
+                    PdfOutline resultedOutline = pdfDocument.GetOutlines(false);
+                    NUnit.Framework.Assert.AreEqual(1, resultedOutline.GetAllChildren().Count);
+                    NUnit.Framework.Assert.AreEqual(resultedOutline, resultedOutline.GetAllChildren()[0].GetParent());
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OutlineNoParentLinkInConservativeModeTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "outlinesNoParentLink.pdf")
+                )) {
+                pdfDocument.GetReader().SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE);
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetOutlines(true
+                    ));
+                //Hardcode indirectReference, cause there is no option to get this outline due to #getOutlines method
+                // will be thrown an exception.
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_PARENT_ENTRY
+                    , "9 0 R"), exception.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OutlineHasInfiniteLoopInConservativeModeTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "outlinesHaveInfiniteLoop.pdf"
+                ))) {
+                pdfDocument.GetReader().SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE);
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetOutlines(true
+                    ));
+                //Hardcode indirectReference, cause there is no option to get this outline due to #getOutlines method
+                // will be thrown an exception.
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP
+                    , "<</Dest [4 0 R /Fit ] /Next 10 0 R /Parent <<>> /Prev 10 0 R /Title First Page >>"), exception.Message
+                    );
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateOutlinesWithDifferentVariantsOfChildrenTest() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDocument.GetCatalog().SetPageMode(PdfName.UseOutlines);
+                    PdfPage firstPage = pdfDocument.AddNewPage();
+                    PdfOutline a = pdfDocument.GetOutlines(false);
+                    PdfOutline b = a.AddOutline("B");
+                    PdfOutline e = b.AddOutline("E");
+                    PdfOutline f = e.AddOutline("F");
+                    PdfOutline d = b.AddOutline("D");
+                    PdfOutline c = a.AddOutline("C");
+                    PdfOutline g = f.AddOutline("G");
+                    PdfOutline h = f.AddOutline("H");
+                    a.AddDestination(PdfExplicitDestination.CreateFit(firstPage));
+                    PdfOutline resultedA = pdfDocument.GetOutlines(true);
+                    // Asserting children of root outline.
+                    NUnit.Framework.Assert.AreEqual(2, resultedA.GetAllChildren().Count);
+                    NUnit.Framework.Assert.AreEqual(resultedA, resultedA.GetAllChildren()[0].GetParent());
+                    NUnit.Framework.Assert.AreEqual(resultedA, resultedA.GetAllChildren()[1].GetParent());
+                    NUnit.Framework.Assert.IsTrue(resultedA.GetAllChildren()[1].GetAllChildren().IsEmpty());
+                    NUnit.Framework.Assert.AreEqual(2, resultedA.GetAllChildren()[0].GetAllChildren().Count);
+                    //Asserting children of B outline after reconstructing.
+                    PdfOutline resultedB = resultedA.GetAllChildren()[0];
+                    NUnit.Framework.Assert.AreEqual(resultedB, resultedB.GetAllChildren()[0].GetParent());
+                    NUnit.Framework.Assert.AreEqual(resultedB, resultedB.GetAllChildren()[1].GetParent());
+                    NUnit.Framework.Assert.IsTrue(resultedB.GetAllChildren()[1].GetAllChildren().IsEmpty());
+                    NUnit.Framework.Assert.AreEqual(1, resultedB.GetAllChildren()[0].GetAllChildren().Count);
+                    //Asserting children of E outline after reconstructing.
+                    PdfOutline resultedE = resultedB.GetAllChildren()[0];
+                    NUnit.Framework.Assert.AreEqual(resultedE, resultedE.GetAllChildren()[0].GetParent());
+                    NUnit.Framework.Assert.AreEqual(2, resultedE.GetAllChildren()[0].GetAllChildren().Count);
+                    //Asserting children of F outline after reconstructing.
+                    PdfOutline resultedF = resultedE.GetAllChildren()[0];
+                    NUnit.Framework.Assert.AreEqual(resultedF, resultedF.GetAllChildren()[0].GetParent());
+                    NUnit.Framework.Assert.AreEqual(resultedF, resultedF.GetAllChildren()[1].GetParent());
+                    NUnit.Framework.Assert.IsTrue(resultedF.GetAllChildren()[0].GetAllChildren().IsEmpty());
+                    NUnit.Framework.Assert.IsTrue(resultedF.GetAllChildren()[1].GetAllChildren().IsEmpty());
                 }
             }
         }

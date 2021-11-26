@@ -47,6 +47,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Collection;
 using iText.Kernel.Pdf.Layer;
@@ -79,7 +80,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>The document’s optional content properties dictionary.</summary>
         protected internal PdfOCProperties ocProperties;
 
-        private const String OutlineRoot = "Outlines";
+        private const String ROOT_OUTLINE_TITLE = "Outlines";
 
         private PdfOutline outlines;
 
@@ -603,6 +604,99 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>
+        /// Construct
+        /// <see cref="PdfCatalog">dictionary</see>
+        /// iteratively.
+        /// </summary>
+        /// <remarks>
+        /// Construct
+        /// <see cref="PdfCatalog">dictionary</see>
+        /// iteratively. Invalid pdf documents will be processed depending on
+        /// <see cref="StrictnessLevel"/>
+        /// , if it set to lenient, we will ignore and process invalid outline structure, otherwise
+        /// <see cref="iText.Kernel.Exceptions.PdfException"/>
+        /// will be thrown.
+        /// </remarks>
+        /// <param name="outlineRoot">
+        /// 
+        /// <see cref="PdfOutline">dictionary</see>
+        /// root.
+        /// </param>
+        /// <param name="names">map containing the PdfObjects stored in the tree.</param>
+        internal virtual void ConstructOutlines(PdfDictionary outlineRoot, IDictionary<String, PdfObject> names) {
+            if (outlineRoot == null) {
+                return;
+            }
+            PdfReader reader = GetDocument().GetReader();
+            bool isLenientLevel = reader == null || PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(reader.GetStrictnessLevel
+                ());
+            PdfDictionary current = outlineRoot.GetAsDictionary(PdfName.First);
+            outlines = new PdfOutline(ROOT_OUTLINE_TITLE, outlineRoot, GetDocument());
+            PdfOutline parentOutline = outlines;
+            IDictionary<PdfOutline, PdfDictionary> nextUnprocessedChildForParentMap = new Dictionary<PdfOutline, PdfDictionary
+                >();
+            ICollection<PdfDictionary> alreadyVisitedOutlinesSet = new HashSet<PdfDictionary>();
+            while (current != null) {
+                PdfDictionary parent = current.GetAsDictionary(PdfName.Parent);
+                if (null == parent && !isLenientLevel) {
+                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_PARENT_ENTRY
+                        , current.indirectReference));
+                }
+                PdfString title = current.GetAsString(PdfName.Title);
+                if (null == title) {
+                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_TITLE_ENTRY
+                        , current.indirectReference));
+                }
+                PdfOutline currentOutline = new PdfOutline(title.ToUnicodeString(), current, parentOutline);
+                alreadyVisitedOutlinesSet.Add(current);
+                AddOutlineToPage(currentOutline, current, names);
+                parentOutline.GetAllChildren().Add(currentOutline);
+                PdfDictionary first = current.GetAsDictionary(PdfName.First);
+                PdfDictionary next = current.GetAsDictionary(PdfName.Next);
+                if (first != null) {
+                    if (alreadyVisitedOutlinesSet.Contains(first)) {
+                        if (!isLenientLevel) {
+                            throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP
+                                , first));
+                        }
+                        LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP
+                            , first));
+                        return;
+                    }
+                    // Down in hierarchy; when returning up, process `next`.
+                    nextUnprocessedChildForParentMap.Put(parentOutline, next);
+                    parentOutline = currentOutline;
+                    current = first;
+                }
+                else {
+                    if (next != null) {
+                        if (alreadyVisitedOutlinesSet.Contains(next)) {
+                            if (!isLenientLevel) {
+                                throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP
+                                    , next));
+                            }
+                            LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP
+                                , next));
+                            return;
+                        }
+                        // Next sibling in hierarchy
+                        current = next;
+                    }
+                    else {
+                        // Up in hierarchy using 'nextUnprocessedChildForParentMap'.
+                        current = null;
+                        while (current == null && parentOutline != null) {
+                            parentOutline = parentOutline.GetParent();
+                            if (parentOutline != null) {
+                                current = nextUnprocessedChildForParentMap.Get(parentOutline);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         internal virtual PdfDestination CopyDestination(PdfObject dest, IDictionary<PdfPage, PdfPage> page2page, PdfDocument
              toDocument) {
             if (null == dest) {
@@ -729,61 +823,6 @@ namespace iText.Kernel.Pdf {
                             PdfDestination destination = PdfDestination.MakeDestination(destObject);
                             outline.SetDestination(destination);
                             AddOutlineToPage(outline, names);
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Constructs
-        /// <see cref="outlines"/>
-        /// iteratively
-        /// </summary>
-        internal virtual void ConstructOutlines(PdfDictionary outlineRoot, IDictionary<String, PdfObject> names) {
-            if (outlineRoot == null) {
-                return;
-            }
-            PdfDictionary current = outlineRoot.GetAsDictionary(PdfName.First);
-            outlines = new PdfOutline(OutlineRoot, outlineRoot, GetDocument());
-            PdfOutline parentOutline = outlines;
-            // map `PdfOutline` to the next sibling to process in the hierarchy
-            Dictionary<PdfOutline, PdfDictionary> positionMap = new Dictionary<PdfOutline, PdfDictionary>();
-            while (current != null) {
-                PdfDictionary parent = current.GetAsDictionary(PdfName.Parent);
-                if (null == parent) {
-                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_PARENT_ENTRY
-                        , current.indirectReference));
-                }
-                PdfString title = current.GetAsString(PdfName.Title);
-                if (null == title) {
-                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_TITLE_ENTRY
-                        , current.indirectReference));
-                }
-                PdfOutline currentOutline = new PdfOutline(title.ToUnicodeString(), current, parentOutline);
-                AddOutlineToPage(currentOutline, current, names);
-                parentOutline.GetAllChildren().Add(currentOutline);
-                PdfDictionary first = current.GetAsDictionary(PdfName.First);
-                PdfDictionary next = current.GetAsDictionary(PdfName.Next);
-                if (first != null) {
-                    // Down in hierarchy; when returning up, process `next`
-                    positionMap.Put(parentOutline, next);
-                    parentOutline = currentOutline;
-                    current = first;
-                }
-                else {
-                    if (next != null) {
-                        // Next sibling in hierarchy
-                        current = next;
-                    }
-                    else {
-                        // Up in hierarchy using `positionMap`
-                        current = null;
-                        while (current == null && parentOutline != null) {
-                            parentOutline = parentOutline.GetParent();
-                            if (parentOutline != null) {
-                                current = positionMap.Get(parentOutline);
-                            }
                         }
                     }
                 }
