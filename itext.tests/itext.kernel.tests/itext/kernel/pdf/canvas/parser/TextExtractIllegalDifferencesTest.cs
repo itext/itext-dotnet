@@ -51,10 +51,19 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/TextExtractIllegalDifferencesTest/";
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCFONT_HAS_ILLEGAL_DIFFERENCES, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCFONT_HAS_ILLEGAL_DIFFERENCES)]
         public virtual void IllegalDifference() {
-            PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "illegalDifference.pdf"));
-            PdfTextExtractor.GetTextFromPage(pdf.GetFirstPage());
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "illegalDifference.pdf"))) {
+                NUnit.Framework.Assert.DoesNotThrow(() => PdfTextExtractor.GetTextFromPage(pdf.GetFirstPage()));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCFONT_HAS_ILLEGAL_DIFFERENCES, Count = 2)]
+        public virtual void IllegalDifferenceType3Font() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "illegalDifferenceType3Font.pdf"))) {
+                NUnit.Framework.Assert.DoesNotThrow(() => PdfTextExtractor.GetTextFromPage(pdf.GetFirstPage()));
+            }
         }
     }
 }
