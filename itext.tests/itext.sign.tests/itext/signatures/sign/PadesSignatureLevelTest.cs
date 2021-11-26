@@ -48,6 +48,7 @@ using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
 using iText.Test.Signutils;
@@ -89,6 +90,8 @@ namespace iText.Signatures.Sign {
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.SignDetached(pks, signRsaChain, null, null, testTsa, 0, PdfSigner.CryptoStandard.CADES);
             PadesSigTest.BasicCheckSignedDoc(destinationFolder + "padesSignatureLevelTTest01.pdf", "Signature1");
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, sourceFolder + "cmp_padesSignatureLevelTTest01.pdf"
+                ));
         }
 
         [NUnit.Framework.Test]

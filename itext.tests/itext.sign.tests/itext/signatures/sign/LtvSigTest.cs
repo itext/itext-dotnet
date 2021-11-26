@@ -47,6 +47,7 @@ using Org.BouncyCastle.X509;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
 using iText.Test.Signutils;
@@ -94,6 +95,8 @@ namespace iText.Signatures.Sign {
                 ), new StampingProperties().UseAppendMode());
             signer.Timestamp(testTsa, "timestampSig1");
             BasicCheckLtvDoc("ltvEnabledTsTest01.pdf", "timestampSig1");
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, sourceFolder + "cmp_ltvEnabledTsTest01.pdf"
+                ));
         }
 
         [NUnit.Framework.Test]
@@ -150,6 +153,8 @@ namespace iText.Signatures.Sign {
                 ), new StampingProperties().UseAppendMode());
             signer.Timestamp(testTsa, "timestampSig2");
             BasicCheckLtvDoc("secondLtvOriginalHasNoVriTs01.pdf", "timestampSig2");
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, sourceFolder + "cmp_secondLtvOriginalHasNoVriTs01.pdf"
+                ));
         }
 
         private void BasicCheckLtvDoc(String outFileName, String tsSigName) {
