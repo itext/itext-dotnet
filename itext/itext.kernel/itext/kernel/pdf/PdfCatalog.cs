@@ -707,68 +707,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <summary>Get the next outline of the current node in the outline tree by looking for a child or sibling node.
-        ///     </summary>
-        /// <remarks>
-        /// Get the next outline of the current node in the outline tree by looking for a child or sibling node.
-        /// If there is no child or sibling of the current node
-        /// <see cref="GetParentNextOutline(PdfDictionary)"/>
-        /// is called to get a hierarchical parent's next node.
-        /// <see langword="null"/>
-        /// is returned if one does not exist.
-        /// </remarks>
-        /// <returns>
-        /// the
-        /// <see cref="PdfDictionary"/>
-        /// object of the next outline if one exists,
-        /// <see langword="null"/>
-        /// otherwise.
-        /// </returns>
-        private PdfDictionary GetNextOutline(PdfDictionary first, PdfDictionary next, PdfDictionary parent) {
-            if (first != null) {
-                return first;
-            }
-            else {
-                if (next != null) {
-                    return next;
-                }
-                else {
-                    return GetParentNextOutline(parent);
-                }
-            }
-        }
-
-        /// <summary>Gets the parent's next outline of the current node.</summary>
-        /// <remarks>
-        /// Gets the parent's next outline of the current node.
-        /// If the parent does not have a next we look at the grand parent, great-grand parent, etc until we find a next node or reach the root at which point
-        /// <see langword="null"/>
-        /// is returned to signify there is no next node present.
-        /// </remarks>
-        /// <returns>
-        /// the
-        /// <see cref="PdfDictionary"/>
-        /// object of the next outline if one exists,
-        /// <see langword="null"/>
-        /// otherwise.
-        /// </returns>
-        private PdfDictionary GetParentNextOutline(PdfDictionary parent) {
-            if (parent == null) {
-                return null;
-            }
-            PdfDictionary current = null;
-            while (current == null) {
-                current = parent.GetAsDictionary(PdfName.Next);
-                if (current == null) {
-                    parent = parent.GetAsDictionary(PdfName.Parent);
-                    if (parent == null) {
-                        return null;
-                    }
-                }
-            }
-            return current;
-        }
-
         private void AddOutlineToPage(PdfOutline outline, PdfDictionary item, IDictionary<String, PdfObject> names
             ) {
             PdfObject dest = item.Get(PdfName.Dest);
@@ -806,15 +744,12 @@ namespace iText.Kernel.Pdf {
             if (outlineRoot == null) {
                 return;
             }
-            PdfDictionary first = outlineRoot.GetAsDictionary(PdfName.First);
-            PdfDictionary current = first;
-            Dictionary<PdfDictionary, PdfOutline> parentOutlineMap = new Dictionary<PdfDictionary, PdfOutline>();
+            PdfDictionary current = outlineRoot.GetAsDictionary(PdfName.First);
             outlines = new PdfOutline(OutlineRoot, outlineRoot, GetDocument());
             PdfOutline parentOutline = outlines;
-            parentOutlineMap.Put(outlineRoot, parentOutline);
+            // map `PdfOutline` to the next sibling to process in the hierarchy
+            Dictionary<PdfOutline, PdfDictionary> positionMap = new Dictionary<PdfOutline, PdfDictionary>();
             while (current != null) {
-                first = current.GetAsDictionary(PdfName.First);
-                PdfDictionary next = current.GetAsDictionary(PdfName.Next);
                 PdfDictionary parent = current.GetAsDictionary(PdfName.Parent);
                 if (null == parent) {
                     throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_PARENT_ENTRY
@@ -825,14 +760,33 @@ namespace iText.Kernel.Pdf {
                     throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_TITLE_ENTRY
                         , current.indirectReference));
                 }
-                parentOutline = parentOutlineMap.Get(parent);
                 PdfOutline currentOutline = new PdfOutline(title.ToUnicodeString(), current, parentOutline);
                 AddOutlineToPage(currentOutline, current, names);
                 parentOutline.GetAllChildren().Add(currentOutline);
+                PdfDictionary first = current.GetAsDictionary(PdfName.First);
+                PdfDictionary next = current.GetAsDictionary(PdfName.Next);
                 if (first != null) {
-                    parentOutlineMap.Put(current, currentOutline);
+                    // Down in hierarchy; when returning up, process `next`
+                    positionMap.Put(parentOutline, next);
+                    parentOutline = currentOutline;
+                    current = first;
                 }
-                current = GetNextOutline(first, next, parent);
+                else {
+                    if (next != null) {
+                        // Next sibling in hierarchy
+                        current = next;
+                    }
+                    else {
+                        // Up in hierarchy using `positionMap`
+                        current = null;
+                        while (current == null && parentOutline != null) {
+                            parentOutline = parentOutline.GetParent();
+                            if (parentOutline != null) {
+                                current = positionMap.Get(parentOutline);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
