@@ -348,7 +348,7 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("TODO: DEVSIX-5064 (when doing merge with outlines infinite loop occurs )")]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void MergeOutlinesWithWrongStructureTest() {
             PdfDocument inputDoc = new PdfDocument(new PdfReader(sourceFolder + "infiniteLoopInOutlineStructure.pdf"));
             PdfDocument outputDoc = new PdfDocument(new PdfWriter(destinationFolder + "infiniteLoopInOutlineStructure.pdf"
