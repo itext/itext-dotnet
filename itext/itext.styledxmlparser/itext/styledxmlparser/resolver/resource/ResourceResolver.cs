@@ -46,7 +46,6 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Image;
-using iText.IO.Util;
 using iText.Kernel.Pdf.Xobject;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
@@ -278,7 +277,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         protected internal virtual PdfXObject TryResolveUrlImageSource(String uri) {
             try {
                 Uri url = uriResolver.ResolveAgainstBaseUri(uri);
-                url = UrlUtil.GetFinalURL(url);
                 String imageResolvedSrc = url.ToExternalForm();
                 PdfXObject imageXObject = imageCache.GetImage(imageResolvedSrc);
                 if (imageXObject == null) {
@@ -295,11 +293,11 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         /// <summary>Create a iText XObject based on the image stored at the passed location.</summary>
-        /// <param name="url">location of the Image file</param>
+        /// <param name="url">location of the Image file.</param>
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
-        /// containing the Image loaded in
+        /// containing the Image loaded in.
         /// </returns>
         protected internal virtual PdfXObject CreateImageByUrl(Uri url) {
             byte[] bytes = retriever.GetByteArrayByUrl(url);

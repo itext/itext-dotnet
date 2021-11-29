@@ -114,8 +114,10 @@ namespace iText.IO.Util {
         /// <summary>
         /// This method gets the last redirected url.
         /// </summary>
-        /// <param name="uri">an initial url</param>
-        /// <returns>the last redirected url</returns>
+        /// <param name="uri">an initial url.</param>
+        /// 
+        /// <returns>the last redirected url.</returns>
+        [Obsolete]
         public static Uri GetFinalURL(Uri uri) {
             return uri;
         }
@@ -138,6 +140,17 @@ namespace iText.IO.Util {
         public static String GetNormalizedFileUriString(String filename)
         {
             return "file://" + UrlUtil.ToNormalizedURI(filename).AbsolutePath;
+        }
+
+        /// <summary>
+        /// Gets the input stream of connection related to last redirected url. You should manually close input stream after
+        /// calling this method to not hold any open resources.
+        /// </summary>
+        /// <param name="url">an initial URL.</param>
+        /// 
+        /// <returns>an input stream of connection related to the last redirected url.</returns>
+        public static Stream GetInputStreamOfFinalConnection(Uri url) {
+            return UrlUtil.OpenStream(url);
         }
     }
 }

@@ -96,7 +96,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                     , url));
                 return null;
             }
-            return new LimitedInputStream(UrlUtil.OpenStream(url), resourceSizeByteLimit);
+            return new LimitedInputStream(UrlUtil.GetInputStreamOfFinalConnection(url), resourceSizeByteLimit);
         }
 
         /// <summary>Gets the byte array that are retrieved from the source URL.</summary>

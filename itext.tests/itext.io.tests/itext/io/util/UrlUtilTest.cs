@@ -42,9 +42,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using iText.Commons.Utils;
 using iText.Test;
+using NUnit.Framework;
 
 namespace iText.IO.Util {
     public class UrlUtilTest : ExtendedITextTest {
@@ -62,6 +64,27 @@ namespace iText.IO.Util {
             FileInfo tempFile = FileUtil.CreateTempFile(destinationFolder);
             UrlUtil.GetFinalURL(UrlUtil.ToURL(tempFile.FullName));
             NUnit.Framework.Assert.IsTrue(FileUtil.DeleteFile(tempFile));
+        }
+
+        // This test checks that when we pass invalid url and trying get stream related to final redirected url,exception
+        // would be thrown.
+        [NUnit.Framework.Test]
+        public virtual void GetInputStreamOfFinalConnectionThrowExceptionTest() {
+            Uri invalidUrl = new Uri("http://itextpdf");
+            
+            NUnit.Framework.Assert.That(() => {
+                    UrlUtil.GetInputStreamOfFinalConnection(invalidUrl);
+                }, NUnit.Framework.Throws.InstanceOf<WebException>());
+        }
+        
+        // This test checks that when we pass valid url and trying get stream related to final redirected url, it would
+        // not be null.
+        [NUnit.Framework.Test]
+        public virtual void GetInputStreamOfFinalConnectionTest() {
+            Uri initialUrl = new Uri("http://itextpdf.com");
+            Stream streamOfFinalConnectionOfInvalidUrl = UrlUtil.GetInputStreamOfFinalConnection(initialUrl);
+            
+            NUnit.Framework.Assert.NotNull(streamOfFinalConnectionOfInvalidUrl);
         }
 
         [NUnit.Framework.Test]
