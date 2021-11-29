@@ -42,9 +42,16 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Cms;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
+using iText.Commons.Utils;
 using iText.Signatures;
+using iText.Signatures.Testutils.Client;
 using iText.Test;
+using iText.Test.Attributes;
 using iText.Test.Signutils;
 
 namespace iText.Signatures.Verify {
@@ -71,6 +78,40 @@ namespace iText.Signatures.Verify {
             IList<VerificationException> verificationExceptions = CertificateVerification.VerifyCertificates(certChain
                 , caKeyStore);
             NUnit.Framework.Assert.IsTrue(verificationExceptions.IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TimestampCertificateAndKeyStoreCorrespondTest() {
+            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
+            List<X509Certificate> caKeyStore = Pkcs12FileHelper.InitStore(tsaCertFileName, password);
+            NUnit.Framework.Assert.IsTrue(VerifyTimestampCertificates(tsaCertFileName, caKeyStore));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("certificate hash does not match certID hash.")]
+        public virtual void TimestampCertificateAndKeyStoreDoNotCorrespondTest() {
+            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
+            String notTsaCertFileName = certsSrc + "rootRsa.p12";
+            List<X509Certificate> caKeyStore = Pkcs12FileHelper.InitStore(notTsaCertFileName, password);
+            NUnit.Framework.Assert.IsFalse(VerifyTimestampCertificates(tsaCertFileName, caKeyStore));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Unexpected exception was thrown during keystore processing")]
+        public virtual void KeyStoreWithoutCertificatesTest() {
+            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
+            NUnit.Framework.Assert.IsFalse(VerifyTimestampCertificates(tsaCertFileName, null));
+        }
+
+        private static bool VerifyTimestampCertificates(String tsaClientCertificate, List<X509Certificate> caKeyStore
+            ) {
+            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaClientCertificate, password);
+            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaClientCertificate, password, password);
+            TestTsaClient testTsaClient = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
+            byte[] tsaCertificateBytes = testTsaClient.GetTimeStampToken(testTsaClient.GetMessageDigest().Digest());
+            TimeStampToken timeStampToken = new TimeStampToken(ContentInfo.GetInstance(Asn1Sequence.GetInstance(tsaCertificateBytes
+                )));
+            return CertificateVerification.VerifyTimestampCertificates(timeStampToken, caKeyStore);
         }
     }
 }
