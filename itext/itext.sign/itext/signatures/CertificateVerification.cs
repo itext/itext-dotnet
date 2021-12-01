@@ -243,7 +243,7 @@ namespace iText.Signatures {
                 }
             }
             catch (Exception e) {
-                exceptionsThrown.Add(e);
+                LOGGER.LogError(e, "Unexpected exception was thrown during keystore processing");
             }
             foreach (Exception ex in exceptionsThrown) {
                 LOGGER.LogError(ex, ex.Message);
