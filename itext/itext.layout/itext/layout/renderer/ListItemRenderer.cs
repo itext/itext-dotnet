@@ -47,7 +47,10 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
+using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -226,9 +229,11 @@ namespace iText.Layout.Renderer {
                 else {
                     symbolRenderer.Move(dxPosition, 0);
                 }
-                if (!isRtl && symbolRenderer.GetOccupiedArea().GetBBox().GetRight() > parent.GetOccupiedArea().GetBBox().GetLeft
-                    () || isRtl && symbolRenderer.GetOccupiedArea().GetBBox().GetLeft() < parent.GetOccupiedArea().GetBBox
-                    ().GetRight()) {
+                // consider page area without margins
+                Rectangle effectiveArea = ObtainEffectiveArea(drawContext);
+                // symbols are not drawn here, because they are in page margins
+                if (!isRtl && symbolRenderer.GetOccupiedArea().GetBBox().GetRight() > effectiveArea.GetLeft() || isRtl && 
+                    symbolRenderer.GetOccupiedArea().GetBBox().GetLeft() < effectiveArea.GetRight()) {
                     BeginElementOpacityApplying(drawContext);
                     symbolRenderer.Draw(drawContext);
                     EndElementOpacityApplying(drawContext);
@@ -352,6 +357,25 @@ namespace iText.Layout.Renderer {
                     GetValue() * ascenderDescender[1] / TextRenderer.TEXT_SPACE_COEFF };
             }
             return new float[] { 0, 0 };
+        }
+
+        private Rectangle ObtainEffectiveArea(DrawContext drawContext) {
+            PdfDocument pdfDocument = drawContext.GetDocument();
+            // for the time being iText creates a single symbol renderer for a list.
+            // This renderer will be used for all the items across all the pages, which mean that it could
+            // be layouted at page i and used at page j, j>i.
+            int pageNumber = parent.GetOccupiedArea().GetPageNumber();
+            Rectangle pageSize;
+            if (pageNumber != 0) {
+                PdfPage page = pdfDocument.GetPage(pageNumber);
+                pageSize = page.GetPageSize();
+            }
+            else {
+                pageSize = pdfDocument.GetDefaultPageSize();
+            }
+            Document document = new Document(pdfDocument);
+            return new Rectangle(pageSize).ApplyMargins(document.GetTopMargin(), document.GetRightMargin(), document.GetBottomMargin
+                (), document.GetLeftMargin(), false);
         }
     }
 }
