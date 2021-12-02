@@ -357,7 +357,6 @@ namespace iText.Kernel.Pdf.Tagging {
             StructureTreeCopier.StructElemCopyingParams copyingParams) {
             PdfDictionary copied;
             if (copyingParams.IsCopyFromDestDocument()) {
-                //TODO: detect wether object is needed to be cloned at all
                 copied = source.Clone(ignoreKeysForClone);
                 if (source.IsIndirect()) {
                     copied.MakeIndirect(copyingParams.GetToDocument());
