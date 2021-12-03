@@ -188,8 +188,8 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual void StartMarginsCollapse(Rectangle parentBBox) {
-            collapseInfo.GetCollapseBefore().JoinMargin(GetModelTopMargin(renderer));
-            collapseInfo.GetCollapseAfter().JoinMargin(GetModelBottomMargin(renderer));
+            collapseInfo.GetCollapseBefore().JoinMargin(DefineTopMarginValueForCollapse(renderer));
+            collapseInfo.GetCollapseAfter().JoinMargin(DefineBottomMarginValueForCollapse(renderer));
             if (!FirstChildMarginAdjoinedToParent(renderer)) {
                 float topIndent = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
                 ApplyTopMargin(parentBBox, topIndent);
@@ -231,7 +231,7 @@ namespace iText.Layout.Margincollapse {
             else {
                 ownCollapseAfter = new MarginsCollapse();
             }
-            ownCollapseAfter.JoinMargin(GetModelBottomMargin(renderer));
+            ownCollapseAfter.JoinMargin(DefineBottomMarginValueForCollapse(renderer));
             collapseInfo.SetOwnCollapseAfter(ownCollapseAfter);
             if (collapseInfo.IsSelfCollapsing()) {
                 if (prevChildMarginInfo != null) {
@@ -509,33 +509,19 @@ namespace iText.Layout.Margincollapse {
         }
 
         private static bool HasTopPadding(IRenderer renderer) {
-            UnitValue padding = renderer.GetModelElement().GetProperty<UnitValue>(Property.PADDING_TOP);
-            if (null != padding && !padding.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
-                    , Property.PADDING_TOP));
-            }
-            return padding != null && padding.GetValue() > 0;
+            return iText.Layout.Margincollapse.MarginsCollapseHandler.HasPadding(renderer, Property.PADDING_TOP);
         }
 
         private static bool HasBottomPadding(IRenderer renderer) {
-            UnitValue padding = renderer.GetModelElement().GetProperty<UnitValue>(Property.PADDING_BOTTOM);
-            if (null != padding && !padding.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
-                    , Property.PADDING_BOTTOM));
-            }
-            return padding != null && padding.GetValue() > 0;
+            return iText.Layout.Margincollapse.MarginsCollapseHandler.HasPadding(renderer, Property.PADDING_BOTTOM);
         }
 
         private static bool HasTopBorders(IRenderer renderer) {
-            IPropertyContainer modelElement = renderer.GetModelElement();
-            return modelElement.HasProperty(Property.BORDER_TOP) || modelElement.HasProperty(Property.BORDER);
+            return iText.Layout.Margincollapse.MarginsCollapseHandler.HasBorders(renderer, Property.BORDER_TOP);
         }
 
         private static bool HasBottomBorders(IRenderer renderer) {
-            IPropertyContainer modelElement = renderer.GetModelElement();
-            return modelElement.HasProperty(Property.BORDER_BOTTOM) || modelElement.HasProperty(Property.BORDER);
+            return iText.Layout.Margincollapse.MarginsCollapseHandler.HasBorders(renderer, Property.BORDER_BOTTOM);
         }
 
         private static bool RendererIsFloated(IRenderer renderer) {
@@ -546,42 +532,61 @@ namespace iText.Layout.Margincollapse {
             return floatPropertyValue != null && !floatPropertyValue.Equals(FloatPropertyValue.NONE);
         }
 
-        private static float GetModelTopMargin(IRenderer renderer) {
-            UnitValue marginUV = renderer.GetModelElement().GetProperty<UnitValue>(Property.MARGIN_TOP);
-            if (null != marginUV && !marginUV.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
-                    , Property.MARGIN_TOP));
-            }
-            // TODO Concerning "renderer instanceof CellRenderer" check: may be try to apply more general solution in future
-            return marginUV != null && !(renderer is CellRenderer) ? marginUV.GetValue() : 0;
+        private static float DefineTopMarginValueForCollapse(IRenderer renderer) {
+            return iText.Layout.Margincollapse.MarginsCollapseHandler.DefineMarginValueForCollapse(renderer, Property.
+                MARGIN_TOP);
         }
 
         private static void IgnoreModelTopMargin(IRenderer renderer) {
-            renderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(0f));
+            iText.Layout.Margincollapse.MarginsCollapseHandler.OverrideModelTopMargin(renderer, 0f);
         }
 
         private static void OverrideModelTopMargin(IRenderer renderer, float collapsedMargins) {
-            renderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(collapsedMargins));
+            iText.Layout.Margincollapse.MarginsCollapseHandler.OverrideModelMargin(renderer, Property.MARGIN_TOP, collapsedMargins
+                );
         }
 
-        private static float GetModelBottomMargin(IRenderer renderer) {
-            UnitValue marginUV = renderer.GetModelElement().GetProperty<UnitValue>(Property.MARGIN_BOTTOM);
-            if (null != marginUV && !marginUV.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
-                    , Property.MARGIN_TOP));
-            }
-            // TODO Concerning "renderer instanceof CellRenderer" check: may be try to apply more general solution in future
-            return marginUV != null && !(renderer is CellRenderer) ? marginUV.GetValue() : 0;
+        private static float DefineBottomMarginValueForCollapse(IRenderer renderer) {
+            return iText.Layout.Margincollapse.MarginsCollapseHandler.DefineMarginValueForCollapse(renderer, Property.
+                MARGIN_BOTTOM);
         }
 
         private static void IgnoreModelBottomMargin(IRenderer renderer) {
-            renderer.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(0f));
+            iText.Layout.Margincollapse.MarginsCollapseHandler.OverrideModelBottomMargin(renderer, 0f);
         }
 
         private static void OverrideModelBottomMargin(IRenderer renderer, float collapsedMargins) {
-            renderer.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(collapsedMargins));
+            iText.Layout.Margincollapse.MarginsCollapseHandler.OverrideModelMargin(renderer, Property.MARGIN_BOTTOM, collapsedMargins
+                );
+        }
+
+        private static float DefineMarginValueForCollapse(IRenderer renderer, int property) {
+            UnitValue marginUV = renderer.GetModelElement().GetProperty<UnitValue>(property);
+            if (null != marginUV && !marginUV.IsPointValue()) {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , property));
+            }
+            return marginUV != null && !(renderer is CellRenderer) ? marginUV.GetValue() : 0;
+        }
+
+        private static void OverrideModelMargin(IRenderer renderer, int property, float collapsedMargins) {
+            renderer.SetProperty(property, UnitValue.CreatePointValue(collapsedMargins));
+        }
+
+        private static bool HasPadding(IRenderer renderer, int property) {
+            UnitValue padding = renderer.GetModelElement().GetProperty<UnitValue>(property);
+            if (null != padding && !padding.IsPointValue()) {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , property));
+            }
+            return padding != null && padding.GetValue() > 0;
+        }
+
+        private static bool HasBorders(IRenderer renderer, int property) {
+            IPropertyContainer modelElement = renderer.GetModelElement();
+            return modelElement.HasProperty(property) || modelElement.HasProperty(Property.BORDER);
         }
     }
 }
