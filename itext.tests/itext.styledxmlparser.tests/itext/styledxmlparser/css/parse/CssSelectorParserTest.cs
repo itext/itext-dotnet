@@ -21,15 +21,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
+using iText.StyledXmlParser.Exceptions;
+using iText.Test;
 
-namespace iText.StyledXmlParser.Exceptions {
-    /// <summary>Class containing constants to be used in exceptions in the SXP module.</summary>
-    public sealed class StyledXmlParserExceptionMessage {
-        public const String INVALID_TOKEN_AT_THE_BEGINNING_OF_SELECTOR = "Invalid token detected at the beginning of the selector string: \"{0}\"";
-
-        public const String READING_BYTE_LIMIT_MUST_NOT_BE_LESS_ZERO = "The reading byte limit argument must not be less than zero.";
-
-        private StyledXmlParserExceptionMessage() {
+namespace iText.StyledXmlParser.Css.Parse {
+    public class CssSelectorParserTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void SelectorBeginsWithSpaceTest() {
+            String space = " ";
+            String selectorWithSpaceAtTheBeginning = space + ".spaceBefore";
+            Exception expectedException = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => CssSelectorParser
+                .ParseSelectorItems(selectorWithSpaceAtTheBeginning));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXmlParserExceptionMessage.INVALID_TOKEN_AT_THE_BEGINNING_OF_SELECTOR
+                , space), expectedException.Message);
         }
     }
 }
