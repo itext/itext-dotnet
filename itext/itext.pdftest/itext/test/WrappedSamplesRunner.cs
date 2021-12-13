@@ -174,7 +174,7 @@ namespace iText.Test {
             }
         }
 
-        private void RunMain() {
+        protected void RunMain() {
             MethodInfo mainMethod = GetMain(sampleClassParams.sampleType);
             if (mainMethod == null) {
                 throw new ArgumentException("Class must have main method.");
