@@ -207,7 +207,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             pkcs7input[22] = two;
             pkcs7input[23] = one;
             MemoryStream baos = new MemoryStream();
-            DerOutputStream k = new Org.BouncyCastle.Asn1.Asn1OutputStream(baos);
+            DerOutputStream k = DerOutputStream.Create(baos, Org.BouncyCastle.Asn1.Asn1Encodable.Der);
             Asn1Object obj = CreateDERForRecipient(pkcs7input, (X509Certificate)certificate);
             k.WriteObject(obj);
             cms = baos.ToArray();
