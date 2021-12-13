@@ -43,6 +43,9 @@ address: sales@itextpdf.com
 
 using System;
 using System.IO;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.X509;
@@ -61,6 +64,29 @@ namespace iText.Kernel.Crypto {
         public static ICipherParameters ReadPrivateKeyFromPkcs12KeyStore(Stream keyStore, String pkAlias, char[] pkPassword) {
             return new Pkcs12Store(keyStore, pkPassword).GetKey(pkAlias).Key;
         }
+        
+        /// <summary>
+        /// Creates <see cref="DerOutputStream"/> instance which can be an implementation of one of the ASN1 encodings
+        /// writing logic. This method also asserts for unexpected ASN1 encodings.
+        /// </summary>
+        /// <param name="outputStream">the underlying stream</param>
+        /// <param name="asn1Encoding">ASN1 encoding that will be used for writing. Only DER and BER are allowed as values.</param>
+        /// <returns>a <see cref="DerOutputStream"/> instance. Exact stream implementation is chosen based on passed encoding.</returns>
+        /// <exception cref="NotSupportedException"></exception>
+        public static DerOutputStream CreateAsn1OutputStream(Stream outputStream, String asn1Encoding) {
+            if (Asn1Encodable.Ber.Equals(asn1Encoding)) {
+                return new Asn1OutputStream(outputStream);
+            }
+
+            if (Asn1Encodable.Der.Equals(asn1Encoding)) {
+                return new DerOutputStream(outputStream);
+            }
+
+            throw new NotSupportedException(
+                MessageFormatUtil.Format(KernelExceptionMessageConstant.UNSUPPORTED_ASN1_ENCODING, asn1Encoding)
+            );
+        }
+
 
     }
 }

@@ -51,6 +51,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.IO.Util;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
@@ -207,7 +208,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             pkcs7input[22] = two;
             pkcs7input[23] = one;
             MemoryStream baos = new MemoryStream();
-            DerOutputStream k = DerOutputStream.Create(baos, Org.BouncyCastle.Asn1.Asn1Encodable.Der);
+            DerOutputStream k = CryptoUtil.CreateAsn1OutputStream(baos, Org.BouncyCastle.Asn1.Asn1Encodable.Der);
             Asn1Object obj = CreateDERForRecipient(pkcs7input, (X509Certificate)certificate);
             k.WriteObject(obj);
             cms = baos.ToArray();

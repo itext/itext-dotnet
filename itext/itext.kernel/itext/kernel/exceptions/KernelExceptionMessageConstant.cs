@@ -29,26 +29,22 @@ namespace iText.Kernel.Exceptions {
 
         public const String ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE = "Annotation shall have reference to page.";
 
-        public const String APPEND_MODE_REQUIRES_A_DOCUMENT_WITHOUT_ERRORS_EVEN_IF_RECOVERY_IS_POSSIBLE = "Append "
-             + "mode requires a document without errors, even if recovery is possible.";
+        public const String APPEND_MODE_REQUIRES_A_DOCUMENT_WITHOUT_ERRORS_EVEN_IF_RECOVERY_IS_POSSIBLE = "Append mode requires a document without errors, even if recovery is possible.";
 
         public const String BAD_CERTIFICATE_AND_KEY = "Bad public key certificate and/or private key.";
 
-        public const String BAD_USER_PASSWORD = "Bad user password. Password is not provided or wrong password " +
-             "provided. Correct password should be passed to PdfReader constructor with properties. " + "See ReaderProperties#setPassword() method.";
+        public const String BAD_USER_PASSWORD = "Bad user password. Password is not provided or wrong password provided. Correct password should be passed "
+             + "to PdfReader constructor with properties. See ReaderProperties#setPassword() method.";
 
         public const String CANNOT_ADD_KID_TO_THE_FLUSHED_ELEMENT = "Cannot add kid to the flushed element.";
 
-        public const String CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS = "{0} cannot be embedded due to " + 
-            "licensing restrictions.";
+        public const String CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS = "{0} cannot be embedded due to licensing restrictions.";
 
         public const String CANNOT_CLOSE_DOCUMENT = "Cannot close document.";
 
-        public const String CANNOT_CLOSE_DOCUMENT_WITH_ALREADY_FLUSHED_PDF_CATALOG = "Cannot close document with "
-             + "already flushed PDF Catalog.";
+        public const String CANNOT_CLOSE_DOCUMENT_WITH_ALREADY_FLUSHED_PDF_CATALOG = "Cannot close document with already flushed PDF Catalog.";
 
-        public const String CANNOT_CONVERT_PDF_ARRAY_TO_AN_ARRAY_OF_BOOLEANS = "Cannot convert PdfArray to an " + 
-            "array of booleans";
+        public const String CANNOT_CONVERT_PDF_ARRAY_TO_AN_ARRAY_OF_BOOLEANS = "Cannot convert PdfArray to an array of booleans";
 
         public const String CANNOT_CONVERT_PDF_ARRAY_TO_DOUBLE_ARRAY = "Cannot convert PdfArray to an array " + "of doubles.";
 
@@ -470,12 +466,14 @@ namespace iText.Kernel.Exceptions {
 
         public const String UNKNOWN_PDF_EXCEPTION = "Unknown PdfException.";
 
+        public const String UNSUPPORTED_ASN1_ENCODING = "Unknown ASN1-encoding {0}. Only DER and BER encodings are supported!";
+
         public const String UNSUPPORTED_FONT_EMBEDDING_STRATEGY = "Unsupported font embedding strategy.";
 
         public const String UNSUPPORTED_XOBJECT_TYPE = "Unsupported XObject type.";
 
         public const String WHEN_ADDING_OBJECT_REFERENCE_TO_THE_TAG_TREE_IT_MUST_BE_CONNECTED_TO_NOT_FLUSHED_OBJECT
-             = "" + "When adding object reference to the tag tree, it must be connected to not flushed object.";
+             = "When adding object reference to the tag tree, it must be connected to not flushed object.";
 
         public const String WHITE_POINT_IS_INCORRECTLY_SPECIFIED = "White point is incorrectly specified.";
 
