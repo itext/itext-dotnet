@@ -146,6 +146,7 @@ namespace iText.IO.Logs {
              + " profile, the {0} error with message \"{1}\" occurred, the ICC profile will not be installed in the "
              + "image.";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
 
         public const String ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED = "Element was placed in a forced way. Keep with next property will be ignored";
