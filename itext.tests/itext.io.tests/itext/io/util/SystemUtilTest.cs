@@ -155,5 +155,18 @@ namespace iText.IO.Util {
             NUnit.Framework.Assert.False(result);
             NUnit.Framework.Assert.True(FileUtil.FileExists(diff));
         }
+        
+        [NUnit.Framework.Test]
+        public void RunProcessAndGetProcessInfoTest() {
+            String imageMagickPath = SystemUtil.GetEnvironmentVariable(ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE);
+            if (imageMagickPath == null) {
+                imageMagickPath = SystemUtil.GetEnvironmentVariable(ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY);
+            }
+
+            ProcessInfo processInfo = SystemUtil.RunProcessAndGetProcessInfo(imageMagickPath,"--version");
+
+            NUnit.Framework.Assert.NotNull(processInfo);
+            NUnit.Framework.Assert.AreEqual(0, processInfo.GetExitCode());
+        }
     }
 }
