@@ -146,6 +146,35 @@ namespace iText.Signatures {
                 (DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar(pkcs7.GetOcsp().ProducedAt))), EPS);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void VerifyTimestampImprintSimpleSignatureTest() {
+            PdfDocument outDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "simpleSignature.pdf"));
+            PdfPKCS7 pkcs7 = new SignatureUtil(outDocument).ReadSignatureData("Signature1");
+            NUnit.Framework.Assert.IsFalse(pkcs7.VerifyTimestampImprint());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyTimestampImprintTimeStampSignatureTest() {
+            PdfDocument outDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timeStampSignature.pdf"));
+            PdfPKCS7 pkcs7 = new SignatureUtil(outDocument).ReadSignatureData("timestampSig1");
+            NUnit.Framework.Assert.IsFalse(pkcs7.VerifyTimestampImprint());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyTimestampImprintEmbeddedTimeStampSignatureTest() {
+            PdfDocument outDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "embeddedTimeStampSignature.pdf"));
+            PdfPKCS7 pkcs7 = new SignatureUtil(outDocument).ReadSignatureData("Signature1");
+            NUnit.Framework.Assert.IsTrue(pkcs7.VerifyTimestampImprint());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyTimestampImprintCorruptedTimeStampSignatureTest() {
+            PdfDocument outDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "embeddedTimeStampCorruptedSignature.pdf"
+                ));
+            PdfPKCS7 pkcs7 = new SignatureUtil(outDocument).ReadSignatureData("Signature1");
+            NUnit.Framework.Assert.IsTrue(pkcs7.VerifyTimestampImprint());
+        }
+
         // PdfPKCS7 is created here the same way it's done in PdfSigner#signDetached
         private static PdfPKCS7 CreateSimplePdfPKCS7() {
             return new PdfPKCS7(null, chain, DigestAlgorithms.SHA256, false);
