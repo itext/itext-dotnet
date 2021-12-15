@@ -20,7 +20,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Processors;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Ecosystem;
 using iText.Commons.Exceptions;
@@ -29,14 +31,20 @@ using iText.Test;
 
 namespace iText.Commons.Actions {
     public class ProductEventHandlerTest : ExtendedITextTest {
+        [NUnit.Framework.SetUp]
+        public virtual void ClearProcessors() {
+            ProductEventHandler.INSTANCE.ClearProcessors();
+        }
+
         [NUnit.Framework.Test]
         public virtual void UnknownProductTest() {
             ProductEventHandler handler = ProductEventHandler.INSTANCE;
-            NUnit.Framework.Assert.That(() =>  {
-                handler.OnAcceptedEvent(new ITextTestEvent(new SequenceId(), null, "test-event", "Unknown Product"));
-            }
-            , NUnit.Framework.Throws.InstanceOf<UnknownProductException>().With.Message.EqualTo(MessageFormatUtil.Format(UnknownProductException.UNKNOWN_PRODUCT, "Unknown Product")))
-;
+            AbstractContextBasedITextEvent @event = new ITextTestEvent(new SequenceId(), null, "test-event", "Unknown Product"
+                );
+            Exception ex = NUnit.Framework.Assert.Catch(typeof(UnknownProductException), () => handler.OnAcceptedEvent
+                (@event));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(UnknownProductException.UNKNOWN_PRODUCT, "Unknown Product"
+                ), ex.Message);
         }
 
         [NUnit.Framework.Test]
@@ -82,6 +90,64 @@ namespace iText.Commons.Actions {
             NUnit.Framework.Assert.IsTrue(handler.GetEvents(sequenceId)[0] is ConfirmedEventWrapper);
             NUnit.Framework.Assert.AreEqual(@event, ((ConfirmedEventWrapper)handler.GetEvents(sequenceId)[0]).GetEvent
                 ());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RepeatEventHandlingWithFiveExceptionOnProcessingTest() {
+            ProductEventHandler handler = ProductEventHandler.INSTANCE;
+            handler.AddProcessor(new ProductEventHandlerTest.RepeatEventProcessor(5));
+            AbstractContextBasedITextEvent @event = new ITextTestEvent(new SequenceId(), null, "test", ProductNameConstant
+                .ITEXT_CORE);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ProductEventHandlerRepeatException), () => handler.OnAcceptedEvent
+                (@event));
+            NUnit.Framework.Assert.AreEqual("customMessage5", e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RepeatEventHandlingWithFourExceptionOnProcessingTest() {
+            ProductEventHandler handler = ProductEventHandler.INSTANCE;
+            handler.AddProcessor(new ProductEventHandlerTest.RepeatEventProcessor(4));
+            AbstractContextBasedITextEvent @event = new ITextTestEvent(new SequenceId(), null, "test", ProductNameConstant
+                .ITEXT_CORE);
+            NUnit.Framework.Assert.DoesNotThrow(() => handler.OnAcceptedEvent(@event));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RepeatEventHandlingWithOneExceptionOnProcessingTest() {
+            ProductEventHandler handler = ProductEventHandler.INSTANCE;
+            handler.AddProcessor(new ProductEventHandlerTest.RepeatEventProcessor(1));
+            AbstractContextBasedITextEvent @event = new ITextTestEvent(new SequenceId(), null, "test", ProductNameConstant
+                .ITEXT_CORE);
+            NUnit.Framework.Assert.DoesNotThrow(() => handler.OnAcceptedEvent(@event));
+        }
+
+        private class RepeatEventProcessor : ITextProductEventProcessor {
+            private readonly int exceptionsCount;
+
+            private int exceptionCounter = 0;
+
+            public RepeatEventProcessor(int exceptionsCount) {
+                this.exceptionsCount = exceptionsCount;
+            }
+
+            public virtual void OnEvent(AbstractProductProcessITextEvent @event) {
+                if (exceptionCounter < exceptionsCount) {
+                    exceptionCounter++;
+                    throw new ProductEventHandlerRepeatException("customMessage" + exceptionCounter);
+                }
+            }
+
+            public virtual String GetProductName() {
+                return ProductNameConstant.ITEXT_CORE;
+            }
+
+            public virtual String GetUsageType() {
+                return "someUsage";
+            }
+
+            public virtual String GetProducer() {
+                return "someProducer";
+            }
         }
     }
 }
