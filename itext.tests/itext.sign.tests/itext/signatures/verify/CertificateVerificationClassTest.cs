@@ -56,6 +56,9 @@ using iText.Test.Signutils;
 
 namespace iText.Signatures.Verify {
     public class CertificateVerificationClassTest : ExtendedITextTest {
+        // Such messageTemplate is equal to any log message. This is required for porting reasons.
+        private const String ANY_LOG_MESSAGE = "{0}";
+
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
@@ -97,7 +100,7 @@ namespace iText.Signatures.Verify {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Unexpected exception was thrown during keystore processing")]
+        [LogMessage(ANY_LOG_MESSAGE)]
         public virtual void KeyStoreWithoutCertificatesTest() {
             String tsaCertFileName = certsSrc + "tsCertRsa.p12";
             NUnit.Framework.Assert.IsFalse(VerifyTimestampCertificates(tsaCertFileName, null));
