@@ -53,6 +53,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 using iText.Layout.Margincollapse;
 using iText.Layout.Properties;
 using iText.Layout.Tagging;
@@ -162,8 +163,7 @@ namespace iText.Layout.Renderer {
                                     ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
                                     result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
                                     ILogger logger = ITextLogManager.GetLogger(typeof(RootRenderer));
-                                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""
-                                        ));
+                                    logger.LogWarning(MessageFormatUtil.Format(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                                 }
                             }
                             else {
@@ -515,8 +515,7 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
                 ILogger logger = ITextLogManager.GetLogger(typeof(RootRenderer));
                 if (logger.IsEnabled(LogLevel.Warning)) {
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""
-                        ));
+                    logger.LogWarning(MessageFormatUtil.Format(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                 }
                 return true;
             }
@@ -543,7 +542,7 @@ namespace iText.Layout.Renderer {
             toDisableKeepTogether.GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
             ILogger logger = ITextLogManager.GetLogger(typeof(RootRenderer));
             if (logger.IsEnabled(LogLevel.Warning)) {
-                logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
+                logger.LogWarning(MessageFormatUtil.Format(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
                     ));
             }
             if (!rendererIsFloat) {

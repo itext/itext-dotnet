@@ -51,6 +51,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Exceptions;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Test;
@@ -646,7 +647,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void LargeTableWithLayoutResultNothingTest02() {
             String testName = "largeTableWithLayoutResultNothingTest02.pdf";
             String outFileName = destinationFolder + testName;
@@ -858,7 +859,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void LargeTableWithCellBordersSplitTest() {
             // TODO DEVSIX-5866 at #complete left border is initialized as null
             String testName = "largeTableWithCellBordersSplitTest.pdf";
@@ -885,7 +886,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void LargeTableWithCellBordersSplitTest02() {
             // TODO DEVSIX-5866 at #complete left border is initialized as null
             String testName = "largeTableWithCellBordersSplitTest02.pdf";
@@ -1340,7 +1341,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         // TODO DEVSIX-3953 Footer is not placed on the first page in case of large table, but fits the page for a usual table
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void LargeTableFooterNotFitTest() {
             String testName = "largeTableFooterNotFitTest.pdf";
             String outFileName = destinationFolder + testName;

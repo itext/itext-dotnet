@@ -49,12 +49,13 @@ using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.Signatures.Logs;
 
 namespace iText.Signatures {
     /// <summary>This class consists of some methods that allow you to verify certificates.</summary>
     public class CertificateVerification {
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(CrlClientOnline));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(CertificateVerification));
 
         /// <summary>Verifies a single certificate for the current date.</summary>
         /// <param name="cert">the certificate to verify</param>
@@ -209,7 +210,9 @@ namespace iText.Signatures {
             try {
                 foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {
                     try {
-                        return SignUtils.IsSignatureValid(ocsp, certStoreX509);
+                        if (SignUtils.IsSignatureValid(ocsp, certStoreX509)) {
+                            return true;
+                        }
                     }
                     catch (Exception ex) {
                         exceptionsThrown.Add(ex);
@@ -219,9 +222,7 @@ namespace iText.Signatures {
             catch (Exception e) {
                 exceptionsThrown.Add(e);
             }
-            foreach (Exception ex in exceptionsThrown) {
-                LOGGER.LogError(ex, ex.Message);
-            }
+            LogExceptionMessages(exceptionsThrown);
             return false;
         }
 
@@ -243,12 +244,16 @@ namespace iText.Signatures {
                 }
             }
             catch (Exception e) {
-                LOGGER.LogError(e, "Unexpected exception was thrown during keystore processing");
+                exceptionsThrown.Add(e);
             }
-            foreach (Exception ex in exceptionsThrown) {
-                LOGGER.LogError(ex, ex.Message);
-            }
+            LogExceptionMessages(exceptionsThrown);
             return false;
+        }
+
+        private static void LogExceptionMessages(IList<Exception> exceptionsThrown) {
+            foreach (Exception ex in exceptionsThrown) {
+                LOGGER.LogError(ex, ex.Message == null ? SignLogMessageConstant.EXCEPTION_WITHOUT_MESSAGE : ex.Message);
+            }
         }
     }
 }

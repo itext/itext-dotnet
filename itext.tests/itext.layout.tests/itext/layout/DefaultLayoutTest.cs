@@ -53,6 +53,7 @@ using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -151,7 +152,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void AddParagraphOnShortPage1() {
             String outFileName = destinationFolder + "addParagraphOnShortPage1.pdf";
             String cmpFileName = sourceFolder + "cmp_addParagraphOnShortPage1.pdf";
@@ -170,7 +171,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void AddParagraphOnShortPage2() {
             String outFileName = destinationFolder + "addParagraphOnShortPage2.pdf";
             String cmpFileName = sourceFolder + "cmp_addParagraphOnShortPage2.pdf";
@@ -186,7 +187,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void AddWordOnShortPageTest01() {
             String outFileName = destinationFolder + "addWordOnShortPageTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_addWordOnShortPageTest01.pdf";

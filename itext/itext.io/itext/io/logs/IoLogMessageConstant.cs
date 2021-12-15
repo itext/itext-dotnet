@@ -71,6 +71,7 @@ namespace iText.IO.Logs {
         public const String CANNOT_ADD_HINTS_TO_FINISHED_PARENT = "Layout tagging hints addition failed: cannot add new kid hints to a parent which hint is already marked "
              + "as finished. Consider using com.itextpdf.layout.tagging.LayoutTaggingHelper#replaceKidHint " + "method for replacing not yet finished kid hint of a finished parent hint.";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String CANNOT_ADD_KID_HINT_WHICH_IS_ALREADY_ADDED_TO_ANOTHER_PARENT = "Layout tagging hints addition failed: cannot add a kid hint to a new parent if it is already added to "
              + "another parent. Consider using com.itextpdf.layout.tagging.LayoutTaggingHelper#moveHint method " +
              "instead.";
@@ -135,6 +136,7 @@ namespace iText.IO.Logs {
 
         public const String DOCUMENT_IDS_ARE_CORRUPTED = "The document original and/or modified id is corrupted";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String DOCUMENT_SERIALIZATION_EXCEPTION_RAISED = "Unhandled exception while serialization";
 
         public const String DOCUMENT_VERSION_IN_CATALOG_CORRUPTED = "The document version specified in catalog is "
@@ -144,6 +146,7 @@ namespace iText.IO.Logs {
              + " profile, the {0} error with message \"{1}\" occurred, the ICC profile will not be installed in the "
              + "image.";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
 
         public const String ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED = "Element was placed in a forced way. Keep with next property will be ignored";
@@ -242,6 +245,7 @@ namespace iText.IO.Logs {
 
         public const String INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED = "Inline block element does not fit into parent element and will be clipped";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String INPUT_STREAM_CONTENT_IS_LOST_ON_PDFSTREAM_SERIALIZATION = "PdfStream contains not null input stream. It's content will be lost in serialized object.";
 
         public const String INVALID_DISTRIBUTION_POINT = "Skipped CRL: {0}";
@@ -355,8 +359,10 @@ namespace iText.IO.Logs {
 
         public const String TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH = "Table width is more than expected due to min width of cell(s).";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String TAGGING_HINT_NOT_FINISHED_BEFORE_CLOSE = "Tagging hint wasn't finished before closing.";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String TAG_STRUCTURE_CONTEXT_WILL_BE_REINITIALIZED_ON_SERIALIZATION = "Tag structure context is not null and will be reinitialized in the copy of document. The copy may lose "
              + "some data";
 
@@ -376,16 +382,20 @@ namespace iText.IO.Logs {
              + "this means that element was added to the Canvas instance that was created not with constructor " +
              "taking PdfPage as argument. Not processed property: {0}";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String UNABLE_TO_INTERRUPT_THREAD = "Unable to interrupt a thread";
 
         public const String UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION = "Unable to invert gradient transformation, "
              + "ignoring it";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to register event data handler shutdown hook because of security reasons.";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String UNABLE_TO_SEARCH_FOR_EVENT_CONTEXT = "It is impossible to retrieve event context because of the security reasons. Event counting may behave in "
              + "unexpected way";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String UNABLE_TO_UNREGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to unregister event data handler shutdown hook because of security permissions";
 
         public const String UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING = "Unexpected behaviour during table row collapsing. Calculated rowspan was less then 1.";
@@ -396,6 +406,7 @@ namespace iText.IO.Logs {
 
         public const String UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB = "Unknown color format: must be rgb or rrggbb.";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String UNKNOWN_DIGEST_METHOD = "Unknown digest method. Valid values are MD5, SHA1 SHA256, SHA384, SHA512 and RIPEMD160.";
 
         public const String UNKNOWN_ERROR_WHILE_PROCESSING_CMAP = "Unknown error while processing CMap.";
@@ -424,6 +435,7 @@ namespace iText.IO.Logs {
 
         public const String XFDF_NO_F_OBJECT_TO_COMPARE = "Xfdf no f object to compare.";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String XFDF_OUTPUT_STREAM_CORRUPTED = "Xfdf output stream is corrupted.";
 
         public const String XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE = "Xfdf unsupported attribute type";

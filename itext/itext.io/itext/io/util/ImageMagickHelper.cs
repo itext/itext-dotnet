@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Text.RegularExpressions;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 
@@ -67,6 +68,11 @@ namespace iText.IO.Util {
         internal const String MAGICK_COMPARE_KEYWORD = "ImageMagick Studio LLC";
 
         private const String TEMP_FILE_PREFIX = "itext_im_io_temp";
+
+        private const String DIFF_PIXELS_OUTPUT_REGEXP = "^\\d+\\.*\\d*(e\\+\\d+)?";
+
+        private static readonly Regex pattern = iText.Commons.Utils.StringUtil.RegexCompile(DIFF_PIXELS_OUTPUT_REGEXP
+            );
 
         private String compareExec;
 
@@ -128,6 +134,59 @@ namespace iText.IO.Util {
         /// <returns>boolean result of comparing: true - images are visually equal</returns>
         public virtual bool RunImageMagickImageCompare(String outImageFilePath, String cmpImageFilePath, String diffImageName
             , String fuzzValue) {
+            ImageMagickCompareResult compareResult = RunImageMagickImageCompareAndGetResult(outImageFilePath, cmpImageFilePath
+                , diffImageName, fuzzValue);
+            return compareResult.IsComparingResultSuccessful();
+        }
+
+        /// <summary>
+        /// Runs imageMagick to visually compare images with the specified fuzziness value and given threshold
+        /// and generate difference output.
+        /// </summary>
+        /// <param name="outImageFilePath">Path to the output image file</param>
+        /// <param name="cmpImageFilePath">Path to the cmp image file</param>
+        /// <param name="diffImageName">Path to the difference output image file</param>
+        /// <param name="fuzzValue">
+        /// String fuzziness value to compare images. Should be formatted as string with integer
+        /// or decimal number. Can be null, if it is not required to use fuzziness
+        /// </param>
+        /// <param name="threshold">Long value of accepted threshold.</param>
+        /// <returns>boolean result of comparing: true - images are visually equal</returns>
+        public virtual bool RunImageMagickImageCompareWithThreshold(String outImageFilePath, String cmpImageFilePath
+            , String diffImageName, String fuzzValue, long threshold) {
+            ImageMagickCompareResult compareResult = RunImageMagickImageCompareAndGetResult(outImageFilePath, cmpImageFilePath
+                , diffImageName, fuzzValue);
+            if (compareResult.IsComparingResultSuccessful()) {
+                return true;
+            }
+            else {
+                return compareResult.GetDiffPixels() <= threshold;
+            }
+        }
+
+        /// <summary>Runs imageMagick to visually compare images with the specified fuzziness value and generate difference output.
+        ///     </summary>
+        /// <remarks>
+        /// Runs imageMagick to visually compare images with the specified fuzziness value and generate difference output.
+        /// This method returns an object of
+        /// <see cref="ImageMagickCompareResult"/>
+        /// , containing comparing result information,
+        /// such as boolean result value and the number of different pixels.
+        /// </remarks>
+        /// <param name="outImageFilePath">Path to the output image file</param>
+        /// <param name="cmpImageFilePath">Path to the cmp image file</param>
+        /// <param name="diffImageName">Path to the difference output image file</param>
+        /// <param name="fuzzValue">
+        /// String fuzziness value to compare images. Should be formatted as string with integer
+        /// or decimal number. Can be null, if it is not required to use fuzziness
+        /// </param>
+        /// <returns>
+        /// an object of
+        /// <see cref="ImageMagickCompareResult"/>
+        /// . containing comparing result information.
+        /// </returns>
+        public virtual ImageMagickCompareResult RunImageMagickImageCompareAndGetResult(String outImageFilePath, String
+             cmpImageFilePath, String diffImageName, String fuzzValue) {
             if (!ValidateFuzziness(fuzzValue)) {
                 throw new ArgumentException("Invalid fuzziness value: " + fuzzValue);
             }
@@ -143,11 +202,14 @@ namespace iText.IO.Util {
                 replacementDiff = FileUtil.CreateTempFile(TEMP_FILE_PREFIX, ".png").FullName;
                 String currCompareParams = fuzzValue + " '" + replacementOutFile + "' '" + replacementCmpFile + "' '" + replacementDiff
                      + "'";
-                bool result = SystemUtil.RunProcessAndWait(compareExec, currCompareParams);
+                ProcessInfo processInfo = SystemUtil.RunProcessAndGetProcessInfo(compareExec, currCompareParams);
+                bool comparingResult = processInfo.GetExitCode() == 0;
+                long diffPixels = ParseImageMagickProcessOutput(processInfo.GetProcessErrOutput());
+                ImageMagickCompareResult resultInfo = new ImageMagickCompareResult(comparingResult, diffPixels);
                 if (FileUtil.FileExists(replacementDiff)) {
                     FileUtil.Copy(replacementDiff, diffImageName);
                 }
-                return result;
+                return resultInfo;
             }
             finally {
                 FileUtil.RemoveFiles(new String[] { replacementOutFile, replacementCmpFile, replacementDiff });
@@ -168,6 +230,28 @@ namespace iText.IO.Util {
                     return false;
                 }
             }
+        }
+
+        private static long ParseImageMagickProcessOutput(String processOutput) {
+            if (null == processOutput) {
+                throw new ArgumentException(IoExceptionMessage.IMAGE_MAGICK_OUTPUT_IS_NULL);
+            }
+            if (String.IsNullOrEmpty(processOutput)) {
+                return 0L;
+            }
+            String[] processOutputLines = iText.Commons.Utils.StringUtil.Split(processOutput, "\n");
+            foreach (String line in processOutputLines) {
+                try {
+                    Matcher matcher = iText.Commons.Utils.Matcher.Match(pattern, line);
+                    if (matcher.Find()) {
+                        return (long)Double.Parse(matcher.Group(), System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                }
+                catch (FormatException) {
+                }
+            }
+            // Nothing should be done here because of the exception, that will be thrown later.
+            throw new System.IO.IOException(IoExceptionMessage.IMAGE_MAGICK_PROCESS_EXECUTION_FAILED + processOutput);
         }
     }
 }

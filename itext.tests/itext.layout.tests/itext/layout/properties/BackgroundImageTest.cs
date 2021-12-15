@@ -55,6 +55,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -173,8 +174,7 @@ namespace iText.Layout.Properties {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN
-            )]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
         public virtual void BackgroundImageWithLinearGradientAndTransformTest() {
             AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
                 GradientColorStop(ColorConstants.RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
