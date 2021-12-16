@@ -43,6 +43,10 @@ namespace iText.Commons.Actions {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.ProductEventHandler
             ));
 
+        // The constant has the following value for two reasons. First, to avoid the infinite loop.
+        // Second, to retry event processing several times for technical reasons.
+        private const int MAX_EVENT_RETRY_COUNT = 4;
+
         private readonly ConcurrentDictionary<String, ITextProductEventProcessor> processors = new ConcurrentDictionary
             <String, ITextProductEventProcessor>();
 
@@ -59,25 +63,18 @@ namespace iText.Commons.Actions {
         /// </summary>
         /// <param name="event">to handle</param>
         protected internal override void OnAcceptedEvent(AbstractContextBasedITextEvent @event) {
-            if (!(@event is AbstractProductProcessITextEvent)) {
-                return;
-            }
-            AbstractProductProcessITextEvent productEvent = (AbstractProductProcessITextEvent)@event;
-            String productName = productEvent.GetProductName();
-            ITextProductEventProcessor productEventProcessor = GetActiveProcessor(productName);
-            if (productEventProcessor == null) {
-                throw new UnknownProductException(MessageFormatUtil.Format(UnknownProductException.UNKNOWN_PRODUCT, productName
-                    ));
-            }
-            productEventProcessor.OnEvent(productEvent);
-            if (productEvent.GetSequenceId() != null) {
-                if (productEvent is ConfirmEvent) {
-                    WrapConfirmedEvent((ConfirmEvent)productEvent, productEventProcessor);
+            for (int i = 0; i < MAX_EVENT_RETRY_COUNT; i++) {
+                try {
+                    TryProcessEvent(@event);
+                    // process succeeded
+                    return;
                 }
-                else {
-                    AddEvent(productEvent.GetSequenceId(), productEvent);
+                catch (ProductEventHandlerRepeatException) {
                 }
             }
+            // ignore this exception to retry the processing
+            // the final processing retry
+            TryProcessEvent(@event);
         }
 
         internal ITextProductEventProcessor AddProcessor(ITextProductEventProcessor processor) {
@@ -130,6 +127,28 @@ namespace iText.Commons.Actions {
                     events.Put(id, listOfEvents);
                 }
                 listOfEvents.Add(@event);
+            }
+        }
+
+        private void TryProcessEvent(AbstractContextBasedITextEvent @event) {
+            if (!(@event is AbstractProductProcessITextEvent)) {
+                return;
+            }
+            AbstractProductProcessITextEvent productEvent = (AbstractProductProcessITextEvent)@event;
+            String productName = productEvent.GetProductName();
+            ITextProductEventProcessor productEventProcessor = GetActiveProcessor(productName);
+            if (productEventProcessor == null) {
+                throw new UnknownProductException(MessageFormatUtil.Format(UnknownProductException.UNKNOWN_PRODUCT, productName
+                    ));
+            }
+            productEventProcessor.OnEvent(productEvent);
+            if (productEvent.GetSequenceId() != null) {
+                if (productEvent is ConfirmEvent) {
+                    WrapConfirmedEvent((ConfirmEvent)productEvent, productEventProcessor);
+                }
+                else {
+                    AddEvent(productEvent.GetSequenceId(), productEvent);
+                }
             }
         }
 
