@@ -109,15 +109,18 @@ namespace iText.Signatures {
         /// <returns>
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
-        /// that identifies type of the wrapped dictionary, returns null if it is not explicitly specified.
+        /// that identifies type of the wrapped dictionary,
+        /// returns null if it is not explicitly specified.
         /// </returns>
         public virtual PdfName GetType() {
             return GetPdfObject().GetAsName(PdfName.Type);
         }
 
         /// <summary>Sets the /ByteRange.</summary>
-        /// <param name="range">an array of pairs of integers that specifies the byte range used in the digest calculation. A pair consists of the starting byte offset and the length
-        ///     </param>
+        /// <param name="range">
+        /// an array of pairs of integers that specifies the byte range used in the digest calculation.
+        /// A pair consists of the starting byte offset and the length
+        /// </param>
         public virtual void SetByteRange(int[] range) {
             PdfArray array = new PdfArray();
             for (int k = 0; k < range.Length; ++k) {
@@ -127,8 +130,10 @@ namespace iText.Signatures {
         }
 
         /// <summary>Gets the /ByteRange.</summary>
-        /// <returns>an array of pairs of integers that specifies the byte range used in the digest calculation. A pair consists of the starting byte offset and the length.
-        ///     </returns>
+        /// <returns>
+        /// an array of pairs of integers that specifies the byte range used in the digest calculation.
+        /// A pair consists of the starting byte offset and the length.
+        /// </returns>
         public virtual PdfArray GetByteRange() {
             return GetPdfObject().GetAsArray(PdfName.ByteRange);
         }

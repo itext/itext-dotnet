@@ -240,7 +240,7 @@ namespace iText.Signatures {
         ///     "/>
         public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
              signDate) {
-            // we'll verify agains the rootstore (if present)
+            // we'll verify against the rootstore (if present)
             RootStoreVerifier rootStoreVerifier = new RootStoreVerifier(verifier);
             rootStoreVerifier.SetRootStore(rootStore);
             // We'll verify against a list of CRLs

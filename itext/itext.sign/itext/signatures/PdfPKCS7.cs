@@ -731,10 +731,8 @@ namespace iText.Signatures {
                 }
                 DerSet dercertificates = new DerSet(v);
                 // Create signerinfo structure.
-                //
                 Asn1EncodableVector signerinfo = new Asn1EncodableVector();
                 // Add the signerInfo version
-                //
                 signerinfo.Add(new DerInteger(signerversion));
                 v = new Asn1EncodableVector();
                 v.Add(CertificateInfo.GetIssuer(signCert.GetTbsCertificate()));
