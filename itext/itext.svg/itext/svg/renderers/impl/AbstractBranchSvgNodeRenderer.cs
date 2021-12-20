@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.IO.Source;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -113,7 +114,22 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 CleanUp(context);
                 // Transformation already happened in AbstractSvgNodeRenderer, so no need to do a transformation here
-                context.GetCurrentCanvas().AddXObject(xObject, 0, 0);
+                AddXObject(context.GetCurrentCanvas(), xObject, 0, 0);
+            }
+        }
+
+        //TODO: DEVSIX-5731 Replace this workaround method with PdfCanvas::addXObjectAt
+        internal static void AddXObject(PdfCanvas canvas, PdfXObject xObject, float x, float y) {
+            if (xObject is PdfFormXObject) {
+                canvas.SaveState();
+                canvas.ConcatMatrix(1, 0, 0, 1, x, y);
+                PdfName name = canvas.GetResources().AddForm((PdfFormXObject)xObject);
+                canvas.GetContentStream().GetOutputStream().Write(name).WriteSpace().WriteBytes(ByteUtils.GetIsoBytes("Do\n"
+                    ));
+                canvas.RestoreState();
+            }
+            else {
+                canvas.AddXObjectAt(xObject, x, y);
             }
         }
 

@@ -47,6 +47,9 @@ using iText.Test;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
     public class UriResolverTest : ExtendedITextTest {
+        
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/com/itextpdfstyledxmlparser/resolver/resource/UriResolverTest/";
 
         [NUnit.Framework.Test]
         public virtual void UriResolverTest01() {
@@ -106,6 +109,15 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             String parentFolder = new Uri(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).ToExternalForm() + "/";
             TestPaths(parentFolder, resolver);
         }
+        
+        [NUnit.Framework.Test]
+        public virtual void ResolveAgainstBaseUriTest() {
+            String baseUrl = "https://test";
+            UriResolver resolver = new UriResolver(SOURCE_FOLDER);
+        resolver.ResolveAgainstBaseUri(baseUrl);
+        NUnit.Framework.Assert.IsTrue(resolver.IsLocalBaseUri());
+        NUnit.Framework.Assert.IsTrue(resolver.GetBaseUri().StartsWith("file:"));
+    }
 
         [NUnit.Framework.Test]
         public virtual void UriResolverTest07() {

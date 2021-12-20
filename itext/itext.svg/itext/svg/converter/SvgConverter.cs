@@ -1065,14 +1065,15 @@ namespace iText.Svg.Converter {
         * This method is kept private, because there is little purpose in exposing it.
         */
         private static void Draw(PdfFormXObject pdfForm, PdfCanvas canvas) {
-            canvas.AddXObject(pdfForm, 0, 0);
+            Draw(pdfForm, canvas, 0, 0);
         }
 
         /*
         * This method is kept private, because there is little purpose in exposing it.
         */
-        private static void Draw(PdfFormXObject pdfForm, PdfCanvas canvas, float x, float y) {
-            canvas.AddXObject(pdfForm, x, y);
+        internal static void Draw(PdfFormXObject pdfForm, PdfCanvas canvas, float x, float y) {
+            canvas.AddXObjectAt(pdfForm, x + (pdfForm.GetBBox() == null ? 0 : pdfForm.GetBBox().GetAsNumber(0).FloatValue
+                ()), y + (pdfForm.GetBBox() == null ? 0 : pdfForm.GetBBox().GetAsNumber(1).FloatValue()));
         }
 
         /// <summary>

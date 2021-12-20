@@ -50,7 +50,6 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Svg;
-using iText.Svg.Exceptions;
 using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
@@ -71,6 +70,9 @@ namespace iText.Svg.Renderers.Impl {
 
         public virtual Color CreateColor(SvgDrawContext context, Rectangle objectBoundingBox, float objectBoundingBoxMargin
             , float parentOpacity) {
+            if (objectBoundingBox == null) {
+                return null;
+            }
             if (!context.PushPatternId(GetAttribute(SvgConstants.Attributes.ID))) {
                 // this means that pattern is cycled
                 return null;
@@ -86,7 +88,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+            return null;
         }
 
         private PdfPattern.Tiling CreateTilingPattern(SvgDrawContext context, Rectangle objectBoundingBox) {

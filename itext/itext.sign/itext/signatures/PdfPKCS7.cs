@@ -635,7 +635,7 @@ namespace iText.Signatures {
                     digest = sig.GenerateSignature();
                 }
                 MemoryStream bOut = new MemoryStream();
-                Asn1OutputStream dout = new Asn1OutputStream(bOut);
+                DerOutputStream dout = new Org.BouncyCastle.Asn1.Asn1OutputStream(bOut);
                 dout.WriteObject(new DerOctetString(digest));
                 dout.Dispose();
                 return bOut.ToArray();
@@ -785,7 +785,7 @@ namespace iText.Signatures {
                 whole.Add(new DerObjectIdentifier(SecurityIDs.ID_PKCS7_SIGNED_DATA));
                 whole.Add(new DerTaggedObject(0, new DerSequence(body)));
                 MemoryStream bOut = new MemoryStream();
-                Asn1OutputStream dout = new Asn1OutputStream(bOut);
+                DerOutputStream dout = new Org.BouncyCastle.Asn1.Asn1OutputStream(bOut);
                 dout.WriteObject(new DerSequence(whole));
                 dout.Dispose();
                 return bOut.ToArray();
@@ -1050,7 +1050,7 @@ namespace iText.Signatures {
         /// <summary>Checks if the timestamp refers to this document.</summary>
         /// <returns>true if it checks false otherwise</returns>
         public virtual bool VerifyTimestampImprint() {
-            // TODO ensure this method works correctly
+            // TODO DEVSIX-6011 ensure this method works correctly
             if (timeStampToken == null) {
                 return false;
             }

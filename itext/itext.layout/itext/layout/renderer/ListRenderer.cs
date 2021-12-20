@@ -239,7 +239,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? StandardFonts.SYMBOL : StandardFonts.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_222(constantFont, textElement);
+                            textRenderer = new ListRenderer.ConstantFontTextRenderer(textElement, constantFont);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -267,24 +267,6 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-        }
-
-        private sealed class _TextRenderer_222 : TextRenderer {
-            public _TextRenderer_222(String constantFont, Text baseArg1)
-                : base(baseArg1) {
-                this.constantFont = constantFont;
-            }
-
-            public override void Draw(DrawContext drawContext) {
-                try {
-                    this.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
-                }
-                catch (System.IO.IOException) {
-                }
-                base.Draw(drawContext);
-            }
-
-            private readonly String constantFont;
         }
 
         // Wrap the bullet with a line because the direction (f.e. RTL) is processed on the LineRenderer level.
@@ -471,6 +453,25 @@ namespace iText.Layout.Renderer {
                 }
             }
             return null;
+        }
+
+        private sealed class ConstantFontTextRenderer : TextRenderer {
+            private String constantFontName;
+
+            public ConstantFontTextRenderer(Text textElement, String font)
+                : base(textElement) {
+                constantFontName = font;
+            }
+
+            public override void Draw(DrawContext drawContext) {
+                try {
+                    SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFontName));
+                }
+                catch (System.IO.IOException) {
+                }
+                // Do nothing
+                base.Draw(drawContext);
+            }
         }
     }
 }

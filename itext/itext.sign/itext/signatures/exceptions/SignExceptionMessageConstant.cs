@@ -45,6 +45,8 @@ namespace iText.Signatures.Exceptions {
 
         public const String DOCUMENT_MUST_BE_PRE_CLOSED = "Document must be preClosed.";
 
+        public const String DOCUMENT_MUST_HAVE_READER = "Document must have reader.";
+
         public const String FAILED_TO_GET_TSA_RESPONSE = "Failed to get TSA response from {0}.";
 
         public const String FIELD_ALREADY_SIGNED = "Field has been already signed.";
@@ -64,8 +66,12 @@ namespace iText.Signatures.Exceptions {
         public const String NOT_A_VALID_PKCS7_OBJECT_NOT_SIGNED_DATA = "Not a valid PKCS#7 object - not signed " +
              "data.";
 
+        public const String NOT_ENOUGH_SPACE = "Not enough space.";
+
         public const String SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT = "Signature "
              + "with name {0} is not the last. It doesn't cover the whole document.";
+
+        public const String THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL = "The name of the digest algorithm is null.";
 
         public const String THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME = "There is no field in the document "
              + "with such name: {0}.";
@@ -78,6 +84,8 @@ namespace iText.Signatures.Exceptions {
 
         public const String THIS_TSA_FAILED_TO_RETURN_TIME_STAMP_TOKEN = "TSA {0} failed to return time stamp " + 
             "token: {1}.";
+
+        public const String TOO_BIG_KEY = "The key is too big.";
 
         public const String UNEXPECTED_CLOSE_BRACKET = "Unexpected close bracket.";
 

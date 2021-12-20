@@ -97,7 +97,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public virtual Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+            return null;
         }
 
         internal virtual AffineTransform CalculateTransformation(SvgDrawContext context) {

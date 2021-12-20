@@ -65,6 +65,14 @@ namespace iText.Commons
             return value;
         }
 
+        public static T JRemoveFirst<T>(this LinkedList<T> list)
+        {
+            T value = list.First.Value;
+            list.RemoveFirst();
+
+            return value;
+        }
+
         public static List<T> SubList<T>(this IList<T> list, int fromIndex, int toIndex) {
             if (list is SingletonList<T>) {
                 if (fromIndex == 0 && toIndex >= 1) {

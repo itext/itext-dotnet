@@ -147,7 +147,7 @@ namespace iText.Pdfa.Checker {
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
                     PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new _CanvasGraphicsState_191(extGStateDict);
+                    CanvasGraphicsState gState = new PdfA2Checker.UpdateCanvasGraphicsState(extGStateDict);
                     CheckExtGState(gState, contentStream);
                 }
                 else {
@@ -157,17 +157,6 @@ namespace iText.Pdfa.Checker {
                 }
             }
             base.CheckColor(color, currentColorSpaces, fill, contentStream);
-        }
-
-        private sealed class _CanvasGraphicsState_191 : CanvasGraphicsState {
-            public _CanvasGraphicsState_191(PdfDictionary extGStateDict) {
-                this.extGStateDict = extGStateDict;
- {
-                    this.UpdateFromExtGState(new PdfExtGState(extGStateDict));
-                }
-            }
-
-            private readonly PdfDictionary extGStateDict;
         }
 
         public override void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
@@ -1098,6 +1087,12 @@ namespace iText.Pdfa.Checker {
                         CheckFormXObject(type3Glyph.GetContentStream(), contentStream);
                     }
                 }
+            }
+        }
+
+        private sealed class UpdateCanvasGraphicsState : CanvasGraphicsState {
+            public UpdateCanvasGraphicsState(PdfDictionary extGStateDict) {
+                UpdateFromExtGState(new PdfExtGState(extGStateDict));
             }
         }
     }

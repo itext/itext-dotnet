@@ -46,12 +46,15 @@ using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.Commons.Utils;
+using iText.Forms;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Test;
+using iText.Test.Pdfa;
 using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
@@ -98,8 +101,24 @@ namespace iText.Signatures.Sign {
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
                 , rect, false, false, PdfSigner.NOT_CERTIFIED, 12f);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(dest, sourceFolder + "cmp_" + fileName
+                ));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
                 , "diff_", GetTestMap(new Rectangle(67, 575, 155, 15))));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SigningPdfA2DocumentTest() {
+            String src = sourceFolder + "simplePdfA2Document.pdf";
+            String @out = destinationFolder + "signedPdfA2Document.pdf";
+            PdfReader reader = new PdfReader(new FileStream(src, FileMode.Open, FileAccess.Read));
+            PdfSigner signer = new PdfSigner(reader, new FileStream(@out, FileMode.Create), new StampingProperties());
+            signer.SetFieldLockDict(new PdfSigFieldLock());
+            signer.SetCertificationLevel(PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED);
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(@out));
         }
 
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
@@ -139,7 +158,7 @@ namespace iText.Signatures.Sign {
 
         private static IDictionary<int, IList<Rectangle>> GetTestMap(Rectangle ignoredArea) {
             IDictionary<int, IList<Rectangle>> result = new Dictionary<int, IList<Rectangle>>();
-            result.Put(1, JavaUtil.ArraysAsList(ignoredArea));
+            result.Put(1, JavaCollectionsUtil.SingletonList(ignoredArea));
             return result;
         }
     }

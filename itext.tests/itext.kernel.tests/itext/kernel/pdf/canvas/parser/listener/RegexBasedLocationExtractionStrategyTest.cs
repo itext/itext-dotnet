@@ -287,5 +287,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             pdfDocument.Close();
             NUnit.Framework.Assert.AreEqual(0, locations.Count);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void SortCompareTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "sortCompare.pdf"))) {
+                RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("a");
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(extractionStrategy);
+                pdfCanvasProcessor.ProcessPageContent(pdfDocument.GetPage(1));
+                pdfCanvasProcessor.ProcessPageContent(pdfDocument.GetPage(2));
+                IList<IPdfTextLocation> locations = new List<IPdfTextLocation>(extractionStrategy.GetResultantLocations());
+                NUnit.Framework.Assert.AreEqual(13, locations.Count);
+            }
+        }
     }
 }

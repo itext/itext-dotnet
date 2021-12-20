@@ -1427,43 +1427,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <seealso cref="TextNodes()"/>
         public virtual String Text() {
             StringBuilder accum = iText.StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
-            NodeTraversor.Traverse(new _NodeVisitor_1262(accum), 
-                        // make sure there is a space between block tags and immediately following text nodes <div>One</div>Two should be "One Two".
-                        this);
+            NodeTraversor.Traverse(new Element.TextNodeVisitor(accum), this);
             return iText.StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(accum).Trim();
-        }
-
-        private sealed class _NodeVisitor_1262 : NodeVisitor {
-            public _NodeVisitor_1262(StringBuilder accum) {
-                this.accum = accum;
-            }
-
-            public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
-                if (node is TextNode) {
-                    TextNode textNode = (TextNode)node;
-                    iText.StyledXmlParser.Jsoup.Nodes.Element.AppendNormalisedText(accum, textNode);
-                }
-                else {
-                    if (node is iText.StyledXmlParser.Jsoup.Nodes.Element) {
-                        iText.StyledXmlParser.Jsoup.Nodes.Element element = (iText.StyledXmlParser.Jsoup.Nodes.Element)node;
-                        if (accum.Length > 0 && (element.IsBlock() || element.tag.GetName().Equals("br")) && !TextNode.LastCharIsWhitespace
-                            (accum)) {
-                            accum.Append(' ');
-                        }
-                    }
-                }
-            }
-
-            public void Tail(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
-                if (node is iText.StyledXmlParser.Jsoup.Nodes.Element) {
-                    iText.StyledXmlParser.Jsoup.Nodes.Element element = (iText.StyledXmlParser.Jsoup.Nodes.Element)node;
-                    if (element.IsBlock() && (node.NextSibling() is TextNode) && !TextNode.LastCharIsWhitespace(accum)) {
-                        accum.Append(' ');
-                    }
-                }
-            }
-
-            private readonly StringBuilder accum;
         }
 
         /// <summary>
@@ -1474,26 +1439,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <seealso cref="Text()"/>
         public virtual String WholeText() {
             StringBuilder accum = iText.StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
-            NodeTraversor.Traverse(new _NodeVisitor_1299(accum), this);
+            NodeTraversor.Traverse(new Element.WholeTextNodeVisitor(accum), this);
             return iText.StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(accum);
-        }
-
-        private sealed class _NodeVisitor_1299 : NodeVisitor {
-            public _NodeVisitor_1299(StringBuilder accum) {
-                this.accum = accum;
-            }
-
-            public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
-                if (node is TextNode) {
-                    TextNode textNode = (TextNode)node;
-                    accum.Append(textNode.GetWholeText());
-                }
-            }
-
-            public void Tail(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
-            }
-
-            private readonly StringBuilder accum;
         }
 
         /// <summary>Gets the (normalized) text owned by this element only; does not get the combined text of all children.
@@ -1998,6 +1945,59 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             iText.StyledXmlParser.Jsoup.Nodes.Element parent = (iText.StyledXmlParser.Jsoup.Nodes.Element)Parent();
             return Tag().IsInline() && !Tag().IsEmpty() && (parent == null || parent.IsBlock()) && PreviousSibling() !=
                  null && !@out.Outline();
+        }
+
+        private sealed class TextNodeVisitor : NodeVisitor {
+            private StringBuilder accum;
+
+            internal TextNodeVisitor(StringBuilder accum) {
+                this.accum = accum;
+            }
+
+            public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
+                if (node is TextNode) {
+                    TextNode textNode = (TextNode)node;
+                    AppendNormalisedText(accum, textNode);
+                }
+                else {
+                    if (node is iText.StyledXmlParser.Jsoup.Nodes.Element) {
+                        iText.StyledXmlParser.Jsoup.Nodes.Element element = (iText.StyledXmlParser.Jsoup.Nodes.Element)node;
+                        if (accum.Length > 0 && (element.IsBlock() || element.tag.GetName().Equals("br")) && !TextNode.LastCharIsWhitespace
+                            (accum)) {
+                            accum.Append(' ');
+                        }
+                    }
+                }
+            }
+
+            public void Tail(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
+                // make sure there is a space between block tags and immediately
+                // following text nodes <div>One</div>Two should be "One Two".
+                if (node is iText.StyledXmlParser.Jsoup.Nodes.Element) {
+                    iText.StyledXmlParser.Jsoup.Nodes.Element element = (iText.StyledXmlParser.Jsoup.Nodes.Element)node;
+                    if (element.IsBlock() && (node.NextSibling() is TextNode) && !TextNode.LastCharIsWhitespace(accum)) {
+                        accum.Append(' ');
+                    }
+                }
+            }
+        }
+
+        private sealed class WholeTextNodeVisitor : NodeVisitor {
+            private StringBuilder accum;
+
+            internal WholeTextNodeVisitor(StringBuilder accum) {
+                this.accum = accum;
+            }
+
+            public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
+                if (node is TextNode) {
+                    TextNode textNode = (TextNode)node;
+                    accum.Append(textNode.GetWholeText());
+                }
+            }
+
+            public void Tail(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
+            }
         }
     }
 }

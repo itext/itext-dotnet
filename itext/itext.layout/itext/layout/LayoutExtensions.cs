@@ -201,14 +201,6 @@ namespace iText.Layout {
             return str.Split(regex.ToCharArray());
         }
 
-        public static T JRemoveFirst<T>(this LinkedList<T> list)
-        {
-            T value = list.First.Value;
-            list.RemoveFirst();
-
-            return value;
-        }
-
         public static T[] ToArray<T>(this ICollection<T> col, T[] toArray) {
             T[] r;
             int colSize = col.Count;

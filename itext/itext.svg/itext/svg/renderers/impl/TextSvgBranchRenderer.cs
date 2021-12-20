@@ -91,9 +91,13 @@ namespace iText.Svg.Renderers.Impl {
 
         public override ISvgNodeRenderer CreateDeepCopy() {
             iText.Svg.Renderers.Impl.TextSvgBranchRenderer copy = new iText.Svg.Renderers.Impl.TextSvgBranchRenderer();
+            FillCopy(copy);
+            return copy;
+        }
+
+        internal virtual void FillCopy(iText.Svg.Renderers.Impl.TextSvgBranchRenderer copy) {
             DeepCopyAttributesAndStyles(copy);
             DeepCopyChildren(copy);
-            return copy;
         }
 
         public void AddChild(ISvgTextNodeRenderer child) {
@@ -202,35 +206,16 @@ namespace iText.Svg.Renderers.Impl {
             if (GetChildren().Count > 0) {
                 // if branch has no children, don't do anything
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                if (performRootTransformations) {
-                    currentCanvas.BeginText();
-                    // Current transformation matrix results in the character glyphs being mirrored, correct with inverse tf
-                    AffineTransform rootTf;
-                    if (this.ContainsAbsolutePositionChange()) {
-                        rootTf = GetTextTransform(this.GetAbsolutePositionChanges(), context);
-                    }
-                    else {
-                        rootTf = new AffineTransform(TEXTFLIP);
-                    }
-                    currentCanvas.SetTextMatrix(rootTf);
-                    // Reset context of text move
-                    context.ResetTextMove();
-                    // Apply relative move
-                    if (this.ContainsRelativeMove()) {
-                        float[] rootMove = this.GetRelativeTranslation();
-                        context.AddTextMove(rootMove[0], -rootMove[1]);
-                    }
-                    //-y to account for the text-matrix transform we do in the text root to account for the coordinates
-                    // Handle white-spaces
-                    if (!whiteSpaceProcessed) {
-                        SvgTextUtil.ProcessWhiteSpace(this, true);
-                    }
-                }
-                ApplyTextRenderingMode(currentCanvas);
+                context.ResetTextMove();
+                context.SetLastTextTransform(null);
                 if (this.attributesAndStyles != null) {
-                    ResolveFont(context);
-                    currentCanvas.SetFontAndSize(font, GetCurrentFontSize());
                     foreach (ISvgTextNodeRenderer c in children) {
+                        currentCanvas.SaveState();
+                        currentCanvas.BeginText();
+                        PerformRootTransformations(currentCanvas, context);
+                        ApplyTextRenderingMode(currentCanvas);
+                        ResolveFont(context);
+                        currentCanvas.SetFontAndSize(font, GetCurrentFontSize());
                         float childLength = c.GetTextContentLength(GetCurrentFontSize(), font);
                         if (c.ContainsAbsolutePositionChange()) {
                             // TODO: DEVSIX-2507 support rotate and other attributes
@@ -243,6 +228,11 @@ namespace iText.Svg.Renderers.Impl {
                             // Absolute position changes requires resetting the current text move in the context
                             context.ResetTextMove();
                         }
+                        else {
+                            if (c is TextLeafSvgNodeRenderer && !context.GetLastTextTransform().IsIdentity()) {
+                                currentCanvas.SetTextMatrix(context.GetLastTextTransform());
+                            }
+                        }
                         // Handle Text-Anchor declarations
                         float textAnchorCorrection = GetTextAnchorAlignmentCorrection(childLength);
                         if (!CssUtils.CompareFloats(0f, textAnchorCorrection)) {
@@ -254,19 +244,35 @@ namespace iText.Svg.Renderers.Impl {
                             context.AddTextMove(childMove[0], -childMove[1]);
                         }
                         //-y to account for the text-matrix transform we do in the text root to account for the coordinates
-                        currentCanvas.SaveState();
                         c.Draw(context);
                         context.AddTextMove(childLength, 0);
-                        currentCanvas.RestoreState();
-                        // Restore transformation matrix
-                        if (!context.GetLastTextTransform().IsIdentity()) {
-                            currentCanvas.SetTextMatrix(context.GetLastTextTransform());
-                        }
-                    }
-                    if (performRootTransformations) {
+                        context.SetPreviousElementTextMove(null);
                         currentCanvas.EndText();
+                        currentCanvas.RestoreState();
                     }
                 }
+            }
+        }
+
+        internal virtual void PerformRootTransformations(PdfCanvas currentCanvas, SvgDrawContext context) {
+            // Current transformation matrix results in the character glyphs being mirrored, correct with inverse tf
+            AffineTransform rootTf;
+            if (this.ContainsAbsolutePositionChange()) {
+                rootTf = GetTextTransform(this.GetAbsolutePositionChanges(), context);
+            }
+            else {
+                rootTf = new AffineTransform(TEXTFLIP);
+            }
+            currentCanvas.SetTextMatrix(rootTf);
+            // Apply relative move
+            if (this.ContainsRelativeMove()) {
+                float[] rootMove = this.GetRelativeTranslation();
+                //-y to account for the text-matrix transform we do in the text root to account for the coordinates
+                context.AddTextMove(rootMove[0], -rootMove[1]);
+            }
+            // Handle white-spaces
+            if (!whiteSpaceProcessed) {
+                SvgTextUtil.ProcessWhiteSpace(this, true);
             }
         }
 
@@ -357,7 +363,7 @@ namespace iText.Svg.Renderers.Impl {
             return result;
         }
 
-        private static AffineTransform GetTextTransform(float[][] absolutePositions, SvgDrawContext context) {
+        internal static AffineTransform GetTextTransform(float[][] absolutePositions, SvgDrawContext context) {
             AffineTransform tf = new AffineTransform();
             // If x is not specified, but y is, we need to correct for preceding text.
             if (absolutePositions[0] == null && absolutePositions[1] != null) {
@@ -372,7 +378,7 @@ namespace iText.Svg.Renderers.Impl {
             return tf;
         }
 
-        private void ApplyTextRenderingMode(PdfCanvas currentCanvas) {
+        internal virtual void ApplyTextRenderingMode(PdfCanvas currentCanvas) {
             // Fill only is the default for text operation in PDF
             if (doStroke && doFill) {
                 currentCanvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.FILL_STROKE);
@@ -396,7 +402,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        private float GetTextAnchorAlignmentCorrection(float childContentLength) {
+        internal virtual float GetTextAnchorAlignmentCorrection(float childContentLength) {
             // Resolve text anchor
             // TODO DEVSIX-2631 properly resolve text-anchor by taking entire line into account, not only children of the current TextSvgBranchRenderer
             float textAnchorXCorrection = 0.0f;

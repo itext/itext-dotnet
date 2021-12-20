@@ -27,9 +27,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\itext.io\itext.io.netstandard.csproj" />
     <ProjectReference Include="..\itext.kernel\itext.kernel.netstandard.csproj" />
   </ItemGroup>

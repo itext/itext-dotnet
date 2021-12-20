@@ -69,8 +69,7 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void NullNameGetAllowedDigestTest() {
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => DigestAlgorithms.GetAllowedDigest(null)
-                );
+            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => DigestAlgorithms.GetAllowedDigest(null));
         }
     }
 }

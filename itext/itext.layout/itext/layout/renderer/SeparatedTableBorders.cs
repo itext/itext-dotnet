@@ -62,13 +62,13 @@ namespace iText.Layout.Renderer {
             : base(rows, numberOfColumns, tableBoundingBorders, largeTableIndexOffset) {
         }
 
-        protected internal override TableBorders DrawHorizontalBorder(int i, float startX, float y1, PdfCanvas canvas
-            , float[] countedColumnWidth) {
+        protected internal override TableBorders DrawHorizontalBorder(PdfCanvas canvas, TableBorderDescriptor borderDescriptor
+            ) {
             return this;
         }
 
-        protected internal override TableBorders DrawVerticalBorder(int i, float startY, float x1, PdfCanvas canvas
-            , IList<float> heights) {
+        protected internal override TableBorders DrawVerticalBorder(PdfCanvas canvas, TableBorderDescriptor borderDescriptor
+            ) {
             return this;
         }
 
@@ -207,28 +207,7 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual bool CheckAndReplaceBorderInArray(IList<IList<Border>> borderArray, int i, int 
             j, Border borderToAdd, bool hasPriority) {
-            //        if (borderArray.size() <= i) {
-            //            for (int count = borderArray.size(); count <= i; count++) {
-            //                borderArray.add(new ArrayList<Border>());
-            //            }
-            //        }
             IList<Border> borders = borderArray[i];
-            //        if (borders.isEmpty()) {
-            //            for (int count = 0; count < j; count++) {
-            //                borders.add(null);
-            //            }
-            //            borders.add(borderToAdd);
-            //            return true;
-            //        }
-            //        if (borders.size() == j) {
-            //            borders.add(borderToAdd);
-            //            return true;
-            //        }
-            //        if (borders.size() < j) {
-            //            for (int count = borders.size(); count <= j; count++) {
-            //                borders.add(count, null);
-            //            }
-            //        }
             Border neighbour = borders[j];
             if (neighbour == null) {
                 borders[j] = borderToAdd;

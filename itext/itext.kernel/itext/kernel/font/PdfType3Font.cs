@@ -408,15 +408,20 @@ namespace iText.Kernel.Font {
                     currentNumber = ((PdfNumber)obj).IntValue();
                 }
                 else {
-                    String glyphName = ((PdfName)obj).GetValue();
-                    int unicode = fontEncoding.GetUnicode(currentNumber);
-                    if (GetFontProgram().GetGlyphByCode(currentNumber) == null && charProcsDic.ContainsKey(new PdfName(glyphName
-                        ))) {
-                        fontEncoding.SetDifference(currentNumber, glyphName);
-                        ((Type3Font)GetFontProgram()).AddGlyph(currentNumber, unicode, widths[currentNumber], null, new Type3Glyph
-                            (charProcsDic.GetAsStream(new PdfName(glyphName)), GetDocument()));
+                    if (currentNumber > SIMPLE_FONT_MAX_CHAR_CODE_VALUE) {
                     }
-                    currentNumber++;
+                    else {
+                        // Skip glyphs with id greater than 255
+                        String glyphName = ((PdfName)obj).GetValue();
+                        int unicode = fontEncoding.GetUnicode(currentNumber);
+                        if (GetFontProgram().GetGlyphByCode(currentNumber) == null && charProcsDic.ContainsKey(new PdfName(glyphName
+                            ))) {
+                            fontEncoding.SetDifference(currentNumber, glyphName);
+                            ((Type3Font)GetFontProgram()).AddGlyph(currentNumber, unicode, widths[currentNumber], null, new Type3Glyph
+                                (charProcsDic.GetAsStream(new PdfName(glyphName)), GetDocument()));
+                        }
+                        currentNumber++;
+                    }
                 }
             }
         }

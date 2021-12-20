@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Function;
@@ -294,6 +295,21 @@ namespace iText.Pdfa.Checker {
             // for Pdf/A-2
             NUnit.Framework.Assert.Catch(typeof(Exception), () => pdfA2Checker.CheckColorSpace(new PdfSpecialCs.DeviceN
                 (tmpArray, new PdfDeviceCs.Rgb(), function), currentColorSpaces, true, false));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckColorShadingTest() {
+            PdfDictionary patternDict = new PdfDictionary();
+            patternDict.Put(PdfName.ExtGState, new PdfDictionary());
+            PdfPattern.Shading pattern = new PdfPattern.Shading(patternDict);
+            PdfDictionary dictionary = new PdfDictionary();
+            dictionary.Put(PdfName.ColorSpace, PdfName.DeviceCMYK);
+            pattern.SetShading(dictionary);
+            Color color = new PatternColor(pattern);
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                pdfA2Checker.CheckColor(color, new PdfDictionary(), true, null);
+            }
+            );
         }
     }
 }

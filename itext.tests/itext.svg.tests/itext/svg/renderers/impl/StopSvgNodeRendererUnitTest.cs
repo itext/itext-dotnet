@@ -239,11 +239,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void NoObjectBoundingBoxTest() {
             StopSvgNodeRenderer renderer = new StopSvgNodeRenderer();
-            NUnit.Framework.Assert.That(() =>  {
-                renderer.GetObjectBoundingBox(null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX))
-;
+            NUnit.Framework.Assert.IsNull(renderer.GetObjectBoundingBox(null));
         }
     }
 }

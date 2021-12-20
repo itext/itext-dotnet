@@ -683,7 +683,8 @@ namespace iText.Signatures {
             napp.MakeIndirect(document);
             napp.GetResources().AddForm(topLayer, new PdfName("FRM"));
             canvas = new PdfCanvas(napp, document);
-            canvas.AddXObject(topLayer, 0, 0);
+            canvas.AddXObjectAt(topLayer, topLayer.GetBBox().GetAsNumber(0).FloatValue(), topLayer.GetBBox().GetAsNumber
+                (1).FloatValue());
             return napp;
         }
 

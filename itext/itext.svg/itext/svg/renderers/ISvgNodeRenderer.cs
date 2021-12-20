@@ -104,13 +104,17 @@ namespace iText.Svg.Renderers {
         /// <returns>deep copy of this renderer</returns>
         ISvgNodeRenderer CreateDeepCopy();
 
-        /// <summary>Get object bounding box.</summary>
+        /// <summary>Calculates the current object bounding box.</summary>
         /// <param name="context">
-        /// the
-        /// <see cref="SvgDrawContext"/>
-        /// context
+        /// the current context, for instance it contains current viewport and available
+        /// font data
         /// </param>
-        /// <returns>object bounding box</returns>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// representing the current object's bounding box, or null
+        /// if bounding box is undefined
+        /// </returns>
         Rectangle GetObjectBoundingBox(SvgDrawContext context);
     }
 }

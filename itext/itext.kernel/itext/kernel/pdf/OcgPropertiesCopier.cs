@@ -107,24 +107,25 @@ namespace iText.Kernel.Pdf {
                             iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromOcDict(toAnnotDict.GetAsDictionary(PdfName.OC
                                 ), fromAnnotDict.GetAsDictionary(PdfName.OC), fromUsedOcgs, toOcProperties);
                             iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toAnnot.GetNormalAppearanceObject(), 
-                                fromAnnot.GetNormalAppearanceObject(), fromUsedOcgs, toOcProperties);
+                                fromAnnot.GetNormalAppearanceObject(), fromUsedOcgs, toOcProperties, new HashSet<PdfObject>());
                             iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toAnnot.GetRolloverAppearanceObject(
-                                ), fromAnnot.GetRolloverAppearanceObject(), fromUsedOcgs, toOcProperties);
+                                ), fromAnnot.GetRolloverAppearanceObject(), fromUsedOcgs, toOcProperties, new HashSet<PdfObject>());
                             iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toAnnot.GetDownAppearanceObject(), fromAnnot
-                                .GetDownAppearanceObject(), fromUsedOcgs, toOcProperties);
+                                .GetDownAppearanceObject(), fromUsedOcgs, toOcProperties, new HashSet<PdfObject>());
                         }
                     }
                 }
                 PdfDictionary toResources = toPage.GetPdfObject().GetAsDictionary(PdfName.Resources);
                 PdfDictionary fromResources = fromPage.GetPdfObject().GetAsDictionary(PdfName.Resources);
                 iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromResources(toResources, fromResources, fromUsedOcgs
-                    , toOcProperties);
+                    , toOcProperties, new HashSet<PdfObject>());
             }
             return fromUsedOcgs;
         }
 
         private static void GetUsedNonFlushedOCGsFromResources(PdfDictionary toResources, PdfDictionary fromResources
-            , ICollection<PdfIndirectReference> fromUsedOcgs, PdfDictionary toOcProperties) {
+            , ICollection<PdfIndirectReference> fromUsedOcgs, PdfDictionary toOcProperties, ICollection<PdfObject>
+             visitedObjects) {
             if (toResources != null && !toResources.IsFlushed()) {
                 // Copy OCGs from properties
                 PdfDictionary toProperties = toResources.GetAsDictionary(PdfName.Properties);
@@ -141,12 +142,18 @@ namespace iText.Kernel.Pdf {
                 PdfDictionary toXObject = toResources.GetAsDictionary(PdfName.XObject);
                 PdfDictionary fromXObject = fromResources.GetAsDictionary(PdfName.XObject);
                 iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toXObject, fromXObject, fromUsedOcgs
-                    , toOcProperties);
+                    , toOcProperties, visitedObjects);
             }
         }
 
         private static void GetUsedNonFlushedOCGsFromXObject(PdfDictionary toXObject, PdfDictionary fromXObject, ICollection
-            <PdfIndirectReference> fromUsedOcgs, PdfDictionary toOcProperties) {
+            <PdfIndirectReference> fromUsedOcgs, PdfDictionary toOcProperties, ICollection<PdfObject> visitedObjects
+            ) {
+            //Resolving cycled properties, by memorizing the visited objects
+            if (visitedObjects.Contains(fromXObject)) {
+                return;
+            }
+            visitedObjects.Add(fromXObject);
             if (toXObject != null && !toXObject.IsFlushed()) {
                 if (toXObject.IsStream() && !toXObject.IsFlushed()) {
                     PdfStream toStream = (PdfStream)toXObject;
@@ -154,7 +161,7 @@ namespace iText.Kernel.Pdf {
                     iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromOcDict(toStream.GetAsDictionary(PdfName.OC), 
                         fromStream.GetAsDictionary(PdfName.OC), fromUsedOcgs, toOcProperties);
                     iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromResources(toStream.GetAsDictionary(PdfName.Resources
-                        ), fromStream.GetAsDictionary(PdfName.Resources), fromUsedOcgs, toOcProperties);
+                        ), fromStream.GetAsDictionary(PdfName.Resources), fromUsedOcgs, toOcProperties, visitedObjects);
                 }
                 else {
                     foreach (PdfName name in toXObject.KeySet()) {
@@ -164,7 +171,7 @@ namespace iText.Kernel.Pdf {
                             PdfStream toStream = (PdfStream)toCurrObj;
                             PdfStream fromStream = (PdfStream)fromCurrObj;
                             iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toStream, fromStream, fromUsedOcgs, 
-                                toOcProperties);
+                                toOcProperties, visitedObjects);
                         }
                     }
                 }

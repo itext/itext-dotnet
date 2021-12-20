@@ -243,31 +243,31 @@ namespace iText.Svg.Renderers.Impl {
                     currentCanvas.EndPath();
                 }
                 else {
-                    if (doFill && CanElementFill()) {
-                        String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
-                        if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
-                            if (doStroke) {
-                                currentCanvas.EoFillStroke();
+                    if (!(this is ISvgTextNodeRenderer)) {
+                        if (doFill && CanElementFill()) {
+                            String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
+                            if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
+                                if (doStroke) {
+                                    currentCanvas.EoFillStroke();
+                                }
+                                else {
+                                    currentCanvas.EoFill();
+                                }
                             }
                             else {
-                                currentCanvas.EoFill();
+                                if (doStroke) {
+                                    currentCanvas.FillStroke();
+                                }
+                                else {
+                                    currentCanvas.Fill();
+                                }
                             }
                         }
                         else {
                             if (doStroke) {
-                                currentCanvas.FillStroke();
+                                currentCanvas.Stroke();
                             }
                             else {
-                                currentCanvas.Fill();
-                            }
-                        }
-                    }
-                    else {
-                        if (doStroke) {
-                            currentCanvas.Stroke();
-                        }
-                        else {
-                            if (!typeof(TextSvgBranchRenderer).IsInstanceOfType(this)) {
                                 currentCanvas.EndPath();
                             }
                         }

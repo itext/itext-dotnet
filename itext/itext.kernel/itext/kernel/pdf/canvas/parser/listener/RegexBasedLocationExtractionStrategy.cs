@@ -52,6 +52,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>This class is designed to search for the occurrences of a regular expression and return the resultant rectangles.
     ///     </summary>
     public class RegexBasedLocationExtractionStrategy : ILocationExtractionStrategy {
+        private const float EPS = 1.0E-4F;
+
         private Regex pattern;
 
         private IList<CharacterRenderInfo> parseResult = new List<CharacterRenderInfo>();
@@ -86,26 +88,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             * This is to ensure that tests that use this functionality (for instance to generate pdf with
             * areas of interest highlighted) will not break when compared.
             */
-            JavaCollectionsUtil.Sort(retval, new _IComparer_103());
+            JavaCollectionsUtil.Sort(retval, new RegexBasedLocationExtractionStrategy.PdfTextLocationComparator());
             // ligatures can produces same rectangle
             RemoveDuplicates(retval);
             return retval;
-        }
-
-        private sealed class _IComparer_103 : IComparer<IPdfTextLocation> {
-            public _IComparer_103() {
-            }
-
-            public int Compare(IPdfTextLocation l1, IPdfTextLocation l2) {
-                Rectangle o1 = l1.GetRectangle();
-                Rectangle o2 = l2.GetRectangle();
-                if (o1.GetY() == o2.GetY()) {
-                    return o1.GetX() == o2.GetX() ? 0 : (o1.GetX() < o2.GetX() ? -1 : 1);
-                }
-                else {
-                    return o1.GetY() < o2.GetY() ? -1 : 1;
-                }
-            }
         }
 
         private void RemoveDuplicates(IList<IPdfTextLocation> sortedList) {
@@ -243,6 +229,19 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 index--;
             }
             return indexMap.Get(index);
+        }
+
+        private sealed class PdfTextLocationComparator : IComparer<IPdfTextLocation> {
+            public int Compare(IPdfTextLocation l1, IPdfTextLocation l2) {
+                Rectangle o1 = l1.GetRectangle();
+                Rectangle o2 = l2.GetRectangle();
+                if (Math.Abs(o1.GetY() - o2.GetY()) < EPS) {
+                    return Math.Abs(o1.GetX() - o2.GetX()) < EPS ? 0 : ((o2.GetX() - o1.GetX()) > EPS ? -1 : 1);
+                }
+                else {
+                    return (o2.GetY() - o1.GetY()) > EPS ? -1 : 1;
+                }
+            }
         }
     }
 }

@@ -47,6 +47,7 @@ using Org.BouncyCastle.X509;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Test;
 using iText.Test.Signutils;
 
@@ -73,6 +74,7 @@ namespace iText.Signatures.Sign {
             String signCertFileName = certsSrc + "signCertRsa01.p12";
             String outFileName = destinationFolder + "sequentialSignOfFileWithAnnots.pdf";
             String srcFileName = sourceFolder + "signedWithAnnots.pdf";
+            String cmpFileName = sourceFolder + "cmp_sequentialSignOfFileWithAnnots.pdf";
             X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
             ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
@@ -84,6 +86,7 @@ namespace iText.Signatures.Sign {
                 ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText7.");
             signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             PadesSigTest.BasicCheckSignedDoc(outFileName, signatureName);
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
         [NUnit.Framework.Test]
@@ -91,6 +94,7 @@ namespace iText.Signatures.Sign {
             String signCertFileName = certsSrc + "signCertRsa01.p12";
             String outFileName = destinationFolder + "secondSignOfTagged.pdf";
             String srcFileName = sourceFolder + "taggedAndSignedDoc.pdf";
+            String cmpFileName = sourceFolder + "cmp_secondSignOfTagged.pdf";
             X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
             ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
@@ -120,6 +124,7 @@ namespace iText.Signatures.Sign {
                     NUnit.Framework.Assert.AreNotEqual(resourceStrElemNumber, outStrElemNumber);
                 }
             }
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
     }
 }

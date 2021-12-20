@@ -25,6 +25,8 @@ using System;
 namespace iText.StyledXmlParser.Exceptions {
     /// <summary>Class containing constants to be used in exceptions in the SXP module.</summary>
     public sealed class StyledXmlParserExceptionMessage {
+        public const String INVALID_TOKEN_AT_THE_BEGINNING_OF_SELECTOR = "Invalid token detected at the beginning of the selector string: \"{0}\"";
+
         public const String READING_BYTE_LIMIT_MUST_NOT_BE_LESS_ZERO = "The reading byte limit argument must not be less than zero.";
 
         private StyledXmlParserExceptionMessage() {

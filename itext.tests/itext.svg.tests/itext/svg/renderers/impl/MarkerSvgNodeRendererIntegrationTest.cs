@@ -69,107 +69,107 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathAutoOrientTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathAutoOrientTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathAutoOrient");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathAngleOrientTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathAngleOrientTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathAngleOrient");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathRefXRefYNoAspectRatioPreservationTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathRefXRefYNoAspectRatioPreservationTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathRefXRefYNoAspectRatioPreservation");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathRefXAndRefYTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathAutoOrientTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathAutoOrient");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathViewboxRightOrientTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxRightOrientTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxRightOrient");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathViewboxRightOrientNoAspectRatioPreservationTest() {
             // TODO (DEVSIX-3621) fix cmp after fixing
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxRightOrientNoAspectRatioPreservationTest"
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxRightOrientNoAspectRatioPreservation"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathViewboxLeftOrientTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxLeftOrientTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxLeftOrient");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathViewboxUpOrientTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxUpOrientTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxUpOrient");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathViewboxDownOrientTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxDownOrientTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxDownOrient");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathViewboxAngledOrientTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxAngledOrientTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxAngledOrient");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathPreserveAspectRatioTest() {
             // TODO (DEVSIX-3621) fix cmp after fixing
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathPreserveAspectRatioTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathPreserveAspectRatio");
         }
 
         // Markers in different elements
         [NUnit.Framework.Test]
         public virtual void MarkerTest() {
             // TODO: update when DEVSIX-3397 will be closed
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "marker");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInLineElementTest() {
             // TODO: update when DEVSIX-3397 will be closed
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInLineElementTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInLineElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInPolylineElementTest() {
             // TODO: update when DEVSIX-3397 will be closed
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPolylineElementTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPolylineElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInPolygonElementTest() {
             // TODO: update when DEVSIX-3397, DEVSIX-2719 will be closed
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPolygonElementTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPolygonElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInPathTest() {
             // TODO: update when DEVSIX-3397 will be closed
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPathTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPath");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerUnitsTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerUnitsTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerRefXYTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerRefXYTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerRefXY");
         }
 
         // orient attribute tests
         [NUnit.Framework.Test]
         public virtual void MarkerOrientTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOrientTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOrient");
         }
 
         [NUnit.Framework.Test]
@@ -191,106 +191,100 @@ namespace iText.Svg.Renderers.Impl {
         // TODO DEVSIX-3432 relative values doesn't support correctly for stroke-width attribute
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
             , Count = 3)]
-        public virtual void TestMarkerUnitsStrokeWidthWhenParentStrokeWidthIsFontRelativeValues() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "testMarkerUnitsStrokeWidthWhenParentStrokeWidthIsFontRelativeValues"
-                );
+        public virtual void MarkerUnitsStrokeWidthWhenParentStrokeWidthIsFontRelativeValuesTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "parentStrokeWidthIsFontRelativeValues");
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestMarkerUnitsStrokeWidthWhenParentStrokeWidthIsMetricValues() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "testMarkerUnitsStrokeWidthWhenParentStrokeWidthIsMetricValues"
-                );
+        public virtual void MarkerUnitsStrokeWidthWhenParentStrokeWidthIsMetricValuesTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "parentStrokeWidthIsMetricValues");
         }
 
         [NUnit.Framework.Test]
         // TODO DEVSIX-3432 relative values doesn't support correctly for stroke-width attribute
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
             , Count = 3)]
-        public virtual void TestMarkerUnitsStrokeWidthWhenParentStrokeWidthIsPercentageValues() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "testMarkerUnitsStrokeWidthWhenParentStrokeWidthIsPercentageValues"
-                );
+        public virtual void MarkerUnitsStrokeWidthWhenParentStrokeWidthIsPercentageValuesTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "parentStrokeWidthIsPercentageValues");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerDefaultValuesTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerDefaultValuesTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerDefaultValues");
         }
 
         // Style inheritance
         [NUnit.Framework.Test]
         public virtual void MarkerInheritFillAttributeTest0() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInheritFillAttributeTest0");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInheritFillAttribute0");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInheritFillAttributeTest1() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInheritFillAttributeTest1");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInheritFillAttribute1");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInheritFillAttributeTest2() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInheritFillAttributeTest2");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInheritFillAttribute2");
         }
 
         [NUnit.Framework.Test]
-        public virtual void MarkerInheritFillAttributeNestedMarker() {
+        public virtual void MarkerInheritFillAttributeNestedMarkerTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInheritFillAttributeNestedMarker");
         }
 
         [NUnit.Framework.Test]
-        public virtual void FontRelativeValueInRefX() {
+        public virtual void FontRelativeValueInRefXTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "fontRelativeValueInRefX");
         }
 
         [NUnit.Framework.Test]
-        public virtual void FontRelativeValueInRefXDefault() {
+        public virtual void FontRelativeValueInRefXDefaultTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "fontRelativeValueInRefXDefault");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerAspectRatioTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerAspectRatioTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerAspectRatio");
         }
 
         // Overflow attribute
         [NUnit.Framework.Test]
         public virtual void MarkerOverflowVisibleIncreaseViewBoxScaleRootElementTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleIncreaseViewBoxScaleRootElementTest"
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleIncreaseViewBoxScaleRootElement"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerOverflowVisibleIncreaseViewBoxScaleSvgElementTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleIncreaseViewBoxScaleSvgElementTest"
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleIncreaseViewBoxScaleSvgElement"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerOverflowVisibleTransformScaleTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleTransformScaleTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleTransformScale");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerOverflowVisibleTransformTranslateTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleTransformTranslateTest"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleTransformTranslate");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerOverflowVisibleNestedSvgViewBoxesTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleNestedSvgViewBoxesTest"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleNestedSvgViewBoxes");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerOverflowVisibleNestedSvgViewBoxes2Test() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleNestedSvgViewBoxes2Test"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleNestedSvgViewBoxes2");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerOverflowVisibleTransformRotateTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleTransformRotateTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleTransformRotate");
         }
 
         [NUnit.Framework.Test]
@@ -299,12 +293,11 @@ namespace iText.Svg.Renderers.Impl {
         [LogMessage("markerWidth has negative value. Marker will not be rendered.")]
         [LogMessage("markerHeight has negative value. Marker will not be rendered.")]
         public virtual void MarkerEspecialMarkerWidthHeightValuesTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerEspecialMarkerWidthHeightValuesTest"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerEspecialMarkerWidthHeightValues");
         }
 
         [NUnit.Framework.Test]
-        public virtual void DeformationWhenRotationAndPreserveAspectRationNone() {
+        public virtual void DeformationWhenRotationAndPreserveAspectRationNoneTest() {
             // TODO (DEVSIX-3621) change cmp after fixing
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "deformationWhenRotationAndPreserveAspectRationNone"
                 );
@@ -314,7 +307,7 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void MarkerParentElementTest() {
             // TODO DEVSIX-4130 fix after ticket will be completed
             // Compare with Chrome browser
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerParentElementTest");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerParentElement");
         }
     }
 }

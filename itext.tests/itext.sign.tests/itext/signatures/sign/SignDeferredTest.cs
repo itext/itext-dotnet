@@ -50,6 +50,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Signatures;
+using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Test;
 using iText.Test.Signutils;
@@ -96,6 +97,47 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
+        public virtual void PrepareDocForSignDeferredNotEnoughSizeTest() {
+            String input = sourceFolder + "helloWorldDoc.pdf";
+            String sigFieldName = "DeferredSignature1";
+            PdfName filter = PdfName.Adobe_PPKLite;
+            PdfName subFilter = PdfName.Adbe_pkcs7_detached;
+            PdfReader reader = new PdfReader(input);
+            PdfSigner signer = new PdfSigner(reader, new MemoryStream(), new StampingProperties());
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+            appearance.SetLayer2Text("Signature field which signing is deferred.").SetPageRect(new Rectangle(36, 600, 
+                200, 100)).SetPageNumber(1);
+            signer.SetFieldName(sigFieldName);
+            IExternalSignatureContainer external = new ExternalBlankSignatureContainer(filter, subFilter);
+            // This size is definitely not enough
+            int estimatedSize = -1;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(System.IO.IOException), () => signer.SignExternalContainer
+                (external, estimatedSize));
+            NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.NOT_ENOUGH_SPACE, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PrepareDocForSignDeferredLittleSpaceTest() {
+            String input = sourceFolder + "helloWorldDoc.pdf";
+            String sigFieldName = "DeferredSignature1";
+            PdfName filter = PdfName.Adobe_PPKLite;
+            PdfName subFilter = PdfName.Adbe_pkcs7_detached;
+            PdfReader reader = new PdfReader(input);
+            PdfSigner signer = new PdfSigner(reader, new MemoryStream(), new StampingProperties());
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+            appearance.SetLayer2Text("Signature field which signing is deferred.").SetPageRect(new Rectangle(36, 600, 
+                200, 100)).SetPageNumber(1);
+            signer.SetFieldName(sigFieldName);
+            IExternalSignatureContainer external = new ExternalBlankSignatureContainer(filter, subFilter);
+            // This size is definitely not enough, however, the size check will pass.
+            // The test will fail lately on an invalid key
+            int estimatedSize = 0;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => signer.SignExternalContainer(external
+                , estimatedSize));
+            NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.TOO_BIG_KEY, e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DeferredHashCalcAndSignTest01() {
             String srcFileName = sourceFolder + "templateForSignCMSDeferred.pdf";
             String outFileName = destinationFolder + "deferredHashCalcAndSignTest01.pdf";
@@ -115,6 +157,7 @@ namespace iText.Signatures.Sign {
             PadesSigTest.BasicCheckSignedDoc(outFileName, sigFieldName);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outFileName, cmpFileName, destinationFolder
                 , null));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
         [NUnit.Framework.Test]
@@ -157,6 +200,7 @@ namespace iText.Signatures.Sign {
             PadesSigTest.BasicCheckSignedDoc(outFileName, sigFieldName);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outFileName, cmpFileName, destinationFolder
                 , null));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
         internal static void ValidateTemplateForSignedDeferredResult(String output, String sigFieldName, PdfName filter

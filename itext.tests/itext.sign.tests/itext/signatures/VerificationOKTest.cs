@@ -40,6 +40,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+using iText.Signatures.Testutils;
 using iText.Test;
 
 namespace iText.Signatures {
@@ -49,6 +51,14 @@ namespace iText.Signatures {
             VerificationOK verificationOK = new VerificationOK(null, typeof(CRLVerifier), "Mock verification");
             NUnit.Framework.Assert.AreEqual(typeof(CRLVerifier).FullName + ": Mock verification", verificationOK.ToString
                 ());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ToStringWithCertificateNotNullTest() {
+            VerificationOK verificationOK = new VerificationOK(new X509MockCertificate(), typeof(CRLVerifier), "Mock verification"
+                );
+            // NPE is thrown because getSubjectDN method returns null for X509MockCertificate class.
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => verificationOK.ToString());
         }
     }
 }

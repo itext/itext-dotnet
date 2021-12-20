@@ -26,7 +26,6 @@ using iText.Commons;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
-using iText.Svg.Exceptions;
 using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
@@ -57,7 +56,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+            return null;
         }
 
         internal override void PreDraw(SvgDrawContext context) {

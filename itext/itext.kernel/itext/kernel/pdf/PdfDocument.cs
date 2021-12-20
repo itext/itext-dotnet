@@ -53,6 +53,7 @@ using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Events;
+using iText.Kernel.Colors;
 using iText.Kernel.Events;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
@@ -830,7 +831,10 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                         for (int pageNum = 1; pageNum <= GetNumberOfPages(); pageNum++) {
-                            GetPage(pageNum).Flush();
+                            PdfPage page = GetPage(pageNum);
+                            if (page != null) {
+                                page.Flush();
+                            }
                         }
                         if (structTreeRoot != null) {
                             TryFlushTagStructure(false);
@@ -2452,6 +2456,15 @@ namespace iText.Kernel.Pdf {
                     if (copiedDest != null) {
                         child.AddDestination(copiedDest);
                     }
+                    int? copiedStyle = outline.GetStyle();
+                    if (copiedStyle != null) {
+                        child.SetStyle(copiedStyle.Value);
+                    }
+                    Color copiedColor = outline.GetColor();
+                    if (copiedColor != null) {
+                        child.SetColor(copiedColor);
+                    }
+                    child.SetOpen(outline.IsOpen());
                     CloneOutlines(outlinesToCopy, child, outline, page2page, toDocument);
                 }
             }

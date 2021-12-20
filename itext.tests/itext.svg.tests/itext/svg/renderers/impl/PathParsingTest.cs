@@ -49,17 +49,17 @@ using iText.Test;
 namespace iText.Svg.Renderers.Impl {
     public class PathParsingTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        public virtual void PathParsingNoDOperatorTest() {
-            // Path objects must have a d attribute
-            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-            path.SetAttribute(SvgConstants.Attributes.STROKE, "black");
-            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => path.ParsePathOperations());
-        }
-
-        [NUnit.Framework.Test]
         public virtual void PathParsingOperatorEmptyTest() {
             PathSvgNodeRenderer path = new PathSvgNodeRenderer();
             path.SetAttribute(SvgConstants.Attributes.D, "");
+            ICollection<String> ops = path.ParsePathOperations();
+            NUnit.Framework.Assert.IsTrue(ops.IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PathParsingOperatorDefaultValueTest() {
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            path.SetAttributesAndStyles(new Dictionary<String, String>());
             ICollection<String> ops = path.ParsePathOperations();
             NUnit.Framework.Assert.IsTrue(ops.IsEmpty());
         }

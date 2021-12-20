@@ -56,6 +56,9 @@ namespace iText.Commons.Utils {
     public class SystemUtil {
         private const String SPLIT_REGEX = "((\".+?\"|[^'\\s]|'.+?')+)\\s*";
 
+        private const int STD_OUTPUT_INDEX = 0;
+        private const int ERR_OUTPUT_INDEX = 1;
+
         public static long GetTimeBasedSeed() {
             return DateTime.Now.Ticks + Environment.TickCount;
         }
@@ -119,6 +122,18 @@ namespace iText.Commons.Utils {
             }
 
             return processOutput;
+        }
+        
+        public static ProcessInfo RunProcessAndGetProcessInfo(String exec, String @params) {
+            using (Process proc = new Process()) {
+                SetProcessStartInfo(proc, exec, @params, null);
+                proc.Start();
+                StringBuilder[] outputStreamStrings = GetProcessOutputBuilders(proc);
+                String processStdOutput = outputStreamStrings[STD_OUTPUT_INDEX].ToString();
+                String processErrOutput = outputStreamStrings[ERR_OUTPUT_INDEX].ToString();
+                proc.WaitForExit();
+                return new ProcessInfo(proc.ExitCode, processStdOutput, processErrOutput);
+            }
         }
 
         public static StringBuilder RunProcessAndCollectErrors(String exec, String @params) {
@@ -186,15 +201,25 @@ namespace iText.Commons.Utils {
         }
 
         internal static String GetProcessOutput(Process p) {
+            StringBuilder[] builders = GetProcessOutputBuilders(p);
+
+            return builders[STD_OUTPUT_INDEX].ToString() 
+                   + '\n' 
+                   + builders[ERR_OUTPUT_INDEX].ToString();
+        }
+        
+        internal static StringBuilder[] GetProcessOutputBuilders(Process p) {
             StringBuilder bri = new StringBuilder();
             StringBuilder bre = new StringBuilder();
-            do
-            {
+            do {
                 bri.Append(p.StandardOutput.ReadToEnd());
                 bre.Append(p.StandardError.ReadToEnd());
             } while (!p.HasExited);
+            
+            Console.Out.WriteLine(bre.ToString());
 
-            return bri.ToString() + '\n' + bre.ToString();
+            StringBuilder[] resultOutputArray = new[] { bri, bre };
+            return resultOutputArray;
         }
 
         internal static StringBuilder GetProcessErrorsOutput(Process p) {

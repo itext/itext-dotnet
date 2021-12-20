@@ -49,12 +49,14 @@ namespace iText.IO.Source {
 		where T : Stream
 	{
 		private readonly ByteBuffer numBuffer = new ByteBuffer(32);
+		
+		private bool? localHighPrecision;
 
-		protected internal Stream outputStream = null;
+		private Stream outputStream = null;
 
-		protected internal long currentPos = 0;
+		private long currentPos = 0;
 
-		protected internal bool closeStream = true;
+		private bool closeStream = true;
 
 		//long=19 + max frac=6 => 26 => round to 32.
 		public static bool GetHighPrecision()
@@ -66,11 +68,32 @@ namespace iText.IO.Source {
 		{
 			ByteUtils.HighPrecision = value;
 		}
+		
+		public bool? GetLocalHighPrecision()
+		{
+			return this.localHighPrecision;
+		}
 
+		public void SetLocalHighPrecision(bool value)
+		{
+			this.localHighPrecision = value;
+		}
+
+		public OutputStream()
+			: base()
+		{
+		}
 		public OutputStream(Stream outputStream)
 			: base()
 		{
 			this.outputStream = outputStream;
+		}
+		
+		public OutputStream(Stream outputStream, bool localHighPrecision)
+			: base()
+		{
+			this.outputStream = outputStream;
+			this.localHighPrecision = localHighPrecision;
 		}
 
         public virtual void Write(int b)
@@ -191,7 +214,7 @@ namespace iText.IO.Source {
 
 		public virtual T WriteFloat(float value)
 		{
-			return WriteFloat(value, ByteUtils.HighPrecision);
+			return WriteFloat(value, localHighPrecision == null ? ByteUtils.HighPrecision : (bool)localHighPrecision);
 		}
 
 		public virtual T WriteFloat(float value, bool highPrecision)
@@ -214,7 +237,7 @@ namespace iText.IO.Source {
 
 		public virtual T WriteDouble(double value)
 		{
-			return WriteDouble(value, ByteUtils.HighPrecision);
+			return WriteDouble(value, localHighPrecision == null ? ByteUtils.HighPrecision : (bool)localHighPrecision);
 		}
 
 		public virtual T WriteDouble(double value, bool highPrecision)

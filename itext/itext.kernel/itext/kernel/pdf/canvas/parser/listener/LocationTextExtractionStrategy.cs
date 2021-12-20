@@ -68,17 +68,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         /// <summary>Creates a new text extraction renderer.</summary>
         public LocationTextExtractionStrategy()
-            : this(new _ITextChunkLocationStrategy_85()) {
-        }
-
-        private sealed class _ITextChunkLocationStrategy_85 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
-            public _ITextChunkLocationStrategy_85() {
-            }
-
-            public ITextChunkLocation CreateLocation(TextRenderInfo renderInfo, LineSegment baseline) {
-                return new TextChunkLocationDefaultImp(baseline.GetStartPoint(), baseline.GetEndPoint(), renderInfo.GetSingleSpaceWidth
-                    ());
-            }
+            : this(new LocationTextExtractionStrategy.ITextChunkLocationStrategyImpl()) {
         }
 
         /// <summary>
@@ -343,6 +333,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             internal IList<TextChunk> preceding = new List<TextChunk>();
 
             internal IList<TextChunk> succeeding = new List<TextChunk>();
+        }
+
+        private sealed class ITextChunkLocationStrategyImpl : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
+            public ITextChunkLocation CreateLocation(TextRenderInfo renderInfo, LineSegment baseline) {
+                return new TextChunkLocationDefaultImp(baseline.GetStartPoint(), baseline.GetEndPoint(), renderInfo.GetSingleSpaceWidth
+                    ());
+            }
         }
     }
 }

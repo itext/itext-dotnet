@@ -196,7 +196,7 @@ namespace iText.Kernel.Pdf {
                     PdfPage page = copyPdfX.AddNewPage(new PageSize(ps));
                     PdfCanvas canvas = new PdfCanvas(page);
                     PdfFormXObject pageCopy = origPage.CopyAsFormXObject(copyPdfX);
-                    canvas.AddXObject(pageCopy, 0, 0);
+                    canvas.AddXObjectAt(pageCopy, 0, 0);
                 }
             }
             copyPdfX.Close();

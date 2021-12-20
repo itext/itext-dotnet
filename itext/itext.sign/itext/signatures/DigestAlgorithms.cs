@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
+using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>Class that contains a map with the different message digest algorithms.</summary>
@@ -184,6 +185,9 @@ namespace iText.Signatures {
         /// <param name="name">The name of the digest algorithm.</param>
         /// <returns>An oid.</returns>
         public static String GetAllowedDigest(String name) {
+            if (name == null) {
+                throw new ArgumentException(SignExceptionMessageConstant.THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL);
+            }
             return allowedDigests.Get(name.ToUpperInvariant());
         }
     }

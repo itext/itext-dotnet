@@ -46,6 +46,7 @@ using System.Text.RegularExpressions;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css.Selector.Item;
 using iText.StyledXmlParser.Css.Util;
+using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Utilities class to parse a CSS selector.</summary>
@@ -120,7 +121,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                     case '>':
                     case '~': {
                         if (selectorItems.Count == 0) {
-                            throw new ArgumentException(MessageFormatUtil.Format("Invalid token detected in the start of the selector string: {0}"
+                            throw new ArgumentException(MessageFormatUtil.Format(StyledXmlParserExceptionMessage.INVALID_TOKEN_AT_THE_BEGINNING_OF_SELECTOR
                                 , firstChar));
                         }
                         ICssSelectorItem lastItem = selectorItems[selectorItems.Count - 1];

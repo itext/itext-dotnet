@@ -359,6 +359,16 @@ namespace iText.Kernel.Pdf {
         }
 
         private void LoadPage(int pageNum) {
+            LoadPage(pageNum, new HashSet<PdfIndirectReference>());
+        }
+
+        /// <summary>Load page from pages tree node structure</summary>
+        /// <param name="pageNum">page number to load</param>
+        /// <param name="processedParents">
+        /// set with already processed parents object reference numbers
+        /// if this method was called recursively to avoid infinite recursion.
+        /// </param>
+        private void LoadPage(int pageNum, ICollection<PdfIndirectReference> processedParents) {
             PdfIndirectReference targetPage = pageRefs[pageNum];
             if (targetPage != null) {
                 return;
@@ -366,6 +376,16 @@ namespace iText.Kernel.Pdf {
             //if we go here, we have to split PdfPages that contains pageNum
             int parentIndex = FindPageParent(pageNum);
             PdfPages parent = parents[parentIndex];
+            PdfIndirectReference parentIndirectReference = parent.GetPdfObject().GetIndirectReference();
+            if (parentIndirectReference != null) {
+                if (processedParents.Contains(parentIndirectReference)) {
+                    throw new PdfException(KernelExceptionMessageConstant.INVALID_PAGE_STRUCTURE).SetMessageParams(pageNum + 1
+                        );
+                }
+                else {
+                    processedParents.Add(parentIndirectReference);
+                }
+            }
             PdfArray kids = parent.GetKids();
             if (kids == null) {
                 throw new PdfException(KernelExceptionMessageConstant.INVALID_PAGE_STRUCTURE).SetMessageParams(pageNum + 1
@@ -444,7 +464,7 @@ namespace iText.Kernel.Pdf {
                 }
                 // recursive call, to load needed pageRef.
                 // NOTE optimization? add to loadPage startParentIndex.
-                LoadPage(pageNum);
+                LoadPage(pageNum, processedParents);
             }
             else {
                 int from = parent.GetFrom();

@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Test;
 using iText.Test.Attributes;
@@ -48,7 +49,7 @@ using iText.Test.Attributes;
 namespace iText.IO.Source {
     public class WriteNumbersTest : ExtendedITextTest {
         public static double Round(double value, int places) {
-            return Math.Round(value * Math.Pow(10, places)) / Math.Pow(10, places);
+            return MathematicUtil.Round(value * Math.Pow(10, places)) / Math.Pow(10, places);
         }
 
         [NUnit.Framework.Test]

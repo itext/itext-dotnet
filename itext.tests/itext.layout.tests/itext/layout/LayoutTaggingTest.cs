@@ -60,6 +60,7 @@ using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Font;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -97,7 +98,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageTest01.pdf"));
             pdfDocument.SetTagged();
@@ -799,7 +800,7 @@ namespace iText.Layout {
             canvas.EnableAutoTagging(page1);
             canvas.Add(new Paragraph(txt));
             PdfCanvas canvas1 = new PdfCanvas(page1);
-            canvas1.AddXObject(template, 10, 10);
+            canvas1.AddXObjectAt(template, 10, 10);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpPdf, destinationFolder, "diff"
                 ));

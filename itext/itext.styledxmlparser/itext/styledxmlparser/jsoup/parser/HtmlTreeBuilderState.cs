@@ -29,2422 +29,51 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <remarks>The Tree Builder's current state. Each state embodies the processing for the state, and transitions to other states.
     ///     </remarks>
     internal abstract class HtmlTreeBuilderState {
-        private sealed class _HtmlTreeBuilderState_40 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_40() {
-            }
+        public static HtmlTreeBuilderState Initial = new HtmlTreeBuilderState.InitialBS();
 
-            public override String ToString() {
-                return "Initial";
-            }
+        public static HtmlTreeBuilderState BeforeHtml = new HtmlTreeBuilderState.BeforeHtmlBS();
 
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (HtmlTreeBuilderState.IsWhitespace(t)) {
-                    return true;
-                }
-                else {
-                    // ignore whitespace until we get the first content
-                    if (t.IsComment()) {
-                        tb.Insert(t.AsComment());
-                    }
-                    else {
-                        if (t.IsDoctype()) {
-                            Token.Doctype d = t.AsDoctype();
-                            DocumentType doctype = new DocumentType(tb.settings.NormalizeTag(d.GetName()), d.GetPublicIdentifier(), d.
-                                GetSystemIdentifier());
-                            doctype.SetPubSysKey(d.GetPubSysKey());
-                            tb.GetDocument().AppendChild(doctype);
-                            if (d.IsForceQuirks()) {
-                                tb.GetDocument().QuirksMode(QuirksMode.quirks);
-                            }
-                            tb.Transition(HtmlTreeBuilderState.BeforeHtml);
-                        }
-                        else {
-                            tb.Transition(HtmlTreeBuilderState.BeforeHtml);
-                            return tb.Process(t);
-                        }
-                    }
-                }
-                // re-process token
-                return true;
-            }
-        }
+        public static HtmlTreeBuilderState BeforeHead = new HtmlTreeBuilderState.BeforeHeadBS();
 
-        public static HtmlTreeBuilderState Initial = new _HtmlTreeBuilderState_40();
+        public static HtmlTreeBuilderState InHead = new HtmlTreeBuilderState.InHeadBS();
 
-        private sealed class _HtmlTreeBuilderState_69 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_69() {
-            }
+        public static HtmlTreeBuilderState InHeadNoscript = new HtmlTreeBuilderState.InHeadNoScriptBS();
 
-            public override String ToString() {
-                return "BeforeHtml";
-            }
+        public static HtmlTreeBuilderState AfterHead = new HtmlTreeBuilderState.AfterHeadBS();
 
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (t.IsDoctype()) {
-                    tb.Error(this);
-                    return false;
-                }
-                else {
-                    if (t.IsComment()) {
-                        tb.Insert(t.AsComment());
-                    }
-                    else {
-                        if (HtmlTreeBuilderState.IsWhitespace(t)) {
-                            tb.Insert(t.AsCharacter());
-                        }
-                        else {
-                            // out of spec - include whitespace
-                            if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html")) {
-                                tb.Insert(t.AsStartTag());
-                                tb.Transition(HtmlTreeBuilderState.BeforeHead);
-                            }
-                            else {
-                                if (t.IsEndTag() && (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsEndTag().NormalName(), HtmlTreeBuilderState.Constants
-                                    .BeforeHtmlToHead))) {
-                                    return this.AnythingElse(t, tb);
-                                }
-                                else {
-                                    if (t.IsEndTag()) {
-                                        tb.Error(this);
-                                        return false;
-                                    }
-                                    else {
-                                        return this.AnythingElse(t, tb);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
+        public static HtmlTreeBuilderState InBody = new HtmlTreeBuilderState.InBodyBS();
 
-            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
-                tb.InsertStartTag("html");
-                tb.Transition(HtmlTreeBuilderState.BeforeHead);
-                return tb.Process(t);
-            }
-        }
+        public static HtmlTreeBuilderState Text = new HtmlTreeBuilderState.TextBS();
 
-        public static HtmlTreeBuilderState BeforeHtml = new _HtmlTreeBuilderState_69();
+        public static HtmlTreeBuilderState InTable = new HtmlTreeBuilderState.InTableBS();
 
-        private sealed class _HtmlTreeBuilderState_105 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_105() {
-            }
+        public static HtmlTreeBuilderState InTableText = new HtmlTreeBuilderState.InTableTextBS();
 
-            public override String ToString() {
-                return "BeforeHead";
-            }
+        public static HtmlTreeBuilderState InCaption = new HtmlTreeBuilderState.InCaptionBS();
 
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (HtmlTreeBuilderState.IsWhitespace(t)) {
-                    tb.Insert(t.AsCharacter());
-                }
-                else {
-                    // out of spec - include whitespace
-                    if (t.IsComment()) {
-                        tb.Insert(t.AsComment());
-                    }
-                    else {
-                        if (t.IsDoctype()) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html")) {
-                                return HtmlTreeBuilderState.InBody.Process(t, tb);
-                            }
-                            else {
-                                // does not transition
-                                if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("head")) {
-                                    iText.StyledXmlParser.Jsoup.Nodes.Element head = tb.Insert(t.AsStartTag());
-                                    tb.SetHeadElement(head);
-                                    tb.Transition(HtmlTreeBuilderState.InHead);
-                                }
-                                else {
-                                    if (t.IsEndTag() && (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsEndTag().NormalName(), HtmlTreeBuilderState.Constants
-                                        .BeforeHtmlToHead))) {
-                                        tb.ProcessStartTag("head");
-                                        return tb.Process(t);
-                                    }
-                                    else {
-                                        if (t.IsEndTag()) {
-                                            tb.Error(this);
-                                            return false;
-                                        }
-                                        else {
-                                            tb.ProcessStartTag("head");
-                                            return tb.Process(t);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-        }
+        public static HtmlTreeBuilderState InColumnGroup = new HtmlTreeBuilderState.InColumnGroupBS();
 
-        public static HtmlTreeBuilderState BeforeHead = new _HtmlTreeBuilderState_105();
+        public static HtmlTreeBuilderState InTableBody = new HtmlTreeBuilderState.InTableBodyBS();
 
-        private sealed class _HtmlTreeBuilderState_140 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_140() {
-            }
+        public static HtmlTreeBuilderState InRow = new HtmlTreeBuilderState.InRowBS();
 
-            public override String ToString() {
-                return "InHead";
-            }
+        public static HtmlTreeBuilderState InCell = new HtmlTreeBuilderState.InCellBS();
 
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (HtmlTreeBuilderState.IsWhitespace(t)) {
-                    tb.Insert(t.AsCharacter());
-                    // out of spec - include whitespace
-                    return true;
-                }
-                String name;
-                switch (t.type) {
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Comment: {
-                        tb.Insert(t.AsComment());
-                        break;
-                    }
+        public static HtmlTreeBuilderState InSelect = new HtmlTreeBuilderState.InSelectBS();
 
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Doctype: {
-                        tb.Error(this);
-                        return false;
-                    }
+        public static HtmlTreeBuilderState InSelectInTable = new HtmlTreeBuilderState.InSelectInTableBS();
 
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
-                        Token.StartTag start = t.AsStartTag();
-                        name = start.NormalName();
-                        if (name.Equals("html")) {
-                            return HtmlTreeBuilderState.InBody.Process(t, tb);
-                        }
-                        else {
-                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InHeadEmpty
-                                )) {
-                                iText.StyledXmlParser.Jsoup.Nodes.Element el = tb.InsertEmpty(start);
-                                // jsoup special: update base the first time it is seen
-                                if (name.Equals("base") && el.HasAttr("href")) {
-                                    tb.MaybeSetBaseUri(el);
-                                }
-                            }
-                            else {
-                                if (name.Equals("meta")) {
-                                    tb.InsertEmpty(start);
-                                }
-                                else {
-                                    if (name.Equals("title")) {
-                                        HtmlTreeBuilderState.HandleRcData(start, tb);
-                                    }
-                                    else {
-                                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InHeadRaw
-                                            )) {
-                                            HtmlTreeBuilderState.HandleRawtext(start, tb);
-                                        }
-                                        else {
-                                            if (name.Equals("noscript")) {
-                                                // else if noscript && scripting flag = true: rawtext (jsoup doesn't run script, to handle as noscript)
-                                                tb.Insert(start);
-                                                tb.Transition(HtmlTreeBuilderState.InHeadNoscript);
-                                            }
-                                            else {
-                                                if (name.Equals("script")) {
-                                                    // skips some script rules as won't execute them
-                                                    tb.tokeniser.Transition(TokeniserState.ScriptData);
-                                                    tb.MarkInsertionMode();
-                                                    tb.Transition(HtmlTreeBuilderState.Text);
-                                                    tb.Insert(start);
-                                                }
-                                                else {
-                                                    if (name.Equals("head")) {
-                                                        tb.Error(this);
-                                                        return false;
-                                                    }
-                                                    else {
-                                                        return this.AnythingElse(t, tb);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    }
+        public static HtmlTreeBuilderState AfterBody = new HtmlTreeBuilderState.AfterBodyBS();
 
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EndTag: {
-                        Token.EndTag end = t.AsEndTag();
-                        name = end.NormalName();
-                        if (name.Equals("head")) {
-                            tb.Pop();
-                            tb.Transition(HtmlTreeBuilderState.AfterHead);
-                        }
-                        else {
-                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InHeadEnd
-                                )) {
-                                return this.AnythingElse(t, tb);
-                            }
-                            else {
-                                tb.Error(this);
-                                return false;
-                            }
-                        }
-                        break;
-                    }
+        public static HtmlTreeBuilderState InFrameset = new HtmlTreeBuilderState.InFrameSetBS();
 
-                    default: {
-                        return this.AnythingElse(t, tb);
-                    }
-                }
-                return true;
-            }
+        public static HtmlTreeBuilderState AfterFrameset = new HtmlTreeBuilderState.AfterFrameSetBS();
 
-            private bool AnythingElse(Token t, TreeBuilder tb) {
-                tb.ProcessEndTag("head");
-                return tb.Process(t);
-            }
-        }
+        public static HtmlTreeBuilderState AfterAfterBody = new HtmlTreeBuilderState.AfterAfterBodyBS();
 
-        public static HtmlTreeBuilderState InHead = new _HtmlTreeBuilderState_140();
+        public static HtmlTreeBuilderState AfterAfterFrameset = new HtmlTreeBuilderState.AfterAfterFrameSetBS();
 
-        private sealed class _HtmlTreeBuilderState_219 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_219() {
-            }
-
-            public override String ToString() {
-                return "InHeadNoscript";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (t.IsDoctype()) {
-                    tb.Error(this);
-                }
-                else {
-                    if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html")) {
-                        return tb.Process(t, HtmlTreeBuilderState.InBody);
-                    }
-                    else {
-                        if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("noscript")) {
-                            tb.Pop();
-                            tb.Transition(HtmlTreeBuilderState.InHead);
-                        }
-                        else {
-                            if (HtmlTreeBuilderState.IsWhitespace(t) || t.IsComment() || (t.IsStartTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil
-                                .InSorted(t.AsStartTag().NormalName(), HtmlTreeBuilderState.Constants.InHeadNoScriptHead))) {
-                                return tb.Process(t, HtmlTreeBuilderState.InHead);
-                            }
-                            else {
-                                if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("br")) {
-                                    return this.AnythingElse(t, tb);
-                                }
-                                else {
-                                    if ((t.IsStartTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsStartTag().NormalName(
-                                        ), HtmlTreeBuilderState.Constants.InHeadNoscriptIgnore)) || t.IsEndTag()) {
-                                        tb.Error(this);
-                                        return false;
-                                    }
-                                    else {
-                                        return this.AnythingElse(t, tb);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-
-            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
-                // note that this deviates from spec, which is to pop out of noscript and reprocess in head:
-                // https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inheadnoscript
-                // allows content to be inserted as data
-                tb.Error(this);
-                tb.Insert(new Token.Character().Data(t.ToString()));
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState InHeadNoscript = new _HtmlTreeBuilderState_219();
-
-        private sealed class _HtmlTreeBuilderState_258 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_258() {
-            }
-
-            public override String ToString() {
-                return "AfterHead";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (HtmlTreeBuilderState.IsWhitespace(t)) {
-                    tb.Insert(t.AsCharacter());
-                }
-                else {
-                    if (t.IsComment()) {
-                        tb.Insert(t.AsComment());
-                    }
-                    else {
-                        if (t.IsDoctype()) {
-                            tb.Error(this);
-                        }
-                        else {
-                            if (t.IsStartTag()) {
-                                Token.StartTag startTag = t.AsStartTag();
-                                String name = startTag.NormalName();
-                                if (name.Equals("html")) {
-                                    return tb.Process(t, HtmlTreeBuilderState.InBody);
-                                }
-                                else {
-                                    if (name.Equals("body")) {
-                                        tb.Insert(startTag);
-                                        tb.FramesetOk(false);
-                                        tb.Transition(HtmlTreeBuilderState.InBody);
-                                    }
-                                    else {
-                                        if (name.Equals("frameset")) {
-                                            tb.Insert(startTag);
-                                            tb.Transition(HtmlTreeBuilderState.InFrameset);
-                                        }
-                                        else {
-                                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartToHead
-                                                )) {
-                                                tb.Error(this);
-                                                iText.StyledXmlParser.Jsoup.Nodes.Element head = tb.GetHeadElement();
-                                                tb.Push(head);
-                                                tb.Process(t, HtmlTreeBuilderState.InHead);
-                                                tb.RemoveFromStack(head);
-                                            }
-                                            else {
-                                                if (name.Equals("head")) {
-                                                    tb.Error(this);
-                                                    return false;
-                                                }
-                                                else {
-                                                    this.AnythingElse(t, tb);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            else {
-                                if (t.IsEndTag()) {
-                                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsEndTag().NormalName(), HtmlTreeBuilderState.Constants
-                                        .AfterHeadBody)) {
-                                        this.AnythingElse(t, tb);
-                                    }
-                                    else {
-                                        tb.Error(this);
-                                        return false;
-                                    }
-                                }
-                                else {
-                                    this.AnythingElse(t, tb);
-                                }
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-
-            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
-                tb.ProcessStartTag("body");
-                tb.FramesetOk(true);
-                return tb.Process(t);
-            }
-        }
-
-        public static HtmlTreeBuilderState AfterHead = new _HtmlTreeBuilderState_258();
-
-        private sealed class _HtmlTreeBuilderState_316 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_316() {
-            }
-
-            public override String ToString() {
-                return "InBody";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                switch (t.type) {
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Character: {
-                        Token.Character c = t.AsCharacter();
-                        if (c.GetData().Equals(HtmlTreeBuilderState.nullString)) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            if (tb.FramesetOk() && HtmlTreeBuilderState.IsWhitespace(c)) {
-                                // don't check if whitespace if frames already closed
-                                tb.ReconstructFormattingElements();
-                                tb.Insert(c);
-                            }
-                            else {
-                                tb.ReconstructFormattingElements();
-                                tb.Insert(c);
-                                tb.FramesetOk(false);
-                            }
-                        }
-                        break;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Comment: {
-                        tb.Insert(t.AsComment());
-                        break;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Doctype: {
-                        tb.Error(this);
-                        return false;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
-                        return this.InBodyStartTag(t, tb);
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EndTag: {
-                        return this.InBodyEndTag(t, tb);
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EOF: {
-                        // stop parsing
-                        break;
-                    }
-                }
-                return true;
-            }
-
-            private bool InBodyStartTag(Token t, HtmlTreeBuilder tb) {
-                Token.StartTag startTag = t.AsStartTag();
-                String name = startTag.NormalName();
-                List<iText.StyledXmlParser.Jsoup.Nodes.Element> stack;
-                iText.StyledXmlParser.Jsoup.Nodes.Element el;
-                switch (name) {
-                    case "a": {
-                        if (tb.GetActiveFormattingElement("a") != null) {
-                            tb.Error(this);
-                            tb.ProcessEndTag("a");
-                            // still on stack?
-                            iText.StyledXmlParser.Jsoup.Nodes.Element remainingA = tb.GetFromStack("a");
-                            if (remainingA != null) {
-                                tb.RemoveFromActiveFormattingElements(remainingA);
-                                tb.RemoveFromStack(remainingA);
-                            }
-                        }
-                        tb.ReconstructFormattingElements();
-                        el = tb.Insert(startTag);
-                        tb.PushActiveFormattingElements(el);
-                        break;
-                    }
-
-                    case "span": {
-                        // same as final else, but short circuits lots of checks
-                        tb.ReconstructFormattingElements();
-                        tb.Insert(startTag);
-                        break;
-                    }
-
-                    case "li": {
-                        tb.FramesetOk(false);
-                        stack = tb.GetStack();
-                        for (int i = stack.Count - 1; i > 0; i--) {
-                            el = stack[i];
-                            if (el.NormalName().Equals("li")) {
-                                tb.ProcessEndTag("li");
-                                break;
-                            }
-                            if (tb.IsSpecial(el) && !iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(el.NormalName(), HtmlTreeBuilderState.Constants
-                                .InBodyStartLiBreakers)) {
-                                break;
-                            }
-                        }
-                        if (tb.InButtonScope("p")) {
-                            tb.ProcessEndTag("p");
-                        }
-                        tb.Insert(startTag);
-                        break;
-                    }
-
-                    case "html": {
-                        tb.Error(this);
-                        // merge attributes onto real html
-                        iText.StyledXmlParser.Jsoup.Nodes.Element html = tb.GetStack()[0];
-                        if (startTag.HasAttributes()) {
-                            foreach (iText.StyledXmlParser.Jsoup.Nodes.Attribute attribute in startTag.attributes) {
-                                if (!html.HasAttr(attribute.Key)) {
-                                    html.Attributes().Put(attribute);
-                                }
-                            }
-                        }
-                        break;
-                    }
-
-                    case "body": {
-                        tb.Error(this);
-                        stack = tb.GetStack();
-                        if (stack.Count == 1 || (stack.Count > 2 && !stack[1].NormalName().Equals("body"))) {
-                            // only in fragment case
-                            return false;
-                        }
-                        else {
-                            // ignore
-                            tb.FramesetOk(false);
-                            iText.StyledXmlParser.Jsoup.Nodes.Element body = stack[1];
-                            if (startTag.HasAttributes()) {
-                                foreach (iText.StyledXmlParser.Jsoup.Nodes.Attribute attribute in startTag.attributes) {
-                                    if (!body.HasAttr(attribute.Key)) {
-                                        body.Attributes().Put(attribute);
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    }
-
-                    case "frameset": {
-                        tb.Error(this);
-                        stack = tb.GetStack();
-                        if (stack.Count == 1 || (stack.Count > 2 && !stack[1].NormalName().Equals("body"))) {
-                            // only in fragment case
-                            return false;
-                        }
-                        else {
-                            // ignore
-                            if (!tb.FramesetOk()) {
-                                return false;
-                            }
-                            else {
-                                // ignore frameset
-                                iText.StyledXmlParser.Jsoup.Nodes.Element second = stack[1];
-                                if (second.Parent() != null) {
-                                    second.Remove();
-                                }
-                                // pop up to html element
-                                while (stack.Count > 1) {
-                                    stack.JRemoveAt(stack.Count - 1);
-                                }
-                                tb.Insert(startTag);
-                                tb.Transition(HtmlTreeBuilderState.InFrameset);
-                            }
-                        }
-                        break;
-                    }
-
-                    case "form": {
-                        if (tb.GetFormElement() != null) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        if (tb.InButtonScope("p")) {
-                            tb.ProcessEndTag("p");
-                        }
-                        tb.InsertForm(startTag, true);
-                        break;
-                    }
-
-                    case "plaintext": {
-                        if (tb.InButtonScope("p")) {
-                            tb.ProcessEndTag("p");
-                        }
-                        tb.Insert(startTag);
-                        tb.tokeniser.Transition(TokeniserState.PLAINTEXT);
-                        // once in, never gets out
-                        break;
-                    }
-
-                    case "button": {
-                        if (tb.InButtonScope("button")) {
-                            // close and reprocess
-                            tb.Error(this);
-                            tb.ProcessEndTag("button");
-                            tb.Process(startTag);
-                        }
-                        else {
-                            tb.ReconstructFormattingElements();
-                            tb.Insert(startTag);
-                            tb.FramesetOk(false);
-                        }
-                        break;
-                    }
-
-                    case "nobr": {
-                        tb.ReconstructFormattingElements();
-                        if (tb.InScope("nobr")) {
-                            tb.Error(this);
-                            tb.ProcessEndTag("nobr");
-                            tb.ReconstructFormattingElements();
-                        }
-                        el = tb.Insert(startTag);
-                        tb.PushActiveFormattingElements(el);
-                        break;
-                    }
-
-                    case "table": {
-                        if (tb.GetDocument().QuirksMode() != QuirksMode.quirks && tb.InButtonScope("p")) {
-                            tb.ProcessEndTag("p");
-                        }
-                        tb.Insert(startTag);
-                        tb.FramesetOk(false);
-                        tb.Transition(HtmlTreeBuilderState.InTable);
-                        break;
-                    }
-
-                    case "input": {
-                        tb.ReconstructFormattingElements();
-                        el = tb.InsertEmpty(startTag);
-                        if (!el.Attr("type").EqualsIgnoreCase("hidden")) {
-                            tb.FramesetOk(false);
-                        }
-                        break;
-                    }
-
-                    case "hr": {
-                        if (tb.InButtonScope("p")) {
-                            tb.ProcessEndTag("p");
-                        }
-                        tb.InsertEmpty(startTag);
-                        tb.FramesetOk(false);
-                        break;
-                    }
-
-                    case "image": {
-                        if (tb.GetFromStack("svg") == null) {
-                            return tb.Process(startTag.Name("img"));
-                        }
-                        else {
-                            // change <image> to <img>, unless in svg
-                            tb.Insert(startTag);
-                        }
-                        break;
-                    }
-
-                    case "isindex": {
-                        // how much do we care about the early 90s?
-                        tb.Error(this);
-                        if (tb.GetFormElement() != null) {
-                            return false;
-                        }
-                        tb.ProcessStartTag("form");
-                        if (startTag.HasAttribute("action")) {
-                            iText.StyledXmlParser.Jsoup.Nodes.Element form = tb.GetFormElement();
-                            form.Attr("action", startTag.attributes.Get("action"));
-                        }
-                        tb.ProcessStartTag("hr");
-                        tb.ProcessStartTag("label");
-                        // hope you like english.
-                        String prompt = startTag.HasAttribute("prompt") ? startTag.attributes.Get("prompt") : "This is a searchable index. Enter search keywords: ";
-                        tb.Process(new Token.Character().Data(prompt));
-                        // input
-                        Attributes inputAttribs = new Attributes();
-                        if (startTag.HasAttributes()) {
-                            foreach (iText.StyledXmlParser.Jsoup.Nodes.Attribute attr in startTag.attributes) {
-                                if (!iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(attr.Key, HtmlTreeBuilderState.Constants.InBodyStartInputAttribs
-                                    )) {
-                                    inputAttribs.Put(attr);
-                                }
-                            }
-                        }
-                        inputAttribs.Put("name", "isindex");
-                        tb.ProcessStartTag("input", inputAttribs);
-                        tb.ProcessEndTag("label");
-                        tb.ProcessStartTag("hr");
-                        tb.ProcessEndTag("form");
-                        break;
-                    }
-
-                    case "textarea": {
-                        tb.Insert(startTag);
-                        if (!startTag.IsSelfClosing()) {
-                            tb.tokeniser.Transition(TokeniserState.Rcdata);
-                            tb.MarkInsertionMode();
-                            tb.FramesetOk(false);
-                            tb.Transition(HtmlTreeBuilderState.Text);
-                        }
-                        break;
-                    }
-
-                    case "xmp": {
-                        if (tb.InButtonScope("p")) {
-                            tb.ProcessEndTag("p");
-                        }
-                        tb.ReconstructFormattingElements();
-                        tb.FramesetOk(false);
-                        HtmlTreeBuilderState.HandleRawtext(startTag, tb);
-                        break;
-                    }
-
-                    case "iframe": {
-                        tb.FramesetOk(false);
-                        HtmlTreeBuilderState.HandleRawtext(startTag, tb);
-                        break;
-                    }
-
-                    case "noembed": {
-                        // also handle noscript if script enabled
-                        HtmlTreeBuilderState.HandleRawtext(startTag, tb);
-                        break;
-                    }
-
-                    case "select": {
-                        tb.ReconstructFormattingElements();
-                        tb.Insert(startTag);
-                        tb.FramesetOk(false);
-                        HtmlTreeBuilderState state = tb.State();
-                        if (state.Equals(HtmlTreeBuilderState.InTable) || state.Equals(HtmlTreeBuilderState.InCaption) || state.Equals
-                            (HtmlTreeBuilderState.InTableBody) || state.Equals(HtmlTreeBuilderState.InRow) || state.Equals(HtmlTreeBuilderState
-                            .InCell)) {
-                            tb.Transition(HtmlTreeBuilderState.InSelectInTable);
-                        }
-                        else {
-                            tb.Transition(HtmlTreeBuilderState.InSelect);
-                        }
-                        break;
-                    }
-
-                    case "math": {
-                        tb.ReconstructFormattingElements();
-                        tb.Insert(startTag);
-                        break;
-                    }
-
-                    case "svg": {
-                        tb.ReconstructFormattingElements();
-                        tb.Insert(startTag);
-                        break;
-                    }
-
-                    // static final String[] Headings = new String[]{"h1", "h2", "h3", "h4", "h5", "h6"};
-                    case "h1":
-                    case "h2":
-                    case "h3":
-                    case "h4":
-                    case "h5":
-                    case "h6": {
-                        if (tb.InButtonScope("p")) {
-                            tb.ProcessEndTag("p");
-                        }
-                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(tb.CurrentElement().NormalName(), HtmlTreeBuilderState.Constants
-                            .Headings)) {
-                            tb.Error(this);
-                            tb.Pop();
-                        }
-                        tb.Insert(startTag);
-                        break;
-                    }
-
-                    // static final String[] InBodyStartPreListing = new String[]{"listing", "pre"};
-                    case "pre":
-                    case "listing": {
-                        if (tb.InButtonScope("p")) {
-                            tb.ProcessEndTag("p");
-                        }
-                        tb.Insert(startTag);
-                        tb.reader.MatchConsume("\n");
-                        // ignore LF if next token
-                        tb.FramesetOk(false);
-                        break;
-                    }
-
-                    // static final String[] DdDt = new String[]{"dd", "dt"};
-                    case "dd":
-                    case "dt": {
-                        tb.FramesetOk(false);
-                        stack = tb.GetStack();
-                        for (int i = stack.Count - 1; i > 0; i--) {
-                            el = stack[i];
-                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(el.NormalName(), HtmlTreeBuilderState.Constants
-                                .DdDt)) {
-                                tb.ProcessEndTag(el.NormalName());
-                                break;
-                            }
-                            if (tb.IsSpecial(el) && !iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(el.NormalName(), HtmlTreeBuilderState.Constants
-                                .InBodyStartLiBreakers)) {
-                                break;
-                            }
-                        }
-                        if (tb.InButtonScope("p")) {
-                            tb.ProcessEndTag("p");
-                        }
-                        tb.Insert(startTag);
-                        break;
-                    }
-
-                    // static final String[] InBodyStartOptions = new String[]{"optgroup", "option"};
-                    case "optgroup":
-                    case "option": {
-                        if (tb.CurrentElement().NormalName().Equals("option")) {
-                            tb.ProcessEndTag("option");
-                        }
-                        tb.ReconstructFormattingElements();
-                        tb.Insert(startTag);
-                        break;
-                    }
-
-                    // static final String[] InBodyStartRuby = new String[]{"rp", "rt"};
-                    case "rp":
-                    case "rt": {
-                        if (tb.InScope("ruby")) {
-                            tb.GenerateImpliedEndTags();
-                            if (!tb.CurrentElement().NormalName().Equals("ruby")) {
-                                tb.Error(this);
-                                tb.PopStackToBefore("ruby");
-                            }
-                            // i.e. close up to but not include name
-                            tb.Insert(startTag);
-                        }
-                        break;
-                    }
-
-                    default: {
-                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartEmptyFormatters
-                            )) {
-                            tb.ReconstructFormattingElements();
-                            tb.InsertEmpty(startTag);
-                            tb.FramesetOk(false);
-                        }
-                        else {
-                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartPClosers
-                                )) {
-                                if (tb.InButtonScope("p")) {
-                                    tb.ProcessEndTag("p");
-                                }
-                                tb.Insert(startTag);
-                            }
-                            else {
-                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartToHead
-                                    )) {
-                                    return tb.Process(t, HtmlTreeBuilderState.InHead);
-                                }
-                                else {
-                                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.Formatters
-                                        )) {
-                                        tb.ReconstructFormattingElements();
-                                        el = tb.Insert(startTag);
-                                        tb.PushActiveFormattingElements(el);
-                                    }
-                                    else {
-                                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartApplets
-                                            )) {
-                                            tb.ReconstructFormattingElements();
-                                            tb.Insert(startTag);
-                                            tb.InsertMarkerToFormattingElements();
-                                            tb.FramesetOk(false);
-                                        }
-                                        else {
-                                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartMedia
-                                                )) {
-                                                tb.InsertEmpty(startTag);
-                                            }
-                                            else {
-                                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartDrop
-                                                    )) {
-                                                    tb.Error(this);
-                                                    return false;
-                                                }
-                                                else {
-                                                    tb.ReconstructFormattingElements();
-                                                    tb.Insert(startTag);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-                return true;
-            }
-
-            private bool InBodyEndTag(Token t, HtmlTreeBuilder tb) {
-                Token.EndTag endTag = t.AsEndTag();
-                String name = endTag.NormalName();
-                switch (name) {
-                    case "sarcasm":
-                    // *sigh*
-                    case "span": {
-                        // same as final fall through, but saves short circuit
-                        return this.AnyOtherEndTag(t, tb);
-                    }
-
-                    case "li": {
-                        if (!tb.InListItemScope(name)) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            tb.GenerateImpliedEndTags(name);
-                            if (!tb.CurrentElement().NormalName().Equals(name)) {
-                                tb.Error(this);
-                            }
-                            tb.PopStackToClose(name);
-                        }
-                        break;
-                    }
-
-                    case "body": {
-                        if (!tb.InScope("body")) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            tb.Transition(HtmlTreeBuilderState.AfterBody);
-                        }
-                        break;
-                    }
-
-                    case "html": {
-                        bool notIgnored = tb.ProcessEndTag("body");
-                        if (notIgnored) {
-                            return tb.Process(endTag);
-                        }
-                        break;
-                    }
-
-                    case "form": {
-                        iText.StyledXmlParser.Jsoup.Nodes.Element currentForm = tb.GetFormElement();
-                        tb.SetFormElement(null);
-                        if (currentForm == null || !tb.InScope(name)) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            tb.GenerateImpliedEndTags();
-                            if (!tb.CurrentElement().NormalName().Equals(name)) {
-                                tb.Error(this);
-                            }
-                            // remove currentForm from stack. will shift anything under up.
-                            tb.RemoveFromStack(currentForm);
-                        }
-                        break;
-                    }
-
-                    case "p": {
-                        if (!tb.InButtonScope(name)) {
-                            tb.Error(this);
-                            tb.ProcessStartTag(name);
-                            // if no p to close, creates an empty <p></p>
-                            return tb.Process(endTag);
-                        }
-                        else {
-                            tb.GenerateImpliedEndTags(name);
-                            if (!tb.CurrentElement().NormalName().Equals(name)) {
-                                tb.Error(this);
-                            }
-                            tb.PopStackToClose(name);
-                        }
-                        break;
-                    }
-
-                    case "dd":
-                    case "dt": {
-                        if (!tb.InScope(name)) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            tb.GenerateImpliedEndTags(name);
-                            if (!tb.CurrentElement().NormalName().Equals(name)) {
-                                tb.Error(this);
-                            }
-                            tb.PopStackToClose(name);
-                        }
-                        break;
-                    }
-
-                    case "h1":
-                    case "h2":
-                    case "h3":
-                    case "h4":
-                    case "h5":
-                    case "h6": {
-                        if (!tb.InScope(HtmlTreeBuilderState.Constants.Headings)) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            tb.GenerateImpliedEndTags(name);
-                            if (!tb.CurrentElement().NormalName().Equals(name)) {
-                                tb.Error(this);
-                            }
-                            tb.PopStackToClose(HtmlTreeBuilderState.Constants.Headings);
-                        }
-                        break;
-                    }
-
-                    case "br": {
-                        tb.Error(this);
-                        tb.ProcessStartTag("br");
-                        return false;
-                    }
-
-                    default: {
-                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyEndAdoptionFormatters
-                            )) {
-                            return this.InBodyEndTagAdoption(t, tb);
-                        }
-                        else {
-                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyEndClosers
-                                )) {
-                                if (!tb.InScope(name)) {
-                                    // nothing to close
-                                    tb.Error(this);
-                                    return false;
-                                }
-                                else {
-                                    tb.GenerateImpliedEndTags();
-                                    if (!tb.CurrentElement().NormalName().Equals(name)) {
-                                        tb.Error(this);
-                                    }
-                                    tb.PopStackToClose(name);
-                                }
-                            }
-                            else {
-                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartApplets
-                                    )) {
-                                    if (!tb.InScope("name")) {
-                                        if (!tb.InScope(name)) {
-                                            tb.Error(this);
-                                            return false;
-                                        }
-                                        tb.GenerateImpliedEndTags();
-                                        if (!tb.CurrentElement().NormalName().Equals(name)) {
-                                            tb.Error(this);
-                                        }
-                                        tb.PopStackToClose(name);
-                                        tb.ClearFormattingElementsToLastMarker();
-                                    }
-                                }
-                                else {
-                                    return this.AnyOtherEndTag(t, tb);
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-                return true;
-            }
-
-            internal bool AnyOtherEndTag(Token t, HtmlTreeBuilder tb) {
-                String name = t.AsEndTag().normalName;
-                // case insensitive search - goal is to preserve output case, not for the parse to be case sensitive
-                List<iText.StyledXmlParser.Jsoup.Nodes.Element> stack = tb.GetStack();
-                for (int pos = stack.Count - 1; pos >= 0; pos--) {
-                    iText.StyledXmlParser.Jsoup.Nodes.Element node = stack[pos];
-                    if (node.NormalName().Equals(name)) {
-                        tb.GenerateImpliedEndTags(name);
-                        if (!name.Equals(tb.CurrentElement().NormalName())) {
-                            tb.Error(this);
-                        }
-                        tb.PopStackToClose(name);
-                        break;
-                    }
-                    else {
-                        if (tb.IsSpecial(node)) {
-                            tb.Error(this);
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-
-            // Adoption Agency Algorithm.
-            private bool InBodyEndTagAdoption(Token t, HtmlTreeBuilder tb) {
-                Token.EndTag endTag = t.AsEndTag();
-                String name = endTag.NormalName();
-                List<iText.StyledXmlParser.Jsoup.Nodes.Element> stack = tb.GetStack();
-                iText.StyledXmlParser.Jsoup.Nodes.Element el;
-                for (int i = 0; i < 8; i++) {
-                    iText.StyledXmlParser.Jsoup.Nodes.Element formatEl = tb.GetActiveFormattingElement(name);
-                    if (formatEl == null) {
-                        return this.AnyOtherEndTag(t, tb);
-                    }
-                    else {
-                        if (!tb.OnStack(formatEl)) {
-                            tb.Error(this);
-                            tb.RemoveFromActiveFormattingElements(formatEl);
-                            return true;
-                        }
-                        else {
-                            if (!tb.InScope(formatEl.NormalName())) {
-                                tb.Error(this);
-                                return false;
-                            }
-                            else {
-                                if (tb.CurrentElement() != formatEl) {
-                                    tb.Error(this);
-                                }
-                            }
-                        }
-                    }
-                    iText.StyledXmlParser.Jsoup.Nodes.Element furthestBlock = null;
-                    iText.StyledXmlParser.Jsoup.Nodes.Element commonAncestor = null;
-                    bool seenFormattingElement = false;
-                    // the spec doesn't limit to < 64, but in degenerate cases (9000+ stack depth) this prevents
-                    // run-aways
-                    int stackSize = stack.Count;
-                    int bookmark = -1;
-                    for (int si = 0; si < stackSize && si < 64; si++) {
-                        el = stack[si];
-                        if (el == formatEl) {
-                            commonAncestor = stack[si - 1];
-                            seenFormattingElement = true;
-                            // Let a bookmark note the position of the formatting element in the list of active formatting elements relative to the elements on either side of it in the list.
-                            bookmark = tb.PositionOfElement(el);
-                        }
-                        else {
-                            if (seenFormattingElement && tb.IsSpecial(el)) {
-                                furthestBlock = el;
-                                break;
-                            }
-                        }
-                    }
-                    if (furthestBlock == null) {
-                        tb.PopStackToClose(formatEl.NormalName());
-                        tb.RemoveFromActiveFormattingElements(formatEl);
-                        return true;
-                    }
-                    iText.StyledXmlParser.Jsoup.Nodes.Element node = furthestBlock;
-                    iText.StyledXmlParser.Jsoup.Nodes.Element lastNode = furthestBlock;
-                    for (int j = 0; j < 3; j++) {
-                        if (tb.OnStack(node)) {
-                            node = tb.AboveOnStack(node);
-                        }
-                        if (!tb.IsInActiveFormattingElements(node)) {
-                            // note no bookmark check
-                            tb.RemoveFromStack(node);
-                            continue;
-                        }
-                        else {
-                            if (node == formatEl) {
-                                break;
-                            }
-                        }
-                        iText.StyledXmlParser.Jsoup.Nodes.Element replacement = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                            .ValueOf(node.NodeName(), ParseSettings.preserveCase), tb.GetBaseUri());
-                        // case will follow the original node (so honours ParseSettings)
-                        tb.ReplaceActiveFormattingElement(node, replacement);
-                        tb.ReplaceOnStack(node, replacement);
-                        node = replacement;
-                        if (lastNode == furthestBlock) {
-                            // move the aforementioned bookmark to be immediately after the new node in the list of active formatting elements.
-                            // not getting how this bookmark both straddles the element above, but is inbetween here...
-                            bookmark = tb.PositionOfElement(node) + 1;
-                        }
-                        if (lastNode.Parent() != null) {
-                            lastNode.Remove();
-                        }
-                        node.AppendChild(lastNode);
-                        lastNode = node;
-                    }
-                    if (commonAncestor != null) {
-                        // safety check, but would be an error if null
-                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(commonAncestor.NormalName(), HtmlTreeBuilderState.Constants
-                            .InBodyEndTableFosters)) {
-                            if (lastNode.Parent() != null) {
-                                lastNode.Remove();
-                            }
-                            tb.InsertInFosterParent(lastNode);
-                        }
-                        else {
-                            if (lastNode.Parent() != null) {
-                                lastNode.Remove();
-                            }
-                            commonAncestor.AppendChild(lastNode);
-                        }
-                    }
-                    iText.StyledXmlParser.Jsoup.Nodes.Element adopter = new iText.StyledXmlParser.Jsoup.Nodes.Element(formatEl
-                        .Tag(), tb.GetBaseUri());
-                    adopter.Attributes().AddAll(formatEl.Attributes());
-                    iText.StyledXmlParser.Jsoup.Nodes.Node[] childNodes = furthestBlock.ChildNodes().ToArray(new iText.StyledXmlParser.Jsoup.Nodes.Node
-                        [0]);
-                    foreach (iText.StyledXmlParser.Jsoup.Nodes.Node childNode in childNodes) {
-                        adopter.AppendChild(childNode);
-                    }
-                    // append will reparent. thus the clone to avoid concurrent mod.
-                    furthestBlock.AppendChild(adopter);
-                    tb.RemoveFromActiveFormattingElements(formatEl);
-                    // insert the new element into the list of active formatting elements at the position of the aforementioned bookmark.
-                    tb.PushWithBookmark(adopter, bookmark);
-                    tb.RemoveFromStack(formatEl);
-                    tb.InsertOnStackAfter(furthestBlock, adopter);
-                }
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState InBody = new _HtmlTreeBuilderState_316();
-
-        private sealed class _HtmlTreeBuilderState_943 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_943() {
-            }
-
-            public override String ToString() {
-                return "Text";
-            }
-
-            // in script, style etc. normally treated as data tags
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (t.IsCharacter()) {
-                    tb.Insert(t.AsCharacter());
-                }
-                else {
-                    if (t.IsEOF()) {
-                        tb.Error(this);
-                        // if current node is script: already started
-                        tb.Pop();
-                        tb.Transition(tb.OriginalState());
-                        return tb.Process(t);
-                    }
-                    else {
-                        if (t.IsEndTag()) {
-                            // if: An end tag whose tag name is "script" -- scripting nesting level, if evaluating scripts
-                            tb.Pop();
-                            tb.Transition(tb.OriginalState());
-                        }
-                    }
-                }
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState Text = new _HtmlTreeBuilderState_943();
-
-        private sealed class _HtmlTreeBuilderState_969 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_969() {
-            }
-
-            public override String ToString() {
-                return "InTable";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (t.IsCharacter()) {
-                    tb.NewPendingTableCharacters();
-                    tb.MarkInsertionMode();
-                    tb.Transition(HtmlTreeBuilderState.InTableText);
-                    return tb.Process(t);
-                }
-                else {
-                    if (t.IsComment()) {
-                        tb.Insert(t.AsComment());
-                        return true;
-                    }
-                    else {
-                        if (t.IsDoctype()) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            if (t.IsStartTag()) {
-                                Token.StartTag startTag = t.AsStartTag();
-                                String name = startTag.NormalName();
-                                if (name.Equals("caption")) {
-                                    tb.ClearStackToTableContext();
-                                    tb.InsertMarkerToFormattingElements();
-                                    tb.Insert(startTag);
-                                    tb.Transition(HtmlTreeBuilderState.InCaption);
-                                }
-                                else {
-                                    if (name.Equals("colgroup")) {
-                                        tb.ClearStackToTableContext();
-                                        tb.Insert(startTag);
-                                        tb.Transition(HtmlTreeBuilderState.InColumnGroup);
-                                    }
-                                    else {
-                                        if (name.Equals("col")) {
-                                            tb.ProcessStartTag("colgroup");
-                                            return tb.Process(t);
-                                        }
-                                        else {
-                                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableToBody
-                                                )) {
-                                                tb.ClearStackToTableContext();
-                                                tb.Insert(startTag);
-                                                tb.Transition(HtmlTreeBuilderState.InTableBody);
-                                            }
-                                            else {
-                                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableAddBody
-                                                    )) {
-                                                    tb.ProcessStartTag("tbody");
-                                                    return tb.Process(t);
-                                                }
-                                                else {
-                                                    if (name.Equals("table")) {
-                                                        tb.Error(this);
-                                                        bool processed = tb.ProcessEndTag("table");
-                                                        if (processed) {
-                                                            // only ignored if in fragment
-                                                            return tb.Process(t);
-                                                        }
-                                                    }
-                                                    else {
-                                                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableToHead
-                                                            )) {
-                                                            return tb.Process(t, HtmlTreeBuilderState.InHead);
-                                                        }
-                                                        else {
-                                                            if (name.Equals("input")) {
-                                                                if (!(startTag.HasAttributes() && startTag.attributes.Get("type").EqualsIgnoreCase("hidden"))) {
-                                                                    return this.AnythingElse(t, tb);
-                                                                }
-                                                                else {
-                                                                    tb.InsertEmpty(startTag);
-                                                                }
-                                                            }
-                                                            else {
-                                                                if (name.Equals("form")) {
-                                                                    tb.Error(this);
-                                                                    if (tb.GetFormElement() != null) {
-                                                                        return false;
-                                                                    }
-                                                                    else {
-                                                                        tb.InsertForm(startTag, false);
-                                                                    }
-                                                                }
-                                                                else {
-                                                                    return this.AnythingElse(t, tb);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                return true;
-                            }
-                            else {
-                                if (t.IsEndTag()) {
-                                    Token.EndTag endTag = t.AsEndTag();
-                                    String name = endTag.NormalName();
-                                    if (name.Equals("table")) {
-                                        if (!tb.InTableScope(name)) {
-                                            tb.Error(this);
-                                            return false;
-                                        }
-                                        else {
-                                            tb.PopStackToClose("table");
-                                        }
-                                        tb.ResetInsertionMode();
-                                    }
-                                    else {
-                                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableEndErr
-                                            )) {
-                                            tb.Error(this);
-                                            return false;
-                                        }
-                                        else {
-                                            return this.AnythingElse(t, tb);
-                                        }
-                                    }
-                                    return true;
-                                }
-                                else {
-                                    if (t.IsEOF()) {
-                                        if (tb.CurrentElement().NormalName().Equals("html")) {
-                                            tb.Error(this);
-                                        }
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                // stops parsing
-                return this.AnythingElse(t, tb);
-            }
-
-            internal bool AnythingElse(Token t, HtmlTreeBuilder tb) {
-                tb.Error(this);
-                bool processed;
-                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(tb.CurrentElement().NormalName(), HtmlTreeBuilderState.Constants
-                    .InTableFoster)) {
-                    tb.SetFosterInserts(true);
-                    processed = tb.Process(t, HtmlTreeBuilderState.InBody);
-                    tb.SetFosterInserts(false);
-                }
-                else {
-                    processed = tb.Process(t, HtmlTreeBuilderState.InBody);
-                }
-                return processed;
-            }
-        }
-
-        public static HtmlTreeBuilderState InTable = new _HtmlTreeBuilderState_969();
-
-        private sealed class _HtmlTreeBuilderState_1075 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1075() {
-            }
-
-            public override String ToString() {
-                return "InTableText";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (t.type == iText.StyledXmlParser.Jsoup.Parser.TokenType.Character) {
-                    Token.Character c = t.AsCharacter();
-                    if (c.GetData().Equals(HtmlTreeBuilderState.nullString)) {
-                        tb.Error(this);
-                        return false;
-                    }
-                    else {
-                        tb.GetPendingTableCharacters().Add(c.GetData());
-                    }
-                }
-                else {
-                    if (tb.GetPendingTableCharacters().Count > 0) {
-                        foreach (String character in tb.GetPendingTableCharacters()) {
-                            if (!HtmlTreeBuilderState.IsWhitespace(character)) {
-                                // InTable anything else section:
-                                tb.Error(this);
-                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(tb.CurrentElement().NormalName(), HtmlTreeBuilderState.Constants
-                                    .InTableFoster)) {
-                                    tb.SetFosterInserts(true);
-                                    tb.Process(new Token.Character().Data(character), HtmlTreeBuilderState.InBody);
-                                    tb.SetFosterInserts(false);
-                                }
-                                else {
-                                    tb.Process(new Token.Character().Data(character), HtmlTreeBuilderState.InBody);
-                                }
-                            }
-                            else {
-                                tb.Insert(new Token.Character().Data(character));
-                            }
-                        }
-                        tb.NewPendingTableCharacters();
-                    }
-                    tb.Transition(tb.OriginalState());
-                    return tb.Process(t);
-                }
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState InTableText = new _HtmlTreeBuilderState_1075();
-
-        private sealed class _HtmlTreeBuilderState_1116 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1116() {
-            }
-
-            public override String ToString() {
-                return "InCaption";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("caption")) {
-                    Token.EndTag endTag = t.AsEndTag();
-                    String name = endTag.NormalName();
-                    if (!tb.InTableScope(name)) {
-                        tb.Error(this);
-                        return false;
-                    }
-                    else {
-                        tb.GenerateImpliedEndTags();
-                        if (!tb.CurrentElement().NormalName().Equals("caption")) {
-                            tb.Error(this);
-                        }
-                        tb.PopStackToClose("caption");
-                        tb.ClearFormattingElementsToLastMarker();
-                        tb.Transition(HtmlTreeBuilderState.InTable);
-                    }
-                }
-                else {
-                    if ((t.IsStartTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsStartTag().NormalName(
-                        ), HtmlTreeBuilderState.Constants.InCellCol) || t.IsEndTag() && t.AsEndTag().NormalName().Equals("table"
-                        ))) {
-                        tb.Error(this);
-                        bool processed = tb.ProcessEndTag("caption");
-                        if (processed) {
-                            return tb.Process(t);
-                        }
-                    }
-                    else {
-                        if (t.IsEndTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsEndTag().NormalName(), HtmlTreeBuilderState.Constants
-                            .InCaptionIgnore)) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            return tb.Process(t, HtmlTreeBuilderState.InBody);
-                        }
-                    }
-                }
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState InCaption = new _HtmlTreeBuilderState_1116();
-
-        private sealed class _HtmlTreeBuilderState_1156 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1156() {
-            }
-
-            public override String ToString() {
-                return "InColumnGroup";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (HtmlTreeBuilderState.IsWhitespace(t)) {
-                    tb.Insert(t.AsCharacter());
-                    return true;
-                }
-                switch (t.type) {
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Comment: {
-                        tb.Insert(t.AsComment());
-                        break;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Doctype: {
-                        tb.Error(this);
-                        break;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
-                        Token.StartTag startTag = t.AsStartTag();
-                        switch (startTag.NormalName()) {
-                            case "html": {
-                                return tb.Process(t, HtmlTreeBuilderState.InBody);
-                            }
-
-                            case "col": {
-                                tb.InsertEmpty(startTag);
-                                break;
-                            }
-
-                            default: {
-                                return this.AnythingElse(t, tb);
-                            }
-                        }
-                        break;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EndTag: {
-                        Token.EndTag endTag = t.AsEndTag();
-                        if (endTag.normalName.Equals("colgroup")) {
-                            if (tb.CurrentElement().NormalName().Equals("html")) {
-                                // frag case
-                                tb.Error(this);
-                                return false;
-                            }
-                            else {
-                                tb.Pop();
-                                tb.Transition(HtmlTreeBuilderState.InTable);
-                            }
-                        }
-                        else {
-                            return this.AnythingElse(t, tb);
-                        }
-                        break;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EOF: {
-                        if (tb.CurrentElement().NormalName().Equals("html")) {
-                            return true;
-                        }
-                        else {
-                            // stop parsing; frag case
-                            return this.AnythingElse(t, tb);
-                        }
-                        goto default;
-                    }
-
-                    default: {
-                        return this.AnythingElse(t, tb);
-                    }
-                }
-                return true;
-            }
-
-            private bool AnythingElse(Token t, TreeBuilder tb) {
-                bool processed = tb.ProcessEndTag("colgroup");
-                if (processed) {
-                    // only ignored in frag case
-                    return tb.Process(t);
-                }
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState InColumnGroup = new _HtmlTreeBuilderState_1156();
-
-        private sealed class _HtmlTreeBuilderState_1219 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1219() {
-            }
-
-            public override String ToString() {
-                return "InTableBody";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                String name;
-                switch (t.type) {
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
-                        Token.StartTag startTag = t.AsStartTag();
-                        name = startTag.NormalName();
-                        if (name.Equals("template")) {
-                            tb.Insert(startTag);
-                        }
-                        else {
-                            if (name.Equals("tr")) {
-                                tb.ClearStackToTableBodyContext();
-                                tb.Insert(startTag);
-                                tb.Transition(HtmlTreeBuilderState.InRow);
-                            }
-                            else {
-                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InCellNames
-                                    )) {
-                                    tb.Error(this);
-                                    tb.ProcessStartTag("tr");
-                                    return tb.Process(startTag);
-                                }
-                                else {
-                                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableBodyExit
-                                        )) {
-                                        return this.ExitTableBody(t, tb);
-                                    }
-                                    else {
-                                        return this.AnythingElse(t, tb);
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EndTag: {
-                        Token.EndTag endTag = t.AsEndTag();
-                        name = endTag.NormalName();
-                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableEndIgnore
-                            )) {
-                            if (!tb.InTableScope(name)) {
-                                tb.Error(this);
-                                return false;
-                            }
-                            else {
-                                tb.ClearStackToTableBodyContext();
-                                tb.Pop();
-                                tb.Transition(HtmlTreeBuilderState.InTable);
-                            }
-                        }
-                        else {
-                            if (name.Equals("table")) {
-                                return this.ExitTableBody(t, tb);
-                            }
-                            else {
-                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableBodyEndIgnore
-                                    )) {
-                                    tb.Error(this);
-                                    return false;
-                                }
-                                else {
-                                    return this.AnythingElse(t, tb);
-                                }
-                            }
-                        }
-                        break;
-                    }
-
-                    default: {
-                        return this.AnythingElse(t, tb);
-                    }
-                }
-                return true;
-            }
-
-            private bool ExitTableBody(Token t, HtmlTreeBuilder tb) {
-                if (!(tb.InTableScope("tbody") || tb.InTableScope("thead") || tb.InScope("tfoot"))) {
-                    // frag case
-                    tb.Error(this);
-                    return false;
-                }
-                tb.ClearStackToTableBodyContext();
-                tb.ProcessEndTag(tb.CurrentElement().NormalName());
-                // tbody, tfoot, thead
-                return tb.Process(t);
-            }
-
-            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
-                return tb.Process(t, HtmlTreeBuilderState.InTable);
-            }
-        }
-
-        public static HtmlTreeBuilderState InTableBody = new _HtmlTreeBuilderState_1219();
-
-        private sealed class _HtmlTreeBuilderState_1289 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1289() {
-            }
-
-            public override String ToString() {
-                return "InRow";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (t.IsStartTag()) {
-                    Token.StartTag startTag = t.AsStartTag();
-                    String name = startTag.NormalName();
-                    if (name.Equals("template")) {
-                        tb.Insert(startTag);
-                    }
-                    else {
-                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InCellNames
-                            )) {
-                            tb.ClearStackToTableRowContext();
-                            tb.Insert(startTag);
-                            tb.Transition(HtmlTreeBuilderState.InCell);
-                            tb.InsertMarkerToFormattingElements();
-                        }
-                        else {
-                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InRowMissing
-                                )) {
-                                return this.HandleMissingTr(t, tb);
-                            }
-                            else {
-                                return this.AnythingElse(t, tb);
-                            }
-                        }
-                    }
-                }
-                else {
-                    if (t.IsEndTag()) {
-                        Token.EndTag endTag = t.AsEndTag();
-                        String name = endTag.NormalName();
-                        if (name.Equals("tr")) {
-                            if (!tb.InTableScope(name)) {
-                                tb.Error(this);
-                                // frag
-                                return false;
-                            }
-                            tb.ClearStackToTableRowContext();
-                            tb.Pop();
-                            // tr
-                            tb.Transition(HtmlTreeBuilderState.InTableBody);
-                        }
-                        else {
-                            if (name.Equals("table")) {
-                                return this.HandleMissingTr(t, tb);
-                            }
-                            else {
-                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableToBody
-                                    )) {
-                                    if (!tb.InTableScope(name) || !tb.InTableScope("tr")) {
-                                        tb.Error(this);
-                                        return false;
-                                    }
-                                    tb.ClearStackToTableRowContext();
-                                    tb.Pop();
-                                    // tr
-                                    tb.Transition(HtmlTreeBuilderState.InTableBody);
-                                }
-                                else {
-                                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InRowIgnore
-                                        )) {
-                                        tb.Error(this);
-                                        return false;
-                                    }
-                                    else {
-                                        return this.AnythingElse(t, tb);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        return this.AnythingElse(t, tb);
-                    }
-                }
-                return true;
-            }
-
-            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
-                return tb.Process(t, HtmlTreeBuilderState.InTable);
-            }
-
-            private bool HandleMissingTr(Token t, TreeBuilder tb) {
-                bool processed = tb.ProcessEndTag("tr");
-                if (processed) {
-                    return tb.Process(t);
-                }
-                else {
-                    return false;
-                }
-            }
-        }
-
-        public static HtmlTreeBuilderState InRow = new _HtmlTreeBuilderState_1289();
-
-        private sealed class _HtmlTreeBuilderState_1360 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1360() {
-            }
-
-            public override String ToString() {
-                return "InCell";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (t.IsEndTag()) {
-                    Token.EndTag endTag = t.AsEndTag();
-                    String name = endTag.NormalName();
-                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InCellNames
-                        )) {
-                        if (!tb.InTableScope(name)) {
-                            tb.Error(this);
-                            tb.Transition(HtmlTreeBuilderState.InRow);
-                            // might not be in scope if empty: <td /> and processing fake end tag
-                            return false;
-                        }
-                        tb.GenerateImpliedEndTags();
-                        if (!tb.CurrentElement().NormalName().Equals(name)) {
-                            tb.Error(this);
-                        }
-                        tb.PopStackToClose(name);
-                        tb.ClearFormattingElementsToLastMarker();
-                        tb.Transition(HtmlTreeBuilderState.InRow);
-                    }
-                    else {
-                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InCellBody
-                            )) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InCellTable
-                                )) {
-                                if (!tb.InTableScope(name)) {
-                                    tb.Error(this);
-                                    return false;
-                                }
-                                this.CloseCell(tb);
-                                return tb.Process(t);
-                            }
-                            else {
-                                return this.AnythingElse(t, tb);
-                            }
-                        }
-                    }
-                }
-                else {
-                    if (t.IsStartTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsStartTag().NormalName()
-                        , HtmlTreeBuilderState.Constants.InCellCol)) {
-                        if (!(tb.InTableScope("td") || tb.InTableScope("th"))) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        this.CloseCell(tb);
-                        return tb.Process(t);
-                    }
-                    else {
-                        return this.AnythingElse(t, tb);
-                    }
-                }
-                return true;
-            }
-
-            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
-                return tb.Process(t, HtmlTreeBuilderState.InBody);
-            }
-
-            private void CloseCell(HtmlTreeBuilder tb) {
-                if (tb.InTableScope("td")) {
-                    tb.ProcessEndTag("td");
-                }
-                else {
-                    tb.ProcessEndTag("th");
-                }
-            }
-        }
-
-        public static HtmlTreeBuilderState InCell = new _HtmlTreeBuilderState_1360();
-
-        private sealed class _HtmlTreeBuilderState_1423 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1423() {
-            }
-
-            // only here if th or td in scope
-            public override String ToString() {
-                return "InSelect";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                String name;
-                switch (t.type) {
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Character: {
-                        Token.Character c = t.AsCharacter();
-                        if (c.GetData().Equals(HtmlTreeBuilderState.nullString)) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            tb.Insert(c);
-                        }
-                        break;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Comment: {
-                        tb.Insert(t.AsComment());
-                        break;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Doctype: {
-                        tb.Error(this);
-                        return false;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
-                        Token.StartTag start = t.AsStartTag();
-                        name = start.NormalName();
-                        if (name.Equals("html")) {
-                            return tb.Process(start, HtmlTreeBuilderState.InBody);
-                        }
-                        else {
-                            if (name.Equals("option")) {
-                                if (tb.CurrentElement().NormalName().Equals("option")) {
-                                    tb.ProcessEndTag("option");
-                                }
-                                tb.Insert(start);
-                            }
-                            else {
-                                if (name.Equals("optgroup")) {
-                                    if (tb.CurrentElement().NormalName().Equals("option")) {
-                                        tb.ProcessEndTag("option");
-                                    }
-                                    // pop option and flow to pop optgroup
-                                    if (tb.CurrentElement().NormalName().Equals("optgroup")) {
-                                        tb.ProcessEndTag("optgroup");
-                                    }
-                                    tb.Insert(start);
-                                }
-                                else {
-                                    if (name.Equals("select")) {
-                                        tb.Error(this);
-                                        return tb.ProcessEndTag("select");
-                                    }
-                                    else {
-                                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InSelectEnd
-                                            )) {
-                                            tb.Error(this);
-                                            if (!tb.InSelectScope("select")) {
-                                                return false;
-                                            }
-                                            // frag
-                                            tb.ProcessEndTag("select");
-                                            return tb.Process(start);
-                                        }
-                                        else {
-                                            if (name.Equals("script")) {
-                                                return tb.Process(t, HtmlTreeBuilderState.InHead);
-                                            }
-                                            else {
-                                                return this.AnythingElse(t, tb);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EndTag: {
-                        Token.EndTag end = t.AsEndTag();
-                        name = end.NormalName();
-                        switch (name) {
-                            case "optgroup": {
-                                if (tb.CurrentElement().NormalName().Equals("option") && tb.AboveOnStack(tb.CurrentElement()) != null && tb
-                                    .AboveOnStack(tb.CurrentElement()).NormalName().Equals("optgroup")) {
-                                    tb.ProcessEndTag("option");
-                                }
-                                if (tb.CurrentElement().NormalName().Equals("optgroup")) {
-                                    tb.Pop();
-                                }
-                                else {
-                                    tb.Error(this);
-                                }
-                                break;
-                            }
-
-                            case "option": {
-                                if (tb.CurrentElement().NormalName().Equals("option")) {
-                                    tb.Pop();
-                                }
-                                else {
-                                    tb.Error(this);
-                                }
-                                break;
-                            }
-
-                            case "select": {
-                                if (!tb.InSelectScope(name)) {
-                                    tb.Error(this);
-                                    return false;
-                                }
-                                else {
-                                    tb.PopStackToClose(name);
-                                    tb.ResetInsertionMode();
-                                }
-                                break;
-                            }
-
-                            default: {
-                                return this.AnythingElse(t, tb);
-                            }
-                        }
-                        break;
-                    }
-
-                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EOF: {
-                        if (!tb.CurrentElement().NormalName().Equals("html")) {
-                            tb.Error(this);
-                        }
-                        break;
-                    }
-
-                    default: {
-                        return this.AnythingElse(t, tb);
-                    }
-                }
-                return true;
-            }
-
-            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
-                tb.Error(this);
-                return false;
-            }
-        }
-
-        public static HtmlTreeBuilderState InSelect = new _HtmlTreeBuilderState_1423();
-
-        private sealed class _HtmlTreeBuilderState_1525 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1525() {
-            }
-
-            public override String ToString() {
-                return "InSelectInTable";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (t.IsStartTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsStartTag().NormalName()
-                    , HtmlTreeBuilderState.Constants.InSelecTableEnd)) {
-                    tb.Error(this);
-                    tb.ProcessEndTag("select");
-                    return tb.Process(t);
-                }
-                else {
-                    if (t.IsEndTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsEndTag().NormalName(), HtmlTreeBuilderState.Constants
-                        .InSelecTableEnd)) {
-                        tb.Error(this);
-                        if (tb.InTableScope(t.AsEndTag().NormalName())) {
-                            tb.ProcessEndTag("select");
-                            return (tb.Process(t));
-                        }
-                        else {
-                            return false;
-                        }
-                    }
-                    else {
-                        return tb.Process(t, HtmlTreeBuilderState.InSelect);
-                    }
-                }
-            }
-        }
-
-        public static HtmlTreeBuilderState InSelectInTable = new _HtmlTreeBuilderState_1525();
-
-        private sealed class _HtmlTreeBuilderState_1550 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1550() {
-            }
-
-            public override String ToString() {
-                return "AfterBody";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (HtmlTreeBuilderState.IsWhitespace(t)) {
-                    tb.Insert(t.AsCharacter());
-                }
-                else {
-                    // out of spec - include whitespace. spec would move into body
-                    if (t.IsComment()) {
-                        tb.Insert(t.AsComment());
-                    }
-                    else {
-                        // into html node
-                        if (t.IsDoctype()) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html")) {
-                                return tb.Process(t, HtmlTreeBuilderState.InBody);
-                            }
-                            else {
-                                if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("html")) {
-                                    if (tb.IsFragmentParsing()) {
-                                        tb.Error(this);
-                                        return false;
-                                    }
-                                    else {
-                                        tb.Transition(HtmlTreeBuilderState.AfterAfterBody);
-                                    }
-                                }
-                                else {
-                                    if (t.IsEOF()) {
-                                    }
-                                    else {
-                                        // chillax! we're done
-                                        tb.Error(this);
-                                        tb.Transition(HtmlTreeBuilderState.InBody);
-                                        return tb.Process(t);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState AfterBody = new _HtmlTreeBuilderState_1550();
-
-        private sealed class _HtmlTreeBuilderState_1585 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1585() {
-            }
-
-            public override String ToString() {
-                return "InFrameset";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (HtmlTreeBuilderState.IsWhitespace(t)) {
-                    tb.Insert(t.AsCharacter());
-                }
-                else {
-                    if (t.IsComment()) {
-                        tb.Insert(t.AsComment());
-                    }
-                    else {
-                        if (t.IsDoctype()) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            if (t.IsStartTag()) {
-                                Token.StartTag start = t.AsStartTag();
-                                switch (start.NormalName()) {
-                                    case "html": {
-                                        return tb.Process(start, HtmlTreeBuilderState.InBody);
-                                    }
-
-                                    case "frameset": {
-                                        tb.Insert(start);
-                                        break;
-                                    }
-
-                                    case "frame": {
-                                        tb.InsertEmpty(start);
-                                        break;
-                                    }
-
-                                    case "noframes": {
-                                        return tb.Process(start, HtmlTreeBuilderState.InHead);
-                                    }
-
-                                    default: {
-                                        tb.Error(this);
-                                        return false;
-                                    }
-                                }
-                            }
-                            else {
-                                if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("frameset")) {
-                                    if (tb.CurrentElement().NormalName().Equals("html")) {
-                                        // frag
-                                        tb.Error(this);
-                                        return false;
-                                    }
-                                    else {
-                                        tb.Pop();
-                                        if (!tb.IsFragmentParsing() && !tb.CurrentElement().NormalName().Equals("frameset")) {
-                                            tb.Transition(HtmlTreeBuilderState.AfterFrameset);
-                                        }
-                                    }
-                                }
-                                else {
-                                    if (t.IsEOF()) {
-                                        if (!tb.CurrentElement().NormalName().Equals("html")) {
-                                            tb.Error(this);
-                                            return true;
-                                        }
-                                    }
-                                    else {
-                                        tb.Error(this);
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState InFrameset = new _HtmlTreeBuilderState_1585();
-
-        private sealed class _HtmlTreeBuilderState_1640 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1640() {
-            }
-
-            public override String ToString() {
-                return "AfterFrameset";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (HtmlTreeBuilderState.IsWhitespace(t)) {
-                    tb.Insert(t.AsCharacter());
-                }
-                else {
-                    if (t.IsComment()) {
-                        tb.Insert(t.AsComment());
-                    }
-                    else {
-                        if (t.IsDoctype()) {
-                            tb.Error(this);
-                            return false;
-                        }
-                        else {
-                            if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html")) {
-                                return tb.Process(t, HtmlTreeBuilderState.InBody);
-                            }
-                            else {
-                                if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("html")) {
-                                    tb.Transition(HtmlTreeBuilderState.AfterAfterFrameset);
-                                }
-                                else {
-                                    if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("noframes")) {
-                                        return tb.Process(t, HtmlTreeBuilderState.InHead);
-                                    }
-                                    else {
-                                        if (t.IsEOF()) {
-                                        }
-                                        else {
-                                            // cool your heels, we're complete
-                                            tb.Error(this);
-                                            return false;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState AfterFrameset = new _HtmlTreeBuilderState_1640();
-
-        private sealed class _HtmlTreeBuilderState_1671 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1671() {
-            }
-
-            public override String ToString() {
-                return "AfterAfterBody";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (t.IsComment()) {
-                    tb.Insert(t.AsComment());
-                }
-                else {
-                    if (t.IsDoctype() || (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html"))) {
-                        return tb.Process(t, HtmlTreeBuilderState.InBody);
-                    }
-                    else {
-                        if (HtmlTreeBuilderState.IsWhitespace(t)) {
-                            // allows space after </html>, and put the body back on stack to allow subsequent tags if any
-                            iText.StyledXmlParser.Jsoup.Nodes.Element html = tb.PopStackToClose("html");
-                            tb.Insert(t.AsCharacter());
-                            tb.stack.Add(html);
-                            tb.stack.Add(html.SelectFirst("body"));
-                        }
-                        else {
-                            if (t.IsEOF()) {
-                            }
-                            else {
-                                // nice work chuck
-                                tb.Error(this);
-                                tb.Transition(HtmlTreeBuilderState.InBody);
-                                return tb.Process(t);
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState AfterAfterBody = new _HtmlTreeBuilderState_1671();
-
-        private sealed class _HtmlTreeBuilderState_1700 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1700() {
-            }
-
-            public override String ToString() {
-                return "AfterAfterFrameset";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                if (t.IsComment()) {
-                    tb.Insert(t.AsComment());
-                }
-                else {
-                    if (t.IsDoctype() || HtmlTreeBuilderState.IsWhitespace(t) || (t.IsStartTag() && t.AsStartTag().NormalName(
-                        ).Equals("html"))) {
-                        return tb.Process(t, HtmlTreeBuilderState.InBody);
-                    }
-                    else {
-                        if (t.IsEOF()) {
-                        }
-                        else {
-                            // nice work chuck
-                            if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("noframes")) {
-                                return tb.Process(t, HtmlTreeBuilderState.InHead);
-                            }
-                            else {
-                                tb.Error(this);
-                                return false;
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState AfterAfterFrameset = new _HtmlTreeBuilderState_1700();
-
-        private sealed class _HtmlTreeBuilderState_1724 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1724() {
-            }
-
-            public override String ToString() {
-                return "ForeignContent";
-            }
-
-            internal override bool Process(Token t, HtmlTreeBuilder tb) {
-                return true;
-            }
-        }
-
-        public static HtmlTreeBuilderState ForeignContent = new _HtmlTreeBuilderState_1724();
+        public static HtmlTreeBuilderState ForeignContent = new HtmlTreeBuilderState.ForeignContentBS();
 
         private static readonly String nullString = '\u0000'.ToString();
 
@@ -2574,6 +203,2306 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
             internal static readonly String[] InCaptionIgnore = new String[] { "body", "col", "colgroup", "html", "tbody"
                 , "td", "tfoot", "th", "thead", "tr" };
+        }
+
+        private sealed class InitialBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "Initial";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (IsWhitespace(t)) {
+                    return true;
+                }
+                else {
+                    // ignore whitespace until we get the first content
+                    if (t.IsComment()) {
+                        tb.Insert(t.AsComment());
+                    }
+                    else {
+                        if (t.IsDoctype()) {
+                            Token.Doctype d = t.AsDoctype();
+                            DocumentType doctype = new DocumentType(tb.settings.NormalizeTag(d.GetName()), d.GetPublicIdentifier(), d.
+                                GetSystemIdentifier());
+                            doctype.SetPubSysKey(d.GetPubSysKey());
+                            tb.GetDocument().AppendChild(doctype);
+                            if (d.IsForceQuirks()) {
+                                tb.GetDocument().QuirksMode(QuirksMode.quirks);
+                            }
+                            tb.Transition(BeforeHtml);
+                        }
+                        else {
+                            tb.Transition(BeforeHtml);
+                            return tb.Process(t);
+                        }
+                    }
+                }
+                // re-process token
+                return true;
+            }
+        }
+
+        private sealed class BeforeHtmlBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "BeforeHtml";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (t.IsDoctype()) {
+                    tb.Error(this);
+                    return false;
+                }
+                else {
+                    if (t.IsComment()) {
+                        tb.Insert(t.AsComment());
+                    }
+                    else {
+                        if (IsWhitespace(t)) {
+                            tb.Insert(t.AsCharacter());
+                        }
+                        else {
+                            // out of spec - include whitespace
+                            if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html")) {
+                                tb.Insert(t.AsStartTag());
+                                tb.Transition(BeforeHead);
+                            }
+                            else {
+                                if (t.IsEndTag() && (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsEndTag().NormalName(), HtmlTreeBuilderState.Constants
+                                    .BeforeHtmlToHead))) {
+                                    return AnythingElse(t, tb);
+                                }
+                                else {
+                                    if (t.IsEndTag()) {
+                                        tb.Error(this);
+                                        return false;
+                                    }
+                                    else {
+                                        return AnythingElse(t, tb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+
+            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
+                tb.InsertStartTag("html");
+                tb.Transition(BeforeHead);
+                return tb.Process(t);
+            }
+        }
+
+        private sealed class BeforeHeadBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "BeforeHead";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (IsWhitespace(t)) {
+                    tb.Insert(t.AsCharacter());
+                }
+                else {
+                    // out of spec - include whitespace
+                    if (t.IsComment()) {
+                        tb.Insert(t.AsComment());
+                    }
+                    else {
+                        if (t.IsDoctype()) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html")) {
+                                return InBody.Process(t, tb);
+                            }
+                            else {
+                                // does not transition
+                                if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("head")) {
+                                    iText.StyledXmlParser.Jsoup.Nodes.Element head = tb.Insert(t.AsStartTag());
+                                    tb.SetHeadElement(head);
+                                    tb.Transition(InHead);
+                                }
+                                else {
+                                    if (t.IsEndTag() && (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsEndTag().NormalName(), HtmlTreeBuilderState.Constants
+                                        .BeforeHtmlToHead))) {
+                                        tb.ProcessStartTag("head");
+                                        return tb.Process(t);
+                                    }
+                                    else {
+                                        if (t.IsEndTag()) {
+                                            tb.Error(this);
+                                            return false;
+                                        }
+                                        else {
+                                            tb.ProcessStartTag("head");
+                                            return tb.Process(t);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        private sealed class InHeadBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InHead";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (IsWhitespace(t)) {
+                    tb.Insert(t.AsCharacter());
+                    // out of spec - include whitespace
+                    return true;
+                }
+                String name;
+                switch (t.type) {
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Comment: {
+                        tb.Insert(t.AsComment());
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Doctype: {
+                        tb.Error(this);
+                        return false;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
+                        Token.StartTag start = t.AsStartTag();
+                        name = start.NormalName();
+                        if (name.Equals("html")) {
+                            return InBody.Process(t, tb);
+                        }
+                        else {
+                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InHeadEmpty
+                                )) {
+                                iText.StyledXmlParser.Jsoup.Nodes.Element el = tb.InsertEmpty(start);
+                                // jsoup special: update base the first time it is seen
+                                if (name.Equals("base") && el.HasAttr("href")) {
+                                    tb.MaybeSetBaseUri(el);
+                                }
+                            }
+                            else {
+                                if (name.Equals("meta")) {
+                                    tb.InsertEmpty(start);
+                                }
+                                else {
+                                    if (name.Equals("title")) {
+                                        HandleRcData(start, tb);
+                                    }
+                                    else {
+                                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InHeadRaw
+                                            )) {
+                                            HandleRawtext(start, tb);
+                                        }
+                                        else {
+                                            if (name.Equals("noscript")) {
+                                                // else if noscript && scripting flag = true: rawtext (jsoup doesn't run script, to handle as noscript)
+                                                tb.Insert(start);
+                                                tb.Transition(InHeadNoscript);
+                                            }
+                                            else {
+                                                if (name.Equals("script")) {
+                                                    // skips some script rules as won't execute them
+                                                    tb.tokeniser.Transition(TokeniserState.ScriptData);
+                                                    tb.MarkInsertionMode();
+                                                    tb.Transition(Text);
+                                                    tb.Insert(start);
+                                                }
+                                                else {
+                                                    if (name.Equals("head")) {
+                                                        tb.Error(this);
+                                                        return false;
+                                                    }
+                                                    else {
+                                                        return AnythingElse(t, tb);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EndTag: {
+                        Token.EndTag end = t.AsEndTag();
+                        name = end.NormalName();
+                        if (name.Equals("head")) {
+                            tb.Pop();
+                            tb.Transition(AfterHead);
+                        }
+                        else {
+                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InHeadEnd
+                                )) {
+                                return AnythingElse(t, tb);
+                            }
+                            else {
+                                tb.Error(this);
+                                return false;
+                            }
+                        }
+                        break;
+                    }
+
+                    default: {
+                        return AnythingElse(t, tb);
+                    }
+                }
+                return true;
+            }
+
+            private bool AnythingElse(Token t, TreeBuilder tb) {
+                tb.ProcessEndTag("head");
+                return tb.Process(t);
+            }
+        }
+
+        private sealed class InHeadNoScriptBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InHeadNoscript";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (t.IsDoctype()) {
+                    tb.Error(this);
+                }
+                else {
+                    if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html")) {
+                        return tb.Process(t, InBody);
+                    }
+                    else {
+                        if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("noscript")) {
+                            tb.Pop();
+                            tb.Transition(InHead);
+                        }
+                        else {
+                            if (IsWhitespace(t) || t.IsComment() || (t.IsStartTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil
+                                .InSorted(t.AsStartTag().NormalName(), HtmlTreeBuilderState.Constants.InHeadNoScriptHead))) {
+                                return tb.Process(t, InHead);
+                            }
+                            else {
+                                if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("br")) {
+                                    return AnythingElse(t, tb);
+                                }
+                                else {
+                                    if ((t.IsStartTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsStartTag().NormalName(
+                                        ), HtmlTreeBuilderState.Constants.InHeadNoscriptIgnore)) || t.IsEndTag()) {
+                                        tb.Error(this);
+                                        return false;
+                                    }
+                                    else {
+                                        return AnythingElse(t, tb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+
+            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
+                // note that this deviates from spec, which is to pop out of noscript and reprocess in head:
+                // https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inheadnoscript
+                // allows content to be inserted as data
+                tb.Error(this);
+                tb.Insert(new Token.Character().Data(t.ToString()));
+                return true;
+            }
+        }
+
+        private sealed class AfterHeadBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "AfterHead";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (IsWhitespace(t)) {
+                    tb.Insert(t.AsCharacter());
+                }
+                else {
+                    if (t.IsComment()) {
+                        tb.Insert(t.AsComment());
+                    }
+                    else {
+                        if (t.IsDoctype()) {
+                            tb.Error(this);
+                        }
+                        else {
+                            if (t.IsStartTag()) {
+                                Token.StartTag startTag = t.AsStartTag();
+                                String name = startTag.NormalName();
+                                if (name.Equals("html")) {
+                                    return tb.Process(t, InBody);
+                                }
+                                else {
+                                    if (name.Equals("body")) {
+                                        tb.Insert(startTag);
+                                        tb.FramesetOk(false);
+                                        tb.Transition(InBody);
+                                    }
+                                    else {
+                                        if (name.Equals("frameset")) {
+                                            tb.Insert(startTag);
+                                            tb.Transition(InFrameset);
+                                        }
+                                        else {
+                                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartToHead
+                                                )) {
+                                                tb.Error(this);
+                                                iText.StyledXmlParser.Jsoup.Nodes.Element head = tb.GetHeadElement();
+                                                tb.Push(head);
+                                                tb.Process(t, InHead);
+                                                tb.RemoveFromStack(head);
+                                            }
+                                            else {
+                                                if (name.Equals("head")) {
+                                                    tb.Error(this);
+                                                    return false;
+                                                }
+                                                else {
+                                                    AnythingElse(t, tb);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                if (t.IsEndTag()) {
+                                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsEndTag().NormalName(), HtmlTreeBuilderState.Constants
+                                        .AfterHeadBody)) {
+                                        AnythingElse(t, tb);
+                                    }
+                                    else {
+                                        tb.Error(this);
+                                        return false;
+                                    }
+                                }
+                                else {
+                                    AnythingElse(t, tb);
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+
+            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
+                tb.ProcessStartTag("body");
+                tb.FramesetOk(true);
+                return tb.Process(t);
+            }
+        }
+
+        private sealed class InBodyBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InBody";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                switch (t.type) {
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Character: {
+                        Token.Character c = t.AsCharacter();
+                        if (c.GetData().Equals(nullString)) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            if (tb.FramesetOk() && IsWhitespace(c)) {
+                                // don't check if whitespace if frames already closed
+                                tb.ReconstructFormattingElements();
+                                tb.Insert(c);
+                            }
+                            else {
+                                tb.ReconstructFormattingElements();
+                                tb.Insert(c);
+                                tb.FramesetOk(false);
+                            }
+                        }
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Comment: {
+                        tb.Insert(t.AsComment());
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Doctype: {
+                        tb.Error(this);
+                        return false;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
+                        return InBodyStartTag(t, tb);
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EndTag: {
+                        return InBodyEndTag(t, tb);
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EOF: {
+                        // stop parsing
+                        break;
+                    }
+                }
+                return true;
+            }
+
+            private bool InBodyStartTag(Token t, HtmlTreeBuilder tb) {
+                Token.StartTag startTag = t.AsStartTag();
+                String name = startTag.NormalName();
+                List<iText.StyledXmlParser.Jsoup.Nodes.Element> stack;
+                iText.StyledXmlParser.Jsoup.Nodes.Element el;
+                switch (name) {
+                    case "a": {
+                        if (tb.GetActiveFormattingElement("a") != null) {
+                            tb.Error(this);
+                            tb.ProcessEndTag("a");
+                            // still on stack?
+                            iText.StyledXmlParser.Jsoup.Nodes.Element remainingA = tb.GetFromStack("a");
+                            if (remainingA != null) {
+                                tb.RemoveFromActiveFormattingElements(remainingA);
+                                tb.RemoveFromStack(remainingA);
+                            }
+                        }
+                        tb.ReconstructFormattingElements();
+                        el = tb.Insert(startTag);
+                        tb.PushActiveFormattingElements(el);
+                        break;
+                    }
+
+                    case "span": {
+                        // same as final else, but short circuits lots of checks
+                        tb.ReconstructFormattingElements();
+                        tb.Insert(startTag);
+                        break;
+                    }
+
+                    case "li": {
+                        tb.FramesetOk(false);
+                        stack = tb.GetStack();
+                        for (int i = stack.Count - 1; i > 0; i--) {
+                            el = stack[i];
+                            if (el.NormalName().Equals("li")) {
+                                tb.ProcessEndTag("li");
+                                break;
+                            }
+                            if (tb.IsSpecial(el) && !iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(el.NormalName(), HtmlTreeBuilderState.Constants
+                                .InBodyStartLiBreakers)) {
+                                break;
+                            }
+                        }
+                        if (tb.InButtonScope("p")) {
+                            tb.ProcessEndTag("p");
+                        }
+                        tb.Insert(startTag);
+                        break;
+                    }
+
+                    case "html": {
+                        tb.Error(this);
+                        // merge attributes onto real html
+                        iText.StyledXmlParser.Jsoup.Nodes.Element html = tb.GetStack()[0];
+                        if (startTag.HasAttributes()) {
+                            foreach (iText.StyledXmlParser.Jsoup.Nodes.Attribute attribute in startTag.attributes) {
+                                if (!html.HasAttr(attribute.Key)) {
+                                    html.Attributes().Put(attribute);
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    case "body": {
+                        tb.Error(this);
+                        stack = tb.GetStack();
+                        if (stack.Count == 1 || (stack.Count > 2 && !stack[1].NormalName().Equals("body"))) {
+                            // only in fragment case
+                            return false;
+                        }
+                        else {
+                            // ignore
+                            tb.FramesetOk(false);
+                            iText.StyledXmlParser.Jsoup.Nodes.Element body = stack[1];
+                            if (startTag.HasAttributes()) {
+                                foreach (iText.StyledXmlParser.Jsoup.Nodes.Attribute attribute in startTag.attributes) {
+                                    if (!body.HasAttr(attribute.Key)) {
+                                        body.Attributes().Put(attribute);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    case "frameset": {
+                        tb.Error(this);
+                        stack = tb.GetStack();
+                        if (stack.Count == 1 || (stack.Count > 2 && !stack[1].NormalName().Equals("body"))) {
+                            // only in fragment case
+                            return false;
+                        }
+                        else {
+                            // ignore
+                            if (!tb.FramesetOk()) {
+                                return false;
+                            }
+                            else {
+                                // ignore frameset
+                                iText.StyledXmlParser.Jsoup.Nodes.Element second = stack[1];
+                                if (second.Parent() != null) {
+                                    second.Remove();
+                                }
+                                // pop up to html element
+                                while (stack.Count > 1) {
+                                    stack.JRemoveAt(stack.Count - 1);
+                                }
+                                tb.Insert(startTag);
+                                tb.Transition(InFrameset);
+                            }
+                        }
+                        break;
+                    }
+
+                    case "form": {
+                        if (tb.GetFormElement() != null) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        if (tb.InButtonScope("p")) {
+                            tb.ProcessEndTag("p");
+                        }
+                        tb.InsertForm(startTag, true);
+                        break;
+                    }
+
+                    case "plaintext": {
+                        if (tb.InButtonScope("p")) {
+                            tb.ProcessEndTag("p");
+                        }
+                        tb.Insert(startTag);
+                        tb.tokeniser.Transition(TokeniserState.PLAINTEXT);
+                        // once in, never gets out
+                        break;
+                    }
+
+                    case "button": {
+                        if (tb.InButtonScope("button")) {
+                            // close and reprocess
+                            tb.Error(this);
+                            tb.ProcessEndTag("button");
+                            tb.Process(startTag);
+                        }
+                        else {
+                            tb.ReconstructFormattingElements();
+                            tb.Insert(startTag);
+                            tb.FramesetOk(false);
+                        }
+                        break;
+                    }
+
+                    case "nobr": {
+                        tb.ReconstructFormattingElements();
+                        if (tb.InScope("nobr")) {
+                            tb.Error(this);
+                            tb.ProcessEndTag("nobr");
+                            tb.ReconstructFormattingElements();
+                        }
+                        el = tb.Insert(startTag);
+                        tb.PushActiveFormattingElements(el);
+                        break;
+                    }
+
+                    case "table": {
+                        if (tb.GetDocument().QuirksMode() != QuirksMode.quirks && tb.InButtonScope("p")) {
+                            tb.ProcessEndTag("p");
+                        }
+                        tb.Insert(startTag);
+                        tb.FramesetOk(false);
+                        tb.Transition(InTable);
+                        break;
+                    }
+
+                    case "input": {
+                        tb.ReconstructFormattingElements();
+                        el = tb.InsertEmpty(startTag);
+                        if (!el.Attr("type").EqualsIgnoreCase("hidden")) {
+                            tb.FramesetOk(false);
+                        }
+                        break;
+                    }
+
+                    case "hr": {
+                        if (tb.InButtonScope("p")) {
+                            tb.ProcessEndTag("p");
+                        }
+                        tb.InsertEmpty(startTag);
+                        tb.FramesetOk(false);
+                        break;
+                    }
+
+                    case "image": {
+                        if (tb.GetFromStack("svg") == null) {
+                            return tb.Process(startTag.Name("img"));
+                        }
+                        else {
+                            // change <image> to <img>, unless in svg
+                            tb.Insert(startTag);
+                        }
+                        break;
+                    }
+
+                    case "isindex": {
+                        // how much do we care about the early 90s?
+                        tb.Error(this);
+                        if (tb.GetFormElement() != null) {
+                            return false;
+                        }
+                        tb.ProcessStartTag("form");
+                        if (startTag.HasAttribute("action")) {
+                            iText.StyledXmlParser.Jsoup.Nodes.Element form = tb.GetFormElement();
+                            form.Attr("action", startTag.attributes.Get("action"));
+                        }
+                        tb.ProcessStartTag("hr");
+                        tb.ProcessStartTag("label");
+                        // hope you like english.
+                        String prompt = startTag.HasAttribute("prompt") ? startTag.attributes.Get("prompt") : "This is a searchable index. Enter search keywords: ";
+                        tb.Process(new Token.Character().Data(prompt));
+                        // input
+                        Attributes inputAttribs = new Attributes();
+                        if (startTag.HasAttributes()) {
+                            foreach (iText.StyledXmlParser.Jsoup.Nodes.Attribute attr in startTag.attributes) {
+                                if (!iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(attr.Key, HtmlTreeBuilderState.Constants.InBodyStartInputAttribs
+                                    )) {
+                                    inputAttribs.Put(attr);
+                                }
+                            }
+                        }
+                        inputAttribs.Put("name", "isindex");
+                        tb.ProcessStartTag("input", inputAttribs);
+                        tb.ProcessEndTag("label");
+                        tb.ProcessStartTag("hr");
+                        tb.ProcessEndTag("form");
+                        break;
+                    }
+
+                    case "textarea": {
+                        tb.Insert(startTag);
+                        if (!startTag.IsSelfClosing()) {
+                            tb.tokeniser.Transition(TokeniserState.Rcdata);
+                            tb.MarkInsertionMode();
+                            tb.FramesetOk(false);
+                            tb.Transition(Text);
+                        }
+                        break;
+                    }
+
+                    case "xmp": {
+                        if (tb.InButtonScope("p")) {
+                            tb.ProcessEndTag("p");
+                        }
+                        tb.ReconstructFormattingElements();
+                        tb.FramesetOk(false);
+                        HandleRawtext(startTag, tb);
+                        break;
+                    }
+
+                    case "iframe": {
+                        tb.FramesetOk(false);
+                        HandleRawtext(startTag, tb);
+                        break;
+                    }
+
+                    case "noembed": {
+                        // also handle noscript if script enabled
+                        HandleRawtext(startTag, tb);
+                        break;
+                    }
+
+                    case "select": {
+                        tb.ReconstructFormattingElements();
+                        tb.Insert(startTag);
+                        tb.FramesetOk(false);
+                        HtmlTreeBuilderState state = tb.State();
+                        if (state.Equals(InTable) || state.Equals(InCaption) || state.Equals(InTableBody) || state.Equals(InRow) ||
+                             state.Equals(InCell)) {
+                            tb.Transition(InSelectInTable);
+                        }
+                        else {
+                            tb.Transition(InSelect);
+                        }
+                        break;
+                    }
+
+                    case "math": {
+                        tb.ReconstructFormattingElements();
+                        tb.Insert(startTag);
+                        break;
+                    }
+
+                    case "svg": {
+                        tb.ReconstructFormattingElements();
+                        tb.Insert(startTag);
+                        break;
+                    }
+
+                    // static final String[] Headings = new String[]{"h1", "h2", "h3", "h4", "h5", "h6"};
+                    case "h1":
+                    case "h2":
+                    case "h3":
+                    case "h4":
+                    case "h5":
+                    case "h6": {
+                        if (tb.InButtonScope("p")) {
+                            tb.ProcessEndTag("p");
+                        }
+                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(tb.CurrentElement().NormalName(), HtmlTreeBuilderState.Constants
+                            .Headings)) {
+                            tb.Error(this);
+                            tb.Pop();
+                        }
+                        tb.Insert(startTag);
+                        break;
+                    }
+
+                    // static final String[] InBodyStartPreListing = new String[]{"listing", "pre"};
+                    case "pre":
+                    case "listing": {
+                        if (tb.InButtonScope("p")) {
+                            tb.ProcessEndTag("p");
+                        }
+                        tb.Insert(startTag);
+                        tb.reader.MatchConsume("\n");
+                        // ignore LF if next token
+                        tb.FramesetOk(false);
+                        break;
+                    }
+
+                    // static final String[] DdDt = new String[]{"dd", "dt"};
+                    case "dd":
+                    case "dt": {
+                        tb.FramesetOk(false);
+                        stack = tb.GetStack();
+                        for (int i = stack.Count - 1; i > 0; i--) {
+                            el = stack[i];
+                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(el.NormalName(), HtmlTreeBuilderState.Constants
+                                .DdDt)) {
+                                tb.ProcessEndTag(el.NormalName());
+                                break;
+                            }
+                            if (tb.IsSpecial(el) && !iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(el.NormalName(), HtmlTreeBuilderState.Constants
+                                .InBodyStartLiBreakers)) {
+                                break;
+                            }
+                        }
+                        if (tb.InButtonScope("p")) {
+                            tb.ProcessEndTag("p");
+                        }
+                        tb.Insert(startTag);
+                        break;
+                    }
+
+                    // static final String[] InBodyStartOptions = new String[]{"optgroup", "option"};
+                    case "optgroup":
+                    case "option": {
+                        if (tb.CurrentElement().NormalName().Equals("option")) {
+                            tb.ProcessEndTag("option");
+                        }
+                        tb.ReconstructFormattingElements();
+                        tb.Insert(startTag);
+                        break;
+                    }
+
+                    // static final String[] InBodyStartRuby = new String[]{"rp", "rt"};
+                    case "rp":
+                    case "rt": {
+                        if (tb.InScope("ruby")) {
+                            tb.GenerateImpliedEndTags();
+                            if (!tb.CurrentElement().NormalName().Equals("ruby")) {
+                                tb.Error(this);
+                                tb.PopStackToBefore("ruby");
+                            }
+                            // i.e. close up to but not include name
+                            tb.Insert(startTag);
+                        }
+                        break;
+                    }
+
+                    default: {
+                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartEmptyFormatters
+                            )) {
+                            tb.ReconstructFormattingElements();
+                            tb.InsertEmpty(startTag);
+                            tb.FramesetOk(false);
+                        }
+                        else {
+                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartPClosers
+                                )) {
+                                if (tb.InButtonScope("p")) {
+                                    tb.ProcessEndTag("p");
+                                }
+                                tb.Insert(startTag);
+                            }
+                            else {
+                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartToHead
+                                    )) {
+                                    return tb.Process(t, InHead);
+                                }
+                                else {
+                                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.Formatters
+                                        )) {
+                                        tb.ReconstructFormattingElements();
+                                        el = tb.Insert(startTag);
+                                        tb.PushActiveFormattingElements(el);
+                                    }
+                                    else {
+                                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartApplets
+                                            )) {
+                                            tb.ReconstructFormattingElements();
+                                            tb.Insert(startTag);
+                                            tb.InsertMarkerToFormattingElements();
+                                            tb.FramesetOk(false);
+                                        }
+                                        else {
+                                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartMedia
+                                                )) {
+                                                tb.InsertEmpty(startTag);
+                                            }
+                                            else {
+                                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartDrop
+                                                    )) {
+                                                    tb.Error(this);
+                                                    return false;
+                                                }
+                                                else {
+                                                    tb.ReconstructFormattingElements();
+                                                    tb.Insert(startTag);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+                return true;
+            }
+
+            private bool InBodyEndTag(Token t, HtmlTreeBuilder tb) {
+                Token.EndTag endTag = t.AsEndTag();
+                String name = endTag.NormalName();
+                switch (name) {
+                    case "sarcasm":
+                    // *sigh*
+                    case "span": {
+                        // same as final fall through, but saves short circuit
+                        return AnyOtherEndTag(t, tb);
+                    }
+
+                    case "li": {
+                        if (!tb.InListItemScope(name)) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            tb.GenerateImpliedEndTags(name);
+                            if (!tb.CurrentElement().NormalName().Equals(name)) {
+                                tb.Error(this);
+                            }
+                            tb.PopStackToClose(name);
+                        }
+                        break;
+                    }
+
+                    case "body": {
+                        if (!tb.InScope("body")) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            tb.Transition(AfterBody);
+                        }
+                        break;
+                    }
+
+                    case "html": {
+                        bool notIgnored = tb.ProcessEndTag("body");
+                        if (notIgnored) {
+                            return tb.Process(endTag);
+                        }
+                        break;
+                    }
+
+                    case "form": {
+                        iText.StyledXmlParser.Jsoup.Nodes.Element currentForm = tb.GetFormElement();
+                        tb.SetFormElement(null);
+                        if (currentForm == null || !tb.InScope(name)) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            tb.GenerateImpliedEndTags();
+                            if (!tb.CurrentElement().NormalName().Equals(name)) {
+                                tb.Error(this);
+                            }
+                            // remove currentForm from stack. will shift anything under up.
+                            tb.RemoveFromStack(currentForm);
+                        }
+                        break;
+                    }
+
+                    case "p": {
+                        if (!tb.InButtonScope(name)) {
+                            tb.Error(this);
+                            tb.ProcessStartTag(name);
+                            // if no p to close, creates an empty <p></p>
+                            return tb.Process(endTag);
+                        }
+                        else {
+                            tb.GenerateImpliedEndTags(name);
+                            if (!tb.CurrentElement().NormalName().Equals(name)) {
+                                tb.Error(this);
+                            }
+                            tb.PopStackToClose(name);
+                        }
+                        break;
+                    }
+
+                    case "dd":
+                    case "dt": {
+                        if (!tb.InScope(name)) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            tb.GenerateImpliedEndTags(name);
+                            if (!tb.CurrentElement().NormalName().Equals(name)) {
+                                tb.Error(this);
+                            }
+                            tb.PopStackToClose(name);
+                        }
+                        break;
+                    }
+
+                    case "h1":
+                    case "h2":
+                    case "h3":
+                    case "h4":
+                    case "h5":
+                    case "h6": {
+                        if (!tb.InScope(HtmlTreeBuilderState.Constants.Headings)) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            tb.GenerateImpliedEndTags(name);
+                            if (!tb.CurrentElement().NormalName().Equals(name)) {
+                                tb.Error(this);
+                            }
+                            tb.PopStackToClose(HtmlTreeBuilderState.Constants.Headings);
+                        }
+                        break;
+                    }
+
+                    case "br": {
+                        tb.Error(this);
+                        tb.ProcessStartTag("br");
+                        return false;
+                    }
+
+                    default: {
+                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyEndAdoptionFormatters
+                            )) {
+                            return InBodyEndTagAdoption(t, tb);
+                        }
+                        else {
+                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyEndClosers
+                                )) {
+                                if (!tb.InScope(name)) {
+                                    // nothing to close
+                                    tb.Error(this);
+                                    return false;
+                                }
+                                else {
+                                    tb.GenerateImpliedEndTags();
+                                    if (!tb.CurrentElement().NormalName().Equals(name)) {
+                                        tb.Error(this);
+                                    }
+                                    tb.PopStackToClose(name);
+                                }
+                            }
+                            else {
+                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InBodyStartApplets
+                                    )) {
+                                    if (!tb.InScope("name")) {
+                                        if (!tb.InScope(name)) {
+                                            tb.Error(this);
+                                            return false;
+                                        }
+                                        tb.GenerateImpliedEndTags();
+                                        if (!tb.CurrentElement().NormalName().Equals(name)) {
+                                            tb.Error(this);
+                                        }
+                                        tb.PopStackToClose(name);
+                                        tb.ClearFormattingElementsToLastMarker();
+                                    }
+                                }
+                                else {
+                                    return AnyOtherEndTag(t, tb);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+                return true;
+            }
+
+            internal bool AnyOtherEndTag(Token t, HtmlTreeBuilder tb) {
+                String name = t.AsEndTag().normalName;
+                // case insensitive search - goal is to preserve output case, not for the parse to be case sensitive
+                List<iText.StyledXmlParser.Jsoup.Nodes.Element> stack = tb.GetStack();
+                for (int pos = stack.Count - 1; pos >= 0; pos--) {
+                    iText.StyledXmlParser.Jsoup.Nodes.Element node = stack[pos];
+                    if (node.NormalName().Equals(name)) {
+                        tb.GenerateImpliedEndTags(name);
+                        if (!name.Equals(tb.CurrentElement().NormalName())) {
+                            tb.Error(this);
+                        }
+                        tb.PopStackToClose(name);
+                        break;
+                    }
+                    else {
+                        if (tb.IsSpecial(node)) {
+                            tb.Error(this);
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            // Adoption Agency Algorithm.
+            private bool InBodyEndTagAdoption(Token t, HtmlTreeBuilder tb) {
+                Token.EndTag endTag = t.AsEndTag();
+                String name = endTag.NormalName();
+                List<iText.StyledXmlParser.Jsoup.Nodes.Element> stack = tb.GetStack();
+                iText.StyledXmlParser.Jsoup.Nodes.Element el;
+                for (int i = 0; i < 8; i++) {
+                    iText.StyledXmlParser.Jsoup.Nodes.Element formatEl = tb.GetActiveFormattingElement(name);
+                    if (formatEl == null) {
+                        return AnyOtherEndTag(t, tb);
+                    }
+                    else {
+                        if (!tb.OnStack(formatEl)) {
+                            tb.Error(this);
+                            tb.RemoveFromActiveFormattingElements(formatEl);
+                            return true;
+                        }
+                        else {
+                            if (!tb.InScope(formatEl.NormalName())) {
+                                tb.Error(this);
+                                return false;
+                            }
+                            else {
+                                if (tb.CurrentElement() != formatEl) {
+                                    tb.Error(this);
+                                }
+                            }
+                        }
+                    }
+                    iText.StyledXmlParser.Jsoup.Nodes.Element furthestBlock = null;
+                    iText.StyledXmlParser.Jsoup.Nodes.Element commonAncestor = null;
+                    bool seenFormattingElement = false;
+                    // the spec doesn't limit to < 64, but in degenerate cases (9000+ stack depth) this prevents
+                    // run-aways
+                    int stackSize = stack.Count;
+                    int bookmark = -1;
+                    for (int si = 0; si < stackSize && si < 64; si++) {
+                        el = stack[si];
+                        if (el == formatEl) {
+                            commonAncestor = stack[si - 1];
+                            seenFormattingElement = true;
+                            // Let a bookmark note the position of the formatting element in the list of active formatting elements relative to the elements on either side of it in the list.
+                            bookmark = tb.PositionOfElement(el);
+                        }
+                        else {
+                            if (seenFormattingElement && tb.IsSpecial(el)) {
+                                furthestBlock = el;
+                                break;
+                            }
+                        }
+                    }
+                    if (furthestBlock == null) {
+                        tb.PopStackToClose(formatEl.NormalName());
+                        tb.RemoveFromActiveFormattingElements(formatEl);
+                        return true;
+                    }
+                    iText.StyledXmlParser.Jsoup.Nodes.Element node = furthestBlock;
+                    iText.StyledXmlParser.Jsoup.Nodes.Element lastNode = furthestBlock;
+                    for (int j = 0; j < 3; j++) {
+                        if (tb.OnStack(node)) {
+                            node = tb.AboveOnStack(node);
+                        }
+                        if (!tb.IsInActiveFormattingElements(node)) {
+                            // note no bookmark check
+                            tb.RemoveFromStack(node);
+                            continue;
+                        }
+                        else {
+                            if (node == formatEl) {
+                                break;
+                            }
+                        }
+                        iText.StyledXmlParser.Jsoup.Nodes.Element replacement = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                            .ValueOf(node.NodeName(), ParseSettings.preserveCase), tb.GetBaseUri());
+                        // case will follow the original node (so honours ParseSettings)
+                        tb.ReplaceActiveFormattingElement(node, replacement);
+                        tb.ReplaceOnStack(node, replacement);
+                        node = replacement;
+                        if (lastNode == furthestBlock) {
+                            // move the aforementioned bookmark to be immediately after the new node in the list of active formatting elements.
+                            // not getting how this bookmark both straddles the element above, but is inbetween here...
+                            bookmark = tb.PositionOfElement(node) + 1;
+                        }
+                        if (lastNode.Parent() != null) {
+                            lastNode.Remove();
+                        }
+                        node.AppendChild(lastNode);
+                        lastNode = node;
+                    }
+                    if (commonAncestor != null) {
+                        // safety check, but would be an error if null
+                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(commonAncestor.NormalName(), HtmlTreeBuilderState.Constants
+                            .InBodyEndTableFosters)) {
+                            if (lastNode.Parent() != null) {
+                                lastNode.Remove();
+                            }
+                            tb.InsertInFosterParent(lastNode);
+                        }
+                        else {
+                            if (lastNode.Parent() != null) {
+                                lastNode.Remove();
+                            }
+                            commonAncestor.AppendChild(lastNode);
+                        }
+                    }
+                    iText.StyledXmlParser.Jsoup.Nodes.Element adopter = new iText.StyledXmlParser.Jsoup.Nodes.Element(formatEl
+                        .Tag(), tb.GetBaseUri());
+                    adopter.Attributes().AddAll(formatEl.Attributes());
+                    iText.StyledXmlParser.Jsoup.Nodes.Node[] childNodes = furthestBlock.ChildNodes().ToArray(new iText.StyledXmlParser.Jsoup.Nodes.Node
+                        [0]);
+                    foreach (iText.StyledXmlParser.Jsoup.Nodes.Node childNode in childNodes) {
+                        adopter.AppendChild(childNode);
+                    }
+                    // append will reparent. thus the clone to avoid concurrent mod.
+                    furthestBlock.AppendChild(adopter);
+                    tb.RemoveFromActiveFormattingElements(formatEl);
+                    // insert the new element into the list of active formatting elements at the position of the aforementioned bookmark.
+                    tb.PushWithBookmark(adopter, bookmark);
+                    tb.RemoveFromStack(formatEl);
+                    tb.InsertOnStackAfter(furthestBlock, adopter);
+                }
+                return true;
+            }
+        }
+
+        private sealed class TextBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "Text";
+            }
+
+            // in script, style etc. normally treated as data tags
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (t.IsCharacter()) {
+                    tb.Insert(t.AsCharacter());
+                }
+                else {
+                    if (t.IsEOF()) {
+                        tb.Error(this);
+                        // if current node is script: already started
+                        tb.Pop();
+                        tb.Transition(tb.OriginalState());
+                        return tb.Process(t);
+                    }
+                    else {
+                        if (t.IsEndTag()) {
+                            // if: An end tag whose tag name is "script" -- scripting nesting level, if evaluating scripts
+                            tb.Pop();
+                            tb.Transition(tb.OriginalState());
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        private sealed class InTableBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InTable";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (t.IsCharacter()) {
+                    tb.NewPendingTableCharacters();
+                    tb.MarkInsertionMode();
+                    tb.Transition(InTableText);
+                    return tb.Process(t);
+                }
+                else {
+                    if (t.IsComment()) {
+                        tb.Insert(t.AsComment());
+                        return true;
+                    }
+                    else {
+                        if (t.IsDoctype()) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            if (t.IsStartTag()) {
+                                Token.StartTag startTag = t.AsStartTag();
+                                String name = startTag.NormalName();
+                                if (name.Equals("caption")) {
+                                    tb.ClearStackToTableContext();
+                                    tb.InsertMarkerToFormattingElements();
+                                    tb.Insert(startTag);
+                                    tb.Transition(InCaption);
+                                }
+                                else {
+                                    if (name.Equals("colgroup")) {
+                                        tb.ClearStackToTableContext();
+                                        tb.Insert(startTag);
+                                        tb.Transition(InColumnGroup);
+                                    }
+                                    else {
+                                        if (name.Equals("col")) {
+                                            tb.ProcessStartTag("colgroup");
+                                            return tb.Process(t);
+                                        }
+                                        else {
+                                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableToBody
+                                                )) {
+                                                tb.ClearStackToTableContext();
+                                                tb.Insert(startTag);
+                                                tb.Transition(InTableBody);
+                                            }
+                                            else {
+                                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableAddBody
+                                                    )) {
+                                                    tb.ProcessStartTag("tbody");
+                                                    return tb.Process(t);
+                                                }
+                                                else {
+                                                    if (name.Equals("table")) {
+                                                        tb.Error(this);
+                                                        bool processed = tb.ProcessEndTag("table");
+                                                        if (processed) {
+                                                            // only ignored if in fragment
+                                                            return tb.Process(t);
+                                                        }
+                                                    }
+                                                    else {
+                                                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableToHead
+                                                            )) {
+                                                            return tb.Process(t, InHead);
+                                                        }
+                                                        else {
+                                                            if (name.Equals("input")) {
+                                                                if (!(startTag.HasAttributes() && startTag.attributes.Get("type").EqualsIgnoreCase("hidden"))) {
+                                                                    return AnythingElse(t, tb);
+                                                                }
+                                                                else {
+                                                                    tb.InsertEmpty(startTag);
+                                                                }
+                                                            }
+                                                            else {
+                                                                if (name.Equals("form")) {
+                                                                    tb.Error(this);
+                                                                    if (tb.GetFormElement() != null) {
+                                                                        return false;
+                                                                    }
+                                                                    else {
+                                                                        tb.InsertForm(startTag, false);
+                                                                    }
+                                                                }
+                                                                else {
+                                                                    return AnythingElse(t, tb);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                return true;
+                            }
+                            else {
+                                if (t.IsEndTag()) {
+                                    Token.EndTag endTag = t.AsEndTag();
+                                    String name = endTag.NormalName();
+                                    if (name.Equals("table")) {
+                                        if (!tb.InTableScope(name)) {
+                                            tb.Error(this);
+                                            return false;
+                                        }
+                                        else {
+                                            tb.PopStackToClose("table");
+                                        }
+                                        tb.ResetInsertionMode();
+                                    }
+                                    else {
+                                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableEndErr
+                                            )) {
+                                            tb.Error(this);
+                                            return false;
+                                        }
+                                        else {
+                                            return AnythingElse(t, tb);
+                                        }
+                                    }
+                                    return true;
+                                }
+                                else {
+                                    if (t.IsEOF()) {
+                                        if (tb.CurrentElement().NormalName().Equals("html")) {
+                                            tb.Error(this);
+                                        }
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // stops parsing
+                return AnythingElse(t, tb);
+            }
+
+            internal bool AnythingElse(Token t, HtmlTreeBuilder tb) {
+                tb.Error(this);
+                bool processed;
+                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(tb.CurrentElement().NormalName(), HtmlTreeBuilderState.Constants
+                    .InTableFoster)) {
+                    tb.SetFosterInserts(true);
+                    processed = tb.Process(t, InBody);
+                    tb.SetFosterInserts(false);
+                }
+                else {
+                    processed = tb.Process(t, InBody);
+                }
+                return processed;
+            }
+        }
+
+        private sealed class InTableTextBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InTableText";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (t.type == iText.StyledXmlParser.Jsoup.Parser.TokenType.Character) {
+                    Token.Character c = t.AsCharacter();
+                    if (c.GetData().Equals(nullString)) {
+                        tb.Error(this);
+                        return false;
+                    }
+                    else {
+                        tb.GetPendingTableCharacters().Add(c.GetData());
+                    }
+                }
+                else {
+                    if (tb.GetPendingTableCharacters().Count > 0) {
+                        foreach (String character in tb.GetPendingTableCharacters()) {
+                            if (!IsWhitespace(character)) {
+                                // InTable anything else section:
+                                tb.Error(this);
+                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(tb.CurrentElement().NormalName(), HtmlTreeBuilderState.Constants
+                                    .InTableFoster)) {
+                                    tb.SetFosterInserts(true);
+                                    tb.Process(new Token.Character().Data(character), InBody);
+                                    tb.SetFosterInserts(false);
+                                }
+                                else {
+                                    tb.Process(new Token.Character().Data(character), InBody);
+                                }
+                            }
+                            else {
+                                tb.Insert(new Token.Character().Data(character));
+                            }
+                        }
+                        tb.NewPendingTableCharacters();
+                    }
+                    tb.Transition(tb.OriginalState());
+                    return tb.Process(t);
+                }
+                return true;
+            }
+        }
+
+        private sealed class InCaptionBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InCaption";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("caption")) {
+                    Token.EndTag endTag = t.AsEndTag();
+                    String name = endTag.NormalName();
+                    if (!tb.InTableScope(name)) {
+                        tb.Error(this);
+                        return false;
+                    }
+                    else {
+                        tb.GenerateImpliedEndTags();
+                        if (!tb.CurrentElement().NormalName().Equals("caption")) {
+                            tb.Error(this);
+                        }
+                        tb.PopStackToClose("caption");
+                        tb.ClearFormattingElementsToLastMarker();
+                        tb.Transition(InTable);
+                    }
+                }
+                else {
+                    if ((t.IsStartTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsStartTag().NormalName(
+                        ), HtmlTreeBuilderState.Constants.InCellCol) || t.IsEndTag() && t.AsEndTag().NormalName().Equals("table"
+                        ))) {
+                        tb.Error(this);
+                        bool processed = tb.ProcessEndTag("caption");
+                        if (processed) {
+                            return tb.Process(t);
+                        }
+                    }
+                    else {
+                        if (t.IsEndTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsEndTag().NormalName(), HtmlTreeBuilderState.Constants
+                            .InCaptionIgnore)) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            return tb.Process(t, InBody);
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        private sealed class InColumnGroupBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InColumnGroup";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (IsWhitespace(t)) {
+                    tb.Insert(t.AsCharacter());
+                    return true;
+                }
+                switch (t.type) {
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Comment: {
+                        tb.Insert(t.AsComment());
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Doctype: {
+                        tb.Error(this);
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
+                        Token.StartTag startTag = t.AsStartTag();
+                        switch (startTag.NormalName()) {
+                            case "html": {
+                                return tb.Process(t, InBody);
+                            }
+
+                            case "col": {
+                                tb.InsertEmpty(startTag);
+                                break;
+                            }
+
+                            default: {
+                                return AnythingElse(t, tb);
+                            }
+                        }
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EndTag: {
+                        Token.EndTag endTag = t.AsEndTag();
+                        if (endTag.normalName.Equals("colgroup")) {
+                            if (tb.CurrentElement().NormalName().Equals("html")) {
+                                // frag case
+                                tb.Error(this);
+                                return false;
+                            }
+                            else {
+                                tb.Pop();
+                                tb.Transition(InTable);
+                            }
+                        }
+                        else {
+                            return AnythingElse(t, tb);
+                        }
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EOF: {
+                        if (tb.CurrentElement().NormalName().Equals("html")) {
+                            return true;
+                        }
+                        else {
+                            // stop parsing; frag case
+                            return AnythingElse(t, tb);
+                        }
+                        goto default;
+                    }
+
+                    default: {
+                        return AnythingElse(t, tb);
+                    }
+                }
+                return true;
+            }
+
+            private bool AnythingElse(Token t, TreeBuilder tb) {
+                bool processed = tb.ProcessEndTag("colgroup");
+                if (processed) {
+                    // only ignored in frag case
+                    return tb.Process(t);
+                }
+                return true;
+            }
+        }
+
+        private sealed class InTableBodyBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InTableBody";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                String name;
+                switch (t.type) {
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
+                        Token.StartTag startTag = t.AsStartTag();
+                        name = startTag.NormalName();
+                        if (name.Equals("template")) {
+                            tb.Insert(startTag);
+                        }
+                        else {
+                            if (name.Equals("tr")) {
+                                tb.ClearStackToTableBodyContext();
+                                tb.Insert(startTag);
+                                tb.Transition(InRow);
+                            }
+                            else {
+                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InCellNames
+                                    )) {
+                                    tb.Error(this);
+                                    tb.ProcessStartTag("tr");
+                                    return tb.Process(startTag);
+                                }
+                                else {
+                                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableBodyExit
+                                        )) {
+                                        return ExitTableBody(t, tb);
+                                    }
+                                    else {
+                                        return AnythingElse(t, tb);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EndTag: {
+                        Token.EndTag endTag = t.AsEndTag();
+                        name = endTag.NormalName();
+                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableEndIgnore
+                            )) {
+                            if (!tb.InTableScope(name)) {
+                                tb.Error(this);
+                                return false;
+                            }
+                            else {
+                                tb.ClearStackToTableBodyContext();
+                                tb.Pop();
+                                tb.Transition(InTable);
+                            }
+                        }
+                        else {
+                            if (name.Equals("table")) {
+                                return ExitTableBody(t, tb);
+                            }
+                            else {
+                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableBodyEndIgnore
+                                    )) {
+                                    tb.Error(this);
+                                    return false;
+                                }
+                                else {
+                                    return AnythingElse(t, tb);
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    default: {
+                        return AnythingElse(t, tb);
+                    }
+                }
+                return true;
+            }
+
+            private bool ExitTableBody(Token t, HtmlTreeBuilder tb) {
+                if (!(tb.InTableScope("tbody") || tb.InTableScope("thead") || tb.InScope("tfoot"))) {
+                    // frag case
+                    tb.Error(this);
+                    return false;
+                }
+                tb.ClearStackToTableBodyContext();
+                tb.ProcessEndTag(tb.CurrentElement().NormalName());
+                // tbody, tfoot, thead
+                return tb.Process(t);
+            }
+
+            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
+                return tb.Process(t, InTable);
+            }
+        }
+
+        private sealed class InRowBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InRow";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (t.IsStartTag()) {
+                    Token.StartTag startTag = t.AsStartTag();
+                    String name = startTag.NormalName();
+                    if (name.Equals("template")) {
+                        tb.Insert(startTag);
+                    }
+                    else {
+                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InCellNames
+                            )) {
+                            tb.ClearStackToTableRowContext();
+                            tb.Insert(startTag);
+                            tb.Transition(InCell);
+                            tb.InsertMarkerToFormattingElements();
+                        }
+                        else {
+                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InRowMissing
+                                )) {
+                                return HandleMissingTr(t, tb);
+                            }
+                            else {
+                                return AnythingElse(t, tb);
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (t.IsEndTag()) {
+                        Token.EndTag endTag = t.AsEndTag();
+                        String name = endTag.NormalName();
+                        if (name.Equals("tr")) {
+                            if (!tb.InTableScope(name)) {
+                                tb.Error(this);
+                                // frag
+                                return false;
+                            }
+                            tb.ClearStackToTableRowContext();
+                            tb.Pop();
+                            // tr
+                            tb.Transition(InTableBody);
+                        }
+                        else {
+                            if (name.Equals("table")) {
+                                return HandleMissingTr(t, tb);
+                            }
+                            else {
+                                if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InTableToBody
+                                    )) {
+                                    if (!tb.InTableScope(name) || !tb.InTableScope("tr")) {
+                                        tb.Error(this);
+                                        return false;
+                                    }
+                                    tb.ClearStackToTableRowContext();
+                                    tb.Pop();
+                                    // tr
+                                    tb.Transition(InTableBody);
+                                }
+                                else {
+                                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InRowIgnore
+                                        )) {
+                                        tb.Error(this);
+                                        return false;
+                                    }
+                                    else {
+                                        return AnythingElse(t, tb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        return AnythingElse(t, tb);
+                    }
+                }
+                return true;
+            }
+
+            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
+                return tb.Process(t, InTable);
+            }
+
+            private bool HandleMissingTr(Token t, TreeBuilder tb) {
+                bool processed = tb.ProcessEndTag("tr");
+                if (processed) {
+                    return tb.Process(t);
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+
+        private sealed class InCellBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InCell";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (t.IsEndTag()) {
+                    Token.EndTag endTag = t.AsEndTag();
+                    String name = endTag.NormalName();
+                    if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InCellNames
+                        )) {
+                        if (!tb.InTableScope(name)) {
+                            tb.Error(this);
+                            tb.Transition(InRow);
+                            // might not be in scope if empty: <td /> and processing fake end tag
+                            return false;
+                        }
+                        tb.GenerateImpliedEndTags();
+                        if (!tb.CurrentElement().NormalName().Equals(name)) {
+                            tb.Error(this);
+                        }
+                        tb.PopStackToClose(name);
+                        tb.ClearFormattingElementsToLastMarker();
+                        tb.Transition(InRow);
+                    }
+                    else {
+                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InCellBody
+                            )) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InCellTable
+                                )) {
+                                if (!tb.InTableScope(name)) {
+                                    tb.Error(this);
+                                    return false;
+                                }
+                                CloseCell(tb);
+                                return tb.Process(t);
+                            }
+                            else {
+                                return AnythingElse(t, tb);
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (t.IsStartTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsStartTag().NormalName()
+                        , HtmlTreeBuilderState.Constants.InCellCol)) {
+                        if (!(tb.InTableScope("td") || tb.InTableScope("th"))) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        CloseCell(tb);
+                        return tb.Process(t);
+                    }
+                    else {
+                        return AnythingElse(t, tb);
+                    }
+                }
+                return true;
+            }
+
+            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
+                return tb.Process(t, InBody);
+            }
+
+            private void CloseCell(HtmlTreeBuilder tb) {
+                if (tb.InTableScope("td")) {
+                    tb.ProcessEndTag("td");
+                }
+                else {
+                    tb.ProcessEndTag("th");
+                }
+            }
+            // only here if th or td in scope
+        }
+
+        private sealed class InSelectBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InSelect";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                String name;
+                switch (t.type) {
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Character: {
+                        Token.Character c = t.AsCharacter();
+                        if (c.GetData().Equals(nullString)) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            tb.Insert(c);
+                        }
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Comment: {
+                        tb.Insert(t.AsComment());
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.Doctype: {
+                        tb.Error(this);
+                        return false;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
+                        Token.StartTag start = t.AsStartTag();
+                        name = start.NormalName();
+                        if (name.Equals("html")) {
+                            return tb.Process(start, InBody);
+                        }
+                        else {
+                            if (name.Equals("option")) {
+                                if (tb.CurrentElement().NormalName().Equals("option")) {
+                                    tb.ProcessEndTag("option");
+                                }
+                                tb.Insert(start);
+                            }
+                            else {
+                                if (name.Equals("optgroup")) {
+                                    if (tb.CurrentElement().NormalName().Equals("option")) {
+                                        tb.ProcessEndTag("option");
+                                    }
+                                    // pop option and flow to pop optgroup
+                                    if (tb.CurrentElement().NormalName().Equals("optgroup")) {
+                                        tb.ProcessEndTag("optgroup");
+                                    }
+                                    tb.Insert(start);
+                                }
+                                else {
+                                    if (name.Equals("select")) {
+                                        tb.Error(this);
+                                        return tb.ProcessEndTag("select");
+                                    }
+                                    else {
+                                        if (iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(name, HtmlTreeBuilderState.Constants.InSelectEnd
+                                            )) {
+                                            tb.Error(this);
+                                            if (!tb.InSelectScope("select")) {
+                                                return false;
+                                            }
+                                            // frag
+                                            tb.ProcessEndTag("select");
+                                            return tb.Process(start);
+                                        }
+                                        else {
+                                            if (name.Equals("script")) {
+                                                return tb.Process(t, InHead);
+                                            }
+                                            else {
+                                                return AnythingElse(t, tb);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EndTag: {
+                        Token.EndTag end = t.AsEndTag();
+                        name = end.NormalName();
+                        switch (name) {
+                            case "optgroup": {
+                                if (tb.CurrentElement().NormalName().Equals("option") && tb.AboveOnStack(tb.CurrentElement()) != null && tb
+                                    .AboveOnStack(tb.CurrentElement()).NormalName().Equals("optgroup")) {
+                                    tb.ProcessEndTag("option");
+                                }
+                                if (tb.CurrentElement().NormalName().Equals("optgroup")) {
+                                    tb.Pop();
+                                }
+                                else {
+                                    tb.Error(this);
+                                }
+                                break;
+                            }
+
+                            case "option": {
+                                if (tb.CurrentElement().NormalName().Equals("option")) {
+                                    tb.Pop();
+                                }
+                                else {
+                                    tb.Error(this);
+                                }
+                                break;
+                            }
+
+                            case "select": {
+                                if (!tb.InSelectScope(name)) {
+                                    tb.Error(this);
+                                    return false;
+                                }
+                                else {
+                                    tb.PopStackToClose(name);
+                                    tb.ResetInsertionMode();
+                                }
+                                break;
+                            }
+
+                            default: {
+                                return AnythingElse(t, tb);
+                            }
+                        }
+                        break;
+                    }
+
+                    case iText.StyledXmlParser.Jsoup.Parser.TokenType.EOF: {
+                        if (!tb.CurrentElement().NormalName().Equals("html")) {
+                            tb.Error(this);
+                        }
+                        break;
+                    }
+
+                    default: {
+                        return AnythingElse(t, tb);
+                    }
+                }
+                return true;
+            }
+
+            private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
+                tb.Error(this);
+                return false;
+            }
+        }
+
+        private sealed class InSelectInTableBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InSelectInTable";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (t.IsStartTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsStartTag().NormalName()
+                    , HtmlTreeBuilderState.Constants.InSelecTableEnd)) {
+                    tb.Error(this);
+                    tb.ProcessEndTag("select");
+                    return tb.Process(t);
+                }
+                else {
+                    if (t.IsEndTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsEndTag().NormalName(), HtmlTreeBuilderState.Constants
+                        .InSelecTableEnd)) {
+                        tb.Error(this);
+                        if (tb.InTableScope(t.AsEndTag().NormalName())) {
+                            tb.ProcessEndTag("select");
+                            return (tb.Process(t));
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                    else {
+                        return tb.Process(t, InSelect);
+                    }
+                }
+            }
+        }
+
+        private sealed class AfterBodyBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "AfterBody";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (IsWhitespace(t)) {
+                    tb.Insert(t.AsCharacter());
+                }
+                else {
+                    // out of spec - include whitespace. spec would move into body
+                    if (t.IsComment()) {
+                        tb.Insert(t.AsComment());
+                    }
+                    else {
+                        // into html node
+                        if (t.IsDoctype()) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html")) {
+                                return tb.Process(t, InBody);
+                            }
+                            else {
+                                if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("html")) {
+                                    if (tb.IsFragmentParsing()) {
+                                        tb.Error(this);
+                                        return false;
+                                    }
+                                    else {
+                                        tb.Transition(AfterAfterBody);
+                                    }
+                                }
+                                else {
+                                    if (t.IsEOF()) {
+                                    }
+                                    else {
+                                        // chillax! we're done
+                                        tb.Error(this);
+                                        tb.Transition(InBody);
+                                        return tb.Process(t);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        private sealed class InFrameSetBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "InFrameset";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (IsWhitespace(t)) {
+                    tb.Insert(t.AsCharacter());
+                }
+                else {
+                    if (t.IsComment()) {
+                        tb.Insert(t.AsComment());
+                    }
+                    else {
+                        if (t.IsDoctype()) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            if (t.IsStartTag()) {
+                                Token.StartTag start = t.AsStartTag();
+                                switch (start.NormalName()) {
+                                    case "html": {
+                                        return tb.Process(start, InBody);
+                                    }
+
+                                    case "frameset": {
+                                        tb.Insert(start);
+                                        break;
+                                    }
+
+                                    case "frame": {
+                                        tb.InsertEmpty(start);
+                                        break;
+                                    }
+
+                                    case "noframes": {
+                                        return tb.Process(start, InHead);
+                                    }
+
+                                    default: {
+                                        tb.Error(this);
+                                        return false;
+                                    }
+                                }
+                            }
+                            else {
+                                if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("frameset")) {
+                                    if (tb.CurrentElement().NormalName().Equals("html")) {
+                                        // frag
+                                        tb.Error(this);
+                                        return false;
+                                    }
+                                    else {
+                                        tb.Pop();
+                                        if (!tb.IsFragmentParsing() && !tb.CurrentElement().NormalName().Equals("frameset")) {
+                                            tb.Transition(AfterFrameset);
+                                        }
+                                    }
+                                }
+                                else {
+                                    if (t.IsEOF()) {
+                                        if (!tb.CurrentElement().NormalName().Equals("html")) {
+                                            tb.Error(this);
+                                            return true;
+                                        }
+                                    }
+                                    else {
+                                        tb.Error(this);
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        private sealed class AfterFrameSetBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "AfterFrameset";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (IsWhitespace(t)) {
+                    tb.Insert(t.AsCharacter());
+                }
+                else {
+                    if (t.IsComment()) {
+                        tb.Insert(t.AsComment());
+                    }
+                    else {
+                        if (t.IsDoctype()) {
+                            tb.Error(this);
+                            return false;
+                        }
+                        else {
+                            if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html")) {
+                                return tb.Process(t, InBody);
+                            }
+                            else {
+                                if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("html")) {
+                                    tb.Transition(AfterAfterFrameset);
+                                }
+                                else {
+                                    if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("noframes")) {
+                                        return tb.Process(t, InHead);
+                                    }
+                                    else {
+                                        if (t.IsEOF()) {
+                                        }
+                                        else {
+                                            // cool your heels, we're complete
+                                            tb.Error(this);
+                                            return false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        private sealed class AfterAfterBodyBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "AfterAfterBody";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (t.IsComment()) {
+                    tb.Insert(t.AsComment());
+                }
+                else {
+                    if (t.IsDoctype() || (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html"))) {
+                        return tb.Process(t, InBody);
+                    }
+                    else {
+                        if (IsWhitespace(t)) {
+                            // allows space after </html>, and put the body back on stack to allow subsequent tags if any
+                            iText.StyledXmlParser.Jsoup.Nodes.Element html = tb.PopStackToClose("html");
+                            tb.Insert(t.AsCharacter());
+                            tb.stack.Add(html);
+                            tb.stack.Add(html.SelectFirst("body"));
+                        }
+                        else {
+                            if (t.IsEOF()) {
+                            }
+                            else {
+                                // nice work chuck
+                                tb.Error(this);
+                                tb.Transition(InBody);
+                                return tb.Process(t);
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        private sealed class AfterAfterFrameSetBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "AfterAfterFrameset";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                if (t.IsComment()) {
+                    tb.Insert(t.AsComment());
+                }
+                else {
+                    if (t.IsDoctype() || IsWhitespace(t) || (t.IsStartTag() && t.AsStartTag().NormalName().Equals("html"))) {
+                        return tb.Process(t, InBody);
+                    }
+                    else {
+                        if (t.IsEOF()) {
+                        }
+                        else {
+                            // nice work chuck
+                            if (t.IsStartTag() && t.AsStartTag().NormalName().Equals("noframes")) {
+                                return tb.Process(t, InHead);
+                            }
+                            else {
+                                tb.Error(this);
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        private sealed class ForeignContentBS : HtmlTreeBuilderState {
+            public override String ToString() {
+                return "ForeignContent";
+            }
+
+            internal override bool Process(Token t, HtmlTreeBuilder tb) {
+                return true;
+            }
         }
     }
 }

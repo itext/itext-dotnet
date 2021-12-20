@@ -119,5 +119,10 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void MultipleTransformationsTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleTransformations");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void FillGradientTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "fillGradient");
+        }
     }
 }

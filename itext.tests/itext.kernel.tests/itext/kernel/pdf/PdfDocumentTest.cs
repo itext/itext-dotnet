@@ -404,14 +404,14 @@ namespace iText.Kernel.Pdf {
                 ));
             imageXObject.AddAssociatedFile(PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "Associated File 1".GetBytes
                 (), "af_1.txt", PdfName.Data));
-            pageCanvas.AddXObject(imageXObject, 40, 400);
+            pageCanvas.AddXObjectAt(imageXObject, 40, 400);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(200, 200));
             PdfCanvas formCanvas = new PdfCanvas(formXObject, pdfDocument);
             formCanvas.SaveState().Circle(100, 100, 50).SetColor(ColorConstants.BLACK, true).Fill().RestoreState();
             formCanvas.Release();
             formXObject.AddAssociatedFile(PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "Associated File 2".GetBytes
                 (), "af_2.txt", PdfName.Data));
-            pageCanvas.AddXObject(formXObject, 40, 100);
+            pageCanvas.AddXObjectAt(formXObject, 40, 100);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "add_associated_files02.pdf"
                 , SOURCE_FOLDER + "cmp_add_associated_files02.pdf", DESTINATION_FOLDER, "diff_"));

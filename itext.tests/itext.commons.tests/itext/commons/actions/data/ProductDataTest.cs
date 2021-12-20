@@ -35,6 +35,17 @@ namespace iText.Commons.Actions.Data {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ProductDataAnotherCreationTest() {
+            ProductData productData = new ProductData("publicProductName", "productName", "1.2", "4.0.0", 1900, 2100);
+            NUnit.Framework.Assert.AreEqual("publicProductName", productData.GetPublicProductName());
+            NUnit.Framework.Assert.AreEqual("productName", productData.GetProductName());
+            NUnit.Framework.Assert.AreEqual("1.2", productData.GetVersion());
+            NUnit.Framework.Assert.AreEqual("4.0.0", productData.GetMinCompatibleLicensingModuleVersion());
+            NUnit.Framework.Assert.AreEqual(1900, productData.GetSinceCopyrightYear());
+            NUnit.Framework.Assert.AreEqual(2100, productData.GetToCopyrightYear());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void EqualsTest() {
             ProductData a = new ProductData("publicProductName", "productName", "1.2", 1900, 2100);
             ProductData b = new ProductData("publicProductName", "productName", "1.2", 1900, 2100);

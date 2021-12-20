@@ -157,20 +157,8 @@ namespace iText.Kernel.Utils {
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
         public virtual IList<PdfDocument> SplitByPageNumbers(IList<int> pageNumbers) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-            SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_172(splitDocuments));
+            SplitByPageNumbers(pageNumbers, new PdfSplitter.SplitReadyListener(splitDocuments));
             return splitDocuments;
-        }
-
-        private sealed class _IDocumentReadyListener_172 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_172(IList<PdfDocument> splitDocuments) {
-                this.splitDocuments = splitDocuments;
-            }
-
-            public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange) {
-                splitDocuments.Add(pdfDocument);
-            }
-
-            private readonly IList<PdfDocument> splitDocuments;
         }
 
         /// <summary>Splits a document into smaller documents with no more than @pageCount pages each.</summary>
@@ -194,20 +182,8 @@ namespace iText.Kernel.Utils {
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
         public virtual IList<PdfDocument> SplitByPageCount(int pageCount) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-            SplitByPageCount(pageCount, new _IDocumentReadyListener_209(splitDocuments));
+            SplitByPageCount(pageCount, new PdfSplitter.SplitReadyListener(splitDocuments));
             return splitDocuments;
-        }
-
-        private sealed class _IDocumentReadyListener_209 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_209(IList<PdfDocument> splitDocuments) {
-                this.splitDocuments = splitDocuments;
-            }
-
-            public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange) {
-                splitDocuments.Add(pdfDocument);
-            }
-
-            private readonly IList<PdfDocument> splitDocuments;
         }
 
         /// <summary>Extracts the specified page ranges from a document.</summary>
@@ -393,6 +369,18 @@ namespace iText.Kernel.Utils {
 
         private long XrefLength(int size) {
             return 20L * (size + 1);
+        }
+
+        private sealed class SplitReadyListener : PdfSplitter.IDocumentReadyListener {
+            private IList<PdfDocument> splitDocuments;
+
+            public SplitReadyListener(IList<PdfDocument> splitDocuments) {
+                this.splitDocuments = splitDocuments;
+            }
+
+            public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange) {
+                splitDocuments.Add(pdfDocument);
+            }
         }
     }
 }

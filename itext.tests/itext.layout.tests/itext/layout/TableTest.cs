@@ -53,6 +53,7 @@ using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -444,7 +445,32 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        public virtual void WideFirstCellBorderDoesntAffectSecondCellTest() {
+            String testName = "wideFirstCellBorderDoesntAffectSecondCellTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            String longTextContent = "1. " + TEXT_CONTENT + "2. " + TEXT_CONTENT + "3. " + TEXT_CONTENT + "4. " + TEXT_CONTENT
+                 + "5. " + TEXT_CONTENT + "6. " + TEXT_CONTENT + "7. " + TEXT_CONTENT + "8. " + TEXT_CONTENT + "9. " +
+                 TEXT_CONTENT;
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
+                (new Cell().Add(new Paragraph("cell 1, 2")).SetBorder(new SolidBorder(ColorConstants.RED, 100))).AddCell
+                (new Cell().Add(new Paragraph("cell 2, 1\n" + longTextContent))).AddCell(new Cell().Add(new Paragraph(
+                "cell 2, 2\n" + longTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + longTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 2, 1\n" + longTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + longTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 2, 2\n" + longTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + longTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent)));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest17() {
             String testName = "tableTest17.pdf";
             String outFileName = destinationFolder + testName;
@@ -467,7 +493,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest18() {
             String testName = "tableTest18.pdf";
             String outFileName = destinationFolder + testName;
@@ -491,7 +517,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest19() {
             String testName = "tableTest19.pdf";
             String outFileName = destinationFolder + testName;
@@ -516,7 +542,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest20() {
             String testName = "tableTest20.pdf";
             String outFileName = destinationFolder + testName;
@@ -538,7 +564,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest21() {
             String testName = "tableTest21.pdf";
             String outFileName = destinationFolder + testName;
@@ -836,7 +862,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void ToLargeElementWithKeepTogetherPropertyInTableTest01() {
             String testName = "toLargeElementWithKeepTogetherPropertyInTableTest01.pdf";
@@ -862,7 +888,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void ToLargeElementInTableTest01() {
             String testName = "toLargeElementInTableTest01.pdf";
@@ -973,7 +999,7 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void SplitTableOnShortPage() {
             String testName = "splitTableOnShortPage.pdf";
@@ -1331,7 +1357,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void BigFooterTest01() {
             String testName = "bigFooterTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -1349,7 +1375,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void BigFooterTest02() {
             String testName = "bigFooterTest02.pdf";
             String outFileName = destinationFolder + testName;
@@ -1649,7 +1675,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void TableNothingResultTest() {
             String testName = "tableNothingResultTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -1663,6 +1689,181 @@ namespace iText.Layout {
                 table.AddCell(new Cell().Add(new Paragraph("World")));
                 table.StartNewRow();
             }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void TableWithEmptyLastRowTest() {
+            String testName = "tableWithEmptyLastRowTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            StartSeveralEmptyRows(table);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING)]
+        public virtual void TableWithEmptyRowsBetweenFullRowsTest() {
+            String testName = "tableWithEmptyRowsBetweenFullRowsTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            StartSeveralEmptyRows(table);
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING, Count = 2
+            )]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void TableWithEmptyRowAfterJustOneCellTest() {
+            String testName = "tableWithEmptyRowAfterJustOneCellTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(3);
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j <= i; j++) {
+                    table.AddCell(new Cell().Add(new Paragraph("Hello")));
+                }
+                StartSeveralEmptyRows(table);
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING, Count = 39
+            )]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void TableWithAlternatingRowsTest() {
+            String testName = "tableWithAlternatingRowsTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            for (int i = 0; i < 40; i++) {
+                table.AddCell(new Cell().Add(new Paragraph("Hello")));
+                table.AddCell(new Cell().Add(new Paragraph("World")));
+                StartSeveralEmptyRows(table);
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColoredTableWithColoredCellsTest() {
+            String testName = "coloredTableWithColoredCellsTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.SetBackgroundColor(ColorConstants.RED);
+            for (int i = 0; i < 40; i++) {
+                table.AddCell(new Cell().Add(new Paragraph("Hello")).SetBackgroundColor(ColorConstants.GREEN));
+                table.StartNewRow();
+            }
+            table.AddCell(new Cell().Add(new Paragraph("Hello")).SetBackgroundColor(ColorConstants.GREEN));
+            table.AddCell(new Cell().Add(new Paragraph("World")).SetBackgroundColor(ColorConstants.GREEN));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING, Count = 2
+            )]
+        public virtual void TableWithEmptyRowsAndSeparatedBordersTest() {
+            String testName = "tableWithEmptyRowsAndSeparatedBordersTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            StartSeveralEmptyRows(table);
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        // TODO DEVSIX-6020:Border-collapsing doesn't work in case startNewRow has been called
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING)]
+        public virtual void TableWithCollapsedBordersTest() {
+            String testName = "tableWithCollapsedBordersTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hello")).SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 
+                10)));
+            table.AddCell(new Cell().Add(new Paragraph("World")).SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 
+                10)));
+            StartSeveralEmptyRows(table);
+            table.AddCell(new Cell().Add(new Paragraph("Hello")).SetBorderTop(new SolidBorder(ColorConstants.RED, 20))
+                );
+            table.AddCell(new Cell().Add(new Paragraph("World")).SetBorderTop(new SolidBorder(ColorConstants.RED, 20))
+                );
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void TableWithCollapsedBordersAndFooterTest() {
+            String testName = "tableWithCollapsedBordersAndFooterTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hello")).SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 
+                10)));
+            table.AddCell(new Cell().Add(new Paragraph("World")).SetBorderBottom(new SolidBorder(ColorConstants.BLUE, 
+                10)));
+            StartSeveralEmptyRows(table);
+            table.AddFooterCell(new Cell().Add(new Paragraph("Hello")).SetBorderTop(new SolidBorder(ColorConstants.RED
+                , 20)));
+            table.AddFooterCell(new Cell().Add(new Paragraph("World")).SetBorderTop(new SolidBorder(ColorConstants.RED
+                , 20)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -1804,7 +2005,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void NestedTableLostContent() {
             // When the test was created, only first line of text was displayed on the first page
             String testName = "nestedTableLostContent.pdf";
@@ -1829,7 +2030,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void NestedTableMinMaxWidthException() {
             // When the test was created, an exception was thrown due to min-max width calculations for an inner table.
             // At some point isOriginalNonSplitRenderer was true for a parent renderer but false for the inner table renderer
@@ -2577,7 +2778,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InfiniteLoopOnUnfitCellAndBigRowspanTest() {
             String testName = "infiniteLoopOnUnfitCellAndBigRowspanTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -2604,7 +2805,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void FirstRowNotFitBigRowspanTest() {
             String testName = "firstRowNotFitBigRowspanTest.pdf";
@@ -2675,7 +2876,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void BigRowSpanTooFarNothingTest() {
             // TODO DEVSIX-5250 The first column should be fully red
             String filename = "bigRowSpanTooFarNothingTest.pdf";
@@ -2696,6 +2897,58 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetWidthShouldBeRespectedTest() {
+            // TODO DEVSIX-5916 The first cell's width is the same as the second one's, however, it's not respected
+            String fileName = "setWidthShouldBeRespectedTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName));
+            Document doc = new Document(pdfDocument, new PageSize(842, 1400));
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(ColorConstants.GREEN, 90f));
+            Cell cell;
+            cell = new Cell().Add(new Paragraph("100pt"));
+            cell.SetBorder(new SolidBorder(ColorConstants.BLUE, 20f));
+            cell.SetWidth(100).SetMargin(0).SetPadding(0);
+            table.AddCell(cell);
+            cell = new Cell().Add(new Paragraph("100pt"));
+            cell.SetBorder(new SolidBorder(ColorConstants.RED, 120f));
+            cell.SetWidth(100).SetMargin(0).SetPadding(0);
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder));
+        }
+
+        //creates 2 empty lines, where 2 is random number
+        private static void StartSeveralEmptyRows(Table table) {
+            table.StartNewRow();
+            table.StartNewRow();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableRelayoutTest() {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                using (Document doc = new Document(pdfDoc)) {
+                    float width = 142f;
+                    Table table = new Table(1);
+                    table.SetWidth(width);
+                    table.SetFixedLayout();
+                    Cell cell = new Cell();
+                    cell.SetWidth(width);
+                    cell.Add(new Paragraph("Testing, FinancialProfessional Associate adasdasdasdasada.gmail.com"));
+                    table.AddCell(cell);
+                    LayoutResult result = table.CreateRendererSubTree().SetParent(doc.GetRenderer()).Layout(new LayoutContext(
+                        new LayoutArea(1, new Rectangle(0, 0, 10000, 10000.0F))));
+                    Rectangle tableRect = result.GetOccupiedArea().GetBBox();
+                    result = table.CreateRendererSubTree().SetParent(doc.GetRenderer()).Layout(new LayoutContext(new LayoutArea
+                        (1, new Rectangle(0, 0, 10000, 10000.0F))));
+                    Rectangle tableRectRelayout = result.GetOccupiedArea().GetBBox();
+                    NUnit.Framework.Assert.IsTrue(tableRect.EqualsWithEpsilon(tableRectRelayout));
+                }
+            }
         }
 
         private class RotatedDocumentRenderer : DocumentRenderer {
