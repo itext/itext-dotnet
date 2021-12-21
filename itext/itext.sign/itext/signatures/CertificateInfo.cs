@@ -149,15 +149,14 @@ namespace iText.Signatures {
                     for (int i = 0; i < set.Count; i++) {
                         Asn1Sequence s = (Asn1Sequence)set[i];
                         String id = DefaultSymbols.Get((DerObjectIdentifier)s[0]);
-                        if (id == null) {
-                            continue;
+                        if (id != null) {
+                            IList<String> vs = values.Get(id);
+                            if (vs == null) {
+                                vs = new List<String>();
+                                values.Put(id, vs);
+                            }
+                            vs.Add(((DerStringBase)s[1]).GetString());
                         }
-                        IList<String> vs = values.Get(id);
-                        if (vs == null) {
-                            vs = new List<String>();
-                            values.Put(id, vs);
-                        }
-                        vs.Add(((DerStringBase)s[1]).GetString());
                     }
                 }
             }

@@ -126,8 +126,10 @@ namespace iText.Signatures {
         /// <summary>Verifies a certificate against a single OCSP response</summary>
         /// <param name="ocspResp">the OCSP response</param>
         /// <param name="signCert">the certificate that needs to be checked</param>
-        /// <param name="issuerCert">the certificate of CA (certificate that issued signCert). This certificate is considered trusted and valid by this method.
-        ///     </param>
+        /// <param name="issuerCert">
+        /// the certificate of CA (certificate that issued signCert). This certificate is considered trusted
+        /// and valid by this method.
+        /// </param>
         /// <param name="signDate">sign date</param>
         /// <returns>
         /// 
