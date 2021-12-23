@@ -1139,7 +1139,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Helper method that tries to construct the CRLs.</summary>
-        private void FindCRL(Asn1Sequence seq) {
+        internal virtual void FindCRL(Asn1Sequence seq) {
             try {
                 crls = new List<X509Crl>();
                 for (int k = 0; k < seq.Count; ++k) {
