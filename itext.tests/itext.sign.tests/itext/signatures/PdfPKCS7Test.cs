@@ -21,7 +21,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
 using iText.Commons.Utils;
@@ -173,6 +179,68 @@ namespace iText.Signatures {
                 ));
             PdfPKCS7 pkcs7 = new SignatureUtil(outDocument).ReadSignatureData("Signature1");
             NUnit.Framework.Assert.IsTrue(pkcs7.VerifyTimestampImprint());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FindCrlIsNotNullTest() {
+            PdfDocument outDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "singleSignatureNotEmptyCRL.pdf"));
+            SignatureUtil sigUtil = new SignatureUtil(outDocument);
+            PdfPKCS7 pkcs7 = sigUtil.ReadSignatureData("Signature1");
+            IList<X509Crl> crls = pkcs7.GetCRLs().Select((crl) => (X509Crl)crl).ToList();
+            NUnit.Framework.Assert.AreEqual(2, crls.Count);
+            NUnit.Framework.Assert.AreEqual(crls[0].GetEncoded(), File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER
+                , "firstCrl.bin")));
+            NUnit.Framework.Assert.AreEqual(crls[1].GetEncoded(), File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER
+                , "secondCrl.bin")));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FindCrlNullSequenceNoExceptionTest() {
+            PdfPKCS7 pkcs7 = CreateSimplePdfPKCS7();
+            pkcs7.FindCRL(null);
+            NUnit.Framework.Assert.IsTrue(pkcs7.GetCRLs().IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsRevocationValidWithInvalidOcspTest() {
+            PdfDocument outDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureWithInvalidOcspTest.pdf"
+                ));
+            SignatureUtil sigUtil = new SignatureUtil(outDocument);
+            PdfPKCS7 pkcs7 = sigUtil.ReadSignatureData("Signature1");
+            NUnit.Framework.Assert.IsFalse(pkcs7.IsRevocationValid());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsRevocationValidWithValidOcspTest() {
+            PdfDocument outDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureWithValidOcspTest.pdf"));
+            SignatureUtil sigUtil = new SignatureUtil(outDocument);
+            PdfPKCS7 pkcs7 = sigUtil.ReadSignatureData("Signature1");
+            NUnit.Framework.Assert.IsTrue(pkcs7.IsRevocationValid());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsRevocationValidOcspResponseIsNullTest() {
+            PdfPKCS7 pkcs7 = CreateSimplePdfPKCS7();
+            pkcs7.basicResp = null;
+            NUnit.Framework.Assert.IsFalse(pkcs7.IsRevocationValid());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsRevocationValidLackOfSignCertsTest() {
+            PdfPKCS7 pkcs7 = CreateSimplePdfPKCS7();
+            pkcs7.basicResp = new BasicOcspResp(BasicOcspResponse.GetInstance(new Asn1InputStream(File.ReadAllBytes(System.IO.Path.Combine
+                (SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject()));
+            pkcs7.signCerts = JavaCollectionsUtil.Singleton(chain[0]);
+            NUnit.Framework.Assert.IsFalse(pkcs7.IsRevocationValid());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsRevocationValidExceptionDuringValidationTest() {
+            PdfPKCS7 pkcs7 = CreateSimplePdfPKCS7();
+            pkcs7.basicResp = new BasicOcspResp(BasicOcspResponse.GetInstance(new Asn1InputStream(File.ReadAllBytes(System.IO.Path.Combine
+                (SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject()));
+            pkcs7.signCerts = JavaUtil.ArraysAsList(new X509Certificate[] { null, null });
+            NUnit.Framework.Assert.IsFalse(pkcs7.IsRevocationValid());
         }
 
         // PdfPKCS7 is created here the same way it's done in PdfSigner#signDetached
