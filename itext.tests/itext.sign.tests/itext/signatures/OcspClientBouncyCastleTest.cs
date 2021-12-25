@@ -101,6 +101,13 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        public virtual void GetOcspResponseWhenUrlCertIsNullTest() {
+            OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
+            NUnit.Framework.Assert.Catch(typeof(WebException), () => castle.GetOcspResponse(checkCert, rootCert, null)
+                );
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage("Getting OCSP from http://asd", LogLevel = LogLevelConstants.INFO)]
         public virtual void IncorrectUrlTest() {
             OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
