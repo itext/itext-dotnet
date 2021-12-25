@@ -98,15 +98,11 @@ namespace iText.Signatures.Sign {
         public virtual void PadesSignatureLevelLTTest01() {
             String outFileName = destinationFolder + "padesSignatureLevelLTTest01.pdf";
             String srcFileName = sourceFolder + "signedPAdES-T.pdf";
-            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
             String caCertFileName = certsSrc + "rootRsa.p12";
-            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
-            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
             ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             ICrlClient crlClient = new TestCrlClient(caCert, caPrivateKey);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
-            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName), new StampingProperties
                 ().UseAppendMode());
             LtvVerification ltvVerification = new LtvVerification(document);
@@ -114,7 +110,8 @@ namespace iText.Signatures.Sign {
                 , LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.YES);
             ltvVerification.Merge();
             document.Close();
-            BasicCheckDssDict("padesSignatureLevelLTTest01.pdf");
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, sourceFolder + "cmp_padesSignatureLevelLTTest01.pdf"
+                ));
         }
 
         [NUnit.Framework.Test]
@@ -128,14 +125,8 @@ namespace iText.Signatures.Sign {
                 new StampingProperties().UseAppendMode());
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.Timestamp(testTsa, "timestampSig1");
-            PadesSigTest.BasicCheckSignedDoc(destinationFolder + "padesSignatureLevelLTATest01.pdf", "timestampSig1");
-        }
-
-        private void BasicCheckDssDict(String fileName) {
-            PdfDocument outDocument = new PdfDocument(new PdfReader(destinationFolder + fileName));
-            PdfDictionary dssDict = outDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
-            NUnit.Framework.Assert.IsNotNull(dssDict);
-            NUnit.Framework.Assert.AreEqual(4, dssDict.Size());
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, sourceFolder + "cmp_padesSignatureLevelLTATest01.pdf"
+                ));
         }
     }
 }
