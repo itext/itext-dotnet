@@ -122,9 +122,9 @@ namespace iText.Signatures {
                 for (int i = 0; i < AccessDescriptions.Count; i++) {
                     Asn1Sequence AccessDescription = (Asn1Sequence)AccessDescriptions[i];
                     if (AccessDescription.Count != 2) {
-                        continue;
                     }
                     else {
+                        // do nothing and continue
                         if (AccessDescription[0] is DerObjectIdentifier) {
                             DerObjectIdentifier id = (DerObjectIdentifier)AccessDescription[0];
                             if (SecurityIDs.ID_OCSP.Equals(id.Id)) {

@@ -192,13 +192,13 @@ namespace iText.Signatures {
                         return true;
                     }
                     catch (GeneralSecurityException) {
-                        continue;
                     }
                 }
             }
             catch (GeneralSecurityException) {
-                return false;
             }
+            // do nothing and continue
+            // do nothing and return false at the end
             return false;
         }
     }
