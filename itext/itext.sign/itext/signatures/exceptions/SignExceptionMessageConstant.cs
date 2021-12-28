@@ -99,5 +99,6 @@ namespace iText.Signatures.Exceptions {
 
         private SignExceptionMessageConstant() {
         }
+        // Private constructor will prevent the instantiation of this class directly
     }
 }

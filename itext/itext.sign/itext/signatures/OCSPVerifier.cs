@@ -265,8 +265,7 @@ namespace iText.Signatures {
                             }
                         }
                         else {
-                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Signatures.OCSPVerifier));
-                            logger.LogError("Authorized OCSP responder certificate revocation status cannot be checked");
+                            LOGGER.LogError("Authorized OCSP responder certificate revocation status cannot be checked");
                         }
                     }
                 }

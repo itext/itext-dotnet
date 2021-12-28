@@ -140,7 +140,6 @@ namespace iText.Signatures {
                                 return result;
                             }
                             catch (Exception) {
-                                continue;
                             }
                         }
                         catch (Exception) {
@@ -149,6 +148,9 @@ namespace iText.Signatures {
                 }
                 catch (Exception) {
                 }
+                // do nothing and continue
+                // do nothing
+                // do nothing
                 int j;
                 for (j = 0; j < certs.Length; ++j) {
                     if (j == k) {
@@ -162,6 +164,7 @@ namespace iText.Signatures {
                     catch (Exception) {
                     }
                 }
+                // do nothing
                 if (j == certs.Length) {
                     result.Add(new VerificationException(cert, "Cannot be verified against the KeyStore or the certificate chain"
                         ));

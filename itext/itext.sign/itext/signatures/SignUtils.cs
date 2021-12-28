@@ -153,8 +153,8 @@ namespace iText.Signatures {
 
             // create details for nonce extension
             IDictionary extensions = new Hashtable();
-
-            extensions[OcspObjectIdentifiers.PkixOcspNonce] = new X509Extension(false, new DerOctetString(new DerOctetString(PdfEncryption.GenerateNewDocumentId()).GetEncoded()));
+            DerOctetString derOctetString = new DerOctetString(new DerOctetString(PdfEncryption.GenerateNewDocumentId()).GetEncoded());
+            extensions[OcspObjectIdentifiers.PkixOcspNonce] = new X509Extension(false, derOctetString);
 
             gen.SetRequestExtensions(new X509Extensions(extensions));
             return gen.Generate();

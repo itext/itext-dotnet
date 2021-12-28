@@ -133,10 +133,13 @@ namespace iText.Signatures {
                 spqi = new SigPolicyQualifierInfo(Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.IdSpqEtsUri, new DerIA5String
                     (this.policyUri));
             }
-            signaturePolicyIdentifier = new SignaturePolicyIdentifier(new SignaturePolicyId(DerObjectIdentifier.GetInstance
-                (new DerObjectIdentifier(this.policyIdentifier.Replace("urn:oid:", ""))), new OtherHashAlgAndValue(new 
-                AlgorithmIdentifier(new DerObjectIdentifier(algId)), new DerOctetString(this.policyHash)), SignUtils.CreateSigPolicyQualifiers
-                (spqi)));
+            DerObjectIdentifier identifier = DerObjectIdentifier.GetInstance(new DerObjectIdentifier(this.policyIdentifier
+                .Replace("urn:oid:", "")));
+            OtherHashAlgAndValue otherHashAlgAndValue = new OtherHashAlgAndValue(new AlgorithmIdentifier(new DerObjectIdentifier
+                (algId)), new DerOctetString(this.policyHash));
+            SignaturePolicyId signaturePolicyId = new SignaturePolicyId(identifier, otherHashAlgAndValue, SignUtils.CreateSigPolicyQualifiers
+                (spqi));
+            signaturePolicyIdentifier = new SignaturePolicyIdentifier(signaturePolicyId);
             return signaturePolicyIdentifier;
         }
     }

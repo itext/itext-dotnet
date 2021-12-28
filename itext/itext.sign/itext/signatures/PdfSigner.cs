@@ -938,7 +938,8 @@ namespace iText.Signatures {
         /// </returns>
         protected internal virtual Stream GetRangeStream() {
             RandomAccessSourceFactory fac = new RandomAccessSourceFactory();
-            return new RASInputStream(fac.CreateRanged(GetUnderlyingSource(), range));
+            IRandomAccessSource randomAccessSource = fac.CreateRanged(GetUnderlyingSource(), range);
+            return new RASInputStream(randomAccessSource);
         }
 
         /// <summary>This is the last method to be called when using external signatures.</summary>

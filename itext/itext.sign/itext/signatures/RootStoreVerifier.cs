@@ -92,9 +92,9 @@ namespace iText.Signatures {
                         return result;
                     }
                     catch (GeneralSecurityException) {
-                        continue;
                     }
                 }
+                // do nothing and continue
                 result.AddAll(base.Verify(signCert, issuerCert, signDate));
                 return result;
             }
