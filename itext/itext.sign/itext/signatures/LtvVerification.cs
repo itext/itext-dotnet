@@ -295,7 +295,7 @@ namespace iText.Signatures {
             dss.Remove(PdfName.CRLs);
             dss.Remove(PdfName.Certs);
             PdfDictionary vrim = dss.GetAsDictionary(PdfName.VRI);
-            //delete old validations
+            // delete old validations
             if (vrim != null) {
                 foreach (PdfName n in vrim.KeySet()) {
                     if (validated.ContainsKey(n)) {
@@ -329,17 +329,11 @@ namespace iText.Signatures {
             }
             foreach (PdfObject pi in toDelete) {
                 PdfIndirectReference pir = pi.GetIndirectReference();
-                if (pir == null) {
-                    continue;
-                }
-                for (int k = 0; k < all.Size(); ++k) {
-                    PdfIndirectReference pod = all.Get(k).GetIndirectReference();
-                    if (pod == null) {
-                        continue;
-                    }
-                    if (pir.GetObjNumber() == pod.GetObjNumber()) {
-                        all.Remove(k);
-                        --k;
+                for (int i = 0; i < all.Size(); i++) {
+                    PdfIndirectReference pod = all.Get(i).GetIndirectReference();
+                    if (Object.Equals(pir, pod)) {
+                        all.Remove(i);
+                        i--;
                     }
                 }
             }
