@@ -54,6 +54,10 @@ using iText.Signatures.Logs;
 namespace iText.Signatures {
     /// <summary>This class consists of some methods that allow you to verify certificates.</summary>
     public class CertificateVerification {
+        public const String HAS_UNSUPPORTED_EXTENSIONS = "Has unsupported critical extension";
+
+        public const String CERTIFICATE_REVOKED = "Certificate revoked";
+
         /// <summary>The Logger instance.</summary>
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(CertificateVerification));
 
@@ -78,7 +82,7 @@ namespace iText.Signatures {
         /// </returns>
         public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl> crls, DateTime calendar) {
             if (SignUtils.HasUnsupportedCriticalExtension(cert)) {
-                return "Has unsupported critical extension";
+                return CertificateVerification.HAS_UNSUPPORTED_EXTENSIONS;
             }
             try {
                 cert.CheckValidity(calendar.ToUniversalTime());
@@ -89,7 +93,7 @@ namespace iText.Signatures {
             if (crls != null) {
                 foreach (X509Crl crl in crls) {
                     if (crl.IsRevoked(cert)) {
-                        return "Certificate revoked";
+                        return CertificateVerification.CERTIFICATE_REVOKED;
                     }
                 }
             }
