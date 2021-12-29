@@ -125,7 +125,8 @@ namespace iText.Signatures.Sign {
                 new StampingProperties());
             signer.SetFieldName("Signature1");
             signer.SignDetached(pks, signChain, null, testOcspClient, testTsa, 0, PdfSigner.CryptoStandard.CADES);
-            PadesSigTest.BasicCheckSignedDoc(destinationFolder + "ltvEnabledSingleSignatureTest01.pdf", "Signature1");
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvFileName, sourceFolder + "cmp_ltvEnabledSingleSignatureTest01.pdf"
+                ));
         }
 
         [NUnit.Framework.Test]

@@ -58,7 +58,6 @@ namespace iText.Signatures.Testutils {
     public class SignaturesCompareTool {
         private const String OID_MESSAGE_DIGEST = "1.2.840.113549.1.9.4";
 
-        // Timestamp related ids
         private const String OID_SIGNED_DATA = "1.2.840.113549.1.7.2";
 
         private const String OID_TST_INFO = "1.2.840.113549.1.9.16.1.4";
@@ -66,6 +65,21 @@ namespace iText.Signatures.Testutils {
         private const String OID_SIGNING_TIME = "1.2.840.113549.1.9.5";
 
         private const String OID_SIGNATURE_TIMESTAMP_ATTRIBUTE = "1.2.840.113549.1.9.16.2.14";
+
+        private const String OID_OCSP_RESPONSE = "1.3.6.1.5.5.7.48.1.1";
+
+        private const String OID_OCSP_NONCE_EXTENSION = "1.3.6.1.5.5.7.48.1.2";
+
+        private static readonly ICollection<String> IGNORED_OIDS;
+
+        static SignaturesCompareTool() {
+            HashSet<String> tempSet = new HashSet<String>();
+            tempSet.Add(OID_MESSAGE_DIGEST);
+            tempSet.Add(OID_TST_INFO);
+            tempSet.Add(OID_SIGNING_TIME);
+            tempSet.Add(OID_OCSP_NONCE_EXTENSION);
+            IGNORED_OIDS = JavaCollectionsUtil.UnmodifiableSet(tempSet);
+        }
 
         public static String CompareSignatures(String dest, String cmp) {
             return CompareSignatures(dest, cmp, new ReaderProperties(), new ReaderProperties());
@@ -90,15 +104,10 @@ namespace iText.Signatures.Testutils {
                             Asn1Sequence cmpSignedData = (Asn1Sequence)GetSignatureContent(sig, cmpSigUtil);
                             bool isEqual = CompareSignatureObjects(outSignedData, cmpSignedData, errorText);
                             if (!isEqual) {
-                                String sigFileName = dest.JSubstring(0, dest.LastIndexOf("."));
-                                String outSigFile = sigFileName + "_" + sig + "_out.txt";
-                                String cmpSigFile = sigFileName + "_" + sig + "_cmp.txt";
-                                WriteToFile(outSigFile, sig + "\n" + Asn1Dump.DumpAsString(outSignedData, true) + "\n");
-                                WriteToFile(cmpSigFile, sig + "\n" + Asn1Dump.DumpAsString(cmpSignedData, true) + "\n");
-                                errorText.Insert(0, "See signature output files: \nout: " + UrlUtil.GetNormalizedFileUriString(outSigFile)
-                                     + "\ncmp: " + UrlUtil.GetNormalizedFileUriString(cmpSigFile) + "\n");
+                                CreateTxtFilesFromAsn1Sequences(outSignedData, cmpSignedData, dest, sig, errorText);
                             }
                         }
+                        CompareDssEntries(outDocument, cmpDocument, dest, errorText);
                     }
                 }
             }
@@ -106,6 +115,89 @@ namespace iText.Signatures.Testutils {
                 errorText.Append(e.Message);
             }
             return String.IsNullOrEmpty(errorText.ToString()) ? null : errorText.ToString();
+        }
+
+        private static void CreateTxtFilesFromAsn1Sequences(Asn1Sequence outSignedData, Asn1Sequence cmpSignedData
+            , String dest, String sig, StringBuilder errorText) {
+            String sigFileName = dest.JSubstring(0, dest.LastIndexOf("."));
+            String outSigFile = sigFileName + "_" + sig + "_out.txt";
+            String cmpSigFile = sigFileName + "_" + sig + "_cmp.txt";
+            WriteToFile(outSigFile, sig + "\n" + Asn1Dump.DumpAsString(outSignedData, true) + "\n");
+            WriteToFile(cmpSigFile, sig + "\n" + Asn1Dump.DumpAsString(cmpSignedData, true) + "\n");
+            errorText.Insert(0, "See signature output files: " + "\nout: " + UrlUtil.GetNormalizedFileUriString(outSigFile
+                ) + "\ncmp: " + UrlUtil.GetNormalizedFileUriString(cmpSigFile) + "\n");
+        }
+
+        private static bool CompareDssEntries(PdfDocument outDocument, PdfDocument cmpDocument, String dest, StringBuilder
+             errorText) {
+            PdfDictionary outDss = outDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
+            PdfDictionary cmpDss = cmpDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
+            if (outDss == null || cmpDss == null) {
+                if (outDss == cmpDss) {
+                    return true;
+                }
+                AddError(errorText, "DSS dictionaries are different");
+                return false;
+            }
+            bool ocspCertificatesEqual = CompareRevocationDataFromDss(outDss, cmpDss, PdfName.OCSPs, dest, errorText, 
+                (outSequence, cmpSequence, errorStringBuilder) => SignaturesCompareTool.CompareAsn1Structures(outSequence
+                , cmpSequence, errorStringBuilder));
+            bool crlCertificatesEqual = CompareRevocationDataFromDss(outDss, cmpDss, PdfName.CRLs, dest, errorText, (outSequence
+                , cmpSequence, errorStringBuilder) => SignaturesCompareTool.CompareSequencesWithSignatureValue(outSequence
+                , cmpSequence, errorStringBuilder));
+            return ocspCertificatesEqual && crlCertificatesEqual;
+        }
+
+        private static bool CompareRevocationDataFromDss(PdfDictionary outDss, PdfDictionary cmpDss, PdfName entryName
+            , String dest, StringBuilder errorText, SignaturesCompareTool.SequenceComparator comparator) {
+            String errorMessage = entryName.GetValue() + " entries inside DSS dictionaries are different";
+            PdfArray outDssEntry = outDss.GetAsArray(entryName);
+            PdfArray cmpDssEntry = cmpDss.GetAsArray(entryName);
+            if (outDssEntry == null || cmpDssEntry == null) {
+                if (outDssEntry == cmpDssEntry) {
+                    return true;
+                }
+                AddError(errorText, errorMessage);
+                return false;
+            }
+            if (outDssEntry.Size() != cmpDssEntry.Size()) {
+                AddError(errorText, errorMessage);
+                return false;
+            }
+            for (int i = 0; i < outDssEntry.Size(); ++i) {
+                PdfStream outDssEntryItem = outDssEntry.GetAsStream(i);
+                PdfStream cmpDssEntryItem = cmpDssEntry.GetAsStream(i);
+                if (outDssEntryItem == null || cmpDssEntryItem == null) {
+                    if (outDssEntryItem == cmpDssEntryItem) {
+                        continue;
+                    }
+                    AddError(errorText, errorMessage);
+                    return false;
+                }
+                Asn1Sequence outDecodedItem = (Asn1Sequence)Asn1Sequence.FromByteArray(outDssEntryItem.GetBytes());
+                Asn1Sequence cmpDecodedItem = (Asn1Sequence)Asn1Sequence.FromByteArray(cmpDssEntryItem.GetBytes());
+                if (!comparator(outDecodedItem, cmpDecodedItem, errorText)) {
+                    CreateTxtFilesFromAsn1Sequences(outDecodedItem, cmpDecodedItem, dest, "DSS_" + entryName.GetValue() + "_" 
+                        + i, errorText);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool CompareOcspResponses(Asn1Encodable[] outOcspResponse, Asn1Encodable[] cmpOcspResponse, 
+            StringBuilder errorText) {
+            if (outOcspResponse.Length != 2 || cmpOcspResponse.Length != 2) {
+                AddError(errorText, "OCSP response has unexpected structure");
+            }
+            Asn1OctetString outResponseString = (Asn1OctetString)outOcspResponse[1];
+            Asn1OctetString cmpResponseString = (Asn1OctetString)cmpOcspResponse[1];
+            if (outResponseString.Equals(cmpResponseString)) {
+                return true;
+            }
+            Asn1Sequence parsedOutResponse = (Asn1Sequence)Asn1Sequence.FromByteArray(outResponseString.GetOctets());
+            Asn1Sequence parsedCmpResponse = (Asn1Sequence)Asn1Sequence.FromByteArray(cmpResponseString.GetOctets());
+            return CompareSequencesWithSignatureValue(parsedOutResponse, parsedCmpResponse, errorText);
         }
 
         private static bool CompareSignatureObjects(Asn1Sequence outSignedData, Asn1Sequence cmpSignedData, StringBuilder
@@ -160,17 +252,21 @@ namespace iText.Signatures.Testutils {
             }
             Asn1Sequence outSignerInfo = (Asn1Sequence)cmpSignerInfos[0];
             Asn1Sequence cmpSignerInfo = (Asn1Sequence)outSignerInfos[0];
-            if (cmpSignerInfo.Count != outSignerInfo.Count) {
-                AddError(errorText, "Incorrect SignerInfo entries count", outSignerInfo.Count.ToString(), cmpSignerInfo.Count
-                    .ToString());
+            return CompareSequencesWithSignatureValue(outSignerInfo, cmpSignerInfo, errorText);
+        }
+
+        private static bool CompareSequencesWithSignatureValue(Asn1Sequence outSequence, Asn1Sequence cmpSequence, 
+            StringBuilder errorText) {
+            if (cmpSequence.Count != outSequence.Count) {
+                AddError(errorText, "Incorrect SignerInfo entries count", outSequence.Count.ToString(), cmpSequence.Count.
+                    ToString());
                 return false;
             }
-            for (int i = 0; i < cmpSignerInfo.Count; i++) {
-                // Skipping comparison of ASN1OctetString fields in SignerInfo. SignerInfo is expected to have
-                // a single field of ASN1OctetString which is SignatureValue, that is expected to be
-                // different in each signature instance.
-                if (outSignerInfo[i] is Asn1OctetString) {
-                    if (cmpSignerInfo[i] is Asn1OctetString) {
+            for (int i = 0; i < cmpSequence.Count; i++) {
+                // Skipping comparison of encoded strings fields which are SignatureValue fields.
+                // They are expected to be different.
+                if (outSequence[i] is Asn1OctetString || outSequence[i] is DerBitString) {
+                    if (outSequence[i].GetType().Equals(cmpSequence[i].GetType())) {
                         continue;
                     }
                     else {
@@ -178,7 +274,7 @@ namespace iText.Signatures.Testutils {
                         return false;
                     }
                 }
-                if (!CompareAsn1Structures(outSignerInfo[i].ToAsn1Object(), cmpSignerInfo[i].ToAsn1Object(), errorText)) {
+                if (!CompareAsn1Structures(outSequence[i].ToAsn1Object(), cmpSequence[i].ToAsn1Object(), errorText)) {
                     return false;
                 }
             }
@@ -209,10 +305,16 @@ namespace iText.Signatures.Testutils {
                         }
                     }
                     else {
-                        if (!cmp.Equals(@out)) {
-                            AddError(errorText, "ASN1 objects are different", Asn1Dump.DumpAsString(@out, true), Asn1Dump.DumpAsString
-                                (cmp, true));
-                            return false;
+                        if (cmp is DerGeneralizedTime || cmp is DerUtcTime) {
+                            // Ignore time values since usually they shouldn't be equal
+                            return true;
+                        }
+                        else {
+                            if (!cmp.Equals(@out)) {
+                                AddError(errorText, "ASN1 objects are different", Asn1Dump.DumpAsString(@out, true), Asn1Dump.DumpAsString
+                                    (cmp, true));
+                                return false;
+                            }
                         }
                     }
                 }
@@ -233,14 +335,14 @@ namespace iText.Signatures.Testutils {
                 AddError(errorText, "Containers ids are different", outASN1ObjectId, cmpASN1ObjectId);
                 return false;
             }
-            // Message digest, timestamp token info and signing time should be ignored during comparing.
-            if (OID_MESSAGE_DIGEST.Equals(cmpASN1ObjectId) || OID_TST_INFO.Equals(cmpASN1ObjectId) || OID_SIGNING_TIME
-                .Equals(cmpASN1ObjectId)) {
+            if (IGNORED_OIDS.Contains(cmpASN1ObjectId)) {
                 return true;
             }
-            // Signature timestamp attribute (nested timestamp signature) should be processed as separated signature.
             if (OID_SIGNATURE_TIMESTAMP_ATTRIBUTE.Equals(cmpASN1ObjectId)) {
                 return CompareTimestampAttributes(outArray, cmpArray, errorText);
+            }
+            if (OID_OCSP_RESPONSE.Equals(cmpASN1ObjectId)) {
+                return CompareOcspResponses(outArray, cmpArray, errorText);
             }
             for (int i = 0; i < cmpArray.Length; i++) {
                 if (!CompareAsn1Structures(outArray[i].ToAsn1Object(), cmpArray[i].ToAsn1Object(), errorText)) {
@@ -305,6 +407,10 @@ namespace iText.Signatures.Testutils {
             }
         }
 
+        private static void AddError(StringBuilder errorBuilder, String errorText) {
+            AddError(errorBuilder, errorText, null, null);
+        }
+
         private static void AddError(StringBuilder errorBuilder, String errorText, String @out, String cmp) {
             errorBuilder.Append(errorText);
             if (null != @out) {
@@ -315,5 +421,8 @@ namespace iText.Signatures.Testutils {
             }
             errorBuilder.Append("\n\n");
         }
+
+        internal delegate bool SequenceComparator(Asn1Sequence outSequence, Asn1Sequence cmpSequence, StringBuilder
+             errorText);
     }
 }
