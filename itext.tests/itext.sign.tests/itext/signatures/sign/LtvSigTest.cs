@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
@@ -54,36 +55,32 @@ using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
     public class LtvSigTest : ExtendedITextTest {
-        private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/LtvSigTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/signatures/sign/LtvSigTest/";
 
-        private static readonly char[] password = "testpass".ToCharArray();
+        private static readonly char[] PASSWORD = "testpass".ToCharArray();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void LtvEnabledTest01() {
-            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
-            String caCertFileName = certsSrc + "rootRsa.p12";
-            String srcFileName = sourceFolder + "signedDoc.pdf";
-            String ltvFileName = destinationFolder + "ltvEnabledTest01.pdf";
-            String ltvTsFileName = destinationFolder + "ltvEnabledTsTest01.pdf";
-            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
-            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
-            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
-            TestCrlClient testCrlClient = new TestCrlClient(caCert, caPrivateKey);
+            String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.p12";
+            String caCertP12FileName = CERTS_SRC + "rootRsa.p12";
+            String srcFileName = SOURCE_FOLDER + "signedDoc.pdf";
+            String ltvFileName = DESTINATION_FOLDER + "ltvEnabledTest01.pdf";
+            String ltvTsFileName = DESTINATION_FOLDER + "ltvEnabledTsTest01.pdf";
+            TestCrlClient testCrlClient = PrepareCrlClientForIssuer(caCertP12FileName);
+            TestOcspClient testOcspClient = PrepareOcspClientForIssuer(caCertP12FileName);
+            TestTsaClient testTsa = PrepareTsaClient(tsaCertP12FileName);
             PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(ltvFileName), new StampingProperties
                 ().UseAppendMode());
             LtvVerification ltvVerification = new LtvVerification(document);
@@ -95,54 +92,73 @@ namespace iText.Signatures.Sign {
                 ), new StampingProperties().UseAppendMode());
             signer.Timestamp(testTsa, "timestampSig1");
             BasicCheckLtvDoc("ltvEnabledTsTest01.pdf", "timestampSig1");
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, sourceFolder + "cmp_ltvEnabledTsTest01.pdf"
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, SOURCE_FOLDER + "cmp_ltvEnabledTsTest01.pdf"
                 ));
         }
 
         [NUnit.Framework.Test]
-        public virtual void LtvEnabledSingleSignatureTest01() {
-            String signCertFileName = certsSrc + "signCertRsaWithChain.p12";
-            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
-            String intermediateCertFileName = certsSrc + "intermediateRsa.p12";
-            String caCertFileName = certsSrc + "rootRsa.p12";
-            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
-            String ltvFileName = destinationFolder + "ltvEnabledSingleSignatureTest01.pdf";
-            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
-            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
-            X509Certificate intermediateCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(intermediateCertFileName
-                , password)[0];
-            ICipherParameters intermediatePrivateKey = Pkcs12FileHelper.ReadFirstKey(intermediateCertFileName, password
-                , password);
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
-            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(intermediateCert, intermediatePrivateKey
-                ).AddBuilderForCertIssuer(caCert, caPrivateKey);
-            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
-            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
-            IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
+        public virtual void LtvEnabledSingleSignatureNoCrlDataTest() {
+            String signCertP12FileName = CERTS_SRC + "signCertRsaWithChain.p12";
+            String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.p12";
+            String intermediateCertP12FileName = CERTS_SRC + "intermediateRsa.p12";
+            String caCertP12FileName = CERTS_SRC + "rootRsa.p12";
+            String srcFileName = SOURCE_FOLDER + "helloWorldDoc.pdf";
+            String ltvFileName = DESTINATION_FOLDER + "ltvEnabledSingleSignatureNoCrlDataTest.pdf";
+            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertP12FileName, PASSWORD);
+            IExternalSignature pks = PrepareSignatureHandler(signCertP12FileName);
+            TestTsaClient testTsa = PrepareTsaClient(tsaCertP12FileName);
+            TestOcspClient testOcspClient = PrepareOcspClientForIssuer(intermediateCertP12FileName, caCertP12FileName);
+            ICollection<ICrlClient> crlNotAvailableList = JavaUtil.ArraysAsList((ICrlClient)null, new _ICrlClient_145(
+                ));
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(ltvFileName, FileMode.Create), 
                 new StampingProperties());
             signer.SetFieldName("Signature1");
-            signer.SignDetached(pks, signChain, null, testOcspClient, testTsa, 0, PdfSigner.CryptoStandard.CADES);
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvFileName, sourceFolder + "cmp_ltvEnabledSingleSignatureTest01.pdf"
+            signer.SignDetached(pks, signChain, crlNotAvailableList, testOcspClient, testTsa, 0, PdfSigner.CryptoStandard
+                .CADES);
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvFileName, SOURCE_FOLDER + "cmp_ltvEnabledSingleSignatureNoCrlDataTest.pdf"
+                ));
+        }
+
+        private sealed class _ICrlClient_145 : ICrlClient {
+            public _ICrlClient_145() {
+            }
+
+            public ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url) {
+                return null;
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LtvEnabledSingleSignatureNoOcspDataTest() {
+            String signCertP12FileName = CERTS_SRC + "signCertRsaWithChain.p12";
+            String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.p12";
+            String intermediateCertP12FileName = CERTS_SRC + "intermediateRsa.p12";
+            String caCertP12FileName = CERTS_SRC + "rootRsa.p12";
+            String srcFileName = SOURCE_FOLDER + "helloWorldDoc.pdf";
+            String ltvFileName = DESTINATION_FOLDER + "ltvEnabledSingleSignatureNoOcspDataTest.pdf";
+            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertP12FileName, PASSWORD);
+            IExternalSignature pks = PrepareSignatureHandler(signCertP12FileName);
+            TestTsaClient testTsa = PrepareTsaClient(tsaCertP12FileName);
+            TestCrlClient testCrlClient = PrepareCrlClientForIssuer(caCertP12FileName, intermediateCertP12FileName);
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(ltvFileName, FileMode.Create), 
+                new StampingProperties());
+            signer.SetFieldName("Signature1");
+            signer.SignDetached(pks, signChain, JavaCollectionsUtil.SingletonList<ICrlClient>(testCrlClient), null, testTsa
+                , 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvFileName, SOURCE_FOLDER + "cmp_ltvEnabledSingleSignatureNoOcspDataTest.pdf"
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void SecondLtvOriginalHasNoVri01() {
-            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
-            String caCertFileName = certsSrc + "rootRsa.p12";
-            String srcFileName = sourceFolder + "ltvEnabledNoVriEntry.pdf";
-            String ltvFileName = destinationFolder + "secondLtvOriginalHasNoVri01.pdf";
-            String ltvTsFileName = destinationFolder + "secondLtvOriginalHasNoVriTs01.pdf";
-            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
-            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
-            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
-            TestCrlClient testCrlClient = new TestCrlClient(caCert, caPrivateKey);
+            String tsaCertFileName = CERTS_SRC + "tsCertRsa.p12";
+            String caCertFileName = CERTS_SRC + "rootRsa.p12";
+            String srcFileName = SOURCE_FOLDER + "ltvEnabledNoVriEntry.pdf";
+            String ltvFileName = DESTINATION_FOLDER + "secondLtvOriginalHasNoVri01.pdf";
+            String ltvTsFileName = DESTINATION_FOLDER + "secondLtvOriginalHasNoVriTs01.pdf";
+            TestCrlClient testCrlClient = PrepareCrlClientForIssuer(caCertFileName);
+            TestOcspClient testOcspClient = PrepareOcspClientForIssuer(caCertFileName);
+            TestTsaClient testTsa = PrepareTsaClient(tsaCertFileName);
             PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(ltvFileName), new StampingProperties
                 ().UseAppendMode());
             LtvVerification ltvVerification = new LtvVerification(document);
@@ -154,17 +170,49 @@ namespace iText.Signatures.Sign {
                 ), new StampingProperties().UseAppendMode());
             signer.Timestamp(testTsa, "timestampSig2");
             BasicCheckLtvDoc("secondLtvOriginalHasNoVriTs01.pdf", "timestampSig2");
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, sourceFolder + "cmp_secondLtvOriginalHasNoVriTs01.pdf"
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, SOURCE_FOLDER + "cmp_secondLtvOriginalHasNoVriTs01.pdf"
                 ));
         }
 
+        private static IExternalSignature PrepareSignatureHandler(String signCertP12FileName) {
+            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertP12FileName, PASSWORD, PASSWORD);
+            return new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
+        }
+
+        private static TestCrlClient PrepareCrlClientForIssuer(params String[] issuerCertP12FileNames) {
+            TestCrlClient testCrlClient = new TestCrlClient();
+            foreach (String issuerP12File in issuerCertP12FileNames) {
+                X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(issuerP12File, PASSWORD)[0];
+                ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(issuerP12File, PASSWORD, PASSWORD);
+                testCrlClient.AddBuilderForCertIssuer(caCert, caPrivateKey);
+            }
+            return testCrlClient;
+        }
+
+        private static TestOcspClient PrepareOcspClientForIssuer(params String[] issuerCertP12FileNames) {
+            TestOcspClient ocspClient = new TestOcspClient();
+            foreach (String issuerP12File in issuerCertP12FileNames) {
+                X509Certificate issuerCertificate = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(issuerP12File, PASSWORD
+                    )[0];
+                ICipherParameters issuerPrivateKey = Pkcs12FileHelper.ReadFirstKey(issuerP12File, PASSWORD, PASSWORD);
+                ocspClient.AddBuilderForCertIssuer(issuerCertificate, issuerPrivateKey);
+            }
+            return ocspClient;
+        }
+
+        private static TestTsaClient PrepareTsaClient(String tsaCertP12FileName) {
+            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertP12FileName, PASSWORD);
+            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertP12FileName, PASSWORD, PASSWORD);
+            return new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
+        }
+
         private void BasicCheckLtvDoc(String outFileName, String tsSigName) {
-            PdfDocument outDocument = new PdfDocument(new PdfReader(destinationFolder + outFileName));
+            PdfDocument outDocument = new PdfDocument(new PdfReader(DESTINATION_FOLDER + outFileName));
             PdfDictionary dssDict = outDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
             NUnit.Framework.Assert.IsNotNull(dssDict);
             NUnit.Framework.Assert.AreEqual(4, dssDict.Size());
             outDocument.Close();
-            PadesSigTest.BasicCheckSignedDoc(destinationFolder + outFileName, tsSigName);
+            PadesSigTest.BasicCheckSignedDoc(DESTINATION_FOLDER + outFileName, tsSigName);
         }
     }
 }

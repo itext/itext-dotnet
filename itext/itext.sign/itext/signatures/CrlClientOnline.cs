@@ -113,8 +113,8 @@ namespace iText.Signatures {
             if (checkCert == null) {
                 return null;
             }
-            IList<Uri> urllist = new List<Uri>(urls);
-            if (urllist.Count == 0) {
+            IList<Uri> urlList = new List<Uri>(urls);
+            if (urlList.Count == 0) {
                 LOGGER.LogInformation("Looking for CRL for certificate " + checkCert.SubjectDN);
                 try {
                     if (url == null) {
@@ -123,7 +123,7 @@ namespace iText.Signatures {
                     if (url == null) {
                         throw new ArgumentException("Passed url can not be null.");
                     }
-                    urllist.Add(new Uri(url));
+                    urlList.Add(new Uri(url));
                     LOGGER.LogInformation("Found CRL url: " + url);
                 }
                 catch (Exception e) {
@@ -131,7 +131,7 @@ namespace iText.Signatures {
                 }
             }
             IList<byte[]> ar = new List<byte[]>();
-            foreach (Uri urlt in urllist) {
+            foreach (Uri urlt in urlList) {
                 try {
                     LOGGER.LogInformation("Checking CRL: " + urlt);
                     Stream inp = SignUtils.GetHttpResponse(urlt);
