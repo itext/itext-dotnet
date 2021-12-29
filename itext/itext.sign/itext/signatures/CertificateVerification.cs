@@ -49,6 +49,7 @@ using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.Signatures.Exceptions;
 using iText.Signatures.Logs;
 
 namespace iText.Signatures {
@@ -153,8 +154,8 @@ namespace iText.Signatures {
                 catch (Exception) {
                 }
                 // do nothing and continue
-                // do nothing
-                // do nothing
+                // Do nothing.
+                // Do nothing.
                 int j;
                 for (j = 0; j < certs.Length; ++j) {
                     if (j == k) {
@@ -168,14 +169,14 @@ namespace iText.Signatures {
                     catch (Exception) {
                     }
                 }
-                // do nothing
+                // Do nothing.
                 if (j == certs.Length) {
-                    result.Add(new VerificationException(cert, "Cannot be verified against the KeyStore or the certificate chain"
+                    result.Add(new VerificationException(cert, SignExceptionMessageConstant.CANNOT_BE_VERIFIED_CERTIFICATE_CHAIN
                         ));
                 }
             }
             if (result.Count == 0) {
-                result.Add(new VerificationException((X509Certificate)null, "Invalid state. Possible circular certificate chain"
+                result.Add(new VerificationException((X509Certificate)null, SignExceptionMessageConstant.INVALID_STATE_WHILE_CHECKING_CERT_CHAIN
                     ));
             }
             return result;

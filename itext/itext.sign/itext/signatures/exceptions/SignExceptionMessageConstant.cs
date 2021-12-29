@@ -35,9 +35,14 @@ namespace iText.Signatures.Exceptions {
         public const String CANNOT_FIND_SIGNING_CERTIFICATE_WITH_THIS_SERIAL = "Cannot find signing certificate " 
             + "with serial {0}.";
 
+        public const String CANNOT_BE_VERIFIED_CERTIFICATE_CHAIN = "Cannot be verified against the KeyStore or the "
+             + "certificate chain.";
+
         public const String CERTIFICATION_SIGNATURE_CREATION_FAILED_DOC_SHALL_NOT_CONTAIN_SIGS = "Certification " 
             + "signature creation failed. Document shall not contain any certification or approval signatures before "
              + "signing with certification signature.";
+
+        public const String CERTIFICATE_TEMPLATE_FOR_EXCEPTION_MESSAGE = "Certificate {0} failed: {1}";
 
         public const String DICTIONARY_THIS_KEY_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
 
@@ -56,6 +61,8 @@ namespace iText.Signatures.Exceptions {
         public const String FIELD_TYPE_IS_NOT_A_SIGNATURE_FIELD_TYPE = "Field type is not a signature field type.";
 
         public const String INVALID_HTTP_RESPONSE = "Invalid http response {0}.";
+
+        public const String INVALID_STATE_WHILE_CHECKING_CERT_CHAIN = "Invalid state. Possible circular " + "certificate chain.";
 
         public const String INVALID_TSA_RESPONSE = "Invalid TSA {0} response code {1}.";
 
