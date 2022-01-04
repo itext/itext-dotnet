@@ -64,11 +64,11 @@ namespace iText.Kernel.Events {
             handlers.Add(handler);
         }
 
-        public virtual void DispatchEvent(iText.Kernel.Events.Event @event) {
+        public virtual void DispatchEvent(Event @event) {
             DispatchEvent(@event, false);
         }
 
-        public virtual void DispatchEvent(iText.Kernel.Events.Event @event, bool delayed) {
+        public virtual void DispatchEvent(Event @event, bool delayed) {
             IList<iText.Kernel.Events.IEventHandler> handlers = eventHandlers.Get(@event.GetEventType());
             if (handlers != null) {
                 foreach (iText.Kernel.Events.IEventHandler handler in handlers) {
