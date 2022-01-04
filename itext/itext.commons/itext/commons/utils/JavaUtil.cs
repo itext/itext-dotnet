@@ -194,6 +194,10 @@ namespace iText.Commons.Utils {
             }
         }
 
+        public static IEnumerable<T> ArraysToEnumerable<T>(T[] a) {
+            return a;
+        }
+
         public static bool IsValidCodePoint(int codePoint) {
             // see http://www.unicode.org/glossary/#code_point
             return codePoint >= 0 && codePoint <= 0x10FFFF;
