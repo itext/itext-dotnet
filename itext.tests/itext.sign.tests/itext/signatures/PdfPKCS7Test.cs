@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -35,6 +35,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
+using iText.Signatures.Testutils.Client;
 using iText.Test;
 using iText.Test.Signutils;
 
@@ -241,6 +242,47 @@ namespace iText.Signatures {
                 (SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject()));
             pkcs7.signCerts = JavaUtil.ArraysAsList(new X509Certificate[] { null, null });
             NUnit.Framework.Assert.IsFalse(pkcs7.IsRevocationValid());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetEncodedPkcs1Test() {
+            String hashAlgorithm = DigestAlgorithms.SHA256;
+            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
+            byte[] bytes = pkcs7.GetEncodedPKCS1();
+            byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "cmpBytesPkcs1.txt"));
+            Asn1OctetString outOctetString = Asn1OctetString.GetInstance(bytes);
+            Asn1OctetString cmpOctetString = Asn1OctetString.GetInstance(cmpBytes);
+            NUnit.Framework.Assert.AreEqual(outOctetString, cmpOctetString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetEncodedPkcs1NullPrivateKeyTest() {
+            String hashAlgorithm = DigestAlgorithms.SHA256;
+            PdfPKCS7 pkcs7 = new PdfPKCS7(null, chain, hashAlgorithm, true);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pkcs7.GetEncodedPKCS1());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION, exception.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetEncodedPkcs7UnknownExceptionTest() {
+            String hashAlgorithm = DigestAlgorithms.SHA256;
+            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
+            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(chain), pk);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pkcs7.GetEncodedPKCS7(null, 
+                PdfSigner.CryptoStandard.CMS, testTsa, null, null));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION, exception.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetEncodedPkcs7Test() {
+            String hashAlgorithm = DigestAlgorithms.SHA256;
+            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
+            byte[] bytes = pkcs7.GetEncodedPKCS7();
+            byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "cmpBytesPkcs7.txt"));
+            Asn1Object outStream = Asn1Object.FromByteArray(bytes);
+            Asn1Object cmpStream = Asn1Object.FromByteArray(cmpBytes);
+            NUnit.Framework.Assert.AreEqual("SHA256withRSA", pkcs7.GetDigestAlgorithm());
+            NUnit.Framework.Assert.AreEqual(outStream, cmpStream);
         }
 
         // PdfPKCS7 is created here the same way it's done in PdfSigner#signDetached
