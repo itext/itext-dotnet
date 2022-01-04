@@ -59,38 +59,38 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfPagesTest : ExtendedITextTest {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfPagesTest/";
 
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfPagesTest/";
 
         private static readonly PdfName PageNum = new PdfName("PageNum");
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Setup() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void SimplePagesTest() {
             String filename = "simplePagesTest.pdf";
             int pageCount = 111;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(PageNum, new PdfNumber(i + 1));
                 page.Flush();
             }
             pdfDoc.Close();
-            VerifyPagesOrder(destinationFolder + filename, pageCount);
+            VerifyPagesOrder(DESTINATION_FOLDER + filename, pageCount);
         }
 
         [NUnit.Framework.Test]
         public virtual void ReversePagesTest() {
             String filename = "reversePagesTest.pdf";
             int pageCount = 111;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             for (int i = pageCount; i > 0; i--) {
                 PdfPage page = new PdfPage(pdfDoc, pdfDoc.GetDefaultPageSize());
                 pdfDoc.AddPage(1, page);
@@ -98,21 +98,21 @@ namespace iText.Kernel.Pdf {
                 page.Flush();
             }
             pdfDoc.Close();
-            VerifyPagesOrder(destinationFolder + filename, pageCount);
+            VerifyPagesOrder(DESTINATION_FOLDER + filename, pageCount);
         }
 
         [NUnit.Framework.Test]
         public virtual void ReversePagesTest2() {
             String filename = "1000PagesDocument_reversed.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "1000PagesDocument.pdf"), new PdfWriter(
-                destinationFolder + filename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "1000PagesDocument.pdf"), new PdfWriter
+                (DESTINATION_FOLDER + filename));
             int n = pdfDoc.GetNumberOfPages();
             for (int i = n - 1; i > 0; --i) {
                 pdfDoc.MovePage(i, n + 1);
             }
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff"));
         }
 
         [NUnit.Framework.Test]
@@ -130,7 +130,7 @@ namespace iText.Kernel.Pdf {
                 indexes[index] = indexes[i];
                 indexes[i] = a;
             }
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             PdfPage[] pages = new PdfPage[pageCount];
             for (int i = 0; i < indexes.Length; i++) {
                 PdfPage page = document.AddNewPage();
@@ -146,7 +146,7 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.IsTrue(document.MovePage(pages[i], i + 1), "Move page");
             }
             document.Close();
-            VerifyPagesOrder(destinationFolder + filename, pageCount);
+            VerifyPagesOrder(DESTINATION_FOLDER + filename, pageCount);
         }
 
         [NUnit.Framework.Test]
@@ -164,7 +164,7 @@ namespace iText.Kernel.Pdf {
                 indexes[index] = indexes[i];
                 indexes[i] = a;
             }
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             for (int i = 0; i < indexes.Length; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(PageNum, new PdfNumber(indexes[i]));
@@ -181,7 +181,7 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.IsTrue(VerifyIntegrity(pdfDoc.GetCatalog().GetPageTree()) == -1);
             }
             pdfDoc.Close();
-            VerifyPagesOrder(destinationFolder + filename, pageCount);
+            VerifyPagesOrder(DESTINATION_FOLDER + filename, pageCount);
         }
 
         [NUnit.Framework.Test]
@@ -215,7 +215,7 @@ namespace iText.Kernel.Pdf {
         public virtual void RemoveFlushedPage() {
             String filename = "removeFlushedPage.pdf";
             int pageCount = 10;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             PdfPage removedPage = pdfDoc.AddNewPage();
             int removedPageObjectNumber = removedPage.GetPdfObject().GetIndirectReference().GetObjNumber();
             removedPage.Flush();
@@ -229,7 +229,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsFalse(pdfDoc.GetXref().Get(removedPageObjectNumber).CheckState(PdfObject.FREE), "Free reference"
                 );
             pdfDoc.Close();
-            VerifyPagesOrder(destinationFolder + filename, pageCount - 1);
+            VerifyPagesOrder(DESTINATION_FOLDER + filename, pageCount - 1);
         }
 
         [NUnit.Framework.Test]
@@ -256,7 +256,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestInheritedResources() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleInheritedResources.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "simpleInheritedResources.pdf"));
             PdfPage page = pdfDocument.GetPage(1);
             PdfDictionary dict = page.GetResources().GetResource(PdfName.ExtGState);
             NUnit.Framework.Assert.AreEqual(2, dict.Size());
@@ -268,7 +268,7 @@ namespace iText.Kernel.Pdf {
         public virtual void ReadFormXObjectsWithCircularReferencesInResources() {
             // given input file contains circular reference in resources of form xobjects
             // (form xobjects are nested inside each other)
-            String input = sourceFolder + "circularReferencesInResources.pdf";
+            String input = SOURCE_FOLDER + "circularReferencesInResources.pdf";
             PdfReader reader1 = new PdfReader(input);
             PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
             PdfPage page = inputPdfDoc1.GetPage(1);
@@ -289,14 +289,14 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestInheritedResourcesUpdate() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "simpleInheritedResources.pdf"), new PdfWriter
-                (destinationFolder + "updateInheritedResources.pdf").SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "simpleInheritedResources.pdf"), new PdfWriter
+                (DESTINATION_FOLDER + "updateInheritedResources.pdf").SetCompressionLevel(CompressionConstants.NO_COMPRESSION
                 ));
             PdfName newGsName = pdfDoc.GetPage(1).GetResources().AddExtGState(new PdfExtGState().SetLineWidth(30));
             int gsCount = pdfDoc.GetPage(1).GetResources().GetResource(PdfName.ExtGState).Size();
             pdfDoc.Close();
-            String compareResult = new CompareTool().CompareByContent(destinationFolder + "updateInheritedResources.pdf"
-                , sourceFolder + "cmp_" + "updateInheritedResources.pdf", destinationFolder, "diff");
+            String compareResult = new CompareTool().CompareByContent(DESTINATION_FOLDER + "updateInheritedResources.pdf"
+                , SOURCE_FOLDER + "cmp_" + "updateInheritedResources.pdf", DESTINATION_FOLDER, "diff");
             NUnit.Framework.Assert.AreEqual(3, gsCount);
             NUnit.Framework.Assert.AreEqual("Gs3", newGsName.GetValue());
             NUnit.Framework.Assert.IsNull(compareResult);
@@ -305,20 +305,20 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ReorderInheritedResourcesTest() {
             //TODO: DEVSIX-1643 Inherited resources aren't copied on page reordering
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "inheritedFontResources.pdf"), new PdfWriter
-                (destinationFolder + "reorderInheritedFontResources.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "inheritedFontResources.pdf"), new PdfWriter
+                (DESTINATION_FOLDER + "reorderInheritedFontResources.pdf"));
             pdfDoc.MovePage(1, pdfDoc.GetNumberOfPages() + 1);
             pdfDoc.RemovePage(1);
             pdfDoc.Close();
-            String compareResult = new CompareTool().CompareByContent(destinationFolder + "reorderInheritedFontResources.pdf"
-                , sourceFolder + "cmp_reorderInheritedFontResources.pdf", destinationFolder, "diff_reorderInheritedFontResources_"
+            String compareResult = new CompareTool().CompareByContent(DESTINATION_FOLDER + "reorderInheritedFontResources.pdf"
+                , SOURCE_FOLDER + "cmp_reorderInheritedFontResources.pdf", DESTINATION_FOLDER, "diff_reorderInheritedFontResources_"
                 );
             NUnit.Framework.Assert.IsNull(compareResult);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetPageByDictionary() {
-            String filename = sourceFolder + "1000PagesDocument.pdf";
+            String filename = SOURCE_FOLDER + "1000PagesDocument.pdf";
             PdfReader reader = new PdfReader(filename);
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfObject[] pageDictionaries = new PdfObject[] { pdfDoc.GetPdfObject(4), pdfDoc.GetPdfObject(255), pdfDoc.
@@ -334,22 +334,20 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void RemovePageWithFormFieldsTest() {
-            String filename = sourceFolder + "docWithFields.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
-            pdfDoc.RemovePage(1);
-            PdfArray fields = pdfDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm).GetAsArray(PdfName.
-                Fields);
-            PdfDictionary field = (PdfDictionary)fields.Get(0);
-            PdfDictionary kid = (PdfDictionary)field.GetAsArray(PdfName.Kids).Get(0);
-            NUnit.Framework.Assert.AreEqual(6, kid.KeySet().Count);
-            NUnit.Framework.Assert.AreEqual(3, fields.Size());
-            pdfDoc.Close();
+            String testName = "docWithFieldsRemovePage.pdf";
+            String outPdf = DESTINATION_FOLDER + testName;
+            String sourceFile = SOURCE_FOLDER + "docWithFields.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(outPdf))) {
+                pdfDoc.RemovePage(1);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName
+                , DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetPageSizeWithInheritedMediaBox() {
             double eps = 0.0000001;
-            String filename = sourceFolder + "inheritedMediaBox.pdf";
+            String filename = SOURCE_FOLDER + "inheritedMediaBox.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             NUnit.Framework.Assert.AreEqual(0, pdfDoc.GetPage(1).GetPageSize().GetLeft(), eps);
             NUnit.Framework.Assert.AreEqual(0, pdfDoc.GetPage(1).GetPageSize().GetBottom(), eps);
@@ -362,28 +360,28 @@ namespace iText.Kernel.Pdf {
         public virtual void PageThumbnailTest() {
             String filename = "pageThumbnail.pdf";
             String imageSrc = "icon.jpg";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename).SetCompressionLevel(CompressionConstants
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename).SetCompressionLevel(CompressionConstants
                 .NO_COMPRESSION));
-            PdfPage page = pdfDoc.AddNewPage().SetThumbnailImage(new PdfImageXObject(ImageDataFactory.Create(sourceFolder
+            PdfPage page = pdfDoc.AddNewPage().SetThumbnailImage(new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER
                  + imageSrc)));
             new PdfCanvas(page).SetFillColor(ColorConstants.RED).Rectangle(100, 100, 400, 400).Fill();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void RotationPagesRotationTest() {
             String filename = "singlePageDocumentWithRotation.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + filename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + filename));
             PdfPage page = pdfDoc.GetPage(1);
             NUnit.Framework.Assert.AreEqual(90, page.GetRotation(), "Inherited value is invalid");
         }
 
         [NUnit.Framework.Test]
         public virtual void PageTreeCleanupParentRefTest() {
-            String src = sourceFolder + "CatalogWithPageAndPagesEntries.pdf";
-            String dest = destinationFolder + "CatalogWithPageAndPagesEntries_opened.pdf";
+            String src = SOURCE_FOLDER + "CatalogWithPageAndPagesEntries.pdf";
+            String dest = DESTINATION_FOLDER + "CatalogWithPageAndPagesEntries_opened.pdf";
             PdfReader reader = new PdfReader(src);
             PdfWriter writer = new PdfWriter(dest);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
@@ -393,8 +391,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void PdfNumberInPageContentArrayTest() {
-            String src = sourceFolder + "pdfNumberInPageContentArray.pdf";
-            String dest = destinationFolder + "pdfNumberInPageContentArray_saved.pdf";
+            String src = SOURCE_FOLDER + "pdfNumberInPageContentArray.pdf";
+            String dest = DESTINATION_FOLDER + "pdfNumberInPageContentArray_saved.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
             pdfDoc.Close();
             // test is mainly to ensure document is successfully opened-and-closed without exceptions
@@ -432,8 +430,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestExcessiveXrefEntriesForCopyXObject() {
-            PdfDocument inputPdf = new PdfDocument(new PdfReader(sourceFolder + "input500.pdf"));
-            PdfDocument outputPdf = new PdfDocument(new PdfWriter(destinationFolder + "output500.pdf"));
+            PdfDocument inputPdf = new PdfDocument(new PdfReader(SOURCE_FOLDER + "input500.pdf"));
+            PdfDocument outputPdf = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "output500.pdf"));
             float scaleX = 595f / 612f;
             float scaleY = 842f / 792f;
             for (int i = 1; i <= inputPdf.GetNumberOfPages(); ++i) {
@@ -453,7 +451,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS, Count = 1)]
         public virtual void PageGetMediaBoxTooManyArgumentsTest() {
-            PdfReader reader = new PdfReader(sourceFolder + "helloWorldMediaboxTooManyArguments.pdf");
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "helloWorldMediaboxTooManyArguments.pdf");
             Rectangle expected = new Rectangle(0, 0, 375, 300);
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfPage pageOne = pdfDoc.GetPage(1);
@@ -463,7 +461,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void CloseDocumentWithRecursivePagesNodeReferencesThrowsExTest() {
-            using (PdfReader reader = new PdfReader(sourceFolder + "recursivePagesNodeReference.pdf")) {
+            using (PdfReader reader = new PdfReader(SOURCE_FOLDER + "recursivePagesNodeReference.pdf")) {
                 using (PdfWriter writer = new PdfWriter(new MemoryStream())) {
                     PdfDocument pdfDocument = new PdfDocument(reader, writer);
                     Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.Close());
@@ -475,7 +473,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void GetPageWithRecursivePagesNodeReferenceInAppendModeThrowExTest() {
-            using (PdfReader reader = new PdfReader(sourceFolder + "recursivePagesNodeReference.pdf")) {
+            using (PdfReader reader = new PdfReader(SOURCE_FOLDER + "recursivePagesNodeReference.pdf")) {
                 using (PdfWriter writer = new PdfWriter(new MemoryStream())) {
                     using (PdfDocument pdfDocument = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode())
                         ) {
@@ -491,7 +489,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void CloseDocumentWithRecursivePagesNodeInAppendModeDoesNotThrowsTest() {
-            using (PdfReader reader = new PdfReader(sourceFolder + "recursivePagesNodeReference.pdf")) {
+            using (PdfReader reader = new PdfReader(SOURCE_FOLDER + "recursivePagesNodeReference.pdf")) {
                 using (PdfWriter writer = new PdfWriter(new MemoryStream())) {
                     using (PdfDocument pdfDocument = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode())
                         ) {
@@ -503,7 +501,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void PageGetMediaBoxNotEnoughArgumentsTest() {
-            PdfReader reader = new PdfReader(sourceFolder + "helloWorldMediaboxNotEnoughArguments.pdf");
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "helloWorldMediaboxNotEnoughArguments.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfPage pageOne = pdfDoc.GetPage(1);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pageOne.GetPageSize());
@@ -514,7 +512,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void InsertIntermediateParentTest() {
             String filename = "insertIntermediateParentTest.pdf";
-            PdfReader reader = new PdfReader(sourceFolder + filename);
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + filename);
             PdfWriter writer = new PdfWriter(new MemoryStream());
             PdfDocument pdfDoc = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode());
             PdfPage page = pdfDoc.GetFirstPage();
@@ -528,7 +526,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void VerifyPagesAreNotReadOnOpenTest() {
-            String srcFile = sourceFolder + "taggedOnePage.pdf";
+            String srcFile = SOURCE_FOLDER + "taggedOnePage.pdf";
             PdfPagesTest.CustomPdfReader reader = new PdfPagesTest.CustomPdfReader(this, srcFile);
             PdfDocument document = new PdfDocument(reader);
             document.Close();
@@ -555,7 +553,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ReadPagesInBlocksTest() {
-            String srcFile = sourceFolder + "docWithBalancedPageTree.pdf";
+            String srcFile = SOURCE_FOLDER + "docWithBalancedPageTree.pdf";
             int maxAmountOfPagesReadAtATime = 0;
             PdfPagesTest.CustomPdfReader reader = new PdfPagesTest.CustomPdfReader(this, srcFile);
             PdfDocument document = new PdfDocument(reader);
@@ -573,7 +571,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ReadSinglePageTest() {
-            String srcFile = sourceFolder + "allPagesAreLeaves.pdf";
+            String srcFile = SOURCE_FOLDER + "allPagesAreLeaves.pdf";
             PdfPagesTest.CustomPdfReader reader = new PdfPagesTest.CustomPdfReader(this, srcFile);
             reader.SetMemorySavingMode(true);
             PdfDocument document = new PdfDocument(reader);
@@ -591,19 +589,19 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ImplicitPagesTreeRebuildingTest() {
-            String inFileName = sourceFolder + "implicitPagesTreeRebuilding.pdf";
-            String outFileName = destinationFolder + "implicitPagesTreeRebuilding.pdf";
-            String cmpFileName = sourceFolder + "cmp_implicitPagesTreeRebuilding.pdf";
+            String inFileName = SOURCE_FOLDER + "implicitPagesTreeRebuilding.pdf";
+            String outFileName = DESTINATION_FOLDER + "implicitPagesTreeRebuilding.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_implicitPagesTreeRebuilding.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName), new PdfWriter(outFileName));
             pdfDocument.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE)]
         public virtual void BrokenPageTreeWithExcessiveLastPageTest() {
-            String inFileName = sourceFolder + "brokenPageTreeNullLast.pdf";
+            String inFileName = SOURCE_FOLDER + "brokenPageTreeNullLast.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
             IList<int> pages = JavaUtil.ArraysAsList(4);
             ICollection<int> nullPages = new HashSet<int>(pages);
@@ -613,7 +611,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE)]
         public virtual void BrokenPageTreeWithExcessiveMiddlePageTest() {
-            String inFileName = sourceFolder + "brokenPageTreeNullMiddle.pdf";
+            String inFileName = SOURCE_FOLDER + "brokenPageTreeNullMiddle.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
             IList<int> pages = JavaUtil.ArraysAsList(3);
             ICollection<int> nullPages = new HashSet<int>(pages);
@@ -623,7 +621,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE, Count = 7)]
         public virtual void BrokenPageTreeWithExcessiveMultipleNegativePagesTest() {
-            String inFileName = sourceFolder + "brokenPageTreeNullMultipleSequence.pdf";
+            String inFileName = SOURCE_FOLDER + "brokenPageTreeNullMultipleSequence.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
             IList<int> pages = JavaUtil.ArraysAsList(2, 3, 4, 6, 7, 8, 9);
             ICollection<int> nullPages = new HashSet<int>(pages);
@@ -633,7 +631,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE, Count = 2)]
         public virtual void BrokenPageTreeWithExcessiveRangeNegativePagesTest() {
-            String inFileName = sourceFolder + "brokenPageTreeNullRangeNegative.pdf";
+            String inFileName = SOURCE_FOLDER + "brokenPageTreeNullRangeNegative.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
             IList<int> pages = JavaUtil.ArraysAsList(2, 4);
             ICollection<int> nullPages = new HashSet<int>(pages);
