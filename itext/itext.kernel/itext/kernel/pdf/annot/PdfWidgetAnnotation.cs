@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
@@ -58,27 +57,6 @@ namespace iText.Kernel.Pdf.Annot {
 
         public PdfWidgetAnnotation(Rectangle rect)
             : base(rect) {
- {
-                widgetEntries.Add(PdfName.Subtype);
-                widgetEntries.Add(PdfName.Type);
-                widgetEntries.Add(PdfName.Rect);
-                widgetEntries.Add(PdfName.Contents);
-                widgetEntries.Add(PdfName.P);
-                widgetEntries.Add(PdfName.NM);
-                widgetEntries.Add(PdfName.M);
-                widgetEntries.Add(PdfName.F);
-                widgetEntries.Add(PdfName.AP);
-                widgetEntries.Add(PdfName.AS);
-                widgetEntries.Add(PdfName.Border);
-                widgetEntries.Add(PdfName.C);
-                widgetEntries.Add(PdfName.StructParent);
-                widgetEntries.Add(PdfName.OC);
-                widgetEntries.Add(PdfName.H);
-                widgetEntries.Add(PdfName.MK);
-                widgetEntries.Add(PdfName.A);
-                widgetEntries.Add(PdfName.AA);
-                widgetEntries.Add(PdfName.BS);
-            }
         }
 
         /// <summary>
@@ -96,30 +74,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <seealso cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
         protected internal PdfWidgetAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
- {
-                widgetEntries.Add(PdfName.Subtype);
-                widgetEntries.Add(PdfName.Type);
-                widgetEntries.Add(PdfName.Rect);
-                widgetEntries.Add(PdfName.Contents);
-                widgetEntries.Add(PdfName.P);
-                widgetEntries.Add(PdfName.NM);
-                widgetEntries.Add(PdfName.M);
-                widgetEntries.Add(PdfName.F);
-                widgetEntries.Add(PdfName.AP);
-                widgetEntries.Add(PdfName.AS);
-                widgetEntries.Add(PdfName.Border);
-                widgetEntries.Add(PdfName.C);
-                widgetEntries.Add(PdfName.StructParent);
-                widgetEntries.Add(PdfName.OC);
-                widgetEntries.Add(PdfName.H);
-                widgetEntries.Add(PdfName.MK);
-                widgetEntries.Add(PdfName.A);
-                widgetEntries.Add(PdfName.AA);
-                widgetEntries.Add(PdfName.BS);
-            }
         }
-
-        private HashSet<PdfName> widgetEntries = new HashSet<PdfName>();
 
         public override PdfName GetSubtype() {
             return PdfName.Widget;
@@ -167,18 +122,14 @@ namespace iText.Kernel.Pdf.Annot {
             return GetPdfObject().GetAsName(PdfName.H);
         }
 
-        /// <summary>This method removes all widget annotation entries from the form field  the given annotation merged with.
-        ///     </summary>
+        /// <summary>Remove widget annotation from AcroForm hierarchy.</summary>
         public virtual void ReleaseFormFieldFromWidgetAnnotation() {
-            PdfDictionary annotDict = GetPdfObject();
-            foreach (PdfName entry in widgetEntries) {
-                annotDict.Remove(entry);
-            }
-            PdfDictionary parent = annotDict.GetAsDictionary(PdfName.Parent);
-            if (parent != null && annotDict.Size() == 1) {
+            PdfDictionary annotationDictionary = GetPdfObject();
+            PdfDictionary parent = annotationDictionary.GetAsDictionary(PdfName.Parent);
+            if (parent != null) {
                 PdfArray kids = parent.GetAsArray(PdfName.Kids);
-                kids.Remove(annotDict);
-                if (kids.Size() == 0) {
+                kids.Remove(annotationDictionary);
+                if (kids.IsEmpty()) {
                     parent.Remove(PdfName.Kids);
                 }
             }

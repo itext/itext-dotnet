@@ -632,12 +632,12 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void DispatchEvent(iText.Kernel.Events.Event @event) {
+        public virtual void DispatchEvent(Event @event) {
             eventDispatcher.DispatchEvent(@event);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void DispatchEvent(iText.Kernel.Events.Event @event, bool delayed) {
+        public virtual void DispatchEvent(Event @event, bool delayed) {
             eventDispatcher.DispatchEvent(@event, delayed);
         }
 
@@ -2334,16 +2334,23 @@ namespace iText.Kernel.Pdf {
             markInfo.Put(key, value);
         }
 
-        /// <summary>This method removes all annotation entries from form fields associated with a given page.</summary>
+        /// <summary>Removes all widgets associated with a given page from AcroForm structure.</summary>
+        /// <remarks>Removes all widgets associated with a given page from AcroForm structure. Widgets can be either pure or merged.
+        ///     </remarks>
         /// <param name="page">to remove from.</param>
         private void RemoveUnusedWidgetsFromFields(PdfPage page) {
             if (page.IsFlushed()) {
                 return;
             }
+            PdfDictionary acroForm = this.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
+            PdfArray fields = acroForm == null ? null : acroForm.GetAsArray(PdfName.Fields);
             IList<PdfAnnotation> annots = page.GetAnnotations();
             foreach (PdfAnnotation annot in annots) {
                 if (annot.GetSubtype().Equals(PdfName.Widget)) {
                     ((PdfWidgetAnnotation)annot).ReleaseFormFieldFromWidgetAnnotation();
+                    if (fields != null) {
+                        fields.Remove(annot.GetPdfObject());
+                    }
                 }
             }
         }

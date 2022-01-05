@@ -467,17 +467,36 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void WidgetDaEntryRemovePageTest() {
-            // TODO DEVSIX-5760 cleaned widget left in the kids of the form field
-            // In this test widgets contain entry /DA that is not specific for widget annotation, so after removing of the
-            // page such widget is not removed from the document. See method PdfDocument#removeUnusedWidgetsFromFields
-            // to see logic of removing unused widgets.
-            // If open the output PDF in Adobe Acrobat, widgets on pages 3-4 will not be viewed. It seems to adobe bug.
             String testName = "widgetDaEntryRemovePage.pdf";
             String outPdf = DESTINATION_FOLDER + testName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "widgetWithDaEntry.pdf"), new PdfWriter
-                (outPdf));
-            pdfDocument.RemovePage(3);
-            pdfDocument.Close();
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "widgetWithDaEntry.pdf"), new 
+                PdfWriter(outPdf))) {
+                pdfDocument.RemovePage(3);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName
+                , DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergedAndSimpleWidgetsRemovePageTest() {
+            String testName = "mergedAndSimpleWidgetsRemovePage.pdf";
+            String outPdf = DESTINATION_FOLDER + testName;
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "mergedAndSimpleWidgets.pdf"
+                ), new PdfWriter(outPdf))) {
+                pdfDocument.RemovePage(1);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName
+                , DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergedSiblingWidgetsRemovePageTest() {
+            String testName = "mergedSiblingWidgetsRemovePage.pdf";
+            String outPdf = DESTINATION_FOLDER + testName;
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "mergedSiblingWidgets.pdf")
+                , new PdfWriter(outPdf))) {
+                pdfDocument.RemovePage(2);
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName
                 , DESTINATION_FOLDER));
         }
