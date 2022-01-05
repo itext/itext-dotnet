@@ -62,6 +62,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void BuildEmptyTable() {
+            //TODO DEVSIX-6255 Implementation of the application border attributes for cells
             String outFileName = destinationFolder + "emptyNestedTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyNestedTableTest.pdf";
             // setup document
