@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using iText.Commons.Utils;
@@ -53,11 +54,15 @@ using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
 using iText.IO.Util;
 using iText.Signatures;
+using Org.BouncyCastle.Crypto.Tls;
 using Org.BouncyCastle.X509.Store;
 
 namespace iText.Signatures.Testutils.Builder {
     public class TestTimestampTokenBuilder {
         private IList<X509Certificate> tsaCertificateChain;
+        
+        // just a more or less random oid of timestamp policy
+        private static readonly String POLICY_OID = "1.3.6.1.4.1.45794.1.1";
 
         private ICipherParameters tsaPrivateKey;
 
@@ -71,9 +76,8 @@ namespace iText.Signatures.Testutils.Builder {
         }
 
         public virtual byte[] CreateTimeStampToken(TimeStampRequest request) {
-            // just a more or less random oid of timestamp policy
-            String policy = "1.3.6.1.4.1.45794.1.1";
-            TimeStampTokenGenerator tsTokGen = new TimeStampTokenGenerator((AsymmetricKeyParameter) tsaPrivateKey, tsaCertificateChain[0], DigestAlgorithms.GetAllowedDigest("SHA1"), policy);
+            TimeStampTokenGenerator tsTokGen = CreateTimeStampTokenGenerator(tsaPrivateKey, tsaCertificateChain[0], 
+                "SHA1", POLICY_OID);
             tsTokGen.SetAccuracySeconds(1);
 
             // TODO setting this is somewhat wrong. Acrobat and openssl recognize timestamp tokens generated with this line as corrupted
@@ -87,5 +91,28 @@ namespace iText.Signatures.Testutils.Builder {
             TimeStampToken tsToken = tsTokGen.Generate(request, serialNumber, genTime);
             return tsToken.GetEncoded();
         }
+        
+        public virtual byte[] CreateTSAResponse(byte[] requestBytes, String signatureAlgorithm, String allowedDigest) {
+            try {
+                String digestForTsSigningCert = DigestAlgorithms.GetAllowedDigest(allowedDigest);
+                TimeStampTokenGenerator tokenGenerator = CreateTimeStampTokenGenerator(tsaPrivateKey,
+                    tsaCertificateChain[0], allowedDigest, POLICY_OID);
+
+                IList<String> algorithms = new List<string>();
+                algorithms.Add(digestForTsSigningCert);
+                TimeStampResponseGenerator generator = new TimeStampResponseGenerator(tokenGenerator, (IList)algorithms);
+                TimeStampRequest request = new TimeStampRequest(requestBytes);
+                return generator.Generate(request, request.Nonce, new DateTime()).GetEncoded();
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        private static TimeStampTokenGenerator CreateTimeStampTokenGenerator(ICipherParameters pk, X509Certificate cert,
+            String allowedDigest, String policyOid) {
+            return new TimeStampTokenGenerator((AsymmetricKeyParameter) pk, cert,
+                DigestAlgorithms.GetAllowedDigest(allowedDigest), policyOid);
+        }
+
     }
 }
