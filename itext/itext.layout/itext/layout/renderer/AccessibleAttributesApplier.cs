@@ -139,7 +139,7 @@ namespace iText.Layout.Renderer {
             if (background != null && background.GetColor() is DeviceRgb) {
                 attributes.Put(PdfName.BackgroundColor, new PdfArray(background.GetColor().GetColorValue()));
             }
-            //TODO NOTE: applying border attributes for cells is temporarily turned off on purpose. Remove this 'if' in future.
+            //TODO DEVSIX-6255: applying border attributes for cells is temporarily turned off on purpose. Remove this 'if' in future.
             // The reason is that currently, we can't distinguish if all cells have same border style or not.
             // Therefore for every cell in every table we have to write the same border attributes, which creates lots of clutter.
             if (!(renderer.GetModelElement() is Cell)) {
