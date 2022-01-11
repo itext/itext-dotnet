@@ -2929,6 +2929,26 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void PreciseFittingBoldSimulatedTextInCellsTest() {
+            String fileName = "preciseFittingBoldSimulatedTextInCells.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName))) {
+                using (Document doc = new Document(pdfDocument)) {
+                    int numberOfColumns = 9;
+                    Table table = new Table(UnitValue.CreatePercentArray(numberOfColumns));
+                    table.UseAllAvailableWidth();
+                    table.SetFixedLayout();
+                    for (int i = 0; i < numberOfColumns; i++) {
+                        table.AddCell(new Cell().Add(new Paragraph("Description").SetBold()));
+                    }
+                    doc.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TableRelayoutTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 using (Document doc = new Document(pdfDoc)) {
