@@ -125,6 +125,8 @@ namespace iText.Kernel.Pdf {
 
         protected internal FingerPrint fingerPrint;
 
+        protected internal SerializeOptions serializeOptions = new SerializeOptions();
+
         protected internal readonly StampingProperties properties;
 
         protected internal PdfStructTreeRoot structTreeRoot;
@@ -264,16 +266,17 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Sets the XMP Metadata.</summary>
+        /// <remarks>SerializeOptions are saved for the lifetime of PdfDocument.</remarks>
         /// <param name="xmpMeta">the xmpMetadata to set</param>
-        /// <param name="serializeOptions">serialization options</param>
-        public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
-            SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
+        /// <param name="options">serialization options</param>
+        public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions options) {
+            serializeOptions = options;
+            SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, options));
         }
 
         /// <summary>Sets the XMP Metadata.</summary>
         /// <param name="xmpMeta">the xmpMetadata to set</param>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta) {
-            SerializeOptions serializeOptions = new SerializeOptions();
             serializeOptions.SetPadding(2000);
             SetXmpMetadata(xmpMeta, serializeOptions);
         }
@@ -1917,6 +1920,13 @@ namespace iText.Kernel.Pdf {
         /// <returns>document id</returns>
         public virtual SequenceId GetDocumentIdWrapper() {
             return documentId;
+        }
+
+        /// <summary>Sets a persistent XMP metadata serialization options.</summary>
+        /// <param name="options"><see cref="iText.Kernel.XMP.Options.SerializeOptions"/>.</param>
+        public virtual void SetSerializeOptions(SerializeOptions options)
+        {
+            serializeOptions = options;
         }
 
         /// <summary>Gets list of indirect references.</summary>

@@ -803,6 +803,10 @@ namespace iText.Kernel.XMP.Impl
 					return;
 				}
 			}
+			if (string.IsNullOrEmpty(prefix))
+			{
+				return;
+			}
 			if (!usedPrefixes.Contains(prefix))
 			{
 				WriteNewline();
