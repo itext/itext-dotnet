@@ -482,7 +482,11 @@ namespace iText.Kernel.Exceptions {
         public const String WRONG_MEDIA_BOX_SIZE_TOO_FEW_ARGUMENTS = "Wrong media box size: {0}. Need at least 4 "
              + "arguments";
 
+        public const String XREF_TABLE_HAS_CYCLED_REFERENCES = "Xref table has cycled references. Prev pointer indicates an already visited xref table.";
+
         public const String XREF_SUBSECTION_NOT_FOUND = "xref subsection not found.";
+
+        public const String XREF_STREAM_HAS_CYCLED_REFERENCES = "Xref stream has cycled references. Prev pointer indicates an already visited xref stream.";
 
         public const String YOU_HAVE_TO_DEFINE_A_BOOLEAN_ARRAY_FOR_THIS_COLLECTION_SORT_DICTIONARY = "You have to "
              + "define a boolean array for this collection sort dictionary.";
