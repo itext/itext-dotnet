@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
@@ -30,15 +31,14 @@ namespace iText.Kernel.Pdf {
     public class PdfStructTreeRootUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CannotMovePageInPartlyFlushedDocTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                PdfPage pdfPage = pdfDocument.AddNewPage(1);
-                pdfPage.Flush();
-                PdfStructTreeRoot pdfStructTreeRoot = new PdfStructTreeRoot(pdfDocument);
-                pdfStructTreeRoot.Move(pdfPage, -1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.CANNOT_MOVE_PAGES_IN_PARTLY_FLUSHED_DOCUMENT, 1)))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfPage pdfPage = pdfDocument.AddNewPage(1);
+            pdfPage.Flush();
+            PdfStructTreeRoot pdfStructTreeRoot = new PdfStructTreeRoot(pdfDocument);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfStructTreeRoot.Move(pdfPage
+                , -1));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CANNOT_MOVE_PAGES_IN_PARTLY_FLUSHED_DOCUMENT
+                , 1), exception.Message);
         }
     }
 }

@@ -36,11 +36,9 @@ namespace iText.Svg.Processors.Impl {
         public virtual void ContextParameterCannotBeNullTest() {
             IDictionary<String, ISvgNodeRenderer> namedObjects = new Dictionary<String, ISvgNodeRenderer>();
             ISvgNodeRenderer root = new SvgTagSvgNodeRenderer();
-            NUnit.Framework.Assert.That(() =>  {
-                SvgProcessorResult result = new SvgProcessorResult(namedObjects, root, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(SvgExceptionMessageConstant.PARAMETER_CANNOT_BE_NULL))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new SvgProcessorResult
+                (namedObjects, root, null));
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.PARAMETER_CANNOT_BE_NULL, exception.Message);
         }
 
         [NUnit.Framework.Test]

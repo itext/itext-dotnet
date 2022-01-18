@@ -35,7 +35,7 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfDocumentUnitTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfDocumentUnitTest/";
 
         [NUnit.Framework.Test]
@@ -185,7 +185,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void PdfDocumentInstanceNoWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
             NUnit.Framework.Assert.IsNull(pdfDocument.info);
             NUnit.Framework.Assert.IsNull(pdfDocument.reader.pdfAConformanceLevel);
             pdfDocument.Close();
@@ -195,7 +195,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void PdfDocumentInstanceWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"), new PdfWriter
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"), new PdfWriter
                 (new ByteArrayOutputStream()));
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
             NUnit.Framework.Assert.IsNull(pdfDocument.reader.pdfAConformanceLevel);
@@ -206,7 +206,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentNoWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_251(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            PdfDocument pdfDocument = new _PdfDocument_247(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
             // This class instance extends pdfDocument
             // TODO DEVSIX-5292 These fields shouldn't be initialized during the document's opening
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -216,15 +216,15 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_251 : PdfDocument {
-            public _PdfDocument_251(PdfReader baseArg1)
+        private sealed class _PdfDocument_247 : PdfDocument {
+            public _PdfDocument_247(PdfReader baseArg1)
                 : base(baseArg1) {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_268(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"), new PdfWriter
+            PdfDocument pdfDocument = new _PdfDocument_264(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"), new PdfWriter
                 (new ByteArrayOutputStream()));
             // This class instance extends pdfDocument
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -235,22 +235,22 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_268 : PdfDocument {
-            public _PdfDocument_268(PdfReader baseArg1, PdfWriter baseArg2)
+        private sealed class _PdfDocument_264 : PdfDocument {
+            public _PdfDocument_264(PdfReader baseArg1, PdfWriter baseArg2)
                 : base(baseArg1, baseArg2) {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void GetDocumentInfoAlreadyClosedTest() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
             pdfDocument.Close();
             NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetDocumentInfo());
         }
 
         [NUnit.Framework.Test]
         public virtual void GetDocumentInfoNotInitializedTest() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
             NUnit.Framework.Assert.IsNull(pdfDocument.info);
             NUnit.Framework.Assert.IsNotNull(pdfDocument.GetDocumentInfo());
             pdfDocument.Close();
@@ -258,7 +258,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void GetPdfAConformanceLevelNotInitializedTest() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
             NUnit.Framework.Assert.IsNull(pdfDocument.reader.pdfAConformanceLevel);
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.GetPdfAConformanceLevel());
             pdfDocument.Close();
@@ -312,105 +312,95 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void CannotGetTagStructureForUntaggedDocumentTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                pdfDoc.GetTagStructureContext();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.MUST_BE_A_TAGGED_DOCUMENT))
-;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.GetTagStructureContext
+                ());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.MUST_BE_A_TAGGED_DOCUMENT, exception.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotAddPageAfterDocumentIsClosedTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                pdfDoc.AddNewPage(1);
-                pdfDoc.Close();
-                pdfDoc.AddNewPage(2);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION))
-;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            pdfDoc.AddNewPage(1);
+            pdfDoc.Close();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.AddNewPage(2));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotMovePageToZeroPositionTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                pdfDoc.AddNewPage();
-                pdfDoc.MovePage(1, 0);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS, 0)))
-;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            pdfDoc.AddNewPage();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => pdfDoc.MovePage
+                (1, 0));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                , 0), exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotMovePageToNegativePosition() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                pdfDoc.AddNewPage();
-                pdfDoc.MovePage(1, -1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS, -1)))
-;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            pdfDoc.AddNewPage();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => pdfDoc.MovePage
+                (1, -1));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                , -1), exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotMovePageToOneMorePositionThanPagesNumberTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                pdfDoc.AddNewPage();
-                pdfDoc.MovePage(1, 3);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS, 3)))
-;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            pdfDoc.AddNewPage();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => pdfDoc.MovePage
+                (1, 3));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                , 3), exception.Message);
         }
 
         [NUnit.Framework.Test]
-        public virtual void CannotAddPageToAnotherDocumentTest01() {
+        public virtual void CannotAddPageToAnotherDocumentTest() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             pdfDoc1.AddNewPage(1);
-            NUnit.Framework.Assert.That(() =>  {
-                pdfDoc2.CheckAndAddPage(1, pdfDoc1.GetPage(1));
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT, pdfDoc1, 1, pdfDoc2)))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc2.CheckAndAddPage(1, 
+                pdfDoc1.GetPage(1)));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT
+                , pdfDoc1, 1, pdfDoc2), exception.Message);
         }
 
         [NUnit.Framework.Test]
-        public virtual void CannotAddPageToAnotherDocumentTest02() {
+        public virtual void CannotAddPageToAnotherDocTest() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             pdfDoc1.AddNewPage(1);
-            NUnit.Framework.Assert.That(() =>  {
-                pdfDoc2.CheckAndAddPage(pdfDoc1.GetPage(1));
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT, pdfDoc1, 1, pdfDoc2)))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc2.CheckAndAddPage(pdfDoc1
+                .GetPage(1)));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT
+                , pdfDoc1, 1, pdfDoc2), exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotSetEncryptedPayloadInReadingModeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "setEncryptedPayloadInReadingModeTest.pdf"
-                    ));
-                pdfDoc.SetEncryptedPayload(null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_DOCUMENT_OPENED_IN_READING_MODE))
-;
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "setEncryptedPayloadInReadingModeTest.pdf"
+                ));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.SetEncryptedPayload(
+                null));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_DOCUMENT_OPENED_IN_READING_MODE
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotSetEncryptedPayloadToEncryptedDocTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                WriterProperties writerProperties = new WriterProperties();
-                writerProperties.SetStandardEncryption(new byte[] {  }, new byte[] {  }, 1, 1);
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream(), writerProperties));
-                PdfFileSpec fs = PdfFileSpec.CreateExternalFileSpec(pdfDoc, sourceFolder + "testPath");
-                pdfDoc.SetEncryptedPayload(fs);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_ENCRYPTED_DOCUMENT))
-;
+            WriterProperties writerProperties = new WriterProperties();
+            writerProperties.SetStandardEncryption(new byte[] {  }, new byte[] {  }, 1, 1);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream(), writerProperties));
+            PdfFileSpec fs = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + "testPath");
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.SetEncryptedPayload(
+                fs));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_ENCRYPTED_DOCUMENT
+                , exception.Message);
         }
     }
 }

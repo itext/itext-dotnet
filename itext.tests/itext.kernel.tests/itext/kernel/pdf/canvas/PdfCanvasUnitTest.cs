@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -29,67 +30,59 @@ namespace iText.Kernel.Pdf.Canvas {
     public class PdfCanvasUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void UnbalancedSaveRestoreStateOperatorsUnexpectedRestoreTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                PdfStream pdfStream = new PdfStream();
-                PdfResources pdfResources = new PdfResources();
-                PdfCanvas pdfCanvas = new PdfCanvas(pdfStream, pdfResources, pdfDocument);
-                NUnit.Framework.Assert.IsTrue(pdfCanvas.gsStack.IsEmpty());
-                pdfCanvas.RestoreState();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.UNBALANCED_SAVE_RESTORE_STATE_OPERATORS))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfStream pdfStream = new PdfStream();
+            PdfResources pdfResources = new PdfResources();
+            PdfCanvas pdfCanvas = new PdfCanvas(pdfStream, pdfResources, pdfDocument);
+            NUnit.Framework.Assert.IsTrue(pdfCanvas.gsStack.IsEmpty());
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfCanvas.RestoreState());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNBALANCED_SAVE_RESTORE_STATE_OPERATORS, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void UnbalancedLayerOperatorUnexpectedEndTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                PdfStream pdfStream = new PdfStream();
-                PdfResources pdfResources = new PdfResources();
-                PdfCanvas pdfCanvas = new PdfCanvas(pdfStream, pdfResources, pdfDocument);
-                pdfCanvas.EndLayer();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.UNBALANCED_LAYER_OPERATORS))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfStream pdfStream = new PdfStream();
+            PdfResources pdfResources = new PdfResources();
+            PdfCanvas pdfCanvas = new PdfCanvas(pdfStream, pdfResources, pdfDocument);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfCanvas.EndLayer());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNBALANCED_LAYER_OPERATORS, exception.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void UnbalancedBeginAndMarkedOperatorsUnexpectedEndTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                PdfStream pdfStream = new PdfStream();
-                PdfResources pdfResources = new PdfResources();
-                PdfCanvas pdfCanvas = new PdfCanvas(pdfStream, pdfResources, pdfDocument);
-                pdfCanvas.EndMarkedContent();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.UNBALANCED_BEGIN_END_MARKED_CONTENT_OPERATORS))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfStream pdfStream = new PdfStream();
+            PdfResources pdfResources = new PdfResources();
+            PdfCanvas pdfCanvas = new PdfCanvas(pdfStream, pdfResources, pdfDocument);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfCanvas.EndMarkedContent(
+                ));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNBALANCED_BEGIN_END_MARKED_CONTENT_OPERATORS
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void FontAndSizeShouldBeSetBeforeShowTextTest01() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                PdfPage pdfPage = pdfDocument.AddNewPage();
-                PdfCanvas pdfCanvas = new PdfCanvas(pdfPage);
-                pdfCanvas.ShowText("text");
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfPage pdfPage = pdfDocument.AddNewPage();
+            PdfCanvas pdfCanvas = new PdfCanvas(pdfPage);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfCanvas.ShowText("text"));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void FontAndSizeShouldBeSetBeforeShowTextTest02() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                PdfPage pdfPage = pdfDocument.AddNewPage();
-                PdfCanvas pdfCanvas = new PdfCanvas(pdfPage);
-                PdfArray pdfArray = new PdfArray();
-                pdfCanvas.ShowText(pdfArray);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfPage pdfPage = pdfDocument.AddNewPage();
+            PdfCanvas pdfCanvas = new PdfCanvas(pdfPage);
+            PdfArray pdfArray = new PdfArray();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfCanvas.ShowText(pdfArray
+                ));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT
+                , exception.Message);
         }
     }
 }
