@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -31,113 +32,101 @@ namespace iText.Kernel.Pdf.Tagutils {
     public class TagTreePointerUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void RootTagCannotBeRemovedTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = CreateTestDocument();
-                TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
-                tagTreePointer.RemoveTag();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_REMOVE_DOCUMENT_ROOT_TAG))
-;
+            PdfDocument pdfDoc = CreateTestDocument();
+            TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tagTreePointer.RemoveTag());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_REMOVE_DOCUMENT_ROOT_TAG, exception.
+                Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotMoveToKidWithNonExistingRoleTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = CreateTestDocument();
-                TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
-                tagTreePointer.MoveToKid(1, "role");
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.NO_KID_WITH_SUCH_ROLE))
-;
+            PdfDocument pdfDoc = CreateTestDocument();
+            TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tagTreePointer.MoveToKid(1, 
+                "role"));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.NO_KID_WITH_SUCH_ROLE, exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotMoveToKidMcrTest01() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = CreateTestDocument();
-                TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
-                tagTreePointer.MoveToKid(1, "MCR");
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_MOVE_TO_MARKED_CONTENT_REFERENCE))
-;
+            PdfDocument pdfDoc = CreateTestDocument();
+            TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tagTreePointer.MoveToKid(1, 
+                "MCR"));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_MOVE_TO_MARKED_CONTENT_REFERENCE, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.ENCOUNTERED_INVALID_MCR)]
         public virtual void CannotMoveToKidMcrTest02() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = CreateTestDocument();
-                TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
-                PdfStructElem parent = new PdfStructElem(pdfDoc, PdfName.MCR);
-                parent.Put(PdfName.P, new PdfStructElem(pdfDoc, PdfName.MCR).GetPdfObject());
-                PdfStructElem kid1 = new PdfStructElem(pdfDoc, PdfName.MCR);
-                PdfMcrNumber kid2 = new PdfMcrNumber(new PdfNumber(1), parent);
-                parent.AddKid(kid1);
-                parent.AddKid(kid2);
-                tagTreePointer.SetCurrentStructElem(parent);
-                tagTreePointer.MoveToKid(1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_MOVE_TO_MARKED_CONTENT_REFERENCE))
-;
+            PdfDocument pdfDoc = CreateTestDocument();
+            TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
+            PdfStructElem parent = new PdfStructElem(pdfDoc, PdfName.MCR);
+            parent.Put(PdfName.P, new PdfStructElem(pdfDoc, PdfName.MCR).GetPdfObject());
+            PdfStructElem kid1 = new PdfStructElem(pdfDoc, PdfName.MCR);
+            PdfMcrNumber kid2 = new PdfMcrNumber(new PdfNumber(1), parent);
+            parent.AddKid(kid1);
+            parent.AddKid(kid2);
+            tagTreePointer.SetCurrentStructElem(parent);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tagTreePointer.MoveToKid(1)
+                );
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_MOVE_TO_MARKED_CONTENT_REFERENCE, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void NoParentObjectInStructElemTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = CreateTestDocument();
-                TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
-                PdfStructElem pdfStructElem = new PdfStructElem(pdfDoc, PdfName.MCR);
-                tagTreePointer.SetCurrentStructElem(pdfStructElem);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.STRUCTURE_ELEMENT_SHALL_CONTAIN_PARENT_OBJECT))
-;
+            PdfDocument pdfDoc = CreateTestDocument();
+            TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
+            PdfStructElem pdfStructElem = new PdfStructElem(pdfDoc, PdfName.MCR);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tagTreePointer.SetCurrentStructElem
+                (pdfStructElem));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.STRUCTURE_ELEMENT_SHALL_CONTAIN_PARENT_OBJECT
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void PageMustBeInitializedBeforeNextMcidCreationTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = CreateTestDocument();
-                TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
-                PdfStructElem pdfStructElem = new PdfStructElem(pdfDoc, PdfName.MCR);
-                tagTreePointer.CreateNextMcidForStructElem(pdfStructElem, 1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.PAGE_IS_NOT_SET_FOR_THE_PDF_TAG_STRUCTURE))
-;
+            PdfDocument pdfDoc = CreateTestDocument();
+            TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
+            PdfStructElem pdfStructElem = new PdfStructElem(pdfDoc, PdfName.MCR);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tagTreePointer.CreateNextMcidForStructElem
+                (pdfStructElem, 1));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PAGE_IS_NOT_SET_FOR_THE_PDF_TAG_STRUCTURE, 
+                exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotMoveRootToParentTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = CreateTestDocument();
-                TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
-                tagTreePointer.MoveToParent();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_MOVE_TO_PARENT_CURRENT_ELEMENT_IS_ROOT))
-;
+            PdfDocument pdfDoc = CreateTestDocument();
+            TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tagTreePointer.MoveToParent
+                ());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_MOVE_TO_PARENT_CURRENT_ELEMENT_IS_ROOT
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotRelocateRootTagTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = CreateTestDocument();
-                TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
-                tagTreePointer.Relocate(tagTreePointer);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_RELOCATE_ROOT_TAG))
-;
+            PdfDocument pdfDoc = CreateTestDocument();
+            TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tagTreePointer.Relocate(tagTreePointer
+                ));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_RELOCATE_ROOT_TAG, exception.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotFlushAlreadyFlushedPageTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = CreateTestDocument();
-                TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
-                PdfPage pdfPage = pdfDoc.AddNewPage(1);
-                pdfPage.Flush();
-                tagTreePointer.SetPageForTagging(pdfPage);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.PAGE_ALREADY_FLUSHED))
-;
+            PdfDocument pdfDoc = CreateTestDocument();
+            TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
+            PdfPage pdfPage = pdfDoc.AddNewPage(1);
+            pdfPage.Flush();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tagTreePointer.SetPageForTagging
+                (pdfPage));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PAGE_ALREADY_FLUSHED, exception.Message);
         }
 
         private static PdfDocument CreateTestDocument() {

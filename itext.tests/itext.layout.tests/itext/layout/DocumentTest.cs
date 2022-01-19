@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Sequence;
@@ -40,16 +41,15 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ExecuteActionInClosedDocTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                Document document = new Document(pdfDoc);
-                Paragraph paragraph = new Paragraph("test");
-                document.Add(paragraph);
-                document.Close();
-                document.CheckClosingStatus();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(LayoutExceptionMessageConstant.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION))
-;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Document document = new Document(pdfDoc);
+            Paragraph paragraph = new Paragraph("test");
+            document.Add(paragraph);
+            document.Close();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.CheckClosingStatus
+                ());
+            NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]

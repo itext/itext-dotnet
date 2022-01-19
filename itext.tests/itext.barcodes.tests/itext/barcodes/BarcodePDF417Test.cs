@@ -53,21 +53,21 @@ using iText.Test;
 
 namespace iText.Barcodes {
     public class BarcodePDF417Test : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/barcodes/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/barcodes/BarcodePDF417/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "barcode417_01.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -77,15 +77,15 @@ namespace iText.Barcodes {
             barcode.SetCode(text);
             barcode.PlaceBarcode(canvas, null);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
             String filename = "barcode417_02.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
-            PdfReader reader = new PdfReader(sourceFolder + "DocumentWithTrueTypeFont1.pdf");
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "DocumentWithTrueTypeFont1.pdf");
             PdfDocument document = new PdfDocument(reader, writer);
             PdfCanvas canvas = new PdfCanvas(document.GetLastPage());
             String text = "Call me Ishmael. Some years ago--never mind how long " + "precisely --having little or no money in my purse, and nothing "
@@ -94,14 +94,14 @@ namespace iText.Barcodes {
             barcode.SetCode(text);
             barcode.PlaceBarcode(canvas, null);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void MacroPDF417Test01() {
             String filename = "barcode417Macro_01.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument pdfDocument = new PdfDocument(writer);
             PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.AddNewPage());
             pdfCanvas.AddXObjectWithTransformationMatrix(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 0"
@@ -109,8 +109,8 @@ namespace iText.Barcodes {
             pdfCanvas.AddXObjectWithTransformationMatrix(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 1"
                 , 1, 1, 1), 1, 0, 0, 1, 36, 676);
             pdfDocument.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -151,7 +151,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode417XObjectTest() {
             String filename = "barcode417XObjectTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -162,8 +162,8 @@ namespace iText.Barcodes {
             PdfFormXObject xObject = barcode.CreateFormXObject(document);
             canvas.AddXObjectAt(xObject, 10, 650);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -186,7 +186,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode417CodeReuseTest() {
             String filename = "barcode417CodeReuseTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
             String text = "Call me Ishmael. Some years ago--never mind how long " + "precisely --having little or no money in my purse, and nothing "
@@ -200,14 +200,14 @@ namespace iText.Barcodes {
             canvas = new PdfCanvas(document.AddNewPage());
             barcode2.PlaceBarcode(canvas, ColorConstants.CYAN);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void Barcode417NumbersTest() {
             String filename = "barcode417NumbersTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
             String numbers = "1234567890";
@@ -215,14 +215,14 @@ namespace iText.Barcodes {
             barcode.SetCode(numbers);
             barcode.PlaceBarcode(canvas, null);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void Barcode417ByteLessThanSixSizeNumbersTest() {
             String filename = "barcode417ByteLessThanSixSizeNumbersTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
             byte[] numbers = new byte[] { 0, 10 };
@@ -230,14 +230,14 @@ namespace iText.Barcodes {
             barcode.SetCode(numbers);
             barcode.PlaceBarcode(canvas, ColorConstants.BLUE);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void Barcode417ByteMoreThanSixSizeNumbersTest() {
             String filename = "barcode417ByteMoreThanSixSizeNumbersTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
             byte[] numbers = new byte[] { 0, 10, 11, 12, 13, 30, 50, 70 };
@@ -245,8 +245,8 @@ namespace iText.Barcodes {
             barcode.SetCode(numbers);
             barcode.PlaceBarcode(canvas, ColorConstants.BLUE);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -330,39 +330,30 @@ namespace iText.Barcodes {
 
         [NUnit.Framework.Test]
         public virtual void LenCodewordsIsNotEnoughTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                BarcodePDF417 barcodePDF417 = new BarcodePDF417();
-                barcodePDF417.SetOptions(BarcodePDF417.PDF417_USE_RAW_CODEWORDS);
-                barcodePDF417.PaintCode();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE))
-;
+            BarcodePDF417 barcodePDF417 = new BarcodePDF417();
+            barcodePDF417.SetOptions(BarcodePDF417.PDF417_USE_RAW_CODEWORDS);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => barcodePDF417.PaintCode());
+            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE, exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LenCodewordsIsTooSmallTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                BarcodePDF417 barcodePDF417 = new BarcodePDF417();
-                barcodePDF417.SetOptions(BarcodePDF417.PDF417_USE_RAW_CODEWORDS);
-                // lenCodeWords should be bigger than 1
-                barcodePDF417.SetLenCodewords(0);
-                barcodePDF417.PaintCode();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE))
-;
+            BarcodePDF417 barcodePDF417 = new BarcodePDF417();
+            barcodePDF417.SetOptions(BarcodePDF417.PDF417_USE_RAW_CODEWORDS);
+            // lenCodeWords should be bigger than 1
+            barcodePDF417.SetLenCodewords(0);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => barcodePDF417.PaintCode());
+            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE, exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LenCodewordsMoreThanMaxDataCodewordsTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                BarcodePDF417 barcodePDF417 = new BarcodePDF417();
-                barcodePDF417.SetOptions(BarcodePDF417.PDF417_USE_RAW_CODEWORDS);
-                // lenCodeWords should be smaller than MAX_DATA_CODEWORDS
-                barcodePDF417.SetLenCodewords(927);
-                barcodePDF417.PaintCode();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE))
-;
+            BarcodePDF417 barcodePDF417 = new BarcodePDF417();
+            barcodePDF417.SetOptions(BarcodePDF417.PDF417_USE_RAW_CODEWORDS);
+            // lenCodeWords should be smaller than MAX_DATA_CODEWORDS
+            barcodePDF417.SetLenCodewords(927);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => barcodePDF417.PaintCode());
+            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE, exception.Message);
         }
 
         private PdfFormXObject CreateMacroBarcodePart(PdfDocument document, String text, float mh, float mw, int segmentId

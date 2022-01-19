@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -82,11 +83,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         public virtual void CsInDictAsNameNullTest() {
             PdfName colorSpace = PdfName.ICCBased;
             PdfDictionary dictionary = new PdfDictionary();
-            NUnit.Framework.Assert.That(() =>  {
-                InlineImageParsingUtils.GetComponentsPerPixel(colorSpace, dictionary);
-            }
-            , NUnit.Framework.Throws.InstanceOf<InlineImageParsingUtils.InlineImageParseException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_COLOR_SPACE, "/ICCBased")))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(InlineImageParsingUtils.InlineImageParseException
+                ), () => InlineImageParsingUtils.GetComponentsPerPixel(colorSpace, dictionary));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_COLOR_SPACE
+                , "/ICCBased"), exception.Message);
         }
 
         [NUnit.Framework.Test]
@@ -99,11 +99,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             stream.Put(PdfName.N, new PdfNumber(4));
             array.Add(stream);
             dictionary.Put(colorSpace, array);
-            NUnit.Framework.Assert.That(() =>  {
-                InlineImageParsingUtils.GetComponentsPerPixel(colorSpace, dictionary);
-            }
-            , NUnit.Framework.Throws.InstanceOf<InlineImageParsingUtils.InlineImageParseException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_COLOR_SPACE, "/ICCBased")))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(InlineImageParsingUtils.InlineImageParseException
+                ), () => InlineImageParsingUtils.GetComponentsPerPixel(colorSpace, dictionary));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_COLOR_SPACE
+                , "/ICCBased"), exception.Message);
         }
 
         [NUnit.Framework.Test]

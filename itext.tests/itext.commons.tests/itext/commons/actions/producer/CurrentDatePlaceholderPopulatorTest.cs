@@ -31,11 +31,10 @@ namespace iText.Commons.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void NullTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                populator.Populate(null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(CommonsExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED, "currentDate")))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => populator.Populate(null
+                , null));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CommonsExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED
+                , "currentDate"), exception.Message);
         }
 
         [NUnit.Framework.Test]
@@ -76,29 +75,26 @@ namespace iText.Commons.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void PlainTextEndlessQuotationErrorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                populator.Populate(null, "'plain text");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(CommonsExceptionMessageConstant.PATTERN_CONTAINS_OPEN_QUOTATION))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => populator.Populate(null
+                , "'plain text"));
+            NUnit.Framework.Assert.AreEqual(CommonsExceptionMessageConstant.PATTERN_CONTAINS_OPEN_QUOTATION, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void PlainTextMultipleQuotationsEndlessQuotationErrorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                populator.Populate(null, "'plain'' ''text");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(CommonsExceptionMessageConstant.PATTERN_CONTAINS_OPEN_QUOTATION))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => populator.Populate(null
+                , "'plain'' ''text"));
+            NUnit.Framework.Assert.AreEqual(CommonsExceptionMessageConstant.PATTERN_CONTAINS_OPEN_QUOTATION, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void PlainTextEscapedApostropheEndlessQuotationErrorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                populator.Populate(null, "'plain text\\'");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(CommonsExceptionMessageConstant.PATTERN_CONTAINS_OPEN_QUOTATION))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => populator.Populate(null
+                , "'plain text\\'"));
+            NUnit.Framework.Assert.AreEqual(CommonsExceptionMessageConstant.PATTERN_CONTAINS_OPEN_QUOTATION, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]
@@ -118,29 +114,26 @@ namespace iText.Commons.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void UnexpectedLetterComponentTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                populator.Populate(null, "dd MM tyy yyyy HH");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(CommonsExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_COMPONENT, "t")))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => populator.Populate(null
+                , "dd MM tyy yyyy HH"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CommonsExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_COMPONENT
+                , "t"), exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void UnexpectedLongComponentTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                populator.Populate(null, "dd MMMMM yy yyyy HH");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(CommonsExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_COMPONENT, "MMMMM")))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => populator.Populate(null
+                , "dd MMMMM yy yyyy HH"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CommonsExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_COMPONENT
+                , "MMMMM"), exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void UnexpectedShortComponentTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                populator.Populate(null, "dd MM y yyyy HH");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(CommonsExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_COMPONENT, "y")))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => populator.Populate(null
+                , "dd MM y yyyy HH"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CommonsExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_COMPONENT
+                , "y"), exception.Message);
         }
     }
 }

@@ -36,11 +36,10 @@ namespace iText.Commons.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void NullTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                populator.Populate(GetEvents(1), null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(CommonsExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED, "usedProducts")))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => populator.Populate(GetEvents
+                (1), null));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CommonsExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED
+                , "usedProducts"), exception.Message);
         }
 
         [NUnit.Framework.Test]
@@ -127,11 +126,10 @@ namespace iText.Commons.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void InvalidLetterFormatTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                populator.Populate(GetEvents(1), "PVTX");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(CommonsExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_CHARACTER, "X")))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => populator.Populate(GetEvents
+                (1), "PVTX"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CommonsExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_CHARACTER
+                , "X"), exception.Message);
         }
 
         private IList<ConfirmedEventWrapper> GetEvents(params int[] indexes) {

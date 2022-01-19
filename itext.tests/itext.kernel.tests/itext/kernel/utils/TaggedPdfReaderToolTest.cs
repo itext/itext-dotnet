@@ -48,23 +48,23 @@ using iText.Test;
 
 namespace iText.Kernel.Utils {
     public class TaggedPdfReaderToolTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/utils/TaggedPdfReaderToolTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/utils/TaggedPdfReaderToolTest/";
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void TaggedPdfReaderToolTest01() {
             String filename = "iphone_user_guide.pdf";
-            String outXmlPath = destinationFolder + "outXml01.xml";
-            String cmpXmlPath = sourceFolder + "cmpXml01.xml";
-            PdfReader reader = new PdfReader(sourceFolder + filename);
+            String outXmlPath = DESTINATION_FOLDER + "outXml01.xml";
+            String cmpXmlPath = SOURCE_FOLDER + "cmpXml01.xml";
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + filename);
             using (FileStream outXml = new FileStream(outXmlPath, FileMode.Create)) {
                 using (PdfDocument document = new PdfDocument(reader)) {
                     TaggedPdfReaderTool tool = new TaggedPdfReaderTool(document);
@@ -80,21 +80,20 @@ namespace iText.Kernel.Utils {
 
         [NUnit.Framework.Test]
         public virtual void NoStructTreeRootInDocTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String outXmlPath = destinationFolder + "noStructTreeRootInDoc.xml";
-                try {
-                    PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
-                    TaggedPdfReaderTool tool = new TaggedPdfReaderTool(pdfDocument);
-                    using (FileStream outXml = new FileStream(outXmlPath, FileMode.Create)) {
-                        tool.ConvertToXml(outXml, "UTF-8");
-                    }
-                }
-                catch (System.IO.IOException) {
-                    NUnit.Framework.Assert.Fail("IOException is not expected to be triggered");
+            String outXmlPath = DESTINATION_FOLDER + "noStructTreeRootInDoc.xml";
+            try {
+                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+                TaggedPdfReaderTool tool = new TaggedPdfReaderTool(pdfDocument);
+                using (FileStream outXml = new FileStream(outXmlPath, FileMode.Create)) {
+                    Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tool.ConvertToXml(outXml, "UTF-8"
+                        ));
+                    NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_DOES_NOT_CONTAIN_STRUCT_TREE_ROOT, 
+                        exception.Message);
                 }
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.DOCUMENT_DOES_NOT_CONTAIN_STRUCT_TREE_ROOT))
-;
+            catch (System.IO.IOException) {
+                NUnit.Framework.Assert.Fail("IOException is not expected to be triggered");
+            }
         }
     }
 }

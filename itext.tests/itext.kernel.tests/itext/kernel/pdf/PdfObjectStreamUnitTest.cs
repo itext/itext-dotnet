@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Test;
@@ -28,17 +29,18 @@ namespace iText.Kernel.Pdf {
     public class PdfObjectStreamUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CannotAddMoreObjectsThanMaxStreamSizeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                PdfObjectStream pdfObjectStream = new PdfObjectStream(pdfDocument);
-                PdfNumber number = new PdfNumber(1);
-                number.MakeIndirect(pdfDocument);
-                for (int i = 0; i <= PdfObjectStream.MAX_OBJ_STREAM_SIZE; i++) {
-                    pdfObjectStream.AddObject(number);
-                }
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfObjectStream pdfObjectStream = new PdfObjectStream(pdfDocument);
+            PdfNumber number = new PdfNumber(1);
+            number.MakeIndirect(pdfDocument);
+            //Here we add the maximum number of objects, so that adding the next one will cause an exception
+            for (int i = 0; i < PdfObjectStream.MAX_OBJ_STREAM_SIZE; i++) {
+                pdfObjectStream.AddObject(number);
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.PDF_OBJECT_STREAM_REACH_MAX_SIZE))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfObjectStream.AddObject(number
+                ));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PDF_OBJECT_STREAM_REACH_MAX_SIZE, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]
