@@ -602,7 +602,7 @@ namespace iText.Kernel.Crypto {
             }
             else {
                 NUnit.Framework.Assert.IsFalse(expectedContentFound, "Expected content: \n" + pageContent);
-                NUnit.Framework.Assert.AreNotEqual("Encrypted custom", customInfoEntryValue, actualCustomInfoEntry);
+                NUnit.Framework.Assert.AreNotEqual(customInfoEntryValue, actualCustomInfoEntry, "Encrypted custom");
             }
             document.Close();
         }
