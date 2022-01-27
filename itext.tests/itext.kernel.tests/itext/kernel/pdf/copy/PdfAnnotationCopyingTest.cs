@@ -129,7 +129,7 @@ namespace iText.Kernel.Pdf.Copy {
             String cmpFilePath = sourceFolder + "cmp_copySameLinksWithGoToSmartMode.pdf";
             String outFilePath = destinationFolder + "copySameLinksWithGoToSmartMode.pdf";
             CopyLinksGoToActionTest(outFilePath, true, false);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(cmpFilePath, outFilePath, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, destinationFolder
                 ));
         }
 
@@ -139,7 +139,7 @@ namespace iText.Kernel.Pdf.Copy {
             String cmpFilePath = sourceFolder + "cmp_copyDiffDestLinksWithGoToSmartMode.pdf";
             String outFilePath = destinationFolder + "copyDiffDestLinksWithGoToSmartMode.pdf";
             CopyLinksGoToActionTest(outFilePath, false, false);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(cmpFilePath, outFilePath, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, destinationFolder
                 ));
         }
 
@@ -149,7 +149,7 @@ namespace iText.Kernel.Pdf.Copy {
             String cmpFilePath = sourceFolder + "cmp_copyDiffDisplayLinksWithGoToSmartMode.pdf";
             String outFilePath = destinationFolder + "copyDiffDisplayLinksWithGoToSmartMode.pdf";
             CopyLinksGoToActionTest(outFilePath, false, true);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(cmpFilePath, outFilePath, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, destinationFolder
                 ));
         }
 
