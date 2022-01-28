@@ -154,20 +154,48 @@ namespace iText.IO.Source
             }
 		}
 
-		/// <summary>
-		/// Creates a
-		/// <see cref="RandomAccessSource"/>
-		/// based on an
-		/// <see cref="System.IO.Stream"/>
-		/// .  The full content of the InputStream is read into memory and used
-		/// as the source for the
-		/// <see cref="RandomAccessSource"/>
-		/// </summary>
-		/// <param name="inputStream">the stream to read from</param>
-		/// <returns>
-		/// the newly created
-		/// <see cref="RandomAccessSource"/>
-		/// </returns>
+        /// <summary>
+        /// Creates or extracts a
+        /// <see cref="RandomAccessSource"/>
+        /// based on a
+        /// <see cref="System.IO.Stream"/>
+        /// <para/>
+        /// If the InputStream is an instance of
+        /// <see cref="RASInputStream"/>
+        /// then extracts the source from it.
+        /// Otherwise The full content of the InputStream is read into memory and used
+        /// as the source for the
+        /// <see cref="RandomAccessSource"/>
+        /// </summary>
+        /// <param name="inputStream">the stream to read from</param>
+        /// <returns>
+        /// the newly created or extracted
+        /// <see cref="RandomAccessSource"/>
+        /// </returns>
+        public IRandomAccessSource ExtractOrCreateSource(Stream inputStream)
+        {
+            if (inputStream is RASInputStream)
+            {
+                return ((RASInputStream) inputStream).GetSource();
+            }
+            return CreateSource(inputStream);
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="RandomAccessSource"/>
+        /// based on an
+        /// <see cref="System.IO.Stream"/>
+        /// <para />
+        /// The full content of the InputStream is read into memory and used
+        /// as the source for the
+        /// <see cref="RandomAccessSource"/>
+        /// </summary>
+        /// <param name="inputStream">the stream to read from</param>
+        /// <returns>
+        /// the newly created
+        /// <see cref="RandomAccessSource"/>
+        /// </returns>
         public IRandomAccessSource CreateSource(Stream inputStream)
 		{
 			return CreateSource(StreamUtil.InputStreamToArray(inputStream));

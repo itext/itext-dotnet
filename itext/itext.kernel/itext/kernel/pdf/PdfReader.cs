@@ -127,12 +127,16 @@ namespace iText.Kernel.Pdf {
         /// <param name="is">
         /// the
         /// <c>InputStream</c>
-        /// containing the document. The stream is read to the
-        /// end but is not closed.
+        /// containing the document. If the inputStream is an instance of
+        /// <see cref="iText.IO.Source.RASInputStream"/>
+        /// then the
+        /// <see cref="iText.IO.Source.IRandomAccessSource"/>
+        /// would be extracted. Otherwise the stream
+        /// is read to the end but is not closed.
         /// </param>
         /// <param name="properties">properties of the created reader</param>
         public PdfReader(Stream @is, ReaderProperties properties)
-            : this(new RandomAccessSourceFactory().CreateSource(@is), properties, true) {
+            : this(new RandomAccessSourceFactory().ExtractOrCreateSource(@is), properties, true) {
         }
 
         /// <summary>Reads and parses a PDF document.</summary>
@@ -149,10 +153,12 @@ namespace iText.Kernel.Pdf {
         /// <param name="is">
         /// the
         /// <c>InputStream</c>
-        /// containing the document. the
-        /// <c>InputStream</c>
-        /// containing the document. The stream is read to the
-        /// end but is not closed.
+        /// containing the document. If the inputStream is an instance of
+        /// <see cref="iText.IO.Source.RASInputStream"/>
+        /// then the
+        /// <see cref="iText.IO.Source.IRandomAccessSource"/>
+        /// would be extracted. Otherwise the stream
+        /// is read to the end but is not closed.
         /// </param>
         public PdfReader(Stream @is)
             : this(@is, new ReaderProperties()) {
