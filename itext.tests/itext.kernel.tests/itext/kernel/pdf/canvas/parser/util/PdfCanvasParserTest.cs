@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Source;
+using iText.IO.Util;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -52,6 +54,20 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             PdfArray cmpArray = new PdfArray(expected);
             NUnit.Framework.Assert.IsTrue(new CompareTool().CompareArrays(cmpArray, (((PdfDictionary)actual[1]).GetAsArray
                 (new PdfName("ColorantsDef")))));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseArrayTest() {
+            String inputFileName = sourceFolder + "innerArraysInContentStreamWithEndDictToken.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFileName));
+            byte[] docInBytes = pdfDocument.GetFirstPage().GetContentBytes();
+            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
+            PdfTokenizer tokeniser = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(docInBytes)));
+            PdfResources resources = pdfDocument.GetPage(1).GetResources();
+            PdfCanvasParser ps = new PdfCanvasParser(tokeniser, resources);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => ps.Parse(null));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, 
+                ">>"), exception.InnerException.Message);
         }
     }
 }
