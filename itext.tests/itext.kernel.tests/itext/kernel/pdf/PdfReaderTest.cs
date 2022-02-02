@@ -1865,6 +1865,134 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        [NUnit.Framework.Test]
+        [LogMessage(KernelExceptionMessageConstant.UNEXPECTED_TOKEN)]
+        public virtual void EndDicInsteadOfArrayClosingBracketTest() {
+            String fileName = SOURCE_FOLDER + "invalidArrayEndDictToken.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(fileName));
+            PdfArray actual = (PdfArray)document.GetPdfObject(4);
+            PdfArray expected = new PdfArray(new float[] { 5, 10, 15, 20 });
+            for (int i = 0; i < expected.Size(); i++) {
+                NUnit.Framework.Assert.AreEqual(expected.Get(i), actual.Get(i));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EndArrayClosingBracketInsteadOfEndDicTest() {
+            String fileName = SOURCE_FOLDER + "endArrayClosingBracketInsteadOfEndDic.pdf";
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => new PdfDocument
+                (new PdfReader(fileName)));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, 
+                "]"), exception.InnerException.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EndDicClosingBracketInsideTheDicTest() {
+            String fileName = SOURCE_FOLDER + "endDicClosingBracketInsideTheDic.pdf";
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => new PdfDocument
+                (new PdfReader(fileName)));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, 
+                ">>"), exception.InnerException.Message);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelExceptionMessageConstant.UNEXPECTED_TOKEN)]
+        public virtual void EofInsteadOfArrayClosingBracketTest() {
+            String fileName = SOURCE_FOLDER + "invalidArrayEOFToken.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(fileName));
+            PdfArray actual = (PdfArray)document.GetPdfObject(4);
+            PdfArray expected = new PdfArray(new float[] { 5, 10, 15, 20 });
+            for (int i = 0; i < expected.Size(); i++) {
+                NUnit.Framework.Assert.AreEqual(expected.Get(i), actual.Get(i));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelExceptionMessageConstant.UNEXPECTED_TOKEN)]
+        public virtual void EndObjInsteadOfArrayClosingBracketTest() {
+            String fileName = SOURCE_FOLDER + "invalidArrayEndObjToken.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(fileName));
+            PdfArray actual = (PdfArray)document.GetPdfObject(4);
+            PdfArray expected = new PdfArray(new float[] { 5, 10, 15, 20 });
+            for (int i = 0; i < expected.Size(); i++) {
+                NUnit.Framework.Assert.AreEqual(expected.Get(i), actual.Get(i));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelExceptionMessageConstant.UNEXPECTED_TOKEN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        public virtual void NameInsteadOfArrayClosingBracketTest() {
+            String fileName = SOURCE_FOLDER + "invalidArrayNameToken.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(fileName));
+            PdfArray actual = (PdfArray)document.GetPdfObject(4);
+            PdfArray expected = new PdfArray(new float[] { 5, 10, 15, 20 });
+            for (int i = 0; i < expected.Size(); i++) {
+                NUnit.Framework.Assert.AreEqual(expected.Get(i), actual.Get(i));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelExceptionMessageConstant.UNEXPECTED_TOKEN)]
+        public virtual void ObjInsteadOfArrayClosingBracketTest() {
+            String fileName = SOURCE_FOLDER + "invalidArrayObjToken.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(fileName));
+            PdfArray actual = (PdfArray)document.GetPdfObject(4);
+            PdfArray expected = new PdfArray(new float[] { 5, 10, 15, 20 });
+            for (int i = 0; i < expected.Size(); i++) {
+                NUnit.Framework.Assert.AreEqual(expected.Get(i), actual.Get(i));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelExceptionMessageConstant.UNEXPECTED_TOKEN)]
+        public virtual void RefInsteadOfArrayClosingBracketTest() {
+            String fileName = SOURCE_FOLDER + "invalidArrayRefToken.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(fileName));
+            PdfArray actual = (PdfArray)document.GetPdfObject(4);
+            PdfArray expected = new PdfArray(new float[] { 5, 10, 15, 20 });
+            for (int i = 0; i < expected.Size(); i++) {
+                NUnit.Framework.Assert.AreEqual(expected.Get(i), actual.Get(i));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, Count = 2)]
+        public virtual void StartArrayInsteadOfArrayClosingBracketTest() {
+            String fileName = SOURCE_FOLDER + "invalidArrayStartArrayToken.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(fileName));
+            PdfArray actual = (PdfArray)document.GetPdfObject(4);
+            PdfArray expected = new PdfArray(new float[] { 5, 10, 15, 20 });
+            for (int i = 0; i < expected.Size(); i++) {
+                NUnit.Framework.Assert.AreEqual(expected.Get(i), actual.Get(i));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelExceptionMessageConstant.UNEXPECTED_TOKEN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        public virtual void StringInsteadOfArrayClosingBracketTest() {
+            String fileName = SOURCE_FOLDER + "invalidArrayStringToken.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(fileName));
+            PdfArray actual = (PdfArray)document.GetPdfObject(4);
+            PdfArray expected = new PdfArray(new float[] { 5, 10, 15, 20 });
+            for (int i = 0; i < expected.Size(); i++) {
+                NUnit.Framework.Assert.AreEqual(expected.Get(i), actual.Get(i));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClosingArrayBracketMissingConservativeTest() {
+            String fileName = SOURCE_FOLDER + "invalidArrayObjToken.pdf";
+            PdfReader reader = new PdfReader(fileName);
+            reader.SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE);
+            PdfDocument document = new PdfDocument(reader);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => document
+                .GetPdfObject(4));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, 
+                "obj"), exception.InnerException.Message);
+        }
+
         private static FileInfo CopyFileForTest(String fileName, String copiedFileName) {
             FileInfo copiedFile = new FileInfo(copiedFileName);
             File.Copy(System.IO.Path.Combine(fileName), System.IO.Path.Combine(copiedFileName));

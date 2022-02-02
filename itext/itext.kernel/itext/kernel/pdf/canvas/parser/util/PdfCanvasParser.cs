@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -160,7 +161,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 }
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndDic && obj.GetObjectType() != PdfObject.DICTIONARY
                     ) {
-                    tokeniser.ThrowError(KernelExceptionMessageConstant.UNEXPECTED_GT_GT);
+                    tokeniser.ThrowError(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, ">>"));
                 }
                 array.Add(obj);
             }

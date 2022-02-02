@@ -1028,10 +1028,10 @@ namespace iText.Kernel.Pdf {
                 PdfObject obj = ReadObject(true, objStm);
                 if (obj == null) {
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
-                        tokens.ThrowError(KernelExceptionMessageConstant.UNEXPECTED_GT_GT);
+                        tokens.ThrowError(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, ">>"));
                     }
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
-                        tokens.ThrowError(KernelExceptionMessageConstant.UNEXPECTED_CLOSE_BRACKET);
+                        tokens.ThrowError(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, "]"));
                     }
                 }
                 dic.Put(name, obj);
@@ -1044,12 +1044,10 @@ namespace iText.Kernel.Pdf {
             while (true) {
                 PdfObject obj = ReadObject(true, objStm);
                 if (obj == null) {
-                    if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
-                        break;
+                    if (tokens.GetTokenType() != PdfTokenizer.TokenType.EndArray) {
+                        ProcessArrayReadError();
                     }
-                    if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
-                        tokens.ThrowError(KernelExceptionMessageConstant.UNEXPECTED_GT_GT);
-                    }
+                    break;
                 }
                 array.Add(obj);
             }
@@ -1435,6 +1433,18 @@ namespace iText.Kernel.Pdf {
 
         internal virtual bool IsMemorySavingMode() {
             return memorySavingMode;
+        }
+
+        private void ProcessArrayReadError() {
+            String error = MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, iText.Commons.Utils.JavaUtil.GetStringForBytes
+                (tokens.GetByteContent(), System.Text.Encoding.UTF8));
+            if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.GetStrictnessLevel())) {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                logger.LogError(error);
+            }
+            else {
+                tokens.ThrowError(error);
+            }
         }
 
         private void ReadDecryptObj() {
