@@ -43,12 +43,13 @@ namespace iText.Commons.Utils {
         }
         
         [Test]
-		[NUnit.Framework.Ignore("DEVSIX-6043 - Unignore this tests after the specified ticket will be resolved")]
-        public void ParseDateAndGetUtcMillisFromEpochTest() {
-            DateTime parsedDate = DateTimeUtil.GetCalendar(DateTimeUtil.ParseWithDefaultPattern("2020-05-05"));
+        public void ParseDateAndGetUtcMillisFromEpochTest()
+        {
+            DateTime date = DateTimeUtil.ParseWithDefaultPattern("2020-05-05");
+            DateTime parsedDate = DateTimeUtil.GetCalendar(date);
             double millisFromEpochTo2020_05_05 = DateTimeUtil.GetUtcMillisFromEpoch(parsedDate);
 
-            long offset = DateTimeUtil.GetCurrentTimeZoneOffset();
+            long offset = DateTimeUtil.GetCurrentTimeZoneOffset(date);
             Assert.AreEqual(1588636800000d - offset, millisFromEpochTo2020_05_05, ZERO_DELTA);
         }
 
@@ -61,11 +62,13 @@ namespace iText.Commons.Utils {
         }
 
         [Test]
-		[NUnit.Framework.Ignore("DEVSIX-6043 - Unignore this tests after the specified ticket will be resolved")]
-        public void ParseDateAndGetRelativeTimeTest() {
-            long relativeTime = DateTimeUtil.GetRelativeTime(DateTimeUtil.ParseWithDefaultPattern("2020-05-05"));
+        public void ParseDateAndGetRelativeTimeTest()
+        {
+            DateTime date = DateTimeUtil.ParseWithDefaultPattern("2020-05-05");
+            long relativeTime = DateTimeUtil.GetRelativeTime(date);
 
-            long offset = DateTimeUtil.GetCurrentTimeZoneOffset();
+            long offset = DateTimeUtil.GetCurrentTimeZoneOffset(date);
+            
             Assert.AreEqual(1588636800000d - offset, relativeTime, ZERO_DELTA);
         }
     }
