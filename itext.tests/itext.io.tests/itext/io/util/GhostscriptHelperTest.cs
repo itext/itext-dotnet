@@ -56,7 +56,7 @@ namespace iText.IO.Util {
 
         // In some of the test we will check whether Ghostscript has printed its help message to the console.
         // The value of this threshold should be definitely less than the length of the help message.
-        private const int SYSTEM_OUT_LENGTH_LIMIT = 400;
+        private const int SYSTEM_OUT_LENGTH_LIMIT = 450;
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {
