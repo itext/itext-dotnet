@@ -90,7 +90,8 @@ namespace iText.Signatures {
                     if (name.TagNo != GeneralName.UniformResourceIdentifier) {
                         continue;
                     }
-                    DerIA5String derStr = DerIA5String.GetInstance((Asn1TaggedObject)name.ToAsn1Object(), false);
+                    DerIA5String derStr = ((DerIA5String)DerIA5String.GetInstance((Asn1TaggedObject)name.ToAsn1Object(), false
+                        ));
                     return derStr.GetString();
                 }
             }
