@@ -68,6 +68,8 @@ namespace iText.Kernel.Pdf {
 
         private bool readingCompleted;
 
+        private MemoryLimitsAwareHandler memoryLimitsAwareHandler;
+
         /// <summary>
         /// Free references linked list is stored in a form of a map, where:
         /// key - free reference obj number;
@@ -75,17 +77,79 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         private readonly SortedDictionary<int, PdfIndirectReference> freeReferencesLinkedList;
 
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfXrefTable"/>
+        /// which will be used to store xref structure of the pdf document.
+        /// </summary>
+        /// <remarks>
+        /// Creates a
+        /// <see cref="PdfXrefTable"/>
+        /// which will be used to store xref structure of the pdf document.
+        /// Capacity and
+        /// <see cref="MemoryLimitsAwareHandler"/>
+        /// instance would be set by default values.
+        /// </remarks>
         public PdfXrefTable()
             : this(INITIAL_CAPACITY) {
         }
 
-        public PdfXrefTable(int capacity) {
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfXrefTable"/>
+        /// which will be used to store xref structure of the pdf document.
+        /// </summary>
+        /// <param name="capacity">initial capacity of xref table.</param>
+        public PdfXrefTable(int capacity)
+            : this(capacity, null) {
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfXrefTable"/>
+        /// which will be used to store xref structure of the pdf document.
+        /// </summary>
+        /// <param name="memoryLimitsAwareHandler">
+        /// custom
+        /// <see cref="MemoryLimitsAwareHandler"/>
+        /// to set.
+        /// </param>
+        public PdfXrefTable(MemoryLimitsAwareHandler memoryLimitsAwareHandler)
+            : this(INITIAL_CAPACITY, memoryLimitsAwareHandler) {
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="PdfXrefTable"/>
+        /// which will be used to store xref structure of the pdf document.
+        /// </summary>
+        /// <param name="capacity">initial capacity of xref table.</param>
+        /// <param name="memoryLimitsAwareHandler">
+        /// memoryLimitsAwareHandler custom
+        /// <see cref="MemoryLimitsAwareHandler"/>
+        /// to set.
+        /// </param>
+        public PdfXrefTable(int capacity, MemoryLimitsAwareHandler memoryLimitsAwareHandler) {
             if (capacity < 1) {
-                capacity = INITIAL_CAPACITY;
+                capacity = memoryLimitsAwareHandler == null ? INITIAL_CAPACITY : Math.Min(INITIAL_CAPACITY, memoryLimitsAwareHandler
+                    .GetMaxNumberOfElementsInXrefStructure());
             }
-            xref = new PdfIndirectReference[capacity];
-            freeReferencesLinkedList = new SortedDictionary<int, PdfIndirectReference>();
+            this.memoryLimitsAwareHandler = memoryLimitsAwareHandler;
+            if (this.memoryLimitsAwareHandler != null) {
+                this.memoryLimitsAwareHandler.CheckIfXrefStructureExceedsTheLimit(capacity);
+            }
+            this.xref = new PdfIndirectReference[capacity];
+            this.freeReferencesLinkedList = new SortedDictionary<int, PdfIndirectReference>();
             Add((PdfIndirectReference)new PdfIndirectReference(null, 0, MAX_GENERATION, 0).SetState(PdfObject.FREE));
+        }
+
+        /// <summary>
+        /// Sets custom
+        /// <see cref="MemoryLimitsAwareHandler"/>.
+        /// </summary>
+        /// <param name="memoryLimitsAwareHandler">instance to set.</param>
+        public virtual void SetMemoryLimitsAwareHandler(MemoryLimitsAwareHandler memoryLimitsAwareHandler) {
+            this.memoryLimitsAwareHandler = memoryLimitsAwareHandler;
         }
 
         /// <summary>Adds indirect reference to list of indirect objects.</summary>
@@ -185,6 +249,12 @@ namespace iText.Kernel.Pdf {
             if (reference.GetGenNumber() < MAX_GENERATION) {
                 reference.genNr++;
             }
+        }
+
+        /// <summary>Gets the capacity of xref stream.</summary>
+        /// <returns>the capacity of xref stream.</returns>
+        protected internal virtual int GetCapacity() {
+            return xref.Length;
         }
 
         /// <summary>Increase capacity of the array of indirect references.</summary>
@@ -559,9 +629,12 @@ namespace iText.Kernel.Pdf {
         }
 
         private void ExtendXref(int capacity) {
+            if (this.memoryLimitsAwareHandler != null) {
+                this.memoryLimitsAwareHandler.CheckIfXrefStructureExceedsTheLimit(capacity);
+            }
             PdfIndirectReference[] newXref = new PdfIndirectReference[capacity];
-            Array.Copy(xref, 0, newXref, 0, xref.Length);
-            xref = newXref;
+            Array.Copy(this.xref, 0, newXref, 0, this.xref.Length);
+            this.xref = newXref;
         }
     }
 }

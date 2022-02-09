@@ -46,21 +46,61 @@ using iText.Commons.Utils;
 using iText.IO.Source;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// A
+    /// <c>PdfNumber</c>
+    /// -class is the PDF-equivalent of a
+    /// <c>Double</c>
+    /// -object.
+    /// </summary>
+    /// <remarks>
+    /// A
+    /// <c>PdfNumber</c>
+    /// -class is the PDF-equivalent of a
+    /// <c>Double</c>
+    /// -object.
+    /// <para />
+    /// PDF provides two types of numeric objects: integer and real. Integer objects represent mathematical integers. Real
+    /// objects represent mathematical real numbers. The range and precision of numbers may be limited by the internal
+    /// representations used in the computer on which the PDF processor is running.
+    /// An integer shall be written as one or more decimal digits optionally preceded by a sign. The value shall be
+    /// interpreted as a signed decimal integer and shall be converted to an integer object.
+    /// A real value shall be written as one or more decimal digits with an optional sign and a leading, trailing, or
+    /// embedded period (decimal point).
+    /// </remarks>
     public class PdfNumber : PdfPrimitiveObject {
         private double value;
 
         private bool isDouble;
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="PdfNumber"/>
+        /// and sets value.
+        /// </summary>
+        /// <param name="value">double value to set</param>
         public PdfNumber(double value)
             : base() {
             SetValue(value);
         }
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="PdfNumber"/>
+        /// and sets value.
+        /// </summary>
+        /// <param name="value">int value to set</param>
         public PdfNumber(int value)
             : base() {
             SetValue(value);
         }
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="PdfNumber"/>
+        /// with provided content.
+        /// </summary>
+        /// <param name="content">byte array content to set</param>
         public PdfNumber(byte[] content)
             : base(content) {
             this.isDouble = true;
@@ -75,6 +115,15 @@ namespace iText.Kernel.Pdf {
             return NUMBER;
         }
 
+        /// <summary>
+        /// Returns value of current instance of
+        /// <see cref="PdfNumber"/>.
+        /// </summary>
+        /// <returns>
+        /// value of
+        /// <see cref="PdfNumber"/>
+        /// instance
+        /// </returns>
         public virtual double GetValue() {
             if (double.IsNaN(value)) {
                 GenerateValue();
@@ -82,38 +131,71 @@ namespace iText.Kernel.Pdf {
             return value;
         }
 
+        /// <summary>
+        /// Returns double value of current instance of
+        /// <see cref="PdfNumber"/>.
+        /// </summary>
+        /// <returns>
+        /// double value of
+        /// <see cref="PdfNumber"/>
+        /// instance
+        /// </returns>
         public virtual double DoubleValue() {
             return GetValue();
         }
 
+        /// <summary>Returns value and converts it to float.</summary>
+        /// <returns>value converted to float</returns>
         public virtual float FloatValue() {
             return (float)GetValue();
         }
 
+        /// <summary>Returns value and converts it to long.</summary>
+        /// <returns>value converted to long</returns>
         public virtual long LongValue() {
             return (long)GetValue();
         }
 
+        /// <summary>Returns value and converts it to an int.</summary>
+        /// <remarks>
+        /// Returns value and converts it to an int. If value surpasses
+        /// <see cref="int.MaxValue"/>
+        /// ,
+        /// <see cref="int.MaxValue"/>
+        /// would be return.
+        /// </remarks>
+        /// <returns>value converted to int</returns>
         public virtual int IntValue() {
-            return (int)GetValue();
+            if (GetValue() > (double)int.MaxValue) {
+                return int.MaxValue;
+            }
+            else {
+                return (int)GetValue();
+            }
         }
 
+        /// <summary>Sets value and convert it to double.</summary>
+        /// <param name="value">to set</param>
         public virtual void SetValue(int value) {
             this.value = value;
             this.isDouble = false;
             this.content = null;
         }
 
+        /// <summary>Sets value.</summary>
+        /// <param name="value">to set</param>
         public virtual void SetValue(double value) {
             this.value = value;
             this.isDouble = true;
             this.content = null;
         }
 
+        /// <summary>Increments current value.</summary>
         public virtual void Increment() {
             SetValue(++value);
         }
 
+        /// <summary>Decrements current value.</summary>
         public virtual void Decrement() {
             SetValue(--value);
         }

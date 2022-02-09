@@ -40,6 +40,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -78,6 +80,52 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.AreEqual(numberOfReferences, table.GetCountOfIndirectObjects());
             NUnit.Framework.Assert.AreEqual(226, table.Size());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckExceedTheNumberOfElementsInXrefTest() {
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new MemoryLimitsAwareHandler();
+            memoryLimitsAwareHandler.SetMaxNumberOfElementsInXrefStructure(5);
+            PdfXrefTable xrefTable = new PdfXrefTable(5, memoryLimitsAwareHandler);
+            int numberOfReferences = 5;
+            for (int i = 1; i < numberOfReferences; i++) {
+                xrefTable.Add(new PdfIndirectReference(null, i));
+            }
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => xrefTable.Add
+                (new PdfIndirectReference(null, numberOfReferences)));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT, exception
+                .Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EnsureCapacityExceedTheLimitTest() {
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new MemoryLimitsAwareHandler();
+            PdfXrefTable xrefTable = new PdfXrefTable(memoryLimitsAwareHandler);
+            int newCapacityExceededTheLimit = memoryLimitsAwareHandler.GetMaxNumberOfElementsInXrefStructure() + 2;
+            // There we add 2 instead of 1 since xref structures used 1-based indexes, so we decrement the capacity
+            // before check.
+            Exception ex = NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => xrefTable.SetCapacity
+                (newCapacityExceededTheLimit));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT, ex.
+                Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PassCapacityGreaterThanLimitInConstructorTest() {
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new MemoryLimitsAwareHandler();
+            memoryLimitsAwareHandler.SetMaxNumberOfElementsInXrefStructure(20);
+            Exception ex = NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => new PdfXrefTable(30, 
+                memoryLimitsAwareHandler));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT, ex.
+                Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ZeroCapacityInConstructorWithHandlerTest() {
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new MemoryLimitsAwareHandler();
+            memoryLimitsAwareHandler.SetMaxNumberOfElementsInXrefStructure(20);
+            PdfXrefTable xrefTable = new PdfXrefTable(0, memoryLimitsAwareHandler);
+            NUnit.Framework.Assert.AreEqual(20, xrefTable.GetCapacity());
         }
     }
 }
