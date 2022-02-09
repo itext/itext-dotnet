@@ -130,85 +130,26 @@ namespace iText.Kernel.Pdf {
             return xref[index];
         }
 
-        /// <summary>
-        /// Change the state of the cross-reference table to mark that reading of the document
-        /// was completed.
-        /// </summary>
-        internal virtual void MarkReadingCompleted() {
-            readingCompleted = true;
-        }
-
-        /// <summary>Check if reading of the document was completed.</summary>
-        /// <returns>true if reading was completed and false otherwise</returns>
-        internal virtual bool IsReadingCompleted() {
-            return readingCompleted;
-        }
-
-        /// <summary>Set up appropriate state for the free references list.</summary>
-        /// <param name="pdfDocument">
-        /// is the current
-        /// <see cref="PdfDocument">document</see>
-        /// </param>
-        internal virtual void InitFreeReferencesList(PdfDocument pdfDocument) {
-            freeReferencesLinkedList.Clear();
-            // ensure zero object is free
-            xref[0].SetState(PdfObject.FREE);
-            SortedSet<int> freeReferences = new SortedSet<int>();
-            for (int i = 1; i < Size(); ++i) {
-                PdfIndirectReference @ref = xref[i];
-                if (@ref == null || @ref.IsFree()) {
-                    freeReferences.Add(i);
+        /// <summary>Convenience method to write the fingerprint preceding the trailer.</summary>
+        /// <remarks>
+        /// Convenience method to write the fingerprint preceding the trailer.
+        /// The fingerprint contains information on iText products used in the generation or manipulation
+        /// of an outputted PDF file.
+        /// </remarks>
+        /// <param name="document">pdfDocument to write the fingerprint to</param>
+        protected internal static void WriteKeyInfo(PdfDocument document) {
+            PdfWriter writer = document.GetWriter();
+            ICollection<ProductData> products = document.GetFingerPrint().GetProducts();
+            if (products.IsEmpty()) {
+                writer.WriteString(MessageFormatUtil.Format("%iText-{0}-no-registered-products\n", ITextCoreProductData.GetInstance
+                    ().GetVersion()));
+            }
+            else {
+                foreach (ProductData productData in products) {
+                    writer.WriteString(MessageFormatUtil.Format("%iText-{0}-{1}\n", productData.GetPublicProductName(), productData
+                        .GetVersion()));
                 }
             }
-            PdfIndirectReference prevFreeRef = xref[0];
-            while (!freeReferences.IsEmpty<int>()) {
-                int currFreeRefObjNr = -1;
-                if (prevFreeRef.GetOffset() <= int.MaxValue) {
-                    currFreeRefObjNr = (int)prevFreeRef.GetOffset();
-                }
-                if (!freeReferences.Contains(currFreeRefObjNr) || xref[currFreeRefObjNr] == null) {
-                    break;
-                }
-                freeReferencesLinkedList.Put(currFreeRefObjNr, prevFreeRef);
-                prevFreeRef = xref[currFreeRefObjNr];
-                freeReferences.Remove(currFreeRefObjNr);
-            }
-            while (!freeReferences.IsEmpty<int>()) {
-                int next = freeReferences.PollFirst();
-                if (xref[next] == null) {
-                    if (pdfDocument.properties.appendMode) {
-                        continue;
-                    }
-                    xref[next] = (PdfIndirectReference)new PdfIndirectReference(pdfDocument, next, 0).SetState(PdfObject.FREE)
-                        .SetState(PdfObject.MODIFIED);
-                }
-                else {
-                    if (xref[next].GetGenNumber() == MAX_GENERATION && xref[next].GetOffset() == 0) {
-                        continue;
-                    }
-                }
-                if (prevFreeRef.GetOffset() != (long)next) {
-                    ((PdfIndirectReference)prevFreeRef.SetState(PdfObject.MODIFIED)).SetOffset(next);
-                }
-                freeReferencesLinkedList.Put(next, prevFreeRef);
-                prevFreeRef = xref[next];
-            }
-            if (prevFreeRef.GetOffset() != 0) {
-                ((PdfIndirectReference)prevFreeRef.SetState(PdfObject.MODIFIED)).SetOffset(0);
-            }
-            freeReferencesLinkedList.Put(0, prevFreeRef);
-        }
-
-        /// <summary>Method is used for object streams to avoid reuse existed references.</summary>
-        /// <param name="document">
-        /// is the current
-        /// <see cref="PdfDocument">document</see>
-        /// </param>
-        /// <returns>created indirect reference to the object stream</returns>
-        internal virtual PdfIndirectReference CreateNewIndirectReference(PdfDocument document) {
-            PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
-            Add(reference);
-            return (PdfIndirectReference)reference.SetState(PdfObject.MODIFIED);
         }
 
         /// <summary>Creates next available indirect reference.</summary>
@@ -402,6 +343,87 @@ namespace iText.Kernel.Pdf {
             freeReferencesLinkedList.Clear();
         }
 
+        /// <summary>
+        /// Change the state of the cross-reference table to mark that reading of the document
+        /// was completed.
+        /// </summary>
+        internal virtual void MarkReadingCompleted() {
+            readingCompleted = true;
+        }
+
+        /// <summary>Check if reading of the document was completed.</summary>
+        /// <returns>true if reading was completed and false otherwise</returns>
+        internal virtual bool IsReadingCompleted() {
+            return readingCompleted;
+        }
+
+        /// <summary>Set up appropriate state for the free references list.</summary>
+        /// <param name="pdfDocument">
+        /// is the current
+        /// <see cref="PdfDocument">document</see>
+        /// </param>
+        internal virtual void InitFreeReferencesList(PdfDocument pdfDocument) {
+            freeReferencesLinkedList.Clear();
+            // ensure zero object is free
+            xref[0].SetState(PdfObject.FREE);
+            SortedSet<int> freeReferences = new SortedSet<int>();
+            for (int i = 1; i < Size(); ++i) {
+                PdfIndirectReference @ref = xref[i];
+                if (@ref == null || @ref.IsFree()) {
+                    freeReferences.Add(i);
+                }
+            }
+            PdfIndirectReference prevFreeRef = xref[0];
+            while (!freeReferences.IsEmpty<int>()) {
+                int currFreeRefObjNr = -1;
+                if (prevFreeRef.GetOffset() <= int.MaxValue) {
+                    currFreeRefObjNr = (int)prevFreeRef.GetOffset();
+                }
+                if (!freeReferences.Contains(currFreeRefObjNr) || xref[currFreeRefObjNr] == null) {
+                    break;
+                }
+                freeReferencesLinkedList.Put(currFreeRefObjNr, prevFreeRef);
+                prevFreeRef = xref[currFreeRefObjNr];
+                freeReferences.Remove(currFreeRefObjNr);
+            }
+            while (!freeReferences.IsEmpty<int>()) {
+                int next = freeReferences.PollFirst();
+                if (xref[next] == null) {
+                    if (pdfDocument.properties.appendMode) {
+                        continue;
+                    }
+                    xref[next] = (PdfIndirectReference)new PdfIndirectReference(pdfDocument, next, 0).SetState(PdfObject.FREE)
+                        .SetState(PdfObject.MODIFIED);
+                }
+                else {
+                    if (xref[next].GetGenNumber() == MAX_GENERATION && xref[next].GetOffset() == 0) {
+                        continue;
+                    }
+                }
+                if (prevFreeRef.GetOffset() != (long)next) {
+                    ((PdfIndirectReference)prevFreeRef.SetState(PdfObject.MODIFIED)).SetOffset(next);
+                }
+                freeReferencesLinkedList.Put(next, prevFreeRef);
+                prevFreeRef = xref[next];
+            }
+            if (prevFreeRef.GetOffset() != 0) {
+                ((PdfIndirectReference)prevFreeRef.SetState(PdfObject.MODIFIED)).SetOffset(0);
+            }
+            freeReferencesLinkedList.Put(0, prevFreeRef);
+        }
+
+        /// <summary>Method is used for object streams to avoid reuse existed references.</summary>
+        /// <param name="document">
+        /// is the current
+        /// <see cref="PdfDocument">document</see>
+        /// </param>
+        /// <returns>created indirect reference to the object stream</returns>
+        internal virtual PdfIndirectReference CreateNewIndirectReference(PdfDocument document) {
+            PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
+            Add(reference);
+            return (PdfIndirectReference)reference.SetState(PdfObject.MODIFIED);
+        }
+
         /// <summary>Clear the state of the cross-reference table.</summary>
         internal virtual void Clear() {
             for (int i = 1; i <= count; i++) {
@@ -462,28 +484,6 @@ namespace iText.Kernel.Pdf {
                 mask >>= 8;
             }
             return size;
-        }
-
-        /// <summary>Convenience method to write the fingerprint preceding the trailer.</summary>
-        /// <remarks>
-        /// Convenience method to write the fingerprint preceding the trailer.
-        /// The fingerprint contains information on iText products used in the generation or manipulation
-        /// of an outputted PDF file.
-        /// </remarks>
-        /// <param name="document">pdfDocument to write the fingerprint to</param>
-        protected internal static void WriteKeyInfo(PdfDocument document) {
-            PdfWriter writer = document.GetWriter();
-            ICollection<ProductData> products = document.GetFingerPrint().GetProducts();
-            if (products.IsEmpty()) {
-                writer.WriteString(MessageFormatUtil.Format("%iText-{0}-no-registered-products\n", ITextCoreProductData.GetInstance
-                    ().GetVersion()));
-            }
-            else {
-                foreach (ProductData productData in products) {
-                    writer.WriteString(MessageFormatUtil.Format("%iText-{0}-{1}\n", productData.GetPublicProductName(), productData
-                        .GetVersion()));
-                }
-            }
         }
 
         private void AppendNewRefToFreeList(PdfIndirectReference reference) {
