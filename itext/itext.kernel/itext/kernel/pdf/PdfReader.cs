@@ -780,6 +780,10 @@ namespace iText.Kernel.Pdf {
             catch (XrefCycledReferencesException ex) {
                 // Throws an exception when xref stream has cycled references(due to lack of opportunity to fix such an
                 // issue) or xref tables have cycled references and PdfReader.StrictnessLevel set to CONSERVATIVE.
+                // Also throw an exception when xref structure size exceeds jvm memory limit.
+                throw;
+            }
+            catch (MemoryLimitsAwareException ex) {
                 throw;
             }
             catch (Exception ex) {
@@ -1073,7 +1077,10 @@ namespace iText.Kernel.Pdf {
                     return;
                 }
             }
-            catch (XrefCycledReferencesException cycledReferencesException) {
+            catch (XrefCycledReferencesException exceptionWhileReadingXrefStream) {
+                throw;
+            }
+            catch (MemoryLimitsAwareException exceptionWhileReadingXrefStream) {
                 throw;
             }
             catch (Exception) {

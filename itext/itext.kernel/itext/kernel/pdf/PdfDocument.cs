@@ -2007,6 +2007,7 @@ namespace iText.Kernel.Pdf {
                     if (null == memoryLimitsAwareHandler) {
                         memoryLimitsAwareHandler = new MemoryLimitsAwareHandler(reader.tokens.GetSafeFile().Length());
                     }
+                    xref.SetMemoryLimitsAwareHandler(memoryLimitsAwareHandler);
                     reader.ReadPdf();
                     if (reader.decrypt != null && reader.decrypt.IsEmbeddedFilesOnly()) {
                         encryptedEmbeddedStreamsHandler.StoreAllEmbeddedStreams();
