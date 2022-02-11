@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
+using iText.IO.Font;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;
@@ -1511,12 +1512,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasRebuiltXrefReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader hasRebuiltXrefReader = new _PdfReader_1752(filename);
+            PdfReader hasRebuiltXrefReader = new _PdfReader_1755(filename);
             ReadingNotCompletedTest(hasRebuiltXrefReader);
         }
 
-        private sealed class _PdfReader_1752 : PdfReader {
-            public _PdfReader_1752(String baseArg1)
+        private sealed class _PdfReader_1755 : PdfReader {
+            public _PdfReader_1755(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1537,12 +1538,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasHybridXrefReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader hasHybridXrefPdfReader = new _PdfReader_1775(filename);
+            PdfReader hasHybridXrefPdfReader = new _PdfReader_1778(filename);
             ReadingNotCompletedTest(hasHybridXrefPdfReader);
         }
 
-        private sealed class _PdfReader_1775 : PdfReader {
-            public _PdfReader_1775(String baseArg1)
+        private sealed class _PdfReader_1778 : PdfReader {
+            public _PdfReader_1778(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1562,12 +1563,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasXrefStmReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader hasXrefStmReader = new _PdfReader_1798(filename);
+            PdfReader hasXrefStmReader = new _PdfReader_1801(filename);
             ReadingNotCompletedTest(hasXrefStmReader);
         }
 
-        private sealed class _PdfReader_1798 : PdfReader {
-            public _PdfReader_1798(String baseArg1)
+        private sealed class _PdfReader_1801 : PdfReader {
+            public _PdfReader_1801(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1587,12 +1588,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasFixedXrefReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader hasFixedXrefReader = new _PdfReader_1821(filename);
+            PdfReader hasFixedXrefReader = new _PdfReader_1824(filename);
             ReadingNotCompletedTest(hasFixedXrefReader);
         }
 
-        private sealed class _PdfReader_1821 : PdfReader {
-            public _PdfReader_1821(String baseArg1)
+        private sealed class _PdfReader_1824 : PdfReader {
+            public _PdfReader_1824(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1612,12 +1613,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetLastXrefReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader getLastXrefReader = new _PdfReader_1844(filename);
+            PdfReader getLastXrefReader = new _PdfReader_1847(filename);
             ReadingNotCompletedTest(getLastXrefReader);
         }
 
-        private sealed class _PdfReader_1844 : PdfReader {
-            public _PdfReader_1844(String baseArg1)
+        private sealed class _PdfReader_1847 : PdfReader {
+            public _PdfReader_1847(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1638,12 +1639,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetPermissionsReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader getPermissionsReader = new _PdfReader_1867(filename);
+            PdfReader getPermissionsReader = new _PdfReader_1870(filename);
             ReadingNotCompletedTest(getPermissionsReader);
         }
 
-        private sealed class _PdfReader_1867 : PdfReader {
-            public _PdfReader_1867(String baseArg1)
+        private sealed class _PdfReader_1870 : PdfReader {
+            public _PdfReader_1870(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1664,12 +1665,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void IsOpenedWithFullPReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader isOpenedWithFullPReader = new _PdfReader_1892(filename);
+            PdfReader isOpenedWithFullPReader = new _PdfReader_1895(filename);
             ReadingNotCompletedTest(isOpenedWithFullPReader);
         }
 
-        private sealed class _PdfReader_1892 : PdfReader {
-            public _PdfReader_1892(String baseArg1)
+        private sealed class _PdfReader_1895 : PdfReader {
+            public _PdfReader_1895(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1690,12 +1691,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetCryptoModeReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader getCryptoModeReader = new _PdfReader_1915(filename);
+            PdfReader getCryptoModeReader = new _PdfReader_1918(filename);
             ReadingNotCompletedTest(getCryptoModeReader);
         }
 
-        private sealed class _PdfReader_1915 : PdfReader {
-            public _PdfReader_1915(String baseArg1)
+        private sealed class _PdfReader_1918 : PdfReader {
+            public _PdfReader_1918(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1716,12 +1717,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ComputeUserPasswordReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader computeUserPasswordReader = new _PdfReader_1940(filename);
+            PdfReader computeUserPasswordReader = new _PdfReader_1943(filename);
             ReadingNotCompletedTest(computeUserPasswordReader);
         }
 
-        private sealed class _PdfReader_1940 : PdfReader {
-            public _PdfReader_1940(String baseArg1)
+        private sealed class _PdfReader_1943 : PdfReader {
+            public _PdfReader_1943(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1742,12 +1743,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetOriginalFileIdReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader getOriginalFileIdReader = new _PdfReader_1963(filename);
+            PdfReader getOriginalFileIdReader = new _PdfReader_1966(filename);
             ReadingNotCompletedTest(getOriginalFileIdReader);
         }
 
-        private sealed class _PdfReader_1963 : PdfReader {
-            public _PdfReader_1963(String baseArg1)
+        private sealed class _PdfReader_1966 : PdfReader {
+            public _PdfReader_1966(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1768,12 +1769,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetModifiedFileIdReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader getModifiedFileIdReader = new _PdfReader_1986(filename);
+            PdfReader getModifiedFileIdReader = new _PdfReader_1989(filename);
             ReadingNotCompletedTest(getModifiedFileIdReader);
         }
 
-        private sealed class _PdfReader_1986 : PdfReader {
-            public _PdfReader_1986(String baseArg1)
+        private sealed class _PdfReader_1989 : PdfReader {
+            public _PdfReader_1989(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1793,12 +1794,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void IsEncryptedReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader isEncryptedReader = new _PdfReader_2009(filename);
+            PdfReader isEncryptedReader = new _PdfReader_2012(filename);
             ReadingNotCompletedTest(isEncryptedReader);
         }
 
-        private sealed class _PdfReader_2009 : PdfReader {
-            public _PdfReader_2009(String baseArg1)
+        private sealed class _PdfReader_2012 : PdfReader {
+            public _PdfReader_2012(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -2118,10 +2119,167 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CheckXrefPrevWithDifferentTypesTest() {
+            PdfNumber numberXrefPrev = new PdfNumber(20);
+            PdfString stringXrefPrev = new PdfString("iText", PdfEncodings.UNICODE_BIG);
+            PdfIndirectReference indirectReferenceXrefPrev = new PdfIndirectReference(null, 41);
+            PdfIndirectReference indirectReferenceToString = new PdfIndirectReference(null, 42);
+            indirectReferenceXrefPrev.SetRefersTo(numberXrefPrev);
+            indirectReferenceToString.SetRefersTo(stringXrefPrev);
+            using (PdfReader reader = new PdfReader(new MemoryStream(CreatePdfDocumentForTest()))) {
+                reader.SetStrictnessLevel(PdfReader.StrictnessLevel.LENIENT);
+                NUnit.Framework.Assert.DoesNotThrow(() => reader.GetXrefPrev(numberXrefPrev));
+                NUnit.Framework.Assert.DoesNotThrow(() => reader.GetXrefPrev(indirectReferenceXrefPrev));
+                // Check string xref prev with StrictnessLevel#LENIENT.
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidXRefPrevException), () => reader.GetXrefPrev
+                    (stringXrefPrev));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_PREV_SHALL_BE_DIRECT_NUMBER_OBJECT, exception
+                    .Message);
+                // Check indirect reference to string xref prev with StrictnessLevel#LENIENT.
+                exception = NUnit.Framework.Assert.Catch(typeof(InvalidXRefPrevException), () => reader.GetXrefPrev(indirectReferenceToString
+                    ));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_PREV_SHALL_BE_DIRECT_NUMBER_OBJECT, exception
+                    .Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckXrefPrevWithDifferentTypesConservativeModeTest() {
+            PdfNumber numberXrefPrev = new PdfNumber(20);
+            PdfString stringXrefPrev = new PdfString("iText", PdfEncodings.UNICODE_BIG);
+            PdfIndirectReference indirectReferenceXrefPrev = new PdfIndirectReference(null, 41);
+            PdfIndirectReference indirectReferenceToString = new PdfIndirectReference(null, 42);
+            indirectReferenceXrefPrev.SetRefersTo(numberXrefPrev);
+            indirectReferenceToString.SetRefersTo(stringXrefPrev);
+            using (PdfReader reader = new PdfReader(new MemoryStream(CreatePdfDocumentForTest()))) {
+                reader.SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE);
+                NUnit.Framework.Assert.DoesNotThrow(() => reader.GetXrefPrev(numberXrefPrev));
+                // Check indirect reference to number xref prev with StrictnessLevel#CONSERVATIVE.
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidXRefPrevException), () => reader.GetXrefPrev
+                    (indirectReferenceXrefPrev));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_PREV_SHALL_BE_DIRECT_NUMBER_OBJECT, exception
+                    .Message);
+                // Check string xref prev with StrictnessLevel#CONSERVATIVE.
+                exception = NUnit.Framework.Assert.Catch(typeof(InvalidXRefPrevException), () => reader.GetXrefPrev(stringXrefPrev
+                    ));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_PREV_SHALL_BE_DIRECT_NUMBER_OBJECT, exception
+                    .Message);
+                // Check indirect reference to string xref prev with StrictnessLevel#CONSERVATIVE.
+                exception = NUnit.Framework.Assert.Catch(typeof(InvalidXRefPrevException), () => reader.GetXrefPrev(indirectReferenceToString
+                    ));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_PREV_SHALL_BE_DIRECT_NUMBER_OBJECT, exception
+                    .Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadDocumentWithIndirectPrevTest() {
+            String fileName = SOURCE_FOLDER + "indirectPrev.pdf";
+            String outputName = DESTINATION_FOLDER + "documentWithIndirectPrev.pdf";
+            // Open pdf doc and check that xref prev is indirect.
+            using (PdfReader reader = new PdfReader(fileName)) {
+                using (PdfDocument document = new PdfDocument(reader)) {
+                    PdfDictionary documentTrailer = document.GetTrailer();
+                    NUnit.Framework.Assert.IsTrue(documentTrailer.Get(PdfName.Prev, false).IsIndirectReference());
+                }
+            }
+            // Read/write pdf document to rewrite xref structure.
+            using (PdfReader reader_1 = new PdfReader(fileName)) {
+                using (PdfWriter writer = new PdfWriter(outputName)) {
+                    using (PdfDocument document_1 = new PdfDocument(reader_1, writer)) {
+                    }
+                }
+            }
+            // Read and check that in created pdf we have valid xref prev.
+            using (PdfReader reader_2 = new PdfReader(outputName)) {
+                using (PdfDocument document_2 = new PdfDocument(reader_2)) {
+                    PdfDictionary trailer = document_2.GetTrailer();
+                    NUnit.Framework.Assert.IsNull(trailer.Get(PdfName.Prev, false));
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotChangeInvalidPrevInAppendModeTest() {
+            String fileName = SOURCE_FOLDER + "indirectPrev.pdf";
+            String outputName = DESTINATION_FOLDER + "invalidPrevAppendMode.pdf";
+            // Read document and check that we have indirect prev.
+            using (PdfReader reader = new PdfReader(fileName)) {
+                using (PdfDocument document = new PdfDocument(reader)) {
+                    PdfDictionary documentTrailer = document.GetTrailer();
+                    NUnit.Framework.Assert.IsTrue(documentTrailer.Get(PdfName.Prev, false).IsIndirectReference());
+                }
+            }
+            // Read and write document in append mode to not change previous xref prev.
+            StampingProperties properties = new StampingProperties().UseAppendMode();
+            using (PdfReader reader_1 = new PdfReader(fileName)) {
+                using (PdfWriter writer = new PdfWriter(outputName)) {
+                    using (PdfDocument document_1 = new PdfDocument(reader_1, writer, properties)) {
+                        document_1.AddNewPage();
+                    }
+                }
+            }
+            // Read resulted document and check, that previous xref prev doesn't change and current is pdfNumber.
+            using (PdfReader reader_2 = new PdfReader(outputName)) {
+                using (PdfDocument document_2 = new PdfDocument(reader_2)) {
+                    PdfDictionary trailer = document_2.GetTrailer();
+                    NUnit.Framework.Assert.IsFalse(trailer.Get(PdfName.Prev, false).IsIndirectReference());
+                    PdfNumber prevPointer = (PdfNumber)trailer.Get(PdfName.Prev);
+                    reader_2.tokens.Seek(prevPointer.LongValue());
+                    PdfDictionary previousTrailer = reader_2.ReadXrefSection();
+                    NUnit.Framework.Assert.IsTrue(previousTrailer.Get(PdfName.Prev, false).IsIndirectReference());
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadPdfInvalidPrevConservativeModeTest() {
+            String fileName = SOURCE_FOLDER + "indirectPrev.pdf";
+            // Simply open document with StrictnessLevel#CONSERVATIVE.
+            using (PdfReader reader = new PdfReader(fileName)) {
+                reader.SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE);
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidXRefPrevException), () => new PdfDocument
+                    (reader));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_PREV_SHALL_BE_DIRECT_NUMBER_OBJECT, exception
+                    .Message);
+            }
+            // Open document for read/write with stamping properties and StrictnessLevel#CONSERVATIVE.
+            StampingProperties properties = new StampingProperties().UseAppendMode();
+            using (PdfReader reader_1 = new PdfReader(fileName)) {
+                using (PdfWriter writer = new PdfWriter(new ByteArrayOutputStream())) {
+                    reader_1.SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE);
+                    Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidXRefPrevException), () => new PdfDocument
+                        (reader_1, writer, properties));
+                    NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_PREV_SHALL_BE_DIRECT_NUMBER_OBJECT, exception
+                        .Message);
+                }
+            }
+            // Open document for read/write without stamping properties but with StrictnessLevel#CONSERVATIVE.
+            using (PdfReader reader_2 = new PdfReader(fileName)) {
+                using (PdfWriter writer_1 = new PdfWriter(new ByteArrayOutputStream())) {
+                    reader_2.SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE);
+                    Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidXRefPrevException), () => new PdfDocument
+                        (reader_2, writer_1));
+                    NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_PREV_SHALL_BE_DIRECT_NUMBER_OBJECT, exception
+                        .Message);
+                }
+            }
+        }
+
         private static PdfDictionary GetTestPdfDictionary() {
             Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
             tmpMap.Put(new PdfName("b"), new PdfName("c"));
             return new PdfDictionary(tmpMap);
+        }
+
+        private static byte[] CreatePdfDocumentForTest() {
+            using (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDoc.AddNewPage();
+                }
+                return baos.ToArray();
+            }
         }
     }
 }

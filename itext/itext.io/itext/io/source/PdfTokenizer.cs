@@ -775,8 +775,8 @@ namespace iText.IO.Source {
         /// <paramref name="line"/>
         /// equals to 'trailer'.
         /// </summary>
-        /// <param name="line">for check.</param>
-        /// <returns>true, if line is equals tio 'trailer', otherwise false.</returns>
+        /// <param name="line">for check</param>
+        /// <returns>true, if line is equals to 'trailer', otherwise false</returns>
         public static bool CheckTrailer(ByteBuffer line) {
             if (Trailer.Length > line.Size()) {
                 return false;

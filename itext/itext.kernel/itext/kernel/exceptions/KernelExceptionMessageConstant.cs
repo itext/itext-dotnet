@@ -367,6 +367,12 @@ namespace iText.Kernel.Exceptions {
 
         public const String PDF_VERSION_IS_NOT_VALID = "PDF version is not valid.";
 
+        public const String PNG_FILTER_UNKNOWN = "PNG filter unknown.";
+
+        public const String PRINT_SCALING_ENFORCE_ENTRY_INVALID = "/PrintScaling shall may appear in the Enforce "
+             + "array only if the corresponding entry in the viewer preferences dictionary specifies a valid value "
+             + "other than AppDefault";
+
         public const String REF_ARRAY_ITEMS_IN_STRUCTURE_ELEMENT_DICTIONARY_SHALL_BE_INDIRECT_OBJECTS = "Ref array "
              + "items in structure element dictionary shall be indirect objects.";
 
@@ -377,12 +383,6 @@ namespace iText.Kernel.Exceptions {
 
         public const String ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE = "Role \"{0}\" in namespace {1} "
              + "is not mapped to any standard role.";
-
-        public const String PNG_FILTER_UNKNOWN = "PNG filter unknown.";
-
-        public const String PRINT_SCALING_ENFORCE_ENTRY_INVALID = "/PrintScaling shall may appear in the Enforce "
-             + "array only if the corresponding entry in the viewer preferences dictionary specifies a valid value "
-             + "other than AppDefault";
 
         public const String RESOURCES_CANNOT_BE_NULL = "Resources cannot be null.";
 
@@ -486,7 +486,8 @@ namespace iText.Kernel.Exceptions {
         public const String WRONG_MEDIA_BOX_SIZE_TOO_FEW_ARGUMENTS = "Wrong media box size: {0}. Need at least 4 "
              + "arguments";
 
-        public const String XREF_TABLE_HAS_CYCLED_REFERENCES = "Xref table has cycled references. Prev pointer indicates an already visited xref table.";
+        public const String XREF_PREV_SHALL_BE_DIRECT_NUMBER_OBJECT = "Prev pointer in xref structure shall be " +
+             "direct number object.";
 
         public const String XREF_SUBSECTION_NOT_FOUND = "xref subsection not found.";
 
@@ -494,6 +495,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT = "Xref structure contains too many elements " 
             + "and may cause OOM exception. You can increase number of elements by setting custom " + "MemoryLimitsAwareHandler.";
+
+        public const String XREF_TABLE_HAS_CYCLED_REFERENCES = "Xref table has cycled references. Prev pointer indicates an already visited xref table.";
 
         public const String YOU_HAVE_TO_DEFINE_A_BOOLEAN_ARRAY_FOR_THIS_COLLECTION_SORT_DICTIONARY = "You have to "
              + "define a boolean array for this collection sort dictionary.";
