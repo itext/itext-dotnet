@@ -68,6 +68,7 @@ namespace iText.StyledXmlParser.Css.Page {
         * @see com.itextpdf.styledxmlparser.css.CssNestedAtRule#addBodyCssDeclarations(java.util.List)
         */
         public override void AddBodyCssDeclarations(IList<CssDeclaration> cssDeclarations) {
+            // TODO DEVSIX-6364 Fix the body declarations duplication for each pageSelector part
             foreach (ICssSelector pageSelector in pageSelectors) {
                 this.body.Add(new CssNonStandardRuleSet(new CssPageMarginBoxSelector(GetRuleName(), pageSelector), cssDeclarations
                     ));
