@@ -86,8 +86,9 @@ namespace iText.Signatures {
                 String rootCertPath = CERT_FOLDER_PATH + "rootRsa.p12";
                 X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(rootCertPath, PASSWORD)[0];
                 ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(rootCertPath, PASSWORD, PASSWORD);
-                verification.AddVerification("TestSignature", null, new TestCrlClient(caCert, caPrivateKey), LtvVerification.CertificateOption
-                    .SIGNING_CERTIFICATE, LtvVerification.Level.CRL, LtvVerification.CertificateInclusion.NO);
+                verification.AddVerification("TestSignature", null, new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey
+                    ), LtvVerification.CertificateOption.SIGNING_CERTIFICATE, LtvVerification.Level.CRL, LtvVerification.CertificateInclusion
+                    .NO);
                 verification.Merge();
             }
             using (PdfDocument pdfDocument_2 = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())))) {

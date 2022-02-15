@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.Commons.Utils;
@@ -51,30 +52,35 @@ using iText.Signatures.Testutils.Builder;
 
 namespace iText.Signatures.Testutils.Client {
     public class TestCrlClient : ICrlClient {
-        private readonly TestCrlBuilder crlBuilder;
+        private readonly IList<TestCrlBuilder> crlBuilders;
 
-        private readonly ICipherParameters caPrivateKey;
-
-        public TestCrlClient(TestCrlBuilder crlBuilder, ICipherParameters caPrivateKey) {
-            this.crlBuilder = crlBuilder;
-            this.caPrivateKey = caPrivateKey;
+        public TestCrlClient() {
+            crlBuilders = new List<TestCrlBuilder>();
         }
 
-        public TestCrlClient(X509Certificate caCert, ICipherParameters caPrivateKey) {
-            this.crlBuilder = new TestCrlBuilder(caCert, DateTimeUtil.GetCurrentUtcTime().AddDays(-1));
-            this.caPrivateKey = caPrivateKey;
+        public virtual iText.Signatures.Testutils.Client.TestCrlClient AddBuilderForCertIssuer(TestCrlBuilder crlBuilder
+            ) {
+            crlBuilders.Add(crlBuilder);
+            return this;
+        }
+
+        public virtual iText.Signatures.Testutils.Client.TestCrlClient AddBuilderForCertIssuer(X509Certificate issuerCert
+            , ICipherParameters issuerPrivateKey) {
+            DateTime yesterday = DateTimeUtil.GetCurrentUtcTime().AddDays(-1);
+            crlBuilders.Add(new TestCrlBuilder(issuerCert, issuerPrivateKey, yesterday));
+            return this;
         }
 
         public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url) {
-            ICollection<byte[]> crls = null;
-            try {
-                byte[] crl = crlBuilder.MakeCrl(caPrivateKey);
-                crls = JavaCollectionsUtil.SingletonList(crl);
+            return crlBuilders.Select((testCrlBuilder) => {
+                try {
+                    return testCrlBuilder.MakeCrl();
+                }
+                catch (Exception ignore) {
+                    throw new PdfException(ignore);
+                }
             }
-            catch (Exception ignore) {
-                throw new PdfException(ignore);
-            }
-            return crls;
+            ).ToList();
         }
     }
 }

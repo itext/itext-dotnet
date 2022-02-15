@@ -63,6 +63,8 @@ namespace iText.Signatures.Verify {
         // Such messageTemplate is equal to any log message. This is required for porting reasons.
         private const String ANY_LOG_MESSAGE = "{0}";
 
+        private const int COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME = -1;
+
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
@@ -129,23 +131,22 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ClrWithGivenCertificateTest() {
-            int COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME = -1;
             String caCertFileName = CERTS_SRC + "rootRsa.p12";
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, PASSWORD)[0];
-            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, DateTimeUtil.GetCurrentUtcTime().AddDays(COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME
-                ));
+            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, PASSWORD, PASSWORD);
             String checkCertFileName = CERTS_SRC + "signCertRsa01.p12";
             X509Certificate checkCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(checkCertFileName, PASSWORD)[
                 0];
-            TestCrlBuilder crlForCheckBuilder = new TestCrlBuilder(caCert, DateTimeUtil.GetCurrentUtcTime().AddDays(COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME
-                ));
+            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, DateTimeUtil.GetCurrentUtcTime().AddDays
+                (COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME));
             crlBuilder.AddCrlEntry(caCert, DateTimeUtil.GetCurrentUtcTime().AddDays(COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME
                 ), Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise);
+            TestCrlBuilder crlForCheckBuilder = new TestCrlBuilder(caCert, caPrivateKey, DateTimeUtil.GetCurrentUtcTime
+                ().AddDays(COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME));
             crlForCheckBuilder.AddCrlEntry(checkCert, DateTimeUtil.GetCurrentUtcTime().AddDays(COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME
                 ), Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise);
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, PASSWORD, PASSWORD);
-            TestCrlClient crlClient = new TestCrlClient(crlBuilder, caPrivateKey);
-            TestCrlClient crlForCheckClient = new TestCrlClient(crlForCheckBuilder, caPrivateKey);
+            TestCrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(crlBuilder);
+            TestCrlClient crlForCheckClient = new TestCrlClient().AddBuilderForCertIssuer(crlForCheckBuilder);
             ICollection<byte[]> crlBytesForRootCertCollection = crlClient.GetEncoded(caCert, null);
             ICollection<byte[]> crlBytesForCheckCertCollection = crlForCheckClient.GetEncoded(checkCert, null);
             IList<X509Crl> crls = new List<X509Crl>();
@@ -176,10 +177,10 @@ namespace iText.Signatures.Verify {
             String certForAddingToCrlName = CERTS_SRC + "signCertRsa01.p12";
             X509Certificate certForCrl = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(certForAddingToCrlName, PASSWORD
                 )[0];
-            TestCrlBuilder crlForCheckBuilder = new TestCrlBuilder(certForCrl, DateTimeUtil.GetCurrentUtcTime().AddDays
-                (COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME));
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(rootCertFileName, PASSWORD, PASSWORD);
-            TestCrlClient crlClient = new TestCrlClient(crlForCheckBuilder, caPrivateKey);
+            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(certForAddingToCrlName, PASSWORD, PASSWORD);
+            TestCrlBuilder crlForCheckBuilder = new TestCrlBuilder(certForCrl, caPrivateKey, DateTimeUtil.GetCurrentUtcTime
+                ().AddDays(COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME));
+            TestCrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(crlForCheckBuilder);
             ICollection<byte[]> crlBytesForRootCertCollection = crlClient.GetEncoded(certForCrl, null);
             IList<X509Crl> crls = new List<X509Crl>();
             foreach (byte[] crlBytes in crlBytesForRootCertCollection) {

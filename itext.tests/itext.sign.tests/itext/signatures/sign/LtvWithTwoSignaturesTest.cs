@@ -81,7 +81,7 @@ namespace iText.Signatures.Sign {
             ICipherParameters interPrivateKey = Pkcs12FileHelper.ReadFirstKey(interCertFileName, password, password);
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(interCert, interPrivateKey).AddBuilderForCertIssuer
                 (caCert, caPrivateKey);
-            TestCrlClient testCrlClient = new TestCrlClient(caCert, caPrivateKey);
+            TestCrlClient testCrlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             AddLtvInfo(srcFileName, ltvFileName, "Signature1", testOcspClient, testCrlClient);
             AddLtvInfo(ltvFileName, ltvFileName2, "Signature2", testOcspClient, testCrlClient);
             PdfReader reader = new PdfReader(ltvFileName2);

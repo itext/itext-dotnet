@@ -688,12 +688,7 @@ namespace iText.Signatures {
                 }
                 crlBytes.AddAll(b);
             }
-            if (crlBytes.Count == 0) {
-                return null;
-            }
-            else {
-                return crlBytes;
-            }
+            return crlBytes.Count == 0 ? null : crlBytes;
         }
 
         protected internal virtual void AddDeveloperExtension(PdfDeveloperExtension extension) {

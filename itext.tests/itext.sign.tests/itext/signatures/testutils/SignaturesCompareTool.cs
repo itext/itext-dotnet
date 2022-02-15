@@ -66,6 +66,8 @@ namespace iText.Signatures.Testutils {
 
         private const String OID_SIGNATURE_TIMESTAMP_ATTRIBUTE = "1.2.840.113549.1.9.16.2.14";
 
+        private const String OID_ADBE_REVOCATION_INFO_ARCHIVAL = "1.2.840.113583.1.1.8";
+
         private const String OID_OCSP_RESPONSE = "1.3.6.1.5.5.7.48.1.1";
 
         private const String OID_OCSP_NONCE_EXTENSION = "1.3.6.1.5.5.7.48.1.2";
@@ -102,7 +104,7 @@ namespace iText.Signatures.Testutils {
                         foreach (String sig in signatures) {
                             Asn1Sequence outSignedData = (Asn1Sequence)GetSignatureContent(sig, outSigUtil);
                             Asn1Sequence cmpSignedData = (Asn1Sequence)GetSignatureContent(sig, cmpSigUtil);
-                            bool isEqual = CompareSignatureObjects(outSignedData, cmpSignedData, errorText);
+                            bool isEqual = CompareSignedData(outSignedData, cmpSignedData, errorText);
                             if (!isEqual) {
                                 CreateTxtFilesFromAsn1Sequences(outSignedData, cmpSignedData, dest, sig, errorText);
                             }
@@ -200,7 +202,16 @@ namespace iText.Signatures.Testutils {
             return CompareSequencesWithSignatureValue(parsedOutResponse, parsedCmpResponse, errorText);
         }
 
-        private static bool CompareSignatureObjects(Asn1Sequence outSignedData, Asn1Sequence cmpSignedData, StringBuilder
+        /// <summary>SignedData is top-level CMS-object for signatures, see "5.1.</summary>
+        /// <remarks>
+        /// SignedData is top-level CMS-object for signatures, see "5.1. SignedData Type" at
+        /// https://datatracker.ietf.org/doc/html/rfc5652#section-5.1 .
+        /// </remarks>
+        /// <param name="outSignedData">current output signed data</param>
+        /// <param name="cmpSignedData">reference signed data used for comparison as a ground truth</param>
+        /// <param name="errorText">string builder in order to accumulate errors</param>
+        /// <returns>true if signed data objects are the similar, false otherwise</returns>
+        private static bool CompareSignedData(Asn1Sequence outSignedData, Asn1Sequence cmpSignedData, StringBuilder
              errorText) {
             if (outSignedData.Count != cmpSignedData.Count || outSignedData.Count != 2) {
                 AddError(errorText, "Signature top level elements count is incorrect (should be exactly 2):", outSignedData
@@ -250,8 +261,8 @@ namespace iText.Signatures.Testutils {
                     .Count.ToString());
                 return false;
             }
-            Asn1Sequence outSignerInfo = (Asn1Sequence)cmpSignerInfos[0];
-            Asn1Sequence cmpSignerInfo = (Asn1Sequence)outSignerInfos[0];
+            Asn1Sequence outSignerInfo = (Asn1Sequence)outSignerInfos[0];
+            Asn1Sequence cmpSignerInfo = (Asn1Sequence)cmpSignerInfos[0];
             return CompareSequencesWithSignatureValue(outSignerInfo, cmpSignerInfo, errorText);
         }
 
@@ -287,20 +298,20 @@ namespace iText.Signatures.Testutils {
                 return false;
             }
             if (cmp is Asn1TaggedObject) {
-                return CompareAsn1Structures(((Asn1TaggedObject)cmp).GetObject(), ((Asn1TaggedObject)@out).GetObject(), errorText
+                return CompareAsn1Structures(((Asn1TaggedObject)@out).GetObject(), ((Asn1TaggedObject)cmp).GetObject(), errorText
                     );
             }
             else {
                 if (cmp is Asn1Sequence) {
                     if (!CompareContainers(((Asn1Sequence)@out).ToArray(), ((Asn1Sequence)cmp).ToArray(), errorText)) {
-                        AddError(errorText, "ASN1Sequence objects are different", null, null);
+                        AddError(errorText, "ASN1Sequence objects are different");
                         return false;
                     }
                 }
                 else {
                     if (cmp is Asn1Set) {
                         if (!CompareContainers(((Asn1Set)@out).ToArray(), ((Asn1Set)cmp).ToArray(), errorText)) {
-                            AddError(errorText, "ASN1Set objects are different", null, null);
+                            AddError(errorText, "ASN1Set objects are different");
                             return false;
                         }
                     }
@@ -344,12 +355,96 @@ namespace iText.Signatures.Testutils {
             if (OID_OCSP_RESPONSE.Equals(cmpASN1ObjectId)) {
                 return CompareOcspResponses(outArray, cmpArray, errorText);
             }
+            if (OID_ADBE_REVOCATION_INFO_ARCHIVAL.Equals(cmpASN1ObjectId)) {
+                return CompareRevocationInfoArchivalAttribute(outArray, cmpArray, errorText);
+            }
             for (int i = 0; i < cmpArray.Length; i++) {
                 if (!CompareAsn1Structures(outArray[i].ToAsn1Object(), cmpArray[i].ToAsn1Object(), errorText)) {
                     return false;
                 }
             }
             return true;
+        }
+
+        /// <summary>See ISO 32000-2, 12.8.3.3.2 "Revocation of CMS-based signatures"</summary>
+        /// <param name="out">out signature revocation info attribute value</param>
+        /// <param name="cmp">cmp signature revocation info attribute value</param>
+        /// <param name="errorText">string builder in order to accumulate errors</param>
+        /// <returns>true if signed data objects are the similar, false otherwise</returns>
+        private static bool CompareRevocationInfoArchivalAttribute(Asn1Encodable[] @out, Asn1Encodable[] cmp, StringBuilder
+             errorText) {
+            String structureIsInvalidError = "Signature revocation info archival attribute structure is invalid";
+            if (!IsExpectedRevocationInfoArchivalAttributeStructure(@out) || !IsExpectedRevocationInfoArchivalAttributeStructure
+                (cmp)) {
+                AddError(errorText, structureIsInvalidError, String.Join("", JavaUtil.ArraysToEnumerable(@out).Select((e) =>
+                     Asn1Dump.DumpAsString(e)).ToList()), String.Join("", JavaUtil.ArraysToEnumerable(cmp).Select((e) => Asn1Dump
+                    .DumpAsString(e)).ToList()));
+                return false;
+            }
+            Asn1Sequence outSequence = ((Asn1Sequence)((Asn1Set)@out[1])[0].ToAsn1Object());
+            Asn1Sequence cmpSequence = ((Asn1Sequence)((Asn1Set)cmp[1])[0].ToAsn1Object());
+            if (outSequence.Count != cmpSequence.Count) {
+                AddError(errorText, "Signature revocation info archival attributes have different sets of revocation info types (different sizes)"
+                    , outSequence.Count.ToString(), cmpSequence.Count.ToString());
+                return false;
+            }
+            for (int i = 0; i < outSequence.Count; i++) {
+                if (!(outSequence[i] is Asn1TaggedObject) || !(cmpSequence[i] is Asn1TaggedObject)) {
+                    AddError(errorText, structureIsInvalidError, String.Join("", JavaUtil.ArraysToEnumerable(@out).Select((e) =>
+                         Asn1Dump.DumpAsString(e)).ToList()), String.Join("", JavaUtil.ArraysToEnumerable(cmp).Select((e) => Asn1Dump
+                        .DumpAsString(e)).ToList()));
+                    return false;
+                }
+                Asn1TaggedObject outTaggedObject = (Asn1TaggedObject)outSequence[i];
+                Asn1TaggedObject cmpTaggedObject = (Asn1TaggedObject)cmpSequence[i];
+                if (outTaggedObject.TagNo != cmpTaggedObject.TagNo) {
+                    AddError(errorText, "Signature revocation info archival attributes have different tagged objects tag numbers"
+                        , outTaggedObject.TagNo.ToString(), cmpTaggedObject.TagNo.ToString());
+                    return false;
+                }
+                if (!(outTaggedObject.GetObject() is Asn1Sequence) || !(cmpTaggedObject.GetObject() is Asn1Sequence)) {
+                    AddError(errorText, structureIsInvalidError, String.Join("", JavaUtil.ArraysToEnumerable(@out).Select((e) =>
+                         Asn1Dump.DumpAsString(e)).ToList()), String.Join("", JavaUtil.ArraysToEnumerable(cmp).Select((e) => Asn1Dump
+                        .DumpAsString(e)).ToList()));
+                    return false;
+                }
+                // revocation entries can be either CRLs or OCSPs in most cases
+                Asn1Sequence outRevocationEntries = (Asn1Sequence)outTaggedObject.GetObject();
+                Asn1Sequence cmpRevocationEntries = (Asn1Sequence)cmpTaggedObject.GetObject();
+                if (outRevocationEntries.Count != cmpRevocationEntries.Count) {
+                    AddError(errorText, "Signature revocation info archival attributes have different number of entries", outRevocationEntries
+                        .Count.ToString(), cmpRevocationEntries.Count.ToString());
+                    return false;
+                }
+                if (outTaggedObject.TagNo == 0) {
+                    // CRL revocation info case
+                    for (int j = 0; j < outRevocationEntries.Count; j++) {
+                        if (!(outRevocationEntries[j] is Asn1Sequence) || !(outRevocationEntries[j] is Asn1Sequence)) {
+                            AddError(errorText, "Signature revocation info attribute has unexpected CRL entry type", outRevocationEntries
+                                [j].GetType().FullName.ToString(), cmpRevocationEntries[j].GetType().FullName.ToString());
+                            return false;
+                        }
+                        if (!CompareSequencesWithSignatureValue(((Asn1Sequence)outRevocationEntries[j]), ((Asn1Sequence)cmpRevocationEntries
+                            [j]), errorText)) {
+                            AddError(errorText, MessageFormatUtil.Format("Signature revocation info attribute CRLs at {0} are different"
+                                , j.ToString()));
+                            return false;
+                        }
+                    }
+                }
+                else {
+                    if (!CompareAsn1Structures(outRevocationEntries, cmpRevocationEntries, errorText)) {
+                        AddError(errorText, "Revocation info attribute entries are different");
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private static bool IsExpectedRevocationInfoArchivalAttributeStructure(Asn1Encodable[] container) {
+            return container.Length == 2 && container[1] is Asn1Set && ((Asn1Set)container[1]).Count == 1 && ((Asn1Set
+                )container[1])[0].ToAsn1Object() is Asn1Sequence;
         }
 
         private static bool CompareTimestampAttributes(Asn1Encodable[] @out, Asn1Encodable[] cmp, StringBuilder errorText
@@ -359,12 +454,13 @@ namespace iText.Signatures.Testutils {
                     Asn1Object outSequence = ((Asn1Set)@out[1])[0].ToAsn1Object();
                     Asn1Object cmpSequence = ((Asn1Set)cmp[1])[0].ToAsn1Object();
                     if (outSequence is Asn1Sequence && cmpSequence is Asn1Sequence) {
-                        return CompareSignatureObjects((Asn1Sequence)outSequence, (Asn1Sequence)cmpSequence, errorText);
+                        return CompareSignedData((Asn1Sequence)outSequence, (Asn1Sequence)cmpSequence, errorText);
                     }
                 }
             }
-            AddError(errorText, "Signature timestamp attribute structure is invalid", JavaUtil.ArraysToString(@out), JavaUtil.ArraysToString
-                (cmp));
+            AddError(errorText, "Signature timestamp attribute structure is invalid", String.Join("", JavaUtil.ArraysToEnumerable
+                (@out).Select((e) => Asn1Dump.DumpAsString(e)).ToList()), String.Join("", JavaUtil.ArraysToEnumerable(
+                cmp).Select((e) => Asn1Dump.DumpAsString(e)).ToList()));
             return false;
         }
 

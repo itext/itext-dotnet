@@ -45,22 +45,23 @@ using iText.Commons.Utils;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iText.IO.Util;
 using Org.BouncyCastle.Crypto.Operators;
 
 namespace iText.Signatures.Testutils.Builder {
     public class TestCrlBuilder {
         private const String SIGN_ALG = "SHA256withRSA";
 
-        private X509V2CrlGenerator crlBuilder;
+        private readonly AsymmetricKeyParameter issuerPrivateKey;
+        private readonly X509V2CrlGenerator crlBuilder;
 
         private DateTime nextUpdate = DateTimeUtil.GetCurrentUtcTime().AddDays(30);
 
-        public TestCrlBuilder(X509Certificate caCert, DateTime thisUpdate) {
-            X509Name issuerDN = caCert.IssuerDN;
-            crlBuilder = new X509V2CrlGenerator();
-            crlBuilder.SetIssuerDN(issuerDN);
-            crlBuilder.SetThisUpdate(thisUpdate);
+        public TestCrlBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey, DateTime thisUpdate) {
+            X509Name issuerCertSubjectDn = issuerCert.SubjectDN;
+            this.crlBuilder = new X509V2CrlGenerator();
+            this.crlBuilder.SetIssuerDN(issuerCertSubjectDn);
+            this.crlBuilder.SetThisUpdate(thisUpdate);
+            this.issuerPrivateKey = (AsymmetricKeyParameter) issuerPrivateKey;
         }
 
         public virtual void SetNextUpdate(DateTime nextUpdate) {
@@ -72,9 +73,9 @@ namespace iText.Signatures.Testutils.Builder {
             crlBuilder.AddCrlEntry(certificate.SerialNumber, revocationDate, reason);
         }
 
-        public virtual byte[] MakeCrl(ICipherParameters caPrivateKey) {
+        public virtual byte[] MakeCrl() {
             crlBuilder.SetNextUpdate(nextUpdate);
-            X509Crl crl = crlBuilder.Generate(new Asn1SignatureFactory(SIGN_ALG, (AsymmetricKeyParameter) caPrivateKey));
+            X509Crl crl = crlBuilder.Generate(new Asn1SignatureFactory(SIGN_ALG, issuerPrivateKey));
             return crl.GetEncoded();
         }
     }
