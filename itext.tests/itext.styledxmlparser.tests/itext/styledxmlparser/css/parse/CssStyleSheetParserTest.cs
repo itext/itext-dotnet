@@ -139,8 +139,7 @@ namespace iText.StyledXmlParser.Css.Parse {
 
         [NUnit.Framework.Test]
         public virtual void Test11() {
-            // TODO in this test declarations of the page at-rule with compound selector are duplicated.
-            // See CssPageRule#addBodyCssDeclarations() method for the reason and possible solution if this becomes important.
+            // TODO DEVSIX-6364 Fix the body declarations duplication for each pageSelector part
             String cssFile = sourceFolder + "css11.css";
             String cmpFile = sourceFolder + "cmp_css11.css";
             CssStyleSheet styleSheet = CssStyleSheetParser.Parse(new FileStream(cssFile, FileMode.Open, FileAccess.Read

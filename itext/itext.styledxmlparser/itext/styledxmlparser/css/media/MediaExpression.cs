@@ -241,7 +241,8 @@ namespace iText.StyledXmlParser.Css.Media {
         /// </returns>
         private static float ParseAbsoluteLength(String value) {
             if (CssTypesValidationUtils.IsRelativeValue(value)) {
-                // TODO here should be used default font size of the browser, it probably should be fetched from the more generic place than private class constant
+                // TODO Use some shared default value (from default.css or CssDefaults)
+                //      rather than a constant of this class
                 return CssDimensionParsingUtils.ParseRelativeValue(value, DEFAULT_FONT_SIZE);
             }
             else {
