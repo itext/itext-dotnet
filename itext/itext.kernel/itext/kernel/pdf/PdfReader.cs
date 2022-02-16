@@ -384,7 +384,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>byte[] array.</returns>
         public virtual byte[] ReadStreamBytesRaw(PdfStream stream) {
             PdfName type = stream.GetAsName(PdfName.Type);
-            if (!PdfName.XRefStm.Equals(type) && !PdfName.ObjStm.Equals(type)) {
+            if (!PdfName.XRef.Equals(type) && !PdfName.ObjStm.Equals(type)) {
                 CheckPdfStreamLength(stream);
             }
             long offset = stream.GetOffset();
@@ -398,7 +398,7 @@ namespace iText.Kernel.Pdf {
             RandomAccessFileOrArray file = tokens.GetSafeFile();
             byte[] bytes = null;
             try {
-                file.Seek(stream.GetOffset());
+                file.Seek(offset);
                 bytes = new byte[length];
                 file.ReadFully(bytes);
                 bool embeddedStream = pdfDocument.DoesStreamBelongToEmbeddedFile(stream);
@@ -1597,10 +1597,12 @@ namespace iText.Kernel.Pdf {
                     line.Reset();
                     // added boolean because of mailing list issue (17 Feb. 2014)
                     if (!tokens.ReadLineSegment(line, false)) {
+                        if (!PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.strictnessLevel)) {
+                            throw new PdfException(KernelExceptionMessageConstant.STREAM_SHALL_END_WITH_ENDSTREAM);
+                        }
                         break;
                     }
                     if (line.StartsWith(endstream)) {
-                        streamLength = (int)(pos - start);
                         break;
                     }
                     else {
@@ -1611,11 +1613,11 @@ namespace iText.Kernel.Pdf {
                             if (index >= 0) {
                                 pos = pos - 16 + index;
                             }
-                            streamLength = (int)(pos - start);
                             break;
                         }
                     }
                 }
+                streamLength = (int)(pos - start);
                 tokens.Seek(pos - 2);
                 if (tokens.Read() == 13) {
                     streamLength--;
