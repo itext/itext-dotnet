@@ -63,5 +63,7 @@ namespace iText.IO.Exceptions {
         public const String IMAGE_MAGICK_OUTPUT_IS_NULL = "ImageMagick process output is null.";
 
         public const String IMAGE_MAGICK_PROCESS_EXECUTION_FAILED = "ImageMagick process execution finished with errors: ";
+
+        public const String ALREADY_CLOSED = "Already closed";
     }
 }

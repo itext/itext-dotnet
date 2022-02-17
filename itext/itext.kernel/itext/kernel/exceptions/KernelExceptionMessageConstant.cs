@@ -393,6 +393,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String STDCF_NOT_FOUND_ENCRYPTION = "/StdCF not found (encryption)";
 
+        public const String STREAM_SHALL_END_WITH_ENDSTREAM = "Stream shall end with endstream keyword.";
+
         public const String STRUCT_PARENT_INDEX_NOT_FOUND_IN_TAGGED_OBJECT = "StructParent index not found in " + 
             "tagged object.";
 

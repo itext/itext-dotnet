@@ -66,6 +66,11 @@ namespace iText.IO.Source {
 			this.source = source;
 		}
 
+        public IRandomAccessSource GetSource()
+        {
+            return source;
+        }
+
 	    public override void Flush()
 	    {
 	    }

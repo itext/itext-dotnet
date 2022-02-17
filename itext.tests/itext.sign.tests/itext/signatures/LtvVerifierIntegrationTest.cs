@@ -227,5 +227,23 @@ namespace iText.Signatures {
                 NUnit.Framework.Assert.AreEqual("Root certificate passed without checking", verificationOK.message);
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void SwitchBetweenSeveralRevisionsTest() {
+            String testInput = SOURCE_FOLDER + "severalConsequentSignatures.pdf";
+            using (PdfReader pdfReader = new PdfReader(testInput)) {
+                using (PdfDocument pdfDoc = new PdfDocument(pdfReader)) {
+                    LtvVerifier ltvVerifier = new LtvVerifier(pdfDoc);
+                    NUnit.Framework.Assert.AreEqual("timestampSig2", ltvVerifier.signatureName);
+                    ltvVerifier.SwitchToPreviousRevision();
+                    NUnit.Framework.Assert.AreEqual("Signature2", ltvVerifier.signatureName);
+                    ltvVerifier.SwitchToPreviousRevision();
+                    NUnit.Framework.Assert.AreEqual("timestampSig1", ltvVerifier.signatureName);
+                    ltvVerifier.SwitchToPreviousRevision();
+                    NUnit.Framework.Assert.AreEqual("Signature1", ltvVerifier.signatureName);
+                    ltvVerifier.SwitchToPreviousRevision();
+                }
+            }
+        }
     }
 }
