@@ -85,6 +85,7 @@
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.3.0" />
 	  <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="1.1.0" />
 	  <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
+	  <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itext.commons\itext.commons.netstandard.csproj" />
