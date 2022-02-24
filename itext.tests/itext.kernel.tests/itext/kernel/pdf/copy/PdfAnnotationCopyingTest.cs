@@ -30,25 +30,26 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Copy {
     public class PdfAnnotationCopyingTest : ExtendedITextTest {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfAnnotationCopyingTest/";
 
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfAnnotationCopyingTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("Unignore when DEVSIX-3585 would be implemented")]
         public virtual void TestCopyingPageWithAnnotationContainingPopupKey() {
-            String inFilePath = sourceFolder + "annotation-with-popup.pdf";
-            String outFilePath = destinationFolder + "copy-annotation-with-popup.pdf";
+            String inFilePath = SOURCE_FOLDER + "annotation-with-popup.pdf";
+            String outFilePath = DESTINATION_FOLDER + "copy-annotation-with-popup.pdf";
             PdfDocument originalDocument = new PdfDocument(new PdfReader(inFilePath));
             PdfDocument outDocument = new PdfDocument(new PdfWriter(outFilePath));
             originalDocument.CopyPagesTo(1, 1, outDocument);
@@ -88,8 +89,8 @@ namespace iText.Kernel.Pdf.Copy {
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("Unignore when DEVSIX-3585 would be implemented")]
         public virtual void TestCopyingPageWithAnnotationContainingIrtKey() {
-            String inFilePath = sourceFolder + "annotation-with-irt.pdf";
-            String outFilePath = destinationFolder + "copy-annotation-with-irt.pdf";
+            String inFilePath = SOURCE_FOLDER + "annotation-with-irt.pdf";
+            String outFilePath = DESTINATION_FOLDER + "copy-annotation-with-irt.pdf";
             PdfDocument originalDocument = new PdfDocument(new PdfReader(inFilePath));
             PdfDocument outDocument = new PdfDocument(new PdfWriter(outFilePath));
             originalDocument.CopyPagesTo(1, 1, outDocument);
@@ -126,31 +127,60 @@ namespace iText.Kernel.Pdf.Copy {
         [NUnit.Framework.Test]
         public virtual void CopySameLinksWithGoToSmartModeTest() {
             // TODO DEVSIX-4238 Update cmp file after the ticket DEVSIX-4238 will be resolved
-            String cmpFilePath = sourceFolder + "cmp_copySameLinksWithGoToSmartMode.pdf";
-            String outFilePath = destinationFolder + "copySameLinksWithGoToSmartMode.pdf";
+            String cmpFilePath = SOURCE_FOLDER + "cmp_copySameLinksWithGoToSmartMode.pdf";
+            String outFilePath = DESTINATION_FOLDER + "copySameLinksWithGoToSmartMode.pdf";
             CopyLinksGoToActionTest(outFilePath, true, false);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, DESTINATION_FOLDER
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void CopyDiffDestLinksWithGoToSmartModeTest() {
             // TODO DEVSIX-4238 Update cmp file after the ticket DEVSIX-4238 will be resolved
-            String cmpFilePath = sourceFolder + "cmp_copyDiffDestLinksWithGoToSmartMode.pdf";
-            String outFilePath = destinationFolder + "copyDiffDestLinksWithGoToSmartMode.pdf";
+            String cmpFilePath = SOURCE_FOLDER + "cmp_copyDiffDestLinksWithGoToSmartMode.pdf";
+            String outFilePath = DESTINATION_FOLDER + "copyDiffDestLinksWithGoToSmartMode.pdf";
             CopyLinksGoToActionTest(outFilePath, false, false);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, DESTINATION_FOLDER
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void CopyDiffDisplayLinksWithGoToSmartModeTest() {
             // TODO DEVSIX-4238 Update cmp file after the ticket DEVSIX-4238 will be resolved
-            String cmpFilePath = sourceFolder + "cmp_copyDiffDisplayLinksWithGoToSmartMode.pdf";
-            String outFilePath = destinationFolder + "copyDiffDisplayLinksWithGoToSmartMode.pdf";
+            String cmpFilePath = SOURCE_FOLDER + "cmp_copyDiffDisplayLinksWithGoToSmartMode.pdf";
+            String outFilePath = DESTINATION_FOLDER + "copyDiffDisplayLinksWithGoToSmartMode.pdf";
             CopyLinksGoToActionTest(outFilePath, false, true);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, DESTINATION_FOLDER
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        // TODO: DEVSIX-6090 (update cmp file after fixing the issue)
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        public virtual void CopyPagesWithWidgetAnnotGoToActionExplicitDestTest() {
+            String srcFilePath = SOURCE_FOLDER + "pageToCopyWithWidgetAnnotGoToActionExplicitDest.pdf";
+            String cmpFilePath = SOURCE_FOLDER + "cmp_copyPagesWithWidgetAnnotGoToActionExplicitDest.pdf";
+            String outFilePath = DESTINATION_FOLDER + "copyPagesWithWidgetAnnotGoToActionExplicitDest.pdf";
+            CopyPages(srcFilePath, outFilePath, cmpFilePath);
+        }
+
+        [NUnit.Framework.Test]
+        // TODO: DEVSIX-6090 (update cmp file after fixing the issue)
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        public virtual void CopyPagesWithWidgetAnnotGoToActionNamedDestTest() {
+            String srcFilePath = SOURCE_FOLDER + "pageToCopyWithWidgetAnnotGoToActionNamedDest.pdf";
+            String cmpFilePath = SOURCE_FOLDER + "cmp_copyPagesWithWidgetAnnotGoToActionNamedDest.pdf";
+            String outFilePath = DESTINATION_FOLDER + "copyPagesWithWidgetAnnotGoToActionNamedDest.pdf";
+            CopyPages(srcFilePath, outFilePath, cmpFilePath);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyPagesWithScreenAnnotGoToActionExplicitDestTest() {
+            // TODO: DEVSIX-6090 (update cmp file after fixing the issue)
+            String srcFilePath = SOURCE_FOLDER + "pageToCopyWithScreenAnnotGoToActionExplicitDest.pdf";
+            String cmpFilePath = SOURCE_FOLDER + "cmp_copyPagesWithScreenAnnotGoToActionExplicitDest.pdf";
+            String outFilePath = DESTINATION_FOLDER + "copyPagesWithScreenAnnotGoToActionExplicitDest.pdf";
+            CopyPages(srcFilePath, outFilePath, cmpFilePath);
         }
 
         private void CopyLinksGoToActionTest(String dest, bool isTheSameLinks, bool diffDisplayOptions) {
@@ -160,6 +190,22 @@ namespace iText.Kernel.Pdf.Copy {
             sourceDoc1.CopyPagesTo(1, sourceDoc1.GetNumberOfPages(), destDoc);
             sourceDoc1.Close();
             destDoc.Close();
+        }
+
+        private void CopyPages(String sourceFile, String outFilePath, String cmpFilePath) {
+            using (PdfWriter writer = new PdfWriter(outFilePath)) {
+                using (PdfDocument pdfDoc = new PdfDocument(writer)) {
+                    pdfDoc.AddNewPage();
+                    pdfDoc.AddNewPage();
+                    using (PdfReader reader = new PdfReader(sourceFile)) {
+                        using (PdfDocument srcDoc = new PdfDocument(reader)) {
+                            srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), pdfDoc);
+                        }
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, DESTINATION_FOLDER
+                ));
         }
 
         private MemoryStream CreatePdfWithGoToAnnot(bool isTheSameLink, bool diffDisplayOptions) {
