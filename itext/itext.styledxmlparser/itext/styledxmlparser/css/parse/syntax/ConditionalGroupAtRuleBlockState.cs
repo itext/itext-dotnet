@@ -63,7 +63,6 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         * @see com.itextpdf.styledxmlparser.css.parse.syntax.IParserState#process(char)
         */
         public virtual void Process(char ch) {
-            // TODO use UnknownState?
             if (ch == '/') {
                 controller.EnterCommentStartState();
             }
