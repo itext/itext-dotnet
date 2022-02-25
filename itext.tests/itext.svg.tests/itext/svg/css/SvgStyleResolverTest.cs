@@ -162,8 +162,22 @@ namespace iText.Svg.Css {
             SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
             IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
             String fileName = baseUri + "itis.jpg";
-            String expectedURL = UrlUtil.ToNormalizedURI(fileName).ToString();
-            NUnit.Framework.Assert.AreEqual(expectedURL, attr.Get("xlink:href"));
+            String expectedUrl = UrlUtil.ToNormalizedURI(fileName).ToString();
+            String expectedUrlAnotherValidVersion;
+            if (expectedUrl.StartsWith("file:///")) {
+                expectedUrlAnotherValidVersion = "file:/" + expectedUrl.Substring("file:///".Length);
+            }
+            else {
+                if (expectedUrl.StartsWith("file:/")) {
+                    expectedUrlAnotherValidVersion = "file:///" + expectedUrl.Substring("file:/".Length);
+                }
+                else {
+                    expectedUrlAnotherValidVersion = expectedUrl;
+                }
+            }
+            String url = attr.Get("xlink:href");
+            // Both variants(namely with triple and single slashes) are valid.
+            NUnit.Framework.Assert.IsTrue(expectedUrl.Equals(url) || expectedUrlAnotherValidVersion.Equals(url));
         }
 
         [NUnit.Framework.Test]
