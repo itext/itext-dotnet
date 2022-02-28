@@ -60,6 +60,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>Gets the properties.</summary>
         /// <returns>the properties</returns>
         public virtual IList<CssDeclaration> GetProperties() {
+            if (properties == null) {
+                return new List<CssDeclaration>();
+            }
             return new List<CssDeclaration>(properties);
         }
 
@@ -76,7 +79,7 @@ namespace iText.StyledXmlParser.Css {
         public override String ToString() {
             StringBuilder sb = new StringBuilder();
             sb.Append("@").Append(GetRuleName()).Append(" {").Append("\n");
-            foreach (CssDeclaration declaration in properties) {
+            foreach (CssDeclaration declaration in GetProperties()) {
                 sb.Append("    ");
                 sb.Append(declaration);
                 sb.Append(";\n");
