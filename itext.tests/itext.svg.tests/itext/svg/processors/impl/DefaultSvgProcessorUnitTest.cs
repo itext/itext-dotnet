@@ -251,9 +251,11 @@ namespace iText.Svg.Processors.Impl {
                 ();
             String fileName = resolvedBaseUrl + "/img.png";
             String expectedURL = UrlUtil.ToNormalizedURI(fileName).ToString();
+            String expectedURLAnotherValidVersion = CreateAnotherValidUrlVersion(expectedURL);
             ISvgNodeRenderer imageRendered = rootActual.GetChildren()[0];
             String url = imageRendered.GetAttribute(SvgConstants.Attributes.XLINK_HREF);
-            NUnit.Framework.Assert.AreEqual(expectedURL, url);
+            // Both variants(namely with triple and single slashes) are valid.
+            NUnit.Framework.Assert.IsTrue(expectedURL.Equals(url) || expectedURLAnotherValidVersion.Equals(url));
         }
 
         [NUnit.Framework.Test]
@@ -266,9 +268,11 @@ namespace iText.Svg.Processors.Impl {
                 ();
             String fileName = baseUrl + "/img.png";
             String expectedURL = UrlUtil.ToNormalizedURI(fileName).ToString();
+            String expectedURLAnotherValidVersion = CreateAnotherValidUrlVersion(expectedURL);
             ISvgNodeRenderer imageRendered = rootActual.GetChildren()[0];
             String url = imageRendered.GetAttribute(SvgConstants.Attributes.XLINK_HREF);
-            NUnit.Framework.Assert.AreEqual(expectedURL, url);
+            // Both variants(namely with triple and single slashes) are valid.
+            NUnit.Framework.Assert.IsTrue(expectedURL.Equals(url) || expectedURLAnotherValidVersion.Equals(url));
         }
 
         private INode CreateSvgContainingImage() {
@@ -281,6 +285,20 @@ namespace iText.Svg.Processors.Impl {
             INode root = new JsoupElementNode(jsoupSVGRoot);
             root.AddChild(new JsoupElementNode(jsoupSVGImage));
             return root;
+        }
+
+        private static String CreateAnotherValidUrlVersion(String url) {
+            if (url.StartsWith("file:///")) {
+                return "file:/" + url.Substring("file:///".Length);
+            }
+            else {
+                if (url.StartsWith("file:/")) {
+                    return "file:///" + url.Substring("file:/".Length);
+                }
+                else {
+                    return url;
+                }
+            }
         }
 
         private static ISvgProcessor Processor() {

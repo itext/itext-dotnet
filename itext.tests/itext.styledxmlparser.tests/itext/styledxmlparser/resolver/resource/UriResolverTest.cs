@@ -253,12 +253,20 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             UriResolver resolver = new UriResolver("base/uri/index.html");
             String runFolder = new Uri(Path.GetFullPath(Directory.GetCurrentDirectory() )).ToExternalForm() + "/";
             NUnit.Framework.Assert.AreEqual(runFolder + "base/uri/index.html", resolver.GetBaseUri());
-            NUnit.Framework.Assert.AreEqual("file:///c:/test/folder/img.txt", resolver.ResolveAgainstBaseUri("file:/c:/test/folder/img.txt"
-                ).ToExternalForm());
+            
+            String firstUriResolvingResult = resolver.ResolveAgainstBaseUri("file:/c:/test/folder/img.txt")
+                .ToExternalForm();
+            String expectedUriWithSingleSlash = "file:/c:/test/folder/img.txt";
+            String expectedUriWithTripleSlash = "file:///c:/test/folder/img.txt";
+            NUnit.Framework.Assert.True(expectedUriWithSingleSlash.Equals(firstUriResolvingResult) 
+                                        || expectedUriWithTripleSlash.Equals(firstUriResolvingResult));
             NUnit.Framework.Assert.AreEqual("file:///c:/test/folder/img.txt", resolver.ResolveAgainstBaseUri("file://c:/test/folder/img.txt"
                 ).ToExternalForm());
-            NUnit.Framework.Assert.AreEqual("file:///c:/test/folder/data.jpg", resolver.ResolveAgainstBaseUri("file:///c:/test/folder/data.jpg"
-                ).ToExternalForm());
+            
+            String thirdUriResolvingResult = resolver.ResolveAgainstBaseUri("file:///c:/test/folder/img.txt")
+                .ToExternalForm();
+            // Result of resolving uri with triple slash should be the same as if it contained single slash.
+            NUnit.Framework.Assert.AreEqual(firstUriResolvingResult, thirdUriResolvingResult);
         }
 
 
