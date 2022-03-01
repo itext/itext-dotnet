@@ -56,9 +56,13 @@ namespace iText.IO.Source
 	/// </summary>
 	public sealed class RandomAccessSourceFactory
 	{
-		/// <summary>Whether the full content of the source should be read into memory at construction
-		/// 	</summary>
-		private bool forceRead = false;
+        /// <summary>The default value for the forceRead flag
+        /// 	</summary>
+        private static bool forceReadDefaultValue = false;
+
+        /// <summary>Whether the full content of the source should be read into memory at construction
+        /// 	</summary>
+        private bool forceRead = false;
 
 		/// <summary>Whether the underlying file should have a RW lock on it or just an R lock
 		/// 	</summary>
@@ -70,12 +74,19 @@ namespace iText.IO.Source
 		{
 		}
 
+        /// <summary>Determines the default value for the forceRead flag
+        ///     </summary>
+        /// <param name="forceRead">true if by default the full content will be read, false otherwise</param>
+        public static void SetForceReadDefaultValue(bool forceRead)
+        {
+            forceReadDefaultValue = forceRead;
+        }
+
 		/// <summary>Determines whether the full content of the source will be read into memory
 		/// 	</summary>
 		/// <param name="forceRead">true if the full content will be read, false otherwise</param>
 		/// <returns>this object (this allows chaining of method calls)</returns>
-		public RandomAccessSourceFactory SetForceRead(bool forceRead
-			)
+		public RandomAccessSourceFactory SetForceRead(bool forceRead)
 		{
 			this.forceRead = forceRead;
 			return this;
