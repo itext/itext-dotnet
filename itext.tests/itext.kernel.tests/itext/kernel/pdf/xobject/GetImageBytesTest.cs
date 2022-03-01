@@ -54,15 +54,15 @@ using iText.Test;
 
 namespace iText.Kernel.Pdf.Xobject {
     public class GetImageBytesTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/xobject/GetImageBytesTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/xobject/GetImageBytesTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -135,10 +135,37 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestSeparationCSWithICCBasedAsAlternative() {
+            // TODO: DEVSIX-3538 (update test after fix)
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("separationCSWithICCBasedAsAlternative.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported
+                , PdfName.Separation), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestSeparationCSWithDeviceCMYKAsAlternative() {
+            // TODO: DEVSIX-3538 (update test after fix)
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("separationCSWithDeviceCMYKAsAlternative.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported
+                , PdfName.Separation), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestSeparationCSWithDeviceRGBAsAlternative() {
+            // TODO: DEVSIX-3538 (update test after fix)
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("separationCSWithDeviceRgbAsAlternative.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported
+                , PdfName.Separation), e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ExtractByteAlignedG4TiffImageTest() {
-            String inFileName = sourceFolder + "extractByteAlignedG4TiffImage.pdf";
-            String outImageFileName = destinationFolder + "extractedByteAlignedImage.png";
-            String cmpImageFileName = sourceFolder + "cmp_extractByteAlignedG4TiffImage.png";
+            String inFileName = SOURCE_FOLDER + "extractByteAlignedG4TiffImage.pdf";
+            String outImageFileName = DESTINATION_FOLDER + "extractedByteAlignedImage.png";
+            String cmpImageFileName = SOURCE_FOLDER + "cmp_extractByteAlignedG4TiffImage.png";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
             GetImageBytesTest.ImageExtractor listener = new GetImageBytesTest.ImageExtractor(this);
             PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
@@ -163,7 +190,7 @@ namespace iText.Kernel.Pdf.Xobject {
         [NUnit.Framework.Test]
         public virtual void ExpectedByteAlignedTiffImageExtractionTest() {
             //Byte-aligned image is expected in pdf file, but in fact it's not
-            String inFileName = sourceFolder + "expectedByteAlignedTiffImageExtraction.pdf";
+            String inFileName = SOURCE_FOLDER + "expectedByteAlignedTiffImageExtraction.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
             GetImageBytesTest.ImageExtractor listener = new GetImageBytesTest.ImageExtractor(this);
             PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
@@ -207,30 +234,27 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         private void TestFile(String filename, String objectid, String expectedImageFormat) {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + filename));
-            try {
-                PdfResources resources = pdfDocument.GetPage(1).GetResources();
-                PdfDictionary xobjects = resources.GetResource(PdfName.XObject);
-                PdfObject obj = xobjects.Get(new PdfName(objectid));
-                if (obj == null) {
-                    throw new ArgumentException("Reference " + objectid + " not found - Available keys are " + xobjects.KeySet
-                        ());
+            using (PdfReader reader = new PdfReader(SOURCE_FOLDER + filename)) {
+                using (PdfDocument pdfDocument = new PdfDocument(reader)) {
+                    PdfResources resources = pdfDocument.GetPage(1).GetResources();
+                    PdfDictionary xobjects = resources.GetResource(PdfName.XObject);
+                    PdfObject obj = xobjects.Get(new PdfName(objectid));
+                    if (obj == null) {
+                        throw new ArgumentException("Reference " + objectid + " not found - Available keys are " + xobjects.KeySet
+                            ());
+                    }
+                    PdfImageXObject img = new PdfImageXObject((PdfStream)obj);
+                    NUnit.Framework.Assert.AreEqual(expectedImageFormat, img.IdentifyImageFileExtension());
+                    byte[] result = img.GetImageBytes(true);
+                    byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, filename.JSubstring(0, filename.
+                        Length - 4) + "." + expectedImageFormat));
+                    if (img.IdentifyImageFileExtension().Equals("tif")) {
+                        CompareTiffImages(cmpBytes, result);
+                    }
+                    else {
+                        NUnit.Framework.Assert.AreEqual(cmpBytes, result);
+                    }
                 }
-                PdfImageXObject img = new PdfImageXObject((PdfStream)(obj.IsIndirectReference() ? ((PdfIndirectReference)obj
-                    ).GetRefersTo() : obj));
-                NUnit.Framework.Assert.AreEqual(expectedImageFormat, img.IdentifyImageFileExtension());
-                byte[] result = img.GetImageBytes(true);
-                byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder, filename.JSubstring(0, filename.Length
-                     - 4) + "." + expectedImageFormat));
-                if (img.IdentifyImageFileExtension().Equals("tif")) {
-                    CompareTiffImages(cmpBytes, result);
-                }
-                else {
-                    NUnit.Framework.Assert.AreEqual(cmpBytes, result);
-                }
-            }
-            finally {
-                pdfDocument.Close();
             }
         }
 
@@ -253,9 +277,7 @@ namespace iText.Kernel.Pdf.Xobject {
                     NUnit.Framework.Assert.AreEqual(cmpDir.IsTagPresent(tag), resultDir.IsTagPresent(tag));
                     TIFFField cmpField = cmpDir.GetField(tag);
                     TIFFField resultField = resultDir.GetField(tag);
-                    if (tag == TIFFConstants.TIFFTAG_SOFTWARE) {
-                    }
-                    else {
+                    if (tag != TIFFConstants.TIFFTAG_SOFTWARE) {
                         CompareFields(cmpField, resultField);
                     }
                 }
