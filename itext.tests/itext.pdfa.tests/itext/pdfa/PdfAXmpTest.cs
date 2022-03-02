@@ -44,6 +44,8 @@ using System;
 using System.IO;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Options;
 using iText.Test;
 
 namespace iText.Pdfa {
@@ -94,6 +96,36 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder));
             NUnit.Framework.Assert.IsNull(ct.CompareDocumentInfo(outFile, cmpFile));
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SaveAndReadDocumentWithCanonicalXmpMetadata()
+        {
+            String outFile = destinationFolder + "saveAndReadDocumentWithCanonicalXmpMetadata.pdf";
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_2B;
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(new PdfWriter(outFile), conformanceLevel, outputIntent);
+            doc.AddNewPage();
+            XMPMeta xmp = XMPMetaFactory.Create();
+            xmp.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, conformanceLevel.GetPart(), new PropertyOptions().SetSchemaNode(true));
+            xmp.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, conformanceLevel.GetConformance(), new PropertyOptions().SetSchemaNode(true));
+            var options = new SerializeOptions().SetUseCanonicalFormat(true).SetUseCompactFormat(false);
+            doc.SetXmpMetadata(xmp, options);
+            doc.SetTagged();
+            doc.Close();
+            PdfReader reader = new PdfReader(outFile);
+            PdfDocument resultDoc = new PdfDocument(reader);
+            PdfAConformanceLevel conformanceLevelResult = resultDoc.GetReader().GetPdfAConformanceLevel();
+            NUnit.Framework.Assert.IsNotNull(conformanceLevelResult);
+            NUnit.Framework.Assert.AreEqual(conformanceLevel.GetConformance(), conformanceLevelResult.GetConformance());
+            NUnit.Framework.Assert.AreEqual(conformanceLevel.GetPart(), conformanceLevelResult.GetPart());
+            byte[] xmpResultBytes = resultDoc.GetXmpMetadata();
+            resultDoc.Close();
+            NUnit.Framework.Assert.IsNotNull(xmpResultBytes);
+            XMPMeta xmpResult = XMPMetaFactory.ParseFromBuffer(xmpResultBytes);
+            NUnit.Framework.Assert.IsNotNull(xmpResult);
         }
     }
 }
