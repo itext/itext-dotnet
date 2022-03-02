@@ -50,21 +50,21 @@ using iText.Test;
 
 namespace iText.Barcodes {
     public class BarcodeCodabarTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/barcodes/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/barcodes/Codabar/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "codabar.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -73,52 +73,48 @@ namespace iText.Barcodes {
             codabar.SetStartStopText(true);
             codabar.PlaceBarcode(canvas, null, null);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BarcodeHasNoAbcdAsStartCharacterTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
-                BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
-                BarcodeCodabar.GetBarsCodabar("qbcd");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => BarcodeCodabar.GetBarsCodabar
+                ("qbcd"));
+            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void BarcodeHasNoAbcdAsStopCharacterTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
-                BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
-                BarcodeCodabar.GetBarsCodabar("abcf");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => BarcodeCodabar.GetBarsCodabar
+                ("abcf"));
+            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void BarcodeHasNoAbcdAsStartAndStopCharacterTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
-                BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
-                BarcodeCodabar.GetBarsCodabar("qbcq");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => BarcodeCodabar.GetBarsCodabar
+                ("qbcq"));
+            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void BarcodeHasNoStartAndStopCharacterTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
-                BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
-                BarcodeCodabar.GetBarsCodabar("");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_AT_LEAST_START_AND_STOP_CHARACTER))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => BarcodeCodabar.GetBarsCodabar
+                (""));
+            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_AT_LEAST_START_AND_STOP_CHARACTER
+                , exception.Message);
         }
     }
 }

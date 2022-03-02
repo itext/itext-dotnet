@@ -777,6 +777,11 @@ namespace iText.Kernel.Pdf {
             try {
                 ReadXref();
             }
+            catch (XrefCycledReferencesException ex) {
+                // Throws an exception when xref stream has cycled references(due to lack of opportunity to fix such an
+                // issue) or xref tables have cycled references and PdfReader.StrictnessLevel set to CONSERVATIVE.
+                throw;
+            }
             catch (Exception ex) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
                 logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT);
@@ -1070,27 +1075,40 @@ namespace iText.Kernel.Pdf {
                     return;
                 }
             }
+            catch (XrefCycledReferencesException cycledReferencesException) {
+                throw;
+            }
             catch (Exception) {
             }
+            // Do nothing.
             // clear xref because of possible issues at reading xref stream.
             pdfDocument.GetXref().Clear();
             tokens.Seek(startxref);
             trailer = ReadXrefSection();
-            //  Prev key - integer value
-            //  (Present only if the file has more than one cross-reference section; shall be an indirect reference)
+            //  Prev key - integer value.
+            //  (Present only if the file has more than one cross-reference section; shall be an indirect reference).
             // The byte offset in the decoded stream from the beginning of the file
             // to the beginning of the previous cross-reference section.
             PdfDictionary trailer2 = trailer;
+            ICollection<long> alreadyVisitedXrefTables = new HashSet<long>();
             while (true) {
+                alreadyVisitedXrefTables.Add(startxref);
                 PdfNumber prev = (PdfNumber)trailer2.Get(PdfName.Prev);
                 if (prev == null) {
                     break;
                 }
-                if (prev.LongValue() == startxref) {
-                    throw new PdfException(KernelExceptionMessageConstant.TRAILER_PREV_ENTRY_POINTS_TO_ITS_OWN_CROSS_REFERENCE_SECTION
-                        );
+                long prevXrefOffset = prev.LongValue();
+                if (alreadyVisitedXrefTables.Contains(prevXrefOffset)) {
+                    if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.GetStrictnessLevel())) {
+                        // Throw the exception to rebuild xref table, it'll be caught in method above.
+                        throw new PdfException(KernelExceptionMessageConstant.TRAILER_PREV_ENTRY_POINTS_TO_ITS_OWN_CROSS_REFERENCE_SECTION
+                            );
+                    }
+                    else {
+                        throw new XrefCycledReferencesException(KernelExceptionMessageConstant.XREF_TABLE_HAS_CYCLED_REFERENCES);
+                    }
                 }
-                startxref = prev.LongValue();
+                startxref = prevXrefOffset;
                 tokens.Seek(startxref);
                 trailer2 = ReadXrefSection();
             }
@@ -1199,6 +1217,7 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal virtual bool ReadXrefStream(long ptr) {
+            ICollection<long> alreadyVisitedXrefStreams = new HashSet<long>();
             while (ptr != -1) {
                 tokens.Seek(ptr);
                 if (!tokens.NextToken()) {
@@ -1213,6 +1232,7 @@ namespace iText.Kernel.Pdf {
                 if (!tokens.NextToken() || !tokens.TokenValueEqualsTo(PdfTokenizer.Obj)) {
                     return false;
                 }
+                alreadyVisitedXrefStreams.Add(ptr);
                 PdfXrefTable xref = pdfDocument.GetXref();
                 PdfObject @object = ReadObject(false);
                 PdfStream xrefStream;
@@ -1320,6 +1340,9 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 ptr = prev;
+                if (alreadyVisitedXrefStreams.Contains(ptr)) {
+                    throw new XrefCycledReferencesException(KernelExceptionMessageConstant.XREF_STREAM_HAS_CYCLED_REFERENCES);
+                }
             }
             return true;
         }

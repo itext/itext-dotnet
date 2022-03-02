@@ -37,20 +37,18 @@ namespace iText.Commons.Actions.Producer {
     public class ProducerBuilderTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void EmptyEventsProducerLineTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ProducerBuilder.ModifyProducer(JavaCollectionsUtil.EmptyList<AbstractProductProcessITextEvent>(), null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(CommonsExceptionMessageConstant.NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => ProducerBuilder.ModifyProducer
+                (JavaCollectionsUtil.EmptyList<AbstractProductProcessITextEvent>(), null));
+            NUnit.Framework.Assert.AreEqual(CommonsExceptionMessageConstant.NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void NullEventsProducerLineTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ProducerBuilder.ModifyProducer((IList<AbstractProductProcessITextEvent>)null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(CommonsExceptionMessageConstant.NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => ProducerBuilder.ModifyProducer
+                ((IList<AbstractProductProcessITextEvent>)null, null));
+            NUnit.Framework.Assert.AreEqual(CommonsExceptionMessageConstant.NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
@@ -124,11 +122,10 @@ namespace iText.Commons.Actions.Producer {
         [NUnit.Framework.Test]
         public virtual void CurrentDateNoFormatProducerLineTest() {
             IList<ConfirmedEventWrapper> events = GetEvents("Created at ${currentDate}", 1, 2, 3);
-            NUnit.Framework.Assert.That(() =>  {
-                ProducerBuilder.ModifyProducer(events, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(CommonsExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED, "currentDate")))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => ProducerBuilder.ModifyProducer
+                (events, null));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CommonsExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED
+                , "currentDate"), exception.Message);
         }
 
         [NUnit.Framework.Test]
@@ -150,11 +147,10 @@ namespace iText.Commons.Actions.Producer {
         [NUnit.Framework.Test]
         public virtual void UsedProductsEmptyFormatProducerLineTest() {
             IList<ConfirmedEventWrapper> events = GetEvents("Used products: ${usedProducts}", 1, 2, 3);
-            NUnit.Framework.Assert.That(() =>  {
-                ProducerBuilder.ModifyProducer(events, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(CommonsExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED, "usedProducts")))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => ProducerBuilder.ModifyProducer
+                (events, null));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CommonsExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED
+                , "usedProducts"), exception.Message);
         }
 
         [NUnit.Framework.Test]

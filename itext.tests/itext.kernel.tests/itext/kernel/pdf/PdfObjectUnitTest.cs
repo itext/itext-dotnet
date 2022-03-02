@@ -27,52 +27,48 @@ using iText.Test;
 
 namespace iText.Kernel.Pdf {
     public class PdfObjectUnitTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfObjectUnitTest/";
 
         [NUnit.Framework.Test]
         public virtual void NoWriterForMakingIndirectTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "noWriterForMakingIndirect.pdf"));
-                PdfDictionary pdfDictionary = new PdfDictionary();
-                pdfDictionary.MakeIndirect(pdfDocument);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.THERE_IS_NO_ASSOCIATE_PDF_WRITER_FOR_MAKING_INDIRECTS))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "noWriterForMakingIndirect.pdf"));
+            PdfDictionary pdfDictionary = new PdfDictionary();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDictionary.MakeIndirect(
+                pdfDocument));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.THERE_IS_NO_ASSOCIATE_PDF_WRITER_FOR_MAKING_INDIRECTS
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CopyDocInReadingModeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "copyDocInReadingMode.pdf"));
-                PdfDictionary pdfDictionary = new PdfDictionary();
-                pdfDictionary.ProcessCopying(pdfDocument, true);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_COPY_TO_DOCUMENT_OPENED_IN_READING_MODE))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "copyDocInReadingMode.pdf"));
+            PdfDictionary pdfDictionary = new PdfDictionary();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDictionary.ProcessCopying
+                (pdfDocument, true));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_COPY_TO_DOCUMENT_OPENED_IN_READING_MODE
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CopyIndirectObjectTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                PdfObject pdfObject = pdfDocument.GetPdfObject(1);
-                pdfObject.CopyTo(pdfDocument, true);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_COPY_INDIRECT_OBJECT_FROM_THE_DOCUMENT_THAT_IS_BEING_WRITTEN))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfObject pdfObject = pdfDocument.GetPdfObject(1);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfObject.CopyTo(pdfDocument
+                , true));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_COPY_INDIRECT_OBJECT_FROM_THE_DOCUMENT_THAT_IS_BEING_WRITTEN
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CopyFlushedObjectTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                PdfObject pdfObject = pdfDocument.GetPdfObject(1);
-                pdfObject.Flush();
-                pdfObject.CopyContent(pdfObject, pdfDocument);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_COPY_FLUSHED_OBJECT))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfObject pdfObject = pdfDocument.GetPdfObject(1);
+            pdfObject.Flush();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfObject.CopyContent(pdfObject
+                , pdfDocument));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_COPY_FLUSHED_OBJECT, exception.Message
+                );
         }
     }
 }

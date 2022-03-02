@@ -21,23 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Forms.Exceptions;
-using iText.IO.Source;
-using iText.Kernel.Exceptions;
-using iText.Kernel.Pdf;
-using iText.Test;
 
-namespace iText.Forms.Fields {
-    public class PdfFormFieldUnitTest : ExtendedITextTest {
-        [NUnit.Framework.Test]
-        public virtual void CannotGetRectangleIfKidsIsNullTest() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfDictionary pdfDictionary = new PdfDictionary();
-            PdfFormField pdfFormField = new PdfFormField(pdfDocument);
-            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfFormField.GetRect(pdfDictionary
-                ));
-            NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.WRONG_FORM_FIELD_ADD_ANNOTATION_TO_THE_FIELD
-                , exception.Message);
+namespace iText.Kernel.Exceptions {
+    /// <summary>Exception class for infinite loop in xref structure.</summary>
+    public class XrefCycledReferencesException : PdfException {
+        /// <summary>Creates a new instance of XrefInfiniteLoopException.</summary>
+        /// <param name="message">the detail message.</param>
+        public XrefCycledReferencesException(String message)
+            : base(message) {
         }
     }
 }

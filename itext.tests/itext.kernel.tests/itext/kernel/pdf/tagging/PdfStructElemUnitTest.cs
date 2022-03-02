@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
@@ -31,25 +32,23 @@ namespace iText.Kernel.Pdf.Tagging {
     public class PdfStructElemUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NoParentObjectTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary parent = new PdfDictionary();
-                PdfArray kid = new PdfArray();
-                PdfStructElem.AddKidObject(parent, 1, kid);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.STRUCTURE_ELEMENT_SHALL_CONTAIN_PARENT_OBJECT))
-;
+            PdfDictionary parent = new PdfDictionary();
+            PdfArray kid = new PdfArray();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfStructElem.AddKidObject(
+                parent, 1, kid));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.STRUCTURE_ELEMENT_SHALL_CONTAIN_PARENT_OBJECT
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void AnnotationHasNoReferenceToPageTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                PdfName pdfName = new PdfName("test");
-                PdfAnnotation annotation = new Pdf3DAnnotation(new Rectangle(100, 100), pdfName);
-                PdfStructElem structElem = new PdfStructElem(pdfDoc, pdfName, annotation);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE))
-;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfName pdfName = new PdfName("test");
+            PdfAnnotation annotation = new Pdf3DAnnotation(new Rectangle(100, 100), pdfName);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfStructElem(pdfDoc, pdfName
+                , annotation));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE, exception
+                .Message);
         }
     }
 }

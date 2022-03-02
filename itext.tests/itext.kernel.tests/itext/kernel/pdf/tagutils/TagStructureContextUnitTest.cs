@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -29,12 +30,11 @@ namespace iText.Kernel.Pdf.Tagutils {
     public class TagStructureContextUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NoTagStructureInNonTaggedDocumentTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                TagStructureContext tagStructureContext = new TagStructureContext(pdfDocument);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.MUST_BE_A_TAGGED_DOCUMENT))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new TagStructureContext(pdfDocument
+                ));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.MUST_BE_A_TAGGED_DOCUMENT, exception.Message
+                );
         }
     }
 }

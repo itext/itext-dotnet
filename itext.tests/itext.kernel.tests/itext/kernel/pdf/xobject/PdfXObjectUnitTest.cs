@@ -29,23 +29,21 @@ namespace iText.Kernel.Pdf.Xobject {
     public class PdfXObjectUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NoSubTypeProvidedTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfStream pdfStream = new PdfStream();
-                PdfXObject pdfXObject = PdfXObject.MakeXObject(pdfStream);
-            }
-            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(KernelExceptionMessageConstant.UNSUPPORTED_XOBJECT_TYPE))
-;
+            PdfStream pdfStream = new PdfStream();
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => PdfXObject.MakeXObject
+                (pdfStream));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNSUPPORTED_XOBJECT_TYPE, exception.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void UnsupportedSubTypeIsSet() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfStream pdfStream = new PdfStream();
-                pdfStream.Put(PdfName.Subtype, new PdfName("Unsupported SubType"));
-                PdfXObject pdfXObject = PdfXObject.MakeXObject(pdfStream);
-            }
-            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(KernelExceptionMessageConstant.UNSUPPORTED_XOBJECT_TYPE))
-;
+            PdfStream pdfStream = new PdfStream();
+            pdfStream.Put(PdfName.Subtype, new PdfName("Unsupported SubType"));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => PdfXObject.MakeXObject
+                (pdfStream));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNSUPPORTED_XOBJECT_TYPE, exception.Message
+                );
         }
     }
 }

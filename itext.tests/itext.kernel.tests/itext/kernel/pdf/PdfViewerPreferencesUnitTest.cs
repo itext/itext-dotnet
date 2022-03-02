@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Exceptions;
 using iText.Test;
 
@@ -27,14 +28,13 @@ namespace iText.Kernel.Pdf {
     public class PdfViewerPreferencesUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void PrintScalingIsNullTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfViewerPreferences preferences = new PdfViewerPreferences();
-                PdfName pdfName = PdfName.PrintScaling;
-                PdfArray pdfArray = new PdfArray(pdfName);
-                preferences.SetEnforce(pdfArray);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.PRINT_SCALING_ENFORCE_ENTRY_INVALID))
-;
+            PdfViewerPreferences preferences = new PdfViewerPreferences();
+            PdfName pdfName = PdfName.PrintScaling;
+            PdfArray pdfArray = new PdfArray(pdfName);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => preferences.SetEnforce(pdfArray
+                ));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PRINT_SCALING_ENFORCE_ENTRY_INVALID, exception
+                .Message);
         }
     }
 }

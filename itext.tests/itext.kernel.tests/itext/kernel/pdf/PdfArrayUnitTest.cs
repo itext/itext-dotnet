@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Exceptions;
 using iText.Test;
 
@@ -27,62 +28,50 @@ namespace iText.Kernel.Pdf {
     public class PdfArrayUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CannotConvertArrayOfPdfStringsToArrayOfBooleansTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfArray pdfArray = new PdfArray(new PdfString(""));
-                pdfArray.ToBooleanArray();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_AN_ARRAY_OF_BOOLEANS))
-;
+            PdfArray pdfArray = new PdfArray(new PdfString(""));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfArray.ToBooleanArray());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_AN_ARRAY_OF_BOOLEANS
+                , exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotConvertArrayOfPdfStringsToDoubleArrayTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfArray pdfArray = new PdfArray(new PdfString(""));
-                pdfArray.ToDoubleArray();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_DOUBLE_ARRAY))
-;
+            PdfArray pdfArray = new PdfArray(new PdfString(""));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfArray.ToDoubleArray());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_DOUBLE_ARRAY, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotConvertArrayOfPdfStringsToIntArrayTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfArray pdfArray = new PdfArray(new PdfString(""));
-                pdfArray.ToIntArray();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_INT_ARRAY))
-;
+            PdfArray pdfArray = new PdfArray(new PdfString(""));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfArray.ToIntArray());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_INT_ARRAY, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotConvertArrayOfPdfStringsToFloatArrayTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfArray pdfArray = new PdfArray(new PdfString(""));
-                pdfArray.ToFloatArray();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_FLOAT_ARRAY))
-;
+            PdfArray pdfArray = new PdfArray(new PdfString(""));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfArray.ToFloatArray());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_FLOAT_ARRAY, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotConvertArrayOfPdfStringsToLongArrayTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfArray pdfArray = new PdfArray(new PdfString(""));
-                pdfArray.ToLongArray();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_LONG_ARRAY))
-;
+            PdfArray pdfArray = new PdfArray(new PdfString(""));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfArray.ToLongArray());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_LONG_ARRAY, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotConvertArrayOfPdfStringsToRectangleTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfArray pdfArray = new PdfArray(new PdfString(""));
-                pdfArray.ToRectangle();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_RECTANGLE))
-;
+            PdfArray pdfArray = new PdfArray(new PdfString(""));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfArray.ToRectangle());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_CONVERT_PDF_ARRAY_TO_RECTANGLE, exception
+                .Message);
         }
     }
 }

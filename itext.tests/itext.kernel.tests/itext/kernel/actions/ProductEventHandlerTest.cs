@@ -28,7 +28,7 @@ using iText.Test;
 
 namespace iText.Kernel.Actions {
     public class ProductEventHandlerTest : ExtendedITextTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/actions/";
 
         [NUnit.Framework.Test]

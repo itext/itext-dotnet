@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -29,12 +30,11 @@ namespace iText.Kernel.Utils {
     public class PdfSplitterUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SplitDocumentThatIsBeingWrittenTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                PdfSplitter pdfSplitter = new PdfSplitter(pdfDocument);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_SPLIT_DOCUMENT_THAT_IS_BEING_WRITTEN))
-;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfSplitter(pdfDocument
+                ));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_SPLIT_DOCUMENT_THAT_IS_BEING_WRITTEN
+                , exception.Message);
         }
     }
 }
