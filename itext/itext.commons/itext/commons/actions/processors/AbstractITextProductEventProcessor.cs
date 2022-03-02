@@ -25,9 +25,12 @@ using iText.Commons.Actions;
 using iText.Commons.Exceptions;
 
 namespace iText.Commons.Actions.Processors {
+    /// <summary>Abstract class with some standard functionality for product event processing.</summary>
     public abstract class AbstractITextProductEventProcessor : ITextProductEventProcessor {
         private readonly String productName;
 
+        /// <summary>Creates a new instance of an abstract processor for the provided product.</summary>
+        /// <param name="productName">the product which will be handled by this processor</param>
         public AbstractITextProductEventProcessor(String productName) {
             if (productName == null) {
                 throw new ArgumentException(CommonsExceptionMessageConstant.PRODUCT_NAME_CAN_NOT_BE_NULL);

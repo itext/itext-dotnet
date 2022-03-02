@@ -56,11 +56,20 @@ namespace iText.Commons.Utils {
     public static class FileUtil {
         private static int tempFileCounter = 0;
 
+        /// <summary>
+        /// Gets the default windows font directory.
+        /// </summary>
+        /// <returns>the default windows font directory</returns>
         public static String GetFontsDir() {
             String windir = Environment.GetEnvironmentVariable("windir");
             return windir != null ? Path.Combine(windir, "fonts") : "";
         }
 
+        /// <summary>
+        /// Checks whether there is a file at the provided path.
+        /// </summary>
+        /// <param name="path">the path to the file to be checked on existence</param>
+        /// <returns><CODE>true</CODE> if such a file exists, otherwise <CODE>false</CODE></returns>
         public static bool FileExists(String path) {
             if (!String.IsNullOrEmpty(path)) {
                 return new FileInfo(path).Exists;
@@ -68,6 +77,11 @@ namespace iText.Commons.Utils {
             return false;
         }
 
+        /// <summary>
+        /// Checks whether there is a directory at the provided path.
+        /// </summary>
+        /// <param name="path">the path to the directory to be checked on existence</param>
+        /// <returns>true if such a directory exists, otherwise false</returns>
         public static bool DirectoryExists(String path) {
             if (!String.IsNullOrEmpty(path)) {
                 return new DirectoryInfo(path).Exists;
@@ -75,6 +89,12 @@ namespace iText.Commons.Utils {
             return false;
         }
 
+        /// <summary>
+        /// Lists all the files located at the provided directory.
+        /// </summary>
+        /// <param name="path">path to the directory</param>
+        /// <param name="recursive">if <CODE>true</CODE>, files from all the subdirectories will be returned</param>
+        /// <returns>all the files located at the provided directory</returns>
         public static String[] ListFilesInDirectory(String path, bool recursive) {
             if (!String.IsNullOrEmpty(path)) {
                 DirectoryInfo dir = new DirectoryInfo(path);
@@ -92,10 +112,23 @@ namespace iText.Commons.Utils {
             return null;
         }
 
+        /// <summary>
+        /// Lists all the files located at the provided directory, which are accepted by the provided filter.
+        /// </summary>
+        /// <param name="path">path to the directory</param>
+        /// <param name="filter">filter to accept files to be listed</param>
+        /// <returns>all the files located at the provided directory, which are accepted by the provided filter</returns>
         public static FileInfo[] ListFilesInDirectoryByFilter(String path, IFileFilter filter) {
             return ListFilesInDirectoryByFilter(path, false, filter);
         }
 
+        /// <summary>
+        /// Lists all the files located at the provided directory, which are accepted by the provided filter.
+        /// </summary>
+        /// <param name="path">path to the directory</param>
+        /// <param name="recursive">if <CODE>true</CODE>, files from all the subdirectories will be returned</param>
+        /// <param name="filter">filter to accept files to be listed</param>
+        /// <returns>all the files located at the provided directory, which are accepted by the provided filter</returns>
         public static FileInfo[] ListFilesInDirectoryByFilter(String path, bool recursive, IFileFilter filter) {
             if (!String.IsNullOrEmpty(path)) {
                 DirectoryInfo dir = new DirectoryInfo(path);
@@ -123,6 +156,12 @@ namespace iText.Commons.Utils {
             return new FileStream(filename, FileMode.Create);
         }
 
+        /// <summary>
+        /// Creates a temporary file at the provided path.
+        /// </summary>
+        /// <param name="path">path to the temporary file to be created. If it is a directory,
+        /// then the temporary file will be created at this directory</param>
+        /// <returns>the created temporary file</returns>
         public static FileInfo CreateTempFile(String path) {
             if (DirectoryExists(path)) {
                 return new FileInfo(path + Path.DirectorySeparatorChar + "pdf_" + Interlocked.Increment(ref tempFileCounter));
@@ -148,6 +187,10 @@ namespace iText.Commons.Utils {
             return outputStream;
         }
 
+        /// <summary>
+        /// Creates a directory at the provided path.
+        /// </summary>
+        /// <param name="outPath">path to the directory to be created</param>
         public static void CreateDirectories(String outPath) {
             Directory.CreateDirectory(outPath);
         }

@@ -65,6 +65,11 @@ namespace iText.Commons.Actions.Contexts {
 
         private readonly bool allowEvents;
 
+        /// <summary>
+        /// Creates a fallback
+        /// <see cref="IContext"/>.
+        /// </summary>
+        /// <param name="allowEvents">defines whether the context allows all events or not</param>
         public UnknownContext(bool allowEvents) {
             this.allowEvents = allowEvents;
         }
