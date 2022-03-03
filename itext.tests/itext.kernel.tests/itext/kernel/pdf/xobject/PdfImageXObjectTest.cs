@@ -41,7 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Commons.Utils;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -50,22 +52,22 @@ using iText.Test;
 
 namespace iText.Kernel.Pdf.Xobject {
     public class PdfImageXObjectTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/xobject/PdfImageXObjectTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/xobject/PdfImageXObjectTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void AddFlushedImageXObjectToCanvas() {
-            String filename = destinationFolder + "addFlushedImageXObjectToCanvas.pdf";
-            String cmpfile = sourceFolder + "cmp_addFlushedImageXObjectToCanvas.pdf";
-            String image = sourceFolder + "image.png";
+            String filename = DESTINATION_FOLDER + "addFlushedImageXObjectToCanvas.pdf";
+            String cmpfile = SOURCE_FOLDER + "cmp_addFlushedImageXObjectToCanvas.pdf";
+            String image = SOURCE_FOLDER + "image.png";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(image));
             // flushing pdf object directly
@@ -73,67 +75,103 @@ namespace iText.Kernel.Pdf.Xobject {
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
             canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(50, 500, 200, 200));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpfile, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpfile, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void IndexedColorPngImageXObjectTest() {
-            ConvertAndCompare(destinationFolder + "indexed.pdf", sourceFolder + "cmp_indexed.pdf", sourceFolder + "indexed.png"
+            ConvertAndCompare(DESTINATION_FOLDER + "indexed.pdf", SOURCE_FOLDER + "cmp_indexed.pdf", SOURCE_FOLDER + "indexed.png"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void IndexedColorSimpleTransparencyPngImageXObjectTest() {
-            ConvertAndCompare(destinationFolder + "indexedSimpleTransparency.pdf", sourceFolder + "cmp_indexedSimpleTransparency.pdf"
-                , sourceFolder + "indexedSimpleTransparency.png");
+            ConvertAndCompare(DESTINATION_FOLDER + "indexedSimpleTransparency.pdf", SOURCE_FOLDER + "cmp_indexedSimpleTransparency.pdf"
+                , SOURCE_FOLDER + "indexedSimpleTransparency.png");
         }
 
         [NUnit.Framework.Test]
         public virtual void GrayPngImageXObjectTest() {
-            ConvertAndCompare(destinationFolder + "grayscale16Bpc.pdf", sourceFolder + "cmp_grayscale16Bpc.pdf", sourceFolder
+            ConvertAndCompare(DESTINATION_FOLDER + "grayscale16Bpc.pdf", SOURCE_FOLDER + "cmp_grayscale16Bpc.pdf", SOURCE_FOLDER
                  + "grayscale16Bpc.png");
         }
 
         [NUnit.Framework.Test]
         public virtual void GrayAlphaPngImageXObjectTest() {
-            ConvertAndCompare(destinationFolder + "graya8Bpc.pdf", sourceFolder + "cmp_graya8Bpc.pdf", sourceFolder + 
-                "graya8Bpc.png");
+            ConvertAndCompare(DESTINATION_FOLDER + "graya8Bpc.pdf", SOURCE_FOLDER + "cmp_graya8Bpc.pdf", SOURCE_FOLDER
+                 + "graya8Bpc.png");
         }
 
         [NUnit.Framework.Test]
         public virtual void GrayAlphaPngWithoutEmbeddedProfileImageXObjectTest() {
-            ConvertAndCompare(destinationFolder + "graya8BpcWithoutProfile.pdf", sourceFolder + "cmp_graya8BpcWithoutProfile.pdf"
-                , sourceFolder + "graya8BpcWithoutProfile.png");
+            ConvertAndCompare(DESTINATION_FOLDER + "graya8BpcWithoutProfile.pdf", SOURCE_FOLDER + "cmp_graya8BpcWithoutProfile.pdf"
+                , SOURCE_FOLDER + "graya8BpcWithoutProfile.png");
         }
 
         [NUnit.Framework.Test]
         public virtual void GraySimpleTransparencyPngImageXObjectTest() {
-            ConvertAndCompare(destinationFolder + "grayscaleSimpleTransparencyImage.pdf", sourceFolder + "cmp_grayscaleSimpleTransparencyImage.pdf"
-                , sourceFolder + "grayscaleSimpleTransparencyImage.png");
+            ConvertAndCompare(DESTINATION_FOLDER + "grayscaleSimpleTransparencyImage.pdf", SOURCE_FOLDER + "cmp_grayscaleSimpleTransparencyImage.pdf"
+                , SOURCE_FOLDER + "grayscaleSimpleTransparencyImage.png");
         }
 
         [NUnit.Framework.Test]
         public virtual void RgbPngImageXObjectTest() {
-            ConvertAndCompare(destinationFolder + "rgb16Bpc.pdf", sourceFolder + "cmp_rgb16Bpc.pdf", sourceFolder + "rgb16Bpc.png"
-                );
+            ConvertAndCompare(DESTINATION_FOLDER + "rgb16Bpc.pdf", SOURCE_FOLDER + "cmp_rgb16Bpc.pdf", SOURCE_FOLDER +
+                 "rgb16Bpc.png");
         }
 
         [NUnit.Framework.Test]
         public virtual void RgbAlphaPngImageXObjectTest() {
-            ConvertAndCompare(destinationFolder + "rgba16Bpc.pdf", sourceFolder + "cmp_rgba16Bpc.pdf", sourceFolder + 
-                "rgba16Bpc.png");
+            ConvertAndCompare(DESTINATION_FOLDER + "rgba16Bpc.pdf", SOURCE_FOLDER + "cmp_rgba16Bpc.pdf", SOURCE_FOLDER
+                 + "rgba16Bpc.png");
         }
 
         [NUnit.Framework.Test]
         public virtual void RgbSimpleTransparencyPngImageXObjectTest() {
-            ConvertAndCompare(destinationFolder + "rgbSimpleTransparencyImage.pdf", sourceFolder + "cmp_rgbSimpleTransparencyImage.pdf"
-                , sourceFolder + "rgbSimpleTransparencyImage.png");
+            ConvertAndCompare(DESTINATION_FOLDER + "rgbSimpleTransparencyImage.pdf", SOURCE_FOLDER + "cmp_rgbSimpleTransparencyImage.pdf"
+                , SOURCE_FOLDER + "rgbSimpleTransparencyImage.png");
         }
 
         [NUnit.Framework.Test]
         public virtual void SRgbImageTest() {
-            ConvertAndCompare(destinationFolder + "sRGBImage.pdf", sourceFolder + "cmp_sRGBImage.pdf", sourceFolder + 
-                "sRGBImage.png");
+            ConvertAndCompare(DESTINATION_FOLDER + "sRGBImage.pdf", SOURCE_FOLDER + "cmp_sRGBImage.pdf", SOURCE_FOLDER
+                 + "sRGBImage.png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Group3CompressionTiffImageTest() {
+            // TODO: DEVSIX-5565 (update test when support for adobeDeflate compression tiff image will be realized)
+            String image = SOURCE_FOLDER + "group3CompressionImage.tif";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
+                .Create(UrlUtil.ToURL(image)));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Group3CompTiffImgRecoverErrorAndDirectTest() {
+            String filename = DESTINATION_FOLDER + "group3CompTiffImgRecoverErrorAndDirect.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_group3CompTiffImgRecoverErrorAndDirect.pdf";
+            String image = SOURCE_FOLDER + "group3CompressionImage.tif";
+            using (PdfWriter writer = new PdfWriter(filename)) {
+                using (PdfDocument pdfDoc = new PdfDocument(writer)) {
+                    PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.CreateTiff(UrlUtil.ToURL(image), true, 
+                        1, true));
+                    PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                    canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(50, 500, 200, 200));
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFile, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Group3CompTiffImgNoRecoverErrorAndNotDirectTest() {
+            // TODO: DEVSIX-5565 (update test when support for adobeDeflate compression tiff image will be realized)
+            String image = SOURCE_FOLDER + "group3CompressionImage.tif";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
+                .CreateTiff(UrlUtil.ToURL(image), false, 1, false));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage
+                ), e.Message);
         }
 
         private void ConvertAndCompare(String outFilename, String cmpFilename, String imageFilename) {
