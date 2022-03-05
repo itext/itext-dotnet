@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 
 namespace iText.Commons.Actions {
+    /// <summary>Class that stores namespaces of iText open source products.</summary>
     public sealed class NamespaceConstant {
         public const String ITEXT = "iText";
 

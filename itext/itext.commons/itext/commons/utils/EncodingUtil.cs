@@ -61,6 +61,12 @@ namespace iText.Commons.Utils {
 
         public static Encoding ISO_8859_1 = EncodingUtil.GetEncoding("ISO-8859-1");
 
+        /// <summary>
+        /// Converts to byte array an array of chars, taking the provided encoding into account.
+        /// </summary>
+        /// <param name="chars">an array of chars to be converted to bytes</param>
+        /// <param name="encoding">the encoding to be taken into account while converting the provided array of chars</param>
+        /// <returns>the resultant array of bytes</returns>
         public static byte[] ConvertToBytes(char[] chars, String encoding) {
             Encoding encw = IanaEncodings.GetEncodingEncoding(encoding);
             byte[] preamble = encw.GetPreamble();
@@ -75,6 +81,12 @@ namespace iText.Commons.Utils {
             }
         }
 
+        /// <summary>
+        /// Converts to String an array of bytes, taking the provided encoding into account.
+        /// </summary>
+        /// <param name="chars">an array of bytes to be converted to String</param>
+        /// <param name="encoding">the encoding to be taken into account while converting the provided bytes</param>
+        /// <returns>the resultant string</returns>
         public static String ConvertToString(byte[] bytes, String encoding) {
             if (encoding.Equals(EncodingUtil.UTF8) &&
                 bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
