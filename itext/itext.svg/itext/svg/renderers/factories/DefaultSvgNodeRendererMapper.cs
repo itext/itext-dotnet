@@ -164,6 +164,6 @@ namespace iText.Svg.Renderers.Factories {
             return ignored;
         }
 
-        internal delegate ISvgNodeRenderer ISvgNodeRendererCreator();
+        public delegate ISvgNodeRenderer ISvgNodeRendererCreator();
     }
 }
