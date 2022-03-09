@@ -1,3 +1,25 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2022 iText Group NV
+Authors: iText Software.
+
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
+
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 using System;
 using System.Threading;
 using iText.Commons.Actions.Contexts;
@@ -8,8 +30,8 @@ namespace iText.Forms.Fields {
     public class FormsMetaInfoStaticContainerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void UseMetaInfoDuringTheActionOneThreadTest() {
-            MetaInfoContainer metaInfo1 = new MetaInfoContainer(new _IMetaInfo_16());
-            MetaInfoContainer metaInfo2 = new MetaInfoContainer(new _IMetaInfo_17());
+            MetaInfoContainer metaInfo1 = new MetaInfoContainer(new _IMetaInfo_38());
+            MetaInfoContainer metaInfo2 = new MetaInfoContainer(new _IMetaInfo_39());
             FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(metaInfo1, () => {
                 NUnit.Framework.Assert.AreSame(metaInfo1, FormsMetaInfoStaticContainer.GetMetaInfoForLayout());
                 FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(metaInfo2, () => NUnit.Framework.Assert.AreSame(metaInfo2
@@ -20,13 +42,13 @@ namespace iText.Forms.Fields {
             NUnit.Framework.Assert.IsNull(FormsMetaInfoStaticContainer.GetMetaInfoForLayout());
         }
 
-        private sealed class _IMetaInfo_16 : IMetaInfo {
-            public _IMetaInfo_16() {
+        private sealed class _IMetaInfo_38 : IMetaInfo {
+            public _IMetaInfo_38() {
             }
         }
 
-        private sealed class _IMetaInfo_17 : IMetaInfo {
-            public _IMetaInfo_17() {
+        private sealed class _IMetaInfo_39 : IMetaInfo {
+            public _IMetaInfo_39() {
             }
         }
 
@@ -56,7 +78,7 @@ namespace iText.Forms.Fields {
             }
 
             public virtual void CheckMetaInfo() {
-                MetaInfoContainer metaInfo = new MetaInfoContainer(new _IMetaInfo_56());
+                MetaInfoContainer metaInfo = new MetaInfoContainer(new _IMetaInfo_78());
                 FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(metaInfo, () => {
                     if (metaInfoCheckClass != null) {
                         Thread thread = new Thread(() => metaInfoCheckClass.CheckMetaInfo());
@@ -74,8 +96,8 @@ namespace iText.Forms.Fields {
                 checkFailed |= FormsMetaInfoStaticContainer.GetMetaInfoForLayout() != null;
             }
 
-            private sealed class _IMetaInfo_56 : IMetaInfo {
-                public _IMetaInfo_56() {
+            private sealed class _IMetaInfo_78 : IMetaInfo {
+                public _IMetaInfo_78() {
                 }
             }
 
