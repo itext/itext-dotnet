@@ -21,10 +21,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Actions.Contexts;
 using iText.Forms.Exceptions;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Layout;
+using iText.Layout.Properties;
+using iText.Layout.Renderer;
 using iText.Test;
 
 namespace iText.Forms.Fields {
@@ -38,6 +44,37 @@ namespace iText.Forms.Fields {
                 ));
             NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.WRONG_FORM_FIELD_ADD_ANNOTATION_TO_THE_FIELD
                 , exception.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetMetaInfoToCanvasMetaInfoUsedTest() {
+            Canvas canvas = CreateCanvas();
+            MetaInfoContainer metaInfoContainer = new MetaInfoContainer(new _IMetaInfo_62());
+            FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(metaInfoContainer, () => PdfFormField.SetMetaInfoToCanvas
+                (canvas));
+            NUnit.Framework.Assert.AreSame(metaInfoContainer, canvas.GetProperty<MetaInfoContainer>(Property.META_INFO
+                ));
+        }
+
+        private sealed class _IMetaInfo_62 : IMetaInfo {
+            public _IMetaInfo_62() {
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetMetaInfoToCanvasMetaInfoNotUsedTest() {
+            Canvas canvas = CreateCanvas();
+            PdfFormField.SetMetaInfoToCanvas(canvas);
+            NUnit.Framework.Assert.IsNull(canvas.GetProperty<MetaInfoContainer>(Property.META_INFO));
+        }
+
+        private static Canvas CreateCanvas() {
+            using (PdfDocument document = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(document);
+                PdfResources resources = new PdfResources();
+                PdfCanvas pdfCanvas = new PdfCanvas(stream, resources, document);
+                return new iText.Layout.Canvas(pdfCanvas, new Rectangle(100, 100));
+            }
         }
     }
 }

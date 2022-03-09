@@ -61,6 +61,8 @@ using iText.Kernel.Pdf.Xobject;
 namespace iText.Forms {
     /// <summary>This class represents the static form technology AcroForm on a PDF file.</summary>
     public class PdfAcroForm : PdfObjectWrapper<PdfDictionary> {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
+
         /// <summary>
         /// To be used with
         /// <see cref="SetSignatureFlags(int)"/>.
@@ -126,8 +128,6 @@ namespace iText.Forms {
         private ICollection<PdfFormField> fieldsForFlattening = new LinkedHashSet<PdfFormField>();
 
         private XfaForm xfaForm;
-
-        private static ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
 
         /// <summary>Creates a PdfAcroForm as a wrapper of a dictionary.</summary>
         /// <remarks>
@@ -833,7 +833,7 @@ namespace iText.Forms {
                     }
                 }
                 else {
-                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
+                    LOGGER.LogError(iText.IO.Logs.IoLogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
                 }
                 PdfArray fFields = GetFields();
                 fFields.Remove(fieldObject);
@@ -1005,7 +1005,7 @@ namespace iText.Forms {
         protected internal virtual PdfArray GetFields() {
             PdfArray fields = GetPdfObject().GetAsArray(PdfName.Fields);
             if (fields == null) {
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.NO_FIELDS_IN_ACROFORM);
+                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.NO_FIELDS_IN_ACROFORM);
                 fields = new PdfArray();
                 GetPdfObject().Put(PdfName.Fields, fields);
             }
@@ -1021,12 +1021,12 @@ namespace iText.Forms {
             int index = 1;
             foreach (PdfObject field in array) {
                 if (field.IsFlushed()) {
-                    logger.LogInformation(iText.IO.Logs.IoLogMessageConstant.FORM_FIELD_WAS_FLUSHED);
+                    LOGGER.LogInformation(iText.IO.Logs.IoLogMessageConstant.FORM_FIELD_WAS_FLUSHED);
                     continue;
                 }
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);
                 if (formField == null) {
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, field
+                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, field
                         .GetIndirectReference() == null ? field : field.GetIndirectReference()));
                     continue;
                 }
