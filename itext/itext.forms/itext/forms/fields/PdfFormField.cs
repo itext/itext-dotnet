@@ -3061,6 +3061,7 @@ namespace iText.Forms.Fields {
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, new Rectangle(0, -height, 0, 2 * height)
                 );
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
+            SetMetaInfoToCanvas(modelCanvas);
             Style paragraphStyle = new Style().SetFont(font).SetFontSize(fontSize);
             paragraphStyle.SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 1));
             if (color != null) {
@@ -3119,6 +3120,7 @@ namespace iText.Forms.Fields {
             Rectangle areaRect = new Rectangle(0, 0, width, height);
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, areaRect);
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
+            SetMetaInfoToCanvas(modelCanvas);
             Paragraph paragraph = CreateParagraphForTextFieldValue(value).SetFont(font).SetMargin(0).SetPadding(3).SetMultipliedLeading
                 (1);
             if (fontSize == 0) {
@@ -3162,6 +3164,7 @@ namespace iText.Forms.Fields {
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, new Rectangle(3, 0, Math.Max(0, width - 
                 widthBorder), Math.Max(0, height - heightBorder)));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
+            SetMetaInfoToCanvas(modelCanvas);
             Div div = new Div();
             if (GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
                 div.SetVerticalAlignment(VerticalAlignment.MIDDLE);
@@ -3458,6 +3461,7 @@ namespace iText.Forms.Fields {
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, new Rectangle(0, -height, width, 2 * height
                 ));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
+            SetMetaInfoToCanvas(modelCanvas);
             modelCanvas.ShowTextAligned(paragraph, width / 2, height / 2, TextAlignment.CENTER, VerticalAlignment.MIDDLE
                 );
         }
@@ -3520,6 +3524,13 @@ namespace iText.Forms.Fields {
                     DrawingUtil.DrawPdfAStar(canvas, width, height);
                     break;
                 }
+            }
+        }
+
+        internal static void SetMetaInfoToCanvas(iText.Layout.Canvas canvas) {
+            MetaInfoContainer metaInfo = FormsMetaInfoStaticContainer.GetMetaInfoForLayout();
+            if (metaInfo != null) {
+                canvas.SetProperty(Property.META_INFO, metaInfo);
             }
         }
 
