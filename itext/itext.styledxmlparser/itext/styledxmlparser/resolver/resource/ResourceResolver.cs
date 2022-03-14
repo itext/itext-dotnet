@@ -51,7 +51,6 @@ using iText.Kernel.Pdf.Xobject;
 namespace iText.StyledXmlParser.Resolver.Resource {
     /// <summary>Utilities class to resolve resources.</summary>
     public class ResourceResolver {
-        // TODO handle <base href=".."> tag?
         /// <summary>Identifier string used when loading in base64 images.</summary>
         public const String BASE64_IDENTIFIER = "base64";
 
@@ -75,7 +74,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// </summary>
         private SimpleImageCache imageCache;
 
-        // TODO provide a way to configure capacity, manually reset or disable the image cache?
         private IResourceRetriever retriever;
 
         /// <summary>
