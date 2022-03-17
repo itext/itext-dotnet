@@ -234,8 +234,9 @@ namespace iText.Forms {
             }
             existingField.GetPdfObject().Remove(PdfName.T);
             existingField.GetPdfObject().Remove(PdfName.P);
-            PdfFormField mergedField = PdfFormField.CreateEmptyField(documentTo);
-            mergedField.Put(PdfName.FT, existingField.GetFormType()).Put(PdfName.T, fieldName);
+            PdfFormField mergedField = new NonTerminalFormFieldBuilder(documentTo, fieldName.ToUnicodeString()).CreateNonTerminalFormField
+                ();
+            mergedField.Put(PdfName.FT, existingField.GetFormType());
             PdfDictionary parent = existingField.GetParent();
             if (parent != null) {
                 mergedField.Put(PdfName.Parent, parent);

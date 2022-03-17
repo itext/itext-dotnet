@@ -99,7 +99,9 @@ namespace iText.Forms {
             //TODO DEVSIX-2798
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "writeUtf8FieldNameAndValue.pdf"));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfTextFormField field = PdfTextFormField.CreateText(pdfDoc, new Rectangle(99, 753, 425, 15), "", "");
+            PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "").SetWidgetRectangle(new Rectangle(99, 753, 425
+                , 15)).CreateText();
+            field.SetValue("");
             field.SetFont(PdfFontFactory.CreateFont(FONT, PdfEncodings.IDENTITY_H));
             //  لا
             field.Put(PdfName.T, new PdfString("\u0644\u0627", PdfEncodings.UTF8));

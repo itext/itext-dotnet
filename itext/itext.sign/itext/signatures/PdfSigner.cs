@@ -875,8 +875,7 @@ namespace iText.Signatures {
         protected internal virtual PdfSigFieldLock CreateNewSignatureFormField(PdfAcroForm acroForm, String name) {
             PdfWidgetAnnotation widget = new PdfWidgetAnnotation(appearance.GetPageRect());
             widget.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.LOCKED);
-            PdfSignatureFormField sigField = PdfFormField.CreateSignature(document);
-            sigField.SetFieldName(name);
+            PdfSignatureFormField sigField = new SignatureFormFieldBuilder(document, name).CreateSignature();
             sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
             sigField.AddKid(widget);
             PdfSigFieldLock sigFieldLock = sigField.GetSigFieldLockDictionary();

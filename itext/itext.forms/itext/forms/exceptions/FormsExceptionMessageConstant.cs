@@ -28,6 +28,8 @@ namespace iText.Forms.Exceptions {
         public const String FIELD_FLATTENING_IS_NOT_SUPPORTED_IN_APPEND_MODE = "Field flattening is not supported "
              + "in append mode.";
 
+        public const String INNER_ARRAY_SHALL_HAVE_TWO_ELEMENTS = "Inner arrays shall have exactly two elements";
+
         public const String PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING = ""
              + "The page has been already flushed. Use PdfAcroForm#addFieldAppearanceToPage() method before page "
              + "flushing.";
