@@ -181,7 +181,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary>Ensures that PDF document has n pages.</summary>
         /// <remarks>
-        /// Ensures that PDF document has n pages. If document has less pages,
+        /// Ensures that PDF document has n pages. If document has fewer pages,
         /// adds new pages by calling
         /// <see cref="AddNewPage(iText.Kernel.Geom.PageSize)"/>
         /// method.
