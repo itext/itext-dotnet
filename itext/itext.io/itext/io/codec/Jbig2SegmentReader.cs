@@ -49,6 +49,7 @@ using iText.Commons;
 using iText.IO.Source;
 
 namespace iText.IO.Codec {
+    //TODO DEVSIX-6406: add support for indeterminate-segment-size value of dataLength
     /// <summary>
     /// Class to read a JBIG2 file at a basic level: understand all the segments,
     /// understand what segments belong to which pages, how many pages there are,
@@ -62,7 +63,6 @@ namespace iText.IO.Codec {
     /// are any.  Or: the minimum required to be able to take a normal sequential
     /// or random-access organized file, and be able to embed JBIG2 pages as images
     /// in a PDF.
-    /// TODO: the indeterminate-segment-size value of dataLength, else?
     /// </remarks>
     public class Jbig2SegmentReader {
         //see 7.4.2.
@@ -290,8 +290,8 @@ namespace iText.IO.Codec {
 
         internal virtual void ReadSegment(Jbig2SegmentReader.Jbig2Segment s) {
             int ptr = (int)ra.GetPosition();
+            //TODO DEVSIX-6406 7.2.7 not supported
             if (s.dataLength == unchecked((long)(0xffffffffl))) {
-                // TODO figure this bit out, 7.2.7
                 return;
             }
             byte[] data = new byte[(int)s.dataLength];
@@ -376,7 +376,6 @@ namespace iText.IO.Codec {
                         referred_to_segment_numbers[i] = ra.ReadUnsignedShort();
                     }
                     else {
-                        // TODO wtf ack
                         referred_to_segment_numbers[i] = (int)ra.ReadUnsignedInt();
                     }
                 }
@@ -410,7 +409,7 @@ namespace iText.IO.Codec {
             }
             // 7.2.7
             long segment_data_length = ra.ReadUnsignedInt();
-            // TODO the 0xffffffff value that might be here, and how to understand those afflicted segments
+            //TODO DEVSIX-6406 the 0xffffffff value that might be here, and how to understand those afflicted segments
             s.dataLength = segment_data_length;
             int end_ptr = (int)ra.GetPosition();
             ra.Seek(ptr);
