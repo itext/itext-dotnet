@@ -21,24 +21,62 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Font.Otf;
 using iText.Test;
 
 namespace iText.IO.Font {
     public class TrueTypeFontTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/TrueTypeFontTest/";
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/sharedFontsResourceFiles/";
 
         [NUnit.Framework.Test]
         public virtual void NotoSansJpCmapTest() {
             // 信
             char jpChar = '\u4FE1';
-            FontProgram fontProgram = FontProgramFactory.CreateFont(sourceFolder + "NotoSansJP-Regular.otf");
+            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansJP-Regular_charsetDataFormat0.otf"
+                );
             Glyph glyph = fontProgram.GetGlyph(jpChar);
             NUnit.Framework.Assert.AreEqual(new char[] { jpChar }, glyph.GetUnicodeChars());
             NUnit.Framework.Assert.AreEqual(20449, glyph.GetUnicode());
-            // TODO DEVSIX-5767 actual expected value is 0x27d3
-            NUnit.Framework.Assert.AreEqual(0x0a72, glyph.GetCode());
+            NUnit.Framework.Assert.AreEqual(10195, glyph.GetCode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotoSansScCmapTest() {
+            // 易
+            char chChar = '\u6613';
+            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansSC-Regular.otf");
+            Glyph glyph = fontProgram.GetGlyph(chChar);
+            NUnit.Framework.Assert.AreEqual(new char[] { chChar }, glyph.GetUnicodeChars());
+            NUnit.Framework.Assert.AreEqual(26131, glyph.GetUnicode());
+            NUnit.Framework.Assert.AreEqual(20292, glyph.GetCode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotoSansTcCmapTest() {
+            // 易
+            char chChar = '\u6613';
+            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansTC-Regular.otf");
+            Glyph glyph = fontProgram.GetGlyph(chChar);
+            NUnit.Framework.Assert.AreEqual(new char[] { chChar }, glyph.GetUnicodeChars());
+            NUnit.Framework.Assert.AreEqual(26131, glyph.GetUnicode());
+            NUnit.Framework.Assert.AreEqual(20292, glyph.GetCode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotoSansScMapGlyphsCidsToGidsTest() {
+            // 易
+            char chChar = '\u6613';
+            int charCidInFont = 20292;
+            int charGidInFont = 14890;
+            TrueTypeFont trueTypeFontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansSC-Regular.otf"
+                );
+            HashSet<int> glyphs = new HashSet<int>(JavaCollectionsUtil.SingletonList(charCidInFont));
+            ICollection<int> actualResult = trueTypeFontProgram.MapGlyphsCidsToGids(glyphs);
+            NUnit.Framework.Assert.AreEqual(1, actualResult.Count);
+            NUnit.Framework.Assert.IsTrue(actualResult.Contains(charGidInFont));
         }
     }
 }

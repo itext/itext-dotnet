@@ -694,7 +694,9 @@ namespace iText.Kernel.Font {
                     if (ttf.IsCff()) {
                         byte[] cffBytes;
                         if (subset) {
-                            cffBytes = new CFFFontSubset(ttf.GetFontStreamBytes(), usedGlyphs).Process();
+                            byte[] bytes = ttf.GetFontStreamBytes();
+                            ICollection<int> usedGids = ttf.MapGlyphsCidsToGids(usedGlyphs);
+                            cffBytes = new CFFFontSubset(bytes, usedGids).Process();
                         }
                         else {
                             cffBytes = ttf.GetFontStreamBytes();

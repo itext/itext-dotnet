@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
@@ -211,6 +212,31 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>
+        /// Maps a set of glyph CIDs (as used in PDF file) to corresponding GID values
+        /// (as a glyph primary identifier in the font file).
+        /// </summary>
+        /// <remarks>
+        /// Maps a set of glyph CIDs (as used in PDF file) to corresponding GID values
+        /// (as a glyph primary identifier in the font file).
+        /// This call is only meaningful for fonts that return true for
+        /// <see cref="IsCff()"/>.
+        /// For other types of fonts, GID and CID are always the same, so that call would essentially
+        /// return a set of the same values.
+        /// </remarks>
+        /// <param name="glyphs">a set of glyph CIDs</param>
+        /// <returns>a set of glyph ids corresponding to the passed glyph CIDs</returns>
+        public virtual ICollection<int> MapGlyphsCidsToGids(ICollection<int> glyphs) {
+            return glyphs.Select((i) => {
+                Glyph usedGlyph = GetGlyphByCode(i);
+                if (usedGlyph is GidAwareGlyph) {
+                    return ((GidAwareGlyph)usedGlyph).GetGid();
+                }
+                return i;
+            }
+            ).ToList();
+        }
+
         protected internal virtual void ReadGdefTable() {
             int[] gdef = fontParser.tables.Get("GDEF");
             if (gdef != null) {
@@ -294,6 +320,10 @@ namespace iText.IO.Font {
             unicodeToGlyph = new LinkedDictionary<int, Glyph>(cmap.Count);
             codeToGlyph = new LinkedDictionary<int, Glyph>(numOfGlyphs);
             avgWidth = 0;
+            CFFFontSubset cffFontSubset = null;
+            if (IsCff()) {
+                cffFontSubset = new CFFFontSubset(GetFontStreamBytes());
+            }
             foreach (int charCode in cmap.Keys) {
                 int index = cmap.Get(charCode)[0];
                 if (index >= numOfGlyphs) {
@@ -302,12 +332,24 @@ namespace iText.IO.Font {
                         ().GetFontName(), index));
                     continue;
                 }
-                Glyph glyph = new Glyph(index, glyphWidths[index], charCode, bBoxes != null ? bBoxes[index] : null);
+                int cid;
+                Glyph glyph;
+                int[] glyphBBox = bBoxes != null ? bBoxes[index] : null;
+                if (cffFontSubset != null && cffFontSubset.IsCID()) {
+                    cid = cffFontSubset.GetCidForGlyphId(index);
+                    GidAwareGlyph cffGlyph = new GidAwareGlyph(cid, glyphWidths[index], charCode, glyphBBox);
+                    cffGlyph.SetGid(index);
+                    glyph = cffGlyph;
+                }
+                else {
+                    cid = index;
+                    glyph = new Glyph(cid, glyphWidths[index], charCode, glyphBBox);
+                }
                 unicodeToGlyph.Put(charCode, glyph);
                 // This is done on purpose to keep the mapping to glyphs with smaller unicode values, in contrast with
                 // larger values which often represent different forms of other characters.
-                if (!codeToGlyph.ContainsKey(index)) {
-                    codeToGlyph.Put(index, glyph);
+                if (!codeToGlyph.ContainsKey(cid)) {
+                    codeToGlyph.Put(cid, glyph);
                 }
                 avgWidth += glyph.GetWidth();
             }
