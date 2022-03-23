@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
@@ -850,6 +851,16 @@ namespace iText.Layout.Renderer {
                 NUnit.Framework.Assert.DoesNotThrow(() => renderer.LinkRenderToDocument(divRenderer, doc.GetPdfDocument())
                     );
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ObtainingMarginsErrorTest() {
+            //TODO DEVSIX-6372 Obtaining DocumentRenderer's margins results in a ClassCastException
+            PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Document document = new Document(doc);
+            RootRenderer renderer = document.GetRenderer();
+            Rectangle rect = new Rectangle(0, 0);
+            NUnit.Framework.Assert.Catch(typeof(InvalidCastException), () => renderer.ApplyMargins(rect, false));
         }
     }
 }

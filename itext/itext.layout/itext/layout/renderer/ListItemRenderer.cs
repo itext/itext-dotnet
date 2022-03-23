@@ -50,7 +50,6 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
-using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -373,9 +372,20 @@ namespace iText.Layout.Renderer {
             else {
                 pageSize = pdfDocument.GetDefaultPageSize();
             }
-            Document document = new Document(pdfDocument);
-            return new Rectangle(pageSize).ApplyMargins(document.GetTopMargin(), document.GetRightMargin(), document.GetBottomMargin
-                (), document.GetLeftMargin(), false);
+            RootRenderer rootRenderer = this.GetRootRenderer();
+            //TODO DEVSIX-6372 Obtaining DocumentRenderer's margins results in a ClassCastException
+            float?[] margins = new float?[] { rootRenderer.GetProperty<float?>(Property.MARGIN_TOP), rootRenderer.GetProperty
+                <float?>(Property.MARGIN_RIGHT), rootRenderer.GetProperty<float?>(Property.MARGIN_BOTTOM), rootRenderer
+                .GetProperty<float?>(Property.MARGIN_LEFT) };
+            for (int i = 0; i < margins.Length; i++) {
+                margins[i] = ReplaceIfNull(margins[i], 0f);
+            }
+            return new Rectangle(pageSize).ApplyMargins((float)margins[0], (float)margins[1], (float)margins[2], (float
+                )margins[3], false);
+        }
+
+        private static float ReplaceIfNull(float? value, float defaultValue) {
+            return (float)(null == value ? defaultValue : value);
         }
     }
 }

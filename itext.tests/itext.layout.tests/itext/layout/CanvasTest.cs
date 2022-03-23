@@ -54,6 +54,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Layout.Testutil;
 using iText.Test;
 using iText.Test.Attributes;
@@ -107,6 +108,57 @@ namespace iText.Layout {
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, rectangle);
             canvas.Add(new Paragraph(new Link("Google link!", PdfAction.CreateURI("https://www.google.com")).SetUnderline
                 ().SetFontColor(ColorConstants.BLUE)));
+            canvas.Close();
+            pdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ListItemWithoutMarginsInCanvasTest() {
+            String testName = "listItemWithoutMarginsInCanvasTest";
+            String @out = DESTINATION_FOLDER + testName + ".pdf";
+            String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
+            PdfPage page = pdf.AddNewPage();
+            Rectangle pageSize = page.GetPageSize();
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, pageSize);
+            List list = new List();
+            list.SetListSymbol(ListNumberingType.DECIMAL);
+            list.Add(new ListItem("list item 1"));
+            list.Add(new ListItem("list item 2"));
+            canvas.Add(list);
+            canvas.Close();
+            pdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotApplyingMarginsInCanvasTest() {
+            String testName = "notApplyingMarginsInCanvasTest";
+            String @out = DESTINATION_FOLDER + testName + ".pdf";
+            String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
+            PdfPage page = pdf.AddNewPage();
+            Rectangle pageSize = page.GetPageSize();
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, pageSize);
+            canvas.SetProperty(Property.MARGIN_LEFT, 36);
+            canvas.Add(new Paragraph("Hello"));
+            canvas.Close();
+            pdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NullableMarginsInCanvasRendererTest() {
+            String testName = "nullableMarginsInCanvasRenderer";
+            String @out = DESTINATION_FOLDER + testName + ".pdf";
+            String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
+            PdfPage page = pdf.AddNewPage();
+            Rectangle pageSize = page.GetPageSize();
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, pageSize);
+            canvas.SetProperty(Property.MARGIN_LEFT, null);
+            canvas.Add(new Paragraph("Hello"));
             canvas.Close();
             pdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, DESTINATION_FOLDER));
