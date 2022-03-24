@@ -74,8 +74,6 @@ namespace iText.Kernel.Pdf {
 
         internal const String creator = "iText 7";
 
-        internal const String pangramme = "Amazingly few discotheques provide jukeboxes " + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
@@ -1196,13 +1194,13 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestWoffFont() {
+        public virtual void WoffFontTest() {
             String filename = destinationFolder + "testWoffFont.pdf";
             String cmpFilename = sourceFolder + "cmp_testWoffFont.pdf";
             String helloWorld = "Hello world";
             PdfDocument doc = new PdfDocument(new PdfWriter(filename));
             PdfPage page = doc.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "Amaranth-Regular.woff", "Identity-H", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "SourceSerif4-Black.woff", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText(helloWorld).EndText().RestoreState
@@ -1392,12 +1390,12 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestFontRegister() {
-            FontProgramFactory.RegisterFont(fontsFolder + "Aller_Rg.ttf", "aller");
+        public virtual void FontRegisterTest() {
+            FontProgramFactory.RegisterFont(fontsFolder + "NotoSerif-Regular_v1.7.ttf", "notoSerifRegular");
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
-            PdfFont pdfFont = PdfFontFactory.CreateRegisteredFont("aller");
+            PdfFont pdfFont = PdfFontFactory.CreateRegisteredFont("notoSerifRegular");
             //clear font cache for other tests
             FontProgramFactory.ClearRegisteredFonts();
             NUnit.Framework.Assert.IsTrue(pdfFont is PdfType0Font);
