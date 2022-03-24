@@ -30,12 +30,15 @@ using iText.Test;
 
 namespace iText.Kernel.Font {
     public class PdfType0FontTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/resources/itext/kernel/font/PdfType0FontTest/";
+
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/font/PdfType0FontTest/";
 
         [NUnit.Framework.Test]
         public virtual void TrueTypeFontAndCmapConstructorTest() {
-            TrueTypeFont ttf = new TrueTypeFont(sourceFolder + "NotoSerif-Regular_v1.7.ttf");
+            TrueTypeFont ttf = new TrueTypeFont(SOURCE_FOLDER + "NotoSerif-Regular_v1.7.ttf");
             PdfType0Font type0Font = new PdfType0Font(ttf, PdfEncodings.IDENTITY_H);
             CMapEncoding cmap = type0Font.GetCmap();
             NUnit.Framework.Assert.IsNotNull(cmap);
@@ -50,7 +53,7 @@ namespace iText.Kernel.Font {
 
         [NUnit.Framework.Test]
         public virtual void UnsupportedCmapTest() {
-            TrueTypeFont ttf = new TrueTypeFont(sourceFolder + "NotoSerif-Regular_v1.7.ttf");
+            TrueTypeFont ttf = new TrueTypeFont(SOURCE_FOLDER + "NotoSerif-Regular_v1.7.ttf");
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfType0Font(ttf, PdfEncodings.
                 WINANSI));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.ONLY_IDENTITY_CMAPS_SUPPORTS_WITH_TRUETYPE, 
@@ -59,7 +62,7 @@ namespace iText.Kernel.Font {
 
         [NUnit.Framework.Test]
         public virtual void DictionaryConstructorTest() {
-            String filePath = sourceFolder + "documentWithType0Noto.pdf";
+            String filePath = SOURCE_FOLDER + "documentWithType0Noto.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(filePath));
             PdfDictionary fontDict = pdfDocument.GetPage(1).GetResources().GetResource(PdfName.Font).GetAsDictionary(new 
                 PdfName("F1"));
@@ -79,7 +82,7 @@ namespace iText.Kernel.Font {
         public virtual void AppendThreeSurrogatePairsTest() {
             // this text contains three successive surrogate pairs, which should result in three glyphs
             String textWithThreeSurrogatePairs = "\uD800\uDF10\uD800\uDF00\uD800\uDF11";
-            PdfFont type0Font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansOldItalic-Regular.ttf", PdfEncodings
+            PdfFont type0Font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSansOldItalic-Regular.ttf", PdfEncodings
                 .IDENTITY_H);
             IList<Glyph> glyphs = new List<Glyph>();
             type0Font.AppendGlyphs(textWithThreeSurrogatePairs, 0, textWithThreeSurrogatePairs.Length - 1, glyphs);

@@ -471,10 +471,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>
-        /// TODO To change the template for this generated type comment go to
-        /// Window - Preferences - Java - Code Generation - Code and Comments
-        /// </summary>
         protected internal sealed class SubrMarkerItem : CFFFont.Item {
             private CFFFont.OffsetItem offItem;
 
@@ -940,6 +936,10 @@ namespace iText.IO.Font {
             return b;
         }
 
+        public virtual bool IsCID() {
+            return IsCID(GetNames()[0]);
+        }
+
         public virtual bool IsCID(String fontName) {
             int j;
             for (j = 0; j < fonts.Length; j++) {
@@ -1052,6 +1052,8 @@ namespace iText.IO.Font {
             public int[][] PrivateSubrsOffsetsArray;
 
             public int[] SubrsOffsets;
+
+            public int[] gidToCid;
 
             internal Font(CFFFont _enclosing) {
                 this._enclosing = _enclosing;

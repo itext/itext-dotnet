@@ -1282,38 +1282,36 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void SourceHanSerifKRRegularTest() {
-            // TODO DEVSIX-1653
             String filename = destinationFolder + "SourceHanSerifKRRegularTest.pdf";
             String cmpFilename = sourceFolder + "cmp_SourceHanSerifKRRegularTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(filename));
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "SourceHanSerifKR-Regular.otf", "Identity-H");
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "SourceHanSerifKR-Regular.otf");
             //font.setSubset(false);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12)
                 .ShowText("\ube48\uc9d1").EndText().RestoreState();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder)
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void SourceHanSerifKRRegularFullTest() {
-            // TODO DEVSIX-1653
             String filename = destinationFolder + "SourceHanSerifKRRegularFullTest.pdf";
             String cmpFilename = sourceFolder + "cmp_SourceHanSerifKRRegularFullTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(filename));
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "SourceHanSerifKR-Regular.otf", "Identity-H");
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "SourceHanSerifKR-Regular.otf");
             font.SetSubset(false);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12)
                 .ShowText("\ube48\uc9d1").EndText().RestoreState();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder)
+                );
         }
 
         [NUnit.Framework.Test]
