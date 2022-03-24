@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -22,9 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.X509;
 using iText.Kernel.Pdf;
+using iText.Signatures.Testutils.Client;
 using iText.Test;
 using iText.Test.Attributes;
+using iText.Test.Signutils;
 
 namespace iText.Signatures {
     public class LtvVerificationTest : ExtendedITextTest {
@@ -37,12 +42,69 @@ namespace iText.Signatures {
 
         private const String CRL_DISTRIBUTION_POINT = "http://example.com";
 
+        private static readonly String CERT_FOLDER_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
+
+        private static readonly char[] PASSWORD = "testpass".ToCharArray();
+
         private static LtvVerification TEST_VERIFICATION;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(SRC_PDF));
             TEST_VERIFICATION = new LtvVerification(pdfDoc);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Adding verification for TestSignature", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Certificate: C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRsaCert01", LogLevel = LogLevelConstants
+            .INFO)]
+        [LogMessage("CRL added", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Certificate: C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRoot", LogLevel = LogLevelConstants.INFO
+            )]
+        public virtual void AddVerificationToDocumentWithAlreadyExistedDss() {
+            String input = SOURCE_FOLDER + "signingCertHasChainWithOcspOnlyForChildCert.pdf";
+            String signatureHash = "C5CC1458AAA9B8BAB0677F9EA409983B577178A3";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(input))) {
+                PdfDictionary dss = pdfDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
+                NUnit.Framework.Assert.IsNull(dss.Get(PdfName.CRLs));
+                PdfArray ocsps = dss.GetAsArray(PdfName.OCSPs);
+                NUnit.Framework.Assert.AreEqual(1, ocsps.Size());
+                PdfIndirectReference pir = ocsps.Get(0).GetIndirectReference();
+                PdfDictionary vri = dss.GetAsDictionary(PdfName.VRI);
+                NUnit.Framework.Assert.AreEqual(1, vri.EntrySet().Count);
+                PdfDictionary vriElem = vri.GetAsDictionary(new PdfName(signatureHash));
+                NUnit.Framework.Assert.AreEqual(1, vriElem.EntrySet().Count);
+                PdfArray vriOcsp = vriElem.GetAsArray(PdfName.OCSP);
+                NUnit.Framework.Assert.AreEqual(1, vriOcsp.Size());
+                NUnit.Framework.Assert.AreEqual(pir, vriOcsp.Get(0).GetIndirectReference());
+            }
+            MemoryStream baos = new MemoryStream();
+            using (PdfDocument pdfDocument_1 = new PdfDocument(new PdfReader(input), new PdfWriter(baos), new StampingProperties
+                ().UseAppendMode())) {
+                LtvVerification verification = new LtvVerification(pdfDocument_1);
+                String rootCertPath = CERT_FOLDER_PATH + "rootRsa.p12";
+                X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(rootCertPath, PASSWORD)[0];
+                ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(rootCertPath, PASSWORD, PASSWORD);
+                verification.AddVerification("TestSignature", null, new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey
+                    ), LtvVerification.CertificateOption.SIGNING_CERTIFICATE, LtvVerification.Level.CRL, LtvVerification.CertificateInclusion
+                    .NO);
+                verification.Merge();
+            }
+            using (PdfDocument pdfDocument_2 = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())))) {
+                PdfDictionary dss = pdfDocument_2.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
+                NUnit.Framework.Assert.IsNull(dss.Get(PdfName.OCSPs));
+                PdfArray crls = dss.GetAsArray(PdfName.CRLs);
+                NUnit.Framework.Assert.AreEqual(1, crls.Size());
+                PdfIndirectReference pir = crls.Get(0).GetIndirectReference();
+                PdfDictionary vri = dss.GetAsDictionary(PdfName.VRI);
+                NUnit.Framework.Assert.AreEqual(1, vri.EntrySet().Count);
+                PdfDictionary vriElem = vri.GetAsDictionary(new PdfName(signatureHash));
+                NUnit.Framework.Assert.AreEqual(1, vriElem.EntrySet().Count);
+                PdfArray vriCrl = vriElem.GetAsArray(PdfName.CRL);
+                NUnit.Framework.Assert.AreEqual(1, vriCrl.Size());
+                NUnit.Framework.Assert.AreEqual(pir, vriCrl.Get(0).GetIndirectReference());
+            }
         }
 
         [NUnit.Framework.Test]
@@ -220,6 +282,7 @@ namespace iText.Signatures {
                 , LtvVerification.CertificateInclusion.NO, false);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO)]
@@ -229,6 +292,7 @@ namespace iText.Signatures {
                 , LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameSigningOcspYesTest() {
@@ -236,6 +300,7 @@ namespace iText.Signatures {
                 , LtvVerification.Level.OCSP, LtvVerification.CertificateInclusion.YES, false);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO)]
@@ -245,6 +310,7 @@ namespace iText.Signatures {
                 , LtvVerification.Level.CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO)]
@@ -254,6 +320,7 @@ namespace iText.Signatures {
                 , LtvVerification.Level.OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO)]
@@ -263,6 +330,7 @@ namespace iText.Signatures {
                 , LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.NO, true);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameSigningOcspNoTest() {
@@ -270,6 +338,7 @@ namespace iText.Signatures {
                 , LtvVerification.Level.OCSP, LtvVerification.CertificateInclusion.NO, false);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO)]
@@ -279,6 +348,7 @@ namespace iText.Signatures {
                 , LtvVerification.Level.CRL, LtvVerification.CertificateInclusion.NO, true);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO)]
@@ -288,6 +358,7 @@ namespace iText.Signatures {
                 , LtvVerification.Level.OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.NO, true);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
@@ -297,6 +368,7 @@ namespace iText.Signatures {
                 .OCSP_CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
@@ -306,6 +378,7 @@ namespace iText.Signatures {
                 .OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameWholeChainOcspYesTest() {
@@ -313,6 +386,7 @@ namespace iText.Signatures {
                 .OCSP, LtvVerification.CertificateInclusion.YES, false);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
@@ -322,6 +396,7 @@ namespace iText.Signatures {
                 .CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
@@ -331,6 +406,7 @@ namespace iText.Signatures {
                 .OCSP_CRL, LtvVerification.CertificateInclusion.NO, true);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
@@ -340,6 +416,7 @@ namespace iText.Signatures {
                 .OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.NO, true);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameWholeChainOcspNoTest() {
@@ -347,6 +424,7 @@ namespace iText.Signatures {
                 .OCSP, LtvVerification.CertificateInclusion.NO, false);
         }
 
+        [NUnit.Framework.Ignore("DEVSIX-6354 : Remove this ignore after closing this ticket.")]
         [NUnit.Framework.Test]
         [LogMessage("Added CRL url: http://example.com", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Checking CRL: http://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]

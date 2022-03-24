@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -57,7 +57,7 @@ namespace iText.Kernel.Events {
         /// <see cref="Event"/>
         /// to be dispatched
         /// </param>
-        void DispatchEvent(iText.Kernel.Events.Event @event);
+        void DispatchEvent(Event @event);
 
         /// <summary>Dispatches a delayed event.</summary>
         /// <remarks>
@@ -75,7 +75,7 @@ namespace iText.Kernel.Events {
         /// <see cref="Event"/>
         /// delayed or not
         /// </param>
-        void DispatchEvent(iText.Kernel.Events.Event @event, bool delayed);
+        void DispatchEvent(Event @event, bool delayed);
 
         /// <summary>Checks if event dispatcher as an event handler assigned for a certain event type.</summary>
         /// <param name="type">

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -28,11 +28,11 @@ namespace iText.Kernel {
     public class PdfExceptionTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void WhenCreatedPdfExceptionWrapsCauseWithUnknownExceptionMessageTest() {
-            NUnit.Framework.Assert.That(() =>  {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
                 throw new PdfException(new Exception("itext"));
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION))
-;
+            );
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION, e.Message);
         }
     }
 }

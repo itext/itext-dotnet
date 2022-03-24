@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -33,11 +33,11 @@ namespace iText.Commons.Actions.Data {
 
         internal const String COMMONS_PRODUCT_NAME = "commons";
 
-        internal const String COMMONS_VERSION = "7.2.1";
+        internal const String COMMONS_VERSION = "7.2.2";
 
         internal const int COMMONS_COPYRIGHT_SINCE = 2000;
 
-        internal const int COMMONS_COPYRIGHT_TO = 2021;
+        internal const int COMMONS_COPYRIGHT_TO = 2022;
 
         private static readonly ProductData COMMONS_PRODUCT_DATA = new ProductData(COMMONS_PUBLIC_PRODUCT_NAME, COMMONS_PRODUCT_NAME
             , COMMONS_VERSION, COMMONS_COPYRIGHT_SINCE, COMMONS_COPYRIGHT_TO);

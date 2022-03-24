@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -105,8 +105,8 @@ namespace iText.Kernel.Utils {
             this.preserveOutlines = preserveOutlines;
         }
 
-        /// <summary>Splits the document basing on the given size.</summary>
-        /// <param name="size"><strong>Preferred</strong> size for splitting.</param>
+        /// <summary>Splits the document basing on the given size specified in bytes.</summary>
+        /// <param name="size"><strong>Preferred</strong> size specified in bytes for splitting.</param>
         /// <returns>
         /// The documents which the source document was split into.
         /// Be warned that these documents are not closed.
@@ -224,8 +224,10 @@ namespace iText.Kernel.Utils {
         /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
         /// depending on your needs.
         /// </remarks>
-        /// <param name="documentPageRange">the page range of the original document to be included in the document being created now.
-        ///     </param>
+        /// <param name="documentPageRange">
+        /// the page range of the original document to be included
+        /// in the document being created now.
+        /// </param>
         /// <returns>the PdfWriter instance for the document which is being created.</returns>
         protected internal virtual PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
             return new PdfWriter(new ByteArrayOutputStream());

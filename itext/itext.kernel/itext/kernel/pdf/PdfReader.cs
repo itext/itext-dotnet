@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -127,12 +127,16 @@ namespace iText.Kernel.Pdf {
         /// <param name="is">
         /// the
         /// <c>InputStream</c>
-        /// containing the document. The stream is read to the
-        /// end but is not closed.
+        /// containing the document. If the inputStream is an instance of
+        /// <see cref="iText.IO.Source.RASInputStream"/>
+        /// then the
+        /// <see cref="iText.IO.Source.IRandomAccessSource"/>
+        /// would be extracted. Otherwise the stream
+        /// is read to the end but is not closed.
         /// </param>
         /// <param name="properties">properties of the created reader</param>
         public PdfReader(Stream @is, ReaderProperties properties)
-            : this(new RandomAccessSourceFactory().CreateSource(@is), properties, true) {
+            : this(new RandomAccessSourceFactory().ExtractOrCreateSource(@is), properties, true) {
         }
 
         /// <summary>Reads and parses a PDF document.</summary>
@@ -149,10 +153,12 @@ namespace iText.Kernel.Pdf {
         /// <param name="is">
         /// the
         /// <c>InputStream</c>
-        /// containing the document. the
-        /// <c>InputStream</c>
-        /// containing the document. The stream is read to the
-        /// end but is not closed.
+        /// containing the document. If the inputStream is an instance of
+        /// <see cref="iText.IO.Source.RASInputStream"/>
+        /// then the
+        /// <see cref="iText.IO.Source.IRandomAccessSource"/>
+        /// would be extracted. Otherwise the stream
+        /// is read to the end but is not closed.
         /// </param>
         public PdfReader(Stream @is)
             : this(@is, new ReaderProperties()) {
@@ -384,7 +390,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>byte[] array.</returns>
         public virtual byte[] ReadStreamBytesRaw(PdfStream stream) {
             PdfName type = stream.GetAsName(PdfName.Type);
-            if (!PdfName.XRefStm.Equals(type) && !PdfName.ObjStm.Equals(type)) {
+            if (!PdfName.XRef.Equals(type) && !PdfName.ObjStm.Equals(type)) {
                 CheckPdfStreamLength(stream);
             }
             long offset = stream.GetOffset();
@@ -398,7 +404,7 @@ namespace iText.Kernel.Pdf {
             RandomAccessFileOrArray file = tokens.GetSafeFile();
             byte[] bytes = null;
             try {
-                file.Seek(stream.GetOffset());
+                file.Seek(offset);
                 bytes = new byte[length];
                 file.ReadFully(bytes);
                 bool embeddedStream = pdfDocument.DoesStreamBelongToEmbeddedFile(stream);
@@ -777,10 +783,27 @@ namespace iText.Kernel.Pdf {
             try {
                 ReadXref();
             }
+            catch (XrefCycledReferencesException ex) {
+                // Throws an exception when xref stream has cycled references(due to lack of opportunity to fix such an
+                // issue) or xref tables have cycled references and PdfReader.StrictnessLevel set to CONSERVATIVE.
+                // Also throw an exception when xref structure size exceeds jvm memory limit.
+                throw;
+            }
+            catch (MemoryLimitsAwareException ex) {
+                throw;
+            }
+            catch (InvalidXRefPrevException ex) {
+                throw;
+            }
             catch (Exception ex) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT);
-                RebuildXref();
+                if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.GetStrictnessLevel())) {
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                    logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT);
+                    RebuildXref();
+                }
+                else {
+                    throw;
+                }
             }
             pdfDocument.GetXref().MarkReadingCompleted();
             ReadDecryptObj();
@@ -1023,10 +1046,10 @@ namespace iText.Kernel.Pdf {
                 PdfObject obj = ReadObject(true, objStm);
                 if (obj == null) {
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
-                        tokens.ThrowError(KernelExceptionMessageConstant.UNEXPECTED_GT_GT);
+                        tokens.ThrowError(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, ">>"));
                     }
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
-                        tokens.ThrowError(KernelExceptionMessageConstant.UNEXPECTED_CLOSE_BRACKET);
+                        tokens.ThrowError(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, "]"));
                     }
                 }
                 dic.Put(name, obj);
@@ -1039,12 +1062,10 @@ namespace iText.Kernel.Pdf {
             while (true) {
                 PdfObject obj = ReadObject(true, objStm);
                 if (obj == null) {
-                    if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
-                        break;
+                    if (tokens.GetTokenType() != PdfTokenizer.TokenType.EndArray) {
+                        ProcessArrayReadError();
                     }
-                    if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
-                        tokens.ThrowError(KernelExceptionMessageConstant.UNEXPECTED_GT_GT);
-                    }
+                    break;
                 }
                 array.Add(obj);
             }
@@ -1070,27 +1091,46 @@ namespace iText.Kernel.Pdf {
                     return;
                 }
             }
+            catch (XrefCycledReferencesException exceptionWhileReadingXrefStream) {
+                throw;
+            }
+            catch (MemoryLimitsAwareException exceptionWhileReadingXrefStream) {
+                throw;
+            }
+            catch (InvalidXRefPrevException exceptionWhileReadingXrefStream) {
+                throw;
+            }
             catch (Exception) {
             }
+            // Do nothing.
             // clear xref because of possible issues at reading xref stream.
             pdfDocument.GetXref().Clear();
             tokens.Seek(startxref);
             trailer = ReadXrefSection();
-            //  Prev key - integer value
-            //  (Present only if the file has more than one cross-reference section; shall be an indirect reference)
+            //  Prev key - integer value.
+            //  (Present only if the file has more than one cross-reference section; shall be an indirect reference).
             // The byte offset in the decoded stream from the beginning of the file
             // to the beginning of the previous cross-reference section.
             PdfDictionary trailer2 = trailer;
+            ICollection<long> alreadyVisitedXrefTables = new HashSet<long>();
             while (true) {
-                PdfNumber prev = (PdfNumber)trailer2.Get(PdfName.Prev);
+                alreadyVisitedXrefTables.Add(startxref);
+                PdfNumber prev = GetXrefPrev(trailer2.Get(PdfName.Prev, false));
                 if (prev == null) {
                     break;
                 }
-                if (prev.LongValue() == startxref) {
-                    throw new PdfException(KernelExceptionMessageConstant.TRAILER_PREV_ENTRY_POINTS_TO_ITS_OWN_CROSS_REFERENCE_SECTION
-                        );
+                long prevXrefOffset = prev.LongValue();
+                if (alreadyVisitedXrefTables.Contains(prevXrefOffset)) {
+                    if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.GetStrictnessLevel())) {
+                        // Throw the exception to rebuild xref table, it'll be caught in method above.
+                        throw new PdfException(KernelExceptionMessageConstant.TRAILER_PREV_ENTRY_POINTS_TO_ITS_OWN_CROSS_REFERENCE_SECTION
+                            );
+                    }
+                    else {
+                        throw new XrefCycledReferencesException(KernelExceptionMessageConstant.XREF_TABLE_HAS_CYCLED_REFERENCES);
+                    }
                 }
-                startxref = prev.LongValue();
+                startxref = prevXrefOffset;
                 tokens.Seek(startxref);
                 trailer2 = ReadXrefSection();
             }
@@ -1199,6 +1239,7 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal virtual bool ReadXrefStream(long ptr) {
+            ICollection<long> alreadyVisitedXrefStreams = new HashSet<long>();
             while (ptr != -1) {
                 tokens.Seek(ptr);
                 if (!tokens.NextToken()) {
@@ -1213,6 +1254,7 @@ namespace iText.Kernel.Pdf {
                 if (!tokens.NextToken() || !tokens.TokenValueEqualsTo(PdfTokenizer.Obj)) {
                     return false;
                 }
+                alreadyVisitedXrefStreams.Add(ptr);
                 PdfXrefTable xref = pdfDocument.GetXref();
                 PdfObject @object = ReadObject(false);
                 PdfStream xrefStream;
@@ -1246,7 +1288,7 @@ namespace iText.Kernel.Pdf {
                 }
                 PdfArray w = xrefStream.GetAsArray(PdfName.W);
                 long prev = -1;
-                obj = xrefStream.Get(PdfName.Prev);
+                obj = GetXrefPrev(xrefStream.Get(PdfName.Prev, false));
                 if (obj != null) {
                     prev = ((PdfNumber)obj).LongValue();
                 }
@@ -1320,6 +1362,9 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 ptr = prev;
+                if (alreadyVisitedXrefStreams.Contains(ptr)) {
+                    throw new XrefCycledReferencesException(KernelExceptionMessageConstant.XREF_STREAM_HAS_CYCLED_REFERENCES);
+                }
             }
             return true;
         }
@@ -1410,8 +1455,39 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        protected internal virtual PdfNumber GetXrefPrev(PdfObject prevObjectToCheck) {
+            if (prevObjectToCheck == null) {
+                return null;
+            }
+            if (prevObjectToCheck.GetObjectType() == PdfObject.NUMBER) {
+                return (PdfNumber)prevObjectToCheck;
+            }
+            else {
+                if (prevObjectToCheck.GetObjectType() == PdfObject.INDIRECT_REFERENCE && PdfReader.StrictnessLevel.CONSERVATIVE
+                    .IsStricter(this.GetStrictnessLevel())) {
+                    PdfObject value = ((PdfIndirectReference)prevObjectToCheck).GetRefersTo(true);
+                    if (value != null && value.GetObjectType() == PdfObject.NUMBER) {
+                        return (PdfNumber)value;
+                    }
+                }
+                throw new InvalidXRefPrevException(KernelExceptionMessageConstant.XREF_PREV_SHALL_BE_DIRECT_NUMBER_OBJECT);
+            }
+        }
+
         internal virtual bool IsMemorySavingMode() {
             return memorySavingMode;
+        }
+
+        private void ProcessArrayReadError() {
+            String error = MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, iText.Commons.Utils.JavaUtil.GetStringForBytes
+                (tokens.GetByteContent(), System.Text.Encoding.UTF8));
+            if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.GetStrictnessLevel())) {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                logger.LogError(error);
+            }
+            else {
+                tokens.ThrowError(error);
+            }
         }
 
         private void ReadDecryptObj() {
@@ -1440,33 +1516,6 @@ namespace iText.Kernel.Pdf {
                         .UnsupportedSecurityHandler, filter));
                 }
             }
-        }
-
-        /// <summary>Utility method that checks the provided byte source to see if it has junk bytes at the beginning.
-        ///     </summary>
-        /// <remarks>
-        /// Utility method that checks the provided byte source to see if it has junk bytes at the beginning.  If junk bytes
-        /// are found, construct a tokeniser that ignores the junk.  Otherwise, construct a tokeniser for the byte source as it is
-        /// </remarks>
-        /// <param name="byteSource">the source to check</param>
-        /// <returns>a tokeniser that is guaranteed to start at the PDF header</returns>
-        private static PdfTokenizer GetOffsetTokeniser(IRandomAccessSource byteSource, bool closeStream) {
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(byteSource));
-            int offset;
-            try {
-                offset = tok.GetHeaderOffset();
-            }
-            catch (iText.IO.Exceptions.IOException ex) {
-                if (closeStream) {
-                    tok.Close();
-                }
-                throw;
-            }
-            if (offset != 0) {
-                IRandomAccessSource offsetSource = new WindowRandomAccessSource(byteSource, offset);
-                tok = new PdfTokenizer(new RandomAccessFileOrArray(offsetSource));
-            }
-            return tok;
         }
 
         private PdfObject ReadObject(PdfIndirectReference reference, bool fixXref) {
@@ -1554,10 +1603,12 @@ namespace iText.Kernel.Pdf {
                     line.Reset();
                     // added boolean because of mailing list issue (17 Feb. 2014)
                     if (!tokens.ReadLineSegment(line, false)) {
+                        if (!PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.strictnessLevel)) {
+                            throw new PdfException(KernelExceptionMessageConstant.STREAM_SHALL_END_WITH_ENDSTREAM);
+                        }
                         break;
                     }
                     if (line.StartsWith(endstream)) {
-                        streamLength = (int)(pos - start);
                         break;
                     }
                     else {
@@ -1568,11 +1619,11 @@ namespace iText.Kernel.Pdf {
                             if (index >= 0) {
                                 pos = pos - 16 + index;
                             }
-                            streamLength = (int)(pos - start);
                             break;
                         }
                     }
                 }
+                streamLength = (int)(pos - start);
                 tokens.Seek(pos - 2);
                 if (tokens.Read() == 13) {
                     streamLength--;
@@ -1593,6 +1644,33 @@ namespace iText.Kernel.Pdf {
             else {
                 return new PdfNull();
             }
+        }
+
+        /// <summary>Utility method that checks the provided byte source to see if it has junk bytes at the beginning.
+        ///     </summary>
+        /// <remarks>
+        /// Utility method that checks the provided byte source to see if it has junk bytes at the beginning.  If junk bytes
+        /// are found, construct a tokeniser that ignores the junk.  Otherwise, construct a tokeniser for the byte source as it is
+        /// </remarks>
+        /// <param name="byteSource">the source to check</param>
+        /// <returns>a tokeniser that is guaranteed to start at the PDF header</returns>
+        private static PdfTokenizer GetOffsetTokeniser(IRandomAccessSource byteSource, bool closeStream) {
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(byteSource));
+            int offset;
+            try {
+                offset = tok.GetHeaderOffset();
+            }
+            catch (iText.IO.Exceptions.IOException ex) {
+                if (closeStream) {
+                    tok.Close();
+                }
+                throw;
+            }
+            if (offset != 0) {
+                IRandomAccessSource offsetSource = new WindowRandomAccessSource(byteSource, offset);
+                tok = new PdfTokenizer(new RandomAccessFileOrArray(offsetSource));
+            }
+            return tok;
         }
 
         protected internal class ReusableRandomAccessSource : IRandomAccessSource {

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -54,6 +54,6 @@ namespace iText.Kernel.Events {
         /// associated to the specified Event or, if available, the PdfPage instance.
         /// </remarks>
         /// <param name="event">the Event that needs to be processed</param>
-        void HandleEvent(iText.Kernel.Events.Event @event);
+        void HandleEvent(Event @event);
     }
 }

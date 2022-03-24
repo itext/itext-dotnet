@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -63,7 +63,6 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         * @see com.itextpdf.styledxmlparser.css.parse.syntax.IParserState#process(char)
         */
         public virtual void Process(char ch) {
-            // TODO use UnknownState?
             if (ch == '/') {
                 controller.EnterCommentStartState();
             }

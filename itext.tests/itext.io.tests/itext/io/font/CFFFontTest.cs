@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -27,15 +27,17 @@ using iText.Test;
 namespace iText.IO.Font {
     public class CFFFontTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/CFFFontTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/sharedFontsResourceFiles/";
 
         [NUnit.Framework.Test]
         public virtual void SeekTest() {
             RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
                 (SOURCE_FOLDER + "NotoSansCJKjp-Bold.otf"));
-            byte[] cff = new byte[16014190];
+            int offsetToCff = 259880;
+            int cffLength = 16023217;
+            byte[] cff = new byte[cffLength];
             try {
-                raf.Seek(283192);
+                raf.Seek(offsetToCff);
                 raf.ReadFully(cff);
             }
             finally {
@@ -57,9 +59,11 @@ namespace iText.IO.Font {
         public virtual void GetPositionTest() {
             RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
                 (SOURCE_FOLDER + "NotoSansCJKjp-Bold.otf"));
-            byte[] cff = new byte[16014190];
+            int offsetToCff = 259880;
+            int cffLength = 16023217;
+            byte[] cff = new byte[cffLength];
             try {
-                raf.Seek(283192);
+                raf.Seek(offsetToCff);
                 raf.ReadFully(cff);
             }
             finally {

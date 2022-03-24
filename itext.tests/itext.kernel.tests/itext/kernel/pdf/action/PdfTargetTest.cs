@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -233,13 +233,12 @@ namespace iText.Kernel.Pdf.Action {
 
         [NUnit.Framework.Test]
         public virtual void NoAnnotationPageReferenceTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfFileAttachmentAnnotation pdfAnnotation = new PdfFileAttachmentAnnotation(new Rectangle(100, 100));
-                PdfTarget pdfTarget = PdfTarget.Create(new PdfDictionary());
-                pdfTarget.SetAnnotation(pdfAnnotation, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE))
-;
+            PdfFileAttachmentAnnotation pdfAnnotation = new PdfFileAttachmentAnnotation(new Rectangle(100, 100));
+            PdfTarget pdfTarget = PdfTarget.Create(new PdfDictionary());
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfTarget.SetAnnotation(pdfAnnotation
+                , null));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE, exception
+                .Message);
         }
     }
 }

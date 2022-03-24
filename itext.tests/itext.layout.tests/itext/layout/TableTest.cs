@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -2926,6 +2926,26 @@ namespace iText.Layout {
         private static void StartSeveralEmptyRows(Table table) {
             table.StartNewRow();
             table.StartNewRow();
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void PreciseFittingBoldSimulatedTextInCellsTest() {
+            String fileName = "preciseFittingBoldSimulatedTextInCells.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName))) {
+                using (Document doc = new Document(pdfDocument)) {
+                    int numberOfColumns = 9;
+                    Table table = new Table(UnitValue.CreatePercentArray(numberOfColumns));
+                    table.UseAllAvailableWidth();
+                    table.SetFixedLayout();
+                    for (int i = 0; i < numberOfColumns; i++) {
+                        table.AddCell(new Cell().Add(new Paragraph("Description").SetBold()));
+                    }
+                    doc.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder));
         }
 
         [NUnit.Framework.Test]

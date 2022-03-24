@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -688,12 +688,7 @@ namespace iText.Signatures {
                 }
                 crlBytes.AddAll(b);
             }
-            if (crlBytes.Count == 0) {
-                return null;
-            }
-            else {
-                return crlBytes;
-            }
+            return crlBytes.Count == 0 ? null : crlBytes;
         }
 
         protected internal virtual void AddDeveloperExtension(PdfDeveloperExtension extension) {
@@ -938,7 +933,8 @@ namespace iText.Signatures {
         /// </returns>
         protected internal virtual Stream GetRangeStream() {
             RandomAccessSourceFactory fac = new RandomAccessSourceFactory();
-            return new RASInputStream(fac.CreateRanged(GetUnderlyingSource(), range));
+            IRandomAccessSource randomAccessSource = fac.CreateRanged(GetUnderlyingSource(), range);
+            return new RASInputStream(randomAccessSource);
         }
 
         /// <summary>This is the last method to be called when using external signatures.</summary>

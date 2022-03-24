@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -126,8 +126,10 @@ namespace iText.Signatures {
         /// <summary>Verifies a certificate against a single OCSP response</summary>
         /// <param name="ocspResp">the OCSP response</param>
         /// <param name="signCert">the certificate that needs to be checked</param>
-        /// <param name="issuerCert">the certificate of CA (certificate that issued signCert). This certificate is considered trusted and valid by this method.
-        ///     </param>
+        /// <param name="issuerCert">
+        /// the certificate of CA (certificate that issued signCert). This certificate is considered trusted
+        /// and valid by this method.
+        /// </param>
         /// <param name="signDate">sign date</param>
         /// <returns>
         /// 
@@ -263,8 +265,7 @@ namespace iText.Signatures {
                             }
                         }
                         else {
-                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Signatures.OCSPVerifier));
-                            logger.LogError("Authorized OCSP responder certificate revocation status cannot be checked");
+                            LOGGER.LogError("Authorized OCSP responder certificate revocation status cannot be checked");
                         }
                     }
                 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -174,7 +174,7 @@ namespace iText.Test {
             }
         }
 
-        private void RunMain() {
+        protected void RunMain() {
             MethodInfo mainMethod = GetMain(sampleClassParams.sampleType);
             if (mainMethod == null) {
                 throw new ArgumentException("Class must have main method.");

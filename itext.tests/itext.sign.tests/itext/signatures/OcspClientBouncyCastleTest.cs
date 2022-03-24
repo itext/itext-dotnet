@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -98,6 +98,13 @@ namespace iText.Signatures {
         public virtual void GetOcspResponseWhenRootAndCheckCertIsNullTest() {
             OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
             NUnit.Framework.Assert.IsNull(castle.GetOcspResponse(null, null, ocspServiceUrl));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetOcspResponseWhenUrlCertIsNullTest() {
+            OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
+            NUnit.Framework.Assert.Catch(typeof(WebException), () => castle.GetOcspResponse(checkCert, rootCert, null)
+                );
         }
 
         [NUnit.Framework.Test]

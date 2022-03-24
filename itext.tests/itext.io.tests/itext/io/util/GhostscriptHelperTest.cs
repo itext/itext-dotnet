@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -56,7 +56,7 @@ namespace iText.IO.Util {
 
         // In some of the test we will check whether Ghostscript has printed its help message to the console.
         // The value of this threshold should be definitely less than the length of the help message.
-        private const int SYSTEM_OUT_LENGTH_LIMIT = 400;
+        private const int SYSTEM_OUT_LENGTH_LIMIT = 450;
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {

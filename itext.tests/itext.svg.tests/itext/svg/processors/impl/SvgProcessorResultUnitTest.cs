@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -36,11 +36,9 @@ namespace iText.Svg.Processors.Impl {
         public virtual void ContextParameterCannotBeNullTest() {
             IDictionary<String, ISvgNodeRenderer> namedObjects = new Dictionary<String, ISvgNodeRenderer>();
             ISvgNodeRenderer root = new SvgTagSvgNodeRenderer();
-            NUnit.Framework.Assert.That(() =>  {
-                SvgProcessorResult result = new SvgProcessorResult(namedObjects, root, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(SvgExceptionMessageConstant.PARAMETER_CANNOT_BE_NULL))
-;
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new SvgProcessorResult
+                (namedObjects, root, null));
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.PARAMETER_CANNOT_BE_NULL, exception.Message);
         }
 
         [NUnit.Framework.Test]

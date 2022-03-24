@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -731,10 +731,8 @@ namespace iText.Signatures {
                 }
                 DerSet dercertificates = new DerSet(v);
                 // Create signerinfo structure.
-                //
                 Asn1EncodableVector signerinfo = new Asn1EncodableVector();
                 // Add the signerInfo version
-                //
                 signerinfo.Add(new DerInteger(signerversion));
                 v = new Asn1EncodableVector();
                 v.Add(CertificateInfo.GetIssuer(signCert.GetTbsCertificate()));
@@ -1067,7 +1065,7 @@ namespace iText.Signatures {
         private ICollection<X509Certificate> certs;
 
         /// <summary>All the X.509 certificates used for the main signature.</summary>
-        private ICollection<X509Certificate> signCerts;
+        internal ICollection<X509Certificate> signCerts;
 
         /// <summary>The X.509 certificate that is used to sign the digest.</summary>
         private X509Certificate signCert;
@@ -1141,7 +1139,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Helper method that tries to construct the CRLs.</summary>
-        private void FindCRL(Asn1Sequence seq) {
+        internal virtual void FindCRL(Asn1Sequence seq) {
             try {
                 crls = new List<X509Crl>();
                 for (int k = 0; k < seq.Count; ++k) {
@@ -1158,7 +1156,7 @@ namespace iText.Signatures {
         // ignore
         // Online Certificate Status Protocol
         /// <summary>BouncyCastle BasicOCSPResp</summary>
-        private BasicOcspResp basicResp;
+        internal BasicOcspResp basicResp;
 
         /// <summary>Gets the OCSP basic response if there is one.</summary>
         /// <returns>the OCSP basic response or null</returns>

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -192,6 +192,10 @@ namespace iText.Commons.Utils {
                     return b.Append(']').ToString();
                 b.Append(", ");
             }
+        }
+
+        public static IEnumerable<T> ArraysToEnumerable<T>(T[] a) {
+            return a;
         }
 
         public static bool IsValidCodePoint(int codePoint) {

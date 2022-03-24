@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -192,13 +192,13 @@ namespace iText.Signatures {
                         return true;
                     }
                     catch (GeneralSecurityException) {
-                        continue;
                     }
                 }
             }
             catch (GeneralSecurityException) {
-                return false;
             }
+            // do nothing and continue
+            // do nothing and return false at the end
             return false;
         }
     }

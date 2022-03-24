@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -90,7 +90,8 @@ namespace iText.Signatures {
                     if (name.TagNo != GeneralName.UniformResourceIdentifier) {
                         continue;
                     }
-                    DerIA5String derStr = DerIA5String.GetInstance((Asn1TaggedObject)name.ToAsn1Object(), false);
+                    DerIA5String derStr = ((DerIA5String)DerIA5String.GetInstance((Asn1TaggedObject)name.ToAsn1Object(), false
+                        ));
                     return derStr.GetString();
                 }
             }
@@ -122,9 +123,9 @@ namespace iText.Signatures {
                 for (int i = 0; i < AccessDescriptions.Count; i++) {
                     Asn1Sequence AccessDescription = (Asn1Sequence)AccessDescriptions[i];
                     if (AccessDescription.Count != 2) {
-                        continue;
                     }
                     else {
+                        // do nothing and continue
                         if (AccessDescription[0] is DerObjectIdentifier) {
                             DerObjectIdentifier id = (DerObjectIdentifier)AccessDescription[0];
                             if (SecurityIDs.ID_OCSP.Equals(id.Id)) {

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -153,8 +153,8 @@ namespace iText.Signatures {
 
             // create details for nonce extension
             IDictionary extensions = new Hashtable();
-
-            extensions[OcspObjectIdentifiers.PkixOcspNonce] = new X509Extension(false, new DerOctetString(new DerOctetString(PdfEncryption.GenerateNewDocumentId()).GetEncoded()));
+            DerOctetString derOctetString = new DerOctetString(new DerOctetString(PdfEncryption.GenerateNewDocumentId()).GetEncoded());
+            extensions[OcspObjectIdentifiers.PkixOcspNonce] = new X509Extension(false, derOctetString);
 
             gen.SetRequestExtensions(new X509Extensions(extensions));
             return gen.Generate();

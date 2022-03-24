@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -33,11 +33,16 @@ namespace iText.Commons.Actions.Contexts {
             : base() {
         }
 
+        /// <summary>Registers generic context for products and namespaces which are associated with them.</summary>
+        /// <param name="namespaces">namespaces of the products to be registered</param>
+        /// <param name="products">the products to be registered</param>
         protected internal virtual void RegisterGenericContext(ICollection<String> namespaces, ICollection<String>
              products) {
             ContextManager.GetInstance().RegisterGenericContext(namespaces, products);
         }
 
+        /// <summary>Unregisters certain namespaces.</summary>
+        /// <param name="namespaces">the namespaces to be unregisted</param>
         protected internal virtual void UnregisterContext(ICollection<String> namespaces) {
             ContextManager.GetInstance().UnregisterContext(namespaces);
         }

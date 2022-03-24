@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -349,6 +349,81 @@ namespace iText.Layout {
             document.Add(list.SetBackgroundColor(ColorConstants.BLUE));
             document.Add(new Paragraph("separation between lists"));
             liStyle.SetMargin(0);
+            document.Add(list);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ListItemWithoutMarginsTest() {
+            String outFileName = destinationFolder + "listItemWithoutMarginsTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_listItemWithoutMarginsTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            document.SetMargins(0, 0, 0, 0);
+            List list = new List();
+            list.SetListSymbol(ListNumberingType.DECIMAL);
+            list.Add(new ListItem("list item 1"));
+            list.Add(new ListItem("list item 2"));
+            document.Add(list);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ListItemBigMarginsTest() {
+            String outFileName = destinationFolder + "listItemBigMarginsTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_listItemBigMarginsTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            int margin = 100;
+            document.SetMargins(margin, margin, margin, margin);
+            List list = new List();
+            list.SetListSymbol(ListNumberingType.DECIMAL);
+            list.Add(new ListItem("list item 1"));
+            list.Add(new ListItem("list item 2"));
+            document.Add(list);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaxMarginWidthWhereTheBulletIsNotDrawnTest() {
+            String outFileName = destinationFolder + "maxMarginWidthWhereTheBulletIsNotDrawn.pdf";
+            String cmpFileName = sourceFolder + "cmp_maxMarginWidthWhereTheBulletIsNotDrawn.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            int margin = 50;
+            document.SetMargins(margin, margin, margin, margin);
+            List list = new List();
+            list.SetListSymbol(ListNumberingType.DECIMAL);
+            list.Add(new ListItem("list item 1"));
+            list.Add(new ListItem("list item 2"));
+            float? marginLeft = document.GetDefaultProperty<float>(Property.MARGIN_LEFT);
+            list.SetFixedPosition((float)marginLeft, 780, 200);
+            document.Add(list);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InitialMarginWidthWhereTheBulletIsDrawnTest() {
+            String outFileName = destinationFolder + "initialMarginWidthWhereTheBulletIsDrawn.pdf";
+            String cmpFileName = sourceFolder + "cmp_initialMarginWidthWhereTheBulletIsDrawn.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            int margin = 49;
+            document.SetMargins(margin, margin, margin, margin);
+            List list = new List();
+            list.SetListSymbol(ListNumberingType.DECIMAL);
+            list.Add(new ListItem("list item 1"));
+            list.Add(new ListItem("list item 2"));
+            float? marginLeft = document.GetDefaultProperty<float>(Property.MARGIN_LEFT);
+            list.SetFixedPosition((float)marginLeft, 780, 200);
             document.Add(list);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

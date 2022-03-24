@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Exceptions;
 
 namespace iText.IO.Source {
     /// <summary>A RandomAccessSource that is based on an underlying byte array</summary>
@@ -56,6 +57,9 @@ namespace iText.IO.Source {
         }
 
         public virtual int Get(long offset) {
+            if (array == null) {
+                throw new InvalidOperationException(IoExceptionMessage.ALREADY_CLOSED);
+            }
             if (offset >= array.Length) {
                 return -1;
             }
@@ -64,7 +68,7 @@ namespace iText.IO.Source {
 
         public virtual int Get(long offset, byte[] bytes, int off, int len) {
             if (array == null) {
-                throw new InvalidOperationException("Already closed");
+                throw new InvalidOperationException(IoExceptionMessage.ALREADY_CLOSED);
             }
             if (offset >= array.Length) {
                 return -1;
@@ -77,6 +81,9 @@ namespace iText.IO.Source {
         }
 
         public virtual long Length() {
+            if (array == null) {
+                throw new InvalidOperationException(IoExceptionMessage.ALREADY_CLOSED);
+            }
             return array.Length;
         }
 

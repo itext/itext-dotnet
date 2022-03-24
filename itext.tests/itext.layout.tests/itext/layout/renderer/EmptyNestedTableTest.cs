@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -62,6 +62,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void BuildEmptyTable() {
+            //TODO DEVSIX-6255 Implementation of the application border attributes for cells
             String outFileName = destinationFolder + "emptyNestedTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyNestedTableTest.pdf";
             // setup document

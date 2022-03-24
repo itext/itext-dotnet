@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -60,8 +60,9 @@ namespace iText.Commons.Actions.Producer {
         /// <c>${</c> and ended with <c>}</c> without <c>}</c> character inside.
         /// These substrings are interpreted as placeholders and the first group is the content of the
         /// placeholder.
+        /// Note: The escape on '}' is necessary for regex dialect compatibility reasons.
         /// </remarks>
-        private const String PATTERN_STRING = "\\$\\{([^}]*)}";
+        private const String PATTERN_STRING = "\\$\\{([^}]*)\\}";
 
         private static readonly Regex PATTERN = iText.Commons.Utils.StringUtil.RegexCompile(PATTERN_STRING);
 

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -241,7 +241,8 @@ namespace iText.StyledXmlParser.Css.Media {
         /// </returns>
         private static float ParseAbsoluteLength(String value) {
             if (CssTypesValidationUtils.IsRelativeValue(value)) {
-                // TODO here should be used default font size of the browser, it probably should be fetched from the more generic place than private class constant
+                // TODO DEVSIX-6365 Use some shared default value (from default.css or CssDefaults)
+                //      rather than a constant of this class
                 return CssDimensionParsingUtils.ParseRelativeValue(value, DEFAULT_FONT_SIZE);
             }
             else {
