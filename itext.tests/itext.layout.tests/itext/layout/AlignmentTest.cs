@@ -57,21 +57,21 @@ using iText.Test;
 
 namespace iText.Layout {
     public class AlignmentTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/AlignmentTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/AlignmentTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void JustifyAlignmentTest01() {
-            String outFileName = destinationFolder + "justifyAlignmentTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "justifyAlignmentTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_justifyAlignmentTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
@@ -81,28 +81,28 @@ namespace iText.Layout {
             }
             document.Add(paragraph);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void JustifyAlignmentTest02() {
-            String outFileName = destinationFolder + "justifyAlignmentTest02.pdf";
-            String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "justifyAlignmentTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_justifyAlignmentTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             paragraph.Add(new Text("Hello World!")).Add(new Text(" ")).Add(new Text("Hello People! ")).Add("End");
             document.Add(paragraph);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void JustifyAlignmentTest03() {
-            String outFileName = destinationFolder + "justifyAlignmentTest03.pdf";
-            String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest03.pdf";
+            String outFileName = DESTINATION_FOLDER + "justifyAlignmentTest03.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_justifyAlignmentTest03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
@@ -112,14 +112,14 @@ namespace iText.Layout {
             }
             document.Add(paragraph);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void JustifyAlignmentTest04() {
-            String outFileName = destinationFolder + "justifyAlignmentTest04.pdf";
-            String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest04.pdf";
+            String outFileName = DESTINATION_FOLDER + "justifyAlignmentTest04.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_justifyAlignmentTest04.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
@@ -129,14 +129,14 @@ namespace iText.Layout {
             }
             document.Add(paragraph);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void JustifyAlignmentForcedNewlinesTest01() {
-            String outFileName = destinationFolder + "justifyAlignmentForcedNewlinesTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_justifyAlignmentForcedNewlinesTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "justifyAlignmentForcedNewlinesTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_justifyAlignmentForcedNewlinesTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
@@ -148,14 +148,14 @@ namespace iText.Layout {
                 );
             document.Add(paragraph);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void JustifyAllTest01() {
-            String outFileName = destinationFolder + "justifyAllTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_justifyAllTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "justifyAllTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_justifyAllTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
@@ -167,19 +167,19 @@ namespace iText.Layout {
                 );
             document.Add(paragraph);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void JustifyAllTest02() {
-            String outFileName = destinationFolder + "justifyAllTest02.pdf";
-            String cmpFileName = sourceFolder + "cmp_justifyAllTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "justifyAllTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_justifyAllTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            PdfFont type0 = PdfFontFactory.CreateFont(sourceFolder + "/../fonts/NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H
+            PdfFont type0 = PdfFontFactory.CreateFont(SOURCE_FOLDER + "/../fonts/NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H
                 );
-            PdfFont simpleFont = PdfFontFactory.CreateFont(sourceFolder + "/../fonts/NotoSans-Regular.ttf", PdfFontFactory.EmbeddingStrategy
+            PdfFont simpleFont = PdfFontFactory.CreateFont(SOURCE_FOLDER + "/../fonts/NotoSans-Regular.ttf", PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
             Paragraph paragraph = new Paragraph().SetSpacingRatio(1).SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
             paragraph.Add("If you need to stop reading before you reach the end");
@@ -187,14 +187,14 @@ namespace iText.Layout {
             paragraph.SetFont(simpleFont);
             document.Add(paragraph);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BlockAlignmentTest01() {
-            String outFileName = destinationFolder + "blockAlignmentTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_blockAlignmentTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "blockAlignmentTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_blockAlignmentTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.GREEK_LOWER);
@@ -209,18 +209,18 @@ namespace iText.Layout {
             list.SetTextAlignment(TextAlignment.CENTER);
             document.Add(list);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BlockAlignmentTest02() {
-            String outFileName = destinationFolder + "blockAlignmentTest02.pdf";
-            String cmpFileName = sourceFolder + "cmp_blockAlignmentTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "blockAlignmentTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_blockAlignmentTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div div = new Div();
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(sourceFolder + "Desert.jpg"
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(SOURCE_FOLDER + "Desert.jpg"
                 )));
             iText.Layout.Element.Image image1 = new iText.Layout.Element.Image(xObject, 100).SetHorizontalAlignment(HorizontalAlignment
                 .RIGHT);
@@ -231,44 +231,44 @@ namespace iText.Layout {
             div.Add(image1).Add(image2).Add(image3);
             document.Add(div);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageAlignmentTest01() {
-            String outFileName = destinationFolder + "imageAlignmentTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_imageAlignmentTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "imageAlignmentTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_imageAlignmentTest01.pdf";
             PdfWriter writer = new PdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(sourceFolder + "Desert.jpg"
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(SOURCE_FOLDER + "Desert.jpg"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100).SetHorizontalAlignment(HorizontalAlignment
                 .RIGHT);
             doc.Add(image);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void EmptyLineJustification01() {
-            String outFileName = destinationFolder + "emptyLineJustification01.pdf";
-            String cmpFileName = sourceFolder + "cmp_emptyLineJustification01.pdf";
+            String outFileName = DESTINATION_FOLDER + "emptyLineJustification01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_emptyLineJustification01.pdf";
             PdfWriter writer = new PdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FloatAlignmentTest01() {
-            String outFileName = destinationFolder + "floatAlignmentTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_floatAlignmentTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "floatAlignmentTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_floatAlignmentTest01.pdf";
             PdfWriter writer = new PdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.SetDefaultPageSize(new PageSize(350, 450));
@@ -282,7 +282,7 @@ namespace iText.Layout {
             AddFloatAndText(doc, FloatPropertyValue.RIGHT);
             AddFloatAndText(doc, FloatPropertyValue.LEFT);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -301,8 +301,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void FloatAlignmentTest02() {
-            String outFileName = destinationFolder + "floatAlignmentTest02.pdf";
-            String cmpFileName = sourceFolder + "cmp_floatAlignmentTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "floatAlignmentTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_floatAlignmentTest02.pdf";
             PdfWriter writer = new PdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.SetDefaultPageSize(new PageSize(350, 450));
@@ -317,24 +317,37 @@ namespace iText.Layout {
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             AddInlineBlockFloatAndText(doc, div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
-        private void AddInlineBlockFloatAndText(Document doc, Div div) {
-            doc.Add(new Paragraph("Left aligned.").SetMarginBottom(30).Add(div).SetTextAlignment(TextAlignment.LEFT));
-            doc.Add(new Paragraph("Right aligned.").SetMarginBottom(30).Add(div).SetTextAlignment(TextAlignment.RIGHT)
-                );
-            doc.Add(new Paragraph("Center aligned.").SetMarginBottom(30).Add(div).SetTextAlignment(TextAlignment.CENTER
-                ));
-            doc.Add(new Paragraph().Add(div).Add("Justified. " + "The text is laid out using the correct width, but  the alignment value uses the full width."
-                ).SetTextAlignment(TextAlignment.JUSTIFIED));
+        [NUnit.Framework.Test]
+        public virtual void VerticalAlignmentMiddleTest() {
+            //TODO DEVSIX-6490 Support verticalAlignment property in layout
+            String outPdf = DESTINATION_FOLDER + "verticalAlignmentMiddle.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_verticalAlignmentMiddle.pdf";
+            CreateDocumentWithAlignment(outPdf, cmpPdf, VerticalAlignment.MIDDLE);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalAlignmentBottomTest() {
+            //TODO DEVSIX-6490 Support verticalAlignment property in layout
+            String outPdf = DESTINATION_FOLDER + "verticalAlignmentBottom.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_verticalAlignmentBottom.pdf";
+            CreateDocumentWithAlignment(outPdf, cmpPdf, VerticalAlignment.BOTTOM);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalAlignmentTopTest() {
+            String outPdf = DESTINATION_FOLDER + "verticalAlignmentTop.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_verticalAlignmentTop.pdf";
+            CreateDocumentWithAlignment(outPdf, cmpPdf, VerticalAlignment.TOP);
         }
 
         [NUnit.Framework.Test]
         public virtual void FloatAlignmentTest03() {
-            String outFileName = destinationFolder + "floatAlignmentTest03.pdf";
-            String cmpFileName = sourceFolder + "cmp_floatAlignmentTest03.pdf";
+            String outFileName = DESTINATION_FOLDER + "floatAlignmentTest03.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_floatAlignmentTest03.pdf";
             PdfWriter writer = new PdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.SetDefaultPageSize(new PageSize(350, 450));
@@ -350,8 +363,33 @@ namespace iText.Layout {
             AddInlineBlockFloatAndText(doc, text);
             doc.Close();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
+        }
+
+        private static void CreateDocumentWithAlignment(String outPdf, String cmpPdf, VerticalAlignment? verticalAlignment
+            ) {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            Document doc = new Document(pdfDoc);
+            Paragraph p = new Paragraph();
+            p.SetBackgroundColor(new DeviceRgb(189, 239, 73));
+            p.SetVerticalAlignment(verticalAlignment);
+            p.Add("vertical Alignment " + verticalAlignment + " one");
+            p.Add("\n vertical Alignment " + verticalAlignment + " two");
+            p.Add("\n vertical Alignment " + verticalAlignment + " three");
+            doc.Add(p);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        private void AddInlineBlockFloatAndText(Document doc, Div div) {
+            doc.Add(new Paragraph("Left aligned.").SetMarginBottom(30).Add(div).SetTextAlignment(TextAlignment.LEFT));
+            doc.Add(new Paragraph("Right aligned.").SetMarginBottom(30).Add(div).SetTextAlignment(TextAlignment.RIGHT)
+                );
+            doc.Add(new Paragraph("Center aligned.").SetMarginBottom(30).Add(div).SetTextAlignment(TextAlignment.CENTER
+                ));
+            doc.Add(new Paragraph().Add(div).Add("Justified. " + "The text is laid out using the correct width, but  the alignment value uses the full width."
+                ).SetTextAlignment(TextAlignment.JUSTIFIED));
         }
 
         private void AddInlineBlockFloatAndText(Document doc, Text text) {
