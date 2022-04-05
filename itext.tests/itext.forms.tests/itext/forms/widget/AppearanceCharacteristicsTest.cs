@@ -219,7 +219,7 @@ namespace iText.Forms.Widget {
             String cmpPdf = sourceFolder + "cmp_updatingBorderStyleInFormFields.pdf";
             using (PdfDocument doc = new PdfDocument(new PdfReader(inputPdf), new PdfWriter(outPdf))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, false);
-                IDictionary<String, PdfFormField> fields = form.GetFormFields();
+                IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
                 fields.Get("firstField").SetValue("New Value 1");
                 fields.Get("secondField").SetValue("New Value 2");
                 fields.Get("thirdField").SetValue("New Value 3");

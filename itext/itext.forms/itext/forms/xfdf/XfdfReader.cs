@@ -89,7 +89,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="form">acroform to be filled with xfdf data.</param>
         private void MergeFields(FieldsObject fieldsObject, PdfAcroForm form) {
             if (fieldsObject != null && fieldsObject.GetFieldList() != null && !fieldsObject.GetFieldList().IsEmpty()) {
-                IDictionary<String, PdfFormField> formFields = form.GetFormFields();
+                IDictionary<String, PdfFormField> formFields = form.GetAllFormFields();
                 foreach (FieldObject xfdfField in fieldsObject.GetFieldList()) {
                     String name = xfdfField.GetName();
                     if (formFields.Get(name) != null && xfdfField.GetValue() != null) {

@@ -75,7 +75,7 @@ namespace iText.Forms {
                     String cmp = sourceFolder + "cmp_" + srcFilePattern + i + ".pdf";
                     PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
                     PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-                    foreach (PdfFormField field in form.GetFormFields().Values) {
+                    foreach (PdfFormField field in form.GetAllFormFields().Values) {
                         field.SetValue("Test");
                     }
                     form.FlattenFields();

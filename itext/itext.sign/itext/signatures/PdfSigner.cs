@@ -1076,7 +1076,7 @@ namespace iText.Signatures {
             }
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, false);
             if (acroForm != null) {
-                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
+                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
                     PdfDictionary fieldDict = entry.Value.GetPdfObject();
                     if (!PdfName.Sig.Equals(fieldDict.Get(PdfName.FT))) {
                         continue;

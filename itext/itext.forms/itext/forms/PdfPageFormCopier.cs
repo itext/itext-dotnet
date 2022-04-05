@@ -92,11 +92,11 @@ namespace iText.Forms {
             excludedKeys.Add(PdfName.DR);
             PdfDictionary dict = formFrom.GetPdfObject().CopyTo(documentTo, excludedKeys, false);
             formTo.GetPdfObject().MergeDifferent(dict);
-            IDictionary<String, PdfFormField> fieldsFrom = formFrom.GetFormFields();
+            IDictionary<String, PdfFormField> fieldsFrom = formFrom.GetAllFormFields();
             if (fieldsFrom.Count <= 0) {
                 return;
             }
-            IDictionary<String, PdfFormField> fieldsTo = formTo.GetFormFields();
+            IDictionary<String, PdfFormField> fieldsTo = formTo.GetDirectFormFields();
             IList<PdfAnnotation> annots = toPage.GetAnnotations();
             foreach (PdfAnnotation annot in annots) {
                 if (!annot.GetSubtype().Equals(PdfName.Widget)) {
@@ -172,7 +172,7 @@ namespace iText.Forms {
                     PdfFormField existingField = fieldsTo.Get(fieldName.ToUnicodeString());
                     if (existingField != null) {
                         PdfFormField mergedField = MergeFieldsWithTheSameName(field);
-                        formTo.GetFormFields().Put(mergedField.GetFieldName().ToUnicodeString(), mergedField);
+                        formTo.GetDirectFormFields().Put(mergedField.GetFieldName().ToUnicodeString(), mergedField);
                     }
                     else {
                         HashSet<String> existingFields = new HashSet<String>();
@@ -280,6 +280,7 @@ namespace iText.Forms {
                 }
                 else {
                     kids.Add(fieldDic);
+                    field.SetChildField(MakeFormField(fieldDic));
                 }
             }
             return field;
@@ -325,7 +326,7 @@ namespace iText.Forms {
                             }
                             fieldsTo.Put(kidField.GetFieldName().ToUnicodeString(), kidField);
                             PdfFormField mergedField = MergeFieldsWithTheSameName(field);
-                            formTo.GetFormFields().Put(mergedField.GetFieldName().ToUnicodeString(), mergedField);
+                            formTo.GetDirectFormFields().Put(mergedField.GetFieldName().ToUnicodeString(), mergedField);
                             return;
                         }
                     }

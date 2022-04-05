@@ -220,7 +220,7 @@ namespace iText.Signatures {
             GetSignatureNames();
             IList<String> sigs = new List<String>();
             if (acroForm != null) {
-                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
+                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
                     PdfFormField field = entry.Value;
                     PdfDictionary merged = field.GetPdfObject();
                     if (!PdfName.Sig.Equals(merged.GetAsName(PdfName.FT))) {
@@ -317,7 +317,7 @@ namespace iText.Signatures {
                 return;
             }
             IList<Object[]> sorter = new List<Object[]>();
-            foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
+            foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
                 PdfFormField field = entry.Value;
                 PdfDictionary merged = field.GetPdfObject();
                 if (!PdfName.Sig.Equals(merged.Get(PdfName.FT))) {

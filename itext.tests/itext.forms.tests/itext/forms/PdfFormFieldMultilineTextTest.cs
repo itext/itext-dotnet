@@ -98,7 +98,7 @@ namespace iText.Forms {
             PdfReader reader = new PdfReader(srcPdf);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             fields.Get("BEMERKUNGEN").SetValue("First line\n\n\nFourth line");
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();

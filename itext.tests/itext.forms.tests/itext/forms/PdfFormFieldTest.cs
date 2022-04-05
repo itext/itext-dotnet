@@ -86,11 +86,11 @@ namespace iText.Forms {
         public virtual void FormFieldTest01() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "formFieldFile.pdf"));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             PdfFormField field = fields.Get("Text1");
-            NUnit.Framework.Assert.IsTrue(fields.Count == 6);
-            NUnit.Framework.Assert.IsTrue(field.GetFieldName().ToUnicodeString().Equals("Text1"));
-            NUnit.Framework.Assert.IsTrue(field.GetValue().ToString().Equals("TestField"));
+            NUnit.Framework.Assert.AreEqual(4, fields.Count);
+            NUnit.Framework.Assert.AreEqual("Text1", field.GetFieldName().ToUnicodeString());
+            NUnit.Framework.Assert.AreEqual("TestField", field.GetValue().ToString());
         }
 
         [NUnit.Framework.Test]
@@ -181,7 +181,7 @@ namespace iText.Forms {
             String filename = sourceFolder + "unicodeFormFieldFile.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> formFields = form.GetFormFields();
+            IDictionary<String, PdfFormField> formFields = form.GetAllFormFields();
             // 帐号1: account number 1
             String fieldName = "\u5E10\u53F71";
             NUnit.Framework.Assert.AreEqual(fieldName, formFields.Keys.ToArray(new String[1])[0]);
@@ -368,7 +368,7 @@ namespace iText.Forms {
             text1.SetValue("test");
             child.AddKid(text1);
             form.AddField(root);
-            NUnit.Framework.Assert.AreEqual(3, form.GetFormFields().Count);
+            NUnit.Framework.Assert.AreEqual(3, form.GetAllFormFields().Count);
         }
 
         [NUnit.Framework.Test]
@@ -379,7 +379,7 @@ namespace iText.Forms {
             PdfReader reader = new PdfReader(sourceFolder + "formWithDefaultResources.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             PdfFormField field = fields.Get("Text1");
             field.SetValue("New value size must be 8");
             pdfDoc.Close();
@@ -398,7 +398,7 @@ namespace iText.Forms {
             PdfReader reader = new PdfReader(sourceFolder + "formWithoutResources.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             PdfFormField field = fields.Get("Text1");
             field.SetValue("New value size must be 8").SetFontSize(8);
             pdfDoc.Close();
@@ -446,13 +446,14 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void RegenerateAppearance() {
+            //TODO DEVSIX-6467 The parent's formField value is set to children
             String input = "regenerateAppearance.pdf";
             String output = "regenerateAppearance.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + input), new PdfWriter(destinationFolder
                  + output), new StampingProperties().UseAppendMode());
             PdfAcroForm acro = PdfAcroForm.GetAcroForm(document, false);
             int i = 1;
-            foreach (KeyValuePair<String, PdfFormField> entry in acro.GetFormFields()) {
+            foreach (KeyValuePair<String, PdfFormField> entry in acro.GetAllFormFields()) {
                 if (entry.Key.Contains("field")) {
                     PdfFormField field = entry.Value;
                     field.SetValue("test" + i++, false);
@@ -507,7 +508,7 @@ namespace iText.Forms {
             PdfReader reader = new PdfReader(sourceFolder + "formWithDefaultResources.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             PdfFormField field = fields.Get("Text1");
             field.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
             field.SetValue("New value size must be 8, but with different font.");
@@ -531,7 +532,7 @@ namespace iText.Forms {
             PdfReader reader = new PdfReader(srcPdf);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             fields.Get("Text1").SetValue("New field value");
             fields.Get("Text2").SetValue("New field value");
             fields.Get("Text3").SetValue("New field value");
@@ -1035,7 +1036,7 @@ namespace iText.Forms {
 
         private void FillAcroForm(PdfDocument pdfDocument, String text) {
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
-            foreach (PdfFormField field in acroForm.GetFormFields().Values) {
+            foreach (PdfFormField field in acroForm.GetAllFormFields().Values) {
                 field.SetValue(text);
             }
         }
@@ -1074,7 +1075,7 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);
             form.SetNeedAppearances(true);
             PdfFormField field;
-            foreach (KeyValuePair<String, PdfFormField> entry in form.GetFormFields()) {
+            foreach (KeyValuePair<String, PdfFormField> entry in form.GetAllFormFields()) {
                 field = entry.Value;
                 field.SetValue(line1);
             }
@@ -1085,6 +1086,7 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void FillUnmergedTextFormField() {
+            //TODO DEVSIX-6346 Handle form fields without names more carefully
             String file = sourceFolder + "fillUnmergedTextFormField.pdf";
             String outfile = destinationFolder + "fillUnmergedTextFormField.pdf";
             String text = "John";

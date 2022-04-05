@@ -64,7 +64,7 @@ namespace iText.Forms {
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -72,7 +72,7 @@ namespace iText.Forms {
             String filename = sourceFolder + "utf-8-field-name.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             pdfDoc.Close();
             foreach (String fldName in fields.Keys) {
                 //  لا
@@ -86,7 +86,7 @@ namespace iText.Forms {
             String filename = sourceFolder + "utf-8-text-annot.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             pdfDoc.Close();
             foreach (String fldName in fields.Keys) {
                 //  福昕 福昕UTF8
