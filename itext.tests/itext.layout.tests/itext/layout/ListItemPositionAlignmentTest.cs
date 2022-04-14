@@ -62,6 +62,11 @@ namespace iText.Layout {
 
         private int? comparisonPdfId;
 
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
         public ListItemPositionAlignmentTest(Object listBaseDirection, Object listItemBaseDirection, Object listSymbolAlignment
             , Object listSymbolPosition, Object comparisonPdfId) {
             this.listBaseDirection = (BaseDirection?)listBaseDirection;
@@ -69,9 +74,6 @@ namespace iText.Layout {
             this.listSymbolAlignment = (ListSymbolAlignment)listSymbolAlignment;
             this.listSymbolPosition = (ListSymbolPosition)listSymbolPosition;
             this.comparisonPdfId = (int?)comparisonPdfId;
-            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-            // Create an HTML for this test
-            CreateHtml();
         }
 
         public ListItemPositionAlignmentTest(Object[] array)
@@ -108,6 +110,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 8)]
         public virtual void DefaultListIemPositionAlignmentTest() {
+            // Create an HTML for this test
+            CreateHtml();
             String fileName = MessageFormatUtil.Format(RESULTANT_FILE_NAME_PATTERN, FormatSymbolPosition(listSymbolPosition
                 ), FormatSymbolAlignment(listSymbolAlignment), FormatBaseDirection(listItemBaseDirection), FormatBaseDirection
                 (listBaseDirection));

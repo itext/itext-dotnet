@@ -55,7 +55,7 @@ namespace iText.Forms.Xfdf {
 
         [NUnit.Framework.Test]
         public virtual void XxeVulnerabilityXfdfTest() {
-            XmlProcessorCreator.SetXmlParserFactory(new DefaultSafeXmlParserFactory());
+            XmlProcessorCreator.SetXmlParserFactory(null);
             using (Stream inputStream = new MemoryStream(XFDF_WITH_XXE.GetBytes(System.Text.Encoding.UTF8))) {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => XfdfFileUtils.CreateXfdfDocumentFromStream
                     (inputStream));

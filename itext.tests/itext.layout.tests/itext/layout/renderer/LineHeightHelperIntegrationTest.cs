@@ -52,7 +52,7 @@ namespace iText.Layout.Renderer {
             String cmpPdf = CMP + "cmp_" + name;
             String outPdf = DESTINATION + name;
             TestFont(PdfFontFactory.CreateFont(StandardFonts.COURIER), outPdf);
-            new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION));
         }
 
         [NUnit.Framework.Test]
@@ -61,7 +61,7 @@ namespace iText.Layout.Renderer {
             String cmpPdf = CMP + "cmp_" + name;
             String outPdf = DESTINATION + name;
             TestFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), outPdf);
-            new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION));
         }
 
         [NUnit.Framework.Test]
@@ -70,7 +70,7 @@ namespace iText.Layout.Renderer {
             String cmpPdf = CMP + "cmp_" + name;
             String outPdf = DESTINATION + name;
             TestFont(PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN), outPdf);
-            new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION));
         }
 
         private void TestFont(PdfFont font, String outPdf) {
