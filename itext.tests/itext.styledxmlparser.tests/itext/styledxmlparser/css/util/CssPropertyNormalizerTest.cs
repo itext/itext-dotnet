@@ -46,12 +46,24 @@ using iText.Test;
 namespace iText.StyledXmlParser.Css.Util {
     public class CssPropertyNormalizerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        public virtual void TestUrlNormalizationSimple() {
+        public virtual void CheckUrlNormalizationSimpleTest() {
             Test("url('data:image/png;base64,iVBORw0K')", "url('data:image/png;base64,iVBORw0K')");
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestUrlNormalizationLineTerminators() {
+        public virtual void CheckUrlNormalizationUppercaseTest() {
+            Test("URL('data:image/png;base64,iVBORw0K')", "url('data:image/png;base64,iVBORw0K')");
+            Test("uRL('data:image/png;base64,iVBORw0K')", "url('data:image/png;base64,iVBORw0K')");
+            Test("urL('data:image/png;base64,iVBORw0K')", "url('data:image/png;base64,iVBORw0K')");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckUrlNormalizationWhitespacesTest() {
+            Test("  url(  'data:image/png;base64,iVBORw0K' )", "url('data:image/png;base64,iVBORw0K')");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckUrlNormalizationLineTerminatorsTest() {
             // Test is initially added to ensure equal behavior between Java and C#.
             // The behavior itself might be reconsidered in the future. Browsers do not forgive newlines in base64 expressions
             Test("url(data:image/png;base64,iVBOR\nw0K)", "url(data:image/png;base64,iVBOR\nw0K)");
