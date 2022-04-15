@@ -239,9 +239,7 @@ namespace iText.Layout.Renderer {
                     FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
                     FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     if (result.GetSplitRenderer() != null) {
-                        // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
-                        // in case when parent box should wrap around child boxes.
-                        // TODO in the latter case, all elements should be layouted first so that we know maximum width needed to place all children and then apply horizontal alignment
+                        // TODO DEVSIX-6488 all elements should be layouted first in case when parent box should wrap around child boxes
                         AlignChildHorizontally(result.GetSplitRenderer(), occupiedArea.GetBBox());
                     }
                     // Save the first renderer to produce LayoutResult.NOTHING
@@ -296,9 +294,7 @@ namespace iText.Layout.Renderer {
                 if (result.GetStatus() == LayoutResult.FULL) {
                     DecreaseLayoutBoxAfterChildPlacement(layoutBox, result, childRenderer);
                     if (childRenderer.GetOccupiedArea() != null) {
-                        // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
-                        // in case when parent box should wrap around child boxes.
-                        // TODO in the latter case, all elements should be layouted first so that we know maximum width needed to place all children and then apply horizontal alignment
+                        // TODO DEVSIX-6488 all elements should be layouted first in case when parent box should wrap around child boxes
                         AlignChildHorizontally(childRenderer, occupiedArea.GetBBox());
                     }
                 }
