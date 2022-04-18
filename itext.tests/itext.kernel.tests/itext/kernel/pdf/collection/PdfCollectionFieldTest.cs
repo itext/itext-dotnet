@@ -137,7 +137,7 @@ namespace iText.Kernel.Pdf.Collection {
         [NUnit.Framework.Test]
         public virtual void GetNumberValueTest() {
             double numberValue = 125;
-            String numberValueAsString = numberValue.ToString();
+            String numberValueAsString = numberValue.ToString(System.Globalization.CultureInfo.InvariantCulture);
             PdfDictionary pdfObject = new PdfDictionary();
             pdfObject.Put(PdfName.Subtype, PdfName.N);
             PdfCollectionField field = new PdfCollectionField(pdfObject);

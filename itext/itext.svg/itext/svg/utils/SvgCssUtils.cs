@@ -43,13 +43,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
-using iText.IO.Util;
-using iText.StyledXmlParser.Css.Util;
-using iText.StyledXmlParser.Node;
 
 namespace iText.Svg.Utils {
     /// <summary>Utility class that facilitates parsing values from CSS.</summary>
     public sealed class SvgCssUtils {
+        // TODO DEVSIX-2266
         private SvgCssUtils() {
         }
 
@@ -70,20 +68,18 @@ namespace iText.Svg.Utils {
             return result;
         }
 
-        ///<summary>Converts a float to a String.</summary>
-        ///<param name="value">to be converted float value</param>
-        ///<returns>the value in a String representation</returns>   
-        public static string ConvertFloatToString(float value)
-        {
-            return value.ToString("G", System.Globalization.CultureInfo.InvariantCulture); ;
+        /// <summary>Converts a float to a String.</summary>
+        /// <param name="value">to be converted float value</param>
+        /// <returns>the value in a String representation</returns>
+        public static String ConvertFloatToString(float value) {
+            return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
-       
-        ///<summary>Converts a double to a String.</summary>
-        ///<param name="value">to be converted double value</param>
-        ///<returns>the value in a String representation</returns>   
-        public static string ConvertDoubleToString(double value)
-        {
-            return value.ToString("G", System.Globalization.CultureInfo.InvariantCulture); ;
+
+        /// <summary>Converts a double to a String.</summary>
+        /// <param name="value">to be converted double value</param>
+        /// <returns>the value in a String representation</returns>
+        public static String ConvertDoubleToString(double value) {
+            return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 }

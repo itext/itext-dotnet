@@ -488,7 +488,8 @@ namespace iText.Forms.Xfdf {
         }
 
         internal virtual void AddAttribute(String name, float value) {
-            attributes.Add(new AttributeObject(name, value.ToString()));
+            attributes.Add(new AttributeObject(name, value.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                ));
         }
 
         internal virtual void AddAttribute(String name, Rectangle value) {
@@ -527,7 +528,8 @@ namespace iText.Forms.Xfdf {
                 }
                 else {
                     if (valueObject.GetObjectType() == PdfObject.NUMBER) {
-                        valueString = ((PdfNumber)(valueObject)).GetValue().ToString();
+                        valueString = ((PdfNumber)(valueObject)).GetValue().ToString(System.Globalization.CultureInfo.InvariantCulture
+                            );
                     }
                     else {
                         if (valueObject.GetObjectType() == PdfObject.STRING) {
