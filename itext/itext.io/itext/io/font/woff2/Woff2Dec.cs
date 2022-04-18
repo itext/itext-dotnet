@@ -1102,7 +1102,6 @@ namespace iText.IO.Font.Woff2 {
                     throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
                 }
                 src_offset = Round.Round4(meta_offset + meta_length);
-                //TODO literary can't happen
                 if (src_offset > int.MaxValue) {
                     throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
                 }
@@ -1112,7 +1111,6 @@ namespace iText.IO.Font.Woff2 {
                     throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
                 }
                 src_offset = Round.Round4(priv_offset + priv_length);
-                //TODO literary can't happen
                 if (src_offset > int.MaxValue) {
                     throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
                 }
