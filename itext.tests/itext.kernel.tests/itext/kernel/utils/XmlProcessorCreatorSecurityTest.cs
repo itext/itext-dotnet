@@ -86,7 +86,7 @@ namespace iText.Kernel.Utils
         [SetUp]
         public virtual void ResetXmlParserFactoryToDefault()
         {
-            XmlProcessorCreator.SetXmlParserFactory(new DefaultSafeXmlParserFactory());
+            XmlProcessorCreator.SetXmlParserFactory(null);
         }
 
         [Test]
