@@ -327,7 +327,7 @@ namespace iText.Kernel.XMP {
         /// <param name="value">a long value</param>
         /// <returns>The string representation of the long.</returns>
         public static String ConvertFromDouble(double value) {
-            return value.ToString();
+            return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
 
         /// <summary>Converts a string value to an <c>XMPDateTime</c>.</summary>

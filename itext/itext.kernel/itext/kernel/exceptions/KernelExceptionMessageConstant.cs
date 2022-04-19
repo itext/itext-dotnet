@@ -238,6 +238,9 @@ namespace iText.Kernel.Exceptions {
         public const String FLUSHED_PAGE_CANNOT_BE_REMOVED = "Flushed page cannot be removed from a document which "
              + "is tagged or has an AcroForm";
 
+        public const String FLUSHED_STREAM_FILTER_EXCEPTION = "Stream {0} {1} R contains flushed indirect filter object in encrypted document, try to use "
+             + "PdfStream#flush() stream before PdfDocument#close() to prevent this exception";
+
         public const String FLUSHING_HELPER_FLUSHING_MODE_IS_NOT_FOR_DOC_READING_MODE = "Flushing writes the object "
              + "to the output stream and releases it from memory. It is only possible for documents that have a " 
             + "PdfWriter associated with them. Use PageFlushingHelper#releaseDeep method instead.";

@@ -412,6 +412,9 @@ namespace iText.Kernel.Pdf {
                     PdfObject filter = stream.Get(PdfName.Filter, true);
                     bool skip = false;
                     if (filter != null) {
+                        if (filter.IsFlushed()) {
+                            IndirectFilterUtils.ThrowFlushedFilterException(stream);
+                        }
                         if (PdfName.Crypt.Equals(filter)) {
                             skip = true;
                         }
@@ -419,6 +422,9 @@ namespace iText.Kernel.Pdf {
                             if (filter.GetObjectType() == PdfObject.ARRAY) {
                                 PdfArray filters = (PdfArray)filter;
                                 for (int k = 0; k < filters.Size(); k++) {
+                                    if (filters.Get(k).IsFlushed()) {
+                                        IndirectFilterUtils.ThrowFlushedFilterException(stream);
+                                    }
                                     if (!filters.IsEmpty() && PdfName.Crypt.Equals(filters.Get(k, true))) {
                                         skip = true;
                                         break;
