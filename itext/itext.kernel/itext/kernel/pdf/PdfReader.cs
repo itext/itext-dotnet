@@ -959,7 +959,9 @@ namespace iText.Kernel.Pdf {
                         if (ch != '\n') {
                             tokens.BackOnePosition(ch);
                         }
-                        return new PdfStream(tokens.GetPosition(), dict);
+                        PdfStream pdfStream = new PdfStream(tokens.GetPosition(), dict);
+                        tokens.Seek(pdfStream.GetOffset() + pdfStream.GetLength());
+                        return pdfStream;
                     }
                     else {
                         tokens.Seek(pos);
@@ -1413,7 +1415,7 @@ namespace iText.Kernel.Pdf {
             tokens.Seek(0);
             trailer = null;
             ByteBuffer buffer = new ByteBuffer(24);
-            PdfTokenizer lineTokeniser = new PdfTokenizer(new RandomAccessFileOrArray(new PdfReader.ReusableRandomAccessSource
+            PdfTokenizer lineTokenizer = new PdfTokenizer(new RandomAccessFileOrArray(new PdfReader.ReusableRandomAccessSource
                 (buffer)));
             for (; ; ) {
                 long pos = tokens.GetPosition();
@@ -1444,7 +1446,7 @@ namespace iText.Kernel.Pdf {
                 }
                 else {
                     if (buffer.Get(0) >= '0' && buffer.Get(0) <= '9') {
-                        int[] obj = PdfTokenizer.CheckObjectStart(lineTokeniser);
+                        int[] obj = PdfTokenizer.CheckObjectStart(lineTokenizer);
                         if (obj == null) {
                             continue;
                         }
