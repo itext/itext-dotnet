@@ -2016,7 +2016,11 @@ namespace iText.Kernel.Pdf {
                     pdfVersion = reader.headerPdfVersion;
                     trailer = new PdfDictionary(reader.trailer);
                     ReadDocumentIds();
-                    catalog = new PdfCatalog((PdfDictionary)trailer.Get(PdfName.Root, true));
+                    PdfDictionary catalogDictionary = (PdfDictionary)trailer.Get(PdfName.Root, true);
+                    if (null == catalogDictionary) {
+                        throw new PdfException(KernelExceptionMessageConstant.CORRUPTED_ROOT_ENTRY_IN_TRAILER);
+                    }
+                    catalog = new PdfCatalog(catalogDictionary);
                     UpdatePdfVersionFromCatalog();
                     PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
                     if (xmpMetadataStream != null) {

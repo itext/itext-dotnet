@@ -169,6 +169,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String CORRUPTED_OUTLINE_NO_TITLE_ENTRY = "Document outline is corrupted: some outline (PDF object: \"{0}\") lacks the required title entry.";
 
+        public const String CORRUPTED_ROOT_ENTRY_IN_TRAILER = "The trailer is corrupted: the catalog " + "is corrupted or cannot be referenced from the file's trailer. The PDF cannot be opened.";
+
         public const String DATA_HANDLER_COUNTER_HAS_BEEN_DISABLED = "Data handler counter has been disabled";
 
         public const String DEFAULT_CRYPT_FILTER_NOT_FOUND_ENCRYPTION = "/DefaultCryptFilter not found " + "(encryption).";
