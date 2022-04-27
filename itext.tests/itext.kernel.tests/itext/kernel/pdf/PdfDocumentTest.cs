@@ -501,6 +501,15 @@ namespace iText.Kernel.Pdf {
                 , DESTINATION_FOLDER));
         }
 
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        public virtual void RootCannotBeReferenceFromTrailerTest() {
+            String filename = SOURCE_FOLDER + "rootCannotBeReferenceFromTrailerTest.pdf";
+            PdfReader corruptedReader = new PdfReader(filename);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(corruptedReader));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CORRUPTED_ROOT_ENTRY_IN_TRAILER, e.Message);
+        }
+
         private class IgnoreTagStructurePdfDocument : PdfDocument {
             internal IgnoreTagStructurePdfDocument(PdfReader reader)
                 : base(reader) {
