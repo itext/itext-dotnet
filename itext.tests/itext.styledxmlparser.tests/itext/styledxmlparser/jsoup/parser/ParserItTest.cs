@@ -29,6 +29,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Longer running Parser tests.</summary>
     public class ParserItTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
         public virtual void TestIssue1251() {
             // https://github.com/jhy/jsoup/issues/1251
             String testString = "<a href=\"\"ca";
