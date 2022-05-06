@@ -488,7 +488,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         private static bool IsExponentNotation(String s, int index) {
-            return index < s.Length && s[index] == 'e' && 
+            return index < s.Length && char.ToLower(s[index]) == 'e' && 
                         // e.g. 12e5
                         (index + 1 < s.Length && IsDigit(s[index + 1]) || 
                         // e.g. 12e-5, 12e+5
