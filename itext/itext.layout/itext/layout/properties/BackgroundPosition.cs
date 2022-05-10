@@ -257,12 +257,14 @@ namespace iText.Layout.Properties {
             return value.IsPercentValue() ? (value.GetValue() / 100 * fullValue) : value.GetValue();
         }
 
+        /// <summary>A specialized enum containing positions in x-dimension (horizontal positions).</summary>
         public enum PositionX {
             LEFT,
             RIGHT,
             CENTER
         }
 
+        /// <summary>A specialized enum containing positions in y-dimension (vertical positions).</summary>
         public enum PositionY {
             TOP,
             BOTTOM,

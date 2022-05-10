@@ -21,6 +21,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Layout.Properties {
+    /// <summary>The possible values for the overflow wrap property.</summary>
+    /// <remarks>
+    /// The possible values for the overflow wrap property.
+    /// <para />
+    /// <see cref="ANYWHERE"/>
+    /// and
+    /// <see cref="BREAK_WORD"/>
+    /// mean that long words will break if they overflow the container.
+    /// <para />
+    /// <see cref="NORMAL"/>
+    /// means that long words will not break,
+    /// even if they overflow the container.
+    /// </remarks>
     public enum OverflowWrapPropertyValue {
         ANYWHERE,
         BREAK_WORD,
