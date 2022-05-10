@@ -45,6 +45,11 @@ using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Borders {
+    /// <summary>
+    /// Represents a
+    /// <see cref="Border3D"/>
+    /// with an inset effect being applied.
+    /// </summary>
     public class InsetBorder : Border3D {
         /// <summary>Creates an InsetBorder instance with the specified width.</summary>
         /// <remarks>Creates an InsetBorder instance with the specified width. The color is set to the predefined gray.

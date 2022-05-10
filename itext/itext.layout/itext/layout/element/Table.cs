@@ -952,16 +952,56 @@ namespace iText.Layout.Element {
             return horizontalBorder;
         }
 
+        /// <summary>
+        /// Defines whether the
+        /// <see cref="Table"/>
+        /// should be extended to occupy all the space left in the available area
+        /// in case it is the last element in this area.
+        /// </summary>
+        /// <param name="isExtended">
+        /// defines whether the
+        /// <see cref="Table"/>
+        /// should be extended
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="Table"/>
+        /// </returns>
         public virtual iText.Layout.Element.Table SetExtendBottomRow(bool isExtended) {
             SetProperty(Property.FILL_AVAILABLE_AREA, isExtended);
             return this;
         }
 
+        /// <summary>
+        /// Defines whether the
+        /// <see cref="Table"/>
+        /// should be extended to occupy all the space left in the available area
+        /// in case the area has been split and it is the last element in the split part of this area.
+        /// </summary>
+        /// <param name="isExtended">
+        /// defines whether the
+        /// <see cref="Table"/>
+        /// should be extended
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="Table"/>
+        /// </returns>
         public virtual iText.Layout.Element.Table SetExtendBottomRowOnSplit(bool isExtended) {
             SetProperty(Property.FILL_AVAILABLE_AREA_ON_SPLIT, isExtended);
             return this;
         }
 
+        /// <summary>Sets the type of border collapse.</summary>
+        /// <param name="collapsePropertyValue">
+        /// 
+        /// <see cref="iText.Layout.Properties.BorderCollapsePropertyValue"/>
+        /// to be set as the border collapse type
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="Table"/>
+        /// </returns>
         public virtual iText.Layout.Element.Table SetBorderCollapse(BorderCollapsePropertyValue collapsePropertyValue
             ) {
             SetProperty(Property.BORDER_COLLAPSE, collapsePropertyValue);
@@ -974,6 +1014,22 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        /// <summary>
+        /// Sets the horizontal spacing between this
+        /// <see cref="Table">table</see>
+        /// 's
+        /// <see cref="Cell">cells</see>.
+        /// </summary>
+        /// <param name="spacing">
+        /// a horizontal spacing between this
+        /// <see cref="Table">table</see>
+        /// 's
+        /// <see cref="Cell">cells</see>
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="Table"/>
+        /// </returns>
         public virtual iText.Layout.Element.Table SetHorizontalBorderSpacing(float spacing) {
             SetProperty(Property.HORIZONTAL_BORDER_SPACING, spacing);
             if (null != header) {
@@ -985,6 +1041,22 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        /// <summary>
+        /// Sets the vertical spacing between this
+        /// <see cref="Table">table</see>
+        /// 's
+        /// <see cref="Cell">cells</see>.
+        /// </summary>
+        /// <param name="spacing">
+        /// a vertical spacing between this
+        /// <see cref="Table">table</see>
+        /// 's
+        /// <see cref="Cell">cells</see>
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="Table"/>
+        /// </returns>
         public virtual iText.Layout.Element.Table SetVerticalBorderSpacing(float spacing) {
             SetProperty(Property.VERTICAL_BORDER_SPACING, spacing);
             if (null != header) {

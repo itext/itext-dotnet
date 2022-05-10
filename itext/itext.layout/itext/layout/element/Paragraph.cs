@@ -87,27 +87,55 @@ namespace iText.Layout.Element {
             Add(text);
         }
 
-        /// <summary>Adds a piece of text to the Paragraph</summary>
+        /// <summary>
+        /// Adds a piece of text to this
+        /// <see cref="Paragraph"/>.
+        /// </summary>
         /// <param name="text">
         /// the content to be added, as a
         /// <see cref="System.String"/>
         /// </param>
-        /// <returns>this Paragraph</returns>
+        /// <returns>
+        /// this
+        /// <see cref="Paragraph"/>
+        /// </returns>
         public virtual iText.Layout.Element.Paragraph Add(String text) {
             return Add(new Text(text));
         }
 
-        /// <summary>Adds a layout element to the Paragraph.</summary>
+        /// <summary>
+        /// Adds a
+        /// <see cref="ILeafElement">element</see>
+        /// to this
+        /// <see cref="Paragraph"/>.
+        /// </summary>
         /// <param name="element">
         /// the content to be added, any
         /// <see cref="ILeafElement"/>
         /// </param>
-        /// <returns>this Paragraph</returns>
+        /// <returns>
+        /// this
+        /// <see cref="Paragraph"/>
+        /// </returns>
         public virtual iText.Layout.Element.Paragraph Add(ILeafElement element) {
             childElements.Add(element);
             return this;
         }
 
+        /// <summary>
+        /// Adds an
+        /// <see cref="IBlockElement">element</see>
+        /// to this
+        /// <see cref="Paragraph"/>.
+        /// </summary>
+        /// <param name="element">
+        /// the content to be added, any
+        /// <see cref="IBlockElement"/>
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="Paragraph"/>
+        /// </returns>
         public virtual iText.Layout.Element.Paragraph Add(IBlockElement element) {
             childElements.Add(element);
             return this;
@@ -116,14 +144,18 @@ namespace iText.Layout.Element {
         /// <summary>
         /// Adds a
         /// <see cref="System.Collections.IList{E}"/>
-        /// of layout elements to the Paragraph.
+        /// of layout elements to this
+        /// <see cref="Paragraph"/>.
         /// </summary>
         /// <param name="elements">the content to be added</param>
         /// <typeparam name="T2">
         /// any
         /// <see cref="ILeafElement"/>
         /// </typeparam>
-        /// <returns>this Paragraph</returns>
+        /// <returns>
+        /// this
+        /// <see cref="Paragraph"/>
+        /// </returns>
         public virtual iText.Layout.Element.Paragraph AddAll<T2>(IList<T2> elements)
             where T2 : ILeafElement {
             foreach (ILeafElement element in elements) {
@@ -132,13 +164,19 @@ namespace iText.Layout.Element {
             return this;
         }
 
-        /// <summary>Adds an unspecified amount of tabstop elements as properties to the Paragraph.</summary>
+        /// <summary>
+        /// Adds an unspecified amount of tabstop elements as properties to this
+        /// <see cref="Paragraph"/>.
+        /// </summary>
         /// <param name="tabStops">
         /// the
         /// <see cref="TabStop">tabstop(s)</see>
         /// to be added as properties
         /// </param>
-        /// <returns>this Paragraph</returns>
+        /// <returns>
+        /// this
+        /// <see cref="Paragraph"/>
+        /// </returns>
         /// <seealso cref="TabStop"/>
         public virtual iText.Layout.Element.Paragraph AddTabStops(params TabStop[] tabStops) {
             AddTabStopsAsProperty(JavaUtil.ArraysAsList(tabStops));
@@ -148,14 +186,18 @@ namespace iText.Layout.Element {
         /// <summary>
         /// Adds a
         /// <see cref="System.Collections.IList{E}"/>
-        /// of tabstop elements as properties to the Paragraph.
+        /// of tabstop elements as properties to this
+        /// <see cref="Paragraph"/>.
         /// </summary>
         /// <param name="tabStops">
         /// the list of
         /// <see cref="TabStop"/>
         /// s to be added as properties
         /// </param>
-        /// <returns>this Paragraph</returns>
+        /// <returns>
+        /// this
+        /// <see cref="Paragraph"/>
+        /// </returns>
         /// <seealso cref="TabStop"/>
         public virtual iText.Layout.Element.Paragraph AddTabStops(IList<TabStop> tabStops) {
             AddTabStopsAsProperty(tabStops);
