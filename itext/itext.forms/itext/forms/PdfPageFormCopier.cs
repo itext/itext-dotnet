@@ -315,7 +315,8 @@ namespace iText.Forms {
                 if (existingFields.Contains(name)) {
                     PdfArray kids = parent.GetAsArray(PdfName.Kids);
                     foreach (PdfObject kid in kids) {
-                        if (((PdfDictionary)kid).Get(PdfName.T).Equals(fieldDic.Get(PdfName.T))) {
+                        if (((PdfDictionary)kid).Get(PdfName.T) != null && ((PdfDictionary)kid).Get(PdfName.T).Equals(fieldDic.Get
+                            (PdfName.T))) {
                             PdfFormField kidField = MakeFormField(kid);
                             PdfFormField field = MakeFormField(fieldDic);
                             if (kidField == null || field == null) {
