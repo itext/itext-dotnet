@@ -157,7 +157,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
-        public virtual void ParseAboluteLengthExponential01() {
+        public virtual void ParseAbsoluteLengthExponentialPtTest() {
             String value = "1e2pt";
             float actual = CssDimensionParsingUtils.ParseAbsoluteLength(value);
             float expected = 1e2f;
@@ -165,11 +165,19 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
-        public virtual void ParseAboluteLengthExponential02() {
+        public virtual void ParseAbsoluteLengthExponentialPxTest() {
             String value = "1e2px";
             float actual = CssDimensionParsingUtils.ParseAbsoluteLength(value);
             float expected = 1e2f * 0.75f;
             NUnit.Framework.Assert.AreEqual(expected, actual, 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseAbsoluteLengthExponentialCapitalTest() {
+            String value = "1E-4";
+            float actual = CssDimensionParsingUtils.ParseAbsoluteLength(value);
+            float expected = 1e-4f * 0.75f;
+            NUnit.Framework.Assert.AreEqual(expected, actual, 1e-9);
         }
 
         [NUnit.Framework.Test]

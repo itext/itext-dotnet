@@ -106,11 +106,33 @@ namespace iText.Layout.Element {
             return tagProperties;
         }
 
+        /// <summary>
+        /// Defines whether the
+        /// <see cref="Div"/>
+        /// should occupy all the space left in the available area
+        /// in case it is the last element in this area.
+        /// </summary>
+        /// <param name="fillArea">defines whether the available area should be filled</param>
+        /// <returns>
+        /// this
+        /// <see cref="Div"/>
+        /// </returns>
         public virtual Div SetFillAvailableArea(bool fillArea) {
             SetProperty(Property.FILL_AVAILABLE_AREA, fillArea);
             return this;
         }
 
+        /// <summary>
+        /// Defines whether the
+        /// <see cref="Div"/>
+        /// should occupy all the space left in the available area
+        /// in case the area has been split and it is the last element in the split part of this area.
+        /// </summary>
+        /// <param name="fillAreaOnSplit">defines whether the available area should be filled</param>
+        /// <returns>
+        /// this
+        /// <see cref="Div"/>
+        /// </returns>
         public virtual Div SetFillAvailableAreaOnSplit(bool fillAreaOnSplit) {
             SetProperty(Property.FILL_AVAILABLE_AREA_ON_SPLIT, fillAreaOnSplit);
             return this;

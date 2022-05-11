@@ -474,6 +474,35 @@ namespace iText.Layout.Borders {
             LEFT
         }
 
+        /// <summary>
+        /// Gets a
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// in which two lines intersect.
+        /// </summary>
+        /// <param name="lineBeg">
+        /// a
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// which defines some point on the first line
+        /// </param>
+        /// <param name="lineEnd">
+        /// a
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// which defines another point on the first line
+        /// </param>
+        /// <param name="clipLineBeg">
+        /// a
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// which defines some point on the second line
+        /// </param>
+        /// <param name="clipLineEnd">
+        /// a
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// which defines another point on the second line
+        /// </param>
+        /// <returns>
+        /// the intersection
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// </returns>
         protected internal virtual Point GetIntersectionPoint(Point lineBeg, Point lineEnd, Point clipLineBeg, Point
              clipLineEnd) {
             double A1 = lineBeg.GetY() - lineEnd.GetY();

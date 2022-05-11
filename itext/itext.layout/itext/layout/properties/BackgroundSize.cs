@@ -45,6 +45,17 @@ namespace iText.Layout.Properties {
         /// <summary>Image hsd a maximum size but not larger than the area.</summary>
         private bool contain;
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundSize"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Creates a new
+        /// <see cref="BackgroundSize"/>
+        /// instance.
+        /// The "cover" and "contain" properties are not set.
+        /// </remarks>
         public BackgroundSize() {
             cover = false;
             contain = false;
