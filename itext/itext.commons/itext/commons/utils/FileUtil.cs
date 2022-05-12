@@ -155,6 +155,10 @@ namespace iText.Commons.Utils {
         public static Stream GetBufferedOutputStream(String filename) {
             return new FileStream(filename, FileMode.Create);
         }
+        
+        public static FileInfo ConstructFileByDirectoryAndName(String directory, String fileName) {
+            return new FileInfo(Path.Combine(directory, fileName));
+        }
 
         /// <summary>
         /// Creates a temporary file at the provided path.
@@ -175,6 +179,10 @@ namespace iText.Commons.Utils {
         
         public static FileStream GetInputStreamForFile(String path) {
             return new FileStream(path, FileMode.Open, FileAccess.Read);
+        }
+
+        public static FileStream GetFileOutputStream(String path) {
+            return new FileStream(path, FileMode.Create, FileAccess.Write);
         }
 
         public static FileStream GetRandomAccessFile(FileInfo file) {
