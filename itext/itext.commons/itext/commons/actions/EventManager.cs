@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Actions.Processors;
 using iText.Commons.Exceptions;
 using iText.Commons.Utils;
 
@@ -46,6 +47,16 @@ namespace iText.Commons.Actions {
         /// <returns>the instance of the class</returns>
         public static iText.Commons.Actions.EventManager GetInstance() {
             return INSTANCE;
+        }
+
+        /// <summary>Deliberately turns off the warning message about AGPL usage.</summary>
+        /// <remarks>
+        /// Deliberately turns off the warning message about AGPL usage.
+        /// <para />
+        /// <b> Important note. Calling of this method means that the terms of AGPL license are met. </b>
+        /// </remarks>
+        public static void AcknowledgeAgplUsageDisableWarningMessage() {
+            ProductProcessorFactoryKeeper.SetProductProcessorFactory(new UnderAgplProductProcessorFactory());
         }
 
         /// <summary>Handles the event.</summary>
