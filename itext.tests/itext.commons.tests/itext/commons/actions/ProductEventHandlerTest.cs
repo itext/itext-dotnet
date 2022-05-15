@@ -36,6 +36,11 @@ namespace iText.Commons.Actions {
             ProductEventHandler.INSTANCE.ClearProcessors();
         }
 
+        [NUnit.Framework.TearDown]
+        public virtual void AfterEach() {
+            ProductProcessorFactoryKeeper.RestoreDefaultProductProcessorFactory();
+        }
+
         [NUnit.Framework.Test]
         public virtual void UnknownProductTest() {
             ProductEventHandler handler = ProductEventHandler.INSTANCE;
@@ -93,6 +98,17 @@ namespace iText.Commons.Actions {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SettingCustomProcessFactoryTest() {
+            ProductEventHandlerTest.CustomFactory productProcessorFactory = new ProductEventHandlerTest.CustomFactory(
+                );
+            productProcessorFactory.CreateProcessor(ProductNameConstant.ITEXT_CORE);
+            ProductProcessorFactoryKeeper.SetProductProcessorFactory(productProcessorFactory);
+            ProductEventHandler handler = ProductEventHandler.INSTANCE;
+            ITextProductEventProcessor activeProcessor = handler.GetActiveProcessor(ProductNameConstant.ITEXT_CORE);
+            NUnit.Framework.Assert.IsTrue(activeProcessor is ProductEventHandlerTest.TestProductEventProcessor);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void RepeatEventHandlingWithFiveExceptionOnProcessingTest() {
             ProductEventHandler handler = ProductEventHandler.INSTANCE;
             handler.AddProcessor(new ProductEventHandlerTest.RepeatEventProcessor(5));
@@ -119,6 +135,26 @@ namespace iText.Commons.Actions {
             AbstractContextBasedITextEvent @event = new ITextTestEvent(new SequenceId(), null, "test", ProductNameConstant
                 .ITEXT_CORE);
             NUnit.Framework.Assert.DoesNotThrow(() => handler.OnAcceptedEvent(@event));
+        }
+
+        private class CustomFactory : IProductProcessorFactory {
+            public virtual ITextProductEventProcessor CreateProcessor(String productName) {
+                return new ProductEventHandlerTest.TestProductEventProcessor(productName);
+            }
+        }
+
+        private class TestProductEventProcessor : AbstractITextProductEventProcessor {
+            public TestProductEventProcessor(String productName)
+                : base(productName) {
+            }
+
+            public override void OnEvent(AbstractProductProcessITextEvent @event) {
+            }
+
+            // do nothing
+            public override String GetUsageType() {
+                return "AGPL";
+            }
         }
 
         private class RepeatEventProcessor : ITextProductEventProcessor {

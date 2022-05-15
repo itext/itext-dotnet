@@ -91,7 +91,7 @@ namespace iText.Commons.Actions {
                 return processor;
             }
             if (ProductNameConstant.PRODUCT_NAMES.Contains(productName)) {
-                processor = new DefaultITextProductEventProcessor(productName);
+                processor = ProductProcessorFactoryKeeper.GetProductProcessorFactory().CreateProcessor(productName);
                 processors.Put(productName, processor);
                 return processor;
             }
