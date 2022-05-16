@@ -105,7 +105,7 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(dest, sourceFolder + "cmp_" + fileName
                 ));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
-                , "diff_", GetTestMap(new Rectangle(67, 575, 155, 15))));
+                , "diff_", GetTestMap(new Rectangle(27, 550, 195, 40))));
         }
 
         [NUnit.Framework.Test]
