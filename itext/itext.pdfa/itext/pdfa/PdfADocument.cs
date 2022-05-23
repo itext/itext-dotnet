@@ -303,6 +303,14 @@ namespace iText.Pdfa {
             base.FlushFonts();
         }
 
+        /// <summary>
+        /// Sets the checker that defines the requirements of the PDF/A standard
+        /// depending on conformance level.
+        /// </summary>
+        /// <param name="conformanceLevel">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// </param>
         protected internal virtual void SetChecker(PdfAConformanceLevel conformanceLevel) {
             switch (conformanceLevel.GetPart()) {
                 case "1": {
@@ -322,6 +330,7 @@ namespace iText.Pdfa {
             }
         }
 
+        /// <summary>Initializes tagStructureContext to track necessary information of document's tag structure.</summary>
         protected override void InitTagStructureContext() {
             tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.GetConformanceLevel()));
         }
