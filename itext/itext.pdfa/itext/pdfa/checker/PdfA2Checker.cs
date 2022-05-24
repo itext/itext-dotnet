@@ -833,6 +833,24 @@ namespace iText.Pdfa.Checker {
             CheckFormXObject(form, null);
         }
 
+        /// <summary>
+        /// Verify the conformity of the Form XObject with appropriate
+        /// specification.
+        /// </summary>
+        /// <remarks>
+        /// Verify the conformity of the Form XObject with appropriate
+        /// specification. Throws PdfAConformanceException if any discrepancy was found
+        /// </remarks>
+        /// <param name="form">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// to be checked
+        /// </param>
+        /// <param name="contentStream">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// current content stream
+        /// </param>
         protected internal virtual void CheckFormXObject(PdfStream form, PdfStream contentStream) {
             if (IsAlreadyChecked(form)) {
                 return;
