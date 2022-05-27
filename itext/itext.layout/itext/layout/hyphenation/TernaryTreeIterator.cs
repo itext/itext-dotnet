@@ -82,6 +82,11 @@ namespace iText.Layout.Hyphenation {
                 this.child = c;
             }
 
+            /// <summary>Construct item.</summary>
+            /// <param name="i">
+            /// an
+            /// <see cref="Item"/>
+            /// </param>
             public Item(TernaryTreeIterator _enclosing, TernaryTreeIterator.Item i) {
                 this._enclosing = _enclosing;
                 this.parent = i.parent;

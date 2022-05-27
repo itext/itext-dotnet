@@ -43,7 +43,17 @@ address: sales@itextpdf.com
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
+    /// <summary>
+    /// A
+    /// <see cref="FlexContainer"/>
+    /// represents a container of the flex objects.
+    /// </summary>
     internal class FlexContainer : Div {
+        /// <summary>
+        /// Creates new
+        /// <see cref="FlexContainer"/>
+        /// instance.
+        /// </summary>
         public FlexContainer()
             : base() {
         }

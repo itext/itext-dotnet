@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.Layout.Hyphenation {
+    /// <summary>Class containing constants to be used in hyphenation on layout level.</summary>
     public class HyphenationConstants {
         public const String HYPHENATION_DEFAULT_RESOURCE = "iText.Hyph.";
     }

@@ -51,6 +51,11 @@ using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+    /// <summary>
+    /// Represents a renderer for the
+    /// <see cref="iText.Layout.Element.Cell"/>
+    /// layout element.
+    /// </summary>
     public class CellRenderer : BlockRenderer {
         /// <summary>Creates a CellRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
@@ -156,6 +161,17 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
+        /// <summary>Applies spacings on the given rectangle.</summary>
+        /// <param name="rect">a rectangle spacings will be applied on</param>
+        /// <param name="reverse">
+        /// indicates whether spacings will be applied
+        /// inside (in case of false) or outside (in case of true) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
         protected internal virtual Rectangle ApplySpacings(Rectangle rect, bool reverse) {
             if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
                 BORDER_COLLAPSE))) {
@@ -172,6 +188,18 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
+        /// <summary>Applies given spacings on the given rectangle.</summary>
+        /// <param name="rect">a rectangle spacings will be applied on</param>
+        /// <param name="spacings">the spacings to be applied on the given rectangle</param>
+        /// <param name="reverse">
+        /// indicates whether spacings will be applied
+        /// inside (in case of false) or outside (in case of true) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
         protected internal virtual Rectangle ApplySpacings(Rectangle rect, float[] spacings, bool reverse) {
             if (BorderCollapsePropertyValue.SEPARATE.Equals(parent.GetProperty<BorderCollapsePropertyValue?>(Property.
                 BORDER_COLLAPSE))) {

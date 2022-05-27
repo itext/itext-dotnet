@@ -243,6 +243,15 @@ namespace iText.Layout.Element {
             return new CellRenderer(this);
         }
 
+        /// <summary>Updates cell indexes.</summary>
+        /// <param name="row">the number of the row to update</param>
+        /// <param name="col">the number of the col to update</param>
+        /// <param name="numberOfColumns">to evaluate new colspan</param>
+        /// <returns>
+        /// this
+        /// <see cref="Cell"/>
+        /// with updated fields
+        /// </returns>
         protected internal virtual iText.Layout.Element.Cell UpdateCellIndexes(int row, int col, int numberOfColumns
             ) {
             this.row = row;

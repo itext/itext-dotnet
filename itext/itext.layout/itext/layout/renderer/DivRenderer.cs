@@ -44,6 +44,11 @@ address: sales@itextpdf.com
 using iText.Layout.Element;
 
 namespace iText.Layout.Renderer {
+    /// <summary>
+    /// Represents a renderer for the
+    /// <see cref="iText.Layout.Element.Div"/>
+    /// layout element.
+    /// </summary>
     public class DivRenderer : BlockRenderer {
         /// <summary>Creates a DivRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
