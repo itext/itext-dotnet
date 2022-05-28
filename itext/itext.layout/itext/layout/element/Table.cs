@@ -1103,6 +1103,12 @@ namespace iText.Layout.Element {
             return normalized;
         }
 
+        /// <summary>Returns the list of all row groups.</summary>
+        /// <returns>
+        /// a list of a
+        /// <see cref="RowRange"/>
+        /// which holds the row numbers of a section of a table
+        /// </returns>
         protected internal virtual IList<Table.RowRange> GetRowGroups() {
             int lastRowWeCanFlush = currentColumn == columnWidths.Length ? currentRow : currentRow - 1;
             int[] cellBottomRows = new int[columnWidths.Length];

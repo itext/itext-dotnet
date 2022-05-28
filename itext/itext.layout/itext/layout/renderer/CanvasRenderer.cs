@@ -49,6 +49,11 @@ using iText.Layout.Layout;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+    /// <summary>
+    /// Represents a renderer for the
+    /// <see cref="iText.Layout.Canvas"/>
+    /// layout element.
+    /// </summary>
     public class CanvasRenderer : RootRenderer {
         protected internal Canvas canvas;
 

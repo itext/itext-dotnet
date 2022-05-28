@@ -49,12 +49,12 @@ using iText.Layout.Layout;
 
 namespace iText.Layout.Renderer {
     /// <summary>
-    /// Renderer object for the
+    /// Renderer for the
     /// <see cref="iText.Layout.Element.AreaBreak"/>
     /// layout element.
     /// </summary>
     /// <remarks>
-    /// Renderer object for the
+    /// Renderer for the
     /// <see cref="iText.Layout.Element.AreaBreak"/>
     /// layout element. Will terminate the
     /// current content area and initialize a new one.
