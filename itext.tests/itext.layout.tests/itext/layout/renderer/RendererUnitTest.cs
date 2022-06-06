@@ -54,7 +54,11 @@ namespace iText.Layout.Renderer {
     public abstract class RendererUnitTest : ExtendedITextTest {
         // This also can be converted to a @Rule to have it all at hand in the future
         protected internal static Document CreateDummyDocument() {
-            return new Document(new PdfDocument(new PdfWriter(new ByteArrayOutputStream())));
+            Document document = new Document(new PdfDocument(new PdfWriter(new ByteArrayOutputStream())));
+            // setting margins to 0, because it's a dummy parent and this way it would less likely
+            // interfere with other calculations
+            document.SetMargins(0, 0, 0, 0);
+            return document;
         }
 
         protected internal static TextRenderer CreateLayoutedTextRenderer(String text, Document document) {
@@ -74,6 +78,10 @@ namespace iText.Layout.Renderer {
 
         protected internal static LayoutArea CreateLayoutArea(float width, float height) {
             return new LayoutArea(1, new Rectangle(width, height));
+        }
+
+        protected internal static LayoutContext CreateLayoutContext(float width, float height) {
+            return new LayoutContext(CreateLayoutArea(width, height));
         }
     }
 }
