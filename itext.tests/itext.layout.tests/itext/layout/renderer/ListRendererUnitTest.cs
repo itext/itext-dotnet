@@ -20,23 +20,99 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Layout;
 using iText.Layout.Element;
-using iText.Test;
+using iText.Layout.Layout;
+using iText.Layout.Properties;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
-    public class ListRendererUnitTest : ExtendedITextTest {
+    public class ListRendererUnitTest : RendererUnitTest {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            ListRenderer listRenderer = new _ListRenderer_44(new List());
+            ListRenderer listRenderer = new _ListRenderer_52(new List());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(ListRenderer), listRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _ListRenderer_44 : ListRenderer {
-            public _ListRenderer_44(List baseArg1)
+        private sealed class _ListRenderer_52 : ListRenderer {
+            public _ListRenderer_52(List baseArg1)
                 : base(baseArg1) {
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SymbolPositioningInsideDrawnOnceTest() {
+            ListRendererUnitTest.InvocationsCounter invocationsCounter = new ListRendererUnitTest.InvocationsCounter();
+            List modelElement = new List();
+            modelElement.SetNextRenderer(new ListRendererUnitTest.ListRendererCreatingNotifyingListSymbols(modelElement
+                , invocationsCounter));
+            modelElement.Add((ListItem)new ListItem().Add(new Paragraph("ListItem1")).Add(new Paragraph("ListItem2")));
+            modelElement.SetProperty(Property.LIST_SYMBOL_POSITION, ListSymbolPosition.INSIDE);
+            modelElement.SetFontSize(30);
+            // A hack for a test in order to layout the list at the very left border of the parent area.
+            // List symbols are not drawn outside the parent area, so we want to make sure that symbol renderer
+            // won't be drawn twice even if there's enough space around the list.
+            modelElement.SetMarginLeft(500);
+            IRenderer listRenderer = modelElement.CreateRendererSubTree();
+            Document document = CreateDummyDocument();
+            listRenderer.SetParent(document.GetRenderer());
+            PdfPage pdfPage = document.GetPdfDocument().AddNewPage();
+            // should be enough to fit a single list-item, but not both
+            int height = 80;
+            // we don't want to impose any width restrictions
+            int width = 1000;
+            LayoutResult result = listRenderer.Layout(CreateLayoutContext(width, height));
+            System.Diagnostics.Debug.Assert(result.GetStatus() == LayoutResult.PARTIAL);
+            result.GetSplitRenderer().Draw(new DrawContext(document.GetPdfDocument(), new PdfCanvas(pdfPage)));
+            // only split part is drawn, list symbol is expected to be drawn only once.
+            NUnit.Framework.Assert.AreEqual(1, invocationsCounter.GetInvocationsCount());
+        }
+
+        private class ListRendererCreatingNotifyingListSymbols : ListRenderer {
+            private ListRendererUnitTest.InvocationsCounter counter;
+
+            public ListRendererCreatingNotifyingListSymbols(List modelElement, ListRendererUnitTest.InvocationsCounter
+                 counter)
+                : base(modelElement) {
+                this.counter = counter;
+            }
+
+            protected internal override IRenderer MakeListSymbolRenderer(int index, IRenderer renderer) {
+                return new ListRendererUnitTest.NotifyingListSymbolRenderer(new Text("-"), counter);
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return new ListRendererUnitTest.ListRendererCreatingNotifyingListSymbols((List)GetModelElement(), counter);
+            }
+        }
+
+        private class NotifyingListSymbolRenderer : TextRenderer {
+            private ListRendererUnitTest.InvocationsCounter counter;
+
+            public NotifyingListSymbolRenderer(Text textElement, ListRendererUnitTest.InvocationsCounter counter)
+                : base(textElement) {
+                this.counter = counter;
+            }
+
+            public override void Draw(DrawContext drawContext) {
+                counter.RegisterInvocation();
+                base.Draw(drawContext);
+            }
+        }
+
+        private class InvocationsCounter {
+            private int counter = 0;
+
+            internal virtual void RegisterInvocation() {
+                ++counter;
+            }
+
+            internal virtual int GetInvocationsCount() {
+                return counter;
             }
         }
     }
