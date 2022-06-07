@@ -532,6 +532,12 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override void Move(float dxRight, float dyUp) {
+            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ParagraphRenderer));
+            if (occupiedArea == null) {
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                    , "Moving won't be performed."));
+                return;
+            }
             occupiedArea.GetBBox().MoveRight(dxRight);
             occupiedArea.GetBBox().MoveUp(dyUp);
             if (null != lines) {
