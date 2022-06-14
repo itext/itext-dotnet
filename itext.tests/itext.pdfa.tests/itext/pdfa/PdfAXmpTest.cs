@@ -99,33 +99,46 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SaveAndReadDocumentWithCanonicalXmpMetadata()
-        {
+        public virtual void SaveAndReadDocumentWithCanonicalXmpMetadata() {
             String outFile = destinationFolder + "saveAndReadDocumentWithCanonicalXmpMetadata.pdf";
+            String cmpFile = cmpFolder + "cmp_saveAndReadDocumentWithCanonicalXmpMetadata.pdf";
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_2B;
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                , @is);
-            PdfADocument doc = new PdfADocument(new PdfWriter(outFile), conformanceLevel, outputIntent);
-            doc.AddNewPage();
-            XMPMeta xmp = XMPMetaFactory.Create();
-            xmp.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, conformanceLevel.GetPart(), new PropertyOptions().SetSchemaNode(true));
-            xmp.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, conformanceLevel.GetConformance(), new PropertyOptions().SetSchemaNode(true));
-            var options = new SerializeOptions().SetUseCanonicalFormat(true).SetUseCompactFormat(false);
-            doc.SetXmpMetadata(xmp, options);
-            doc.SetTagged();
-            doc.Close();
-            PdfReader reader = new PdfReader(outFile);
-            PdfDocument resultDoc = new PdfDocument(reader);
-            PdfAConformanceLevel conformanceLevelResult = resultDoc.GetReader().GetPdfAConformanceLevel();
-            NUnit.Framework.Assert.IsNotNull(conformanceLevelResult);
-            NUnit.Framework.Assert.AreEqual(conformanceLevel.GetConformance(), conformanceLevelResult.GetConformance());
-            NUnit.Framework.Assert.AreEqual(conformanceLevel.GetPart(), conformanceLevelResult.GetPart());
-            byte[] xmpResultBytes = resultDoc.GetXmpMetadata();
-            resultDoc.Close();
-            NUnit.Framework.Assert.IsNotNull(xmpResultBytes);
-            XMPMeta xmpResult = XMPMetaFactory.ParseFromBuffer(xmpResultBytes);
-            NUnit.Framework.Assert.IsNotNull(xmpResult);
+            PdfOutputIntent outputIntent;
+            using (Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                )) {
+                outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is);
+            }
+            using (PdfADocument doc = new PdfADocument(new PdfWriter(outFile), conformanceLevel, outputIntent)) {
+                doc.AddNewPage();
+                XMPMeta xmp = XMPMetaFactory.Create();
+                xmp.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, conformanceLevel.GetPart(), new PropertyOptions().SetSchemaNode
+                    (true));
+                xmp.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, conformanceLevel.GetConformance(), new PropertyOptions
+                    ().SetSchemaNode(true));
+                SerializeOptions options = new SerializeOptions().SetUseCanonicalFormat(true).SetUseCompactFormat(false);
+                doc.SetXmpMetadata(xmp, options);
+                doc.SetTagged();
+            }
+            // Closing document and reopening it to flush it XMP metadata ModifyDate
+            using (PdfDocument doc_1 = new PdfDocument(new PdfReader(outFile))) {
+                using (PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpFile))) {
+                    byte[] rdf = doc_1.GetXmpMetadata();
+                    byte[] expectedRdf = cmpDoc.GetXmpMetadata();
+                    // Comparing angle brackets, since it's the main difference between canonical and compact format.
+                    NUnit.Framework.Assert.AreEqual(Count(expectedRdf, (byte)'<'), Count(rdf, (byte)'<'));
+                    NUnit.Framework.Assert.IsNull(new CompareTool().CompareXmp(cmpFile, outFile, true));
+                }
+            }
+        }
+
+        private int Count(byte[] array, byte b) {
+            int counter = 0;
+            foreach (byte each in array) {
+                if (each == b) {
+                    counter++;
+                }
+            }
+            return counter;
         }
     }
 }

@@ -266,12 +266,11 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Sets the XMP Metadata.</summary>
-        /// <remarks>SerializeOptions are saved for the lifetime of PdfDocument.</remarks>
         /// <param name="xmpMeta">the xmpMetadata to set</param>
-        /// <param name="options">serialization options</param>
-        public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions options) {
-            serializeOptions = options;
-            SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, options));
+        /// <param name="serializeOptions">serialization options</param>
+        public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
+            this.serializeOptions = serializeOptions;
+            SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
         }
 
         /// <summary>Sets the XMP Metadata.</summary>
@@ -1923,10 +1922,15 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Sets a persistent XMP metadata serialization options.</summary>
-        /// <param name="options"><see cref="iText.Kernel.XMP.Options.SerializeOptions"/>.</param>
-        public virtual void SetSerializeOptions(SerializeOptions options)
-        {
-            serializeOptions = options;
+        /// <param name="serializeOptions">serialize options</param>
+        public virtual void SetSerializeOptions(SerializeOptions serializeOptions) {
+            this.serializeOptions = serializeOptions;
+        }
+
+        /// <summary>Gets a persistent XMP metadata serialization options.</summary>
+        /// <returns>serialize options</returns>
+        public virtual SerializeOptions GetSerializeOptions() {
+            return this.serializeOptions;
         }
 
         /// <summary>Gets list of indirect references.</summary>
