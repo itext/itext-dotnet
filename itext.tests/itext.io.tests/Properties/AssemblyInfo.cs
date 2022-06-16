@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("7.2.3.0")]
 [assembly: AssemblyFileVersion("7.2.3.0")]
-[assembly: AssemblyInformationalVersion("7.2.3-SNAPSHOT")]
+[assembly: AssemblyInformationalVersion("7.2.3")]
 
 #if !NETSTANDARD2_0
 [assembly: NUnit.Framework.Timeout(300000)]
