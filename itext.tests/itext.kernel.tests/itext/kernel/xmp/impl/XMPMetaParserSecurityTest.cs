@@ -40,7 +40,7 @@ namespace iText.Kernel.XMP.Impl {
 
         [NUnit.Framework.SetUp]
         public virtual void ResetXmlParserFactoryToDefault() {
-            XmlProcessorCreator.SetXmlParserFactory(new DefaultSafeXmlParserFactory());
+            XmlProcessorCreator.SetXmlParserFactory(null);
         }
 
         [NUnit.Framework.Test]

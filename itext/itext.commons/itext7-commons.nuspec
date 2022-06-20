@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7.commons</id>
-    <version>7.2.2</version>
+    <version>7.2.3</version>
     <title>iText 7 commons module</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -18,9 +18,11 @@
     <tags>itext itext7 itextsharp c# .net csharp</tags>
     <dependencies>
       <group targetFramework="net461">
+		<dependency id="Newtonsoft.Json" version="13.0.1" />
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
       </group>
       <group targetFramework="netstandard2.0">
+		<dependency id="Newtonsoft.Json" version="13.0.1" />
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
       </group>
     </dependencies>

@@ -257,6 +257,9 @@ namespace iText.IO.Logs {
 
         public const String INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE = "Invalid key value: key {0} has null value.";
 
+        public const String FILTER_WAS_ALREADY_FLUSHED = "{0} {1} R stream object filter was already flushed, stream compression will remain as in original file. "
+             + "Try to flush object containing filter before the PdfDocument#close() method so that stream " + "compression would be processed as intended.";
+
         public const String LAST_ROW_IS_NOT_COMPLETE = "Last row is not completed. Table bottom border may collapse as you do not expect it";
 
         public const String MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN = "Make copy of Catalog dictionary is forbidden.";
@@ -278,6 +281,7 @@ namespace iText.IO.Logs {
 
         public const String NUM_TREE_SHALL_NOT_END_WITH_KEY = "Number tree ends with a key which is invalid according to the PDF specification.";
 
+        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
         public const String N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY = "\\N entry is required to be present in an appearance dictionary.";
 
         public const String OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED = "Occupied area has not been initialized. {0}";

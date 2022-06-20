@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Actions.Processors;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Ecosystem;
 using iText.Commons.Exceptions;
@@ -30,6 +31,11 @@ using iText.Test.Attributes;
 
 namespace iText.Commons.Actions {
     public class EventManagerTest : ExtendedITextTest {
+        [NUnit.Framework.TearDown]
+        public virtual void AfterEach() {
+            ProductProcessorFactoryKeeper.RestoreDefaultProductProcessorFactory();
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(TestConfigurationEvent.MESSAGE)]
         public virtual void ConfigurationEventTest() {
@@ -86,6 +92,17 @@ namespace iText.Commons.Actions {
             NUnit.Framework.Assert.IsTrue(eventManager.Unregister(handler));
             NUnit.Framework.Assert.IsFalse(eventManager.IsRegistered(handler));
             NUnit.Framework.Assert.IsFalse(eventManager.Unregister(handler));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TurningOffAgplTest() {
+            IProductProcessorFactory defaultProductProcessorFactory = ProductProcessorFactoryKeeper.GetProductProcessorFactory
+                ();
+            NUnit.Framework.Assert.IsTrue(defaultProductProcessorFactory is DefaultProductProcessorFactory);
+            EventManager.AcknowledgeAgplUsageDisableWarningMessage();
+            IProductProcessorFactory underAgplProductProcessorFactory1 = ProductProcessorFactoryKeeper.GetProductProcessorFactory
+                ();
+            NUnit.Framework.Assert.IsTrue(underAgplProductProcessorFactory1 is UnderAgplProductProcessorFactory);
         }
 
         private class ThrowArithmeticExpHandler : IEventHandler {

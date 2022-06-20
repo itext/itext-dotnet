@@ -285,13 +285,15 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping04() {
-            // TODO this test passes, however it seems, that mingling two standard namespaces in the same tag structure tree should be illegal
-            // May be this should be checked if we would implement conforming PDF/UA docs generations in a way PDF/A docs are generated
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping04.pdf", 
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsCntxt = pdfDocument.GetTagStructureContext();
             PdfNamespace stdNs2 = tagsCntxt.FetchNamespace(StandardNamespaces.PDF_2_0);
+            // For /P elem a namespace is not explicitly specified, so PDF 1.7 namespace is used (see 14.8.6.1 of ISO 32000-2).
+            // Mingling two standard namespaces in the same tag structure tree is valid in "core" PDF 2.0, however,
+            // specifically the interaction between them will be addressed by ISO/TS 32005, which is currently still being drafted
+            // (see DEVSIX-6676)
             stdNs2.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.p, StandardRoles.P);
             Document document = new Document(pdfDocument);
             Paragraph customRolePara = new Paragraph("Hello world text.");

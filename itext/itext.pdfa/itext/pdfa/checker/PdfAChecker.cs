@@ -139,6 +139,8 @@ namespace iText.Pdfa.Checker {
 
         private bool fullCheckMode = false;
 
+        /// <summary>Creates a PdfAChecker with the required conformance level.</summary>
+        /// <param name="conformanceLevel">the required conformance level</param>
         protected internal PdfAChecker(PdfAConformanceLevel conformanceLevel) {
             this.conformanceLevel = conformanceLevel;
         }
@@ -417,57 +419,211 @@ namespace iText.Pdfa.Checker {
         /// <returns>maximum allowed number of indirect objects</returns>
         protected internal abstract long GetMaxNumberOfIndirectObjects();
 
+        /// <summary>Retrieve forbidden actions in conforming document.</summary>
+        /// <returns>
+        /// set of
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// with forbidden actions
+        /// </returns>
         protected internal abstract ICollection<PdfName> GetForbiddenActions();
 
+        /// <summary>Retrieve allowed actions in conforming document.</summary>
+        /// <returns>
+        /// set of
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// with allowed named actions
+        /// </returns>
         protected internal abstract ICollection<PdfName> GetAllowedNamedActions();
 
+        /// <summary>Checks if the action is allowed.</summary>
+        /// <param name="action">to be checked</param>
         protected internal abstract void CheckAction(PdfDictionary action);
 
+        /// <summary>Verify the conformity of the annotation dictionary.</summary>
+        /// <param name="annotDic">
+        /// the annotation
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to be checked
+        /// </param>
         protected internal abstract void CheckAnnotation(PdfDictionary annotDic);
 
+        /// <summary>Checks if entries in catalog dictionary are valid.</summary>
+        /// <param name="catalogDict">
+        /// the catalog
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to be checked
+        /// </param>
         protected internal abstract void CheckCatalogValidEntries(PdfDictionary catalogDict);
 
+        /// <summary>Verify the conformity of used color spaces.</summary>
         protected internal abstract void CheckColorsUsages();
 
+        /// <summary>Verify the conformity of the given image.</summary>
+        /// <param name="image">the image to check</param>
+        /// <param name="currentColorSpaces">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the color spaces used in the document
+        /// </param>
         protected internal abstract void CheckImage(PdfStream image, PdfDictionary currentColorSpaces);
 
+        /// <summary>Verify the conformity of the file specification dictionary.</summary>
+        /// <param name="fileSpec">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing file specification to be checked
+        /// </param>
         protected internal abstract void CheckFileSpec(PdfDictionary fileSpec);
 
+        /// <summary>Verify the conformity of the form dictionary.</summary>
+        /// <param name="form">
+        /// the form
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to be checked
+        /// </param>
         protected internal abstract void CheckForm(PdfDictionary form);
 
+        /// <summary>Verify the conformity of the form XObject dictionary.</summary>
+        /// <param name="form">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckFormXObject(PdfStream form);
 
+        /// <summary>Performs a number of checks on the logical structure of the document.</summary>
+        /// <param name="catalog">
+        /// the catalog
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckLogicalStructure(PdfDictionary catalog);
 
+        /// <summary>Performs a number of checks on the metadata of the document.</summary>
+        /// <param name="catalog">
+        /// the catalog
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckMetaData(PdfDictionary catalog);
 
+        /// <summary>Verify the conformity of the non-symbolic TrueType font.</summary>
+        /// <param name="trueTypeFont">
+        /// the
+        /// <see cref="iText.Kernel.Font.PdfTrueTypeFont"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont);
 
+        /// <summary>Verify the conformity of the output intents array in the catalog dictionary.</summary>
+        /// <param name="catalog">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckOutputIntents(PdfDictionary catalog);
 
+        /// <summary>Verify the conformity of the page dictionary.</summary>
+        /// <param name="page">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to check
+        /// </param>
+        /// <param name="pageResources">the page's resources dictionary</param>
         protected internal abstract void CheckPageObject(PdfDictionary page, PdfDictionary pageResources);
 
+        /// <summary>Checks the allowable size of the page.</summary>
+        /// <param name="page">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// of page which size being checked
+        /// </param>
         protected internal abstract void CheckPageSize(PdfDictionary page);
 
+        /// <summary>Verify the conformity of the PDF array.</summary>
+        /// <param name="array">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckPdfArray(PdfArray array);
 
+        /// <summary>Verify the conformity of the PDF dictionary.</summary>
+        /// <param name="dictionary">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckPdfDictionary(PdfDictionary dictionary);
 
+        /// <summary>Verify the conformity of the PDF name.</summary>
+        /// <param name="name">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckPdfName(PdfName name);
 
+        /// <summary>Verify the conformity of the PDF number.</summary>
+        /// <param name="number">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfNumber"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckPdfNumber(PdfNumber number);
 
+        /// <summary>Verify the conformity of the PDF stream.</summary>
+        /// <param name="stream">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckPdfStream(PdfStream stream);
 
+        /// <summary>Verify the conformity of the PDF string.</summary>
+        /// <param name="string">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckPdfString(PdfString @string);
 
+        /// <summary>Verify the conformity of the symbolic TrueType font.</summary>
+        /// <param name="trueTypeFont">
+        /// the
+        /// <see cref="iText.Kernel.Font.PdfTrueTypeFont"/>
+        /// to check
+        /// </param>
         protected internal abstract void CheckSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont);
 
+        /// <summary>Verify the conformity of the trailer dictionary.</summary>
+        /// <param name="trailer">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// of trailer to check
+        /// </param>
         protected internal abstract void CheckTrailer(PdfDictionary trailer);
 
+        /// <summary>Verify the conformity of the page transparency.</summary>
+        /// <param name="pageDict">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// contains contents for transparency to be checked
+        /// </param>
+        /// <param name="pageResources">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// contains resources for transparency to be checked
+        /// </param>
         protected internal abstract void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
             );
 
+        /// <summary>Verify the conformity of the resources dictionary.</summary>
+        /// <param name="resources">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to be checked
+        /// </param>
         protected internal virtual void CheckResources(PdfDictionary resources) {
             if (resources == null) {
                 return;
@@ -515,10 +671,21 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary>Checks if the specified flag is set.</summary>
+        /// <param name="flags">a set of flags specifying various characteristics of the PDF object</param>
+        /// <param name="flag">to be checked</param>
+        /// <returns>true if the specified flag is set</returns>
         protected internal static bool CheckFlag(int flags, int flag) {
             return (flags & flag) != 0;
         }
 
+        /// <summary>Checks conformance level of PDF/A standard.</summary>
+        /// <param name="conformanceLevel">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// to be checked
+        /// </param>
+        /// <returns>true if the specified conformanceLevel is <c>a</c> for PDF/A-1, PDF/A-2 or PDF/A-3</returns>
         protected internal static bool CheckStructure(PdfAConformanceLevel conformanceLevel) {
             return conformanceLevel == PdfAConformanceLevel.PDF_A_1A || conformanceLevel == PdfAConformanceLevel.PDF_A_2A
                  || conformanceLevel == PdfAConformanceLevel.PDF_A_3A;
@@ -543,6 +710,13 @@ namespace iText.Pdfa.Checker {
                 .Group).GetAsName(PdfName.S));
         }
 
+        /// <summary>Checks whether the specified dictionary was already checked.</summary>
+        /// <param name="dictionary">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to check
+        /// </param>
+        /// <returns>true if the specified dictionary was checked</returns>
         protected internal virtual bool IsAlreadyChecked(PdfDictionary dictionary) {
             if (checkedObjects.Contains(dictionary)) {
                 return true;

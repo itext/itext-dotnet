@@ -32,15 +32,19 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         [NUnit.Framework.Test]
         public virtual void TestIssue1251() {
             // https://github.com/jhy/jsoup/issues/1251
-            StringBuilder str = new StringBuilder("<a href=\"\"ca");
-            for (int countSpaces = 0; countSpaces < 100000; countSpaces++) {
-                try {
-                    iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser().SetTrackErrors(1).ParseInput(str.ToString(), "");
-                }
-                catch (Exception e) {
-                    throw new AssertionException("failed at length " + str.Length, e);
-                }
-                str.Insert(countSpaces, ' ');
+            String testString = "<a href=\"\"ca";
+            StringBuilder str = new StringBuilder();
+            // initial max length of the buffer is 2**15 * 0.75 = 24576
+            int spacesToReproduceIssue = 24577 - testString.Length;
+            for (int i = 0; i < spacesToReproduceIssue; i++) {
+                str.Append(" ");
+            }
+            str.Append(testString);
+            try {
+                iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser().SetTrackErrors(1).ParseInput(str.ToString(), "");
+            }
+            catch (Exception e) {
+                throw new AssertionException("failed at length " + str.Length, e);
             }
         }
 

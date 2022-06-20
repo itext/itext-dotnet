@@ -181,6 +181,11 @@ namespace iText.Layout.Element {
             return (T)(Object)this;
         }
 
+        /// <summary>Creates new renderer instance.</summary>
+        /// <returns>
+        /// new
+        /// <see cref="iText.Layout.Renderer.IRenderer"/>
+        /// </returns>
         protected internal abstract IRenderer MakeNewRenderer();
     }
 }

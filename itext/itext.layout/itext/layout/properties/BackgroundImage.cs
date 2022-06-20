@@ -44,6 +44,7 @@ using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Layout.Properties {
+    /// <summary>Class to hold background-image property.</summary>
     public class BackgroundImage {
         private static readonly BlendMode DEFAULT_BLEND_MODE = BlendMode.NORMAL;
 
@@ -80,10 +81,28 @@ namespace iText.Layout.Properties {
                 (), backgroundImage.GetBackgroundOrigin()) {
         }
 
+        /// <summary>
+        /// Gets initial image if it is instanceof
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// , otherwise returns null.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// </returns>
         public virtual PdfImageXObject GetImage() {
             return image is PdfImageXObject ? (PdfImageXObject)image : null;
         }
 
+        /// <summary>
+        /// Gets initial image if it is instanceof
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// , otherwise returns null.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// </returns>
         public virtual PdfFormXObject GetForm() {
             return image is PdfFormXObject ? (PdfFormXObject)image : null;
         }
@@ -157,10 +176,21 @@ namespace iText.Layout.Properties {
             return position;
         }
 
+        /// <summary>Gets linearGradientBuilder.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Colors.Gradients.AbstractLinearGradientBuilder"/>
+        /// </returns>
         public virtual AbstractLinearGradientBuilder GetLinearGradientBuilder() {
             return this.linearGradientBuilder;
         }
 
+        /// <summary>Returns is background specified.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if background is specified, otherwise false
+        /// </returns>
         public virtual bool IsBackgroundSpecified() {
             return image is PdfFormXObject || image is PdfImageXObject || linearGradientBuilder != null;
         }
@@ -246,6 +276,11 @@ namespace iText.Layout.Properties {
 
             private BackgroundBox origin = BackgroundBox.PADDING_BOX;
 
+            /// <summary>
+            /// Creates a new
+            /// <see cref="Builder"/>
+            /// instance.
+            /// </summary>
             public Builder() {
             }
 

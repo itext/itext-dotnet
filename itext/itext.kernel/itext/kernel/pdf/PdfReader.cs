@@ -412,6 +412,9 @@ namespace iText.Kernel.Pdf {
                     PdfObject filter = stream.Get(PdfName.Filter, true);
                     bool skip = false;
                     if (filter != null) {
+                        if (filter.IsFlushed()) {
+                            IndirectFilterUtils.ThrowFlushedFilterException(stream);
+                        }
                         if (PdfName.Crypt.Equals(filter)) {
                             skip = true;
                         }
@@ -419,6 +422,9 @@ namespace iText.Kernel.Pdf {
                             if (filter.GetObjectType() == PdfObject.ARRAY) {
                                 PdfArray filters = (PdfArray)filter;
                                 for (int k = 0; k < filters.Size(); k++) {
+                                    if (filters.Get(k).IsFlushed()) {
+                                        IndirectFilterUtils.ThrowFlushedFilterException(stream);
+                                    }
                                     if (!filters.IsEmpty() && PdfName.Crypt.Equals(filters.Get(k, true))) {
                                         skip = true;
                                         break;
@@ -953,7 +959,9 @@ namespace iText.Kernel.Pdf {
                         if (ch != '\n') {
                             tokens.BackOnePosition(ch);
                         }
-                        return new PdfStream(tokens.GetPosition(), dict);
+                        PdfStream pdfStream = new PdfStream(tokens.GetPosition(), dict);
+                        tokens.Seek(pdfStream.GetOffset() + pdfStream.GetLength());
+                        return pdfStream;
                     }
                     else {
                         tokens.Seek(pos);
@@ -1407,7 +1415,7 @@ namespace iText.Kernel.Pdf {
             tokens.Seek(0);
             trailer = null;
             ByteBuffer buffer = new ByteBuffer(24);
-            PdfTokenizer lineTokeniser = new PdfTokenizer(new RandomAccessFileOrArray(new PdfReader.ReusableRandomAccessSource
+            PdfTokenizer lineTokenizer = new PdfTokenizer(new RandomAccessFileOrArray(new PdfReader.ReusableRandomAccessSource
                 (buffer)));
             for (; ; ) {
                 long pos = tokens.GetPosition();
@@ -1438,7 +1446,7 @@ namespace iText.Kernel.Pdf {
                 }
                 else {
                     if (buffer.Get(0) >= '0' && buffer.Get(0) <= '9') {
-                        int[] obj = PdfTokenizer.CheckObjectStart(lineTokeniser);
+                        int[] obj = PdfTokenizer.CheckObjectStart(lineTokenizer);
                         if (obj == null) {
                             continue;
                         }

@@ -125,6 +125,8 @@ namespace iText.Kernel.Pdf {
 
         protected internal FingerPrint fingerPrint;
 
+        protected internal SerializeOptions serializeOptions = new SerializeOptions();
+
         protected internal readonly StampingProperties properties;
 
         protected internal PdfStructTreeRoot structTreeRoot;
@@ -267,13 +269,13 @@ namespace iText.Kernel.Pdf {
         /// <param name="xmpMeta">the xmpMetadata to set</param>
         /// <param name="serializeOptions">serialization options</param>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
+            this.serializeOptions = serializeOptions;
             SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
         }
 
         /// <summary>Sets the XMP Metadata.</summary>
         /// <param name="xmpMeta">the xmpMetadata to set</param>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta) {
-            SerializeOptions serializeOptions = new SerializeOptions();
             serializeOptions.SetPadding(2000);
             SetXmpMetadata(xmpMeta, serializeOptions);
         }
@@ -1919,6 +1921,18 @@ namespace iText.Kernel.Pdf {
             return documentId;
         }
 
+        /// <summary>Sets a persistent XMP metadata serialization options.</summary>
+        /// <param name="serializeOptions">serialize options</param>
+        public virtual void SetSerializeOptions(SerializeOptions serializeOptions) {
+            this.serializeOptions = serializeOptions;
+        }
+
+        /// <summary>Gets a persistent XMP metadata serialization options.</summary>
+        /// <returns>serialize options</returns>
+        public virtual SerializeOptions GetSerializeOptions() {
+            return this.serializeOptions;
+        }
+
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
@@ -2016,7 +2030,11 @@ namespace iText.Kernel.Pdf {
                     pdfVersion = reader.headerPdfVersion;
                     trailer = new PdfDictionary(reader.trailer);
                     ReadDocumentIds();
-                    catalog = new PdfCatalog((PdfDictionary)trailer.Get(PdfName.Root, true));
+                    PdfDictionary catalogDictionary = (PdfDictionary)trailer.Get(PdfName.Root, true);
+                    if (null == catalogDictionary) {
+                        throw new PdfException(KernelExceptionMessageConstant.CORRUPTED_ROOT_ENTRY_IN_TRAILER);
+                    }
+                    catalog = new PdfCatalog(catalogDictionary);
                     UpdatePdfVersionFromCatalog();
                     PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
                     if (xmpMetadataStream != null) {

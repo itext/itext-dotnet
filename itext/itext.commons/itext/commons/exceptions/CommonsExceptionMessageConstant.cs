@@ -38,12 +38,22 @@ namespace iText.Commons.Exceptions {
         public const String ELEMENT_ALREADY_HAS_IDENTIFIER = "Element already has sequence id: {0}, new id {1} " +
              "will be ignored";
 
+        public const String FILE_SHOULD_EXIST = "File should exist.";
+
+        public const String FILE_NAME_ALREADY_EXIST = "File name: {0}, already exists.";
+
+        public const String FILE_NAME_CAN_NOT_BE_NULL = "File name can not be null.";
+
+        public const String FILE_NAME_SHOULD_BE_UNIQUE = "File name should be unique.";
+
         public const String INVALID_USAGE_CONFIGURATION_FORBIDDEN = "Invalid usage of placeholder \"{0}\": any " +
              "configuration is forbidden";
 
-        public const String INVALID_USAGE_FORMAT_REQUIRED = "Invalid usage of placeholder \"{0}\": format is required";
+        public const String INVALID_USAGE_FORMAT_REQUIRED = "Invalid usage of placeholder \"{0}\": format is " + "required";
 
-        public const String NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT = "No events were registered for the document!";
+        public const String JSON_OBJECT_CAN_NOT_BE_NULL = "Passed json object can not be null";
+
+        public const String NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT = "No events were registered for the " + "document!";
 
         public const String PATTERN_CONTAINS_OPEN_QUOTATION = "Pattern contains open quotation!";
 
@@ -53,9 +63,14 @@ namespace iText.Commons.Exceptions {
 
         public const String PRODUCT_NAME_CAN_NOT_BE_NULL = "Product name can not be null.";
 
+        public const String STREAM_CAN_NOT_BE_NULL = "Passed stream can not be null";
+
         public const String UNKNOWN_ITEXT_EXCEPTION = "Unknown ITextException.";
+
+        public const String ZIP_ENTRY_NOT_FOUND = "Zip entry not found for name: {0}";
 
         private CommonsExceptionMessageConstant() {
         }
+        // Empty constructor.
     }
 }

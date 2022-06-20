@@ -248,12 +248,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void Traverse() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            doc.Select("div").First().Traverse(new _NodeVisitor_260(accum));
+            doc.Select("div").First().Traverse(new _NodeVisitor_273(accum));
             NUnit.Framework.Assert.AreEqual("<div><p><#text></#text></p></div>", accum.ToString());
         }
 
-        private sealed class _NodeVisitor_260 : NodeVisitor {
-            public _NodeVisitor_260(StringBuilder accum) {
+        private sealed class _NodeVisitor_273 : NodeVisitor {
+            public _NodeVisitor_273(StringBuilder accum) {
                 this.accum = accum;
             }
 
@@ -349,6 +349,20 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             Attributes attributes = new Attributes();
             attributes.Put("value", "bar");
             return attributes;
+        }
+
+        private static String CreateAnotherValidUrlVersion(String url) {
+            if (url.StartsWith("file:///")) {
+                return "file:/" + url.Substring("file:///".Length);
+            }
+            else {
+                if (url.StartsWith("file:/")) {
+                    return "file:///" + url.Substring("file:/".Length);
+                }
+                else {
+                    return url;
+                }
+            }
         }
     }
 }

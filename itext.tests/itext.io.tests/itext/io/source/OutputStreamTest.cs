@@ -350,15 +350,25 @@ namespace iText.IO.Source {
 
         [NUnit.Framework.Test]
         public virtual void LocalHighPrecisionOverridesGlobalTest() {
+
+            bool highPrecision = OutputStream<ByteArrayOutputStream>.GetHighPrecision();
+
             //the data is random
             double? numberToWrite = 2.002d;
-            using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes, false)) {
-                    stream.SetLocalHighPrecision(true);
-                    stream.WriteDouble((double)numberToWrite);
-                    stream.Flush();
-                    NUnit.Framework.Assert.AreEqual(numberToWrite.ToString(), Encoding.UTF8.GetString(bytes.ToArray()));
+            try {
+                using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
+                    using (OutputStream<ByteArrayOutputStream> stream =
+                           new OutputStream<ByteArrayOutputStream>(bytes, false)) {
+                        OutputStream<ByteArrayOutputStream>.SetHighPrecision(true);
+                        stream.SetLocalHighPrecision(false);
+                        stream.WriteDouble((double)numberToWrite);
+                        stream.Flush();
+                        NUnit.Framework.Assert.AreEqual("2", Encoding.UTF8.GetString(bytes.ToArray()));
+                    }
                 }
+            }
+            finally {
+                OutputStream<ByteArrayOutputStream>.SetHighPrecision(highPrecision);
             }
         }
     }

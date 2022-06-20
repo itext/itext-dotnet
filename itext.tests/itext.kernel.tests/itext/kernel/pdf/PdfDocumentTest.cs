@@ -54,6 +54,7 @@ using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Kernel.XMP.Options;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -499,6 +500,23 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName
                 , DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        public virtual void RootCannotBeReferenceFromTrailerTest() {
+            String filename = SOURCE_FOLDER + "rootCannotBeReferenceFromTrailerTest.pdf";
+            PdfReader corruptedReader = new PdfReader(filename);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(corruptedReader));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CORRUPTED_ROOT_ENTRY_IN_TRAILER, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetSerializeOptionsTest() {
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
+            SerializeOptions options = new SerializeOptions().SetUseCanonicalFormat(true);
+            document.SetSerializeOptions(options);
+            NUnit.Framework.Assert.AreEqual(options, document.GetSerializeOptions());
         }
 
         private class IgnoreTagStructurePdfDocument : PdfDocument {

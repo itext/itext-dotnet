@@ -560,6 +560,8 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary>Returns maximum allowed bytes length of the string in a PDF document.</summary>
+        /// <returns>maximum string length</returns>
         protected internal virtual int GetMaxStringLength() {
             return 65535;
         }
@@ -731,6 +733,27 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary>
+        /// Gets a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of fields with kids from a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// objects.
+        /// </summary>
+        /// <param name="array">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of form fields
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// objects
+        /// </param>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of form fields
+        /// </returns>
         protected internal virtual PdfArray GetFormFields(PdfArray array) {
             PdfArray fields = new PdfArray();
             foreach (PdfObject field in array) {

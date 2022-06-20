@@ -106,7 +106,7 @@ namespace iText.Layout {
                 );
             document.Add(paragraph);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , diffPrefix));
         }
     }

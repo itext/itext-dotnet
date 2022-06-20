@@ -60,7 +60,14 @@ using iText.Layout.Properties;
 using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
+    /// <summary>Represents a renderer for block elements.</summary>
     public abstract class BlockRenderer : AbstractRenderer {
+        /// <summary>Creates a BlockRenderer from its corresponding layout object.</summary>
+        /// <param name="modelElement">
+        /// the
+        /// <see cref="iText.Layout.Element.IElement"/>
+        /// which this object should manage
+        /// </param>
         protected internal BlockRenderer(IElement modelElement)
             : base(modelElement) {
         }
@@ -239,9 +246,7 @@ namespace iText.Layout.Renderer {
                     FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
                     FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     if (result.GetSplitRenderer() != null) {
-                        // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
-                        // in case when parent box should wrap around child boxes.
-                        // TODO in the latter case, all elements should be layouted first so that we know maximum width needed to place all children and then apply horizontal alignment
+                        // TODO DEVSIX-6488 all elements should be layouted first in case when parent box should wrap around child boxes
                         AlignChildHorizontally(result.GetSplitRenderer(), occupiedArea.GetBBox());
                     }
                     // Save the first renderer to produce LayoutResult.NOTHING
@@ -296,9 +301,7 @@ namespace iText.Layout.Renderer {
                 if (result.GetStatus() == LayoutResult.FULL) {
                     DecreaseLayoutBoxAfterChildPlacement(layoutBox, result, childRenderer);
                     if (childRenderer.GetOccupiedArea() != null) {
-                        // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
-                        // in case when parent box should wrap around child boxes.
-                        // TODO in the latter case, all elements should be layouted first so that we know maximum width needed to place all children and then apply horizontal alignment
+                        // TODO DEVSIX-6488 all elements should be layouted first in case when parent box should wrap around child boxes
                         AlignChildHorizontally(childRenderer, occupiedArea.GetBBox());
                     }
                 }
@@ -518,6 +521,13 @@ namespace iText.Layout.Renderer {
             return bBox;
         }
 
+        /// <summary>Creates a split renderer.</summary>
+        /// <param name="layoutResult">the result of content layouting</param>
+        /// <returns>
+        /// a new
+        /// <see cref="AbstractRenderer"/>
+        /// instance
+        /// </returns>
         protected internal virtual AbstractRenderer CreateSplitRenderer(int layoutResult) {
             AbstractRenderer splitRenderer = (AbstractRenderer)GetNextRenderer();
             splitRenderer.parent = parent;
@@ -528,6 +538,13 @@ namespace iText.Layout.Renderer {
             return splitRenderer;
         }
 
+        /// <summary>Creates an overflow renderer.</summary>
+        /// <param name="layoutResult">the result of content layouting</param>
+        /// <returns>
+        /// a new
+        /// <see cref="AbstractRenderer"/>
+        /// instance
+        /// </returns>
         protected internal virtual AbstractRenderer CreateOverflowRenderer(int layoutResult) {
             AbstractRenderer overflowRenderer = (AbstractRenderer)GetNextRenderer();
             overflowRenderer.parent = parent;
@@ -575,6 +592,10 @@ namespace iText.Layout.Renderer {
             return new AbstractRenderer[] { splitRenderer, overflowRenderer };
         }
 
+        /// <summary>
+        /// This method applies vertical alignment for the occupied area
+        /// of the renderer and its children renderers.
+        /// </summary>
         protected internal virtual void ApplyVerticalAlignment() {
             VerticalAlignment? verticalAlignment = this.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
             if (verticalAlignment == null || verticalAlignment == VerticalAlignment.TOP || childRenderers.IsEmpty()) {
@@ -623,6 +644,14 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>
+        /// This method rotates content of the renderer and
+        /// calculates correct occupied area for the rotated element.
+        /// </summary>
+        /// <param name="layoutBox">
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// </param>
         protected internal virtual void ApplyRotationLayout(Rectangle layoutBox) {
             float angle = (float)this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             float x = occupiedArea.GetBBox().GetX();
@@ -706,6 +735,12 @@ namespace iText.Layout.Renderer {
             return rotationTransform;
         }
 
+        /// <summary>This method starts rotation for the renderer if rotation angle property is specified.</summary>
+        /// <param name="canvas">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// to draw on
+        /// </param>
         protected internal virtual void BeginRotationIfApplied(PdfCanvas canvas) {
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
@@ -721,6 +756,12 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>This method ends rotation for the renderer if applied.</summary>
+        /// <param name="canvas">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// to draw on
+        /// </param>
         protected internal virtual void EndRotationIfApplied(PdfCanvas canvas) {
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null && HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {

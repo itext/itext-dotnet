@@ -128,30 +128,80 @@ namespace iText.Layout.Element {
             this.tabAnchor = '.';
         }
 
+        /// <summary>Returns the position of a tab stop.</summary>
+        /// <returns>tabPosition, measured in absolute points</returns>
         public virtual float GetTabPosition() {
             return tabPosition;
         }
 
+        /// <summary>
+        /// Returns the alignment of a tab stop, which defines the way the textual content
+        /// should be positioned in regard to this tab stop.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Layout.Properties.TabAlignment"/>
+        /// value
+        /// </returns>
         public virtual TabAlignment GetTabAlignment() {
             return tabAlignment;
         }
 
+        /// <summary>
+        /// Sets the alignment, which defines the way the textual content
+        /// should be positioned in regard to this tab stop.
+        /// </summary>
+        /// <param name="tabAlignment">
+        /// a
+        /// <see cref="iText.Layout.Properties.TabAlignment"/>
+        /// value
+        /// </param>
         public virtual void SetTabAlignment(TabAlignment tabAlignment) {
             this.tabAlignment = tabAlignment;
         }
 
+        /// <summary>Returns the anchor of a tab stop.</summary>
+        /// <returns>
+        /// a
+        /// <see cref="char?"/>
+        /// value
+        /// </returns>
         public virtual char? GetTabAnchor() {
             return tabAnchor;
         }
 
+        /// <summary>Sets the anchor of a tab stop.</summary>
+        /// <param name="tabAnchor">
+        /// a
+        /// <see cref="char?"/>
+        /// value
+        /// </param>
         public virtual void SetTabAnchor(char? tabAnchor) {
             this.tabAnchor = tabAnchor;
         }
 
+        /// <summary>
+        /// Returns the tab leader of a tab stop, which defines a pattern that
+        /// should be repeated until the TabStop is reached.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Canvas.Draw.ILineDrawer"/>
+        /// value, a pattern drawing object
+        /// </returns>
         public virtual ILineDrawer GetTabLeader() {
             return tabLeader;
         }
 
+        /// <summary>
+        /// Sets the tab leader of a tab stop, which defines a pattern that
+        /// should be repeated until the TabStop is reached.
+        /// </summary>
+        /// <param name="tabLeader">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Canvas.Draw.ILineDrawer"/>
+        /// value
+        /// </param>
         public virtual void SetTabLeader(ILineDrawer tabLeader) {
             this.tabLeader = tabLeader;
         }

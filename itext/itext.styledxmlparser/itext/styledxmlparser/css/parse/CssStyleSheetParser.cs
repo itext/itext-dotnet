@@ -49,7 +49,6 @@ using iText.StyledXmlParser.Css.Parse.Syntax;
 namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Utilities class to parse a CSS style sheet.</summary>
     public sealed class CssStyleSheetParser {
-        // TODO refactor into interface
         /// <summary>
         /// Creates a new
         /// <see cref="CssStyleSheetParser"/>.
@@ -69,8 +68,8 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// </returns>
         public static CssStyleSheet Parse(Stream stream, String baseUrl) {
             CssParserStateController controller = new CssParserStateController(baseUrl);
-            TextReader br = PortUtil.WrapInBufferedReader(new StreamReader(stream, System.Text.Encoding.UTF8));
             // TODO determine charset correctly DEVSIX-1458
+            TextReader br = PortUtil.WrapInBufferedReader(new StreamReader(stream, System.Text.Encoding.UTF8));
             char[] buffer = new char[8192];
             int length;
             while ((length = br.Read(buffer, 0, buffer.Length)) > 0) {
@@ -105,7 +104,6 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>
         /// </returns>
         public static CssStyleSheet Parse(String data, String baseUrl) {
-            // TODO charset? better to create parse logic based on string completely
             MemoryStream stream = new MemoryStream(data.GetBytes(System.Text.Encoding.UTF8));
             try {
                 return Parse(stream, baseUrl);

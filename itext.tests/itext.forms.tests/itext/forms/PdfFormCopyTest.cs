@@ -578,5 +578,19 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFileName, destinationFolder
                 , "diff_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void WidgetContainsNoTEntryTest() {
+            String sourceFileName = sourceFolder + "fieldThreeWidgets.pdf";
+            String destFileName = destinationFolder + "widgetContainsNoTEntryTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_widgetContainsNoTEntryTest.pdf";
+            PdfDocument sourcePdfDocument = new PdfDocument(new PdfReader(sourceFileName));
+            PdfDocument resultPdfDocument = new PdfDocument(new PdfWriter(destFileName));
+            sourcePdfDocument.CopyPagesTo(1, sourcePdfDocument.GetNumberOfPages(), resultPdfDocument, new PdfPageFormCopier
+                ());
+            resultPdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
     }
 }

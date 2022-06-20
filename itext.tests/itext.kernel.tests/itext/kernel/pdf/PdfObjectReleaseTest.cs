@@ -30,15 +30,15 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfObjectReleaseTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfObjectReleaseTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfObjectReleaseTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -65,58 +65,54 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET)]
         public virtual void ReleaseCatalogTest() {
-            String srcFile = sourceFolder + "releaseObjectsInSimpleDoc.pdf";
-            String release = destinationFolder + "outReleaseObjectsInSimpleDoc.pdf";
+            String srcFile = SOURCE_FOLDER + "releaseObjectsInSimpleDoc.pdf";
+            String release = DESTINATION_FOLDER + "outReleaseObjectsInSimpleDoc.pdf";
             using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(release))) {
                 doc.GetCatalog().GetPdfObject().Release();
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(release, srcFile, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(release, srcFile, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET)]
         public virtual void ReleasePagesTest() {
-            String srcFile = sourceFolder + "releaseObjectsInSimpleDoc.pdf";
-            String release = destinationFolder + "outReleaseObjectsInSimpleDoc.pdf";
+            String srcFile = SOURCE_FOLDER + "releaseObjectsInSimpleDoc.pdf";
+            String release = DESTINATION_FOLDER + "outReleaseObjectsInSimpleDoc.pdf";
             using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(release))) {
                 doc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Pages).Release();
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(release, srcFile, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(release, srcFile, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET)]
         public virtual void ReleaseStructTreeRootTest() {
-            String srcFile = sourceFolder + "releaseObjectsInDocWithStructTreeRoot.pdf";
-            String release = destinationFolder + "outReleaseObjectsInDocWithStructTreeRoot.pdf";
+            String srcFile = SOURCE_FOLDER + "releaseObjectsInDocWithStructTreeRoot.pdf";
+            String release = DESTINATION_FOLDER + "outReleaseObjectsInDocWithStructTreeRoot.pdf";
             using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(release))) {
                 doc.GetStructTreeRoot().GetPdfObject().Release();
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(release, srcFile, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(release, srcFile, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
-        public virtual void NoForbidReleaseObjectsModifyingTest() {
-            String srcFile = sourceFolder + "noForbidReleaseObjectsModifying.pdf";
-            String stampReleased = sourceFolder + "noForbidReleaseObjectsModified.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(destinationFolder + "noForbidReleaseObjectsModifying.pdf"
-                ), new StampingProperties().UseAppendMode())) {
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET)]
+        public virtual void ReleaseModifiedObjectTest() {
+            String srcFile = SOURCE_FOLDER + "releaseModifiedObject.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_releaseModifiedObject.pdf";
+            String outFile = DESTINATION_FOLDER + "releaseModifiedObject.pdf";
+            using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outFile))) {
                 PdfAnnotation annots = doc.GetPage(1).GetAnnotations()[0];
                 annots.SetRectangle(new PdfArray(new Rectangle(100, 100, 80, 50)));
-                annots.GetRectangle().Release();
+                annots.GetPdfObject().Release();
             }
-            using (PdfDocument openPrev = new PdfDocument(new PdfReader(stampReleased))) {
-                NUnit.Framework.Assert.IsTrue(new Rectangle(100, 100, 80, 50).EqualsWithEpsilon(openPrev.GetPage(1).GetAnnotations
-                    ()[0].GetRectangle().ToRectangle()));
-            }
-            NUnit.Framework.Assert.IsNotNull(new CompareTool().CompareByContent(srcFile, stampReleased, destinationFolder
-                ));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void AddingReleasedObjectToDocumentTest() {
-            String srcFile = sourceFolder + "releaseObjectsInSimpleDoc.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(sourceFolder + "addingReleasedObjectToDocument.pdf"
+            String srcFile = SOURCE_FOLDER + "releaseObjectsInSimpleDoc.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(SOURCE_FOLDER + "addingReleasedObjectToDocument.pdf"
                 ));
             try {
                 PdfObject releasedObj = doc.GetPdfObject(1);
@@ -132,9 +128,9 @@ namespace iText.Kernel.Pdf {
 
         private void SinglePdfObjectReleaseTest(String inputFilename, String outStampingFilename, String outStampingReleaseFilename
             ) {
-            String srcFile = sourceFolder + inputFilename;
-            String outPureStamping = destinationFolder + outStampingFilename;
-            String outStampingRelease = destinationFolder + outStampingReleaseFilename;
+            String srcFile = SOURCE_FOLDER + inputFilename;
+            String outPureStamping = DESTINATION_FOLDER + outStampingFilename;
+            String outStampingRelease = DESTINATION_FOLDER + outStampingReleaseFilename;
             PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outPureStamping));
             // We open/close document to make sure that the results of release logic and simple overwriting coincide.
             doc.Close();
@@ -146,7 +142,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             stamperRelease.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outStampingRelease, outPureStamping, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outStampingRelease, outPureStamping, DESTINATION_FOLDER
                 ));
         }
     }

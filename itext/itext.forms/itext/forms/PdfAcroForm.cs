@@ -833,7 +833,7 @@ namespace iText.Forms {
                     }
                 }
                 else {
-                    LOGGER.LogError(iText.IO.Logs.IoLogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
+                    LOGGER.LogWarning(FormsExceptionMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
                 }
                 PdfArray fFields = GetFields();
                 fFields.Remove(fieldObject);

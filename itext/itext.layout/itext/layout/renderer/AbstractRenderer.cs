@@ -297,7 +297,6 @@ namespace iText.Layout.Renderer {
                 (key))) {
                 return (T1)property;
             }
-            // TODO in some situations we will want to check inheritance with additional info, such as parent and descendant.
             if (parent != null && Property.IsPropertyInherited(key) && (property = parent.GetProperty<T1>(key)) != null
                 ) {
                 return (T1)property;
@@ -1069,6 +1068,12 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public virtual void Move(float dxRight, float dyUp) {
+            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+            if (occupiedArea == null) {
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                    , "Moving won't be performed."));
+                return;
+            }
             occupiedArea.GetBBox().MoveRight(dxRight);
             occupiedArea.GetBBox().MoveUp(dyUp);
             foreach (IRenderer childRenderer in childRenderers) {
@@ -1667,7 +1672,6 @@ namespace iText.Layout.Renderer {
             if (value != null) {
                 if (value.GetUnitType() == UnitValue.PERCENT) {
                     // during mathematical operations the precision can be lost, so avoiding them if possible (100 / 100 == 1) is a good practice
-                    // TODO Maybe decrease the result value by AbstractRenderer.EPS ?
                     return value.GetValue() != 100 ? baseValue * value.GetValue() / 100 : baseValue;
                 }
                 else {

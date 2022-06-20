@@ -69,7 +69,11 @@ namespace iText.Kernel.Utils
             return XmlReader.Create(textReader, CreateSafeXmlReaderSettings());
         }
 
-        private static XmlReaderSettings CreateSafeXmlReaderSettings()
+        /// <summary>
+        /// Creates <see cref="XmlReaderSettings"/> to make reader secure against xml attacks.
+        /// </summary>
+        /// <returns>Configured xml reader settings</returns>
+        protected virtual XmlReaderSettings CreateSafeXmlReaderSettings()
         {
             XmlReaderSettings xmlReaderSettings = new XmlReaderSettings {DtdProcessing = DtdProcessing.Prohibit};
             return xmlReaderSettings;

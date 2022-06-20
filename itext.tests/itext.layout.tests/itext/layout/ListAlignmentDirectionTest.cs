@@ -59,15 +59,17 @@ namespace iText.Layout {
 
         private BaseDirection? listBaseDirection;
 
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
         public ListAlignmentDirectionTest(Object itemTextAlignment, Object itemBaseDirection, Object listTextAlignment
             , Object listBaseDirection) {
             this.itemTextAlignment = (TextAlignment?)itemTextAlignment;
             this.itemBaseDirection = (BaseDirection?)itemBaseDirection;
             this.listTextAlignment = (TextAlignment?)listTextAlignment;
             this.listBaseDirection = (BaseDirection?)listBaseDirection;
-            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-            // Create an HTML for this test
-            CreateHtml();
         }
 
         public ListAlignmentDirectionTest(Object[] array)
@@ -102,6 +104,8 @@ namespace iText.Layout {
         public virtual void AlignmentDirectionTest() {
             // TODO DEVSIX-5727 direction of the first list-item should define the symbol indent's side. Once the issue
             // is fixed, the corresponding cmps should be updated.
+            // Create an HTML for this test
+            CreateHtml();
             String fileName = MessageFormatUtil.Format(RESULTANT_FILE_NAME_PATTERN, FormatTextAlignment(itemTextAlignment
                 ), FormatBaseDirection(itemBaseDirection), FormatTextAlignment(listTextAlignment), FormatBaseDirection
                 (listBaseDirection));
