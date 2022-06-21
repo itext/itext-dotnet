@@ -24,6 +24,6 @@ using Versions.Attributes;
 
 [assembly: TypographyVersion("3.0.2.0")]
 
-[assembly: AssemblyVersion("7.2.3.0")]
-[assembly: AssemblyFileVersion("7.2.3.0")]
-[assembly: AssemblyInformationalVersion("7.2.3-SNAPSHOT")]
+[assembly: AssemblyVersion("7.2.4.0")]
+[assembly: AssemblyFileVersion("7.2.4.0")]
+[assembly: AssemblyInformationalVersion("7.2.4-SNAPSHOT")]
