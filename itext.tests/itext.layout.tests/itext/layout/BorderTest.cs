@@ -50,6 +50,7 @@ using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Logs;
+using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -235,6 +236,33 @@ namespace iText.Layout {
             doc.Add(p);
             doc.Add(new Paragraph(textAfter).SetBorder(new DottedBorder(ColorConstants.BLACK, 3)).SetBorderRight(new DottedBorder
                 (ColorConstants.BLACK, 12)));
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BorderOutlineTest() {
+            fileName = "borderOutlineTest.pdf";
+            Document doc = CreateDocument();
+            String textBefore = "At the mid-oceanic ridges, two tectonic plates diverge from one another as new oceanic crust is formed by the cooling and "
+                 + "solidifying of hot molten rock. Because the crust is very thin at these ridges due to the pull of the tectonic plates, the release of "
+                 + "pressure leads to adiabatic expansion and the partial melting of the mantle, causing volcanism and creating new oceanic crust. Most divergent "
+                 + "plate boundaries are at the bottom of the oceans; therefore, most volcanic activity is submarine, forming new seafloor. Black smokers (also "
+                 + "known as deep sea vents) are an example of this kind of volcanic activity. Where the mid-oceanic ridge is above sea-level, volcanic islands are "
+                 + "formed, for example, Iceland.";
+            String text = "Earth's volcanoes occur because its crust is broken into 17 major, rigid tectonic plates that float on a hotter,"
+                 + " softer layer in its mantle. Therefore, on Earth, volcanoes are generally found where tectonic plates are diverging or converging. "
+                 + "For example, a mid-oceanic ridge, such as the Mid-Atlantic Ridge, has volcanoes caused by divergent tectonic plates pulling apart;"
+                 + " the Pacific Ring of Fire has volcanoes caused by convergent tectonic plates coming together. Volcanoes can also form where there is "
+                 + "stretching and thinning of the crust's interior plates, e.g., in the East African Rift and the Wells Gray-Clearwater volcanic field and "
+                 + "Rio Grande Rift in North America. This type of volcanism falls under the umbrella of \"plate hypothesis\" volcanism. Volcanism away "
+                 + "from plate boundaries has also been explained as mantle plumes. These so-called \"hotspots\", for example Hawaii, are postulated to arise "
+                 + "from upwelling diapirs with magma from the core-mantle boundary, 3,000 km deep in the Earth. Volcanoes are usually not created where two "
+                 + "tectonic plates slide past one another.";
+            doc.Add(new Paragraph(textBefore).SetMargins(25, 60, 70, 80));
+            Paragraph p = new Paragraph(text).SetBackgroundColor(ColorConstants.GRAY);
+            p.SetMargins(25, 60, 70, 80);
+            p.SetProperty(Property.OUTLINE, new DoubleBorder(ColorConstants.RED, 25));
+            doc.Add(p);
             CloseDocumentAndCompareOutputs(doc);
         }
 

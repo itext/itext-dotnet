@@ -72,6 +72,10 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <para />
         /// See also
         /// <see cref="iText.Kernel.Pdf.Tagging.StandardRoles"/>.
+        /// <para />
+        /// Calling this method with a null argument will make the tagging on the associated layout
+        /// element "neutral". The effect is that all children of the layout element will be
+        /// tagged as if they were direct children of the parent element.
         /// </remarks>
         /// <param name="role">the role to be set</param>
         /// <returns>

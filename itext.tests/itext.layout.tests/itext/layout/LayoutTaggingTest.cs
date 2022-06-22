@@ -695,8 +695,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             doc.Add(new Paragraph("Set Image role to null and add to div with role \"Figure\""));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
-                )).SetWidth(200);
-            img.GetAccessibilityProperties().SetRole(null);
+                )).SetWidth(200).SetNeutralRole();
             Div div = new Div();
             div.GetAccessibilityProperties().SetRole(StandardRoles.FIGURE);
             div.Add(img);
@@ -708,11 +707,9 @@ namespace iText.Layout {
             div = new Div();
             div.GetAccessibilityProperties().SetRole(StandardRoles.CODE);
             iText.Layout.Element.Text txt = new iText.Layout.Element.Text("// Prints Hello world!");
-            txt.GetAccessibilityProperties().SetRole(null);
-            div.Add(new Paragraph(txt).SetMarginBottom(0));
+            div.Add(new Paragraph(txt.SetNeutralRole()).SetMarginBottom(0));
             txt = new iText.Layout.Element.Text("System.out.println(\"Hello world!\");");
-            txt.GetAccessibilityProperties().SetRole(null);
-            div.Add(new Paragraph(txt).SetMarginTop(0));
+            div.Add(new Paragraph(txt.SetNeutralRole()).SetMarginTop(0));
             doc.Add(div);
             doc.Close();
             CompareResult("imageAndTextNoRole01.pdf", "cmp_imageAndTextNoRole01.pdf");
@@ -836,6 +833,39 @@ namespace iText.Layout {
             CompareResult("createTaggedVersionOneDotFourTest01.pdf", "cmp_createTaggedVersionOneDotFourTest01.pdf");
         }
 
+        [NUnit.Framework.Test]
+        public virtual void NeutralRoleTaggingTest() {
+            String outFile = "neutralRoleTaggingTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
+                (100)).SetFixedLayout();
+            Cell cell1 = new Cell().Add(new Paragraph(new iText.Layout.Element.Text("This is bare text").SetNeutralRole
+                ()).SetNeutralRole());
+            table.AddCell(cell1);
+            Paragraph untaggedPara = new Paragraph().SetNeutralRole().Add(new iText.Layout.Element.Text("This is text in an "
+                ).SetNeutralRole()).Add(new iText.Layout.Element.Text("untagged")).Add(new iText.Layout.Element.Text(" paragraph"
+                ).SetNeutralRole());
+            Div untaggedDiv = new Div().SetNeutralRole().Add(untaggedPara);
+            table.AddCell(new Cell().Add(untaggedDiv));
+            Div listGroup = new Div();
+            listGroup.GetAccessibilityProperties().SetRole(StandardRoles.L);
+            List list1 = new List().SetNeutralRole().Add(new ListItem("Item 1")).Add(new ListItem("Item 2"));
+            listGroup.Add(list1);
+            Paragraph filler = new Paragraph(new iText.Layout.Element.Text("<pretend this is an artifact>").SetNeutralRole
+                ());
+            filler.GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
+            listGroup.Add(filler);
+            List list2 = new List().SetNeutralRole().Add(new ListItem("More items!")).Add(new ListItem("Moooore items!!"
+                ));
+            listGroup.Add(list2);
+            table.AddCell(new Cell().Add(listGroup));
+            document.Add(table);
+            document.Close();
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
         private Paragraph CreateParagraph1() {
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
             Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");
@@ -870,14 +900,12 @@ namespace iText.Layout {
             if (useCaption) {
                 Div div = new Div();
                 div.GetAccessibilityProperties().SetRole(StandardRoles.TABLE);
-                Paragraph p = new Paragraph("Caption");
-                p.GetAccessibilityProperties().SetRole(null);
+                Paragraph p = new Paragraph("Caption").SetNeutralRole();
                 p.SetTextAlignment(TextAlignment.CENTER).SetBold();
                 Div caption = new Div().Add(p);
                 caption.GetAccessibilityProperties().SetRole(StandardRoles.CAPTION);
                 div.Add(caption);
-                table.GetAccessibilityProperties().SetRole(null);
-                div.Add(table);
+                div.Add(table.SetNeutralRole());
                 return div;
             }
             else {

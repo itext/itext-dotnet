@@ -151,6 +151,17 @@ namespace iText.Layout.Element {
             return tagProperties;
         }
 
+        /// <summary>Give this element a neutral role.</summary>
+        /// <remarks>
+        /// Give this element a neutral role. See also
+        /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties.SetRole(System.String)"/>.
+        /// </remarks>
+        /// <returns>this Element</returns>
+        public virtual iText.Layout.Element.Text SetNeutralRole() {
+            this.GetAccessibilityProperties().SetRole(null);
+            return this;
+        }
+
         protected internal override IRenderer MakeNewRenderer() {
             return new TextRenderer(this, text);
         }
