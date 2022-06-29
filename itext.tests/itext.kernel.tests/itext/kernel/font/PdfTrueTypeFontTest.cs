@@ -53,8 +53,7 @@ namespace iText.Kernel.Font {
 
         [NUnit.Framework.Test]
         public virtual void IsNotBuiltInTest() {
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSans-Regular_v.1.8.2.ttf", PdfEncodings.WINANSI
-                );
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSans-Regular.ttf", PdfEncodings.WINANSI);
             NUnit.Framework.Assert.IsTrue(font is PdfTrueTypeFont);
             NUnit.Framework.Assert.IsFalse(((PdfTrueTypeFont)font).IsBuiltInFont());
         }
