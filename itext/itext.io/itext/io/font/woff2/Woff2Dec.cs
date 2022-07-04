@@ -50,11 +50,7 @@ namespace iText.IO.Font.Woff2 {
 
         private const int FLAG_WE_HAVE_INSTRUCTIONS = 1 << 8;
 
-        private const int kCheckSumAdjustmentOffset = 8;
-
         private const int kEndPtsOfContoursOffset = 10;
-
-        private const int kCompositeGlyphBegin = 10;
 
         // 98% of Google Fonts have no glyph above 5k bytes
         // Largest glyph ever observed was 72k bytes
@@ -82,8 +78,7 @@ namespace iText.IO.Font.Woff2 {
 
             public short num_tables;
 
-            //TODO do we need it to be long?
-            public long compressed_offset;
+            public int compressed_offset;
 
             public int compressed_length;
 
@@ -439,8 +434,6 @@ namespace iText.IO.Font.Woff2 {
 
         // Build TrueType loca table. Returns loca_checksum
         private static int StoreLoca(int[] loca_values, int index_format, Woff2Out @out) {
-            // TODO(user) figure out what index format to use based on whether max
-            // offset fits into uint16_t or not
             long loca_size = loca_values.Length;
             long offset_size = index_format != 0 ? 4 : 2;
             if ((loca_size << 2) >> 2 != loca_size) {
@@ -468,11 +461,10 @@ namespace iText.IO.Font.Woff2 {
              @out) {
             int kNumSubStreams = 7;
             Buffer file = new Buffer(data, data_offset, glyf_table.transform_length);
-            int version;
             List<Woff2Dec.StreamInfo> substreams = new List<Woff2Dec.StreamInfo>(kNumSubStreams);
             int glyf_start = @out.Size();
-            // TODO: check version on 0?
-            version = file.ReadInt();
+            //read and ignore version
+            file.ReadInt();
             info.num_glyphs = file.ReadShort();
             info.index_format = file.ReadShort();
             int offset = (2 + kNumSubStreams) * 4;
@@ -619,7 +611,6 @@ namespace iText.IO.Font.Woff2 {
                 }
                 loca_values[i] = @out.Size() - glyf_start;
                 @out.Write(glyph_buf, 0, glyph_size);
-                // TODO(user) Old code aligned glyphs ... but do we actually need to?
                 Pad4(@out);
                 glyph_checksum += Woff2Common.ComputeULongSum(glyph_buf, 0, glyph_size);
                 // We may need x_min to reconstruct 'hmtx'
@@ -674,8 +665,7 @@ namespace iText.IO.Font.Woff2 {
             // Skip 34 to reach 'hhea' numberOfHMetrics
             Buffer buffer = new Buffer(data, offset, data_length);
             buffer.Skip(34);
-            short result = buffer.ReadShort();
-            return result;
+            return buffer.ReadShort();
         }
 
         private static int ReconstructTransformedHmtx(byte[] transformed_buf, int transformed_offset, int transformed_size
@@ -850,10 +840,9 @@ namespace iText.IO.Font.Woff2 {
             return offset;
         }
 
-        //TODO do we realy need long here?
         // First table goes after all the headers, table directory, etc
-        private static long ComputeOffsetToFirstTable(Woff2Dec.Woff2Header hdr) {
-            long offset = Woff2Common.kSfntHeaderSize + Woff2Common.kSfntEntrySize * hdr.num_tables;
+        private static int ComputeOffsetToFirstTable(Woff2Dec.Woff2Header hdr) {
+            int offset = Woff2Common.kSfntHeaderSize + Woff2Common.kSfntEntrySize * hdr.num_tables;
             if (hdr.header_version != 0) {
                 offset = Woff2Common.CollectionHeaderSize(hdr.header_version, hdr.ttc_fonts.Length) + Woff2Common.kSfntHeaderSize
                      * hdr.ttc_fonts.Length;
@@ -872,9 +861,7 @@ namespace iText.IO.Font.Woff2 {
                 }
             }
             else {
-                foreach (Woff2Common.Table table in hdr.tables) {
-                    tables.Add(table);
-                }
+                tables.AddAll(JavaUtil.ArraysAsList(hdr.tables));
             }
             return tables;
         }
@@ -886,7 +873,7 @@ namespace iText.IO.Font.Woff2 {
             Woff2Dec.Woff2FontInfo info = metadata.font_infos[font_index];
             List<Woff2Common.Table> tables = Tables(hdr, font_index);
             // 'glyf' without 'loca' doesn't make sense
-            if ((FindTable(tables, TableTags.kGlyfTableTag) != null) != (FindTable(tables, TableTags.kLocaTableTag) !=
+            if ((FindTable(tables, TableTags.kGlyfTableTag) == null) == (FindTable(tables, TableTags.kLocaTableTag) !=
                  null)) {
                 throw new FontCompressionException(FontCompressionException.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
             }
@@ -902,8 +889,6 @@ namespace iText.IO.Font.Woff2 {
                 if (font_index == 0 && reused) {
                     throw new FontCompressionException(FontCompressionException.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
                 }
-                // TODO(user) a collection with optimized hmtx that reused glyf/loca
-                // would fail. We don't optimize hmtx for collections yet.
                 if (((long)table.src_offset) + table.src_length > transformed_buf_size) {
                     throw new FontCompressionException(FontCompressionException.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
                 }
@@ -994,8 +979,6 @@ namespace iText.IO.Font.Woff2 {
                 throw new FontCompressionException(FontCompressionException.INCORRECT_SIGNATURE);
             }
             hdr.flavor = file.ReadInt();
-            // TODO(user): Should call IsValidVersionTag() here.
-            //assuming we won't deal with font files > 2Gb
             int reported_length = file.ReadInt();
             System.Diagnostics.Debug.Assert(reported_length > 0);
             if (length != reported_length) {
@@ -1086,14 +1069,8 @@ namespace iText.IO.Font.Woff2 {
                     }
                 }
             }
-            long first_table_offset = ComputeOffsetToFirstTable(hdr);
             hdr.compressed_offset = file.GetOffset();
-            //TODO literary can't happen
-            if (hdr.compressed_offset > int.MaxValue) {
-                throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
-            }
-            long src_offset = Round.Round4(hdr.compressed_offset + hdr.compressed_length);
-            long dst_offset = first_table_offset;
+            int src_offset = Round.Round4(hdr.compressed_offset + hdr.compressed_length);
             if (src_offset > length) {
                 throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
             }
@@ -1102,18 +1079,12 @@ namespace iText.IO.Font.Woff2 {
                     throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
                 }
                 src_offset = Round.Round4(meta_offset + meta_length);
-                if (src_offset > int.MaxValue) {
-                    throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
-                }
             }
             if (priv_offset != 0) {
                 if (src_offset != priv_offset) {
                     throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
                 }
                 src_offset = Round.Round4(priv_offset + priv_length);
-                if (src_offset > int.MaxValue) {
-                    throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
-                }
             }
             if (src_offset != Round.Round4(length)) {
                 throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
@@ -1123,9 +1094,7 @@ namespace iText.IO.Font.Woff2 {
         // Write everything before the actual table data
         private static void WriteHeaders(byte[] data, int length, Woff2Dec.RebuildMetadata metadata, Woff2Dec.Woff2Header
              hdr, Woff2Out @out) {
-            long firstTableOffset = ComputeOffsetToFirstTable(hdr);
-            System.Diagnostics.Debug.Assert(firstTableOffset <= int.MaxValue);
-            byte[] output = new byte[(int)firstTableOffset];
+            byte[] output = new byte[ComputeOffsetToFirstTable(hdr)];
             // Re-order tables in output (OTSpec) order
             IList<Woff2Common.Table> sorted_tables = new List<Woff2Common.Table>(JavaUtil.ArraysAsList(hdr.tables));
             if (hdr.header_version != 0) {
@@ -1146,30 +1115,29 @@ namespace iText.IO.Font.Woff2 {
                 JavaCollectionsUtil.Sort(sorted_tables);
             }
             // Start building the font
-            byte[] result = output;
             int offset = 0;
             if (hdr.header_version != 0) {
                 // TTC header
-                offset = StoreBytes.StoreU32(result, offset, hdr.flavor);
+                offset = StoreBytes.StoreU32(output, offset, hdr.flavor);
                 // TAG TTCTag
-                offset = StoreBytes.StoreU32(result, offset, hdr.header_version);
+                offset = StoreBytes.StoreU32(output, offset, hdr.header_version);
                 // FIXED Version
-                offset = StoreBytes.StoreU32(result, offset, hdr.ttc_fonts.Length);
+                offset = StoreBytes.StoreU32(output, offset, hdr.ttc_fonts.Length);
                 // ULONG numFonts
                 // Space for ULONG OffsetTable[numFonts] (zeroed initially)
                 int offset_table = offset;
                 // keep start of offset table for later
                 for (int i = 0; i < hdr.ttc_fonts.Length; ++i) {
-                    offset = StoreBytes.StoreU32(result, offset, 0);
+                    offset = StoreBytes.StoreU32(output, offset, 0);
                 }
                 // will fill real values in later
                 // space for DSIG fields for header v2
                 if (hdr.header_version == 0x00020000) {
-                    offset = StoreBytes.StoreU32(result, offset, 0);
+                    offset = StoreBytes.StoreU32(output, offset, 0);
                     // ULONG ulDsigTag
-                    offset = StoreBytes.StoreU32(result, offset, 0);
+                    offset = StoreBytes.StoreU32(output, offset, 0);
                     // ULONG ulDsigLength
-                    offset = StoreBytes.StoreU32(result, offset, 0);
+                    offset = StoreBytes.StoreU32(output, offset, 0);
                 }
                 // ULONG ulDsigOffset
                 // write Offset Tables and store the location of each in TTC Header
@@ -1177,15 +1145,15 @@ namespace iText.IO.Font.Woff2 {
                 for (int i = 0; i < hdr.ttc_fonts.Length; ++i) {
                     Woff2Dec.TtcFont ttc_font = hdr.ttc_fonts[i];
                     // write Offset Table location into TTC Header
-                    offset_table = StoreBytes.StoreU32(result, offset_table, offset);
+                    offset_table = StoreBytes.StoreU32(output, offset_table, offset);
                     // write the actual offset table so our header doesn't lie
                     ttc_font.dst_offset = offset;
-                    offset = StoreOffsetTable(result, offset, ttc_font.flavor, ttc_font.table_indices.Length);
+                    offset = StoreOffsetTable(output, offset, ttc_font.flavor, ttc_font.table_indices.Length);
                     metadata.font_infos[i] = new Woff2Dec.Woff2FontInfo();
                     foreach (short table_index in ttc_font.table_indices) {
                         int tag = hdr.tables[table_index].tag;
                         metadata.font_infos[i].table_entry_by_tag.Put(tag, offset);
-                        offset = StoreTableEntry(result, offset, tag);
+                        offset = StoreTableEntry(output, offset, tag);
                     }
                     ttc_font.header_checksum = Woff2Common.ComputeULongSum(output, ttc_font.dst_offset, offset - ttc_font.dst_offset
                         );
@@ -1193,11 +1161,11 @@ namespace iText.IO.Font.Woff2 {
             }
             else {
                 metadata.font_infos = new Woff2Dec.Woff2FontInfo[1];
-                offset = StoreOffsetTable(result, offset, hdr.flavor, hdr.num_tables);
+                offset = StoreOffsetTable(output, offset, hdr.flavor, hdr.num_tables);
                 metadata.font_infos[0] = new Woff2Dec.Woff2FontInfo();
                 for (int i = 0; i < hdr.num_tables; ++i) {
                     metadata.font_infos[0].table_entry_by_tag.Put(sorted_tables[i].tag, offset);
-                    offset = StoreTableEntry(result, offset, sorted_tables[i].tag);
+                    offset = StoreTableEntry(output, offset, sorted_tables[i].tag);
                 }
             }
             @out.Write(output, 0, output.Length);
@@ -1225,7 +1193,7 @@ namespace iText.IO.Font.Woff2 {
                     ));
             }
             byte[] uncompressed_buf = new byte[hdr.uncompressed_size];
-            Woff2Uncompress(uncompressed_buf, 0, hdr.uncompressed_size, data, (int)hdr.compressed_offset, hdr.compressed_length
+            Woff2Uncompress(uncompressed_buf, 0, hdr.uncompressed_size, data, hdr.compressed_offset, hdr.compressed_length
                 );
             for (int i = 0; i < metadata.font_infos.Length; i++) {
                 ReconstructFont(uncompressed_buf, 0, hdr.uncompressed_size, metadata, hdr, i, @out);
