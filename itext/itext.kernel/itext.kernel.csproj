@@ -45,5 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itext.io\itext.io.csproj" />
+	<ProjectReference Include="..\itext.bouncy-castle-connector\itext.bouncy-castle-connector.csproj" />
   </ItemGroup>
 </Project>
