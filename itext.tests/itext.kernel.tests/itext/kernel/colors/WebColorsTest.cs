@@ -70,7 +70,7 @@ namespace iText.Kernel.Colors {
                 ), (float)(1.0) };
             float delta = (float)(0.0001);
             float[] resultRgba = WebColors.GetRGBAColor(colorName);
-            NUnit.Framework.Assert.AreEqual(cmpRgba, resultRgba);
+            iText.Test.TestUtil.AreEqual(cmpRgba, resultRgba, delta);
         }
 
         [NUnit.Framework.Test]
@@ -81,7 +81,7 @@ namespace iText.Kernel.Colors {
                 ), (float)(1.0) };
             float delta = (float)(0.0001);
             float[] resultRgba = WebColors.GetRGBAColor(hashHex);
-            NUnit.Framework.Assert.AreEqual(cmpRgba, resultRgba);
+            iText.Test.TestUtil.AreEqual(cmpRgba, resultRgba, delta);
         }
 
         [NUnit.Framework.Test]
@@ -92,7 +92,7 @@ namespace iText.Kernel.Colors {
                 ), (float)(1.0) };
             float delta = (float)(0.0001);
             float[] resultRgba = WebColors.GetRGBAColor(hexString);
-            NUnit.Framework.Assert.AreEqual(cmpRgba, resultRgba);
+            iText.Test.TestUtil.AreEqual(cmpRgba, resultRgba, delta);
         }
 
         [NUnit.Framework.Test]
@@ -102,7 +102,7 @@ namespace iText.Kernel.Colors {
             float[] cmpRgba = new float[] { (float)(153 / RGB_MAX_VAL), (float)(0.0), (float)(0.0), (float)(1.0) };
             float delta = (float)(0.0001);
             float[] resultRgba = WebColors.GetRGBAColor(hexString);
-            NUnit.Framework.Assert.AreEqual(cmpRgba, resultRgba);
+            iText.Test.TestUtil.AreEqual(cmpRgba, resultRgba, delta);
         }
 
         [NUnit.Framework.Test]
@@ -120,7 +120,7 @@ namespace iText.Kernel.Colors {
                 ), (float)(1.0) };
             float delta = (float)(0.0001);
             float[] resultRgba = WebColors.GetRGBAColor(rgbString);
-            NUnit.Framework.Assert.AreEqual(cmpRgba, resultRgba);
+            iText.Test.TestUtil.AreEqual(cmpRgba, resultRgba, delta);
         }
 
         [NUnit.Framework.Test]
@@ -131,7 +131,7 @@ namespace iText.Kernel.Colors {
                 ), (float)(1.0) };
             float delta = (float)(0.0001);
             float[] resultRgba = WebColors.GetRGBAColor(rgbaString);
-            NUnit.Framework.Assert.AreEqual(cmpRgba, resultRgba);
+            iText.Test.TestUtil.AreEqual(cmpRgba, resultRgba, delta);
         }
     }
 }

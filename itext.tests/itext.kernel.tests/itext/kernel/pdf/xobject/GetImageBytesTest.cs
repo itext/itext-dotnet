@@ -315,11 +315,11 @@ namespace iText.Kernel.Pdf.Xobject {
                                     }
                                     else {
                                         if (cmpField.GetFieldType() == TIFFField.TIFF_DOUBLE) {
-                                            NUnit.Framework.Assert.AreEqual(cmpField.GetAsDoubles(), resultField.GetAsDoubles());
+                                            iText.Test.TestUtil.AreEqual(cmpField.GetAsDoubles(), resultField.GetAsDoubles(), 0);
                                         }
                                         else {
                                             if (cmpField.GetFieldType() == TIFFField.TIFF_FLOAT) {
-                                                NUnit.Framework.Assert.AreEqual(cmpField.GetAsFloats(), resultField.GetAsFloats());
+                                                iText.Test.TestUtil.AreEqual(cmpField.GetAsFloats(), resultField.GetAsFloats(), 0);
                                             }
                                             else {
                                                 if (cmpField.GetFieldType() == TIFFField.TIFF_RATIONAL) {
