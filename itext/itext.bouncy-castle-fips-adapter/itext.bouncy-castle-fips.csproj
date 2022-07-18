@@ -2,7 +2,7 @@
   <PropertyGroup Label="Configuration">
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
-    <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.bouncy-castle.xml</DocumentationFile>
+    <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.bouncy-castle-fips-adapter.xml</DocumentationFile>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
@@ -16,7 +16,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AssemblyName>itext.bouncy-castle</AssemblyName>
+    <AssemblyName>itext.bouncy-castle-fips-adapter</AssemblyName>
     <RootNamespace />
   </PropertyGroup>
   <PropertyGroup>
@@ -24,13 +24,18 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.9" />
+    <Reference Include="bc-fips-1.0.1.1, Version=1.0.1.1, Culture=neutral, PublicKeyToken=null">
+      <HintPath>lib\bc-fips\bc-fips-1.0.1.1.dll</HintPath>
+    </Reference>
+    <Reference Include="bcpkix-fips-1.0.1.1, Version=1.0.1.1, Culture=neutral, PublicKeyToken=null">
+      <HintPath>lib\bc-fips\bcpkix-fips-1.0.1.1.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
-  <ItemGroup>
+    <ItemGroup>
     <ProjectReference Include="..\itext.commons\itext.commons.csproj" />
   </ItemGroup>
 </Project>

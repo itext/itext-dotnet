@@ -24,10 +24,10 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\itext.bouncy-castle\itext.bouncy-castle.csproj">
+    <ProjectReference Include="..\itext.bouncy-castle-adapter\itext.bouncy-castle-adapter.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-	<ProjectReference Include="..\itext.bouncy-castle-fips\itext.bouncy-castle-fips.csproj">
+	<ProjectReference Include="..\itext.bouncy-castle-fips-adapter\itext.bouncy-castle-fips-adapter.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
   </ItemGroup>
