@@ -68,8 +68,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             PdfDictionary axialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, PdfShading.ShadingType
                 .AXIAL);
             PdfShading.Axial axial = new PdfShading.Axial(axialShadingDictionary);
-            NUnit.Framework.Assert.AreEqual(coordsArray, axial.GetCoords().ToFloatArray());
-            NUnit.Framework.Assert.AreEqual(domainArray, axial.GetDomain().ToFloatArray());
+            iText.Test.TestUtil.AreEqual(coordsArray, axial.GetCoords().ToFloatArray(), 0f);
+            iText.Test.TestUtil.AreEqual(domainArray, axial.GetDomain().ToFloatArray(), 0f);
             NUnit.Framework.Assert.AreEqual(extendArray, axial.GetExtend().ToBooleanArray());
             NUnit.Framework.Assert.AreEqual(PdfShading.ShadingType.AXIAL, axial.GetShadingType());
         }
@@ -82,8 +82,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             PdfDictionary axialShadingDictionary = InitShadingDictionary(coordsArray, null, null, PdfShading.ShadingType
                 .AXIAL);
             PdfShading.Axial axial = new PdfShading.Axial(axialShadingDictionary);
-            NUnit.Framework.Assert.AreEqual(coordsArray, axial.GetCoords().ToFloatArray());
-            NUnit.Framework.Assert.AreEqual(defaultDomainArray, axial.GetDomain().ToFloatArray());
+            iText.Test.TestUtil.AreEqual(coordsArray, axial.GetCoords().ToFloatArray(), 0f);
+            iText.Test.TestUtil.AreEqual(defaultDomainArray, axial.GetDomain().ToFloatArray(), 0f);
             NUnit.Framework.Assert.AreEqual(defaultExtendArray, axial.GetExtend().ToBooleanArray());
             NUnit.Framework.Assert.AreEqual(PdfShading.ShadingType.AXIAL, axial.GetShadingType());
         }
@@ -96,8 +96,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             PdfDictionary radialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, PdfShading.ShadingType
                 .RADIAL);
             PdfShading.Radial radial = new PdfShading.Radial(radialShadingDictionary);
-            NUnit.Framework.Assert.AreEqual(coordsArray, radial.GetCoords().ToFloatArray());
-            NUnit.Framework.Assert.AreEqual(domainArray, radial.GetDomain().ToFloatArray());
+            iText.Test.TestUtil.AreEqual(coordsArray, radial.GetCoords().ToFloatArray(), 0f);
+            iText.Test.TestUtil.AreEqual(domainArray, radial.GetDomain().ToFloatArray(), 0f);
             NUnit.Framework.Assert.AreEqual(extendArray, radial.GetExtend().ToBooleanArray());
             NUnit.Framework.Assert.AreEqual(PdfShading.ShadingType.RADIAL, radial.GetShadingType());
         }
@@ -110,8 +110,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             PdfDictionary radialShadingDictionary = InitShadingDictionary(coordsArray, null, null, PdfShading.ShadingType
                 .RADIAL);
             PdfShading.Radial radial = new PdfShading.Radial(radialShadingDictionary);
-            NUnit.Framework.Assert.AreEqual(coordsArray, radial.GetCoords().ToFloatArray());
-            NUnit.Framework.Assert.AreEqual(defaultDomainArray, radial.GetDomain().ToFloatArray());
+            iText.Test.TestUtil.AreEqual(coordsArray, radial.GetCoords().ToFloatArray(), 0f);
+            iText.Test.TestUtil.AreEqual(defaultDomainArray, radial.GetDomain().ToFloatArray(), 0f);
             NUnit.Framework.Assert.AreEqual(defaultExtendArray, radial.GetExtend().ToBooleanArray());
             NUnit.Framework.Assert.AreEqual(PdfShading.ShadingType.RADIAL, radial.GetShadingType());
         }

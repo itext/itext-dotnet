@@ -129,7 +129,7 @@ namespace iText.Svg.Renderers.Impl {
             renderer.SetAttributesAndStyles(styles);
             float[] expected = new float[] { 1, 0, 0, 1 };
             float[] actual = renderer.GetStopColor();
-            NUnit.Framework.Assert.AreEqual(expected, actual);
+            iText.Test.TestUtil.AreEqual(expected, actual, DELTA);
         }
 
         [NUnit.Framework.Test]
@@ -140,7 +140,7 @@ namespace iText.Svg.Renderers.Impl {
             renderer.SetAttributesAndStyles(styles);
             float[] expected = new float[] { 0, 0, 0, 1 };
             float[] actual = renderer.GetStopColor();
-            NUnit.Framework.Assert.AreEqual(expected, actual);
+            iText.Test.TestUtil.AreEqual(expected, actual, DELTA);
         }
 
         [NUnit.Framework.Test]
@@ -151,7 +151,7 @@ namespace iText.Svg.Renderers.Impl {
             renderer.SetAttributesAndStyles(styles);
             float[] expected = new float[] { 0, 0, 0, 1 };
             float[] actual = renderer.GetStopColor();
-            NUnit.Framework.Assert.AreEqual(expected, actual);
+            iText.Test.TestUtil.AreEqual(expected, actual, DELTA);
         }
 
         [NUnit.Framework.Test]
@@ -162,7 +162,7 @@ namespace iText.Svg.Renderers.Impl {
             renderer.SetAttributesAndStyles(styles);
             float[] expected = new float[] { 0, 0, 0, 1 };
             float[] actual = renderer.GetStopColor();
-            NUnit.Framework.Assert.AreEqual(expected, actual);
+            iText.Test.TestUtil.AreEqual(expected, actual, DELTA);
         }
 
         [NUnit.Framework.Test]
@@ -173,7 +173,7 @@ namespace iText.Svg.Renderers.Impl {
             renderer.SetAttributesAndStyles(styles);
             float[] expected = new float[] { 0, 0, 0, 1 };
             float[] actual = renderer.GetStopColor();
-            NUnit.Framework.Assert.AreEqual(expected, actual);
+            iText.Test.TestUtil.AreEqual(expected, actual, DELTA);
         }
 
         [NUnit.Framework.Test]

@@ -59,7 +59,8 @@ namespace iText.Kernel.Pdf.Annot {
             PdfPolyGeomAnnotation pdfPolyGeomAnnotation = PdfPolyGeomAnnotation.CreatePolygon(rect, vertices);
             NUnit.Framework.Assert.IsTrue(pdfPolyGeomAnnotation.GetRectangle().ToRectangle().EqualsWithEpsilon(rect), 
                 "Rectangles are not equal");
-            NUnit.Framework.Assert.AreEqual(vertices, pdfPolyGeomAnnotation.GetVertices().ToFloatArray());
+            iText.Test.TestUtil.AreEqual(vertices, pdfPolyGeomAnnotation.GetVertices().ToFloatArray(), FLOAT_EPSILON_COMPARISON
+                );
         }
 
         [NUnit.Framework.Test]
@@ -69,7 +70,8 @@ namespace iText.Kernel.Pdf.Annot {
             PdfPolyGeomAnnotation pdfPolyGeomAnnotation = PdfPolyGeomAnnotation.CreatePolyLine(rect, vertices);
             NUnit.Framework.Assert.IsTrue(pdfPolyGeomAnnotation.GetRectangle().ToRectangle().EqualsWithEpsilon(rect), 
                 "Rectangles are not equal");
-            NUnit.Framework.Assert.AreEqual(vertices, pdfPolyGeomAnnotation.GetVertices().ToFloatArray());
+            iText.Test.TestUtil.AreEqual(vertices, pdfPolyGeomAnnotation.GetVertices().ToFloatArray(), FLOAT_EPSILON_COMPARISON
+                );
         }
 
         [NUnit.Framework.Test]
@@ -77,7 +79,8 @@ namespace iText.Kernel.Pdf.Annot {
             PdfPolyGeomAnnotation pdfPolyGeomAnnotation = new PdfPolygonAnnotation(new PdfDictionary());
             float[] vertices = new float[] { 1, 1, 1, 1 };
             pdfPolyGeomAnnotation.SetVertices(vertices);
-            NUnit.Framework.Assert.AreEqual(vertices, pdfPolyGeomAnnotation.GetVertices().ToFloatArray());
+            iText.Test.TestUtil.AreEqual(vertices, pdfPolyGeomAnnotation.GetVertices().ToFloatArray(), FLOAT_EPSILON_COMPARISON
+                );
         }
 
         [NUnit.Framework.Test]
@@ -88,7 +91,8 @@ namespace iText.Kernel.Pdf.Annot {
             PdfPolyGeomAnnotation pdfPolyGeomAnnotation = new PdfPolygonAnnotation(dict);
             float[] vertices = new float[] { 1, 1, 1, 1 };
             pdfPolyGeomAnnotation.SetVertices(vertices);
-            NUnit.Framework.Assert.AreEqual(vertices, pdfPolyGeomAnnotation.GetVertices().ToFloatArray());
+            iText.Test.TestUtil.AreEqual(vertices, pdfPolyGeomAnnotation.GetVertices().ToFloatArray(), FLOAT_EPSILON_COMPARISON
+                );
         }
 
         [NUnit.Framework.Test]
@@ -96,8 +100,8 @@ namespace iText.Kernel.Pdf.Annot {
             PdfPolyGeomAnnotation pdfPolyGeomAnnotation = new PdfPolygonAnnotation(new PdfDictionary());
             PdfArray vertices = new PdfArray(new float[] { 1, 1, 1, 1 });
             pdfPolyGeomAnnotation.SetVertices(vertices);
-            NUnit.Framework.Assert.AreEqual(vertices.ToFloatArray(), pdfPolyGeomAnnotation.GetVertices().ToFloatArray(
-                ));
+            iText.Test.TestUtil.AreEqual(vertices.ToFloatArray(), pdfPolyGeomAnnotation.GetVertices().ToFloatArray(), 
+                FLOAT_EPSILON_COMPARISON);
         }
 
         [NUnit.Framework.Test]
@@ -108,8 +112,8 @@ namespace iText.Kernel.Pdf.Annot {
             PdfPolyGeomAnnotation pdfPolyGeomAnnotation = new PdfPolygonAnnotation(dict);
             PdfArray vertices = new PdfArray(new float[] { 1, 1, 1, 1 });
             pdfPolyGeomAnnotation.SetVertices(vertices);
-            NUnit.Framework.Assert.AreEqual(vertices.ToFloatArray(), pdfPolyGeomAnnotation.GetVertices().ToFloatArray(
-                ));
+            iText.Test.TestUtil.AreEqual(vertices.ToFloatArray(), pdfPolyGeomAnnotation.GetVertices().ToFloatArray(), 
+                FLOAT_EPSILON_COMPARISON);
         }
 
         [NUnit.Framework.Test]
@@ -119,8 +123,8 @@ namespace iText.Kernel.Pdf.Annot {
             PdfPolyGeomAnnotation pdfPolyGeomAnnotation = new PdfPolygonAnnotation(dict);
             PdfArray lineEndingStyles = new PdfArray(new float[] { 1, 2 });
             pdfPolyGeomAnnotation.SetLineEndingStyles(lineEndingStyles);
-            NUnit.Framework.Assert.AreEqual(lineEndingStyles.ToFloatArray(), pdfPolyGeomAnnotation.GetLineEndingStyles
-                ().ToFloatArray());
+            iText.Test.TestUtil.AreEqual(lineEndingStyles.ToFloatArray(), pdfPolyGeomAnnotation.GetLineEndingStyles().
+                ToFloatArray(), FLOAT_EPSILON_COMPARISON);
         }
 
         [NUnit.Framework.Test]

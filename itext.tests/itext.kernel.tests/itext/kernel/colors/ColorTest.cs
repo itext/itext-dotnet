@@ -54,14 +54,14 @@ namespace iText.Kernel.Colors {
         public virtual void ConvertCmykToRgbTest() {
             DeviceCmyk cmyk = new DeviceCmyk(0, 0, 0, 0);
             DeviceRgb rgb = new DeviceRgb(255, 255, 255);
-            NUnit.Framework.Assert.AreEqual(rgb.colorValue, Color.ConvertCmykToRgb(cmyk).colorValue);
+            iText.Test.TestUtil.AreEqual(rgb.colorValue, Color.ConvertCmykToRgb(cmyk).colorValue, EPS);
         }
 
         [NUnit.Framework.Test]
         public virtual void ConvertRgbToCmykTest() {
             DeviceCmyk cmyk = new DeviceCmyk(0, 0, 0, 0);
             DeviceRgb rgb = new DeviceRgb(255, 255, 255);
-            NUnit.Framework.Assert.AreEqual(cmyk.colorValue, Color.ConvertRgbToCmyk(rgb).colorValue);
+            iText.Test.TestUtil.AreEqual(cmyk.colorValue, Color.ConvertRgbToCmyk(rgb).colorValue, EPS);
         }
 
         [NUnit.Framework.Test]
@@ -141,7 +141,7 @@ namespace iText.Kernel.Colors {
             PdfColorSpace colorSpace = PdfColorSpace.MakeColorSpace(PdfName.DeviceGray);
             Color color = Color.MakeColor(colorSpace);
             NUnit.Framework.Assert.IsTrue(color is DeviceGray);
-            NUnit.Framework.Assert.AreEqual(new float[] { 0.0f }, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(new float[] { 0.0f }, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -150,7 +150,7 @@ namespace iText.Kernel.Colors {
             PdfColorSpace colorSpace = PdfColorSpace.MakeColorSpace(PdfName.DeviceGray);
             Color color = Color.MakeColor(colorSpace, colorValues);
             NUnit.Framework.Assert.IsTrue(color is DeviceGray);
-            NUnit.Framework.Assert.AreEqual(new float[] { 0.7f }, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(new float[] { 0.7f }, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -158,7 +158,7 @@ namespace iText.Kernel.Colors {
             PdfColorSpace colorSpace = PdfColorSpace.MakeColorSpace(PdfName.DeviceCMYK);
             Color color = Color.MakeColor(colorSpace);
             NUnit.Framework.Assert.IsTrue(color is DeviceCmyk);
-            NUnit.Framework.Assert.AreEqual(new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(new float[] { 0.0f, 0.0f, 0.0f, 1.0f }, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -167,7 +167,7 @@ namespace iText.Kernel.Colors {
             PdfColorSpace colorSpace = PdfColorSpace.MakeColorSpace(PdfName.DeviceCMYK);
             Color color = Color.MakeColor(colorSpace, colorValues);
             NUnit.Framework.Assert.IsTrue(color is DeviceCmyk);
-            NUnit.Framework.Assert.AreEqual(colorValues, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(colorValues, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -187,7 +187,7 @@ namespace iText.Kernel.Colors {
             PdfColorSpace colorSpace = PdfColorSpace.MakeColorSpace(calGray);
             Color color = Color.MakeColor(colorSpace);
             NUnit.Framework.Assert.IsTrue(color is CalGray);
-            NUnit.Framework.Assert.AreEqual(new float[] { 0.0f }, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(new float[] { 0.0f }, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -201,7 +201,7 @@ namespace iText.Kernel.Colors {
             float[] colorValues = new float[] { 0.7f, 0.5f, 0.1f };
             Color color = Color.MakeColor(colorSpace, colorValues);
             NUnit.Framework.Assert.IsTrue(color is CalGray);
-            NUnit.Framework.Assert.AreEqual(new float[] { 0.7f }, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(new float[] { 0.7f }, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -214,7 +214,7 @@ namespace iText.Kernel.Colors {
             PdfColorSpace colorSpace = PdfColorSpace.MakeColorSpace(calRgb);
             Color color = Color.MakeColor(colorSpace);
             NUnit.Framework.Assert.IsTrue(color is CalRgb);
-            NUnit.Framework.Assert.AreEqual(new float[] { 0.0f, 0.0f, 0.0f }, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(new float[] { 0.0f, 0.0f, 0.0f }, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -228,7 +228,7 @@ namespace iText.Kernel.Colors {
             float[] colorValues = new float[] { 0.7f, 0.5f, 0.1f };
             Color color = Color.MakeColor(colorSpace, colorValues);
             NUnit.Framework.Assert.IsTrue(color is CalRgb);
-            NUnit.Framework.Assert.AreEqual(colorValues, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(colorValues, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -241,7 +241,7 @@ namespace iText.Kernel.Colors {
             PdfColorSpace colorSpace = PdfColorSpace.MakeColorSpace(calLab);
             Color color = Color.MakeColor(colorSpace);
             NUnit.Framework.Assert.IsTrue(color is Lab);
-            NUnit.Framework.Assert.AreEqual(new float[] { 0.0f, 0.0f, 0.0f }, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(new float[] { 0.0f, 0.0f, 0.0f }, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -255,7 +255,7 @@ namespace iText.Kernel.Colors {
             float[] colorValues = new float[] { 0.7f, 0.5f, 0.1f };
             Color color = Color.MakeColor(colorSpace, colorValues);
             NUnit.Framework.Assert.IsTrue(color is Lab);
-            NUnit.Framework.Assert.AreEqual(colorValues, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(colorValues, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -275,7 +275,7 @@ namespace iText.Kernel.Colors {
             PdfColorSpace colorSpace = PdfColorSpace.MakeColorSpace(deviceN);
             Color color = Color.MakeColor(colorSpace);
             NUnit.Framework.Assert.IsTrue(color is DeviceN);
-            NUnit.Framework.Assert.AreEqual(new float[] {  }, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(new float[] {  }, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -289,7 +289,7 @@ namespace iText.Kernel.Colors {
             float[] colorValues = new float[] { 0.7f, 0.5f, 0.1f };
             Color color = Color.MakeColor(colorSpace, colorValues);
             NUnit.Framework.Assert.IsTrue(color is DeviceN);
-            NUnit.Framework.Assert.AreEqual(colorValues, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(colorValues, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -302,7 +302,7 @@ namespace iText.Kernel.Colors {
             PdfColorSpace colorSpace = PdfColorSpace.MakeColorSpace(indexed);
             Color color = Color.MakeColor(colorSpace);
             NUnit.Framework.Assert.IsTrue(color is Indexed);
-            NUnit.Framework.Assert.AreEqual(new float[] { 0.0f }, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(new float[] { 0.0f }, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -316,7 +316,7 @@ namespace iText.Kernel.Colors {
             float[] colorValues = new float[] { 1.0f, 0.5f, 0.1f };
             Color color = Color.MakeColor(colorSpace, colorValues);
             NUnit.Framework.Assert.IsTrue(color is Indexed);
-            NUnit.Framework.Assert.AreEqual(new float[] { 1f }, color.GetColorValue());
+            iText.Test.TestUtil.AreEqual(new float[] { 1f }, color.GetColorValue(), EPS);
         }
 
         [NUnit.Framework.Test]
