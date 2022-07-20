@@ -48,7 +48,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Crypto {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("Bouncy-castle integration test")]
     public class UnicodeBasedPasswordEncryptionTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/crypto/UnicodeBasedPasswordEncryptionTest/";

@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Org.BouncyCastle.Crypto;
+using iText.Commons.Bouncycastle.Crypto;
 
 namespace iText.Signatures {
     /// <summary>Time Stamp Authority client (caller) interface.</summary>
@@ -68,15 +68,15 @@ namespace iText.Signatures {
 
         /// <summary>
         /// Returns the
-        /// <see cref="Org.BouncyCastle.Crypto.IDigest"/>
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.IIDigest"/>
         /// to digest the data imprint
         /// </summary>
         /// <returns>
         /// The
-        /// <see cref="Org.BouncyCastle.Crypto.IDigest"/>
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.IIDigest"/>
         /// object.
         /// </returns>
-        IDigest GetMessageDigest();
+        IIDigest GetMessageDigest();
 
         /// <summary>Returns RFC 3161 timeStampToken.</summary>
         /// <param name="imprint">byte[] - data imprint to be time-stamped</param>

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.IO.Image;
@@ -119,7 +119,7 @@ namespace iText.Signatures {
         private DateTime signDate;
 
         /// <summary>The signing certificate.</summary>
-        private X509Certificate signCertificate;
+        private IX509Certificate signCertificate;
 
         /// <summary>The image that needs to be used for a visible signature.</summary>
         private ImageData signatureGraphic = null;
@@ -354,14 +354,14 @@ namespace iText.Signatures {
         /// </remarks>
         /// <param name="signCertificate">the certificate</param>
         /// <returns>this instance to support fluent interface</returns>
-        public virtual iText.Signatures.PdfSignatureAppearance SetCertificate(X509Certificate signCertificate) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetCertificate(IX509Certificate signCertificate) {
             this.signCertificate = signCertificate;
             return this;
         }
 
         /// <summary>Get the signing certificate.</summary>
         /// <returns>the signing certificate</returns>
-        public virtual X509Certificate GetCertificate() {
+        public virtual IX509Certificate GetCertificate() {
             return signCertificate;
         }
 
@@ -588,9 +588,9 @@ namespace iText.Signatures {
                 }
                 switch (renderingMode) {
                     case PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION: {
-                        String signedBy = CertificateInfo.GetSubjectFields((X509Certificate)signCertificate).GetField("CN");
+                        String signedBy = CertificateInfo.GetSubjectFields((IX509Certificate)signCertificate).GetField("CN");
                         if (signedBy == null) {
-                            signedBy = CertificateInfo.GetSubjectFields((X509Certificate)signCertificate).GetField("E");
+                            signedBy = CertificateInfo.GetSubjectFields((IX509Certificate)signCertificate).GetField("E");
                         }
                         if (signedBy == null) {
                             signedBy = "";
@@ -766,7 +766,7 @@ namespace iText.Signatures {
             StringBuilder buf = new StringBuilder();
             buf.Append("Digitally signed by ");
             String name = null;
-            CertificateInfo.X500Name x500name = CertificateInfo.GetSubjectFields((X509Certificate)signCertificate);
+            CertificateInfo.X500Name x500name = CertificateInfo.GetSubjectFields((IX509Certificate)signCertificate);
             if (x500name != null) {
                 name = x500name.GetField("CN");
                 if (name == null) {

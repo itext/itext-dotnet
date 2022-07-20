@@ -46,11 +46,11 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
 using iText.Forms;
@@ -167,7 +167,7 @@ namespace iText.Signatures {
             LOGGER.LogInformation("Verifying signature.");
             IList<VerificationOK> result = new List<VerificationOK>();
             // Get the certificate chain
-            X509Certificate[] chain = pkcs7.GetSignCertificateChain();
+            IX509Certificate[] chain = pkcs7.GetSignCertificateChain();
             VerifyChain(chain);
             // how many certificates in the chain do we need to check?
             int total = 1;
@@ -175,15 +175,15 @@ namespace iText.Signatures {
                 total = chain.Length;
             }
             // loop over the certificates
-            X509Certificate signCert;
-            X509Certificate issuerCert;
+            IX509Certificate signCert;
+            IX509Certificate issuerCert;
             for (int i = 0; i < total; ) {
                 // the certificate to check
-                signCert = (X509Certificate)chain[i++];
+                signCert = (IX509Certificate)chain[i++];
                 // its issuer
-                issuerCert = (X509Certificate)null;
+                issuerCert = (IX509Certificate)null;
                 if (i < chain.Length) {
-                    issuerCert = (X509Certificate)chain[i];
+                    issuerCert = (IX509Certificate)chain[i];
                 }
                 // now lets verify the certificate
                 LOGGER.LogInformation(signCert.SubjectDN.ToString());
@@ -220,10 +220,10 @@ namespace iText.Signatures {
         /// do they chain up correctly?
         /// </summary>
         /// <param name="chain">the certificate chain</param>
-        public virtual void VerifyChain(X509Certificate[] chain) {
+        public virtual void VerifyChain(IX509Certificate[] chain) {
             // Loop over the certificates in the chain
             for (int i = 0; i < chain.Length; i++) {
-                X509Certificate cert = (X509Certificate)chain[i];
+                IX509Certificate cert = (IX509Certificate)chain[i];
                 // check if the certificate was/is valid
                 cert.CheckValidity(signDate);
                 // check if the previous certificate was issued by this certificate
@@ -241,9 +241,9 @@ namespace iText.Signatures {
         /// a list of <c>VerificationOK</c> objects.
         /// The list will be empty if the certificate couldn't be verified.
         /// </returns>
-        /// <seealso cref="RootStoreVerifier.Verify(Org.BouncyCastle.X509.X509Certificate, Org.BouncyCastle.X509.X509Certificate, System.DateTime)
+        /// <seealso cref="RootStoreVerifier.Verify(iText.Commons.Bouncycastle.Cert.IX509Certificate, iText.Commons.Bouncycastle.Cert.IX509Certificate, System.DateTime)
         ///     "/>
-        public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
+        public override IList<VerificationOK> Verify(IX509Certificate signCert, IX509Certificate issuerCert, DateTime
              signDate) {
             // we'll verify against the rootstore (if present)
             RootStoreVerifier rootStoreVerifier = new RootStoreVerifier(verifier);
@@ -293,8 +293,8 @@ namespace iText.Signatures {
 
         /// <summary>Gets a list of X509CRL objects from a Document Security Store.</summary>
         /// <returns>a list of CRLs</returns>
-        public virtual IList<X509Crl> GetCRLsFromDSS() {
-            IList<X509Crl> crls = new List<X509Crl>();
+        public virtual IList<IX509Crl> GetCRLsFromDSS() {
+            IList<IX509Crl> crls = new List<IX509Crl>();
             if (dss == null) {
                 return crls;
             }
@@ -304,7 +304,7 @@ namespace iText.Signatures {
             }
             for (int i = 0; i < crlarray.Size(); i++) {
                 PdfStream stream = crlarray.GetAsStream(i);
-                crls.Add((X509Crl)SignUtils.ParseCrlFromStream(new MemoryStream(stream.GetBytes())));
+                crls.Add((IX509Crl)SignUtils.ParseCrlFromStream(new MemoryStream(stream.GetBytes())));
             }
             return crls;
         }
@@ -364,14 +364,14 @@ namespace iText.Signatures {
                 LOGGER.LogInformation("The timestamp covers whole document.");
             }
             else {
-                throw new VerificationException((X509Certificate)null, "Signature doesn't cover whole document.");
+                throw new VerificationException((IX509Certificate)null, "Signature doesn't cover whole document.");
             }
             if (pkcs7.VerifySignatureIntegrityAndAuthenticity()) {
                 LOGGER.LogInformation("The signed document has not been modified.");
                 return pkcs7;
             }
             else {
-                throw new VerificationException((X509Certificate)null, "The document was altered after the final signature was applied."
+                throw new VerificationException((IX509Certificate)null, "The document was altered after the final signature was applied."
                     );
             }
         }

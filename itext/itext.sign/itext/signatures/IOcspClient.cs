@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Signatures {
     /// <summary>Interface for the Online Certificate Status Protocol (OCSP) Client.</summary>
@@ -67,6 +67,6 @@ namespace iText.Signatures {
         /// could not be obtained
         /// </returns>
         /// <seealso><a href="https://datatracker.ietf.org/doc/html/rfc6960#section-4.2.1">RFC 6960 § 4.2.1</a></seealso>
-        byte[] GetEncoded(X509Certificate checkCert, X509Certificate issuerCert, String url);
+        byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url);
     }
 }

@@ -29,7 +29,7 @@ using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
-using iText.Commons.Bouncycastle.Tsp;
+using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -146,15 +146,15 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsNull(pkcs7.GetCRLs());
             // it's tested here that ocsp and time stamp token were found while
             // constructing PdfPKCS7 instance
-            ITimeStampToken timeStampToken = pkcs7.GetTimeStampToken();
-            NUnit.Framework.Assert.IsNotNull(timeStampToken);
+            ITSTInfo timeStampTokenInfo = pkcs7.GetTimeStampTokenInfo();
+            NUnit.Framework.Assert.IsNotNull(timeStampTokenInfo);
             // The number corresponds to 3 September, 2021 13:32:33.
             double expectedMillis = (double)1630675953000L;
             NUnit.Framework.Assert.AreEqual(TimeTestUtil.GetFullDaysMillis(expectedMillis), TimeTestUtil.GetFullDaysMillis
-                (DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar(timeStampToken.GetTimeStampInfo().GetGenTime
-                ()))), EPS);
+                (DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar(timeStampTokenInfo.GetGenTime()))), EPS);
             NUnit.Framework.Assert.AreEqual(TimeTestUtil.GetFullDaysMillis(expectedMillis), TimeTestUtil.GetFullDaysMillis
-                (DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar(pkcs7.GetOcsp().GetProducedAt()))), EPS);
+                (DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar(pkcs7.GetOcsp().GetProducedAtDate()))), EPS
+                );
         }
 
         [NUnit.Framework.Test]
@@ -233,9 +233,8 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void IsRevocationValidLackOfSignCertsTest() {
             PdfPKCS7 pkcs7 = CreateSimplePdfPKCS7();
-            pkcs7.basicResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResp(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(
-                BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, "simpleOCSPResponse.bin"
-                ))).ReadObject()));
+            pkcs7.basicResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1InputStream
+                (File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject());
             pkcs7.signCerts = JavaCollectionsUtil.Singleton(chain[0]);
             NUnit.Framework.Assert.IsFalse(pkcs7.IsRevocationValid());
         }
@@ -243,9 +242,8 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void IsRevocationValidExceptionDuringValidationTest() {
             PdfPKCS7 pkcs7 = CreateSimplePdfPKCS7();
-            pkcs7.basicResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResp(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(
-                BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, "simpleOCSPResponse.bin"
-                ))).ReadObject()));
+            pkcs7.basicResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1InputStream
+                (File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject());
             pkcs7.signCerts = JavaUtil.ArraysAsList(new X509Certificate[] { null, null });
             NUnit.Framework.Assert.IsFalse(pkcs7.IsRevocationValid());
         }

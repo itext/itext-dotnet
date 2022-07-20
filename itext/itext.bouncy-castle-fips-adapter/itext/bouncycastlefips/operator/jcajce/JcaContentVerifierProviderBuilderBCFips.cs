@@ -8,22 +8,42 @@ using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Utils;
 
 namespace iText.Bouncycastlefips.Operator.Jcajce {
+    /// <summary>
+    /// Wrapper class for
+    /// <see cref="Org.BouncyCastle.Operator.Jcajce.JcaContentVerifierProviderBuilder"/>.
+    /// </summary>
     public class JcaContentVerifierProviderBuilderBCFips : IJcaContentVerifierProviderBuilder {
         private readonly JcaContentVerifierProviderBuilder providerBuilder;
 
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Operator.Jcajce.JcaContentVerifierProviderBuilder"/>.
+        /// </summary>
+        /// <param name="providerBuilder">
+        /// 
+        /// <see cref="Org.BouncyCastle.Operator.Jcajce.JcaContentVerifierProviderBuilder"/>
+        /// to be wrapped
+        /// </param>
         public JcaContentVerifierProviderBuilderBCFips(JcaContentVerifierProviderBuilder providerBuilder) {
             this.providerBuilder = providerBuilder;
         }
 
+        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+        /// <returns>
+        /// wrapped
+        /// <see cref="Org.BouncyCastle.Operator.Jcajce.JcaContentVerifierProviderBuilder"/>.
+        /// </returns>
         public virtual JcaContentVerifierProviderBuilder GetProviderBuilder() {
             return providerBuilder;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual IJcaContentVerifierProviderBuilder SetProvider(String provider) {
             providerBuilder.SetProvider(provider);
             return this;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual IContentVerifierProvider Build(AsymmetricKeyParameter publicKey) {
             try {
                 return new ContentVerifierProviderBCFips(providerBuilder.Build(publicKey));
@@ -33,6 +53,8 @@ namespace iText.Bouncycastlefips.Operator.Jcajce {
             }
         }
 
+        /// <summary>Indicates whether some other object is "equal to" this one.</summary>
+        /// <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
         public override bool Equals(Object o) {
             if (this == o) {
                 return true;
@@ -45,10 +67,16 @@ namespace iText.Bouncycastlefips.Operator.Jcajce {
             return Object.Equals(providerBuilder, that.providerBuilder);
         }
 
+        /// <summary>Returns a hash code value based on the wrapped object.</summary>
         public override int GetHashCode() {
             return JavaUtil.ArraysHashCode(providerBuilder);
         }
 
+        /// <summary>
+        /// Delegates
+        /// <c>toString</c>
+        /// method call to the wrapped object.
+        /// </summary>
         public override String ToString() {
             return providerBuilder.ToString();
         }

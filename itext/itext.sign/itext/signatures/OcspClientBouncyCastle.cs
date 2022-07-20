@@ -44,12 +44,12 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Utils;
 using iText.IO.Util;
 
@@ -90,7 +90,7 @@ namespace iText.Signatures {
         /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IBasicOCSPResp"/>
         /// an OCSP response wrapper
         /// </returns>
-        public virtual IBasicOCSPResp GetBasicOCSPResp(X509Certificate checkCert, X509Certificate rootCert, String
+        public virtual IBasicOCSPResp GetBasicOCSPResp(IX509Certificate checkCert, IX509Certificate rootCert, String
              url) {
             try {
                 IOCSPResp ocspResponse = GetOcspResponse(checkCert, rootCert, url);
@@ -113,7 +113,7 @@ namespace iText.Signatures {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual byte[] GetEncoded(X509Certificate checkCert, X509Certificate rootCert, String url) {
+        public virtual byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate rootCert, String url) {
             try {
                 IBasicOCSPResp basicResponse = GetBasicOCSPResp(checkCert, rootCert, url);
                 if (basicResponse != null) {
@@ -149,7 +149,7 @@ namespace iText.Signatures {
         /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IOCSPReq"/>
         /// an OCSP request wrapper
         /// </returns>
-        private static IOCSPReq GenerateOCSPRequest(X509Certificate issuerCert, BigInteger serialNumber) {
+        private static IOCSPReq GenerateOCSPRequest(IX509Certificate issuerCert, IBigInteger serialNumber) {
             //Add provider BC
             // Generate the id for the certificate we are looking for
             ICertificateID id = SignUtils.GenerateCertificateId(issuerCert, serialNumber, BOUNCY_CASTLE_FACTORY.CreateCertificateID
@@ -170,7 +170,7 @@ namespace iText.Signatures {
         /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IOCSPResp"/>
         /// an OCSP response wrapper
         /// </returns>
-        internal virtual IOCSPResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert, String url
+        internal virtual IOCSPResp GetOcspResponse(IX509Certificate checkCert, IX509Certificate rootCert, String url
             ) {
             if (checkCert == null || rootCert == null) {
                 return null;
@@ -182,7 +182,7 @@ namespace iText.Signatures {
                 return null;
             }
             LOGGER.LogInformation("Getting OCSP from " + url);
-            IOCSPReq request = GenerateOCSPRequest(rootCert, checkCert.SerialNumber);
+            IOCSPReq request = GenerateOCSPRequest(rootCert, checkCert.GetSerialNumber());
             byte[] array = request.GetEncoded();
             Uri urlt = new Uri(url);
             Stream @in = SignUtils.GetHttpResponseForOcspRequest(array, urlt);

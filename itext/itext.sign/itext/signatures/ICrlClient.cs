@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Signatures {
     /// <summary>
@@ -56,6 +56,6 @@ namespace iText.Signatures {
         /// <param name="checkCert">The certificate which a CRL URL can be obtained from.</param>
         /// <param name="url">A CRL url if you don't want to obtain it from the certificate.</param>
         /// <returns>A collection of byte array each representing a crl. It may return null or an empty collection.</returns>
-        ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url);
+        ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url);
     }
 }

@@ -44,14 +44,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Cms;
 using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.IO.Util;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
@@ -75,7 +75,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         protected internal virtual byte[] ComputeGlobalKey(String messageDigestAlgorithm, bool encryptMetadata) {
-            IDigest md;
+            IIDigest md;
             byte[] encodedRecipient;
             try {
                 md = DigestUtilities.GetDigest(messageDigestAlgorithm);
@@ -94,8 +94,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return md.Digest();
         }
 
-        protected internal static byte[] ComputeGlobalKeyOnReading(PdfDictionary encryptionDictionary, ICipherParameters
-             certificateKey, X509Certificate certificate, bool encryptMetadata, String digestAlgorithm) {
+        protected internal static byte[] ComputeGlobalKeyOnReading(PdfDictionary encryptionDictionary, IPrivateKey
+             certificateKey, IX509Certificate certificate, bool encryptMetadata, String digestAlgorithm) {
             PdfArray recipients = encryptionDictionary.GetAsArray(PdfName.Recipients);
             if (recipients == null) {
                 recipients = encryptionDictionary.GetAsDictionary(PdfName.CF).GetAsDictionary(PdfName.DefaultCryptFilter).
@@ -103,7 +103,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             }
             byte[] envelopedData = EncryptionUtils.FetchEnvelopedData(certificateKey, certificate, recipients);
             byte[] encryptionKey;
-            IDigest md;
+            IIDigest md;
             try {
                 md = DigestUtilities.GetDigest(digestAlgorithm);
                 md.Update(envelopedData, 0, 20);
@@ -122,7 +122,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return encryptionKey;
         }
 
-        protected internal virtual void AddAllRecipients(X509Certificate[] certs, int[] permissions) {
+        protected internal virtual void AddAllRecipients(IX509Certificate[] certs, int[] permissions) {
             if (certs != null) {
                 for (int i = 0; i < certs.Length; i++) {
                     AddRecipient(certs[i], permissions[i]);
@@ -148,7 +148,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         protected internal abstract void InitKey(byte[] globalKey, int keyLength);
 
-        protected internal virtual void InitKeyAndFillDictionary(PdfDictionary encryptionDictionary, X509Certificate
+        protected internal virtual void InitKeyAndFillDictionary(PdfDictionary encryptionDictionary, IX509Certificate
             [] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly) {
             AddAllRecipients(certs, permissions);
             int? keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
@@ -159,17 +159,17 @@ namespace iText.Kernel.Crypto.Securityhandler {
             SetPubSecSpecificHandlerDicEntries(encryptionDictionary, encryptMetadata, embeddedFilesOnly);
         }
 
-        protected internal virtual void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary, ICipherParameters
-             certificateKey, X509Certificate certificate, bool encryptMetadata) {
+        protected internal virtual void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary, IPrivateKey certificateKey
+            , IX509Certificate certificate, bool encryptMetadata) {
             String digestAlgorithm = GetDigestAlgorithm();
-            byte[] encryptionKey = ComputeGlobalKeyOnReading(encryptionDictionary, (ICipherParameters)certificateKey, 
-                certificate, encryptMetadata, digestAlgorithm);
+            byte[] encryptionKey = ComputeGlobalKeyOnReading(encryptionDictionary, (IPrivateKey)certificateKey, certificate
+                , encryptMetadata, digestAlgorithm);
             int? keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
             int keyLength = keyLen != null ? (int)keyLen : 40;
             InitKey(encryptionKey, keyLength);
         }
 
-        private void AddRecipient(X509Certificate cert, int permission) {
+        private void AddRecipient(IX509Certificate cert, int permission) {
             recipients.Add(new PublicKeyRecipient(cert, permission));
         }
 
@@ -190,7 +190,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             if (cms != null) {
                 return cms;
             }
-            X509Certificate certificate = recipient.GetCertificate();
+            IX509Certificate certificate = recipient.GetCertificate();
             //constants permissions: PdfWriter.AllowCopy | PdfWriter.AllowPrinting | PdfWriter.AllowScreenReaders |
             // PdfWriter.AllowAssembly;
             int permission = recipient.GetPermission();
@@ -216,7 +216,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             MemoryStream baos = new MemoryStream();
             IASN1OutputStream k = CryptoUtil.CreateAsn1OutputStream(baos, BOUNCY_CASTLE_FACTORY.CreateASN1Encoding().GetDer
                 ());
-            IASN1Primitive obj = CreateDERForRecipient(pkcs7input, (X509Certificate)certificate);
+            IASN1Primitive obj = CreateDERForRecipient(pkcs7input, (IX509Certificate)certificate);
             k.WriteObject(obj);
             cms = baos.ToArray();
             recipient.SetCms(cms);
@@ -244,7 +244,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return EncodedRecipients;
         }
 
-        private IASN1Primitive CreateDERForRecipient(byte[] @in, X509Certificate cert) {
+        private IASN1Primitive CreateDERForRecipient(byte[] @in, IX509Certificate cert) {
             EncryptionUtils.DERForRecipientParams parameters = EncryptionUtils.CalculateDERForRecipientParams(@in);
             IKeyTransRecipientInfo keytransrecipientinfo = ComputeRecipientInfo(cert, parameters.abyte0);
             IDEROctetString deroctetstring = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(parameters.abyte1);
@@ -259,7 +259,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return contentinfo.ToASN1Primitive();
         }
 
-        private IKeyTransRecipientInfo ComputeRecipientInfo(X509Certificate x509Certificate, byte[] abyte0) {
+        private IKeyTransRecipientInfo ComputeRecipientInfo(IX509Certificate x509Certificate, byte[] abyte0) {
             IASN1InputStream asn1InputStream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(x509Certificate
                 .GetTbsCertificate()));
             ITBSCertificate tbsCertificate = BOUNCY_CASTLE_FACTORY.CreateTBSCertificate(asn1InputStream.ReadObject());

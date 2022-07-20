@@ -19,9 +19,9 @@ using iText.Bouncycastle.Asn1.Esf;
 using iText.Bouncycastle.Asn1.Ess;
 using iText.Bouncycastle.Asn1.Ocsp;
 using iText.Bouncycastle.Asn1.Pcks;
+using iText.Bouncycastle.Asn1.Tsp;
 using iText.Bouncycastle.Asn1.Util;
 using iText.Bouncycastle.Asn1.X500;
-using iText.Bouncycastle.Asn1.Tsp;
 using iText.Bouncycastle.Asn1.X509;
 using iText.Bouncycastle.Cert;
 using iText.Bouncycastle.Cert.Jcajce;
@@ -31,7 +31,6 @@ using iText.Bouncycastle.Cms.Jcajce;
 using iText.Bouncycastle.Crypto;
 using iText.Bouncycastle.Operator.Jcajce;
 using iText.Bouncycastle.Tsp;
-using iText.Bouncycastlefips.Asn1.Ocsp;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Cms;
@@ -39,8 +38,8 @@ using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Asn1.Ess;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Pkcs;
-using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
+using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
@@ -54,8 +53,16 @@ using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Tsp;
 using Org.BouncyCastle.Asn1.Tsp;
+using Org.BouncyCastle.Security;
+using ICertificateID = iText.Commons.Bouncycastle.Cert.Ocsp.ICertificateID;
+using ISingleResp = iText.Commons.Bouncycastle.Cert.Ocsp.ISingleResp;
 
 namespace iText.Bouncycastle {
+    /// <summary>
+    /// This class implements
+    /// <see cref="iText.Commons.Bouncycastle.IBouncyCastleFactory"/>
+    /// and creates bouncy-castle classes instances.
+    /// </summary>
     public class BouncyCastleFactory : IBouncyCastleFactory {
         private static readonly String PROVIDER_NAME = new BouncyCastleProvider().GetName();
 
@@ -191,6 +198,10 @@ namespace iText.Bouncycastle {
             return new ASN1OutputStreamBC(stream);
         }
 
+        public virtual IASN1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
+            return new ASN1OutputStreamBC(DerOutputStream.Create(outputStream, asn1Encoding));
+        }
+
         public virtual IDEROctetString CreateDEROctetString(byte[] bytes) {
             return new DEROctetStringBC(bytes);
         }
@@ -275,16 +286,6 @@ namespace iText.Bouncycastle {
             return new ContentInfoBC(objectIdentifier, encodable);
         }
 
-        public virtual ITimeStampToken CreateTimeStampToken(IContentInfo contentInfo) {
-            ContentInfoBC contentInfoBC = (ContentInfoBC)contentInfo;
-            try {
-                return new TimeStampTokenBC(new TimeStampToken(contentInfoBC.GetContentInfo()));
-            }
-            catch (TspException e) {
-                throw new TSPExceptionBC(e);
-            }
-        }
-
         public virtual ISigningCertificate CreateSigningCertificate(IASN1Sequence sequence) {
             ASN1SequenceBC sequenceBC = (ASN1SequenceBC)sequence;
             return new SigningCertificateBC(SigningCertificate.GetInstance(sequenceBC.GetASN1Sequence()));
@@ -346,16 +347,12 @@ namespace iText.Bouncycastle {
             return new JcaDigestCalculatorProviderBuilderBC(new JcaDigestCalculatorProviderBuilder());
         }
 
-        public virtual IX509Certificate CreateX509Certificate(object obj) {
-            switch (obj)
-            {
-                case IX509Certificate _:
-                    return (X509CertificateBC) obj;
-                case X509Certificate certificate:
-                    return new X509CertificateBC(certificate);
-                default:
-                    return null;
-            }
+        public virtual ICertificateID CreateCertificateID() {
+            return CertificateIDBC.GetInstance();
+        }
+
+        public virtual IX509CertificateHolder CreateX509CertificateHolder(byte[] bytes) {
+            return new X509CertificateHolderBC(bytes);
         }
 
         public virtual IJcaX509CertificateHolder CreateJcaX509CertificateHolder(X509Certificate certificate) {
@@ -535,10 +532,11 @@ namespace iText.Bouncycastle {
         }
 
         public virtual ITBSCertificate CreateTBSCertificate(IASN1Encodable encodable) {
-            return new TBSCertificateBC(TBSCertificate.GetInstance(((ASN1EncodableBC)encodable).GetEncodable()));
+            return new TBSCertificateBC(TbsCertificateStructure.GetInstance(((ASN1EncodableBC)encodable).GetEncodable(
+                )));
         }
 
-        public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, IBigInteger value) {
+        public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, BigInteger value) {
             return new IssuerAndSerialNumberBC(issuer, value);
         }
 
@@ -642,7 +640,7 @@ namespace iText.Bouncycastle {
         }
 
         public virtual IX500Name CreateX500Name(X509Certificate certificate) {
-            return new X500NameBC(X509Name.GetInstance(TBSCertificate.GetInstance(Asn1Object.FromByteArray(certificate
+            return new X500NameBC(X509Name.GetInstance(TbsCertificateStructure.GetInstance(Asn1Object.FromByteArray(certificate
                 .GetTbsCertificate())).GetSubject()));
         }
 
@@ -704,22 +702,62 @@ namespace iText.Bouncycastle {
 
         public virtual ICRLReason CreateCRLReason() {
             return CRLReasonBC.GetInstance();
-	}
-
-        public ISingleResponse CreateSingleResponse(IBasicOCSPResponse basicResp) {
-            Asn1Encodable responseDataSeq = ((BasicOCSPResponseBC) basicResp).GetBasicOCSPResponse().TbsResponseData.Responses[0];
-            return new SingleResponseBC(SingleResponse.GetInstance(responseDataSeq));
         }
-        
-        public ITSTInfo CreateTSTInfo(IContentInfo contentInfoTsp) {
+
+        public virtual ITSTInfo CreateTSTInfo(IContentInfo contentInfoTsp) {
             CmsProcessable content = new CmsSignedData(((ContentInfoBC) contentInfoTsp).GetContentInfo()).SignedContent;
             MemoryStream bOut = new MemoryStream();
             content.Write(bOut);
             return new TSTInfoBC(TstInfo.GetInstance(Asn1Object.FromByteArray(bOut.ToArray())));
         }
+
+        public virtual ISingleResp CreateSingleResp(IBasicOCSPResponse basicResp) {
+            return new SingleRespBC(basicResp);
+        }
+
+        public virtual IX509Certificate CreateX509Certificate(object obj) {
+            switch (obj) {
+                case IX509Certificate _:
+                    return (X509CertificateBC) obj;
+                case X509Certificate certificate:
+                    return new X509CertificateBC(certificate);
+                default:
+                    return null;
+            }
+        }
+        
+        public IX509Crl CreateX509Crl(Stream input) {
+            return new X509CrlBC(new X509CrlParser().ReadCrl(input));
+        }
+
+        public IIDigest CreateIDigest(string hashAlgorithm) {
+            return new IDigestBC(DigestUtilities.GetDigest(hashAlgorithm));
+        }
+
+        public ICertificateID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
+            return new CertificateIDBC(hashAlgorithm, issuerCert, serialNumber);
+        }
+        
+        public IX500Name CreateX500NameInstance(IASN1Encodable issuer) {
+            return new X500NameBC(X509Name.GetInstance(issuer));
+        }
+
+        public IOCSPReq CreateOCSPReq(ICertificateID certId, byte[] documentId) {
+            return new OCSPReqBC(certId, documentId);
+        }
         
         public IISigner CreateISigner() {
             return new ISignerBC(null);
+        }
+        
+        public List<IX509Certificate> ReadAllCerts(byte[] contentsKey) {
+            X509CertificateParser cf = new X509CertificateParser();
+            List<IX509Certificate> certs = new List<IX509Certificate>();
+
+            foreach (X509Certificate cc in cf.ReadCertificates(contentsKey)) {
+                certs.Add(new X509CertificateBC(cc));
+            }
+            return certs;
         }
     }
 }

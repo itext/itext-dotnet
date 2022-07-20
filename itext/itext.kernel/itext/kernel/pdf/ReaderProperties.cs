@@ -41,8 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 
 namespace iText.Kernel.Pdf {
     public class ReaderProperties {
@@ -50,10 +50,10 @@ namespace iText.Kernel.Pdf {
         protected internal byte[] password;
 
         //added by Aiken Sam for certificate decryption
-        protected internal ICipherParameters certificateKey;
+        protected internal IPrivateKey certificateKey;
 
         //added by Aiken Sam for certificate decryption
-        protected internal X509Certificate certificate;
+        protected internal IX509Certificate certificate;
 
         //added by Aiken Sam for certificate decryption
         protected internal MemoryLimitsAwareHandler memoryLimitsAwareHandler;
@@ -81,13 +81,13 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="certificate">
         /// the recipient
-        /// <see cref="Org.BouncyCastle.X509.X509Certificate"/>
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
         /// ,
         /// serves as recipient identifier
         /// </param>
         /// <param name="certificateKey">
         /// the recipient private
-        /// <see cref="Org.BouncyCastle.Crypto.ICipherParameters"/>
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
         /// to the certificate
         /// </param>
         /// <returns>
@@ -95,8 +95,8 @@ namespace iText.Kernel.Pdf {
         /// <see cref="ReaderProperties"/>
         /// instance
         /// </returns>
-        public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate, ICipherParameters 
-            certificateKey) {
+        public virtual ReaderProperties SetPublicKeySecurityParams(IX509Certificate certificate, IPrivateKey certificateKey
+            ) {
             ClearEncryptionParams();
             this.certificate = certificate;
             this.certificateKey = certificateKey;
@@ -109,7 +109,7 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="certificate">
         /// the recipient
-        /// <see cref="Org.BouncyCastle.X509.X509Certificate"/>
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
         /// ,
         /// serves as recipient identifier
         /// </param>
@@ -118,7 +118,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="ReaderProperties"/>
         /// instance
         /// </returns>
-        public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate) {
+        public virtual ReaderProperties SetPublicKeySecurityParams(IX509Certificate certificate) {
             ClearEncryptionParams();
             this.certificate = certificate;
             return this;

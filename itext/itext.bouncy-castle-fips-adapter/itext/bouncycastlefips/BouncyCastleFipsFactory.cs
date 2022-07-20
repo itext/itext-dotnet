@@ -2,22 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Cms;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ess;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Cms;
+using Org.BouncyCastle.Math;
 using iText.Bouncycastlefips.Asn1;
 using iText.Bouncycastlefips.Asn1.Cms;
 using iText.Bouncycastlefips.Asn1.Esf;
 using iText.Bouncycastlefips.Asn1.Ess;
 using iText.Bouncycastlefips.Asn1.Ocsp;
 using iText.Bouncycastlefips.Asn1.Pcks;
-using Org.BouncyCastle.Cert;
+using iText.Bouncycastlefips.Asn1.Tsp;
 using iText.Bouncycastlefips.Asn1.Util;
 using iText.Bouncycastlefips.Asn1.X500;
-using iText.Bouncycastlefips.Asn1.Tsp;
 using iText.Bouncycastlefips.Asn1.X509;
 using iText.Bouncycastlefips.Cert;
 using iText.Bouncycastlefips.Cert.Jcajce;
@@ -34,8 +33,8 @@ using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Asn1.Ess;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Pkcs;
-using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
+using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
@@ -48,10 +47,20 @@ using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Tsp;
+using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Asn1.X500;
+using Org.BouncyCastle.Cert;
+using Org.BouncyCastle.Utilities.IO;
+using ContentInfo = Org.BouncyCastle.Asn1.Cms.ContentInfo;
+using SignedData = Org.BouncyCastle.Asn1.Cms.SignedData;
 
 namespace iText.Bouncycastlefips {
+    /// <summary>
+    /// This class implements
+    /// <see cref="iText.Commons.Bouncycastle.IBouncyCastleFactory"/>
+    /// and creates bouncy-castle FIPS classes instances.
+    /// </summary>
     public class BouncyCastleFipsFactory : IBouncyCastleFactory {
         private static readonly String PROVIDER_NAME = new BouncyCastleFipsProvider().GetName();
 
@@ -187,6 +196,16 @@ namespace iText.Bouncycastlefips {
             return new ASN1OutputStreamBCFips(stream);
         }
 
+        public virtual IASN1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
+            if (asn1Encoding.Equals("DER")) {
+                return new ASN1OutputStreamBCFips(new DEROutputStream(outputStream));
+            }
+            else {
+                return new ASN1OutputStreamBCFips((asn1Encoding.Equals("DL") ? new DLOutputStream(outputStream) : new DerOutputStream
+                    (outputStream)));
+            }
+        }
+
         public virtual IDEROctetString CreateDEROctetString(byte[] bytes) {
             return new DEROctetStringBCFips(bytes);
         }
@@ -271,16 +290,6 @@ namespace iText.Bouncycastlefips {
             return new ContentInfoBCFips(objectIdentifier, encodable);
         }
 
-        public virtual ITimeStampToken CreateTimeStampToken(IContentInfo contentInfo) {
-            ContentInfoBCFips contentInfoBCFips = (ContentInfoBCFips)contentInfo;
-            try {
-                return new TimeStampTokenBCFips(new TimeStampToken(contentInfoBCFips.GetContentInfo()));
-            }
-            catch (TSPException e) {
-                throw new TSPExceptionBCFips(e);
-            }
-        }
-
         public virtual ISigningCertificate CreateSigningCertificate(IASN1Sequence sequence) {
             ASN1SequenceBCFips sequenceBCFips = (ASN1SequenceBCFips)sequence;
             return new SigningCertificateBCFips(SigningCertificate.GetInstance(sequenceBCFips.GetASN1Sequence()));
@@ -322,7 +331,7 @@ namespace iText.Bouncycastlefips {
             return PROVIDER_NAME;
         }
 
-        public virtual IJceKeyTransEnvelopedRecipient CreateJceKeyTransEnvelopedRecipient(IPrivateKey privateKey
+        public virtual IJceKeyTransEnvelopedRecipient CreateJceKeyTransEnvelopedRecipient(ICipherParameters privateKey
             ) {
             return new JceKeyTransEnvelopedRecipientBCFips(new JceKeyTransEnvelopedRecipient(privateKey));
         }
@@ -343,16 +352,12 @@ namespace iText.Bouncycastlefips {
             return new JcaDigestCalculatorProviderBuilderBCFips(new JcaDigestCalculatorProviderBuilder());
         }
 
-        public virtual IX509Certificate CreateX509Certificate(object obj) {
-            switch (obj)
-            {
-                case IX509Certificate _:
-                    return (X509CertificateBCFips) obj;
-                case X509Certificate certificate:
-                    return new X509CertificateBCFips(certificate);
-                default:
-                    return null;
-            }
+        public virtual ICertificateID CreateCertificateID() {
+            return CertificateIDBCFips.GetInstance();
+        }
+
+        public virtual IX509CertificateHolder CreateX509CertificateHolder(byte[] bytes) {
+            return new X509CertificateHolderBCFips(bytes);
         }
 
         public virtual IJcaX509CertificateHolder CreateJcaX509CertificateHolder(X509Certificate certificate) {
@@ -448,11 +453,11 @@ namespace iText.Bouncycastlefips {
             return OCSPResponseStatusBCFips.GetInstance();
         }
 
-        public virtual ICertStatus CreateCertificateStatus() {
-            return CertStatusBCFips.GetInstance();
+        public virtual ICertificateStatus CreateCertificateStatus() {
+            return CertificateStatusBCFips.GetInstance();
         }
 
-        public virtual IRevokedStatus CreateRevokedStatus(ICertStatus certificateStatus) {
+        public virtual IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus) {
             CertificateStatusBCFips certificateStatusBCFips = (CertificateStatusBCFips)certificateStatus;
             if (certificateStatusBCFips.GetCertificateStatus() is RevokedStatus) {
                 return new RevokedStatusBCFips((RevokedStatus)certificateStatusBCFips.GetCertificateStatus());
@@ -469,7 +474,8 @@ namespace iText.Bouncycastlefips {
         }
 
         public virtual IDERIA5String CreateDERIA5String(IASN1TaggedObject taggedObject, bool b) {
-            return new DERIA5StringBCFips(DerIA5String.GetInstance(((ASN1TaggedObjectBCFips)taggedObject).GetTaggedObject(), b));
+            return new DERIA5StringBCFips(DerIA5String.GetInstance(((ASN1TaggedObjectBCFips)taggedObject).GetTaggedObject
+                (), b));
         }
 
         public virtual IDERIA5String CreateDERIA5String(String str) {
@@ -531,11 +537,11 @@ namespace iText.Bouncycastlefips {
         }
 
         public virtual ITBSCertificate CreateTBSCertificate(IASN1Encodable encodable) {
-            return new TBSCertificateBCFips(TbsCertificateStructure.GetInstance(((ASN1EncodableBCFips)encodable).GetEncodable()
-                ));
+            return new TBSCertificateBCFips(TbsCertificateStructure.GetInstance(((ASN1EncodableBCFips)encodable).GetEncodable
+                ()));
         }
 
-        public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, IBigInteger value) {
+        public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, BigInteger value) {
             return new IssuerAndSerialNumberBCFips(issuer, value);
         }
 
@@ -557,7 +563,7 @@ namespace iText.Bouncycastlefips {
             try {
                 return new CMSEnvelopedDataBCFips(new CMSEnvelopedData(bytes));
             }
-            catch (CMSException e) {
+            catch (CmsException e) {
                 throw new CMSExceptionBCFips(e);
             }
         }
@@ -639,12 +645,12 @@ namespace iText.Bouncycastlefips {
         }
 
         public virtual IX500Name CreateX500Name(X509Certificate certificate) {
-            return new X500NameBCFips(X500Name.GetInstance(TbsCertificateStructure.GetInstance(Asn1Object.FromByteArray(certificate
-                .GetTbsCertificate())).Subject));
+            return new X500NameBCFips(X509Name.GetInstance(TbsCertificateStructure.GetInstance(Asn1Object.FromByteArray
+                (certificate.GetTbsCertificate())).GetSubject()));
         }
 
         public virtual IX500Name CreateX500Name(String s) {
-            return new X500NameBCFips(new X500Name(s));
+            return new X500NameBCFips(new X509Name(s));
         }
 
         public virtual IRespID CreateRespID(IX500Name x500Name) {
@@ -664,7 +670,7 @@ namespace iText.Bouncycastlefips {
         }
 
         public virtual IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(X509Certificate signingCert, 
-            IASN1Integer certSerialNumber, DateTime startDate, DateTime endDate, IX500Name subjectDnName, IPublicKey
+            BigInteger certSerialNumber, DateTime startDate, DateTime endDate, IX500Name subjectDnName, AsymmetricKeyParameter
              publicKey) {
             return new JcaX509v3CertificateBuilderBCFips(signingCert, certSerialNumber, startDate, endDate, subjectDnName
                 , publicKey);
@@ -701,24 +707,103 @@ namespace iText.Bouncycastlefips {
 
         public virtual ICRLReason CreateCRLReason() {
             return CRLReasonBCFips.GetInstance();
-	}
-        
-        public ISingleResponse CreateSingleResponse(IBasicOCSPResponse basicResp)
-        {
-            Asn1Encodable responseDataSeq = ((BasicOCSPResponseBCFips) basicResp).GetBasicOCSPResponse().TbsResponseData.Responses[0];
-            return new SingleResponseBCFips(SingleResponse.GetInstance(responseDataSeq));
         }
 
-        public ITSTInfo CreateTSTInfo(IContentInfo contentInfoTsp)
-        {
+        public ITSTInfo CreateTSTInfo(IContentInfo contentInfoTsp) {
             ICmsTypedData content = new CmsSignedData(((ContentInfoBCFips) contentInfoTsp).GetContentInfo()).SignedContent;
             MemoryStream bOut = new MemoryStream();
             content.Write(bOut);
             return new TSTInfoBCFips(TstInfo.GetInstance(Asn1Object.FromByteArray(bOut.ToArray())));
         }
 
+        public virtual ISingleResp CreateSingleResp(IBasicOCSPResponse basicResp) {
+            return new SingleRespBCFips(basicResp);
+        }
+
+        public virtual IX509Certificate CreateX509Certificate(object obj) {
+            switch (obj) {
+                case IX509Certificate _:
+                    return (X509CertificateBCFips) obj;
+                case X509Certificate certificate:
+                    return new X509CertificateBCFips(certificate);
+                default:
+                    return null;
+            }
+        }
+        
+        public IX509Crl CreateX509Crl(Stream input) {
+            PushbackStream pushbackStream = new PushbackStream(input);
+            int tag = pushbackStream.ReadByte();
+
+            if (tag < 0) {
+                return new X509CrlBCFips(null);
+            }
+            
+            pushbackStream.Unread(tag);
+            
+            Asn1InputStream asn1 = new Asn1InputStream(pushbackStream);
+
+            Asn1Sequence seq = (Asn1Sequence)asn1.ReadObject();
+
+            if (seq.Count > 1 && seq[0] is DerObjectIdentifier) {
+                if (seq[0].Equals(PkcsObjectIdentifiers.SignedData)) {
+                    Asn1Set sCrlData = SignedData.GetInstance(
+                        Asn1Sequence.GetInstance((Asn1TaggedObject) seq[1], true)).CRLs;
+                    return new X509CrlBCFips(new X509Crl(CertificateList.GetInstance(sCrlData[0])));
+                }
+            }
+            return new X509CrlBCFips(new X509Crl(CertificateList.GetInstance(seq)));
+        }
+        
+        public IIDigest CreateIDigest(string hashAlgorithm) {
+            return new IDigestBCFips(hashAlgorithm);
+        }
+        
+        public ICertificateID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
+            return new CertificateIDBCFips(hashAlgorithm, issuerCert, serialNumber);
+        }
+        
+        public IX500Name CreateX500NameInstance(IASN1Encodable issuer) {
+            return new X500NameBCFips(X500Name.GetInstance(
+                ((ASN1EncodableBCFips) issuer).GetEncodable()));
+        }
+        
+        public IOCSPReq CreateOCSPReq(ICertificateID certId, byte[] documentId) {
+            return new OCSPReqBCFips(certId, documentId);
+        }
+        
         public IISigner CreateISigner() {
             return new ISignerBCFips(null);
+        }
+        
+        public List<IX509Certificate> ReadAllCerts(byte[] contentsKey) {
+            List<IX509Certificate> certs = new List<IX509Certificate>();
+            X509Certificate cert;
+            while ((cert = ReadCertificate(new MemoryStream(contentsKey))) != null) {
+                certs.Add(new X509CertificateBCFips(cert));
+            }
+            return certs;
+        }
+        
+        private static X509Certificate ReadCertificate(MemoryStream stream) {
+            PushbackStream pushbackStream = new PushbackStream(stream);
+            int tag = pushbackStream.ReadByte();
+            if (tag < 0) {
+                return null;
+            }
+            pushbackStream.Unread(tag);
+            Asn1Sequence seq = (Asn1Sequence)(new Asn1InputStream(pushbackStream).ReadObject());
+            if (seq.Count > 1 && seq[0] is DerObjectIdentifier) {
+                if (seq[0].Equals(PkcsObjectIdentifiers.SignedData)) {
+                    Asn1Set sData = SignedData.GetInstance(
+                        Asn1Sequence.GetInstance((Asn1TaggedObject) seq[1], true)).Certificates;
+                    object obj = sData[0];
+                    if (obj is Asn1Sequence) {
+                        return new X509Certificate(X509CertificateStructure.GetInstance(obj));
+                    }
+                }
+            }
+            return new X509Certificate(X509CertificateStructure.GetInstance(seq));
         }
     }
 }

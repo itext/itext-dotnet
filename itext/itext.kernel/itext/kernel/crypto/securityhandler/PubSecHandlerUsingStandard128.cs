@@ -41,19 +41,19 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     public class PubSecHandlerUsingStandard128 : PubSecHandlerUsingStandard40 {
-        public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, X509Certificate[] certs, int[] permissions
+        public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, IX509Certificate[] certs, int[] permissions
             , bool encryptMetadata, bool embeddedFilesOnly)
             : base(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly) {
         }
 
-        public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, ICipherParameters certificateKey, 
-            X509Certificate certificate, bool encryptMetadata)
+        public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, IPrivateKey certificateKey, IX509Certificate
+             certificate, bool encryptMetadata)
             : base(encryptionDictionary, certificateKey, certificate, encryptMetadata) {
         }
 

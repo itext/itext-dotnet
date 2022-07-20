@@ -159,16 +159,8 @@ namespace iText.Signatures {
             signer.Init(true, pk);
         }
 
-        public static void InitVerify(this ISigner signer, AsymmetricKeyParameter publicKey) {
-            signer.Init(false, publicKey);
-        }
-
         public static void Update(this ISigner signer, byte[] data) {
             signer.BlockUpdate(data, 0, data.Length);
-        }
-
-        public static void Update(this ISigner signer, byte[] data, int offset, int count) {
-            signer.BlockUpdate(data, offset, count);
         }
 
         public static void Update(this IDigest dgst, byte[] input) {

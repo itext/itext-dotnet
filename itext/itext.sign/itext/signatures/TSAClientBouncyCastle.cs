@@ -44,12 +44,12 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Math;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Cmp;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
@@ -169,7 +169,7 @@ namespace iText.Signatures {
 
         /// <summary>Gets the MessageDigest to digest the data imprint</summary>
         /// <returns>the digest algorithm name</returns>
-        public virtual IDigest GetMessageDigest() {
+        public virtual IIDigest GetMessageDigest() {
             return SignUtils.GetMessageDigest(digestAlgorithm);
         }
 
@@ -189,7 +189,7 @@ namespace iText.Signatures {
                 tsqGenerator.SetReqPolicy(tsaReqPolicy);
             }
             // tsqGenerator.setReqPolicy("1.3.6.1.4.1.601.10.3.1");
-            BigInteger nonce = BigInteger.ValueOf(SystemUtil.GetTimeBasedSeed());
+            IBigInteger nonce = IBigInteger.ValueOf(SystemUtil.GetTimeBasedSeed());
             ITimeStampRequest request = tsqGenerator.Generate(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(DigestAlgorithms
                 .GetAllowedDigest(digestAlgorithm)), imprint, nonce);
             byte[] requestBytes = request.GetEncoded();

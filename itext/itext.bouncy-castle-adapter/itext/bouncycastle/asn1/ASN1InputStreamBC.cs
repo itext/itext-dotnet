@@ -5,33 +5,75 @@ using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Utils;
 
 namespace iText.Bouncycastle.Asn1 {
+    /// <summary>
+    /// Wrapper class for
+    /// <see cref="Org.BouncyCastle.Asn1.Asn1InputStream"/>.
+    /// </summary>
     public class ASN1InputStreamBC : IASN1InputStream {
         private readonly Asn1InputStream stream;
 
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1InputStream"/>.
+        /// </summary>
+        /// <param name="asn1InputStream">
+        /// 
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1InputStream"/>
+        /// to be wrapped
+        /// </param>
         public ASN1InputStreamBC(Asn1InputStream asn1InputStream) {
             this.stream = asn1InputStream;
         }
 
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1InputStream"/>.
+        /// </summary>
+        /// <param name="bytes">
+        /// byte array to create
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1InputStream"/>
+        /// </param>
         public ASN1InputStreamBC(byte[] bytes) {
             this.stream = new Asn1InputStream(bytes);
         }
 
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1InputStream"/>.
+        /// </summary>
+        /// <param name="stream">
+        /// InputStream to create
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1InputStream"/>
+        /// </param>
         public ASN1InputStreamBC(Stream stream) {
             this.stream = new Asn1InputStream(stream);
         }
 
+        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+        /// <returns>
+        /// wrapped
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1InputStream"/>.
+        /// </returns>
         public virtual Asn1InputStream GetASN1InputStream() {
             return stream;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual IASN1Primitive ReadObject() {
             return new ASN1PrimitiveBC(stream.ReadObject());
         }
 
-        public virtual void Close() {
+        /// <summary>
+        /// Delegates
+        /// <c>close</c>
+        /// method call to the wrapped stream.
+        /// </summary>
+        public virtual void Dispose() {
             stream.Close();
         }
 
+        /// <summary>Indicates whether some other object is "equal to" this one.</summary>
+        /// <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
         public override bool Equals(Object o) {
             if (this == o) {
                 return true;
@@ -43,14 +85,16 @@ namespace iText.Bouncycastle.Asn1 {
             return Object.Equals(stream, that.stream);
         }
 
+        /// <summary>Returns a hash code value based on the wrapped object.</summary>
         public override int GetHashCode() {
             return JavaUtil.ArraysHashCode(stream);
         }
 
-        public void Dispose() {
-            Close();
-        }
-
+        /// <summary>
+        /// Delegates
+        /// <c>toString</c>
+        /// method call to the wrapped object.
+        /// </summary>
         public override String ToString() {
             return stream.ToString();
         }

@@ -6,6 +6,10 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Utils;
 
 namespace iText.Bouncycastle.Asn1.Ocsp {
+    /// <summary>
+    /// Wrapper class for
+    /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspObjectIdentifiers"/>.
+    /// </summary>
     public class OCSPObjectIdentifiersBC : IOCSPObjectIdentifiers {
         private static readonly iText.Bouncycastle.Asn1.Ocsp.OCSPObjectIdentifiersBC INSTANCE = new iText.Bouncycastle.Asn1.Ocsp.OCSPObjectIdentifiersBC
             (null);
@@ -21,30 +25,55 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
 
         private readonly OcspObjectIdentifiers ocspObjectIdentifiers;
 
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspObjectIdentifiers"/>.
+        /// </summary>
+        /// <param name="ocspObjectIdentifiers">
+        /// 
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspObjectIdentifiers"/>
+        /// to be wrapped
+        /// </param>
         public OCSPObjectIdentifiersBC(OcspObjectIdentifiers ocspObjectIdentifiers) {
             this.ocspObjectIdentifiers = ocspObjectIdentifiers;
         }
 
+        /// <summary>Gets wrapper instance.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="OCSPObjectIdentifiersBC"/>
+        /// instance.
+        /// </returns>
         public static iText.Bouncycastle.Asn1.Ocsp.OCSPObjectIdentifiersBC GetInstance() {
             return INSTANCE;
         }
 
+        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+        /// <returns>
+        /// wrapped
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspObjectIdentifiers"/>.
+        /// </returns>
         public virtual OcspObjectIdentifiers GetOCSPObjectIdentifiers() {
             return ocspObjectIdentifiers;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual IASN1ObjectIdentifier GetIdPkixOcspBasic() {
             return ID_PKIX_OCSP_BASIC;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual IASN1ObjectIdentifier GetIdPkixOcspNonce() {
             return ID_PKIX_OCSP_NONCE;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual IASN1ObjectIdentifier GetIdPkixOcspNoCheck() {
             return ID_PKIX_OCSP_NOCHECK;
         }
 
+        /// <summary>Indicates whether some other object is "equal to" this one.</summary>
+        /// <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
         public override bool Equals(Object o) {
             if (this == o) {
                 return true;
@@ -57,10 +86,16 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
             return Object.Equals(ocspObjectIdentifiers, that.ocspObjectIdentifiers);
         }
 
+        /// <summary>Returns a hash code value based on the wrapped object.</summary>
         public override int GetHashCode() {
             return JavaUtil.ArraysHashCode(ocspObjectIdentifiers);
         }
 
+        /// <summary>
+        /// Delegates
+        /// <c>toString</c>
+        /// method call to the wrapped object.
+        /// </summary>
         public override String ToString() {
             return ocspObjectIdentifiers.ToString();
         }

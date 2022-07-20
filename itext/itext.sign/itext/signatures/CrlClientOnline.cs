@@ -45,8 +45,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.X509;
 using iText.Commons;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 
 namespace iText.Signatures {
@@ -88,9 +88,9 @@ namespace iText.Signatures {
 
         /// <summary>Creates a CrlClientOnline instance using a certificate chain.</summary>
         /// <param name="chain">a certificate chain</param>
-        public CrlClientOnline(X509Certificate[] chain) {
+        public CrlClientOnline(IX509Certificate[] chain) {
             for (int i = 0; i < chain.Length; i++) {
-                X509Certificate cert = (X509Certificate)chain[i];
+                IX509Certificate cert = (IX509Certificate)chain[i];
                 LOGGER.LogInformation("Checking certificate: " + cert.SubjectDN);
                 String url = null;
                 url = CertificateUtil.GetCRLURL(cert);
@@ -108,8 +108,8 @@ namespace iText.Signatures {
         /// URL with the path to the local file to this method. An other option is to use
         /// the CrlClientOffline class.
         /// </remarks>
-        /// <seealso cref="ICrlClient.GetEncoded(Org.BouncyCastle.X509.X509Certificate, System.String)"/>
-        public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url) {
+        /// <seealso cref="ICrlClient.GetEncoded(iText.Commons.Bouncycastle.Cert.IX509Certificate, System.String)"/>
+        public virtual ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
             if (checkCert == null) {
                 return null;
             }

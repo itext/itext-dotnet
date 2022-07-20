@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Signatures.Exceptions;
 
@@ -53,9 +53,9 @@ namespace iText.Signatures {
         /// <summary>Creates a VerificationException.</summary>
         /// <param name="cert">is a failed certificate</param>
         /// <param name="message">is a reason of failure</param>
-        public VerificationException(X509Certificate cert, String message)
+        public VerificationException(IX509Certificate cert, String message)
             : base(MessageFormatUtil.Format(SignExceptionMessageConstant.CERTIFICATE_TEMPLATE_FOR_EXCEPTION_MESSAGE, cert
-                 == null ? "Unknown" : ((X509Certificate)cert).SubjectDN.ToString(), message)) {
+                 == null ? "Unknown" : ((IX509Certificate)cert).SubjectDN.ToString(), message)) {
         }
     }
 }

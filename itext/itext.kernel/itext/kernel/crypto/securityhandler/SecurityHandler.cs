@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 
@@ -70,7 +70,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// </summary>
         protected internal int nextObjectKeySize;
 
-        protected internal IDigest md5;
+        protected internal IIDigest md5;
 
         /// <summary>Work area to prepare the object/generation bytes</summary>
         protected internal byte[] extra = new byte[5];

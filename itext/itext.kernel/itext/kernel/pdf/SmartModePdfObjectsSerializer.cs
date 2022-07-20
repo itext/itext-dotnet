@@ -42,14 +42,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     internal class SmartModePdfObjectsSerializer {
-        private IDigest md5;
+        private IIDigest md5;
 
         private Dictionary<SerializedObjectContent, PdfIndirectReference> serializedContentToObj = new Dictionary<
             SerializedObjectContent, PdfIndirectReference>();

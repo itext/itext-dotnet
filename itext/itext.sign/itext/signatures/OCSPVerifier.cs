@@ -47,10 +47,10 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Utils;
@@ -101,9 +101,9 @@ namespace iText.Signatures {
         /// a list of <c>VerificationOK</c> objects.
         /// The list will be empty if the certificate couldn't be verified.
         /// </returns>
-        /// <seealso cref="RootStoreVerifier.Verify(Org.BouncyCastle.X509.X509Certificate, Org.BouncyCastle.X509.X509Certificate, System.DateTime)
+        /// <seealso cref="RootStoreVerifier.Verify(iText.Commons.Bouncycastle.Cert.IX509Certificate, iText.Commons.Bouncycastle.Cert.IX509Certificate, System.DateTime)
         ///     "/>
-        public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
+        public override IList<VerificationOK> Verify(IX509Certificate signCert, IX509Certificate issuerCert, DateTime
              signDate) {
             IList<VerificationOK> result = new List<VerificationOK>();
             int validOCSPsFound = 0;
@@ -153,8 +153,8 @@ namespace iText.Signatures {
         /// <see langword="true"/>
         /// , in case successful check, otherwise false.
         /// </returns>
-        public virtual bool Verify(IBasicOCSPResp ocspResp, X509Certificate signCert, X509Certificate issuerCert, 
-            DateTime signDate) {
+        public virtual bool Verify(IBasicOCSPResp ocspResp, IX509Certificate signCert, IX509Certificate issuerCert
+            , DateTime signDate) {
             if (ocspResp == null) {
                 return false;
             }
@@ -162,7 +162,7 @@ namespace iText.Signatures {
             ISingleResp[] resp = ocspResp.GetResponses();
             foreach (ISingleResp iSingleResp in resp) {
                 // check if the serial number corresponds
-                if (!signCert.SerialNumber.Equals(iSingleResp.GetCertID().GetSerialNumber())) {
+                if (!signCert.GetSerialNumber().Equals(iSingleResp.GetCertID().GetSerialNumber())) {
                     continue;
                 }
                 // check if the issuer matches
@@ -226,11 +226,11 @@ namespace iText.Signatures {
         /// <param name="issuerCert">the issuer certificate. This certificate is considered trusted and valid by this method.
         ///     </param>
         /// <param name="signDate">sign date</param>
-        public virtual void IsValidResponse(IBasicOCSPResp ocspResp, X509Certificate issuerCert, DateTime signDate
+        public virtual void IsValidResponse(IBasicOCSPResp ocspResp, IX509Certificate issuerCert, DateTime signDate
             ) {
             // OCSP response might be signed by the issuer certificate or
             // the Authorized OCSP responder certificate containing the id-kp-OCSPSigning extended key usage extension
-            X509Certificate responderCert = null;
+            IX509Certificate responderCert = null;
             // first check if the issuer certificate signed the response
             // since it is expected to be the most common case
             if (IsSignatureValid(ocspResp, issuerCert)) {
@@ -241,8 +241,8 @@ namespace iText.Signatures {
             if (responderCert == null) {
                 if (ocspResp.GetCerts() != null) {
                     //look for existence of Authorized OCSP responder inside the cert chain in ocsp response
-                    IEnumerable<X509Certificate> certs = SignUtils.GetCertsFromOcspResponse(ocspResp);
-                    foreach (X509Certificate cert in certs) {
+                    IEnumerable<IX509Certificate> certs = SignUtils.GetCertsFromOcspResponse(ocspResp);
+                    foreach (IX509Certificate cert in certs) {
                         IList keyPurposes = null;
                         try {
                             keyPurposes = cert.GetExtendedKeyUsage();
@@ -273,20 +273,20 @@ namespace iText.Signatures {
                     // in which case we do not validate (perform revocation check on) ocsp certs for lifetime of certificate
                     if (responderCert.GetExtensionValue(BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers().GetIdPkixOcspNoCheck
                         ().GetId()) == null) {
-                        X509Crl crl;
+                        IX509Crl crl;
                         try {
                             // TODO DEVSIX-5210 Implement a check heck for Authority Information Access according to
                             // RFC6960 4.2.2.2.1. "Revocation Checking of an Authorized Responder"
                             crl = CertificateUtil.GetCRL(responderCert);
                         }
                         catch (Exception) {
-                            crl = (X509Crl)null;
+                            crl = (IX509Crl)null;
                         }
-                        if (crl != null && crl is X509Crl) {
+                        if (crl != null && crl is IX509Crl) {
                             CRLVerifier crlVerifier = new CRLVerifier(null, null);
                             crlVerifier.SetRootStore(rootStore);
                             crlVerifier.SetOnlineCheckingAllowed(onlineCheckingAllowed);
-                            if (!crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, signDate)) {
+                            if (!crlVerifier.Verify((IX509Crl)crl, responderCert, issuerCert, signDate)) {
                                 throw new VerificationException(issuerCert, "Authorized OCSP responder certificate was revoked.");
                             }
                         }
@@ -306,7 +306,7 @@ namespace iText.Signatures {
                     // - ..."
                     if (rootStore != null) {
                         try {
-                            foreach (X509Certificate anchor in SignUtils.GetCertificates(rootStore)) {
+                            foreach (IX509Certificate anchor in SignUtils.GetCertificates(rootStore)) {
                                 if (IsSignatureValid(ocspResp, anchor)) {
                                     // certificate from the root store is considered trusted and valid by this method
                                     responderCert = anchor;
@@ -315,7 +315,7 @@ namespace iText.Signatures {
                             }
                         }
                         catch (Exception) {
-                            responderCert = (X509Certificate)null;
+                            responderCert = (IX509Certificate)null;
                         }
                     }
                     if (responderCert == null) {
@@ -334,7 +334,7 @@ namespace iText.Signatures {
         /// </param>
         /// <param name="responderCert">the responder certificate</param>
         /// <returns>true if the OCSP response verifies against the responder certificate</returns>
-        public virtual bool IsSignatureValid(IBasicOCSPResp ocspResp, X509Certificate responderCert) {
+        public virtual bool IsSignatureValid(IBasicOCSPResp ocspResp, IX509Certificate responderCert) {
             try {
                 return SignUtils.IsSignatureValid(ocspResp, responderCert);
             }
@@ -354,7 +354,7 @@ namespace iText.Signatures {
         /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IBasicOCSPResp"/>
         /// an OCSP response wrapper
         /// </returns>
-        public virtual IBasicOCSPResp GetOcspResponse(X509Certificate signCert, X509Certificate issuerCert) {
+        public virtual IBasicOCSPResp GetOcspResponse(IX509Certificate signCert, IX509Certificate issuerCert) {
             if (signCert == null && issuerCert == null) {
                 return null;
             }

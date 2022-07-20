@@ -1,43 +1,59 @@
 using System;
-using Org.BouncyCastle.Cert.Ocsp;
-using Org.BouncyCastle.Ocsp;
-using iText.Bouncycastlefips.Asn1;
-using iText.Bouncycastlefips.Asn1.X509;
-using iText.Commons.Bouncycastle.Asn1;
-using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace iText.Bouncycastlefips.Cert.Ocsp {
+    /// <summary>
+    /// Wrapper class for
+    /// <see cref="Org.BouncyCastle.Ocsp.OcspReq"/>.
+    /// </summary>
     public class OCSPReqBCFips : IOCSPReq {
-        private readonly OcspReq ocspReq;
+        private readonly OcspRequest ocspReq;
 
-        public OCSPReqBCFips(OcspReq ocspReq) {
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspRequest"/>.
+        /// </summary>
+        /// <param name="ocspReq">
+        /// 
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspRequest"/>
+        /// to be wrapped
+        /// </param>
+        public OCSPReqBCFips(OcspRequest ocspReq) {
             this.ocspReq = ocspReq;
         }
 
-        public virtual OcspReq GetOcspReq() {
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspRequest"/>.
+        /// </summary>
+        /// <param name="ocspReq">
+        /// 
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspRequest"/>
+        /// to be wrapped
+        /// </param>
+        public OCSPReqBCFips(ICertificateID certId, byte[] documentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+        /// <returns>
+        /// wrapped
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspRequest"/>.
+        /// </returns>
+        public virtual OcspRequest GetOcspReq() {
             return ocspReq;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual byte[] GetEncoded() {
             return ocspReq.GetEncoded();
         }
 
-        public virtual IReq[] GetRequestList() {
-            Req[] reqs = ocspReq.GetRequestList();
-            IReq[] reqsBCFips = new IReq[reqs.Length];
-            for (int i = 0; i < reqs.Length; ++i) {
-                reqsBCFips[i] = new ReqBCFips(reqs[i]);
-            }
-            return reqsBCFips;
-        }
-
-        public virtual IExtension GetExtension(IASN1ObjectIdentifier objectIdentifier) {
-            return new ExtensionBCFips(ocspReq.GetExtension(((ASN1ObjectIdentifierBCFips)objectIdentifier).GetASN1ObjectIdentifier
-                ()));
-        }
-
+        /// <summary>Indicates whether some other object is "equal to" this one.</summary>
+        /// <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
         public override bool Equals(Object o) {
             if (this == o) {
                 return true;
@@ -49,10 +65,16 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
             return Object.Equals(ocspReq, that.ocspReq);
         }
 
+        /// <summary>Returns a hash code value based on the wrapped object.</summary>
         public override int GetHashCode() {
             return JavaUtil.ArraysHashCode(ocspReq);
         }
 
+        /// <summary>
+        /// Delegates
+        /// <c>toString</c>
+        /// method call to the wrapped object.
+        /// </summary>
         public override String ToString() {
             return ocspReq.ToString();
         }

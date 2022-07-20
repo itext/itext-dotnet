@@ -7,8 +7,8 @@ using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Asn1.Ess;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Pkcs;
-using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
+using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
@@ -23,6 +23,15 @@ using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Tsp;
 
 namespace iText.Commons.Bouncycastle {
+    /// <summary>
+    /// <see cref="IBouncyCastleFactory"/>
+    /// contains methods required for bouncy-classes objects creation.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="IBouncyCastleFactory"/>
+    /// contains methods required for bouncy-classes objects creation. Implementation will be
+    /// selected depending on a bouncy-castle dependency specified by the user.
+    /// </remarks>
     public interface IBouncyCastleFactory {
         IASN1ObjectIdentifier CreateASN1ObjectIdentifier(IASN1Encodable encodable);
 
@@ -72,6 +81,8 @@ namespace iText.Commons.Bouncycastle {
 
         IASN1OutputStream CreateASN1OutputStream(Stream stream);
 
+        IASN1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding);
+
         IDEROctetString CreateDEROctetString(byte[] bytes);
 
         IDEROctetString CreateDEROctetString(IASN1Encodable encodable);
@@ -106,8 +117,6 @@ namespace iText.Commons.Bouncycastle {
 
         IContentInfo CreateContentInfo(IASN1ObjectIdentifier objectIdentifier, IASN1Encodable encodable);
 
-        ITimeStampToken CreateTimeStampToken(IContentInfo contentInfo);
-
         ISigningCertificate CreateSigningCertificate(IASN1Sequence sequence);
 
         ISigningCertificateV2 CreateSigningCertificateV2(IASN1Sequence sequence);
@@ -134,7 +143,9 @@ namespace iText.Commons.Bouncycastle {
 
         IJcaDigestCalculatorProviderBuilder CreateJcaDigestCalculatorProviderBuilder();
 
-        IX509Certificate CreateX509Certificate(Object obj);
+        ICertificateID CreateCertificateID();
+
+        IX509CertificateHolder CreateX509CertificateHolder(byte[] bytes);
 
         IJcaX509CertificateHolder CreateJcaX509CertificateHolder(IX509Certificate certificate);
 
@@ -177,9 +188,9 @@ namespace iText.Commons.Bouncycastle {
 
         IOCSPResponseStatus CreateOCSPResponseStatus();
 
-        ICertStatus CreateCertificateStatus();
+        ICertificateStatus CreateCertificateStatus();
 
-        IRevokedStatus CreateRevokedStatus(ICertStatus certificateStatus);
+        IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus);
 
         IRevokedStatus CreateRevokedStatus(DateTime date, int i);
 
@@ -290,11 +301,25 @@ namespace iText.Commons.Bouncycastle {
         ISubjectPublicKeyInfo CreateSubjectPublicKeyInfo(Object obj);
 
         ICRLReason CreateCRLReason();
-       
-        ISingleResponse CreateSingleResponse(IBasicOCSPResponse basicResp);
+
+        ITSTInfo CreateTSTInfo(IContentInfo contentInfo);
+
+        ISingleResp CreateSingleResp(IBasicOCSPResponse basicResp);
+
+        IX509Certificate CreateX509Certificate(object element);
         
-        ITSTInfo CreateTSTInfo(IContentInfo contentInfoTsp);
+        IX509Crl CreateX509Crl(Stream input);
+        
+        IIDigest CreateIDigest(string hashAlgorithm);
+        
+        ICertificateID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber);
+        
+        IX500Name CreateX500NameInstance(IASN1Encodable issuer);
+        
+        IOCSPReq CreateOCSPReq(ICertificateID certId, byte[] documentId);
         
         IISigner CreateISigner();
+        
+        List<IX509Certificate> ReadAllCerts(byte[] contentsKey);
     }
 }

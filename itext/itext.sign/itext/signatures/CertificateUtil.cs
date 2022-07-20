@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Cert;
 using iText.IO.Util;
 
 namespace iText.Signatures {
@@ -62,14 +62,14 @@ namespace iText.Signatures {
         /// <summary>Gets a CRL from an X509 certificate.</summary>
         /// <param name="certificate">the X509Certificate to extract the CRL from</param>
         /// <returns>CRL or null if there's no CRL available</returns>
-        public static X509Crl GetCRL(X509Certificate certificate) {
+        public static IX509Crl GetCRL(IX509Certificate certificate) {
             return CertificateUtil.GetCRL(CertificateUtil.GetCRLURL(certificate));
         }
 
         /// <summary>Gets the URL of the Certificate Revocation List for a Certificate</summary>
         /// <param name="certificate">the Certificate</param>
         /// <returns>the String where you can check if the certificate was revoked</returns>
-        public static String GetCRLURL(X509Certificate certificate) {
+        public static String GetCRLURL(IX509Certificate certificate) {
             IASN1Primitive obj;
             try {
                 obj = GetExtensionValue(certificate, FACTORY.CreateExtension().GetCRlDistributionPoints().GetId());
@@ -104,7 +104,7 @@ namespace iText.Signatures {
         /// <summary>Gets the CRL object using a CRL URL.</summary>
         /// <param name="url">the URL where the CRL is located</param>
         /// <returns>CRL object</returns>
-        public static X509Crl GetCRL(String url) {
+        public static IX509Crl GetCRL(String url) {
             if (url == null) {
                 return null;
             }
@@ -115,7 +115,7 @@ namespace iText.Signatures {
         /// <summary>Retrieves the OCSP URL from the given certificate.</summary>
         /// <param name="certificate">the certificate</param>
         /// <returns>the URL or null</returns>
-        public static String GetOCSPURL(X509Certificate certificate) {
+        public static String GetOCSPURL(IX509Certificate certificate) {
             IASN1Primitive obj;
             try {
                 obj = GetExtensionValue(certificate, FACTORY.CreateExtension().GetAuthorityInfoAccess().GetId());
@@ -149,7 +149,7 @@ namespace iText.Signatures {
         /// <summary>Gets the URL of the TSA if it's available on the certificate</summary>
         /// <param name="certificate">a certificate</param>
         /// <returns>a TSA URL</returns>
-        public static String GetTSAURL(X509Certificate certificate) {
+        public static String GetTSAURL(IX509Certificate certificate) {
             byte[] der = SignUtils.GetExtensionValueByOid(certificate, SecurityIDs.ID_TSA);
             if (der == null) {
                 return null;
@@ -175,7 +175,7 @@ namespace iText.Signatures {
         /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1Primitive"/>
         /// object
         /// </returns>
-        private static IASN1Primitive GetExtensionValue(X509Certificate certificate, String oid) {
+        private static IASN1Primitive GetExtensionValue(IX509Certificate certificate, String oid) {
             byte[] bytes = SignUtils.GetExtensionValueByOid(certificate, oid);
             if (bytes == null) {
                 return null;

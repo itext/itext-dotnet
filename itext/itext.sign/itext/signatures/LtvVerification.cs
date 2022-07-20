@@ -45,14 +45,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.IO.Font;
@@ -143,12 +143,12 @@ namespace iText.Signatures {
             }
             PdfPKCS7 pk = sgnUtil.ReadSignatureData(signatureName);
             LOGGER.LogInformation("Adding verification for " + signatureName);
-            X509Certificate[] xc = pk.GetCertificates();
-            X509Certificate cert;
-            X509Certificate signingCert = pk.GetSigningCertificate();
+            IX509Certificate[] xc = pk.GetCertificates();
+            IX509Certificate cert;
+            IX509Certificate signingCert = pk.GetSigningCertificate();
             LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
-            foreach (X509Certificate certificate in xc) {
-                cert = (X509Certificate)certificate;
+            foreach (IX509Certificate certificate in xc) {
+                cert = (IX509Certificate)certificate;
                 LOGGER.LogInformation("Certificate: " + cert.SubjectDN);
                 if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert)) {
                     continue;
@@ -195,10 +195,10 @@ namespace iText.Signatures {
         /// <param name="cert">the certificate for which we search the parent</param>
         /// <param name="certs">an array with certificates that contains the parent</param>
         /// <returns>the parent certificate</returns>
-        private X509Certificate GetParent(X509Certificate cert, X509Certificate[] certs) {
-            X509Certificate parent;
-            foreach (X509Certificate certificate in certs) {
-                parent = (X509Certificate)certificate;
+        private IX509Certificate GetParent(IX509Certificate cert, IX509Certificate[] certs) {
+            IX509Certificate parent;
+            foreach (IX509Certificate certificate in certs) {
+                parent = (IX509Certificate)certificate;
                 if (!cert.IssuerDN.Equals(parent.SubjectDN)) {
                     continue;
                 }
@@ -265,7 +265,7 @@ namespace iText.Signatures {
         }
 
         private static byte[] HashBytesSha1(byte[] b) {
-            IDigest sh = DigestUtilities.GetDigest("SHA1");
+            IIDigest sh = DigestUtilities.GetDigest("SHA1");
             return sh.Digest(b);
         }
 

@@ -10,22 +10,49 @@ using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Utils;
 
 namespace iText.Bouncycastle.Cms.Jcajce {
+    /// <summary>
+    /// Wrapper class for
+    /// <see cref="Org.BouncyCastle.Cms.Jcajce.JcaSignerInfoGeneratorBuilder"/>.
+    /// </summary>
     public class JcaSignerInfoGeneratorBuilderBC : IJcaSignerInfoGeneratorBuilder {
         private readonly JcaSignerInfoGeneratorBuilder jcaSignerInfoGeneratorBuilder;
 
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Cms.Jcajce.JcaSignerInfoGeneratorBuilder"/>.
+        /// </summary>
+        /// <param name="jcaSignerInfoGeneratorBuilder">
+        /// 
+        /// <see cref="Org.BouncyCastle.Cms.Jcajce.JcaSignerInfoGeneratorBuilder"/>
+        /// to be wrapped
+        /// </param>
         public JcaSignerInfoGeneratorBuilderBC(JcaSignerInfoGeneratorBuilder jcaSignerInfoGeneratorBuilder) {
             this.jcaSignerInfoGeneratorBuilder = jcaSignerInfoGeneratorBuilder;
         }
 
-        public JcaSignerInfoGeneratorBuilderBC(IDigestCalculatorProvider digestCalcProviderProvider)
-            : this(new JcaSignerInfoGeneratorBuilder(((DigestCalculatorProviderBC)digestCalcProviderProvider).GetCalculatorProvider
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Cms.Jcajce.JcaSignerInfoGeneratorBuilder"/>.
+        /// </summary>
+        /// <param name="calculatorProvider">
+        /// DigestCalculatorProvider wrapper to create
+        /// <see cref="Org.BouncyCastle.Cms.Jcajce.JcaSignerInfoGeneratorBuilder"/>
+        /// </param>
+        public JcaSignerInfoGeneratorBuilderBC(IDigestCalculatorProvider calculatorProvider)
+            : this(new JcaSignerInfoGeneratorBuilder(((DigestCalculatorProviderBC)calculatorProvider).GetCalculatorProvider
                 ())) {
         }
 
+        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+        /// <returns>
+        /// wrapped
+        /// <see cref="Org.BouncyCastle.Cms.Jcajce.JcaSignerInfoGeneratorBuilder"/>.
+        /// </returns>
         public virtual JcaSignerInfoGeneratorBuilder GetJcaSignerInfoGeneratorBuilder() {
             return jcaSignerInfoGeneratorBuilder;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual ISignerInfoGenerator Build(IContentSigner signer, X509Certificate cert) {
             try {
                 return new SignerInfoGeneratorBC(jcaSignerInfoGeneratorBuilder.Build(((ContentSignerBC)signer).GetContentSigner
@@ -36,6 +63,8 @@ namespace iText.Bouncycastle.Cms.Jcajce {
             }
         }
 
+        /// <summary>Indicates whether some other object is "equal to" this one.</summary>
+        /// <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
         public override bool Equals(Object o) {
             if (this == o) {
                 return true;
@@ -48,10 +77,16 @@ namespace iText.Bouncycastle.Cms.Jcajce {
             return Object.Equals(jcaSignerInfoGeneratorBuilder, that.jcaSignerInfoGeneratorBuilder);
         }
 
+        /// <summary>Returns a hash code value based on the wrapped object.</summary>
         public override int GetHashCode() {
             return JavaUtil.ArraysHashCode(jcaSignerInfoGeneratorBuilder);
         }
 
+        /// <summary>
+        /// Delegates
+        /// <c>toString</c>
+        /// method call to the wrapped object.
+        /// </summary>
         public override String ToString() {
             return jcaSignerInfoGeneratorBuilder.ToString();
         }

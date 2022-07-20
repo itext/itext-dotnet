@@ -42,7 +42,7 @@ Copyright (c) 1998-2022 iText Group NV
 * address: sales@itextpdf.com
 */
 using System;
-using Org.BouncyCastle.Crypto;
+using iText.Commons.Bouncycastle.Crypto;
 
 namespace iText.Signatures {
     /// <summary>
@@ -50,13 +50,13 @@ namespace iText.Signatures {
     /// <see cref="IExternalSignature"/>
     /// interface that
     /// can be used when you have a
-    /// <see cref="Org.BouncyCastle.Crypto.ICipherParameters"/>
+    /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
     /// object.
     /// </summary>
     /// <author>Paulo Soares</author>
     public class PrivateKeySignature : IExternalSignature {
         /// <summary>The private key object.</summary>
-        private ICipherParameters pk;
+        private IPrivateKey pk;
 
         /// <summary>The hash algorithm.</summary>
         private String hashAlgorithm;
@@ -71,12 +71,12 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="pk">
         /// A
-        /// <see cref="Org.BouncyCastle.Crypto.ICipherParameters"/>
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
         /// object.
         /// </param>
         /// <param name="hashAlgorithm">A hash algorithm (e.g. "SHA-1", "SHA-256",...).</param>
         /// <param name="provider">A security provider (e.g. "BC").</param>
-        public PrivateKeySignature(ICipherParameters pk, String hashAlgorithm) {
+        public PrivateKeySignature(IPrivateKey pk, String hashAlgorithm) {
             this.pk = pk;
             this.hashAlgorithm = DigestAlgorithms.GetDigest(DigestAlgorithms.GetAllowedDigest(hashAlgorithm));
             this.encryptionAlgorithm = SignUtils.GetPrivateKeyAlgorithm(pk);
@@ -95,7 +95,7 @@ namespace iText.Signatures {
         /// <summary><inheritDoc/></summary>
         public virtual byte[] Sign(byte[] message) {
             String algorithm = hashAlgorithm + "with" + encryptionAlgorithm;
-            ISigner sig = SignUtils.GetSignatureHelper(algorithm);
+            IISigner sig = SignUtils.GetSignatureHelper(algorithm);
             sig.InitSign(pk);
             sig.Update(message);
             return sig.GenerateSignature();

@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Kernel.Pdf {
     public class WriterProperties {
@@ -295,7 +295,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
-        public virtual iText.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(X509Certificate[] certs, int[] permissions
+        public virtual iText.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(IX509Certificate[] certs, int[] permissions
             , int encryptionAlgorithm) {
             encryptionProperties.SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm);
             return this;

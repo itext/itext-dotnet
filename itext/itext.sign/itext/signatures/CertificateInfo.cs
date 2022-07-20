@@ -46,10 +46,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Exceptions;
 
 namespace iText.Signatures {
@@ -311,7 +311,7 @@ namespace iText.Signatures {
         /// <summary>Get the issuer fields from an X509 Certificate.</summary>
         /// <param name="cert">an X509Certificate</param>
         /// <returns>an X500Name</returns>
-        public static CertificateInfo.X500Name GetIssuerFields(X509Certificate cert) {
+        public static CertificateInfo.X500Name GetIssuerFields(IX509Certificate cert) {
             try {
                 return new CertificateInfo.X500Name(BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(CertificateInfo.GetIssuer(cert
                     .GetTbsCertificate())));
@@ -340,7 +340,7 @@ namespace iText.Signatures {
         /// <summary>Get the subject fields from an X509 Certificate.</summary>
         /// <param name="cert">an X509Certificate</param>
         /// <returns>an X500Name</returns>
-        public static CertificateInfo.X500Name GetSubjectFields(X509Certificate cert) {
+        public static CertificateInfo.X500Name GetSubjectFields(IX509Certificate cert) {
             try {
                 if (cert != null) {
                     return new CertificateInfo.X500Name(BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(CertificateInfo.GetSubject(cert
