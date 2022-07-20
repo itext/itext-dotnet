@@ -45,11 +45,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Actions.Contexts;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Kernel.Pdf;
@@ -57,6 +59,9 @@ using iText.Kernel.Pdf;
 namespace iText.Signatures {
     /// <summary>Verifies the signatures in an LTV document.</summary>
     public class LtvVerifier : RootStoreVerifier {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         /// <summary>The Logger instance</summary>
         protected internal static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.LtvVerifier
             ));
@@ -305,9 +310,9 @@ namespace iText.Signatures {
         }
 
         /// <summary>Gets OCSP responses from the Document Security Store.</summary>
-        /// <returns>a list of BasicOCSPResp objects</returns>
-        public virtual IList<BasicOcspResp> GetOCSPResponsesFromDSS() {
-            IList<BasicOcspResp> ocsps = new List<BasicOcspResp>();
+        /// <returns>a list of IBasicOCSPResp objects</returns>
+        public virtual IList<IBasicOCSPResp> GetOCSPResponsesFromDSS() {
+            IList<IBasicOCSPResp> ocsps = new List<IBasicOCSPResp>();
             if (dss == null) {
                 return ocsps;
             }
@@ -317,18 +322,18 @@ namespace iText.Signatures {
             }
             for (int i = 0; i < ocsparray.Size(); i++) {
                 PdfStream stream = ocsparray.GetAsStream(i);
-                OcspResp ocspResponse;
+                IOCSPResp ocspResponse;
                 try {
-                    ocspResponse = new OcspResp(stream.GetBytes());
+                    ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResp(stream.GetBytes());
                 }
                 catch (System.IO.IOException e) {
                     throw new GeneralSecurityException(e.Message);
                 }
-                if (ocspResponse.Status == 0) {
+                if (ocspResponse.GetStatus() == 0) {
                     try {
-                        ocsps.Add((BasicOcspResp)ocspResponse.GetResponseObject());
+                        ocsps.Add(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResp(ocspResponse.GetResponseObject()));
                     }
-                    catch (OcspException e) {
+                    catch (AbstractOCSPException e) {
                         throw new GeneralSecurityException(e.ToString());
                     }
                 }

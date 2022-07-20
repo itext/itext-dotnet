@@ -42,6 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Test;
@@ -57,6 +59,8 @@ namespace iText.Signatures.Verify {
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
         private static readonly char[] password = "testpass".ToCharArray();
+
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {

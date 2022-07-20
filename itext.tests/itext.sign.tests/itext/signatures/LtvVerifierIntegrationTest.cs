@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Kernel.Pdf;
 using iText.Test;
 using iText.Test.Attributes;
@@ -31,6 +33,9 @@ namespace iText.Signatures {
     public class LtvVerifierIntegrationTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/LtvVerifierIntegrationTest/";
+
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {

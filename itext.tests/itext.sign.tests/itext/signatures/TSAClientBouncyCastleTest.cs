@@ -23,8 +23,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
@@ -35,6 +37,9 @@ using iText.Test.Signutils;
 namespace iText.Signatures {
     [NUnit.Framework.Category("UnitTest")]
     public class TSAClientBouncyCastleTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         [NUnit.Framework.Test]
         public virtual void SetTSAInfoTest() {
             TSAClientBouncyCastle clientBouncyCastle = new TSAClientBouncyCastle("url");
@@ -135,10 +140,10 @@ namespace iText.Signatures {
             tsaClientBouncyCastle.SetTSAInfo(itsaInfoBouncyCastle);
             byte[] timestampTokenArray = tsaClientBouncyCastle.GetTimeStampToken(tsaClientBouncyCastle.GetMessageDigest
                 ().Digest());
-            TimeStampToken expectedToken = new TimeStampResponse(tsaClientBouncyCastle.GetExpectedTsaResponseBytes()).
-                TimeStampToken;
-            TimeStampTokenInfo expectedTsTokenInfo = expectedToken.TimeStampInfo;
-            TimeStampTokenInfo resultTsTokenInfo = itsaInfoBouncyCastle.GetTimeStampTokenInfo();
+            ITimeStampToken expectedToken = BOUNCY_CASTLE_FACTORY.CreateTimeStampResponse(tsaClientBouncyCastle.GetExpectedTsaResponseBytes
+                ()).GetTimeStampToken();
+            ITimeStampTokenInfo expectedTsTokenInfo = expectedToken.GetTimeStampInfo();
+            ITimeStampTokenInfo resultTsTokenInfo = itsaInfoBouncyCastle.GetTimeStampTokenInfo();
             NUnit.Framework.Assert.IsNotNull(timestampTokenArray);
             NUnit.Framework.Assert.IsNotNull(resultTsTokenInfo);
             NUnit.Framework.Assert.AreEqual(expectedTsTokenInfo.GetEncoded(), resultTsTokenInfo.GetEncoded());
@@ -197,13 +202,13 @@ namespace iText.Signatures {
         }
 
         private sealed class CustomItsaInfoBouncyCastle : ITSAInfoBouncyCastle {
-            private TimeStampTokenInfo timeStampTokenInfo;
+            private ITimeStampTokenInfo timeStampTokenInfo;
 
-            public void InspectTimeStampTokenInfo(TimeStampTokenInfo info) {
+            public void InspectTimeStampTokenInfo(ITimeStampTokenInfo info) {
                 this.timeStampTokenInfo = info;
             }
 
-            public TimeStampTokenInfo GetTimeStampTokenInfo() {
+            public ITimeStampTokenInfo GetTimeStampTokenInfo() {
                 return timeStampTokenInfo;
             }
         }

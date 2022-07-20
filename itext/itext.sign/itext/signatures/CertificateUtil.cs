@@ -43,10 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.IO.Util;
 
 namespace iText.Signatures {
@@ -55,6 +56,8 @@ namespace iText.Signatures {
     /// allow you to retrieve information from a Certificate.
     /// </summary>
     public class CertificateUtil {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         // Certificate Revocation Lists
         /// <summary>Gets a CRL from an X509 certificate.</summary>
         /// <param name="certificate">the X509Certificate to extract the CRL from</param>
@@ -67,31 +70,31 @@ namespace iText.Signatures {
         /// <param name="certificate">the Certificate</param>
         /// <returns>the String where you can check if the certificate was revoked</returns>
         public static String GetCRLURL(X509Certificate certificate) {
-            Asn1Object obj;
+            IASN1Primitive obj;
             try {
-                obj = GetExtensionValue(certificate, X509Extensions.CrlDistributionPoints.Id);
+                obj = GetExtensionValue(certificate, FACTORY.CreateExtension().GetCRlDistributionPoints().GetId());
             }
             catch (System.IO.IOException) {
-                obj = (Asn1Object)null;
+                obj = null;
             }
             if (obj == null) {
                 return null;
             }
-            CrlDistPoint dist = CrlDistPoint.GetInstance(obj);
-            DistributionPoint[] dists = dist.GetDistributionPoints();
-            foreach (DistributionPoint p in dists) {
-                DistributionPointName distributionPointName = p.DistributionPointName;
-                if (DistributionPointName.FullName != distributionPointName.PointType) {
+            ICRLDistPoint dist = FACTORY.CreateCRLDistPoint(obj);
+            IDistributionPoint[] dists = dist.GetDistributionPoints();
+            foreach (IDistributionPoint p in dists) {
+                IDistributionPointName distributionPointName = p.GetDistributionPoint();
+                if (FACTORY.CreateDistributionPointName().GetFullName() != distributionPointName.GetType()) {
                     continue;
                 }
-                GeneralNames generalNames = (GeneralNames)distributionPointName.Name;
-                GeneralName[] names = generalNames.GetNames();
-                foreach (GeneralName name in names) {
-                    if (name.TagNo != GeneralName.UniformResourceIdentifier) {
+                IGeneralNames generalNames = FACTORY.CreateGeneralNames(distributionPointName.GetName());
+                IGeneralName[] names = generalNames.GetNames();
+                foreach (IGeneralName name in names) {
+                    if (name.GetTagNo() != FACTORY.CreateGeneralName().GetUniformResourceIdentifier()) {
                         continue;
                     }
-                    DerIA5String derStr = ((DerIA5String)DerIA5String.GetInstance((Asn1TaggedObject)name.ToAsn1Object(), false
-                        ));
+                    IDERIA5String derStr = FACTORY.CreateDERIA5String(FACTORY.CreateASN1TaggedObject(name.ToASN1Primitive()), 
+                        false);
                     return derStr.GetString();
                 }
             }
@@ -113,30 +116,24 @@ namespace iText.Signatures {
         /// <param name="certificate">the certificate</param>
         /// <returns>the URL or null</returns>
         public static String GetOCSPURL(X509Certificate certificate) {
-            Asn1Object obj;
+            IASN1Primitive obj;
             try {
-                obj = GetExtensionValue(certificate, X509Extensions.AuthorityInfoAccess.Id);
+                obj = GetExtensionValue(certificate, FACTORY.CreateExtension().GetAuthorityInfoAccess().GetId());
                 if (obj == null) {
                     return null;
                 }
-                Asn1Sequence AccessDescriptions = (Asn1Sequence)obj;
-                for (int i = 0; i < AccessDescriptions.Count; i++) {
-                    Asn1Sequence AccessDescription = (Asn1Sequence)AccessDescriptions[i];
-                    if (AccessDescription.Count != 2) {
+                IASN1Sequence accessDescriptions = FACTORY.CreateASN1Sequence(obj);
+                for (int i = 0; i < accessDescriptions.Size(); i++) {
+                    IASN1Sequence AccessDescription = FACTORY.CreateASN1Sequence(accessDescriptions.GetObjectAt(i));
+                    IASN1ObjectIdentifier id = FACTORY.CreateASN1ObjectIdentifier(AccessDescription.GetObjectAt(0));
+                    if (AccessDescription.Size() != 2) {
                     }
                     else {
                         // do nothing and continue
-                        if (AccessDescription[0] is DerObjectIdentifier) {
-                            DerObjectIdentifier id = (DerObjectIdentifier)AccessDescription[0];
-                            if (SecurityIDs.ID_OCSP.Equals(id.Id)) {
-                                Asn1Object description = (Asn1Object)AccessDescription[1];
-                                String AccessLocation = GetStringFromGeneralName(description);
-                                if (AccessLocation == null) {
-                                    return "";
-                                }
-                                else {
-                                    return AccessLocation;
-                                }
+                        if (id != null) {
+                            if (SecurityIDs.ID_OCSP.Equals(id.GetId())) {
+                                IASN1Primitive description = FACTORY.CreateASN1Primitive(AccessDescription.GetObjectAt(1));
+                                return GetStringFromGeneralName(description);
                             }
                         }
                     }
@@ -157,13 +154,13 @@ namespace iText.Signatures {
             if (der == null) {
                 return null;
             }
-            Asn1Object asn1obj;
+            IASN1Primitive asn1obj;
             try {
-                asn1obj = Asn1Object.FromByteArray(der);
-                DerOctetString octets = (DerOctetString)asn1obj;
-                asn1obj = Asn1Object.FromByteArray(octets.GetOctets());
-                Asn1Sequence asn1seq = Asn1Sequence.GetInstance(asn1obj);
-                return GetStringFromGeneralName(asn1seq[1].ToAsn1Object());
+                asn1obj = FACTORY.CreateASN1Primitive(der);
+                IDEROctetString octets = FACTORY.CreateDEROctetString(asn1obj);
+                asn1obj = FACTORY.CreateASN1Primitive(octets.GetOctets());
+                IASN1Sequence asn1seq = FACTORY.CreateASN1SequenceInstance(asn1obj);
+                return GetStringFromGeneralName(asn1seq.GetObjectAt(1).ToASN1Primitive());
             }
             catch (System.IO.IOException) {
                 return null;
@@ -173,25 +170,33 @@ namespace iText.Signatures {
         // helper methods
         /// <param name="certificate">the certificate from which we need the ExtensionValue</param>
         /// <param name="oid">the Object Identifier value for the extension.</param>
-        /// <returns>the extension value as an ASN1Primitive object</returns>
-        private static Asn1Object GetExtensionValue(X509Certificate certificate, String oid) {
+        /// <returns>
+        /// the extension value as an
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1Primitive"/>
+        /// object
+        /// </returns>
+        private static IASN1Primitive GetExtensionValue(X509Certificate certificate, String oid) {
             byte[] bytes = SignUtils.GetExtensionValueByOid(certificate, oid);
             if (bytes == null) {
                 return null;
             }
-            Asn1InputStream aIn = new Asn1InputStream(new MemoryStream(bytes));
-            Asn1OctetString octs = (Asn1OctetString)aIn.ReadObject();
-            aIn = new Asn1InputStream(new MemoryStream(octs.GetOctets()));
+            IASN1InputStream aIn = FACTORY.CreateASN1InputStream(new MemoryStream(bytes));
+            IASN1OctetString octs = FACTORY.CreateASN1OctetString(aIn.ReadObject());
+            aIn = FACTORY.CreateASN1InputStream(new MemoryStream(octs.GetOctets()));
             return aIn.ReadObject();
         }
 
         /// <summary>Gets a String from an ASN1Primitive</summary>
-        /// <param name="names">the ASN1Primitive</param>
+        /// <param name="names">
+        /// the
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1Primitive"/>
+        /// primitive wrapper
+        /// </param>
         /// <returns>a human-readable String</returns>
-        private static String GetStringFromGeneralName(Asn1Object names) {
-            Asn1TaggedObject taggedObject = (Asn1TaggedObject)names;
-            return iText.Commons.Utils.JavaUtil.GetStringForBytes(Asn1OctetString.GetInstance(taggedObject, false).GetOctets
-                (), "ISO-8859-1");
+        private static String GetStringFromGeneralName(IASN1Primitive names) {
+            IASN1TaggedObject taggedObject = FACTORY.CreateASN1TaggedObject(names);
+            return iText.Commons.Utils.JavaUtil.GetStringForBytes(FACTORY.CreateASN1OctetString(taggedObject, false).GetOctets
+                (), iText.Commons.Utils.EncodingUtil.ISO_8859_1);
         }
     }
 }

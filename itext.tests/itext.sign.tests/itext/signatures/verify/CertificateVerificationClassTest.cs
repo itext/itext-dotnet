@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Cms;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Exceptions;
@@ -61,6 +61,8 @@ using iText.Test.Signutils;
 namespace iText.Signatures.Verify {
     [NUnit.Framework.Category("UnitTest")]
     public class CertificateVerificationClassTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         // Such messageTemplate is equal to any log message. This is required for porting reasons.
         private const String ANY_LOG_MESSAGE = "{0}";
 
@@ -141,11 +143,11 @@ namespace iText.Signatures.Verify {
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, DateTimeUtil.GetCurrentUtcTime().AddDays
                 (COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME));
             crlBuilder.AddCrlEntry(caCert, DateTimeUtil.GetCurrentUtcTime().AddDays(COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME
-                ), Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise);
+                ), FACTORY.CreateCRLReason().GetKeyCompromise());
             TestCrlBuilder crlForCheckBuilder = new TestCrlBuilder(caCert, caPrivateKey, DateTimeUtil.GetCurrentUtcTime
                 ().AddDays(COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME));
             crlForCheckBuilder.AddCrlEntry(checkCert, DateTimeUtil.GetCurrentUtcTime().AddDays(COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME
-                ), Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise);
+                ), FACTORY.CreateCRLReason().GetKeyCompromise());
             TestCrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(crlBuilder);
             TestCrlClient crlForCheckClient = new TestCrlClient().AddBuilderForCertIssuer(crlForCheckBuilder);
             ICollection<byte[]> crlBytesForRootCertCollection = crlClient.GetEncoded(caCert, null);
@@ -252,8 +254,8 @@ namespace iText.Signatures.Verify {
             ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaClientCertificate, PASSWORD, PASSWORD);
             TestTsaClient testTsaClient = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             byte[] tsaCertificateBytes = testTsaClient.GetTimeStampToken(testTsaClient.GetMessageDigest().Digest());
-            TimeStampToken timeStampToken = new TimeStampToken(ContentInfo.GetInstance(Asn1Sequence.GetInstance(tsaCertificateBytes
-                )));
+            ITimeStampToken timeStampToken = FACTORY.CreateTimeStampToken(FACTORY.CreateContentInfo(FACTORY.CreateASN1Sequence
+                (tsaCertificateBytes)));
             return CertificateVerification.VerifyTimestampCertificates(timeStampToken, caKeyStore);
         }
     }

@@ -41,13 +41,14 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
-using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -60,6 +61,8 @@ using iText.Test.Signutils;
 namespace iText.Signatures.Verify {
     [NUnit.Framework.Category("UnitTest")]
     public class OcspVerifierTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
@@ -84,8 +87,8 @@ namespace iText.Signatures.Verify {
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
             ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
-            builder.SetCertificateStatus(new RevokedStatus(DateTimeUtil.GetCurrentUtcTime().AddDays(-20), Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise
-                ));
+            builder.SetCertificateStatus(FACTORY.CreateRevokedStatus(DateTimeUtil.GetCurrentUtcTime().AddDays(-20), FACTORY
+                .CreateCRLReason().GetKeyCompromise()));
             NUnit.Framework.Assert.IsFalse(VerifyTest(builder));
         }
 
@@ -94,7 +97,7 @@ namespace iText.Signatures.Verify {
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
             ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
-            builder.SetCertificateStatus(new UnknownStatus());
+            builder.SetCertificateStatus(FACTORY.CreateUnknownStatus());
             NUnit.Framework.Assert.IsFalse(VerifyTest(builder));
         }
 
@@ -163,8 +166,8 @@ namespace iText.Signatures.Verify {
             X509Certificate rootCert = rootRsaOcspBuilder.GetIssuerCert();
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(rootCert, rootRsaOcspBuilder);
             byte[] basicOcspRespBytes = ocspClient.GetEncoded(checkCert, rootCert, null);
-            Asn1Object var2 = Asn1Object.FromByteArray(basicOcspRespBytes);
-            BasicOcspResp basicOCSPResp = new BasicOcspResp(BasicOcspResponse.GetInstance(var2));
+            IASN1Primitive var2 = FACTORY.CreateASN1Primitive(basicOcspRespBytes);
+            IBasicOCSPResp basicOCSPResp = FACTORY.CreateBasicOCSPResp(FACTORY.CreateBasicOCSPResponse(var2));
             OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
             return ocspVerifier.Verify(basicOCSPResp, checkCert, rootCert, checkDate);
         }
@@ -190,8 +193,8 @@ namespace iText.Signatures.Verify {
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(ocspResponderCert, ocspRespPrivateKey);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
             byte[] basicOcspRespBytes = ocspClient.GetEncoded(checkCert, caCert, null);
-            Asn1Object var2 = Asn1Object.FromByteArray(basicOcspRespBytes);
-            BasicOcspResp basicOCSPResp = new BasicOcspResp(BasicOcspResponse.GetInstance(var2));
+            IASN1Primitive var2 = FACTORY.CreateASN1Primitive(basicOcspRespBytes);
+            IBasicOCSPResp basicOCSPResp = FACTORY.CreateBasicOCSPResp(FACTORY.CreateBasicOCSPResponse(var2));
             OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
             return ocspVerifier.Verify(basicOCSPResp, checkCert, caCert, checkDate);
         }

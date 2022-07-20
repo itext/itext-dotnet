@@ -45,6 +45,8 @@ using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Forms;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -58,6 +60,8 @@ using iText.Test.Signutils;
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("IntegrationTest")]
     public class SignDeferredTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 

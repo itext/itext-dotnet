@@ -42,6 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -51,6 +53,9 @@ using iText.Test;
 namespace iText.Signatures {
     [NUnit.Framework.Category("IntegrationTest")]
     public class SignatureUtilTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/SignatureUtilTest/";
 

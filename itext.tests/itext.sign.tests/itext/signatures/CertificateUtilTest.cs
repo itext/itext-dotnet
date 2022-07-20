@@ -53,7 +53,7 @@ namespace iText.Signatures {
         public virtual void GetTSAURLAdobeExtensionNotTaggedTest() {
             X509Certificate tsaCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCertWithoutTag.p12"
                 , PASSWORD)[0];
-            NUnit.Framework.Assert.Catch(typeof(InvalidCastException), () => CertificateUtil.GetTSAURL(tsaCert));
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => CertificateUtil.GetTSAURL(tsaCert));
         }
     }
 }

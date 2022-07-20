@@ -44,6 +44,8 @@ using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.IO.Font.Constants;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
@@ -77,6 +79,8 @@ namespace iText.Kernel.Crypto {
     /// </remarks>
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfEncryptionTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/crypto/PdfEncryptionTest/";
 

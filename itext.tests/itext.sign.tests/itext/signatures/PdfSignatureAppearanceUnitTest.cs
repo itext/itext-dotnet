@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.Kernel.Colors;
@@ -58,6 +60,9 @@ namespace iText.Signatures {
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfSignatureAppearanceTest/test.p12";
 
         public static readonly char[] PASSWORD = "kspass".ToCharArray();
+
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
 
         private static X509Certificate[] chain;
 

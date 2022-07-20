@@ -45,13 +45,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
 using iText.Commons;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.IO.Font;
@@ -63,6 +64,9 @@ namespace iText.Signatures {
     /// <summary>Add verification according to PAdES-LTV (part 4).</summary>
     /// <author>Paulo Soares</author>
     public class LtvVerification {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         private ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.LtvVerification));
 
         private PdfDocument document;
@@ -143,8 +147,8 @@ namespace iText.Signatures {
             X509Certificate cert;
             X509Certificate signingCert = pk.GetSigningCertificate();
             LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
-            for (int k = 0; k < xc.Length; ++k) {
-                cert = (X509Certificate)xc[k];
+            foreach (X509Certificate certificate in xc) {
+                cert = (X509Certificate)certificate;
                 LOGGER.LogInformation("Certificate: " + cert.SubjectDN);
                 if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert)) {
                     continue;
@@ -193,8 +197,8 @@ namespace iText.Signatures {
         /// <returns>the parent certificate</returns>
         private X509Certificate GetParent(X509Certificate cert, X509Certificate[] certs) {
             X509Certificate parent;
-            for (int i = 0; i < certs.Length; i++) {
-                parent = (X509Certificate)certs[i];
+            foreach (X509Certificate certificate in certs) {
+                parent = (X509Certificate)certificate;
                 if (!cert.IssuerDN.Equals(parent.SubjectDN)) {
                     continue;
                 }
@@ -227,26 +231,23 @@ namespace iText.Signatures {
                 }
             }
             if (crls != null) {
-                foreach (byte[] crl in crls) {
-                    vd.crls.Add(crl);
-                }
+                vd.crls.AddAll(crls);
             }
             if (certs != null) {
-                foreach (byte[] cert in certs) {
-                    vd.certs.Add(cert);
-                }
+                vd.certs.AddAll(certs);
             }
             validated.Put(GetSignatureHashKey(signatureName), vd);
             return true;
         }
 
         private static byte[] BuildOCSPResponse(byte[] basicOcspResponse) {
-            DerOctetString doctet = new DerOctetString(basicOcspResponse);
-            OcspResponseStatus respStatus = new OcspResponseStatus(Org.BouncyCastle.Asn1.Ocsp.OcspResponseStatus.Successful
-                );
-            ResponseBytes responseBytes = new ResponseBytes(OcspObjectIdentifiers.PkixOcspBasic, doctet);
-            OcspResponse ocspResponse = new OcspResponse(respStatus, responseBytes);
-            return new OcspResp(ocspResponse).GetEncoded();
+            IDEROctetString doctet = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(basicOcspResponse);
+            IOCSPResponseStatus respStatus = BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus(BOUNCY_CASTLE_FACTORY.CreateOCSPRespBuilderInstance
+                ().GetSuccessful());
+            IResponseBytes responseBytes = BOUNCY_CASTLE_FACTORY.CreateResponseBytes(BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers
+                ().GetIdPkixOcspBasic(), doctet);
+            IOCSPResponse ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(respStatus, responseBytes);
+            return BOUNCY_CASTLE_FACTORY.CreateOCSPResp(ocspResponse).GetEncoded();
         }
 
         private PdfName GetSignatureHashKey(String signatureName) {
@@ -255,8 +256,8 @@ namespace iText.Signatures {
             byte[] bc = PdfEncodings.ConvertToBytes(contents.GetValue(), null);
             byte[] bt = null;
             if (PdfName.ETSI_RFC3161.Equals(sig.GetSubFilter())) {
-                Asn1InputStream din = new Asn1InputStream(new MemoryStream(bc));
-                Asn1Object pkcs = din.ReadObject();
+                IASN1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bc));
+                IASN1Primitive pkcs = din.ReadObject();
                 bc = pkcs.GetEncoded();
             }
             bt = HashBytesSha1(bc);

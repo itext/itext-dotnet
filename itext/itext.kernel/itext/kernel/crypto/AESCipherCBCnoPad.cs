@@ -42,16 +42,36 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.Crypto.Modes;
-using Org.BouncyCastle.Crypto.Parameters;
+using Java.Security;
+using Javax.Crypto;
+using Javax.Crypto.Spec;
+using Org.BouncyCastle.Security;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Crypto {
     /// <summary>Creates an AES Cipher with CBC and no padding.</summary>
     /// <author>Paulo Soares</author>
     public class AESCipherCBCnoPad {
-        private IBlockCipher cbc;
+        private const String CIPHER_WITHOUT_PADDING = "AES/CBC/NoPadding";
+
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
+        private static Cipher cipher;
+
+        static AESCipherCBCnoPad() {
+            try {
+                cipher = Cipher.GetInstance(CIPHER_WITHOUT_PADDING, BOUNCY_CASTLE_FACTORY.CreateProvider());
+            }
+            catch (SecurityUtilityException e) {
+                throw new PdfException(KernelExceptionMessageConstant.ERROR_WHILE_INITIALIZING_AES_CIPHER, e);
+            }
+            catch (NoSuchPaddingException e) {
+                throw new PdfException(KernelExceptionMessageConstant.ERROR_WHILE_INITIALIZING_AES_CIPHER, e);
+            }
+        }
 
         /// <summary>Creates a new instance of AESCipher with CBC and no padding</summary>
         /// <param name="forEncryption">
@@ -59,11 +79,8 @@ namespace iText.Kernel.Crypto {
         /// encryption, if false for decryption
         /// </param>
         /// <param name="key">the key to be used in the cipher</param>
-        public AESCipherCBCnoPad(bool forEncryption, byte[] key) {
-            IBlockCipher aes = new AesFastEngine();
-            cbc = new CbcBlockCipher(aes);
-            KeyParameter kp = new KeyParameter(key);
-            cbc.Init(forEncryption, kp);
+        public AESCipherCBCnoPad(bool forEncryption, byte[] key)
+            : this(forEncryption, key, new byte[16]) {
         }
 
         /// <summary>Creates a new instance of AESCipher with CBC and no padding</summary>
@@ -74,26 +91,20 @@ namespace iText.Kernel.Crypto {
         /// <param name="key">the key to be used in the cipher</param>
         /// <param name="initVector">initialization vector to be used in cipher</param>
         public AESCipherCBCnoPad(bool forEncryption, byte[] key, byte[] initVector) {
-            IBlockCipher aes = new AesFastEngine();
-            cbc = new CbcBlockCipher(aes);
-            KeyParameter kp = new KeyParameter(key);
-            ParametersWithIV piv = new ParametersWithIV(kp, initVector);
-            cbc.Init(forEncryption, piv);
+            try {
+                cipher.Init(forEncryption ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new 
+                    IvParameterSpec(initVector));
+            }
+            catch (InvalidKeyException e) {
+                throw new PdfException(KernelExceptionMessageConstant.ERROR_WHILE_INITIALIZING_AES_CIPHER, e);
+            }
+            catch (InvalidAlgorithmParameterException e) {
+                throw new PdfException(KernelExceptionMessageConstant.ERROR_WHILE_INITIALIZING_AES_CIPHER, e);
+            }
         }
 
         public virtual byte[] ProcessBlock(byte[] inp, int inpOff, int inpLen) {
-            if ((inpLen % cbc.GetBlockSize()) != 0) {
-                throw new ArgumentException("Not multiple of block: " + inpLen);
-            }
-            byte[] outp = new byte[inpLen];
-            int baseOffset = 0;
-            while (inpLen > 0) {
-                cbc.ProcessBlock(inp, inpOff, outp, baseOffset);
-                inpLen -= cbc.GetBlockSize();
-                baseOffset += cbc.GetBlockSize();
-                inpOff += cbc.GetBlockSize();
-            }
-            return outp;
+            return cipher.Update(inp, inpOff, inpLen);
         }
     }
 }

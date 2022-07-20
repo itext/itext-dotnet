@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Org.BouncyCastle.Tsp;
+using iText.Commons.Bouncycastle.Tsp;
 
 namespace iText.Signatures {
     /// <summary>
@@ -54,7 +54,7 @@ namespace iText.Signatures {
         /// this method is triggered passing an object that contains
         /// info about the timestamp and the time stamping authority.
         /// </summary>
-        /// <param name="info">a TimeStampTokenInfo object</param>
-        void InspectTimeStampTokenInfo(TimeStampTokenInfo info);
+        /// <param name="info">a ITimeStampTokenInfo object</param>
+        void InspectTimeStampTokenInfo(ITimeStampTokenInfo info);
     }
 }

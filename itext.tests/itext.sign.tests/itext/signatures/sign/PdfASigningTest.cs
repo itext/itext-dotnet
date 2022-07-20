@@ -45,6 +45,8 @@ using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Kernel.Font;
@@ -61,6 +63,8 @@ using iText.Test.Signutils;
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfASigningTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfASigningTest/";
 

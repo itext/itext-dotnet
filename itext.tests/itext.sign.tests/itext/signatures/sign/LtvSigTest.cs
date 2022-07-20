@@ -45,6 +45,8 @@ using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -56,6 +58,8 @@ using iText.Test.Signutils;
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("IntegrationTest")]
     public class LtvSigTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
@@ -109,7 +113,7 @@ namespace iText.Signatures.Sign {
             IExternalSignature pks = PrepareSignatureHandler(signCertP12FileName);
             TestTsaClient testTsa = PrepareTsaClient(tsaCertP12FileName);
             TestOcspClient testOcspClient = PrepareOcspClientForIssuer(intermediateCertP12FileName, caCertP12FileName);
-            ICollection<ICrlClient> crlNotAvailableList = JavaUtil.ArraysAsList((ICrlClient)null, new _ICrlClient_145(
+            ICollection<ICrlClient> crlNotAvailableList = JavaUtil.ArraysAsList((ICrlClient)null, new _ICrlClient_148(
                 ));
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(ltvFileName, FileMode.Create), 
                 new StampingProperties());
@@ -120,8 +124,8 @@ namespace iText.Signatures.Sign {
                 ));
         }
 
-        private sealed class _ICrlClient_145 : ICrlClient {
-            public _ICrlClient_145() {
+        private sealed class _ICrlClient_148 : ICrlClient {
+            public _ICrlClient_148() {
             }
 
             public ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url) {

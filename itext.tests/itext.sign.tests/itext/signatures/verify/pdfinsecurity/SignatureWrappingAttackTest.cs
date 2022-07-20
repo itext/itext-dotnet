@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Test;
@@ -48,6 +50,8 @@ using iText.Test;
 namespace iText.Signatures.Verify.Pdfinsecurity {
     [NUnit.Framework.Category("IntegrationTest")]
     public class SignatureWrappingAttackTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/verify/pdfinsecurity/SignatureWrappingAttackTest/";
 

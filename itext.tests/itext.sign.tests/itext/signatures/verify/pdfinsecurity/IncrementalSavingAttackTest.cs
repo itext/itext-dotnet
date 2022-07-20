@@ -42,6 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Signatures;
@@ -51,6 +53,8 @@ using iText.Test.Attributes;
 namespace iText.Signatures.Verify.Pdfinsecurity {
     [NUnit.Framework.Category("IntegrationTest")]
     public class IncrementalSavingAttackTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/verify/pdfinsecurity/IncrementalSavingAttackTest/";
 

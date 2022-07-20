@@ -45,6 +45,8 @@ using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -56,6 +58,8 @@ using iText.Test.Signutils;
 namespace iText.Signatures.Verify {
     [NUnit.Framework.Category("UnitTest")]
     public class CrlVerifierTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
@@ -85,8 +89,8 @@ namespace iText.Signatures.Verify {
             String checkCertFileName = certsSrc + "signCertRsa01.p12";
             X509Certificate checkCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(checkCertFileName, password)[
                 0];
-            crlBuilder.AddCrlEntry(checkCert, DateTimeUtil.GetCurrentUtcTime().AddDays(-40), Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise
-                );
+            crlBuilder.AddCrlEntry(checkCert, DateTimeUtil.GetCurrentUtcTime().AddDays(-40), FACTORY.CreateCRLReason()
+                .GetKeyCompromise());
             NUnit.Framework.Assert.Catch(typeof(VerificationException), () => VerifyTest(crlBuilder));
         }
 

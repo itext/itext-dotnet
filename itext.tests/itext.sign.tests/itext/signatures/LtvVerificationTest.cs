@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Kernel.Pdf;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
@@ -34,6 +36,9 @@ using iText.Test.Signutils;
 namespace iText.Signatures {
     [NUnit.Framework.Category("UnitTest")]
     public class LtvVerificationTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/LtvVerificationTest/";
 

@@ -24,6 +24,8 @@ using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -33,6 +35,8 @@ using iText.Test.Signutils;
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("IntegrationTest")]
     public class EncryptedSigningTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/EncryptedSigningTest/";
 

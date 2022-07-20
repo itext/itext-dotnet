@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
 using iText.Commons;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Logs;
@@ -213,7 +213,7 @@ namespace iText.Signatures {
         /// <param name="ocsp">the OCSP response</param>
         /// <param name="keystore">the <c>KeyStore</c></param>
         /// <returns><c>true</c> is a certificate was found</returns>
-        public static bool VerifyOcspCertificates(BasicOcspResp ocsp, List<X509Certificate> keystore) {
+        public static bool VerifyOcspCertificates(IBasicOCSPResp ocsp, List<X509Certificate> keystore) {
             IList<Exception> exceptionsThrown = new List<Exception>();
             try {
                 foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {
@@ -238,7 +238,7 @@ namespace iText.Signatures {
         /// <param name="ts">the time stamp</param>
         /// <param name="keystore">the <c>KeyStore</c></param>
         /// <returns><c>true</c> is a certificate was found</returns>
-        public static bool VerifyTimestampCertificates(TimeStampToken ts, List<X509Certificate> keystore) {
+        public static bool VerifyTimestampCertificates(ITimeStampToken ts, List<X509Certificate> keystore) {
             IList<Exception> exceptionsThrown = new List<Exception>();
             try {
                 foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {

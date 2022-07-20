@@ -24,6 +24,8 @@ using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -40,6 +42,8 @@ using iText.Test.Signutils;
 namespace iText.Signatures {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfSignerUnitTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private static readonly byte[] OWNER = "owner".GetBytes();
 
         private static readonly byte[] USER = "user".GetBytes();
