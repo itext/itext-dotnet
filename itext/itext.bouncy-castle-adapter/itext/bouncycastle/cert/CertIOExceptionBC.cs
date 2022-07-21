@@ -2,16 +2,17 @@ using System;
 using Org.BouncyCastle.Cert;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Security.Certificates;
 
 namespace iText.Bouncycastle.Cert {
     public class CertIOExceptionBC : AbstractCertIOException {
-        private readonly CertIOException exception;
+        private readonly CertificateEncodingException exception;
 
-        public CertIOExceptionBC(CertIOException exception) {
+        public CertIOExceptionBC(CertificateEncodingException exception) {
             this.exception = exception;
         }
 
-        public virtual CertIOException GetException() {
+        public virtual CertificateEncodingException GetException() {
             return exception;
         }
 

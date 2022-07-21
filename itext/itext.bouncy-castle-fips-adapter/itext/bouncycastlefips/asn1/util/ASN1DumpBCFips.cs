@@ -1,12 +1,13 @@
 using System;
+using iText.Commons.Bouncycastle.Asn1;
 using Org.BouncyCastle.Asn1.Utilities;
 using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1;
 
 namespace iText.Bouncycastlefips.Asn1.Util {
     public class ASN1DumpBCFips : IASN1Dump {
-        private static readonly iText.Bouncycastlefips.Asn1.Util.ASN1DumpBCFips INSTANCE = new iText.Bouncycastlefips.Asn1.Util.ASN1DumpBCFips
-            (null);
+        private static readonly ASN1DumpBCFips INSTANCE = new ASN1DumpBCFips(null);
 
         private readonly Asn1Dump asn1Dump;
 
@@ -14,7 +15,7 @@ namespace iText.Bouncycastlefips.Asn1.Util {
             this.asn1Dump = asn1Dump;
         }
 
-        public static iText.Bouncycastlefips.Asn1.Util.ASN1DumpBCFips GetInstance() {
+        public static ASN1DumpBCFips GetInstance() {
             return INSTANCE;
         }
 
@@ -23,11 +24,17 @@ namespace iText.Bouncycastlefips.Asn1.Util {
         }
 
         public virtual String DumpAsString(Object obj, bool b) {
-            return Asn1Dump.DumpAsString(obj, b);
+            if (obj is IASN1Encodable) {
+                obj = ((ASN1EncodableBCFips)obj).GetEncodable();
+            }
+            return Asn1Dump.DumpAsString((Asn1Encodable) obj, b);
         }
 
         public virtual String DumpAsString(Object obj) {
-            return Asn1Dump.DumpAsString(obj);
+            if (obj is IASN1Encodable) {
+                obj = ((ASN1EncodableBCFips)obj).GetEncodable();
+            }
+            return Asn1Dump.DumpAsString((Asn1Encodable) obj);
         }
 
         public override bool Equals(Object o) {
@@ -37,7 +44,7 @@ namespace iText.Bouncycastlefips.Asn1.Util {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            iText.Bouncycastlefips.Asn1.Util.ASN1DumpBCFips that = (iText.Bouncycastlefips.Asn1.Util.ASN1DumpBCFips)o;
+            ASN1DumpBCFips that = (ASN1DumpBCFips)o;
             return Object.Equals(asn1Dump, that.asn1Dump);
         }
 

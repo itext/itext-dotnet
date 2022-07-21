@@ -15,26 +15,25 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
             X509Extensions.AuthorityInfoAccess);
 
         private static readonly ASN1ObjectIdentifierBCFips BASIC_CONSTRAINTS = new ASN1ObjectIdentifierBCFips(X509Extensions
-            .basicConstraints);
+            .BasicConstraints);
 
         private static readonly ASN1ObjectIdentifierBCFips KEY_USAGE = new ASN1ObjectIdentifierBCFips(X509Extensions
-            .keyUsage);
+            .KeyUsage);
 
         private static readonly ASN1ObjectIdentifierBCFips EXTENDED_KEY_USAGE = new ASN1ObjectIdentifierBCFips(X509Extensions
-            .extendedKeyUsage);
+            .ExtendedKeyUsage);
 
         private static readonly ASN1ObjectIdentifierBCFips AUTHORITY_KEY_IDENTIFIER = new ASN1ObjectIdentifierBCFips
-            (X509Extensions.authorityKeyIdentifier);
+            (X509Extensions.AuthorityKeyIdentifier);
 
         private static readonly ASN1ObjectIdentifierBCFips SUBJECT_KEY_IDENTIFIER = new ASN1ObjectIdentifierBCFips
-            (X509Extensions.subjectKeyIdentifier);
+            (X509Extensions.SubjectKeyIdentifier);
 
         public ExtensionBCFips(X509Extensions extension)
             : base(extension) {
         }
 
-        public ExtensionBCFips(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString octetString
-            )
+        public ExtensionBCFips(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString octetString)
             : base(new X509Extensions(((ASN1ObjectIdentifierBCFips)objectIdentifier).GetASN1ObjectIdentifier(), critical
                 , ((ASN1OctetStringBCFips)octetString).GetOctetString())) {
         }

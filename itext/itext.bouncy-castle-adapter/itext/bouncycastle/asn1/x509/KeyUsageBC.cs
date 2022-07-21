@@ -20,11 +20,11 @@ namespace iText.Bouncycastle.Asn1.X509 {
         }
 
         public virtual int GetDigitalSignature() {
-            return KeyUsage.digitalSignature;
+            return KeyUsage.DigitalSignature;
         }
 
         public virtual int GetNonRepudiation() {
-            return KeyUsage.nonRepudiation;
+            return KeyUsage.NonRepudiation;
         }
     }
 }

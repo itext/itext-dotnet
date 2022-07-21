@@ -9,7 +9,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
 
         private const int KEY_COMPROMISE = Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise;
 
-        public CRLReasonBC(CRLReason reason)
+        public CRLReasonBC(CrlReason reason)
             : base(reason) {
         }
 
@@ -17,8 +17,8 @@ namespace iText.Bouncycastle.Asn1.X509 {
             return INSTANCE;
         }
 
-        public virtual CRLReason GetCRLReason() {
-            return (CRLReason)GetEncodable();
+        public virtual CrlReason GetCRLReason() {
+            return (CrlReason)GetEncodable();
         }
 
         public virtual int GetKeyCompromise() {

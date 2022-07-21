@@ -14,7 +14,7 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
         }
 
         public virtual IASN1ObjectIdentifier GetAlgorithm() {
-            return new ASN1ObjectIdentifierBCFips(GetAlgorithmIdentifier().ObjectID);
+            return new ASN1ObjectIdentifierBCFips(GetAlgorithmIdentifier().Algorithm);
         }
     }
 }

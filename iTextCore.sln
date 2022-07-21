@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.15
@@ -51,9 +51,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.commons.netstandard",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.commons.tests.netstandard", "itext.tests\itext.commons.tests\itext.commons.tests.csproj", "{726AEDB2-0B0D-45B8-A744-BFFEE36A187E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.bouncy-castle.netstandard", "itext\itext.bouncy-castle\itext.bouncy-castle.csproj", "{3A5D9DAC-A654-4542-8114-1D5B2F153D69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.bouncy-castle-adapter.netstandard", "itext\itext.bouncy-castle-adapter\itext.bouncy-castle-adapter.csproj", "{3A5D9DAC-A654-4542-8114-1D5B2F153D69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.bouncy-castle-fips.netstandard", "itext\itext.bouncy-castle-fips\itext.bouncy-castle-fips.csproj", "{3B634E19-5522-4907-8EE4-3FB017A4FC86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.bouncy-castle-fips-adapter.netstandard", "itext\itext.bouncy-castle-fips-adapter\itext.bouncy-castle-fips-adapter.csproj", "{3B634E19-5522-4907-8EE4-3FB017A4FC86}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.bouncy-castle-connector.netstandard", "itext\itext.bouncy-castle-connector\itext.bouncy-castle-connector.csproj", "{C68E3329-A2E4-4B33-BADE-0521B8E832AD}"
 EndProject

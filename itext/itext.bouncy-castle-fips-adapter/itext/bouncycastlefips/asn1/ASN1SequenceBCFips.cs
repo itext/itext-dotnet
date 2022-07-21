@@ -30,10 +30,10 @@ namespace iText.Bouncycastlefips.Asn1 {
         }
 
         public virtual IASN1Encodable[] ToArray() {
-            Asn1Encodable[] encodables = GetASN1Sequence().ToArray();
-            ASN1EncodableBCFips[] encodablesBCFips = new ASN1EncodableBCFips[encodables.Length];
-            for (int i = 0; i < encodables.Length; ++i) {
-                encodablesBCFips[i] = new ASN1EncodableBCFips(encodables[i]);
+            Asn1Sequence sequence = GetASN1Sequence();
+            ASN1EncodableBCFips[] encodablesBCFips = new ASN1EncodableBCFips[sequence.Count];
+            for (int i = 0; i < sequence.Count; ++i) {
+                encodablesBCFips[i] = new ASN1EncodableBCFips(sequence[i]);
             }
             return encodablesBCFips;
         }

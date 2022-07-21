@@ -5,9 +5,5 @@ namespace iText.Commons.Bouncycastle.Asn1 {
         IASN1Primitive ReadObject();
 
         void Close();
-
-        void System.IDisposable.Dispose() {
-            Close();
-        }
     }
 }

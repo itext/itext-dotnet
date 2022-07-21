@@ -26,10 +26,6 @@ namespace iText.Bouncycastle.Asn1 {
             return Org.BouncyCastle.Asn1.Asn1Encodable.Der;
         }
 
-        public virtual String GetDl() {
-            return Asn1Encodable.DL;
-        }
-
         public virtual String GetBer() {
             return Org.BouncyCastle.Asn1.Asn1Encodable.Ber;
         }

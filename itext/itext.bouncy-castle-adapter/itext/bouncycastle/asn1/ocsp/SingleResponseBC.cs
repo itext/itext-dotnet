@@ -1,34 +1,34 @@
 using System;
-using Org.BouncyCastle.Ocsp;
-using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1.Ocsp;
 
-namespace iText.Bouncycastle.Cert.Ocsp {
-    public class SingleRespBC : ISingleResp {
-        private readonly SingleResp singleResp;
+namespace iText.Bouncycastlefips.Asn1.Ocsp {
+    public class SingleResponseBC : ISingleResponse {
+        private readonly SingleResponse singleResp;
 
-        public SingleRespBC(SingleResp singleResp) {
+        public SingleResponseBC(SingleResponse singleResp) {
             this.singleResp = singleResp;
         }
 
-        public virtual SingleResp GetSingleResp() {
+        public virtual SingleResponse GetSingleResp() {
             return singleResp;
         }
 
-        public virtual ICertificateID GetCertID() {
-            return new CertificateIDBC(singleResp.GetCertID());
+        public virtual ICertID GetCertID() {
+            return new CertIDBC(singleResp.CertId);
         }
 
-        public virtual ICertificateStatus GetCertStatus() {
-            return new CertificateStatusBC(singleResp.GetCertStatus());
+        public virtual ICertStatus GetCertStatus() {
+            return new CertStatusBC(singleResp.CertStatus);
         }
 
         public virtual DateTime GetNextUpdate() {
-            return singleResp.NextUpdate;
+            return singleResp.NextUpdate.ToDateTime();
         }
 
         public virtual DateTime GetThisUpdate() {
-            return singleResp.ThisUpdate;
+            return singleResp.ThisUpdate.ToDateTime();
         }
 
         public override bool Equals(Object o) {
@@ -38,7 +38,7 @@ namespace iText.Bouncycastle.Cert.Ocsp {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            iText.Bouncycastle.Cert.Ocsp.SingleRespBC that = (iText.Bouncycastle.Cert.Ocsp.SingleRespBC)o;
+            SingleResponseBC that = (SingleResponseBC)o;
             return Object.Equals(singleResp, that.singleResp);
         }
 

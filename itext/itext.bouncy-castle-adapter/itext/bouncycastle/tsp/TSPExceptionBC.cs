@@ -5,13 +5,13 @@ using iText.Commons.Utils;
 
 namespace iText.Bouncycastle.Tsp {
     public class TSPExceptionBC : AbstractTSPException {
-        private readonly TSPException tspException;
+        private readonly TspException tspException;
 
-        public TSPExceptionBC(TSPException tspException) {
+        public TSPExceptionBC(TspException tspException) {
             this.tspException = tspException;
         }
 
-        public virtual TSPException GetTSPException() {
+        public virtual TspException GetTSPException() {
             return tspException;
         }
 

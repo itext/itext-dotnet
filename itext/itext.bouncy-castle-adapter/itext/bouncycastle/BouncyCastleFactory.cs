@@ -1,22 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Cms;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ess;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Cert.Jcajce;
-using Org.BouncyCastle.Cert.Ocsp;
 using Org.BouncyCastle.Cms;
-using Org.BouncyCastle.Cms.Jcajce;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Jce.Provider;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.Operator.Jcajce;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
 using iText.Bouncycastle.Asn1;
@@ -27,14 +21,17 @@ using iText.Bouncycastle.Asn1.Ocsp;
 using iText.Bouncycastle.Asn1.Pcks;
 using iText.Bouncycastle.Asn1.Util;
 using iText.Bouncycastle.Asn1.X500;
+using iText.Bouncycastle.Asn1.Tsp;
 using iText.Bouncycastle.Asn1.X509;
 using iText.Bouncycastle.Cert;
 using iText.Bouncycastle.Cert.Jcajce;
 using iText.Bouncycastle.Cert.Ocsp;
 using iText.Bouncycastle.Cms;
 using iText.Bouncycastle.Cms.Jcajce;
+using iText.Bouncycastle.Crypto;
 using iText.Bouncycastle.Operator.Jcajce;
 using iText.Bouncycastle.Tsp;
+using iText.Bouncycastlefips.Asn1.Ocsp;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Cms;
@@ -43,6 +40,7 @@ using iText.Commons.Bouncycastle.Asn1.Ess;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Pkcs;
 using iText.Commons.Bouncycastle.Asn1.Util;
+using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
@@ -50,9 +48,12 @@ using iText.Commons.Bouncycastle.Cert.Jcajce;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Cms.Jcajce;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Tsp;
+using Org.BouncyCastle.Asn1.Tsp;
 
 namespace iText.Bouncycastle {
     public class BouncyCastleFactory : IBouncyCastleFactory {
@@ -161,7 +162,7 @@ namespace iText.Bouncycastle {
             return new ASN1IntegerBC(i);
         }
 
-        public virtual IASN1Integer CreateASN1Integer(BigInteger i) {
+        public virtual IASN1Integer CreateASN1Integer(IBigInteger i) {
             return new ASN1IntegerBC(i);
         }
 
@@ -188,10 +189,6 @@ namespace iText.Bouncycastle {
 
         public virtual IASN1OutputStream CreateASN1OutputStream(Stream stream) {
             return new ASN1OutputStreamBC(stream);
-        }
-
-        public virtual IASN1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
-            return new ASN1OutputStreamBC(DerOutputStream.Create(outputStream, asn1Encoding));
         }
 
         public virtual IDEROctetString CreateDEROctetString(byte[] bytes) {
@@ -283,7 +280,7 @@ namespace iText.Bouncycastle {
             try {
                 return new TimeStampTokenBC(new TimeStampToken(contentInfoBC.GetContentInfo()));
             }
-            catch (TSPException e) {
+            catch (TspException e) {
                 throw new TSPExceptionBC(e);
             }
         }
@@ -301,18 +298,6 @@ namespace iText.Bouncycastle {
         public virtual IBasicOCSPResponse CreateBasicOCSPResponse(IASN1Primitive primitive) {
             ASN1PrimitiveBC primitiveBC = (ASN1PrimitiveBC)primitive;
             return new BasicOCSPResponseBC(BasicOcspResponse.GetInstance(primitiveBC.GetPrimitive()));
-        }
-
-        public virtual IBasicOCSPResp CreateBasicOCSPResp(IBasicOCSPResponse response) {
-            BasicOCSPResponseBC responseBC = (BasicOCSPResponseBC)response;
-            return new BasicOCSPRespBC(new BasicOcspResp(responseBC.GetBasicOCSPResponse()));
-        }
-
-        public virtual IBasicOCSPResp CreateBasicOCSPResp(Object response) {
-            if (response is BasicOcspResp) {
-                return new BasicOCSPRespBC((BasicOcspResp)response);
-            }
-            return null;
         }
 
         public virtual IOCSPObjectIdentifiers CreateOCSPObjectIdentifiers() {
@@ -361,17 +346,16 @@ namespace iText.Bouncycastle {
             return new JcaDigestCalculatorProviderBuilderBC(new JcaDigestCalculatorProviderBuilder());
         }
 
-        public virtual ICertificateID CreateCertificateID(IDigestCalculator digestCalculator, IX509CertificateHolder
-             certificateHolder, BigInteger bigInteger) {
-            return new CertificateIDBC(digestCalculator, certificateHolder, bigInteger);
-        }
-
-        public virtual ICertificateID CreateCertificateID() {
-            return CertificateIDBC.GetInstance();
-        }
-
-        public virtual IX509CertificateHolder CreateX509CertificateHolder(byte[] bytes) {
-            return new X509CertificateHolderBC(bytes);
+        public virtual IX509Certificate CreateX509Certificate(object obj) {
+            switch (obj)
+            {
+                case IX509Certificate _:
+                    return (X509CertificateBC) obj;
+                case X509Certificate certificate:
+                    return new X509CertificateBC(certificate);
+                default:
+                    return null;
+            }
         }
 
         public virtual IJcaX509CertificateHolder CreateJcaX509CertificateHolder(X509Certificate certificate) {
@@ -554,7 +538,7 @@ namespace iText.Bouncycastle {
             return new TBSCertificateBC(TBSCertificate.GetInstance(((ASN1EncodableBC)encodable).GetEncodable()));
         }
 
-        public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, BigInteger value) {
+        public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, IBigInteger value) {
             return new IssuerAndSerialNumberBC(issuer, value);
         }
 
@@ -576,7 +560,7 @@ namespace iText.Bouncycastle {
             try {
                 return new CMSEnvelopedDataBC(new CMSEnvelopedData(bytes));
             }
-            catch (CMSException e) {
+            catch (CmsException e) {
                 throw new CMSExceptionBC(e);
             }
         }
@@ -589,7 +573,7 @@ namespace iText.Bouncycastle {
             try {
                 return new TimeStampResponseBC(new TimeStampResponse(respBytes));
             }
-            catch (TSPException e) {
+            catch (TspException e) {
                 throw new TSPExceptionBC(e);
             }
         }
@@ -720,6 +704,22 @@ namespace iText.Bouncycastle {
 
         public virtual ICRLReason CreateCRLReason() {
             return CRLReasonBC.GetInstance();
+	}
+
+        public ISingleResponse CreateSingleResponse(IBasicOCSPResponse basicResp) {
+            Asn1Encodable responseDataSeq = ((BasicOCSPResponseBC) basicResp).GetBasicOCSPResponse().TbsResponseData.Responses[0];
+            return new SingleResponseBC(SingleResponse.GetInstance(responseDataSeq));
+        }
+        
+        public ITSTInfo CreateTSTInfo(IContentInfo contentInfoTsp) {
+            CmsProcessable content = new CmsSignedData(((ContentInfoBC) contentInfoTsp).GetContentInfo()).SignedContent;
+            MemoryStream bOut = new MemoryStream();
+            content.Write(bOut);
+            return new TSTInfoBC(TstInfo.GetInstance(Asn1Object.FromByteArray(bOut.ToArray())));
+        }
+        
+        public IISigner CreateISigner() {
+            return new ISignerBC(null);
         }
     }
 }

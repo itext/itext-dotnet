@@ -1,9 +1,9 @@
 using Org.BouncyCastle.Asn1.Cms;
-using Org.BouncyCastle.Math;
-using iText.Bouncycastlefips.Asn1;
 using iText.Bouncycastlefips.Asn1.X500;
+using iText.Bouncycastlefips.Math;
 using iText.Commons.Bouncycastle.Asn1.Cms;
 using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Math;
 
 namespace iText.Bouncycastlefips.Asn1.Cms {
     public class IssuerAndSerialNumberBCFips : ASN1EncodableBCFips, IIssuerAndSerialNumber {
@@ -11,8 +11,9 @@ namespace iText.Bouncycastlefips.Asn1.Cms {
             : base(issuerAndSerialNumber) {
         }
 
-        public IssuerAndSerialNumberBCFips(IX500Name issuer, BigInteger value)
-            : base(new IssuerAndSerialNumber(((X500NameBCFips)issuer).GetX500Name(), value)) {
+        public IssuerAndSerialNumberBCFips(IX500Name issuer, IBigInteger value)
+            : base(new IssuerAndSerialNumber(((X500NameBCFips)issuer).GetX500Name(), 
+                ((BigIntegerBCFips)value).GetBigInteger())) {
         }
 
         public virtual IssuerAndSerialNumber GetIssuerAndSerialNumber() {

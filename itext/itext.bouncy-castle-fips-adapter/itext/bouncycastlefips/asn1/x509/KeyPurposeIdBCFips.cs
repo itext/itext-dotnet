@@ -8,9 +8,9 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
             (null);
 
         private static readonly iText.Bouncycastlefips.Asn1.X509.KeyPurposeIdBCFips ID_KP_OCSP_SIGNING = new iText.Bouncycastlefips.Asn1.X509.KeyPurposeIdBCFips
-            (KeyPurposeId.id_kp_OCSPSigning);
+            (KeyPurposeID.IdKPOcspSigning);
 
-        public KeyPurposeIdBCFips(KeyPurposeId KeyPurposeId)
+        public KeyPurposeIdBCFips(KeyPurposeID KeyPurposeId)
             : base(KeyPurposeId) {
         }
 
@@ -18,8 +18,8 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
             return INSTANCE;
         }
 
-        public virtual KeyPurposeId GetKeyPurposeId() {
-            return (KeyPurposeId)GetEncodable();
+        public virtual KeyPurposeID GetKeyPurposeId() {
+            return (KeyPurposeID)GetEncodable();
         }
 
         public virtual IKeyPurposeId GetIdKpOCSPSigning() {

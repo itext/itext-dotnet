@@ -29,7 +29,7 @@ namespace iText.Bouncycastle.Tsp {
             try {
                 timeStampToken.Validate(((SignerInformationVerifierBC)verifier).GetVerifier());
             }
-            catch (TSPException e) {
+            catch (TspException e) {
                 throw new TSPExceptionBC(e);
             }
         }

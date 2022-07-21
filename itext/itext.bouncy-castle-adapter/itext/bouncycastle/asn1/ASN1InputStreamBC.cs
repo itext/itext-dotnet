@@ -47,6 +47,10 @@ namespace iText.Bouncycastle.Asn1 {
             return JavaUtil.ArraysHashCode(stream);
         }
 
+        public void Dispose() {
+            Close();
+        }
+
         public override String ToString() {
             return stream.ToString();
         }

@@ -5,13 +5,13 @@ using iText.Commons.Utils;
 
 namespace iText.Bouncycastlefips.Cert {
     public class CertIOExceptionBCFips : AbstractCertIOException {
-        private readonly CertIOException exception;
+        private readonly CertificateEncodingException exception;
 
-        public CertIOExceptionBCFips(CertIOException exception) {
+        public CertIOExceptionBCFips(CertificateEncodingException exception) {
             this.exception = exception;
         }
 
-        public virtual CertIOException GetException() {
+        public virtual CertificateEncodingException GetException() {
             return exception;
         }
 

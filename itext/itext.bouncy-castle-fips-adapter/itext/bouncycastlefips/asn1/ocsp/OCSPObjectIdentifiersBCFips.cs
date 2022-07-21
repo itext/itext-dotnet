@@ -1,20 +1,19 @@
 using System;
 using Org.BouncyCastle.Asn1.Ocsp;
-using iText.Bouncycastlefips.Asn1;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Utils;
 
 namespace iText.Bouncycastlefips.Asn1.Ocsp {
     public class OCSPObjectIdentifiersBCFips : IOCSPObjectIdentifiers {
-        private static readonly iText.Bouncycastlefips.Asn1.Ocsp.OCSPObjectIdentifiersBCFips INSTANCE = new iText.Bouncycastlefips.Asn1.Ocsp.OCSPObjectIdentifiersBCFips
+        private static readonly OCSPObjectIdentifiersBCFips INSTANCE = new OCSPObjectIdentifiersBCFips
             (null);
 
         private static readonly IASN1ObjectIdentifier ID_PKIX_OCSP_BASIC = new ASN1ObjectIdentifierBCFips(OcspObjectIdentifiers
             .PkixOcspBasic);
 
         private static readonly IASN1ObjectIdentifier ID_PKIX_OCSP_NONCE = new ASN1ObjectIdentifierBCFips(OcspObjectIdentifiers
-            .id_pkix_ocsp_nonce);
+            .PkixOcspNonce);
 
         private static readonly IASN1ObjectIdentifier ID_PKIX_OCSP_NOCHECK = new ASN1ObjectIdentifierBCFips(OcspObjectIdentifiers
             .PkixOcspNocheck);
@@ -25,7 +24,7 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
             this.ocspObjectIdentifiers = ocspObjectIdentifiers;
         }
 
-        public static iText.Bouncycastlefips.Asn1.Ocsp.OCSPObjectIdentifiersBCFips GetInstance() {
+        public static OCSPObjectIdentifiersBCFips GetInstance() {
             return INSTANCE;
         }
 
@@ -52,8 +51,7 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            iText.Bouncycastlefips.Asn1.Ocsp.OCSPObjectIdentifiersBCFips that = (iText.Bouncycastlefips.Asn1.Ocsp.OCSPObjectIdentifiersBCFips
-                )o;
+            OCSPObjectIdentifiersBCFips that = (OCSPObjectIdentifiersBCFips)o;
             return Object.Equals(ocspObjectIdentifiers, that.ocspObjectIdentifiers);
         }
 

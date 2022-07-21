@@ -1,6 +1,6 @@
 using System;
-using Org.BouncyCastle;
 using iText.Commons.Bouncycastle.Asn1;
+using Org.BouncyCastle.Asn1;
 
 namespace iText.Bouncycastlefips.Asn1 {
     public class DERIA5StringBCFips : ASN1PrimitiveBCFips, IDERIA5String {

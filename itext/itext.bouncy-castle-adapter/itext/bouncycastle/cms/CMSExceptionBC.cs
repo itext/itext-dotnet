@@ -5,13 +5,13 @@ using iText.Commons.Utils;
 
 namespace iText.Bouncycastle.Cms {
     public class CMSExceptionBC : AbstractCMSException {
-        private readonly CMSException exception;
+        private readonly CmsException exception;
 
-        public CMSExceptionBC(CMSException exception) {
+        public CMSExceptionBC(CmsException exception) {
             this.exception = exception;
         }
 
-        public virtual CMSException GetCMSException() {
+        public virtual CmsException GetCmsException() {
             return exception;
         }
 

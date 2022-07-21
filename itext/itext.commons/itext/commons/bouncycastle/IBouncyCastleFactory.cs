@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.Security;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.X509;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Cms;
 using iText.Commons.Bouncycastle.Asn1.Esf;
@@ -12,6 +8,7 @@ using iText.Commons.Bouncycastle.Asn1.Ess;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Pkcs;
 using iText.Commons.Bouncycastle.Asn1.Util;
+using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
@@ -19,6 +16,8 @@ using iText.Commons.Bouncycastle.Cert.Jcajce;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Cms.Jcajce;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Tsp;
@@ -61,7 +60,7 @@ namespace iText.Commons.Bouncycastle {
 
         IASN1Integer CreateASN1Integer(int i);
 
-        IASN1Integer CreateASN1Integer(BigInteger i);
+        IASN1Integer CreateASN1Integer(IBigInteger i);
 
         IASN1Set CreateASN1Set(IASN1Encodable encodable);
 
@@ -72,8 +71,6 @@ namespace iText.Commons.Bouncycastle {
         IASN1Set CreateNullASN1Set();
 
         IASN1OutputStream CreateASN1OutputStream(Stream stream);
-
-        IASN1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding);
 
         IDEROctetString CreateDEROctetString(byte[] bytes);
 
@@ -117,10 +114,6 @@ namespace iText.Commons.Bouncycastle {
 
         IBasicOCSPResponse CreateBasicOCSPResponse(IASN1Primitive primitive);
 
-        IBasicOCSPResp CreateBasicOCSPResp(IBasicOCSPResponse response);
-
-        IBasicOCSPResp CreateBasicOCSPResp(Object response);
-
         IOCSPObjectIdentifiers CreateOCSPObjectIdentifiers();
 
         IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm);
@@ -131,7 +124,7 @@ namespace iText.Commons.Bouncycastle {
 
         String GetProviderName();
 
-        IJceKeyTransEnvelopedRecipient CreateJceKeyTransEnvelopedRecipient(ICipherParameters privateKey);
+        IJceKeyTransEnvelopedRecipient CreateJceKeyTransEnvelopedRecipient(IPrivateKey privateKey);
 
         IJcaContentVerifierProviderBuilder CreateJcaContentVerifierProviderBuilder();
 
@@ -141,14 +134,9 @@ namespace iText.Commons.Bouncycastle {
 
         IJcaDigestCalculatorProviderBuilder CreateJcaDigestCalculatorProviderBuilder();
 
-        ICertificateID CreateCertificateID(IDigestCalculator digestCalculator, IX509CertificateHolder certificateHolder
-            , BigInteger bigInteger);
+        IX509Certificate CreateX509Certificate(Object obj);
 
-        ICertificateID CreateCertificateID();
-
-        IX509CertificateHolder CreateX509CertificateHolder(byte[] bytes);
-
-        IJcaX509CertificateHolder CreateJcaX509CertificateHolder(X509Certificate certificate);
+        IJcaX509CertificateHolder CreateJcaX509CertificateHolder(IX509Certificate certificate);
 
         IExtension CreateExtension(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString octetString
             );
@@ -189,9 +177,9 @@ namespace iText.Commons.Bouncycastle {
 
         IOCSPResponseStatus CreateOCSPResponseStatus();
 
-        ICertificateStatus CreateCertificateStatus();
+        ICertStatus CreateCertificateStatus();
 
-        IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus);
+        IRevokedStatus CreateRevokedStatus(ICertStatus certificateStatus);
 
         IRevokedStatus CreateRevokedStatus(DateTime date, int i);
 
@@ -230,7 +218,7 @@ namespace iText.Commons.Bouncycastle {
 
         ITBSCertificate CreateTBSCertificate(IASN1Encodable encodable);
 
-        IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, BigInteger value);
+        IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, IBigInteger value);
 
         IRecipientIdentifier CreateRecipientIdentifier(IIssuerAndSerialNumber issuerAndSerialNumber);
 
@@ -257,7 +245,7 @@ namespace iText.Commons.Bouncycastle {
 
         IASN1UTCTime CreateASN1UTCTime(IASN1Encodable encodable);
 
-        IJcaCertStore CreateJcaCertStore(IList<X509Certificate> certificates);
+        IJcaCertStore CreateJcaCertStore(IList<IX509Certificate> certificates);
 
         ITimeStampResponseGenerator CreateTimeStampResponseGenerator(ITimeStampTokenGenerator tokenGenerator, ICollection
             <String> algorithms);
@@ -272,7 +260,7 @@ namespace iText.Commons.Bouncycastle {
         ITimeStampTokenGenerator CreateTimeStampTokenGenerator(ISignerInfoGenerator siGen, IDigestCalculator dgCalc
             , IASN1ObjectIdentifier policy);
 
-        IX500Name CreateX500Name(X509Certificate certificate);
+        IX500Name CreateX500Name(IX509Certificate certificate);
 
         IX500Name CreateX500Name(String s);
 
@@ -284,8 +272,8 @@ namespace iText.Commons.Bouncycastle {
 
         IX509v2CRLBuilder CreateX509v2CRLBuilder(IX500Name x500Name, DateTime thisUpdate);
 
-        IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(X509Certificate signingCert, BigInteger certSerialNumber
-            , DateTime startDate, DateTime endDate, IX500Name subjectDnName, AsymmetricKeyParameter publicKey);
+        IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(IX509Certificate signingCert, IBigInteger certSerialNumber
+            , DateTime startDate, DateTime endDate, IX500Name subjectDnName, IPublicKey publicKey);
 
         IBasicConstraints CreateBasicConstraints(bool b);
 
@@ -302,5 +290,11 @@ namespace iText.Commons.Bouncycastle {
         ISubjectPublicKeyInfo CreateSubjectPublicKeyInfo(Object obj);
 
         ICRLReason CreateCRLReason();
+       
+        ISingleResponse CreateSingleResponse(IBasicOCSPResponse basicResp);
+        
+        ITSTInfo CreateTSTInfo(IContentInfo contentInfoTsp);
+        
+        IISigner CreateISigner();
     }
 }

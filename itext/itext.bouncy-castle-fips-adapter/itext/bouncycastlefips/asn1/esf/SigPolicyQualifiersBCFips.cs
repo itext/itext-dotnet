@@ -1,19 +1,21 @@
 using Org.BouncyCastle.Asn1.Esf;
 using iText.Bouncycastlefips.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Esf;
+using Org.BouncyCastle.Asn1;
 
 namespace iText.Bouncycastlefips.Asn1.Esf {
     public class SigPolicyQualifiersBCFips : ASN1EncodableBCFips, ISigPolicyQualifiers {
-        public SigPolicyQualifiersBCFips(SigPolicyQualifiers policyQualifiers)
-            : base(policyQualifiers) {
+        public SigPolicyQualifiersBCFips(params SigPolicyQualifierInfo[] sigPolicyQualifiers)
+            : base(new DerSequence(sigPolicyQualifiers)) {
         }
 
-        public SigPolicyQualifiersBCFips(params SigPolicyQualifierInfo[] qualifierInfo)
-            : base(new SigPolicyQualifiers(qualifierInfo)) {
-        }
-
-        public virtual SigPolicyQualifiers GetSigPolityQualifiers() {
-            return (SigPolicyQualifiers)GetEncodable();
+        public virtual SigPolicyQualifierInfo[] GetSigPolityQualifiers()
+        {
+            Asn1Sequence sigPolicyQualifiers = (Asn1Sequence)GetEncodable();
+            SigPolicyQualifierInfo[] policyQualifiers = new SigPolicyQualifierInfo[sigPolicyQualifiers.Count];
+            for (int index = 0; index < sigPolicyQualifiers.Count; ++index)
+                policyQualifiers[index] = SigPolicyQualifierInfo.GetInstance((object) sigPolicyQualifiers[index]);
+            return policyQualifiers;
         }
     }
 }

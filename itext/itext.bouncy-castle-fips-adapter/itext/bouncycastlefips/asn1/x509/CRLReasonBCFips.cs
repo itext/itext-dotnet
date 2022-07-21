@@ -1,24 +1,22 @@
 using Org.BouncyCastle.Asn1.X509;
-using iText.Bouncycastlefips.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X509;
 
 namespace iText.Bouncycastlefips.Asn1.X509 {
     public class CRLReasonBCFips : ASN1EncodableBCFips, ICRLReason {
-        private static readonly iText.Bouncycastlefips.Asn1.X509.CRLReasonBCFips INSTANCE = new iText.Bouncycastlefips.Asn1.X509.CRLReasonBCFips
-            (null);
+        private static readonly CRLReasonBCFips INSTANCE = new CRLReasonBCFips(null);
 
-        private const int KEY_COMPROMISE = Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise;
+        private const int KEY_COMPROMISE = CrlReason.KeyCompromise;
 
-        public CRLReasonBCFips(CRLReason reason)
+        public CRLReasonBCFips(CrlReason reason)
             : base(reason) {
         }
 
-        public static iText.Bouncycastlefips.Asn1.X509.CRLReasonBCFips GetInstance() {
+        public static CRLReasonBCFips GetInstance() {
             return INSTANCE;
         }
 
-        public virtual CRLReason GetCRLReason() {
-            return (CRLReason)GetEncodable();
+        public virtual CrlReason GetCRLReason() {
+            return (CrlReason)GetEncodable();
         }
 
         public virtual int GetKeyCompromise() {

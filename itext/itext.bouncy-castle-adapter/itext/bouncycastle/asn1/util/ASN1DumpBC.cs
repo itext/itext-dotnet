@@ -1,11 +1,13 @@
 using System;
+using iText.Commons.Bouncycastle.Asn1;
 using Org.BouncyCastle.Asn1.Utilities;
 using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1;
 
 namespace iText.Bouncycastle.Asn1.Util {
     public class ASN1DumpBC : IASN1Dump {
-        private static readonly iText.Bouncycastle.Asn1.Util.ASN1DumpBC INSTANCE = new iText.Bouncycastle.Asn1.Util.ASN1DumpBC
+        private static readonly ASN1DumpBC INSTANCE = new ASN1DumpBC
             (null);
 
         private readonly Asn1Dump asn1Dump;
@@ -14,7 +16,7 @@ namespace iText.Bouncycastle.Asn1.Util {
             this.asn1Dump = asn1Dump;
         }
 
-        public static iText.Bouncycastle.Asn1.Util.ASN1DumpBC GetInstance() {
+        public static ASN1DumpBC GetInstance() {
             return INSTANCE;
         }
 
@@ -23,11 +25,17 @@ namespace iText.Bouncycastle.Asn1.Util {
         }
 
         public virtual String DumpAsString(Object obj, bool b) {
-            return Asn1Dump.DumpAsString(obj, b);
+            if (obj is IASN1Encodable) {
+                obj = ((ASN1EncodableBC)obj).GetEncodable();
+            }
+            return Asn1Dump.DumpAsString((Asn1Encodable) obj, b);
         }
 
         public virtual String DumpAsString(Object obj) {
-            return Asn1Dump.DumpAsString(obj);
+            if (obj is IASN1Encodable) {
+                obj = ((ASN1EncodableBC)obj).GetEncodable();
+            }
+            return Asn1Dump.DumpAsString((Asn1Encodable) obj);
         }
 
         public override bool Equals(Object o) {
@@ -37,7 +45,7 @@ namespace iText.Bouncycastle.Asn1.Util {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            iText.Bouncycastle.Asn1.Util.ASN1DumpBC that = (iText.Bouncycastle.Asn1.Util.ASN1DumpBC)o;
+            ASN1DumpBC that = (ASN1DumpBC)o;
             return Object.Equals(asn1Dump, that.asn1Dump);
         }
 

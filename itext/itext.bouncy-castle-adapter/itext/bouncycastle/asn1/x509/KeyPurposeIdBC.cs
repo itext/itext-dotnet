@@ -8,9 +8,9 @@ namespace iText.Bouncycastle.Asn1.X509 {
             (null);
 
         private static readonly iText.Bouncycastle.Asn1.X509.KeyPurposeIdBC ID_KP_OCSP_SIGNING = new iText.Bouncycastle.Asn1.X509.KeyPurposeIdBC
-            (KeyPurposeId.id_kp_OCSPSigning);
+            (KeyPurposeID.IdKPOcspSigning);
 
-        public KeyPurposeIdBC(KeyPurposeId KeyPurposeId)
+        public KeyPurposeIdBC(KeyPurposeID KeyPurposeId)
             : base(KeyPurposeId) {
         }
 
@@ -18,8 +18,8 @@ namespace iText.Bouncycastle.Asn1.X509 {
             return INSTANCE;
         }
 
-        public virtual KeyPurposeId GetKeyPurposeId() {
-            return (KeyPurposeId)GetEncodable();
+        public virtual KeyPurposeID GetKeyPurposeId() {
+            return (KeyPurposeID)GetEncodable();
         }
 
         public virtual IKeyPurposeId GetIdKpOCSPSigning() {

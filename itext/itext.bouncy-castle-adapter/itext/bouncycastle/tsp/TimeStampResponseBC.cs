@@ -21,7 +21,7 @@ namespace iText.Bouncycastle.Tsp {
             try {
                 timeStampResponse.Validate(((TimeStampRequestBC)request).GetTimeStampRequest());
             }
-            catch (TSPException e) {
+            catch (TspException e) {
                 throw new TSPExceptionBC(e);
             }
         }

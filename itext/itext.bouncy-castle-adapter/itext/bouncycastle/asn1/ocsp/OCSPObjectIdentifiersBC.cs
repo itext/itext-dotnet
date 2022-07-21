@@ -14,7 +14,7 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
             .PkixOcspBasic);
 
         private static readonly IASN1ObjectIdentifier ID_PKIX_OCSP_NONCE = new ASN1ObjectIdentifierBC(OcspObjectIdentifiers
-            .id_pkix_ocsp_nonce);
+            .PkixOcspNonce);
 
         private static readonly IASN1ObjectIdentifier ID_PKIX_OCSP_NOCHECK = new ASN1ObjectIdentifierBC(OcspObjectIdentifiers
             .PkixOcspNocheck);
