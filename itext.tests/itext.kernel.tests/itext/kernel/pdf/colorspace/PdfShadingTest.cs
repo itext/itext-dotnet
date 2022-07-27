@@ -31,34 +31,36 @@ namespace iText.Kernel.Pdf.Colorspace {
         [NUnit.Framework.Test]
         public virtual void AxialShadingConstructorNullExtendArgumentTest() {
             bool[] extendArray = null;
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Axial(new PdfDeviceCs.Rgb
-                (), 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
+            PdfDeviceCs.Rgb color = new PdfDeviceCs.Rgb();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Axial(color, 0f
+                , 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
             NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void AxialShadingConstructorInvalidExtendArgumentTest() {
             bool[] extendArray = new bool[] { true };
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Axial(new PdfDeviceCs.Rgb
-                (), 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
+            PdfDeviceCs.Rgb color = new PdfDeviceCs.Rgb();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Axial(color, 0f
+                , 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
             NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RadialShadingConstructorNullExtendArgumentTest() {
             bool[] extendArray = null;
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Radial(new PdfDeviceCs.Rgb
-                (), 0f, 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, 10f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray
-                ));
+            PdfDeviceCs.Rgb color = new PdfDeviceCs.Rgb();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Radial(color, 0f
+                , 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, 10f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
             NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RadialShadingConstructorInvalidExtendArgumentTest() {
             bool[] extendArray = new bool[] { true, false, false };
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Radial(new PdfDeviceCs.Rgb
-                (), 0f, 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, 10f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray
-                ));
+            PdfDeviceCs.Rgb color = new PdfDeviceCs.Rgb();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Radial(color, 0f
+                , 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, 10f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
             NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
 
@@ -147,30 +149,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             NUnit.Framework.Assert.AreEqual(PdfShading.ShadingType.RADIAL, radial.GetShadingType());
         }
 
-        private static PdfDictionary InitShadingDictionary(float[] coordsArray, float[] domainArray, bool[] extendArray
-            , int radial2) {
-            PdfDictionary axialShadingDictionary = new PdfDictionary();
-            axialShadingDictionary.Put(PdfName.ColorSpace, PdfName.DeviceRGB);
-            axialShadingDictionary.Put(PdfName.Coords, new PdfArray(coordsArray));
-            if (domainArray != null) {
-                axialShadingDictionary.Put(PdfName.Domain, new PdfArray(domainArray));
-            }
-            if (extendArray != null) {
-                axialShadingDictionary.Put(PdfName.Extend, new PdfArray(extendArray));
-            }
-            axialShadingDictionary.Put(PdfName.ShadingType, new PdfNumber(radial2));
-            PdfDictionary functionDictionary = new PdfDictionary();
-            functionDictionary.Put(PdfName.C0, new PdfArray(new float[] { 0f, 0f, 0f }));
-            functionDictionary.Put(PdfName.C1, new PdfArray(new float[] { 0.5f, 0.5f, 0.5f }));
-            functionDictionary.Put(PdfName.Domain, new PdfArray(new float[] { 0f, 1f }));
-            functionDictionary.Put(PdfName.FunctionType, new PdfNumber(2));
-            functionDictionary.Put(PdfName.N, new PdfNumber(1));
-            axialShadingDictionary.Put(PdfName.Function, functionDictionary);
-            return axialShadingDictionary;
-        }
-
         [NUnit.Framework.Test]
-        public virtual void MakeShadingShouldFaleOnMissingShadeType() {
+        public virtual void MakeShadingShouldFailOnMissingShadeType() {
             PdfDictionary shade = new PdfDictionary();
             shade.Put(PdfName.ColorSpace, new PdfArray());
             Exception error = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfShading.MakeShading(shade));
@@ -178,7 +158,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         }
 
         [NUnit.Framework.Test]
-        public virtual void MakeShadingShouldFaleOnMissingColorSpace() {
+        public virtual void MakeShadingShouldFailOnMissingColorSpace() {
             PdfDictionary shade = new PdfDictionary();
             shade.Put(PdfName.ShadingType, new PdfArray());
             Exception error = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfShading.MakeShading(shade));
@@ -187,63 +167,41 @@ namespace iText.Kernel.Pdf.Colorspace {
 
         [NUnit.Framework.Test]
         public virtual void UsingPatternColorSpaceThrowsException() {
-            float[] coordsArray = new float[] { 0f, 0f, 0f, 0.5f, 0.5f, 10f };
-            float[] defaultDomainArray = new float[] { 0f, 1f };
-            bool[] defaultExtendArray = new bool[] { false, false };
             byte[] ps = "{2 copy sin abs sin abs 3 index 10 mul sin  1 sub abs}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 );
             PdfFunction function = new PdfFunction.Type4(new PdfArray(new float[] { 0, 1000, 0, 1000 }), new PdfArray(
                 new float[] { 0, 1, 0, 1, 0, 1 }), ps);
-            PdfDictionary functionShadingDictionary = InitShadingDictionary(coordsArray, null, null, PdfShading.ShadingType
-                .FUNCTION_BASED);
             PdfSpecialCs.Pattern colorSpace = new PdfSpecialCs.Pattern();
-            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.FunctionBased(colorSpace, function
-                ));
+            Exception ex = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.FunctionBased(
+                colorSpace, function));
+            NUnit.Framework.Assert.AreEqual("colorSpace", ex.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void MakeShadingFunctionBased1Test() {
-            float[] coordsArray = new float[] { 0f, 0f, 0f, 0.5f, 0.5f, 10f };
-            float[] defaultDomainArray = new float[] { 0f, 1f };
-            bool[] defaultExtendArray = new bool[] { false, false };
             byte[] ps = "{2 copy sin abs sin abs 3 index 10 mul sin  1 sub abs}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 );
-            PdfFunction function = new PdfFunction.Type4(new PdfArray(new float[] { 0, 1000, 0, 1000 }), new PdfArray(
-                new float[] { 0, 1, 0, 1, 0, 1 }), ps);
-            PdfDictionary functionShadingDictionary = InitShadingDictionary(coordsArray, null, null, PdfShading.ShadingType
-                .FUNCTION_BASED);
+            PdfArray domain = new PdfArray(new float[] { 0, 1000, 0, 1000 });
+            PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
+            PdfFunction function = new PdfFunction.Type4(domain, range, ps);
             PdfShading.FunctionBased shade = new PdfShading.FunctionBased(new PdfDeviceCs.Rgb(), function);
             PdfDictionary @object = shade.GetPdfObject();
             NUnit.Framework.Assert.AreEqual(1, @object.GetAsInt(PdfName.ShadingType).Value);
             NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, @object.GetAsName(PdfName.ColorSpace));
             PdfStream functionStream = @object.GetAsStream(PdfName.Function);
             PdfArray functionDomain = functionStream.GetAsArray(PdfName.Domain);
-            NUnit.Framework.Assert.AreEqual(0, functionDomain.GetAsNumber(0).IntValue());
-            NUnit.Framework.Assert.AreEqual(1000, functionDomain.GetAsNumber(1).IntValue());
-            NUnit.Framework.Assert.AreEqual(0, functionDomain.GetAsNumber(2).IntValue());
-            NUnit.Framework.Assert.AreEqual(1000, functionDomain.GetAsNumber(3).IntValue());
+            iText.Test.TestUtil.AreEqual(domain.ToDoubleArray(), functionDomain.ToDoubleArray(), 0.0);
             PdfArray functionRange = functionStream.GetAsArray(PdfName.Range);
-            NUnit.Framework.Assert.AreEqual(0, functionRange.GetAsNumber(0).IntValue());
-            NUnit.Framework.Assert.AreEqual(1, functionRange.GetAsNumber(1).IntValue());
-            NUnit.Framework.Assert.AreEqual(0, functionRange.GetAsNumber(2).IntValue());
-            NUnit.Framework.Assert.AreEqual(1, functionRange.GetAsNumber(3).IntValue());
-            NUnit.Framework.Assert.AreEqual(0, functionRange.GetAsNumber(4).IntValue());
-            NUnit.Framework.Assert.AreEqual(1, functionRange.GetAsNumber(5).IntValue());
+            iText.Test.TestUtil.AreEqual(range.ToDoubleArray(), functionRange.ToDoubleArray(), 0.0);
             NUnit.Framework.Assert.AreEqual(4, functionStream.GetAsInt(PdfName.FunctionType).Value);
         }
 
         [NUnit.Framework.Test]
         public virtual void MakeShadingFunctionBased2Test() {
-            float[] coordsArray = new float[] { 0f, 0f, 0f, 0.5f, 0.5f, 10f };
-            float[] defaultDomainArray = new float[] { 0f, 1f };
-            bool[] defaultExtendArray = new bool[] { false, false };
             byte[] ps = "{2 copy sin abs sin abs 3 index 10 mul sin  1 sub abs}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 );
             PdfArray domain = new PdfArray(new float[] { 0, 1000, 0, 1000 });
             PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
-            PdfFunction function = new PdfFunction.Type4(domain, range, ps);
-            PdfDictionary functionShadingDictionary = InitShadingDictionary(coordsArray, null, null, PdfShading.ShadingType
-                .FUNCTION_BASED);
             PdfDictionary shadingDict = new PdfDictionary();
             shadingDict.Put(PdfName.ShadingType, new PdfNumber(1));
             shadingDict.Put(PdfName.ColorSpace, PdfName.DeviceRGB);
@@ -260,17 +218,9 @@ namespace iText.Kernel.Pdf.Colorspace {
             NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, @object.GetAsName(PdfName.ColorSpace));
             PdfStream functionStream = @object.GetAsStream(PdfName.Function);
             PdfArray functionDomain = functionStream.GetAsArray(PdfName.Domain);
-            NUnit.Framework.Assert.AreEqual(0, functionDomain.GetAsNumber(0).IntValue());
-            NUnit.Framework.Assert.AreEqual(1000, functionDomain.GetAsNumber(1).IntValue());
-            NUnit.Framework.Assert.AreEqual(0, functionDomain.GetAsNumber(2).IntValue());
-            NUnit.Framework.Assert.AreEqual(1000, functionDomain.GetAsNumber(3).IntValue());
+            iText.Test.TestUtil.AreEqual(domain.ToDoubleArray(), functionDomain.ToDoubleArray(), 0.0);
             PdfArray functionRange = functionStream.GetAsArray(PdfName.Range);
-            NUnit.Framework.Assert.AreEqual(0, functionRange.GetAsNumber(0).IntValue());
-            NUnit.Framework.Assert.AreEqual(1, functionRange.GetAsNumber(1).IntValue());
-            NUnit.Framework.Assert.AreEqual(0, functionRange.GetAsNumber(2).IntValue());
-            NUnit.Framework.Assert.AreEqual(1, functionRange.GetAsNumber(3).IntValue());
-            NUnit.Framework.Assert.AreEqual(0, functionRange.GetAsNumber(4).IntValue());
-            NUnit.Framework.Assert.AreEqual(1, functionRange.GetAsNumber(5).IntValue());
+            iText.Test.TestUtil.AreEqual(range.ToDoubleArray(), functionRange.ToDoubleArray(), 0.0);
             NUnit.Framework.Assert.AreEqual(4, functionStream.GetAsInt(PdfName.FunctionType).Value);
             NUnit.Framework.Assert.AreEqual(functionStream, shade.GetFunction());
         }
@@ -278,8 +228,6 @@ namespace iText.Kernel.Pdf.Colorspace {
         [NUnit.Framework.Test]
         public virtual void MakeShadingWithInvalidShadeType() {
             float[] coordsArray = new float[] { 0f, 0f, 0f, 0.5f, 0.5f, 10f };
-            float[] defaultDomainArray = new float[] { 0f, 1f };
-            bool[] defaultExtendArray = new bool[] { false, false };
             PdfDictionary radialShadingDictionary = InitShadingDictionary(coordsArray, null, null, 21);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfShading.MakeShading(radialShadingDictionary
                 ));
@@ -319,7 +267,6 @@ namespace iText.Kernel.Pdf.Colorspace {
             int y = 400;
             // Side of an equilateral triangle
             int side = 500;
-            int sidepart = 50;
             byte[] data = ToMultiWidthBytes(new int[] { 4, 4, 1, 1, 1 }, 500, 0, 250, 0, 0, 500, 500, 0, 250, 0, 0, 0, 
                 0, 0, 250, 0, 500, 250, 0, 0);
             PdfStream stream = new PdfStream(data, CompressionConstants.DEFAULT_COMPRESSION);
@@ -347,7 +294,6 @@ namespace iText.Kernel.Pdf.Colorspace {
             int y = 400;
             // Side of an equilateral triangle
             int side = 500;
-            int sidepart = 50;
             PdfStream stream = new PdfStream(CompressionConstants.DEFAULT_COMPRESSION);
             stream.SetData(ToMultiWidthBytes(new int[] { 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
                 , 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, 0, 
@@ -432,7 +378,6 @@ namespace iText.Kernel.Pdf.Colorspace {
             int y = 400;
             // Side of an equilateral triangle
             int side = 500;
-            int sidepart = 50;
             PdfStream stream = new PdfStream(CompressionConstants.DEFAULT_COMPRESSION);
             stream.SetData(ToMultiWidthBytes(new int[] { 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
                 , 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, 0, 
@@ -537,16 +482,48 @@ namespace iText.Kernel.Pdf.Colorspace {
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNEXPECTED_SHADING_TYPE, e.Message);
         }
 
+        private static PdfDictionary InitShadingDictionary(float[] coordsArray, float[] domainArray, bool[] extendArray
+            , int radial2) {
+            PdfDictionary axialShadingDictionary = new PdfDictionary();
+            axialShadingDictionary.Put(PdfName.ColorSpace, PdfName.DeviceRGB);
+            axialShadingDictionary.Put(PdfName.Coords, new PdfArray(coordsArray));
+            if (domainArray != null) {
+                axialShadingDictionary.Put(PdfName.Domain, new PdfArray(domainArray));
+            }
+            if (extendArray != null) {
+                axialShadingDictionary.Put(PdfName.Extend, new PdfArray(extendArray));
+            }
+            axialShadingDictionary.Put(PdfName.ShadingType, new PdfNumber(radial2));
+            PdfDictionary functionDictionary = new PdfDictionary();
+            functionDictionary.Put(PdfName.C0, new PdfArray(new float[] { 0f, 0f, 0f }));
+            functionDictionary.Put(PdfName.C1, new PdfArray(new float[] { 0.5f, 0.5f, 0.5f }));
+            functionDictionary.Put(PdfName.Domain, new PdfArray(new float[] { 0f, 1f }));
+            functionDictionary.Put(PdfName.FunctionType, new PdfNumber(2));
+            functionDictionary.Put(PdfName.N, new PdfNumber(1));
+            axialShadingDictionary.Put(PdfName.Function, functionDictionary);
+            return axialShadingDictionary;
+        }
+
+        /// <summary>A helper function to create a mixed width byte array.</summary>
+        /// <remarks>
+        /// A helper function to create a mixed width byte array.
+        /// <para />
+        /// </remarks>
+        /// <param name="pattern">
+        /// the width pattern, each element represents the number of bytes that it will
+        /// occupy in the resulting byte array
+        /// </param>
+        /// <param name="ints">the values to be converted</param>
+        /// <returns>a byte array where the ints are represented in widths represented by the pattern</returns>
         private static byte[] ToMultiWidthBytes(int[] pattern, params int[] ints) {
-            // helper function
             if (ints.Length % pattern.Length != 0) {
                 throw new ArgumentException("The number of elements must be an exact multiple of" + " the pattern length");
             }
-            int patternsize = 0;
+            int patternSize = 0;
             for (int i = 0; i < pattern.Length; i++) {
-                patternsize += pattern[i];
+                patternSize += pattern[i];
             }
-            byte[] result = new byte[ints.Length / pattern.Length * patternsize];
+            byte[] result = new byte[ints.Length / pattern.Length * patternSize];
             int targetSize;
             int ri = 0;
             for (int i = 0; i < ints.Length; i++) {
