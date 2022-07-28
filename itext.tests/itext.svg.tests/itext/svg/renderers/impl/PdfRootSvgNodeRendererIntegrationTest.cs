@@ -52,6 +52,7 @@ using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfRootSvgNodeRendererIntegrationTest : SvgIntegrationTest {
         [NUnit.Framework.Test]
         public virtual void CalculateOutermostViewportTest() {

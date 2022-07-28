@@ -50,6 +50,7 @@ using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas {
+    [NUnit.Framework.Category("Unit test")]
     public class CharacterRenderInfoTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void BoundingBoxForRotatedText() {

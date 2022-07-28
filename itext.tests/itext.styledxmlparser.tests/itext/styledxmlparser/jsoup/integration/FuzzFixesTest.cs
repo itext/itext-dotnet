@@ -28,6 +28,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Integration {
     /// <summary>Tests fixes for issues raised by the OSS Fuzz project @ https://oss-fuzz.com/testcases?project=jsoup
     ///     </summary>
+    [NUnit.Framework.Category("Integration test")]
     public class FuzzFixesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void BlankAbsAttr() {

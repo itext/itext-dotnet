@@ -29,6 +29,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Forms.Xfdf {
+    [NUnit.Framework.Category("Unit test")]
     public class XfdfReaderUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]

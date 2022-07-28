@@ -46,6 +46,7 @@ using iText.Signatures;
 using iText.Test;
 
 namespace iText.Signatures.Verify.Pdfinsecurity {
+    [NUnit.Framework.Category("Integration test")]
     public class SignatureWrappingAttackTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/verify/pdfinsecurity/SignatureWrappingAttackTest/";

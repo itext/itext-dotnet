@@ -44,6 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Resolve {
+    [NUnit.Framework.Category("Unit test")]
     public class CssPropertyMergerUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void MergeTextDecorationSimpleTest() {

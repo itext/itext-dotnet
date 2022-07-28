@@ -25,6 +25,7 @@ using iText.IO.Font.Otf;
 using iText.Test;
 
 namespace iText.Layout.Splitting {
+    [NUnit.Framework.Category("Unit test")]
     public class BreakAllSplitCharactersTest : ExtendedITextTest {
         private const char charWithFalse = '\u201b';
 

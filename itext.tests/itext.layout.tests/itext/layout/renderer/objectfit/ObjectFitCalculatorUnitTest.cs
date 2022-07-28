@@ -44,6 +44,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout.Renderer.Objectfit {
+    [NUnit.Framework.Category("Unit test")]
     public class ObjectFitCalculatorUnitTest : ExtendedITextTest {
         private const float SMALL_WIDTH = 200;
 

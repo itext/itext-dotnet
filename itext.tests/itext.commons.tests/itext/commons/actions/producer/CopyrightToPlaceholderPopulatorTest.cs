@@ -29,6 +29,7 @@ using iText.Commons.Ecosystem;
 using iText.Test;
 
 namespace iText.Commons.Actions.Producer {
+    [NUnit.Framework.Category("Unit test")]
     public class CopyrightToPlaceholderPopulatorTest : ExtendedITextTest {
         private CopyrightToPlaceholderPopulator populator = new CopyrightToPlaceholderPopulator();
 

@@ -36,6 +36,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Element {
+    [NUnit.Framework.Category("Integration test")]
     [NUnit.Framework.TestFixtureSource("AlignItemsAndJustifyContentPropertiesTestFixtureData")]
     public class FlexContainerTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext

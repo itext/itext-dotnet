@@ -33,6 +33,7 @@ using iText.Test;
 using iText.Test.Signutils;
 
 namespace iText.Signatures {
+    [NUnit.Framework.Category("Unit test")]
     public class TSAClientBouncyCastleTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SetTSAInfoTest() {

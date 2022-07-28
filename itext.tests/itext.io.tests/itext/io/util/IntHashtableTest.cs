@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Test;
 
 namespace iText.IO.Util {
+    [NUnit.Framework.Category("Unit test")]
     public class IntHashtableTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CloneTest() {

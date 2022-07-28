@@ -44,6 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Util {
+    [NUnit.Framework.Category("Unit test")]
     public class CssPropertyNormalizerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CheckUrlNormalizationSimpleTest() {

@@ -45,6 +45,7 @@ using iText.Signatures.Testutils;
 using iText.Test;
 
 namespace iText.Signatures {
+    [NUnit.Framework.Category("Unit test")]
     public class VerificationOKTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ToStringTest() {

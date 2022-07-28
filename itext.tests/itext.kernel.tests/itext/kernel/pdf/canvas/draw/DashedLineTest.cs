@@ -49,6 +49,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas.Draw {
+    [NUnit.Framework.Category("Unit test")]
     public class DashedLineTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void DefaultDashedLineTest01() {

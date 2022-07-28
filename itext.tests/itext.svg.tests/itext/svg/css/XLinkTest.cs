@@ -50,6 +50,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Svg.Css {
+    [NUnit.Framework.Category("Unit test")]
     public class XLinkTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL)]

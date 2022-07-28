@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using iText.Test;
 
 namespace iText.Layout.Font {
+    [NUnit.Framework.Category("Unit test")]
     public class FontCharacteristicsUtilsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestNormalizingThinFontWeight() {

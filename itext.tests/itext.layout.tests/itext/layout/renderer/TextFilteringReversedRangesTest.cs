@@ -44,6 +44,7 @@ using System.Collections.Generic;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
+    [NUnit.Framework.Category("Unit test")]
     public class TextFilteringReversedRangesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Test01() {

@@ -45,6 +45,7 @@ using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Jfreesvg {
+    [NUnit.Framework.Category("Integration test")]
     public class JFreeSvgTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/JFreeSvgTest/";

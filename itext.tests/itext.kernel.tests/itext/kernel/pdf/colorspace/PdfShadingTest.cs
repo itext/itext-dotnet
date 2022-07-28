@@ -27,6 +27,7 @@ using iText.Kernel.Pdf.Function;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Colorspace {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfShadingTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void AxialShadingConstructorNullExtendArgumentTest() {

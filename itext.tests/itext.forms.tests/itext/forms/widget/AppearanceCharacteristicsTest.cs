@@ -52,6 +52,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Forms.Widget {
+    [NUnit.Framework.Category("Integration test")]
     public class AppearanceCharacteristicsTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/widget/AppearanceCharacteristicsTest/";

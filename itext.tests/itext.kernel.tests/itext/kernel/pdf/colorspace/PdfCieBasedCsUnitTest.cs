@@ -25,6 +25,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Colorspace {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfCieBasedCsUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void WhitePointOfCalGrayIsIncorrectEmptyTest() {

@@ -27,6 +27,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Forms {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfAcroFormTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SetSignatureFlagsTest() {

@@ -49,6 +49,7 @@ using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa.Checker {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfA2ImplementationLimitsCheckerTest : ExtendedITextTest {
         private PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B);
 

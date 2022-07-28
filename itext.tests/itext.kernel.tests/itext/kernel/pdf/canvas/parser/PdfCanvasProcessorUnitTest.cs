@@ -26,6 +26,7 @@ using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas.Parser {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfCanvasProcessorUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void BeginMarkerContentOperatorTest() {

@@ -25,6 +25,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfViewerPreferencesUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void PrintScalingIsNullTest() {

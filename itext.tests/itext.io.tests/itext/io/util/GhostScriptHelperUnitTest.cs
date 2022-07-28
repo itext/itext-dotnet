@@ -44,6 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.IO.Util {
+    [NUnit.Framework.Category("Unit test")]
     public class GhostScriptHelperUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void VerifyEmptyPageList() {

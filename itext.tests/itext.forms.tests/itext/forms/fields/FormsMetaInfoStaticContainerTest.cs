@@ -27,6 +27,7 @@ using iText.Layout.Renderer;
 using iText.Test;
 
 namespace iText.Forms.Fields {
+    [NUnit.Framework.Category("Unit test")]
     public class FormsMetaInfoStaticContainerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void UseMetaInfoDuringTheActionOneThreadTest() {

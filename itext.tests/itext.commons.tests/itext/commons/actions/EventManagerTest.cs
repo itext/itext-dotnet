@@ -30,6 +30,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Commons.Actions {
+    [NUnit.Framework.Category("Unit test")]
     public class EventManagerTest : ExtendedITextTest {
         [NUnit.Framework.TearDown]
         public virtual void AfterEach() {

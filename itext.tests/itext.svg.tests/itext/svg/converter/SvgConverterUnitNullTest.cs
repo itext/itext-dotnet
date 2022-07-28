@@ -65,6 +65,7 @@ namespace iText.Svg.Converter {
     /// parameter is null, this
     /// should NOT throw an exception as this is caught in the library.
     /// </remarks>
+    [NUnit.Framework.Category("Unit test")]
     public class SvgConverterUnitNullTest : ExtendedITextTest {
         // we cannot easily mock the PdfDocument, so we make do with as close to unit testing as we can
         private PdfDocument doc;

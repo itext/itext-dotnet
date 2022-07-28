@@ -46,6 +46,7 @@ using iText.IO.Exceptions;
 using iText.Test;
 
 namespace iText.IO.Font.Woff2 {
+    [NUnit.Framework.Category("Unit test")]
     public abstract class Woff2DecodeTest : ExtendedITextTest {
         protected internal static bool DEBUG = true;
 

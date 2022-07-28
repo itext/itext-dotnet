@@ -24,6 +24,7 @@ using iText.Kernel.Geom;
 using iText.Test;
 
 namespace iText.Layout.Properties {
+    [NUnit.Framework.Category("Unit test")]
     public class TransformTest : ExtendedITextTest {
         // AffineTransform.TYPE_UNKNOWN
         private const float type = -1;

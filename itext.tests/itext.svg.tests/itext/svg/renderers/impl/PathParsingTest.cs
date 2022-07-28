@@ -47,6 +47,7 @@ using iText.Svg.Exceptions;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
+    [NUnit.Framework.Category("Unit test")]
     public class PathParsingTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void PathParsingOperatorEmptyTest() {

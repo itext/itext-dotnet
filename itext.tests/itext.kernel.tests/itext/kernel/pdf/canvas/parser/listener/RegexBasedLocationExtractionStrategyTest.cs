@@ -50,6 +50,7 @@ using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
+    [NUnit.Framework.Category("Integration test")]
     public class RegexBasedLocationExtractionStrategyTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/RegexBasedLocationExtractionStrategyTest/";

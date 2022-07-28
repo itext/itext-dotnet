@@ -29,6 +29,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Colorspace {
+    [NUnit.Framework.Category("Unit test")]
     [NUnit.Framework.TestFixtureSource("ParametersTestFixtureData")]
     public class PdfShadingParameterizedTest : ExtendedITextTest {
         private readonly String shadingName;

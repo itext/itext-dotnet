@@ -46,6 +46,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Svg.Processors.Impl.Font {
+    [NUnit.Framework.Category("Integration test")]
     public class FontSizeTest : SvgIntegrationTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/processors/impl/font/FontSizeTest/";

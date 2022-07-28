@@ -29,6 +29,7 @@ using iText.Kernel.Pdf.Annot;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Tagging {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfStructElemUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NoParentObjectTest() {

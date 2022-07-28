@@ -26,6 +26,7 @@ using System.Text;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Unit test")]
     public class SmartModePdfObjectsSerializerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SmartModeObjectSelfReferencingTest() {

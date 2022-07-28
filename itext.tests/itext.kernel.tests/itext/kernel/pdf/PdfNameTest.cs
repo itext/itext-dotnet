@@ -44,6 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfNameTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SpecialCharactersTest() {

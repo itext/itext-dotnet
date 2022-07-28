@@ -44,6 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.Barcodes {
+    [NUnit.Framework.Category("Unit test")]
     public class BarcodePDF417UnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Barcode417CodeRowsTest() {

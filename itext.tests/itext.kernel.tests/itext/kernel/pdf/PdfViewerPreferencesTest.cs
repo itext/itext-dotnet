@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfViewerPreferencesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void PrintScalingTest() {

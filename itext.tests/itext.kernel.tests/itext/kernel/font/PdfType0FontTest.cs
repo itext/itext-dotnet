@@ -29,6 +29,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Font {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfType0FontTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/resources/itext/kernel/font/PdfType0FontTest/";

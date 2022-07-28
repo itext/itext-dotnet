@@ -30,6 +30,7 @@ using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa.Checker {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfA2CheckerGlyphsTest : ExtendedITextTest {
         private readonly PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B);
 

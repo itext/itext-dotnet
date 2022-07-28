@@ -51,6 +51,7 @@ using iText.Kernel.Pdf.Colorspace;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfArrayTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestValuesIndirectContains() {

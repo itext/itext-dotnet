@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Test;
 
 namespace iText.Kernel.Numbering {
+    [NUnit.Framework.Category("Unit test")]
     public class GeorgianNumberingTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NegativeToGeorgianTest() {

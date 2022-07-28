@@ -50,6 +50,7 @@ using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers {
+    [NUnit.Framework.Category("Integration test")]
     public class TransparencyTest : ExtendedITextTest {
         private static readonly PdfName DEFAULT_RESOURCE_NAME = new PdfName("Gs1");
 

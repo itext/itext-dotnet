@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Test;
 
 namespace iText.Commons.Exceptions {
+    [NUnit.Framework.Category("Unit test")]
     public class AggregatedExceptionTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void AggregatedMessageWithGeneralMessageTest() {

@@ -57,6 +57,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Svg.Processors.Impl {
+    [NUnit.Framework.Category("Unit test")]
     public class DefaultSvgProcessorUnitTest : ExtendedITextTest {
         //Main success scenario
         /// <summary>Simple correct example</summary>

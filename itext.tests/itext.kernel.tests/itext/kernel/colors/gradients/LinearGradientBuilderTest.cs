@@ -30,6 +30,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Colors.Gradients {
+    [NUnit.Framework.Category("Integration test")]
     public class LinearGradientBuilderTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/colors/gradients/LinearGradientBuilderTest/";

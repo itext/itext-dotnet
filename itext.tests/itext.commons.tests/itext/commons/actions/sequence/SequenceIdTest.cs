@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Test;
 
 namespace iText.Commons.Actions.Sequence {
+    [NUnit.Framework.Category("Unit test")]
     public class SequenceIdTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void DifferentIdsCreatedTest() {

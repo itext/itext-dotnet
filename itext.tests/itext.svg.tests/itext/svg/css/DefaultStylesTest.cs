@@ -53,6 +53,7 @@ using iText.Svg.Processors.Impl;
 using iText.Test;
 
 namespace iText.Svg.Css {
+    [NUnit.Framework.Category("Unit test")]
     public class DefaultStylesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CheckDefaultStrokeValuesTest() {

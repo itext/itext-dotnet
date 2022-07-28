@@ -26,6 +26,7 @@ using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Pseudo {
+    [NUnit.Framework.Category("Unit test")]
     public class CssPseudoElementUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CreatePseudoElementTagNameTest() {

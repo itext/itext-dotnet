@@ -53,6 +53,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css.Util {
+    [NUnit.Framework.Category("Unit test")]
     public class CssUtilsTest : ExtendedITextTest {
         private static float EPS = 0.0001f;
 

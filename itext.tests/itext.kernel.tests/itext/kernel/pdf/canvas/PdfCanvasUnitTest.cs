@@ -27,6 +27,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfCanvasUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void UnbalancedSaveRestoreStateOperatorsUnexpectedRestoreTest() {

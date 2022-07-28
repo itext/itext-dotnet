@@ -25,6 +25,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Action {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfActionOcgStateTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void PdfActionOcgStateUsageTest() {

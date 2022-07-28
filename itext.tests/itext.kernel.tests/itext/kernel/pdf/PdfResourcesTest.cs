@@ -48,6 +48,7 @@ using iText.Kernel.Pdf.Extgstate;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfResourcesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ResourcesTest1() {

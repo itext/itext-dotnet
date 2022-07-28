@@ -62,6 +62,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Svg.Converter {
+    [NUnit.Framework.Category("Integration test")]
     public class SvgConverterIntegrationTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/converter/SvgConverterTest/";

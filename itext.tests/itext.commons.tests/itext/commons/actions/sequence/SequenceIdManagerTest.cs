@@ -26,6 +26,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Commons.Actions.Sequence {
+    [NUnit.Framework.Category("Unit test")]
     public class SequenceIdManagerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SetIdentifier() {

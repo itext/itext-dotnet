@@ -29,6 +29,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
+    [NUnit.Framework.Category("Unit test")]
     public class FlexShorthandResolverTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY

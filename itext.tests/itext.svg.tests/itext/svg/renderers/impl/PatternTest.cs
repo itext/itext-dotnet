@@ -28,6 +28,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
+    [NUnit.Framework.Category("Integration test")]
     public class PatternTest : SvgIntegrationTest {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/svg/renderers/impl/PatternTest/";
