@@ -26,6 +26,7 @@ using iText.Commons.Ecosystem;
 using iText.Test;
 
 namespace iText.Commons.Actions {
+    [NUnit.Framework.Category("Unit test")]
     public class AbstractContextBasedITextEventTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SetMetaInfoTest() {

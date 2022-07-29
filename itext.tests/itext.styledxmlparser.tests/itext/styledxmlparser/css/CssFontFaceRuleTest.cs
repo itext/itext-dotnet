@@ -26,6 +26,7 @@ using iText.Layout.Font;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css {
+    [NUnit.Framework.Category("Unit test")]
     public class CssFontFaceRuleTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void VerifyThatToStringProducesValidCss() {

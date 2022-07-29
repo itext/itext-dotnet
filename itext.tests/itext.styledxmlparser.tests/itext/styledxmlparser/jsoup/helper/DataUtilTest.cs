@@ -27,6 +27,7 @@ using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Helper {
+    [NUnit.Framework.Category("Unit test")]
     public class DataUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestCharset() {

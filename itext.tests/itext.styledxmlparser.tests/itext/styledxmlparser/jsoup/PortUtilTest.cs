@@ -24,6 +24,7 @@ using System;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup {
+    [NUnit.Framework.Category("Unit test")]
     public class PortUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TrimControlCodesTest() {

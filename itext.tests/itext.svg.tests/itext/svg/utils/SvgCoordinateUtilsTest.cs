@@ -27,6 +27,7 @@ using iText.Svg.Exceptions;
 using iText.Test;
 
 namespace iText.Svg.Utils {
+    [NUnit.Framework.Category("Unit test")]
     public class SvgCoordinateUtilsTest : ExtendedITextTest {
         private const double DELTA = 0.0000001;
 

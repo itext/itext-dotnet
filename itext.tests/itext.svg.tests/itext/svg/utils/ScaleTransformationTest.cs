@@ -46,6 +46,7 @@ using iText.Svg.Exceptions;
 using iText.Test;
 
 namespace iText.Svg.Utils {
+    [NUnit.Framework.Category("Unit test")]
     public class ScaleTransformationTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalScaleTest() {

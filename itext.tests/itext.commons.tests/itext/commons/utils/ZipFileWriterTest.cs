@@ -27,6 +27,7 @@ using iText.Commons.Exceptions;
 using iText.Test;
 
 namespace iText.Commons.Utils {
+    [NUnit.Framework.Category("Integration test")]
     public class ZipFileWriterTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/commons/utils/ZipFileWriter/";

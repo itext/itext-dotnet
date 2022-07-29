@@ -54,6 +54,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Integration test")]
     public class TagTreePointerTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/TagTreePointerTest/";

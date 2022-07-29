@@ -44,6 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.Layout.Font {
+    [NUnit.Framework.Category("Unit test")]
     public class RangeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestWrongRange() {

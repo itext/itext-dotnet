@@ -24,6 +24,7 @@ using System;
 using iText.Test;
 
 namespace iText.Commons.Exceptions {
+    [NUnit.Framework.Category("Unit test")]
     public class ITextExceptionTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NoParametersConstructorTest() {

@@ -30,6 +30,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Commons.Actions {
+    [NUnit.Framework.Category("Unit test")]
     public class ProductEventHandlerTest : ExtendedITextTest {
         [NUnit.Framework.SetUp]
         public virtual void ClearProcessors() {

@@ -48,6 +48,7 @@ using iText.Svg.Exceptions;
 using iText.Test;
 
 namespace iText.Svg.Utils {
+    [NUnit.Framework.Category("Unit test")]
     public class RotateTransformationTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalRotateTest() {

@@ -52,6 +52,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
+    [NUnit.Framework.Category("Integration test")]
     public class ImageWidthTest : ExtendedITextTest {
         private const double EPSILON = 0.01;
 

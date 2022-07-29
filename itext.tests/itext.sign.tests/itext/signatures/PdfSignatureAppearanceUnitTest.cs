@@ -45,6 +45,7 @@ namespace iText.Signatures {
     /// 's getters.
     /// For actual result of setters invocations one should check the integration test for this class.
     /// </remarks>
+    [NUnit.Framework.Category("Unit test")]
     public class PdfSignatureAppearanceUnitTest : ExtendedITextTest {
         // The source folder points to the integration test, so that the resources are nor duplicated
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext

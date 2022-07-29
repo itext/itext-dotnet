@@ -45,6 +45,7 @@ using iText.Kernel.Geom;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Path.Impl {
+    [NUnit.Framework.Category("Unit test")]
     public class EllipticalPathOperatorTest : ExtendedITextTest {
         // tests for coordinates
         [NUnit.Framework.Test]

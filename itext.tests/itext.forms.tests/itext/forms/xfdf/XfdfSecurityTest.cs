@@ -47,6 +47,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Forms.Xfdf {
+    [NUnit.Framework.Category("Unit test")]
     public class XfdfSecurityTest : ExtendedITextTest {
         private const String XFDF_WITH_XXE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n" + "<!DOCTYPE foo [ <!ENTITY xxe SYSTEM \"xxe-data.txt\" > ]>\n"
              + "<xfdf xmlns=\"http://ns.adobe.com/xfdf/\" xml:space=\"preserve\">\n" + "<f href=\"something.pdf\"/>\n"

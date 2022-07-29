@@ -44,6 +44,7 @@ using iText.Kernel.Geom;
 using iText.Test;
 
 namespace iText.Layout.Layout {
+    [NUnit.Framework.Category("Unit test")]
     public class LayoutAreaTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CloneTest() {

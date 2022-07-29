@@ -30,6 +30,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Commons.Actions.Processors {
+    [NUnit.Framework.Category("Unit test")]
     public class DefaultITextProductEventProcessorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ConstructorWithNullProductNameTest() {

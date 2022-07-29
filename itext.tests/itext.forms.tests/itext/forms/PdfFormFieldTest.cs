@@ -59,6 +59,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Forms {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfFormFieldTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/PdfFormFieldTest/";

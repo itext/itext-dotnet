@@ -29,6 +29,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
+    [NUnit.Framework.Category("Unit test")]
     public class FlexContainerRendererTest : ExtendedITextTest {
         private static float EPS = 0.0001F;
 

@@ -25,6 +25,7 @@ using iText.Kernel.Font;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
+    [NUnit.Framework.Category("Unit test")]
     public class TextPreprocessingUtilTest : ExtendedITextTest {
         private static PdfFont pdfFont;
 

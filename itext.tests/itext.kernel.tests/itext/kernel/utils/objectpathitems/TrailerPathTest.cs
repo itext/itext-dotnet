@@ -48,6 +48,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Utils.Objectpathitems {
+    [NUnit.Framework.Category("Integration test")]
     public class TrailerPathTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void EqualsAndHashCodeTest() {

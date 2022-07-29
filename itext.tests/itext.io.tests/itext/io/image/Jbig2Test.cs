@@ -26,6 +26,7 @@ using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO.Image {
+    [NUnit.Framework.Category("Unit test")]
     public class Jbig2Test : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/image/Jbig2Test/";

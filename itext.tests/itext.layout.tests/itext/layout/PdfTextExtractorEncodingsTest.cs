@@ -51,6 +51,7 @@ using iText.Layout.Element;
 using iText.Test;
 
 namespace iText.Layout {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfTextExtractorEncodingsTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/PdfTextExtractorEncodingsTest/";

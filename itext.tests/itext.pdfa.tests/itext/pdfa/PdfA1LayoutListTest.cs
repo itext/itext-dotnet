@@ -51,6 +51,7 @@ using iText.Layout.Element;
 using iText.Test;
 
 namespace iText.Pdfa {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfA1LayoutListTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/pdfa/PdfA1LayoutListTest/";

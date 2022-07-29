@@ -49,6 +49,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Forms {
+    [NUnit.Framework.Category("Integration test")]
     public class XfdfWriterTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/XfdfWriterTest/";

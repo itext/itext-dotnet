@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Test;
 
 namespace iText.Svg.Renderers.Factories {
+    [NUnit.Framework.Category("Unit test")]
     public class DefaultSvgNodeRendererMapperTest : ExtendedITextTest {
         private DefaultSvgNodeRendererMapper mapper = new DefaultSvgNodeRendererMapper();
 

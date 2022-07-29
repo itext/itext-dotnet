@@ -49,6 +49,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
+    [NUnit.Framework.Category("Integration test")]
     public class DestinationTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/DestinationTest/";

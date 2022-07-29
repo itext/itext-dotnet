@@ -49,6 +49,7 @@ using iText.Svg.Processors.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
+    [NUnit.Framework.Category("Unit test")]
     public class DefsSvgNodeRendererUnitTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/DefsSvgNodeRendererTest/";

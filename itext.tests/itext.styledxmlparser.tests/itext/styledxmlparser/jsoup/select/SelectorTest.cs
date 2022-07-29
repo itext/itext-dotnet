@@ -27,6 +27,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Select {
     /// <summary>Tests that the selector selects correctly.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
+    [NUnit.Framework.Category("Unit test")]
     public class SelectorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestByTag() {

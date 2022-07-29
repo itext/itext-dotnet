@@ -49,6 +49,7 @@ using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Processors {
+    [NUnit.Framework.Category("Integration test")]
     public class DefaultSvgProcessorIntegrationTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/processors/impl/DefaultSvgProcessorIntegrationTest/";

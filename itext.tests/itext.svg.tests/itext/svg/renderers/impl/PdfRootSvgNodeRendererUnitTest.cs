@@ -24,6 +24,7 @@ using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfRootSvgNodeRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NoObjectBoundingBoxTest() {

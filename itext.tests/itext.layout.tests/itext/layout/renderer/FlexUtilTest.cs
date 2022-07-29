@@ -37,6 +37,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
+    [NUnit.Framework.Category("Unit test")]
     public class FlexUtilTest : ExtendedITextTest {
         /* To see integration tests for flex algorithm go to FlexAlgoTest in html2pdf module.
         The names are preserved: one can go to FlexAlgoTest and see the corresponding tests, but be aware that with

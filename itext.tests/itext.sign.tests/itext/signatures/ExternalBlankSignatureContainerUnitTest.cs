@@ -25,6 +25,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Signatures {
+    [NUnit.Framework.Category("Unit test")]
     public class ExternalBlankSignatureContainerUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CreateBlankSignTest() {

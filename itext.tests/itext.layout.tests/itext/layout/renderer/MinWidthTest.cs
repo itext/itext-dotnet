@@ -56,6 +56,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
+    [NUnit.Framework.Category("Integration test")]
     public class MinWidthTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/MinWidthTest/";

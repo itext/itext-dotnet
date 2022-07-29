@@ -45,6 +45,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.IO.Source {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfTokenizerTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/util/";

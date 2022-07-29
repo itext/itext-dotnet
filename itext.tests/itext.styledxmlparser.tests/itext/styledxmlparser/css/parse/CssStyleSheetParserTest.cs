@@ -47,6 +47,7 @@ using iText.StyledXmlParser.Css;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Parse {
+    [NUnit.Framework.Category("Unit test")]
     public class CssStyleSheetParserTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/styledxmlparser/css/parse/CssStyleSheetParserTest/";

@@ -33,6 +33,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Copy {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfAnnotationCopyingTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfAnnotationCopyingTest/";

@@ -46,6 +46,7 @@ using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO.Image {
+    [NUnit.Framework.Category("Unit test")]
     public class BmpTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/image/";

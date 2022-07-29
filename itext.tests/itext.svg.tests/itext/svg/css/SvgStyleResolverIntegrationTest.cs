@@ -53,6 +53,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Svg.Css {
+    [NUnit.Framework.Category("Integration test")]
     public class SvgStyleResolverIntegrationTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/css/SvgStyleResolver/";

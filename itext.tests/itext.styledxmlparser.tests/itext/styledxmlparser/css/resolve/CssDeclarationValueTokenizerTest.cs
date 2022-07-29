@@ -47,6 +47,7 @@ using iText.StyledXmlParser.Css.Parse;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Resolve {
+    [NUnit.Framework.Category("Unit test")]
     public class CssDeclarationValueTokenizerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FunctionTest01() {

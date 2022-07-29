@@ -45,6 +45,7 @@ using iText.IO.Font.Otf;
 using iText.Test;
 
 namespace iText.IO.Font {
+    [NUnit.Framework.Category("Unit test")]
     public class FontCacheNoFontAsianTest : ExtendedITextTest {
         [NUnit.Framework.SetUp]
         public virtual void Before() {

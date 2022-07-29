@@ -45,6 +45,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Forms {
+    [NUnit.Framework.Category("Integration test")]
     public class FlatteningWithNullKidElementTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/FlatteningWithNullKidElementTest/";

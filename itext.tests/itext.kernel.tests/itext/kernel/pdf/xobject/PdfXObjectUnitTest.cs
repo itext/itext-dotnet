@@ -26,6 +26,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Xobject {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfXObjectUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NoSubTypeProvidedTest() {

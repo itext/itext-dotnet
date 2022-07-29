@@ -30,6 +30,7 @@ namespace iText.IO.Util {
     /// At the moment there is no com.itextpdf.io.util.Matcher class in Java (as we use
     /// java.util.regex.Matcher), but there is one in C# that we are testing
     /// </summary>
+    [NUnit.Framework.Category("Unit test")]
     public class MatcherTest : ExtendedITextTest {
         private const String PATTERN_STRING = "(a+)(b+)?";
 

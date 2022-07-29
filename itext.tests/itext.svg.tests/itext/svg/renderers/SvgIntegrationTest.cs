@@ -51,6 +51,7 @@ using iText.Svg.Processors.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers {
+    [NUnit.Framework.Category("Integration test")]
     public class SvgIntegrationTest : ExtendedITextTest {
         public virtual void Convert(Stream svg, Stream pdfOutputStream) {
             PdfDocument doc = new PdfDocument(new PdfWriter(pdfOutputStream, new WriterProperties().SetCompressionLevel

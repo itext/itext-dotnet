@@ -45,6 +45,7 @@ using iText.StyledXmlParser.Css.Selector;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
+    [NUnit.Framework.Category("Unit test")]
     public class SpecificityCalculationTest : ExtendedITextTest {
         // https://www.smashingmagazine.com/2007/07/css-specificity-things-you-should-know/
         // https://specificity.keegan.st/

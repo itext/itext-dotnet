@@ -24,6 +24,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Geom {
+    [NUnit.Framework.Category("Unit test")]
     public class ShapeTransformUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TransformBezierCurveTest() {

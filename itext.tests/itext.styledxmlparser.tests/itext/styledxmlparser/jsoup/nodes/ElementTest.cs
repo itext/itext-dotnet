@@ -30,6 +30,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for Element (DOM stuff mostly).</summary>
     /// <author>Jonathan Hedley</author>
+    [NUnit.Framework.Category("Unit test")]
     public class ElementTest : ExtendedITextTest {
         private String reference = "<div id=div1><p>Hello</p><p>Another <b>element</b></p><div id=div2><img src=foo.png></div></div>";
 

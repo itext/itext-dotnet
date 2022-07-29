@@ -31,6 +31,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfCanvasGlyphlineShowTextTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/canvas/PdfCanvasGlyphlineShowTextTest/";

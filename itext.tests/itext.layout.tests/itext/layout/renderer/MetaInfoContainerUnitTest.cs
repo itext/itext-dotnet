@@ -24,6 +24,7 @@ using iText.Commons.Actions.Contexts;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
+    [NUnit.Framework.Category("Unit test")]
     public class MetaInfoContainerUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CreateAndGetMetaInfoTest() {

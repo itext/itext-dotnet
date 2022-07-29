@@ -46,6 +46,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfObjectTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void IndirectsChain1() {

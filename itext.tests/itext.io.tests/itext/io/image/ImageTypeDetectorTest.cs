@@ -26,6 +26,7 @@ using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO.Image {
+    [NUnit.Framework.Category("Unit test")]
     public class ImageTypeDetectorTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/image/ImageTypeDetectorTest/";

@@ -55,6 +55,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
+    [NUnit.Framework.Category("Integration test")]
     public class FontProviderTest : ExtendedITextTest {
         private class PdfFontProvider : FontProvider {
             private IList<FontInfo> pdfFontInfos = new List<FontInfo>();

@@ -45,6 +45,7 @@ using iText.Svg.Processors.Impl;
 using iText.Test;
 
 namespace iText.Svg.Processors {
+    [NUnit.Framework.Category("Unit test")]
     public class SvgConverterPropertiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetCharsetNameRegressionTest() {

@@ -28,6 +28,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
+    [NUnit.Framework.Category("Unit test")]
     public class BackgroundPositionShorthandResolverTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void InitialValueTest() {

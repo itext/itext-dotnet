@@ -44,6 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.Kernel.Colors {
+    [NUnit.Framework.Category("Unit test")]
     public class WebColorsTest : ExtendedITextTest {
         private const double RGB_MAX_VAL = 255.0;
 

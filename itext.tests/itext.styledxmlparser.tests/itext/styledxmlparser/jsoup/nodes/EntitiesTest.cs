@@ -24,6 +24,7 @@ using System;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
+    [NUnit.Framework.Category("Unit test")]
     public class EntitiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Escape() {

@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Test;
 
 namespace iText.Kernel.Colors.Gradients {
+    [NUnit.Framework.Category("Unit test")]
     public class GradientColorStopTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalizationTest() {

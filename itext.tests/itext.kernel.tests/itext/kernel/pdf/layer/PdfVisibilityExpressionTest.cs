@@ -45,6 +45,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Layer {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfVisibilityExpressionTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ExpressionByArrayTest() {

@@ -26,6 +26,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Tag tests.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
+    [NUnit.Framework.Category("Unit test")]
     public class TagTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void IsCaseSensitive() {

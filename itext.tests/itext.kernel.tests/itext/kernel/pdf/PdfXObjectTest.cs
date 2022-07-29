@@ -53,6 +53,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfXObjectTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfXObjectTest/";
@@ -255,6 +256,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        [NUnit.Framework.Category("Unit test")]
         public virtual void CalculateProportionallyFitRectangleWithWidthForCustomXObjectTest() {
             PdfXObject pdfXObject = new PdfXObjectTest.CustomPdfXObject(new PdfStream());
             Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => PdfXObject.CalculateProportionallyFitRectangleWithWidth
@@ -288,6 +290,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        [NUnit.Framework.Category("Unit test")]
         public virtual void CalculateProportionallyFitRectangleWithHeightForCustomXObjectTest() {
             PdfXObject pdfXObject = new PdfXObjectTest.CustomPdfXObject(new PdfStream());
             Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => PdfXObject.CalculateProportionallyFitRectangleWithHeight
