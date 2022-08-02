@@ -25,6 +25,7 @@ using iText.Bouncycastlefips.Cms;
 using iText.Bouncycastlefips.Cms.Jcajce;
 using iText.Bouncycastlefips.Crypto;
 using iText.Bouncycastlefips.Operator.Jcajce;
+using iText.Bouncycastlefips.Security;
 using iText.Bouncycastlefips.Tsp;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
@@ -46,6 +47,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
+using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.Tsp;
@@ -804,6 +806,11 @@ namespace iText.Bouncycastlefips {
                 }
             }
             return new X509Certificate(X509CertificateStructure.GetInstance(seq));
+        }
+
+        public AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage,
+            Exception exception) {
+            return new GeneralSecurityExceptionBCFips(exceptionMessage, exception);
         }
     }
 }

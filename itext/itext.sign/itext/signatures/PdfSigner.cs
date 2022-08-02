@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Security;
 using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
@@ -397,8 +396,8 @@ namespace iText.Signatures {
         public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
              sigtype) {
-            SignDetached(externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype
-                , (ISignaturePolicyIdentifier)null);
+            SignDetached(externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype, (ISignaturePolicyIdentifier
+                )null);
         }
 
         /// <summary>Signs the document using the detached mode, CMS or CAdES equivalent.</summary>
@@ -419,8 +418,8 @@ namespace iText.Signatures {
         public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
              sigtype, SignaturePolicyInfo signaturePolicy) {
-            SignDetached(externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype
-                , signaturePolicy.ToSignaturePolicyIdentifier());
+            SignDetached(externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype, signaturePolicy
+                .ToSignaturePolicyIdentifier());
         }
 
         /// <summary>Signs the document using the detached mode, CMS or CAdES equivalent.</summary>
@@ -435,13 +434,12 @@ namespace iText.Signatures {
         /// <param name="crlList">the CRL list</param>
         /// <param name="ocspClient">the OCSP client</param>
         /// <param name="tsaClient">the Timestamp client</param>
-        /// <param name="externalDigest">an implementation that provides the digest</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <param name="signaturePolicy">the signature policy (for EPES signatures)</param>
-        public virtual void SignDetached(IExternalDigest externalDigest, IExternalSignature externalSignature, IX509Certificate
-            [] chain, ICollection<ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize
-            , PdfSigner.CryptoStandard sigtype, ISignaturePolicyIdentifier signaturePolicy) {
+        public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
+            <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
+             sigtype, ISignaturePolicyIdentifier signaturePolicy) {
             if (closed) {
                 throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
@@ -599,7 +597,8 @@ namespace iText.Signatures {
                 tsToken = tsa.GetTimeStampToken(tsImprint);
             }
             catch (Exception e) {
-                throw new GeneralSecurityException(e.Message, e);
+                throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
+                    .Message, e);
             }
             if (contentEstimated + 2 < tsToken.Length) {
                 throw new System.IO.IOException("Not enough space");

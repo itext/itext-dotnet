@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
@@ -167,8 +166,8 @@ namespace iText.Signatures.Sign {
             signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
                 ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText7.");
             if (sigPolicyIdentifier != null) {
-                signer.SignDetached(new DigestUtilities(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
-                    , sigPolicyIdentifier);
+                signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES, sigPolicyIdentifier
+                    );
             }
             else {
                 if (sigPolicyInfo != null) {

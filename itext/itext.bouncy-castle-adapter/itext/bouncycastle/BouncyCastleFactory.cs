@@ -30,6 +30,7 @@ using iText.Bouncycastle.Cms;
 using iText.Bouncycastle.Cms.Jcajce;
 using iText.Bouncycastle.Crypto;
 using iText.Bouncycastle.Operator.Jcajce;
+using iText.Bouncycastle.Security;
 using iText.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
@@ -51,6 +52,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
+using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Security;
@@ -758,6 +760,11 @@ namespace iText.Bouncycastle {
                 certs.Add(new X509CertificateBC(cc));
             }
             return certs;
+        }
+
+        public AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage,
+            Exception exception) {
+            return new GeneralSecurityExceptionBC(exceptionMessage, exception);
         }
     }
 }

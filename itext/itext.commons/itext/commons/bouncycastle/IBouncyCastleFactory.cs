@@ -20,6 +20,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
+using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 
 namespace iText.Commons.Bouncycastle {
@@ -321,5 +322,7 @@ namespace iText.Commons.Bouncycastle {
         IISigner CreateISigner();
         
         List<IX509Certificate> ReadAllCerts(byte[] contentsKey);
+
+        AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage, Exception exception);
     }
 }
