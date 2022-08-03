@@ -309,6 +309,8 @@ namespace iText.Commons.Bouncycastle {
 
         IX509Certificate CreateX509Certificate(object element);
         
+        IX509Certificate CreateX509Certificate(Stream s);
+        
         IX509Crl CreateX509Crl(Stream input);
         
         IIDigest CreateIDigest(string hashAlgorithm);
@@ -324,5 +326,9 @@ namespace iText.Commons.Bouncycastle {
         List<IX509Certificate> ReadAllCerts(byte[] contentsKey);
 
         AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage, Exception exception);
+        
+        AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage);
+
+        AbstractGeneralSecurityException CreateGeneralSecurityException();
     }
 }

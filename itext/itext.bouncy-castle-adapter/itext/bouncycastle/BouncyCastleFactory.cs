@@ -201,7 +201,10 @@ namespace iText.Bouncycastle {
         }
 
         public virtual IASN1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
-            return new ASN1OutputStreamBC(DerOutputStream.Create(outputStream, asn1Encoding));
+            if (Asn1Encodable.Ber.Equals(asn1Encoding)) {
+                return new ASN1OutputStreamBC(new BerOutputStream(outputStream));
+            }
+            return new ASN1OutputStreamBC(new DerOutputStream(outputStream));
         }
 
         public virtual IDEROctetString CreateDEROctetString(byte[] bytes) {
@@ -728,6 +731,10 @@ namespace iText.Bouncycastle {
             }
         }
         
+        public virtual IX509Certificate CreateX509Certificate(Stream s) {
+            return new X509CertificateBC(new X509CertificateParser().ReadCertificate(s));
+        }
+        
         public IX509Crl CreateX509Crl(Stream input) {
             return new X509CrlBC(new X509CrlParser().ReadCrl(input));
         }
@@ -765,6 +772,14 @@ namespace iText.Bouncycastle {
         public AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage,
             Exception exception) {
             return new GeneralSecurityExceptionBC(exceptionMessage, exception);
+        }
+        
+        public AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage) {
+            return new GeneralSecurityExceptionBC(new GeneralSecurityException(exceptionMessage));
+        }
+        
+        public AbstractGeneralSecurityException CreateGeneralSecurityException() {
+            return new GeneralSecurityExceptionBC(new GeneralSecurityException());
         }
     }
 }

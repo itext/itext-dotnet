@@ -42,14 +42,14 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Org.BouncyCastle.Security;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>An exception that is thrown when something is wrong with a certificate.</summary>
-    public class VerificationException : GeneralSecurityException {
+    public class VerificationException : AbstractGeneralSecurityException {
         /// <summary>Creates a VerificationException.</summary>
         /// <param name="cert">is a failed certificate</param>
         /// <param name="message">is a reason of failure</param>

@@ -47,6 +47,7 @@ using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Math;
@@ -87,11 +88,11 @@ namespace iText.Signatures {
         /// <param name="url">to get the verification</param>
         /// <returns>
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IBasicOCSPResp"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOCSPResponse"/>
         /// an OCSP response wrapper
         /// </returns>
-        public virtual IBasicOCSPResp GetBasicOCSPResp(IX509Certificate checkCert, IX509Certificate rootCert, String
-             url) {
+        public virtual IBasicOCSPResponse GetBasicOCSPResp(IX509Certificate checkCert, IX509Certificate rootCert, 
+            String url) {
             try {
                 IOCSPResp ocspResponse = GetOcspResponse(checkCert, rootCert, url);
                 if (ocspResponse == null) {
@@ -100,7 +101,8 @@ namespace iText.Signatures {
                 if (ocspResponse.GetStatus() != BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus().GetSuccessful()) {
                     return null;
                 }
-                IBasicOCSPResp basicResponse = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResp(ocspResponse.GetResponseObject());
+                IBasicOCSPResponse basicResponse = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResp(ocspResponse.GetResponseObject
+                    ());
                 if (verifier != null) {
                     verifier.IsValidResponse(basicResponse, rootCert, DateTimeUtil.GetCurrentUtcTime());
                 }
@@ -115,7 +117,7 @@ namespace iText.Signatures {
         /// <summary><inheritDoc/></summary>
         public virtual byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate rootCert, String url) {
             try {
-                IBasicOCSPResp basicResponse = GetBasicOCSPResp(checkCert, rootCert, url);
+                IBasicOCSPResponse basicResponse = GetBasicOCSPResp(checkCert, rootCert, url);
                 if (basicResponse != null) {
                     ISingleResp[] responses = basicResponse.GetResponses();
                     if (responses.Length == 1) {

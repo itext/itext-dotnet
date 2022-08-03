@@ -53,6 +53,12 @@ using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Asn1.X500;
 using Org.BouncyCastle.Cert;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Fips;
+using Org.BouncyCastle.Crypto.General;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities.Encoders;
 using Org.BouncyCastle.Utilities.IO;
 using ContentInfo = Org.BouncyCastle.Asn1.Cms.ContentInfo;
 using SignedData = Org.BouncyCastle.Asn1.Cms.SignedData;
@@ -199,13 +205,10 @@ namespace iText.Bouncycastlefips {
         }
 
         public virtual IASN1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
-            if (asn1Encoding.Equals("DER")) {
-                return new ASN1OutputStreamBCFips(new DEROutputStream(outputStream));
+            if (Asn1Encodable.Ber.Equals(asn1Encoding)) {
+                return new ASN1OutputStreamBCFips(new BerOutputStream(outputStream));
             }
-            else {
-                return new ASN1OutputStreamBCFips((asn1Encoding.Equals("DL") ? new DLOutputStream(outputStream) : new DerOutputStream
-                    (outputStream)));
-            }
+            return new ASN1OutputStreamBCFips(new DerOutputStream(outputStream));
         }
 
         public virtual IDEROctetString CreateDEROctetString(byte[] bytes) {
@@ -733,6 +736,30 @@ namespace iText.Bouncycastlefips {
             }
         }
         
+        //TODO DEVSIX-6995 Move away from PKCS#12 related utilities when moving classes 
+        //to the new approach with BC and BCFips.
+        public virtual IX509Certificate CreateX509Certificate(Stream s) {
+            PushbackStream pushbackStream = new PushbackStream(s);
+            int tag = pushbackStream.ReadByte();
+            if (tag < 0) {
+                return null;
+            }
+            pushbackStream.Unread(tag);
+            Asn1Sequence seq = (Asn1Sequence)(new Asn1InputStream(pushbackStream).ReadObject());
+            if (seq.Count > 1 && seq[0] is DerObjectIdentifier) {
+                if (seq[0].Equals(PkcsObjectIdentifiers.SignedData)) {
+                    Asn1Set sData = SignedData.GetInstance(
+                        Asn1Sequence.GetInstance((Asn1TaggedObject) seq[1], true)).Certificates;
+                    object obj = sData[0];
+                    if (obj is Asn1Sequence) {
+                        return new X509CertificateBCFips(new X509Certificate(
+                            X509CertificateStructure.GetInstance(obj)));
+                    }
+                }
+            }
+            return new X509CertificateBCFips(new X509Certificate(X509CertificateStructure.GetInstance(seq)));
+        }
+
         public IX509Crl CreateX509Crl(Stream input) {
             PushbackStream pushbackStream = new PushbackStream(input);
             int tag = pushbackStream.ReadByte();
@@ -811,6 +838,14 @@ namespace iText.Bouncycastlefips {
         public AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage,
             Exception exception) {
             return new GeneralSecurityExceptionBCFips(exceptionMessage, exception);
+        }
+        
+        public AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage) {
+            return new GeneralSecurityExceptionBCFips(new GeneralSecurityException(exceptionMessage));
+        }
+        
+        public AbstractGeneralSecurityException CreateGeneralSecurityException() {
+            return new GeneralSecurityExceptionBCFips(new GeneralSecurityException());
         }
     }
 }

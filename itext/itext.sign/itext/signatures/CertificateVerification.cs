@@ -45,8 +45,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using iText.Signatures.Exceptions;
@@ -214,7 +214,7 @@ namespace iText.Signatures {
         /// <param name="ocsp">the OCSP response</param>
         /// <param name="keystore">the <c>KeyStore</c></param>
         /// <returns><c>true</c> is a certificate was found</returns>
-        public static bool VerifyOcspCertificates(IBasicOCSPResp ocsp, List<IX509Certificate> keystore) {
+        public static bool VerifyOcspCertificates(IBasicOCSPResponse ocsp, List<IX509Certificate> keystore) {
             IList<Exception> exceptionsThrown = new List<Exception>();
             try {
                 foreach (IX509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {

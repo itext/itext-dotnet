@@ -43,12 +43,14 @@ address: sales@itextpdf.com
 
 using System;
 using System.IO;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Pkcs;
-using Org.BouncyCastle.X509;
 
 namespace iText.Kernel.Crypto {
     /// <summary>
@@ -56,13 +58,18 @@ namespace iText.Kernel.Crypto {
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
     public static class CryptoUtil {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
-        public static X509Certificate ReadPublicCertificate(Stream s) {
-            return new X509CertificateParser().ReadCertificate(s);
+        //TODO DEVSIX-6995 Move away from PKCS#12 related utilities when moving classes 
+        //to the new approach with BC and BCFips.
+        public static IX509Certificate ReadPublicCertificate(Stream s) {
+            return FACTORY.CreateX509Certificate(s);
         }
 
-        public static ICipherParameters ReadPrivateKeyFromPkcs12KeyStore(Stream keyStore, String pkAlias, char[] pkPassword) {
-            return new Pkcs12Store(keyStore, pkPassword).GetKey(pkAlias).Key;
+        //TODO DEVSIX-6995 Move away from PKCS#12 related utilities when moving classes 
+        //to the new approach with BC and BCFips.
+        public static IPrivateKey ReadPrivateKeyFromPkcs12KeyStore(Stream keyStore, String pkAlias, char[] pkPassword) {
+            return null; //new Pkcs12Store(keyStore, pkPassword).GetKey(pkAlias).Key;
         }
         
         /// <summary>
@@ -73,13 +80,10 @@ namespace iText.Kernel.Crypto {
         /// <param name="asn1Encoding">ASN1 encoding that will be used for writing. Only DER and BER are allowed as values.</param>
         /// <returns>a <see cref="DerOutputStream"/> instance. Exact stream implementation is chosen based on passed encoding.</returns>
         /// <exception cref="NotSupportedException"></exception>
-        public static DerOutputStream CreateAsn1OutputStream(Stream outputStream, String asn1Encoding) {
-            if (Asn1Encodable.Ber.Equals(asn1Encoding)) {
-                return new Asn1OutputStream(outputStream);
-            }
-
-            if (Asn1Encodable.Der.Equals(asn1Encoding)) {
-                return new DerOutputStream(outputStream);
+        public static IASN1OutputStream CreateAsn1OutputStream(Stream outputStream, String asn1Encoding) {
+            if (FACTORY.CreateASN1Encoding().GetBer().Equals(asn1Encoding) || 
+                FACTORY.CreateASN1Encoding().GetDer().Equals(asn1Encoding)) {
+                return FACTORY.CreateASN1OutputStream(outputStream, asn1Encoding);
             }
 
             throw new NotSupportedException(

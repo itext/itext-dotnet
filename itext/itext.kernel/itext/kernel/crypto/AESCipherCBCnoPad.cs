@@ -48,6 +48,7 @@ using Javax.Crypto.Spec;
 using Org.BouncyCastle.Security;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Security;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Crypto {

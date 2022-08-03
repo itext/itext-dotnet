@@ -20,6 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
+
 namespace iText.Commons.Bouncycastle.Cert.Ocsp {
     /// <summary>
     /// This interface represents the wrapper for OCSPRespBuilder that provides the ability
@@ -46,6 +48,6 @@ namespace iText.Commons.Bouncycastle.Cert.Ocsp {
         /// <see cref="IOCSPResp"/>
         /// the wrapper for built OCSPResp object.
         /// </returns>
-        IOCSPResp Build(int i, IBasicOCSPResp basicOCSPResp);
+        IOCSPResp Build(int i, IBasicOCSPResponse basicOCSPResp);
     }
 }

@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Security;
 using iText.Commons;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
@@ -263,7 +262,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         private byte[] ComputeHash(byte[] password, byte[] salt, int saltOffset, int saltLen, byte[] userKey) {
-            IIDigest mdSha256 = DigestUtilities.GetDigest("SHA-256");
+            IIDigest mdSha256 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-256"
+                );
             mdSha256.Update(password);
             mdSha256.Update(salt, saltOffset, saltLen);
             if (userKey != null) {
@@ -272,8 +272,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte[] k = mdSha256.Digest();
             if (isPdf2) {
                 // See 7.6.4.3.3 "Algorithm 2.B"
-                IIDigest mdSha384 = DigestUtilities.GetDigest("SHA-384");
-                IIDigest mdSha512 = DigestUtilities.GetDigest("SHA-512");
+                IIDigest mdSha384 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-384"
+                    );
+                IIDigest mdSha512 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-512"
+                    );
                 int userKeyLen = userKey != null ? userKey.Length : 0;
                 int passAndUserKeyLen = password.Length + userKeyLen;
                 // k1 repetition length

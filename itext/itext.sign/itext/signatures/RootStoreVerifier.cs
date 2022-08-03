@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Org.BouncyCastle.Security;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Security;
 
 namespace iText.Signatures {
     /// <summary>
@@ -91,14 +91,14 @@ namespace iText.Signatures {
                         result.AddAll(base.Verify(signCert, issuerCert, signDate));
                         return result;
                     }
-                    catch (GeneralSecurityException) {
+                    catch (AbstractGeneralSecurityException) {
                     }
                 }
                 // do nothing and continue
                 result.AddAll(base.Verify(signCert, issuerCert, signDate));
                 return result;
             }
-            catch (GeneralSecurityException) {
+            catch (AbstractGeneralSecurityException) {
                 return base.Verify(signCert, issuerCert, signDate);
             }
         }

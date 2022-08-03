@@ -88,6 +88,11 @@ namespace iText.Bouncycastlefips.Cert {
             return set;
         }
 
+        /// <summary><inheritDoc/></summary>
+        public void CheckValidity(DateTime time) {
+            certificate.CheckValidity(time);
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {

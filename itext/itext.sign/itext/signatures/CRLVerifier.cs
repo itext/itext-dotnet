@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Security;
 using iText.Commons;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Security;
 using iText.IO.Util;
 
 namespace iText.Signatures {
@@ -159,7 +159,7 @@ namespace iText.Signatures {
             catch (System.IO.IOException) {
                 return null;
             }
-            catch (GeneralSecurityException) {
+            catch (AbstractGeneralSecurityException) {
                 return null;
             }
         }
@@ -175,7 +175,7 @@ namespace iText.Signatures {
                     crl.Verify(crlIssuer.GetPublicKey());
                     return true;
                 }
-                catch (GeneralSecurityException) {
+                catch (AbstractGeneralSecurityException) {
                     LOGGER.LogWarning("CRL not issued by the same authority as the certificate that is being checked");
                 }
             }
@@ -191,11 +191,11 @@ namespace iText.Signatures {
                         crl.Verify(anchor.GetPublicKey());
                         return true;
                     }
-                    catch (GeneralSecurityException) {
+                    catch (AbstractGeneralSecurityException) {
                     }
                 }
             }
-            catch (GeneralSecurityException) {
+            catch (AbstractGeneralSecurityException) {
             }
             // do nothing and continue
             // do nothing and return false at the end

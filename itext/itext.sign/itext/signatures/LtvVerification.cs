@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Security;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
@@ -265,7 +264,7 @@ namespace iText.Signatures {
         }
 
         private static byte[] HashBytesSha1(byte[] b) {
-            IIDigest sh = DigestUtilities.GetDigest("SHA1");
+            IIDigest sh = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA1");
             return sh.Digest(b);
         }
 

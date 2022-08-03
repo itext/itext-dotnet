@@ -21,13 +21,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Tsp;
 using iText.Bouncycastlefips.Asn1.Tsp;
 using iText.Bouncycastlefips.Asn1.X509;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1.Tsp;
 
 namespace iText.Bouncycastlefips.Tsp {
     /// <summary>
@@ -35,7 +35,7 @@ namespace iText.Bouncycastlefips.Tsp {
     /// <see cref="Org.BouncyCastle.Tsp.TimeStampTokenInfo"/>.
     /// </summary>
     public class TimeStampTokenInfoBCFips : ITimeStampTokenInfo {
-        private readonly TimeStampTokenInfo timeStampTokenInfo;
+        private readonly TstInfo timeStampTokenInfo;
 
         /// <summary>
         /// Creates new wrapper instance for
@@ -46,7 +46,7 @@ namespace iText.Bouncycastlefips.Tsp {
         /// <see cref="Org.BouncyCastle.Tsp.TimeStampTokenInfo"/>
         /// to be wrapped
         /// </param>
-        public TimeStampTokenInfoBCFips(TimeStampTokenInfo timeStampTokenInfo) {
+        public TimeStampTokenInfoBCFips(TstInfo timeStampTokenInfo) {
             this.timeStampTokenInfo = timeStampTokenInfo;
         }
 
@@ -55,23 +55,23 @@ namespace iText.Bouncycastlefips.Tsp {
         /// wrapped
         /// <see cref="Org.BouncyCastle.Tsp.TimeStampTokenInfo"/>.
         /// </returns>
-        public virtual TimeStampTokenInfo GetTimeStampTokenInfo() {
+        public virtual TstInfo GetTimeStampTokenInfo() {
             return timeStampTokenInfo;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual IAlgorithmIdentifier GetHashAlgorithm() {
-            return new AlgorithmIdentifierBCFips(timeStampTokenInfo.HashAlgorithm);
+            return new AlgorithmIdentifierBCFips(timeStampTokenInfo.MessageImprint.HashAlgorithm);
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual ITSTInfo ToASN1Structure() {
-            return new TSTInfoBCFips(timeStampTokenInfo.TstInfo);
+            return new TSTInfoBCFips(timeStampTokenInfo);
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual DateTime GetGenTime() {
-            return timeStampTokenInfo.GenTime;
+            return timeStampTokenInfo.GenTime.ToDateTime();
         }
 
         /// <summary><inheritDoc/></summary>

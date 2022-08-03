@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Operator;
@@ -72,9 +73,9 @@ namespace iText.Commons.Bouncycastle.Cert.Ocsp {
         /// <param name="time">produced at</param>
         /// <returns>
         /// 
-        /// <see cref="IBasicOCSPResp"/>
+        /// <see cref="IBasicOCSPResponse"/>
         /// wrapper for built BasicOCSPResp object.
         /// </returns>
-        IBasicOCSPResp Build(IContentSigner signer, IX509CertificateHolder[] chain, DateTime time);
+        IBasicOCSPResponse Build(IContentSigner signer, IX509CertificateHolder[] chain, DateTime time);
     }
 }

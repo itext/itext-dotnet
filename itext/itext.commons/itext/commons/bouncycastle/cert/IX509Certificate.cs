@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
@@ -74,5 +75,13 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <returns>critical extension oids set.</returns>
         ISet<string> GetCriticalExtensionOids();
+
+        /// <summary>
+        /// Calls actual
+        /// <c>CheckValidity</c>
+        /// method for the wrapped X509Certificate object.
+        /// </summary>
+        /// <param name="time">DateTime object</param>
+        void CheckValidity(DateTime time);
     }
 }

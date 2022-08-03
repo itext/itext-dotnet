@@ -30,6 +30,11 @@ namespace iText.Bouncycastlefips.Cert {
             return x509Crl;
         }
 
+        /// <summary><inheritDoc/></summary>
+        public bool IsRevoked(IX509Certificate cert) {
+            return x509Crl.IsRevoked(((X509CertificateBCFips)cert).GetCertificate());
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {

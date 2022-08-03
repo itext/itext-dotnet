@@ -45,11 +45,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Operator;
@@ -72,19 +72,19 @@ namespace iText.Signatures {
 
         /// <summary>
         /// The list of
-        /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IBasicOCSPResp"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOCSPResponse"/>
         /// OCSP response wrappers.
         /// </summary>
-        protected internal IList<IBasicOCSPResp> ocsps;
+        protected internal IList<IBasicOCSPResponse> ocsps;
 
         /// <summary>Creates an OCSPVerifier instance.</summary>
         /// <param name="verifier">the next verifier in the chain</param>
         /// <param name="ocsps">
         /// a list of
-        /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IBasicOCSPResp"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOCSPResponse"/>
         /// OCSP response wrappers
         /// </param>
-        public OCSPVerifier(CertificateVerifier verifier, IList<IBasicOCSPResp> ocsps)
+        public OCSPVerifier(CertificateVerifier verifier, IList<IBasicOCSPResponse> ocsps)
             : base(verifier) {
             this.ocsps = ocsps;
         }
@@ -109,7 +109,7 @@ namespace iText.Signatures {
             int validOCSPsFound = 0;
             // first check in the list of OCSP responses that was provided
             if (ocsps != null) {
-                foreach (IBasicOCSPResp ocspResp in ocsps) {
+                foreach (IBasicOCSPResponse ocspResp in ocsps) {
                     if (Verify(ocspResp, signCert, issuerCert, signDate)) {
                         validOCSPsFound++;
                     }
@@ -139,7 +139,7 @@ namespace iText.Signatures {
         /// <summary>Verifies a certificate against a single OCSP response</summary>
         /// <param name="ocspResp">
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IBasicOCSPResp"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOCSPResponse"/>
         /// the OCSP response wrapper
         /// </param>
         /// <param name="signCert">the certificate that needs to be checked</param>
@@ -153,7 +153,7 @@ namespace iText.Signatures {
         /// <see langword="true"/>
         /// , in case successful check, otherwise false.
         /// </returns>
-        public virtual bool Verify(IBasicOCSPResp ocspResp, IX509Certificate signCert, IX509Certificate issuerCert
+        public virtual bool Verify(IBasicOCSPResponse ocspResp, IX509Certificate signCert, IX509Certificate issuerCert
             , DateTime signDate) {
             if (ocspResp == null) {
                 return false;
@@ -176,7 +176,8 @@ namespace iText.Signatures {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    throw new GeneralSecurityException(e.Message);
+                    throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
+                        .Message);
                 }
                 catch (AbstractOCSPException) {
                     continue;
@@ -220,13 +221,13 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="ocspResp">
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IBasicOCSPResp"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOCSPResponse"/>
         /// the OCSP response wrapper
         /// </param>
         /// <param name="issuerCert">the issuer certificate. This certificate is considered trusted and valid by this method.
         ///     </param>
         /// <param name="signDate">sign date</param>
-        public virtual void IsValidResponse(IBasicOCSPResp ocspResp, IX509Certificate issuerCert, DateTime signDate
+        public virtual void IsValidResponse(IBasicOCSPResponse ocspResp, IX509Certificate issuerCert, DateTime signDate
             ) {
             // OCSP response might be signed by the issuer certificate or
             // the Authorized OCSP responder certificate containing the id-kp-OCSPSigning extended key usage extension
@@ -329,12 +330,12 @@ namespace iText.Signatures {
         /// <summary>Checks if an OCSP response is genuine</summary>
         /// <param name="ocspResp">
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IBasicOCSPResp"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOCSPResponse"/>
         /// the OCSP response wrapper
         /// </param>
         /// <param name="responderCert">the responder certificate</param>
         /// <returns>true if the OCSP response verifies against the responder certificate</returns>
-        public virtual bool IsSignatureValid(IBasicOCSPResp ocspResp, IX509Certificate responderCert) {
+        public virtual bool IsSignatureValid(IBasicOCSPResponse ocspResp, IX509Certificate responderCert) {
             try {
                 return SignUtils.IsSignatureValid(ocspResp, responderCert);
             }
@@ -351,15 +352,15 @@ namespace iText.Signatures {
         /// <param name="issuerCert">the issuer certificate</param>
         /// <returns>
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IBasicOCSPResp"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOCSPResponse"/>
         /// an OCSP response wrapper
         /// </returns>
-        public virtual IBasicOCSPResp GetOcspResponse(IX509Certificate signCert, IX509Certificate issuerCert) {
+        public virtual IBasicOCSPResponse GetOcspResponse(IX509Certificate signCert, IX509Certificate issuerCert) {
             if (signCert == null && issuerCert == null) {
                 return null;
             }
             OcspClientBouncyCastle ocsp = new OcspClientBouncyCastle(null);
-            IBasicOCSPResp ocspResp = ocsp.GetBasicOCSPResp(signCert, issuerCert, null);
+            IBasicOCSPResponse ocspResp = ocsp.GetBasicOCSPResp(signCert, issuerCert, null);
             if (ocspResp == null) {
                 return null;
             }

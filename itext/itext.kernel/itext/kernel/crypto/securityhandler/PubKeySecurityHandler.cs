@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Security;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
@@ -52,6 +51,7 @@ using iText.Commons.Bouncycastle.Asn1.Cms;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Security;
 using iText.IO.Util;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
@@ -78,7 +78,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
             IIDigest md;
             byte[] encodedRecipient;
             try {
-                md = DigestUtilities.GetDigest(messageDigestAlgorithm);
+                md = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(messageDigestAlgorithm
+                    );
                 md.Update(GetSeed());
                 for (int i = 0; i < GetRecipientsSize(); i++) {
                     encodedRecipient = GetEncodedRecipient(i);
@@ -105,7 +106,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte[] encryptionKey;
             IIDigest md;
             try {
-                md = DigestUtilities.GetDigest(digestAlgorithm);
+                md = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(digestAlgorithm);
                 md.Update(envelopedData, 0, 20);
                 for (int i = 0; i < recipients.Size(); i++) {
                     byte[] encodedRecipient = recipients.GetAsString(i).GetValueBytes();
@@ -231,7 +232,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     cms = GetEncodedRecipient(i);
                     EncodedRecipients.Add(new PdfLiteral(StreamUtil.CreateEscapedString(cms)));
                 }
-                catch (GeneralSecurityException) {
+                catch (AbstractGeneralSecurityException) {
                     EncodedRecipients = null;
                     // break was added while porting to itext7
                     break;

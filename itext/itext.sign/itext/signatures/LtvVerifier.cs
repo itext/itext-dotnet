@@ -45,13 +45,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Security;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Kernel.Pdf;
@@ -195,7 +196,7 @@ namespace iText.Signatures {
                             list.Add(new VerificationOK(signCert, this.GetType(), "Root certificate in final revision"));
                         }
                         if (list.Count == 0 && verifyRootCertificate) {
-                            throw new GeneralSecurityException();
+                            throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException();
                         }
                         else {
                             if (chain.Length > 1) {
@@ -203,7 +204,7 @@ namespace iText.Signatures {
                             }
                         }
                     }
-                    catch (GeneralSecurityException) {
+                    catch (AbstractGeneralSecurityException) {
                         throw new VerificationException(signCert, "Couldn't verify with CRL or OCSP or trusted anchor");
                     }
                 }
@@ -311,8 +312,8 @@ namespace iText.Signatures {
 
         /// <summary>Gets OCSP responses from the Document Security Store.</summary>
         /// <returns>a list of IBasicOCSPResp objects</returns>
-        public virtual IList<IBasicOCSPResp> GetOCSPResponsesFromDSS() {
-            IList<IBasicOCSPResp> ocsps = new List<IBasicOCSPResp>();
+        public virtual IList<IBasicOCSPResponse> GetOCSPResponsesFromDSS() {
+            IList<IBasicOCSPResponse> ocsps = new List<IBasicOCSPResponse>();
             if (dss == null) {
                 return ocsps;
             }
@@ -327,14 +328,16 @@ namespace iText.Signatures {
                     ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResp(stream.GetBytes());
                 }
                 catch (System.IO.IOException e) {
-                    throw new GeneralSecurityException(e.Message);
+                    throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
+                        .Message);
                 }
                 if (ocspResponse.GetStatus() == 0) {
                     try {
                         ocsps.Add(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResp(ocspResponse.GetResponseObject()));
                     }
                     catch (AbstractOCSPException e) {
-                        throw new GeneralSecurityException(e.ToString());
+                        throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
+                            .ToString());
                     }
                 }
             }
