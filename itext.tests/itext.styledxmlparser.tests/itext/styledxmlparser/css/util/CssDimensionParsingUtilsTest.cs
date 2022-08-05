@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Utils;
+using iText.Kernel.Colors;
+using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Exceptions;
 using iText.Test;
@@ -230,6 +232,47 @@ namespace iText.StyledXmlParser.Css.Util {
             double? expectedString = null;
             double? actualString = CssDimensionParsingUtils.ParseDouble("text");
             NUnit.Framework.Assert.AreEqual(expectedString, actualString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseSimpleDeviceCmykTest() {
+            TransparentColor expected = new TransparentColor(new DeviceCmyk(0f, 0.4f, 0.6f, 1f), 1);
+            TransparentColor actual = CssDimensionParsingUtils.ParseColor("device-cmyk(0 40% 60% 100%)");
+            NUnit.Framework.Assert.AreEqual(expected.GetColor(), actual.GetColor());
+            NUnit.Framework.Assert.AreEqual(expected.GetOpacity(), actual.GetOpacity(), 0.0001f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDeviceCmykWithOpacityTest() {
+            TransparentColor expected = new TransparentColor(new DeviceCmyk(0f, 0.4f, 0.6f, 1f), 0.5f);
+            TransparentColor actual = CssDimensionParsingUtils.ParseColor("device-cmyk(0 40% 60% 100% / .5)");
+            NUnit.Framework.Assert.AreEqual(expected.GetColor(), actual.GetColor());
+            NUnit.Framework.Assert.AreEqual(expected.GetOpacity(), actual.GetOpacity(), 0.0001f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDeviceCmykWithFallbackAndOpacityTest() {
+            TransparentColor expected = new TransparentColor(new DeviceCmyk(0f, 0.4f, 0.6f, 1f), 0.5f);
+            TransparentColor actual = CssDimensionParsingUtils.ParseColor("device-cmyk(0 40% 60% 100% / .5 rgb(178 34 34))"
+                );
+            NUnit.Framework.Assert.AreEqual(expected.GetColor(), actual.GetColor());
+            NUnit.Framework.Assert.AreEqual(expected.GetOpacity(), actual.GetOpacity(), 0.0001f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseRgbTest() {
+            TransparentColor expected = new TransparentColor(new DeviceRgb(255, 255, 128), 1f);
+            TransparentColor actual = CssDimensionParsingUtils.ParseColor("rgb(255, 255, 128)");
+            NUnit.Framework.Assert.AreEqual(expected.GetColor(), actual.GetColor());
+            NUnit.Framework.Assert.AreEqual(expected.GetOpacity(), actual.GetOpacity(), 0.0001f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInvalidColorTest() {
+            TransparentColor expected = new TransparentColor(new DeviceRgb(0, 0, 0), 1f);
+            TransparentColor actual = CssDimensionParsingUtils.ParseColor("currentcolor");
+            NUnit.Framework.Assert.AreEqual(expected.GetColor(), actual.GetColor());
+            NUnit.Framework.Assert.AreEqual(expected.GetOpacity(), actual.GetOpacity(), 0.0001f);
         }
     }
 }

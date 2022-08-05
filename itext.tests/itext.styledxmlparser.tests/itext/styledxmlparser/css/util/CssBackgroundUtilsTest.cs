@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css.Util {
     [NUnit.Framework.Category("Unit test")]
@@ -49,6 +50,8 @@ namespace iText.StyledXmlParser.Css.Util {
                 ("something"));
         }
 
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.URL_IS_NOT_CLOSED_IN_CSS_EXPRESSION
+            )]
         [NUnit.Framework.Test]
         public virtual void ResolveBackgroundPropertyTypeTest() {
             NUnit.Framework.Assert.AreEqual(CssBackgroundUtils.BackgroundPropertyType.UNDEFINED, CssBackgroundUtils.ResolveBackgroundPropertyType
