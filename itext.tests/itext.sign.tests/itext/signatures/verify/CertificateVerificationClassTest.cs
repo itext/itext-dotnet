@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Java.Security;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
@@ -212,8 +213,8 @@ namespace iText.Signatures.Verify {
             IList<VerificationException> resultedExceptionList = CertificateVerification.VerifyCertificates(validCertChain
                 , emptyKeyStore, (ICollection<X509Crl>)null);
             String expectedResult = MessageFormatUtil.Format(SignExceptionMessageConstant.CERTIFICATE_TEMPLATE_FOR_EXCEPTION_MESSAGE
-                , ((X509Certificate)validCertChain[2]).SubjectDN.ToString(), SignExceptionMessageConstant.CANNOT_BE_VERIFIED_CERTIFICATE_CHAIN
-                );
+                , FACTORY.CreateX500Name((X509Certificate)validCertChain[2]).ToString(), SignExceptionMessageConstant.
+                CANNOT_BE_VERIFIED_CERTIFICATE_CHAIN);
             NUnit.Framework.Assert.AreEqual(1, resultedExceptionList.Count);
             NUnit.Framework.Assert.AreEqual(expectedResult, resultedExceptionList[0].Message);
         }
@@ -234,9 +235,9 @@ namespace iText.Signatures.Verify {
             String validCertChainFileName = CERTS_SRC + "signCertRsaWithExpiredChain.p12";
             X509Certificate[] validCertChain = Pkcs12FileHelper.ReadFirstChain(validCertChainFileName, PASSWORD);
             X509Certificate expectedExpiredCert = (X509Certificate)validCertChain[1];
-            String expiredCertName = expectedExpiredCert.SubjectDN.ToString();
+            String expiredCertName = FACTORY.CreateX500Name(expectedExpiredCert).ToString();
             X509Certificate rootCert = (X509Certificate)validCertChain[2];
-            String rootCertName = rootCert.SubjectDN.ToString();
+            String rootCertName = FACTORY.CreateX500Name(rootCert).ToString();
             IList<VerificationException> resultedExceptionList = CertificateVerification.VerifyCertificates(validCertChain
                 , null, (ICollection<X509Crl>)null);
             NUnit.Framework.Assert.AreEqual(2, resultedExceptionList.Count);

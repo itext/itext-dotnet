@@ -85,19 +85,22 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void SignCertificateSecurityPdfTest() {
-            String srcFile = SOURCE_FOLDER + "signCertificateSecurityPdf.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp_signCertificateSecurityPdf.pdf";
-            String outPdf = DESTINATION_FOLDER + "signCertificateSecurityPdf.pdf";
-            PdfReader reader = new PdfReader(srcFile, new ReaderProperties().SetPublicKeySecurityParams(chain[0], pk));
-            PdfSigner signer = new PdfSigner(reader, new FileStream(outPdf, FileMode.Create), new StampingProperties()
-                .UseAppendMode());
-            // Creating the signature
-            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
-            ReaderProperties properties = new ReaderProperties().SetPublicKeySecurityParams(chain[0], pk);
-            //Public key to open out and cmp files are the same
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf, properties, properties
-                ));
+            //RSA keys in FIPS are supported for signature verification only
+            if (!FACTORY.GetProviderName().Contains("FIPS")) {
+                String srcFile = SOURCE_FOLDER + "signCertificateSecurityPdf.pdf";
+                String cmpPdf = SOURCE_FOLDER + "cmp_signCertificateSecurityPdf.pdf";
+                String outPdf = DESTINATION_FOLDER + "signCertificateSecurityPdf.pdf";
+                PdfReader reader = new PdfReader(srcFile, new ReaderProperties().SetPublicKeySecurityParams(chain[0], pk));
+                PdfSigner signer = new PdfSigner(reader, new FileStream(outPdf, FileMode.Create), new StampingProperties()
+                    .UseAppendMode());
+                // Creating the signature
+                IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+                signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+                ReaderProperties properties = new ReaderProperties().SetPublicKeySecurityParams(chain[0], pk);
+                //Public key to open out and cmp files are the same
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf, properties, properties
+                    ));
+            }
         }
     }
 }

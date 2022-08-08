@@ -187,7 +187,7 @@ namespace iText.Signatures {
                     issuerCert = (IX509Certificate)chain[i];
                 }
                 // now lets verify the certificate
-                LOGGER.LogInformation(signCert.SubjectDN.ToString());
+                LOGGER.LogInformation(BOUNCY_CASTLE_FACTORY.CreateX500Name(signCert).ToString());
                 IList<VerificationOK> list = Verify(signCert, issuerCert, signDate);
                 if (list.Count == 0) {
                     try {

@@ -45,7 +45,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using iText.Bouncycastleconnector;
 using iText.Commons;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 
@@ -56,6 +58,9 @@ namespace iText.Signatures {
     /// </summary>
     /// <author>Paulo Soares</author>
     public class CrlClientOnline : ICrlClient {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         /// <summary>The Logger instance.</summary>
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.CrlClientOnline
             ));
@@ -115,7 +120,8 @@ namespace iText.Signatures {
             }
             IList<Uri> urlList = new List<Uri>(urls);
             if (urlList.Count == 0) {
-                LOGGER.LogInformation("Looking for CRL for certificate " + checkCert.SubjectDN);
+                LOGGER.LogInformation("Looking for CRL for certificate " + BOUNCY_CASTLE_FACTORY.CreateX500Name(checkCert)
+                    );
                 try {
                     if (url == null) {
                         url = CertificateUtil.GetCRLURL(checkCert);

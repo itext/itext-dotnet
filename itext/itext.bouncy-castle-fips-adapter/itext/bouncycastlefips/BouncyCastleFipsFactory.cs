@@ -71,6 +71,7 @@ namespace iText.Bouncycastlefips {
     /// </summary>
     public class BouncyCastleFipsFactory : IBouncyCastleFactory {
         private static readonly String PROVIDER_NAME = new BouncyCastleFipsProvider().GetName();
+        private static readonly BouncyCastleFipsTestConstantsFactory BOUNCY_CASTLE_FIPS_TEST_CONSTANTS = new BouncyCastleFipsTestConstantsFactory();
 
         public virtual IASN1ObjectIdentifier CreateASN1ObjectIdentifier(IASN1Encodable encodable) {
             ASN1EncodableBCFips encodableBCFips = (ASN1EncodableBCFips)encodable;
@@ -649,9 +650,14 @@ namespace iText.Bouncycastlefips {
             return new TimeStampTokenGeneratorBCFips(siGen, dgCalc, policy);
         }
 
-        public virtual IX500Name CreateX500Name(X509Certificate certificate) {
-            return new X500NameBCFips(X509Name.GetInstance(TbsCertificateStructure.GetInstance(Asn1Object.FromByteArray
-                (certificate.GetTbsCertificate())).GetSubject()));
+        public virtual IX500Name CreateX500Name(IX509Certificate certificate) {
+            byte[] tbsCertificate = certificate.GetTbsCertificate();
+            if (tbsCertificate.Length != 0) {
+                return new X500NameBCFips(X500Name.GetInstance(TbsCertificateStructure.GetInstance(Asn1Object.FromByteArray
+                    (certificate.GetTbsCertificate())).Subject));
+            } else {
+                return null;
+            }
         }
 
         public virtual IX500Name CreateX500Name(String s) {
@@ -846,6 +852,10 @@ namespace iText.Bouncycastlefips {
         
         public AbstractGeneralSecurityException CreateGeneralSecurityException() {
             return new GeneralSecurityExceptionBCFips(new GeneralSecurityException());
+        }
+        
+        public IBouncyCastleTestConstantsFactory GetBouncyCastleFactoryTestUtil() {
+            return BOUNCY_CASTLE_FIPS_TEST_CONSTANTS;
         }
     }
 }

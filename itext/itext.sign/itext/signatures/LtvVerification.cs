@@ -148,7 +148,7 @@ namespace iText.Signatures {
             LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
             foreach (IX509Certificate certificate in xc) {
                 cert = (IX509Certificate)certificate;
-                LOGGER.LogInformation("Certificate: " + cert.SubjectDN);
+                LOGGER.LogInformation("Certificate: " + BOUNCY_CASTLE_FACTORY.CreateX500Name(cert));
                 if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert)) {
                     continue;
                 }

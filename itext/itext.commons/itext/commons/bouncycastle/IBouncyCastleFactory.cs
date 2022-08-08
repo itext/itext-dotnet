@@ -330,5 +330,8 @@ namespace iText.Commons.Bouncycastle {
         AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage);
 
         AbstractGeneralSecurityException CreateGeneralSecurityException();
+        
+        IBouncyCastleTestConstantsFactory GetBouncyCastleFactoryTestUtil();
+
     }
 }

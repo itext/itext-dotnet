@@ -112,12 +112,12 @@ namespace iText.Signatures {
                 IList<VerificationOK> verificationOKList = verifier.VerifySignature();
                 NUnit.Framework.Assert.AreEqual(2, verificationOKList.Count);
                 VerificationOK verificationOK = verificationOKList[0];
-                NUnit.Framework.Assert.AreEqual("C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRsaCert01", verificationOK.certificate
-                    .SubjectDN.ToString());
+                NUnit.Framework.Assert.AreEqual("C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRsaCert01", BOUNCY_CASTLE_FACTORY
+                    .CreateX500Name(verificationOK.certificate).ToString());
                 NUnit.Framework.Assert.AreEqual("Valid OCSPs Found: 1", verificationOK.message);
                 verificationOK = verificationOKList[1];
-                NUnit.Framework.Assert.AreEqual("C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRoot", verificationOK.certificate
-                    .SubjectDN.ToString());
+                NUnit.Framework.Assert.AreEqual("C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRoot", BOUNCY_CASTLE_FACTORY.CreateX500Name
+                    (verificationOK.certificate).ToString());
                 NUnit.Framework.Assert.AreEqual("Root certificate passed without checking", verificationOK.message);
             }
         }
@@ -220,16 +220,16 @@ namespace iText.Signatures {
                 IList<VerificationOK> verificationOKList = verifier.VerifySignature();
                 NUnit.Framework.Assert.AreEqual(3, verificationOKList.Count);
                 VerificationOK verificationOK = verificationOKList[0];
-                NUnit.Framework.Assert.AreEqual("C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRsaCert01", verificationOK.certificate
-                    .SubjectDN.ToString());
+                NUnit.Framework.Assert.AreEqual("C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRsaCert01", BOUNCY_CASTLE_FACTORY
+                    .CreateX500Name(verificationOK.certificate).ToString());
                 NUnit.Framework.Assert.AreEqual("Valid OCSPs Found: 1", verificationOK.message);
                 verificationOK = verificationOKList[1];
-                NUnit.Framework.Assert.AreEqual("C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRoot", verificationOK.certificate
-                    .SubjectDN.ToString());
+                NUnit.Framework.Assert.AreEqual("C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRoot", BOUNCY_CASTLE_FACTORY.CreateX500Name
+                    (verificationOK.certificate).ToString());
                 NUnit.Framework.Assert.AreEqual("Root certificate in final revision", verificationOK.message);
                 verificationOK = verificationOKList[2];
-                NUnit.Framework.Assert.AreEqual("C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRoot", verificationOK.certificate
-                    .SubjectDN.ToString());
+                NUnit.Framework.Assert.AreEqual("C=BY,L=Minsk,O=iText,OU=test,CN=iTextTestRoot", BOUNCY_CASTLE_FACTORY.CreateX500Name
+                    (verificationOK.certificate).ToString());
                 NUnit.Framework.Assert.AreEqual("Root certificate passed without checking", verificationOK.message);
             }
         }
