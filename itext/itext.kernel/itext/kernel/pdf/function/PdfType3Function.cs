@@ -290,7 +290,10 @@ namespace iText.Kernel.Pdf.Function {
             if (functionsArray == null || functionsArray.Size() == 0) {
                 throw new PdfException(KernelExceptionMessageConstant.INVALID_TYPE_3_FUNCTION_NULL_FUNCTIONS);
             }
-            int? tempOutputSize = GetRange() == null ? (int?)null : GetOutputSize();
+            int? tempOutputSize = null;
+            if (GetRange() != null) {
+                tempOutputSize = GetOutputSize();
+            }
             IList<IPdfFunction> tempFunctions = new List<IPdfFunction>();
             foreach (PdfObject funcObj in functionsArray) {
                 if (!(funcObj is PdfDictionary)) {
