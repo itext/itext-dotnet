@@ -1,9 +1,11 @@
-using NUnit.Framework;
+using System;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
+using iText.Test;
 
 namespace iText.Kernel.Pdf.Function {
-    public class PdfFunctionFactoryTest : TestCase {
+    [NUnit.Framework.Category("Integration test")]
+    public class PdfFunctionFactoryTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestCreateFunctionType0() {
             PdfStream stream = new PdfStream(new byte[] { 0, 0, 0 });
@@ -64,8 +66,7 @@ namespace iText.Kernel.Pdf.Function {
             stream.Put(PdfName.Size, new PdfArray(new int[] { 2, 1, 3 }));
             stream.Put(PdfName.Range, new PdfArray(new double[] { 1, 2, 3, 4, 5, 6 }));
             stream.Put(PdfName.BitsPerSample, new PdfNumber(1));
-            PdfException ex = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFunctionFactory.Create(stream
-                ));
+            Exception ex = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFunctionFactory.Create(stream));
             NUnit.Framework.Assert.AreEqual("Invalid function type 1", ex.Message);
         }
 
@@ -77,8 +78,7 @@ namespace iText.Kernel.Pdf.Function {
             dict.Put(PdfName.Size, new PdfArray(new int[] { 2, 1, 3 }));
             dict.Put(PdfName.Range, new PdfArray(new double[] { 1, 2, 3, 4, 5, 6 }));
             dict.Put(PdfName.BitsPerSample, new PdfNumber(1));
-            PdfException ex = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFunctionFactory.Create(dict)
-                );
+            Exception ex = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFunctionFactory.Create(dict));
             NUnit.Framework.Assert.AreEqual("Invalid object type, a function type 0 requires a stream object", ex.Message
                 );
         }
@@ -91,8 +91,7 @@ namespace iText.Kernel.Pdf.Function {
             dict.Put(PdfName.Size, new PdfArray(new int[] { 2, 1, 3 }));
             dict.Put(PdfName.Range, new PdfArray(new double[] { 1, 2, 3, 4, 5, 6 }));
             dict.Put(PdfName.BitsPerSample, new PdfNumber(1));
-            PdfException ex = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFunctionFactory.Create(dict)
-                );
+            Exception ex = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFunctionFactory.Create(dict));
             NUnit.Framework.Assert.AreEqual("Invalid object type, a function type 4 requires a stream object", ex.Message
                 );
         }
@@ -100,8 +99,7 @@ namespace iText.Kernel.Pdf.Function {
         [NUnit.Framework.Test]
         public virtual void TestArrayThrows() {
             PdfArray array = new PdfArray();
-            PdfException ex = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFunctionFactory.Create(array
-                ));
+            Exception ex = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFunctionFactory.Create(array));
             NUnit.Framework.Assert.AreEqual("Invalid object type, a function must be either a Dictionary or a Stream", 
                 ex.Message);
         }
