@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Pdf.Function {
@@ -84,5 +85,7 @@ namespace iText.Kernel.Pdf.Function {
         double[] ClipInput(double[] input);
 
         double[] ClipOutput(double[] input);
+
+        PdfObject GetAsPdfObject();
     }
 }

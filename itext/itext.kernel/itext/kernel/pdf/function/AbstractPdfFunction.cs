@@ -105,16 +105,7 @@ namespace iText.Kernel.Pdf.Function {
             range = rangeObj == null ? null : rangeObj.ToDoubleArray();
         }
 
-        /// <summary>
-        /// The function type, (see ISO-320001 Table 38)
-        /// functionType = pdfObject.getAsNumber(PdfName.FunctionType).intValue();
-        /// domain = pdfObject.getAsArray(PdfName.Domain).toDoubleArray();
-        /// final PdfArray rangeObj = pdfObject.getAsArray(PdfName.Range);
-        /// range = rangeObj == null ? null : rangeObj.toDoubleArray();
-        /// }
-        /// /
-        /// The function type, (see ISO-320001 Table 38).
-        /// </summary>
+        /// <summary>The function type, (see ISO-320001 Table 38).</summary>
         /// <returns>The function type, either 0, 2, 3 or 4</returns>
         public virtual int GetFunctionType() {
             return functionType;
@@ -278,6 +269,10 @@ namespace iText.Kernel.Pdf.Function {
                 throw new ArgumentException(KernelExceptionMessageConstant.INPUT_NOT_MULTIPLE_OF_RANGE_SIZE);
             }
             return Clip(input, range);
+        }
+
+        public virtual PdfObject GetAsPdfObject() {
+            return base.GetPdfObject();
         }
 
         protected internal static double[] Clip(double[] values, double[] limits) {

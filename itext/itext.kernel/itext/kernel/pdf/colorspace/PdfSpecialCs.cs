@@ -138,8 +138,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// to the alternate color space
             /// </param>
             public Separation(String name, PdfColorSpace alternateSpace, IPdfFunction tintTransform)
-                : this(new PdfName(name), alternateSpace.GetPdfObject(), ((AbstractPdfFunction<PdfDictionary>)tintTransform
-                    ).GetPdfObject()) {
+                : this(new PdfName(name), alternateSpace.GetPdfObject(), tintTransform.GetAsPdfObject()) {
                 if (!tintTransform.CheckCompatibilityWithColorSpace(alternateSpace)) {
                     throw new PdfException(KernelExceptionMessageConstant.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
                 }
@@ -209,8 +208,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <param name="alternateSpace">the alternate colorspace</param>
             /// <param name="tintTransform">the function to transform colors to the alternate colorspace</param>
             public DeviceN(IList<String> names, PdfColorSpace alternateSpace, IPdfFunction tintTransform)
-                : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), ((AbstractPdfFunction<PdfDictionary>)tintTransform
-                    ).GetPdfObject()) {
+                : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetAsPdfObject()) {
                 if (tintTransform.GetInputSize() != numOfComponents || tintTransform.GetOutputSize() != alternateSpace.GetNumberOfComponents
                     ()) {
                     throw new PdfException(KernelExceptionMessageConstant.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
@@ -273,8 +271,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <param name="attributes">NChannel specific attributes</param>
             public NChannel(IList<String> names, PdfColorSpace alternateSpace, IPdfFunction tintTransform, PdfDictionary
                  attributes)
-                : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), ((AbstractPdfFunction<PdfDictionary>)tintTransform
-                    ).GetPdfObject(), attributes) {
+                : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetAsPdfObject(), attributes
+                    ) {
                 if (tintTransform.GetInputSize() != 1 || tintTransform.GetOutputSize() != alternateSpace.GetNumberOfComponents
                     ()) {
                     throw new PdfException(KernelExceptionMessageConstant.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
