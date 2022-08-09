@@ -155,13 +155,7 @@ namespace iText.Commons.Bouncycastle {
 
         IExtension CreateExtension();
 
-        IExtensions CreateExtensions(IExtension extension);
-
-        IExtensions CreateNullExtensions();
-
         IOCSPReqBuilder CreateOCSPReqBuilder();
-
-        ISigPolicyQualifiers CreateSigPolicyQualifiers(params ISigPolicyQualifierInfo[] qualifierInfosBC);
 
         ISigPolicyQualifierInfo CreateSigPolicyQualifierInfo(IASN1ObjectIdentifier objectIdentifier, IDERIA5String
              @string);
@@ -216,7 +210,7 @@ namespace iText.Commons.Bouncycastle {
             );
 
         ISignaturePolicyId CreateSignaturePolicyId(IASN1ObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue
-            , ISigPolicyQualifiers policyQualifiers);
+            , params ISigPolicyQualifierInfo[] policyQualifiers);
 
         ISignaturePolicyIdentifier CreateSignaturePolicyIdentifier(ISignaturePolicyId policyId);
 

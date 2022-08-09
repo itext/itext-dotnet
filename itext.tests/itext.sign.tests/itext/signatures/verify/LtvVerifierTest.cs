@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Java.Security;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Kernel.Pdf;

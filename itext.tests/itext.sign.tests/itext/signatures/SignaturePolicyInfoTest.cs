@@ -145,9 +145,8 @@ namespace iText.Signatures {
                 );
             IASN1ObjectIdentifier objectIdentifierInstance = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(objectIdentifier
                 );
-            ISigPolicyQualifiers policyQualifiers = SignUtils.CreateSigPolicyQualifiers(sigPolicyQualifierInfo);
             ISignaturePolicyId signaturePolicyId = BOUNCY_CASTLE_FACTORY.CreateSignaturePolicyId(objectIdentifierInstance
-                , otherHashAlgAndValue, policyQualifiers);
+                , otherHashAlgAndValue, sigPolicyQualifierInfo);
             ISignaturePolicyIdentifier expected = BOUNCY_CASTLE_FACTORY.CreateSignaturePolicyIdentifier(signaturePolicyId
                 );
             NUnit.Framework.Assert.AreEqual(expected, actual);

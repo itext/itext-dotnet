@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,7 +51,6 @@ using System.Text;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
-using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.X500;
@@ -232,10 +230,6 @@ namespace iText.Signatures {
                 }
             }
             return false;
-        }
-
-        internal static IEnumerable CreateSigPolicyQualifiers(params ISigPolicyQualifierInfo[] sigPolicyQualifierInfo) {
-            return sigPolicyQualifierInfo;
         }
 
         internal static DateTime GetTimeStampDate(ITSTInfo timeStampTokenInfo) {

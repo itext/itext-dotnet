@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.Security;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;

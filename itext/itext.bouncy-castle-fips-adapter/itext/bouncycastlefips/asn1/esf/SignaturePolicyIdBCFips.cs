@@ -50,12 +50,11 @@ namespace iText.Bouncycastlefips.Asn1.Esf {
         /// </summary>
         /// <param name="objectIdentifier">ASN1ObjectIdentifier wrapper</param>
         /// <param name="algAndValue">OtherHashAlgAndValue wrapper</param>
-        /// <param name="policyQualifiers">SigPolicyQualifiers wrapper</param>
+        /// <param name="policyQualifiers">SigPolicyQualifierInfo array</param>
         public SignaturePolicyIdBCFips(IASN1ObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue, 
-            ISigPolicyQualifiers policyQualifiers)
+            params SigPolicyQualifierInfo[] policyQualifiers)
             : this(new SignaturePolicyId(((ASN1ObjectIdentifierBCFips)objectIdentifier).GetASN1ObjectIdentifier(), ((OtherHashAlgAndValueBCFips
-                )algAndValue).GetOtherHashAlgAndValue(), ((SigPolicyQualifiersBCFips)policyQualifiers).GetSigPolityQualifiers
-                ())) {
+                )algAndValue).GetOtherHashAlgAndValue(), policyQualifiers)) {
         }
 
         /// <summary>

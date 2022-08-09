@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Asn1;
@@ -56,6 +57,7 @@ using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities;
 using ICertificateID = iText.Commons.Bouncycastle.Cert.Ocsp.ICertificateID;
 using ISingleResp = iText.Commons.Bouncycastle.Cert.Ocsp.ISingleResp;
 
@@ -367,32 +369,18 @@ namespace iText.Bouncycastle {
 
         public virtual IExtension CreateExtension(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString
              octetString) {
-            return new ExtensionBC(objectIdentifier, critical, octetString);
+            IDictionary extension = new Hashtable();
+            extension.Add(((ASN1ObjectIdentifierBC)objectIdentifier).GetASN1ObjectIdentifier(),
+                new X509Extension(critical, ((ASN1OctetStringBC)octetString).GetASN1OctetString()));
+            return new ExtensionBC(new X509Extensions(extension));
         }
 
         public virtual IExtension CreateExtension() {
             return ExtensionBC.GetInstance();
         }
 
-        public virtual IExtensions CreateExtensions(IExtension extension) {
-            return new ExtensionsBC(extension);
-        }
-
-        public virtual IExtensions CreateNullExtensions() {
-            return new ExtensionsBC((Extensions)null);
-        }
-
         public virtual IOCSPReqBuilder CreateOCSPReqBuilder() {
             return new OCSPReqBuilderBC(new OCSPReqBuilder());
-        }
-
-        public virtual ISigPolicyQualifiers CreateSigPolicyQualifiers(params ISigPolicyQualifierInfo[] qualifierInfosBC
-            ) {
-            SigPolicyQualifierInfo[] qualifierInfos = new SigPolicyQualifierInfo[qualifierInfosBC.Length];
-            for (int i = 0; i < qualifierInfos.Length; ++i) {
-                qualifierInfos[i] = ((SigPolicyQualifierInfoBC)qualifierInfosBC[i]).GetSigPolicyQualifierInfo();
-            }
-            return new SigPolicyQualifiersBC(qualifierInfos);
         }
 
         public virtual ISigPolicyQualifierInfo CreateSigPolicyQualifierInfo(IASN1ObjectIdentifier objectIdentifier
@@ -515,8 +503,12 @@ namespace iText.Bouncycastle {
         }
 
         public virtual ISignaturePolicyId CreateSignaturePolicyId(IASN1ObjectIdentifier objectIdentifier, IOtherHashAlgAndValue
-             algAndValue, ISigPolicyQualifiers policyQualifiers) {
-            return new SignaturePolicyIdBC(objectIdentifier, algAndValue, policyQualifiers);
+             algAndValue, params ISigPolicyQualifierInfo[] policyQualifiers) {
+            SigPolicyQualifierInfo[] qualifierInfos = new SigPolicyQualifierInfo[policyQualifiers.Length];
+            for (int i = 0; i < qualifierInfos.Length; ++i) {
+                qualifierInfos[i] = ((SigPolicyQualifierInfoBC)policyQualifiers[i]).GetSigPolicyQualifierInfo();
+            }
+            return new SignaturePolicyIdBC(objectIdentifier, algAndValue, qualifierInfos);
         }
 
         public virtual ISignaturePolicyIdentifier CreateSignaturePolicyIdentifier(ISignaturePolicyId policyId) {

@@ -40,20 +40,20 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
         private static readonly ASN1ObjectIdentifierBCFips AUTHORITY_INFO_ACCESS = new ASN1ObjectIdentifierBCFips(
             X509Extensions.AuthorityInfoAccess);
 
-        private static readonly ASN1ObjectIdentifierBCFips BASIC_CONSTRAINTS = new ASN1ObjectIdentifierBCFips(X509Extensions
-            .basicConstraints);
+        private static readonly ASN1ObjectIdentifierBCFips BASIC_CONSTRAINTS = new ASN1ObjectIdentifierBCFips(X509Extensions.BasicConstraints
+            );
 
-        private static readonly ASN1ObjectIdentifierBCFips KEY_USAGE = new ASN1ObjectIdentifierBCFips(X509Extensions
-            .keyUsage);
+        private static readonly ASN1ObjectIdentifierBCFips KEY_USAGE = new ASN1ObjectIdentifierBCFips(X509Extensions.KeyUsage
+            );
 
-        private static readonly ASN1ObjectIdentifierBCFips EXTENDED_KEY_USAGE = new ASN1ObjectIdentifierBCFips(X509Extensions
-            .extendedKeyUsage);
+        private static readonly ASN1ObjectIdentifierBCFips EXTENDED_KEY_USAGE = new ASN1ObjectIdentifierBCFips(X509Extensions.ExtendedKeyUsage
+            );
 
         private static readonly ASN1ObjectIdentifierBCFips AUTHORITY_KEY_IDENTIFIER = new ASN1ObjectIdentifierBCFips
-            (X509Extensions.authorityKeyIdentifier);
+            (X509Extensions.AuthorityKeyIdentifier);
 
         private static readonly ASN1ObjectIdentifierBCFips SUBJECT_KEY_IDENTIFIER = new ASN1ObjectIdentifierBCFips
-            (X509Extensions.subjectKeyIdentifier);
+            (X509Extensions.SubjectKeyIdentifier);
 
         /// <summary>
         /// Creates new wrapper instance for
@@ -66,19 +66,6 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
         /// </param>
         public ExtensionBCFips(X509Extensions extension)
             : base(extension) {
-        }
-
-        /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Extensions"/>.
-        /// </summary>
-        /// <param name="objectIdentifier">ASN1ObjectIdentifier wrapper</param>
-        /// <param name="critical">boolean</param>
-        /// <param name="octetString">ASN1OctetString wrapper</param>
-        public ExtensionBCFips(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString octetString
-            )
-            : base(new X509Extensions(((ASN1ObjectIdentifierBCFips)objectIdentifier).GetASN1ObjectIdentifier(), critical
-                , ((ASN1OctetStringBCFips)octetString).GetOctetString())) {
         }
 
         /// <summary>Gets wrapper instance.</summary>

@@ -40,20 +40,20 @@ namespace iText.Bouncycastle.Asn1.X509 {
         private static readonly ASN1ObjectIdentifierBC AUTHORITY_INFO_ACCESS = new ASN1ObjectIdentifierBC(X509Extensions.AuthorityInfoAccess
             );
 
-        private static readonly ASN1ObjectIdentifierBC BASIC_CONSTRAINTS = new ASN1ObjectIdentifierBC(X509Extensions
-            .basicConstraints);
-
-        private static readonly ASN1ObjectIdentifierBC KEY_USAGE = new ASN1ObjectIdentifierBC(X509Extensions.keyUsage
+        private static readonly ASN1ObjectIdentifierBC BASIC_CONSTRAINTS = new ASN1ObjectIdentifierBC(X509Extensions.BasicConstraints
             );
 
-        private static readonly ASN1ObjectIdentifierBC EXTENDED_KEY_USAGE = new ASN1ObjectIdentifierBC(X509Extensions
-            .extendedKeyUsage);
+        private static readonly ASN1ObjectIdentifierBC KEY_USAGE = new ASN1ObjectIdentifierBC(X509Extensions.KeyUsage
+            );
 
-        private static readonly ASN1ObjectIdentifierBC AUTHORITY_KEY_IDENTIFIER = new ASN1ObjectIdentifierBC(X509Extensions
-            .authorityKeyIdentifier);
+        private static readonly ASN1ObjectIdentifierBC EXTENDED_KEY_USAGE = new ASN1ObjectIdentifierBC(X509Extensions.ExtendedKeyUsage
+            );
 
-        private static readonly ASN1ObjectIdentifierBC SUBJECT_KEY_IDENTIFIER = new ASN1ObjectIdentifierBC(X509Extensions
-            .subjectKeyIdentifier);
+        private static readonly ASN1ObjectIdentifierBC AUTHORITY_KEY_IDENTIFIER = new ASN1ObjectIdentifierBC(X509Extensions.AuthorityKeyIdentifier
+            );
+
+        private static readonly ASN1ObjectIdentifierBC SUBJECT_KEY_IDENTIFIER = new ASN1ObjectIdentifierBC(X509Extensions.SubjectKeyIdentifier
+            );
 
         /// <summary>
         /// Creates new wrapper instance for
@@ -66,18 +66,6 @@ namespace iText.Bouncycastle.Asn1.X509 {
         /// </param>
         public ExtensionBC(X509Extensions extension)
             : base(extension) {
-        }
-
-        /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Extensions"/>.
-        /// </summary>
-        /// <param name="objectIdentifier">ASN1ObjectIdentifier wrapper</param>
-        /// <param name="critical">boolean</param>
-        /// <param name="octetString">ASN1OctetString wrapper</param>
-        public ExtensionBC(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString octetString)
-            : base(new X509Extensions(((ASN1ObjectIdentifierBC)objectIdentifier).GetASN1ObjectIdentifier(), critical, 
-                ((ASN1OctetStringBC)octetString).GetASN1OctetString())) {
         }
 
         /// <summary>Gets wrapper instance.</summary>

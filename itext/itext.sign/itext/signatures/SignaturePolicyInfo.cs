@@ -50,12 +50,15 @@ using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Utils;
 
 namespace iText.Signatures {
-    /// <summary>
+    /// <summary>Class that encapsulates the signature policy information</summary>
+    /// <remarks>
     /// Class that encapsulates the signature policy information
+    /// <para />
     /// Sample:
+    /// <para />
     /// SignaturePolicyInfo spi = new SignaturePolicyInfo("2.16.724.1.3.1.1.2.1.9",
     /// "G7roucf600+f03r/o0bAOQ6WAs0=", "SHA-1", "https://sede.060.gob.es/politica_de_firma_anexo_1.pdf");
-    /// </summary>
+    /// </remarks>
     public class SignaturePolicyInfo {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
@@ -139,8 +142,8 @@ namespace iText.Signatures {
                 (this.policyIdentifier.Replace("urn:oid:", "")));
             IOtherHashAlgAndValue otherHashAlgAndValue = FACTORY.CreateOtherHashAlgAndValue(FACTORY.CreateAlgorithmIdentifier
                 (FACTORY.CreateASN1ObjectIdentifier(algId)), FACTORY.CreateDEROctetString(this.policyHash));
-            ISignaturePolicyId signaturePolicyId = FACTORY.CreateSignaturePolicyId(identifier, otherHashAlgAndValue, SignUtils
-                .CreateSigPolicyQualifiers(spqi));
+            ISignaturePolicyId signaturePolicyId = FACTORY.CreateSignaturePolicyId(identifier, otherHashAlgAndValue, spqi
+                );
             signaturePolicyIdentifier = FACTORY.CreateSignaturePolicyIdentifier(signaturePolicyId);
             return signaturePolicyIdentifier;
         }
