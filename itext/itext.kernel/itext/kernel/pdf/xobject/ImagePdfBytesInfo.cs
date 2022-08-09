@@ -55,25 +55,25 @@ namespace iText.Kernel.Pdf.Xobject {
             ).GetVersion() + " \u00a9" + ITextCoreProductData.GetInstance().GetSinceCopyrightYear() + "-" + ITextCoreProductData
             .GetInstance().GetToCopyrightYear() + " iText Group NV";
 
+        private readonly int bpc;
+
+        private readonly int width;
+
+        private readonly int height;
+
+        private readonly PdfObject colorspace;
+
+        private readonly PdfArray decode;
+
         private int pngColorType;
 
         private int pngBitDepth;
-
-        private int bpc;
 
         private byte[] palette;
 
         private byte[] icc;
 
         private int stride;
-
-        private int width;
-
-        private int height;
-
-        private PdfObject colorspace;
-
-        private PdfArray decode;
 
         public ImagePdfBytesInfo(PdfImageXObject imageXObject) {
             pngColorType = -1;
@@ -171,7 +171,7 @@ namespace iText.Kernel.Pdf.Xobject {
                 throw new NotSupportedException(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
                     );
             }
-            stride = stride = (width * bpc * 3 + 7) / 8;
+            stride = (width * bpc * 3 + 7) / 8;
             return ProcessPng(newImageBytes, pngBitDepth, 2);
         }
 
@@ -274,7 +274,6 @@ namespace iText.Kernel.Pdf.Xobject {
                                             IPdfFunction fct = PdfFunctionFactory.Create(ca.Get(3));
                                             int components = fct.GetOutputSize();
                                             pngColorType = components == 1 ? 1 : 2;
-                                            components = 3;
                                             pngBitDepth = 8;
                                         }
                                     }

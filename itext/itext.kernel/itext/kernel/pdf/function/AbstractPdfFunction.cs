@@ -191,6 +191,10 @@ namespace iText.Kernel.Pdf.Function {
         /// </remarks>
         /// <param name="value">the new set of limts</param>
         public virtual void SetRange(double[] value) {
+            if (value == null) {
+                GetPdfObject().Remove(PdfName.Range);
+                return;
+            }
             range = JavaUtil.ArraysCopyOf(value, value.Length);
             GetPdfObject().Put(PdfName.Range, new PdfArray(range));
         }
