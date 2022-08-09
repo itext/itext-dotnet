@@ -133,6 +133,16 @@ namespace iText.Kernel.Pdf.Colorspace {
                 return ((PdfArray)GetPdfObject()).GetAsName(1);
             }
 
+            /// <summary>Gets the function to calulate a separation color value to an alternative colorspace.</summary>
+            /// <returns>
+            /// a
+            /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+            /// to perform the calculation
+            /// </returns>
+            public virtual IPdfFunction GetTintTransformation() {
+                return PdfFunctionFactory.Create(((PdfArray)GetPdfObject()).Get(3));
+            }
+
             private static PdfArray GetSeparationCsArray(PdfName name, PdfObject alternateSpace, PdfObject tintTransform
                 ) {
                 PdfArray separation = new PdfArray();
