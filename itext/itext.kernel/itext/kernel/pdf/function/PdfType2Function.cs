@@ -92,9 +92,7 @@ namespace iText.Kernel.Pdf.Function {
         }
 
         public PdfType2Function(double[] domain, double[] range, double[] c0, double[] c1, int n)
-            : base(new PdfDictionary()) {
-            base.SetDomain(domain);
-            base.SetRange(range);
+            : base(new PdfDictionary(), PdfFunctionFactory.FUNCTION_TYPE_2, domain, range) {
             SetC0(c0);
             SetC1(c1);
             SetN(n);
@@ -112,10 +110,6 @@ namespace iText.Kernel.Pdf.Function {
                 output[i] = c0[i] + Math.Pow(x, n) * (c1[i] - c0[i]);
             }
             return ClipOutput(output);
-        }
-
-        protected internal override bool IsWrappedObjectMustBeIndirect() {
-            return false;
         }
 
         /// <summary>Gets output size of function.</summary>
@@ -166,6 +160,10 @@ namespace iText.Kernel.Pdf.Function {
         public void SetN(int value) {
             GetPdfObject().Put(PdfName.N, new PdfNumber(value));
             n = value;
+        }
+
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
+            return false;
         }
 
         private static double[] InitializeCArray(PdfArray c, PdfArray otherC, PdfArray range, double defaultValue) {

@@ -52,6 +52,10 @@ namespace iText.Kernel.Pdf.Function {
             : base(dict) {
         }
 
+        public PdfType4Function(double[] domain, double[] range, byte[] code)
+            : base(new PdfStream(code), PdfFunctionFactory.FUNCTION_TYPE_4, domain, range) {
+        }
+
         public override bool CheckCompatibilityWithColorSpace(PdfColorSpace alternateSpace) {
             return GetInputSize() == 1 && GetOutputSize() == alternateSpace.GetNumberOfComponents();
         }

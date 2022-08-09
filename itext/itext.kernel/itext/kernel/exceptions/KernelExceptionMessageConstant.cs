@@ -587,6 +587,14 @@ namespace iText.Kernel.Exceptions {
 
         public const String PDF_TYPE0_FUNCTION_BITS_PER_SAMPLE_INVALID_VALUE = "bitsPerSample value must be from {1, 2, 4, 8, 12, 16, 24, 32}";
 
+        public const String FUCTIONFACTORY_INVALID_OBJECT_TYPE = "Invalid object type, a function must be either a Dictionary or a Stream";
+
+        public const String FUCTIONFACTORY_INVALID_FUNCTION_TYPE = "Invalid function type {0}";
+
+        public const String FUCTIONFACTORY_INVALID_OBJECT_TYPE_TYPE4 = "Invalid object type, a function type 4 requires a stream object";
+
+        public const String FUCTIONFACTORY_INVALID_OBJECT_TYPE_TYPE0 = "Invalid object type, a function type 0 requires a stream object";
+
         private KernelExceptionMessageConstant() {
         }
     }

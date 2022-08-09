@@ -215,7 +215,7 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfSpecialCs.Indexed indexed = new PdfSpecialCs.Indexed(PdfName.DeviceRGB, 255, new PdfString(iText.Commons.Utils.JavaUtil.GetStringForBytes
-                (bytes, "UTF-8")));
+                (bytes, System.Text.Encoding.UTF8)));
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(new Indexed(indexed, 85)).Rectangle(50, 500, 50, 50).Fill();
             canvas.SetFillColor(new Indexed(indexed, 127)).Rectangle(150, 500, 50, 50).Fill();
@@ -227,7 +227,7 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         [NUnit.Framework.Test]
-        public virtual void ColorTest07() {
+        public virtual void ColorTest07Depr() {
             PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest07.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
@@ -246,13 +246,55 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         [NUnit.Framework.Test]
-        public virtual void ColorTest08() {
+        public virtual void ColorTest07() {
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest07.pdf");
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            //com.itextpdf.kernel.pdf.function.PdfFunction.Type4 function = new com.itextpdf.kernel.pdf.function.PdfFunction.Type4(new PdfArray(new float[]{0, 1}), new PdfArray(new float[]{0, 1, 0, 1, 0, 1}), "{0 0}".getBytes(StandardCharsets.ISO_8859_1));
+            PdfType4Function function = new PdfType4Function(new double[] { 0, 1 }, new double[] { 0, 1, 0, 1, 0, 1 }, 
+                "{0 0}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
+            PdfSpecialCs.Separation separation = new PdfSpecialCs.Separation("MyRed", new PdfDeviceCs.Rgb(), function);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SetFillColor(new Separation(separation, 0.25f)).Rectangle(50, 500, 50, 50).Fill();
+            canvas.SetFillColor(new Separation(separation, 0.5f)).Rectangle(150, 500, 50, 50).Fill();
+            canvas.SetFillColor(new Separation(separation, 0.75f)).Rectangle(250, 500, 50, 50).Fill();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "colorTest07.pdf", SOURCE_FOLDER
+                 + "cmp_colorTest07.pdf", DESTINATION_FOLDER, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorTest08Depr() {
             PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest08.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(new float[] { 0, 1, 0, 1 }), new PdfArray(
                 new float[] { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
+            List<String> tmpArray = new List<String>(2);
+            tmpArray.Add("MyRed");
+            tmpArray.Add("MyGreen");
+            PdfSpecialCs.DeviceN deviceN = new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb(), function);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SetFillColor(new DeviceN(deviceN, new float[] { 0, 0 })).Rectangle(50, 500, 50, 50).Fill();
+            canvas.SetFillColor(new DeviceN(deviceN, new float[] { 0, 1 })).Rectangle(150, 500, 50, 50).Fill();
+            canvas.SetFillColor(new DeviceN(deviceN, new float[] { 1, 0 })).Rectangle(250, 500, 50, 50).Fill();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "colorTest08.pdf", SOURCE_FOLDER
+                 + "cmp_colorTest08.pdf", DESTINATION_FOLDER, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorTest08() {
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest08.pdf");
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfType4Function function = new PdfType4Function(new double[] { 0, 1, 0, 1 }, new double[] { 0, 1, 0, 1, 0
+                , 1 }, "{0}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             List<String> tmpArray = new List<String>(2);
             tmpArray.Add("MyRed");
             tmpArray.Add("MyGreen");
@@ -275,35 +317,6 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void SetColorsSameColorSpacesPattern() {
             SetColorSameColorSpacesTest("setColorsSameColorSpacesPattern.pdf", true);
-        }
-
-        private void SetColorSameColorSpacesTest(String pdfName, bool pattern) {
-            String cmpFile = SOURCE_FOLDER + "cmp_" + pdfName;
-            String destFile = DESTINATION_FOLDER + pdfName;
-            PdfDocument document = new PdfDocument(new PdfWriter(destFile));
-            PdfPage page = document.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            PdfColorSpace space = pattern ? new PdfSpecialCs.Pattern() : PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB
-                );
-            float[] colorValue1 = pattern ? null : new float[] { 1.0f, 0.6f, 0.7f };
-            float[] colorValue2 = pattern ? null : new float[] { 0.1f, 0.9f, 0.9f };
-            PdfPattern pattern1 = pattern ? new PdfPattern.Shading(new PdfShading.Axial(new PdfDeviceCs.Rgb(), 45, 750
-                , ColorConstants.PINK.GetColorValue(), 100, 760, ColorConstants.MAGENTA.GetColorValue())) : null;
-            PdfPattern pattern2 = pattern ? new PdfPattern.Shading(new PdfShading.Axial(new PdfDeviceCs.Rgb(), 45, 690
-                , ColorConstants.BLUE.GetColorValue(), 100, 710, ColorConstants.CYAN.GetColorValue())) : null;
-            canvas.SetColor(space, colorValue1, pattern1, true);
-            canvas.SaveState();
-            canvas.BeginText().MoveText(50, 750).SetFontAndSize(PdfFontFactory.CreateFont(), 16).ShowText("pinkish").EndText
-                ();
-            canvas.SaveState().BeginText().SetColor(space, colorValue2, pattern2, true).MoveText(50, 720).SetFontAndSize
-                (PdfFontFactory.CreateFont(), 16).ShowText("bluish").EndText().RestoreState();
-            canvas.RestoreState();
-            canvas.SaveState().BeginText().MoveText(50, 690).SetColor(space, colorValue2, pattern2, true).SetFontAndSize
-                (PdfFontFactory.CreateFont(), 16).ShowText("bluish").EndText().RestoreState();
-            canvas.Release();
-            document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, DESTINATION_FOLDER, "diff_"
-                ));
         }
 
         [NUnit.Framework.Test]
@@ -489,6 +502,35 @@ namespace iText.Kernel.Pdf.Canvas {
             new PdfPatternCanvas(circle, doc).Circle(7.5f, 7.5f, 2.5f).Fill().Release();
             PatternColor redCirclePattern = new PatternColor(circle, ColorConstants.RED);
             NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PatternColor(circle, redCirclePattern));
+        }
+
+        private void SetColorSameColorSpacesTest(String pdfName, bool pattern) {
+            String cmpFile = SOURCE_FOLDER + "cmp_" + pdfName;
+            String destFile = DESTINATION_FOLDER + pdfName;
+            PdfDocument document = new PdfDocument(new PdfWriter(destFile));
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            PdfColorSpace space = pattern ? new PdfSpecialCs.Pattern() : PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB
+                );
+            float[] colorValue1 = pattern ? null : new float[] { 1.0f, 0.6f, 0.7f };
+            float[] colorValue2 = pattern ? null : new float[] { 0.1f, 0.9f, 0.9f };
+            PdfPattern pattern1 = pattern ? new PdfPattern.Shading(new PdfShading.Axial(new PdfDeviceCs.Rgb(), 45, 750
+                , ColorConstants.PINK.GetColorValue(), 100, 760, ColorConstants.MAGENTA.GetColorValue())) : null;
+            PdfPattern pattern2 = pattern ? new PdfPattern.Shading(new PdfShading.Axial(new PdfDeviceCs.Rgb(), 45, 690
+                , ColorConstants.BLUE.GetColorValue(), 100, 710, ColorConstants.CYAN.GetColorValue())) : null;
+            canvas.SetColor(space, colorValue1, pattern1, true);
+            canvas.SaveState();
+            canvas.BeginText().MoveText(50, 750).SetFontAndSize(PdfFontFactory.CreateFont(), 16).ShowText("pinkish").EndText
+                ();
+            canvas.SaveState().BeginText().SetColor(space, colorValue2, pattern2, true).MoveText(50, 720).SetFontAndSize
+                (PdfFontFactory.CreateFont(), 16).ShowText("bluish").EndText().RestoreState();
+            canvas.RestoreState();
+            canvas.SaveState().BeginText().MoveText(50, 690).SetColor(space, colorValue2, pattern2, true).SetFontAndSize
+                (PdfFontFactory.CreateFont(), 16).ShowText("bluish").EndText().RestoreState();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, DESTINATION_FOLDER, "diff_"
+                ));
         }
 
         private static int CountSubstringOccurrences(String str, String findStr) {

@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
@@ -86,7 +87,7 @@ namespace iText.Kernel.Pdf.Function {
                 switch (dict.GetAsNumber(PdfName.FunctionType).IntValue()) {
                     case FUNCTION_TYPE_0: {
                         if (pdfObject.GetObjectType() != PdfObject.STREAM) {
-                            throw new PdfException("Invalid object type, a function type 0 requires a stream object");
+                            throw new PdfException(KernelExceptionMessageConstant.FUCTIONFACTORY_INVALID_OBJECT_TYPE_TYPE0);
                         }
                         return new PdfType0Function((PdfStream)pdfObject);
                     }
@@ -101,17 +102,18 @@ namespace iText.Kernel.Pdf.Function {
 
                     case FUNCTION_TYPE_4: {
                         if (pdfObject.GetObjectType() != PdfObject.STREAM) {
-                            throw new PdfException("Invalid object type, a function type 4 requires a stream object");
+                            throw new PdfException(KernelExceptionMessageConstant.FUCTIONFACTORY_INVALID_OBJECT_TYPE_TYPE4);
                         }
                         return new PdfType4Function((PdfStream)pdfObject);
                     }
 
                     default: {
-                        throw new PdfException("Invalid function type %s", dict.GetAsNumber(PdfName.FunctionType).IntValue());
+                        throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.FUCTIONFACTORY_INVALID_FUNCTION_TYPE
+                            , dict.GetAsNumber(PdfName.FunctionType).IntValue()));
                     }
                 }
             }
-            throw new PdfException("Invalid object type, a function must be either a Dictionary or a Stream");
+            throw new PdfException(KernelExceptionMessageConstant.FUCTIONFACTORY_INVALID_OBJECT_TYPE);
         }
     }
 }
