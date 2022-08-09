@@ -40,43 +40,25 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.StyledXmlParser.Css;
-using iText.StyledXmlParser.Css.Validate.Impl;
+using System;
+using iText.Kernel.Colors;
+using iText.StyledXmlParser.Css.Validate;
 
-namespace iText.StyledXmlParser.Css.Validate {
-    /// <summary>Class that holds CSS declaration validator.</summary>
-    public class CssDeclarationValidationMaster {
-        /// <summary>A validator containing all the CSS declaration validators.</summary>
-        private static ICssDeclarationValidator VALIDATOR = new CssDefaultValidator();
-
-        /// <summary>
-        /// Creates a new
-        /// <c>CssDeclarationValidationMaster</c>
-        /// instance.
-        /// </summary>
-        private CssDeclarationValidationMaster() {
-        }
-
-        /// <summary>Checks a CSS declaration.</summary>
-        /// <param name="declaration">the CSS declaration</param>
-        /// <returns>true, if the validation was successful</returns>
-        public static bool CheckDeclaration(CssDeclaration declaration) {
-            return VALIDATOR.IsValid(declaration);
-        }
-
-        /// <summary>Sets new validator for CSS declarations.</summary>
-        /// <param name="validator">
-        /// validator for CSS declarations:
-        /// use
-        /// <see cref="iText.StyledXmlParser.Css.Validate.Impl.CssDefaultValidator"/>
-        /// instance to
-        /// use default validation,
-        /// use
-        /// <see cref="iText.StyledXmlParser.Css.Validate.Impl.CssDeviceCmykAwareValidator"/>
-        /// instance to support device-cmyk feature
-        /// </param>
-        public static void SetValidator(ICssDeclarationValidator validator) {
-            VALIDATOR = validator;
+namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
+    /// <summary>
+    /// <see cref="iText.StyledXmlParser.Css.Validate.ICssDataTypeValidator"/>
+    /// implementation for colors.
+    /// </summary>
+    public class CssCmykAwareColorValidator : ICssDataTypeValidator {
+        /* (non-Javadoc)
+        * @see com.itextpdf.styledxmlparser.css.validate.ICssDataTypeValidator#isValid(java.lang.String)
+        */
+        public virtual bool IsValid(String objectString) {
+            float[] rgbaColor = WebColors.GetRGBAColor(objectString);
+            if (rgbaColor != null) {
+                return true;
+            }
+            return WebColors.GetCMYKArray(objectString) != null;
         }
     }
 }

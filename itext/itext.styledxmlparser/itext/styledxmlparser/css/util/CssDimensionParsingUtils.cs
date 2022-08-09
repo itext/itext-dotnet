@@ -442,6 +442,37 @@ namespace iText.StyledXmlParser.Css.Util {
             return (float)f;
         }
 
+        /// <summary>Parses either RGBA or CMYK color.</summary>
+        /// <param name="colorValue">the color value</param>
+        /// <returns>an RGBA or CMYK value expressed as an array with four float values</returns>
+        public static TransparentColor ParseColor(String colorValue) {
+            Color device = null;
+            float opacity = 1;
+            float[] color = WebColors.GetRGBAColor(colorValue);
+            if (color == null) {
+                color = WebColors.GetCMYKArray(colorValue);
+            }
+            else {
+                device = new DeviceRgb(color[0], color[1], color[2]);
+                if (color.Length == 4) {
+                    opacity = color[3];
+                }
+            }
+            if (color == null) {
+                color = new float[] { 0, 0, 0, 1 };
+                device = new DeviceRgb(0, 0, 0);
+            }
+            else {
+                if (device == null) {
+                    device = new DeviceCmyk(color[0], color[1], color[2], color[3]);
+                    if (color.Length == 5) {
+                        opacity = color[4];
+                    }
+                }
+            }
+            return new TransparentColor(device, opacity);
+        }
+
         /// <summary>Parses the RGBA color.</summary>
         /// <param name="colorValue">the color value</param>
         /// <returns>an RGBA value expressed as an array with four float values</returns>

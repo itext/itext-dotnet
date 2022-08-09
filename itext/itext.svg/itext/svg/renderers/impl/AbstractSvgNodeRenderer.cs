@@ -47,8 +47,10 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
 using iText.Layout.Properties;
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Util;
+using iText.StyledXmlParser.Css.Validate;
 using iText.Svg;
 using iText.Svg.Css.Impl;
 using iText.Svg.Renderers;
@@ -195,18 +197,6 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>Draws this element to a canvas-like object maintained in the context.</summary>
         /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         protected internal abstract void DoDraw(SvgDrawContext context);
-
-        internal static float GetAlphaFromRGBA(String value) {
-            try {
-                return WebColors.GetRGBAColor(value)[3];
-            }
-            catch (IndexOutOfRangeException) {
-                return 1f;
-            }
-            catch (NullReferenceException) {
-                return 1f;
-            }
-        }
 
         /// <summary>Calculate the transformation for the viewport based on the context.</summary>
         /// <remarks>
@@ -425,7 +415,11 @@ namespace iText.Svg.Renderers.Impl {
             if (token != null) {
                 String value = token.GetValue();
                 if (!SvgConstants.Values.NONE.EqualsIgnoreCase(value)) {
-                    return new TransparentColor(WebColors.GetRGBColor(value), parentOpacity * GetAlphaFromRGBA(value));
+                    if (!CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants.COLOR, value))) {
+                        return new TransparentColor(new DeviceRgb(0.0f, 0.0f, 0.0f), 1.0f);
+                    }
+                    TransparentColor result = CssDimensionParsingUtils.ParseColor(value);
+                    return new TransparentColor(result.GetColor(), result.GetOpacity() * parentOpacity);
                 }
             }
             return null;

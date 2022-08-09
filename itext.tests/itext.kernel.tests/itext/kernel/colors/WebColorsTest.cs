@@ -134,5 +134,85 @@ namespace iText.Kernel.Colors {
             float[] resultRgba = WebColors.GetRGBAColor(rgbaString);
             iText.Test.TestUtil.AreEqual(cmpRgba, resultRgba, delta);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCMYKColorByDeviceCmykTest() {
+            //corresponding color name = "violet"
+            String cmykString = "device-cmyk(44% 100% 0% 0%)";
+            float[] cmpCmyk = new float[] { 0.44f, 1f, 0f, 0f, 1f };
+            float delta = (float)(0.0001);
+            float[] resultCmyk = WebColors.GetCMYKArray(cmykString);
+            iText.Test.TestUtil.AreEqual(cmpCmyk, resultCmyk, delta);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCMYKColorByDeviceCmykWithOpacityTest() {
+            //corresponding color name = "violet"
+            String cmykString = "device-cmyk(44% 100% 0% 0% / .8)";
+            float[] cmpCmyk = new float[] { 0.44f, 1f, 0f, 0f, 0.8f };
+            float delta = (float)(0.0001);
+            float[] resultCmyk = WebColors.GetCMYKArray(cmykString);
+            iText.Test.TestUtil.AreEqual(cmpCmyk, resultCmyk, delta);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCMYKColorByDeviceCmykWithOpacityAndFallbackTest() {
+            //corresponding color name = "violet"
+            String cmykString = "device-cmyk(44% 100% 0% 0% / .8 rgb(238,130,238))";
+            float[] cmpCmyk = new float[] { 0.44f, 1f, 0f, 0f, 0.8f };
+            float delta = (float)(0.0001);
+            float[] resultCmyk = WebColors.GetCMYKArray(cmykString);
+            iText.Test.TestUtil.AreEqual(cmpCmyk, resultCmyk, delta);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCMYKColorWithNoBlack() {
+            String cmykString = "device-cmyk(44% 100% 0%))";
+            float[] cmpCmyk = new float[] { 0.44f, 1f, 0f, 1f, 1f };
+            float delta = (float)(0.0001);
+            float[] resultCmyk = WebColors.GetCMYKArray(cmykString);
+            iText.Test.TestUtil.AreEqual(cmpCmyk, resultCmyk, delta);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCMYKColorWithInvalidDeviceCmykDefinition() {
+            String cmykString = "cmyk(44% 100% 0% 1%))";
+            float[] resultCmyk = WebColors.GetCMYKArray(cmykString);
+            NUnit.Framework.Assert.IsNull(resultCmyk);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCMYKColorWithExceptionDuringParsing() {
+            float[] resultCmyk = WebColors.GetCMYKArray(null);
+            NUnit.Framework.Assert.IsNull(resultCmyk);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCMYKColorTest() {
+            //corresponding color name = "violet"
+            String cmykString = "device-cmyk(44% 100% 0% 0%)";
+            float[] cmpCmyk = new float[] { 0.44f, 1f, 0f, 0f };
+            float delta = (float)(0.0001);
+            DeviceCmyk resultCmyk = WebColors.GetCMYKColor(cmykString);
+            iText.Test.TestUtil.AreEqual(cmpCmyk, resultCmyk.colorValue, delta);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCMYKColorFloatTest() {
+            String cmykString = "device-cmyk(0.44 1 0.2 0.2)";
+            float[] cmpCmyk = new float[] { 0.44f, 1f, 0.2f, 0.2f };
+            float delta = (float)(0.0001);
+            DeviceCmyk resultCmyk = WebColors.GetCMYKColor(cmykString);
+            iText.Test.TestUtil.AreEqual(cmpCmyk, resultCmyk.colorValue, delta);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCMYKColorNullTest() {
+            String cmykString = "null";
+            float[] cmpCmyk = new float[] { 0f, 0f, 0f, 1f };
+            float delta = (float)(0.0001);
+            DeviceCmyk resultCmyk = WebColors.GetCMYKColor(cmykString);
+            iText.Test.TestUtil.AreEqual(cmpCmyk, resultCmyk.colorValue, delta);
+        }
     }
 }

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Validate.Impl;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Validate {
@@ -385,6 +386,18 @@ namespace iText.StyledXmlParser.Css.Validate {
                 .JUSTIFY_CONTENT, "space_evenly")));
             NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
                 .JUSTIFY_CONTENT, "flex-start left")));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChangeValidatorTest() {
+            try {
+                CssDeclarationValidationMaster.SetValidator(new CssDeviceCmykAwareValidator());
+                NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                    .COLOR, "device-cmyk(0, 100%, 70%, 0)")));
+            }
+            finally {
+                CssDeclarationValidationMaster.SetValidator(new CssDefaultValidator());
+            }
         }
     }
 }
