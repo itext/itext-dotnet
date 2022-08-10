@@ -30,6 +30,7 @@ using iText.Bouncycastle.Cert.Ocsp;
 using iText.Bouncycastle.Cms;
 using iText.Bouncycastle.Cms.Jcajce;
 using iText.Bouncycastle.Crypto;
+using iText.Bouncycastle.Math;
 using iText.Bouncycastle.Operator.Jcajce;
 using iText.Bouncycastle.Security;
 using iText.Bouncycastle.Tsp;
@@ -554,7 +555,7 @@ namespace iText.Bouncycastle {
 
         public virtual ICMSEnvelopedData CreateCMSEnvelopedData(byte[] bytes) {
             try {
-                return new CMSEnvelopedDataBC(new CMSEnvelopedData(bytes));
+                return new CMSEnvelopedDataBC(new CmsEnvelopedData(bytes));
             }
             catch (CmsException e) {
                 throw new CMSExceptionBC(e);
@@ -783,5 +784,9 @@ namespace iText.Bouncycastle {
     	public IBouncyCastleTestConstantsFactory GetBouncyCastleFactoryTestUtil() {
         	return BOUNCY_CASTLE_TEST_CONSTANTS;
     	}
+
+        public IBigInteger CreateBigInteger() {
+            return BigIntegerBC.GetInstance();
+        }
     }
 }

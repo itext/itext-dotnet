@@ -9,6 +9,8 @@ namespace iText.Bouncycastle.Math {
     /// <see cref="Org.BouncyCastle.Math.BigInteger"/>.
     /// </summary>
     public class BigIntegerBC : IBigInteger {
+        private static readonly BigIntegerBC INSTANCE = new BigIntegerBC(null);
+        
         private readonly BigInteger bigInteger;
 
         /// <summary>
@@ -20,6 +22,16 @@ namespace iText.Bouncycastle.Math {
         /// </param>
         public BigIntegerBC(BigInteger bigInteger) {
             this.bigInteger = bigInteger;
+        }
+        
+        /// <summary>Gets wrapper instance.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="BigIntegerBC"/>
+        /// instance.
+        /// </returns>
+        public static BigIntegerBC GetInstance() {
+            return INSTANCE;
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
@@ -38,6 +50,11 @@ namespace iText.Bouncycastle.Math {
         /// <summary><inheritDoc/></summary>
         public string ToString(int radix) {
             return bigInteger.ToString(radix);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IBigInteger ValueOf(long value) {
+            return new BigIntegerBC(BigInteger.ValueOf(value));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

@@ -21,10 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Tsp;
+using iText.Bouncycastlefips.Math;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1.Tsp;
 
 namespace iText.Bouncycastlefips.Tsp {
     /// <summary>
@@ -32,7 +33,7 @@ namespace iText.Bouncycastlefips.Tsp {
     /// <see cref="Org.BouncyCastle.Tsp.TimeStampRequest"/>.
     /// </summary>
     public class TimeStampRequestBCFips : ITimeStampRequest {
-        private readonly TimeStampRequest timeStampRequest;
+        private readonly TimeStampReq timeStampRequest;
 
         /// <summary>
         /// Creates new wrapper instance for
@@ -40,19 +41,19 @@ namespace iText.Bouncycastlefips.Tsp {
         /// </summary>
         /// <param name="timeStampRequest">
         /// 
-        /// <see cref="Org.BouncyCastle.Tsp.TimeStampRequest"/>
+        /// <see cref="Org.BouncyCastle.Asn1.Tsp.TimeStampReq"/>
         /// to be wrapped
         /// </param>
-        public TimeStampRequestBCFips(TimeStampRequest timeStampRequest) {
+        public TimeStampRequestBCFips(TimeStampReq timeStampRequest) {
             this.timeStampRequest = timeStampRequest;
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Tsp.TimeStampRequest"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.Tsp.TimeStampReq"/>.
         /// </returns>
-        public virtual TimeStampRequest GetTimeStampRequest() {
+        public virtual TimeStampReq GetTimeStampRequest() {
             return timeStampRequest;
         }
 
@@ -62,8 +63,8 @@ namespace iText.Bouncycastlefips.Tsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual BigInteger GetNonce() {
-            return timeStampRequest.GetNonce();
+        public virtual IBigInteger GetNonce() {
+            return new BigIntegerBCFips(timeStampRequest.Nonce.Value);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

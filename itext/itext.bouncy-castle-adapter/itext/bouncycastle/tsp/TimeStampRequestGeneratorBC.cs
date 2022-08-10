@@ -21,10 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Tsp;
 using iText.Bouncycastle.Asn1;
+using iText.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 
@@ -69,10 +70,10 @@ namespace iText.Bouncycastle.Tsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ITimeStampRequest Generate(IASN1ObjectIdentifier objectIdentifier, byte[] imprint, BigInteger
+        public virtual ITimeStampRequest Generate(IASN1ObjectIdentifier objectIdentifier, byte[] imprint, IBigInteger
              nonce) {
             return new TimeStampRequestBC(requestGenerator.Generate(((ASN1ObjectIdentifierBC)objectIdentifier).GetASN1ObjectIdentifier
-                (), imprint, nonce));
+                (), imprint, ((BigIntegerBC) nonce).GetBigInteger()));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

@@ -28,30 +28,30 @@ using iText.Commons.Utils;
 namespace iText.Bouncycastlefips.Cms {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Cms.CMSEnvelopedData"/>.
+    /// <see cref="Org.BouncyCastle.Cms.CmsEnvelopedData"/>.
     /// </summary>
     public class CMSEnvelopedDataBCFips : ICMSEnvelopedData {
-        private readonly CMSEnvelopedData cmsEnvelopedData;
+        private readonly CmsEnvelopedData cmsEnvelopedData;
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cms.CMSEnvelopedData"/>.
+        /// <see cref="Org.BouncyCastle.Cms.CmsEnvelopedData"/>.
         /// </summary>
         /// <param name="cmsEnvelopedData">
         /// 
-        /// <see cref="Org.BouncyCastle.Cms.CMSEnvelopedData"/>
+        /// <see cref="Org.BouncyCastle.Cms.CmsEnvelopedData"/>
         /// to be wrapped
         /// </param>
-        public CMSEnvelopedDataBCFips(CMSEnvelopedData cmsEnvelopedData) {
+        public CMSEnvelopedDataBCFips(CmsEnvelopedData cmsEnvelopedData) {
             this.cmsEnvelopedData = cmsEnvelopedData;
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Cms.CMSEnvelopedData"/>.
+        /// <see cref="Org.BouncyCastle.Cms.CmsEnvelopedData"/>.
         /// </returns>
-        public virtual CMSEnvelopedData GetCmsEnvelopedData() {
+        public virtual CmsEnvelopedData GetCmsEnvelopedData() {
             return cmsEnvelopedData;
         }
 

@@ -1,7 +1,10 @@
 using System;
+using System.Collections;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <summary>
@@ -28,14 +31,26 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspRequest"/>.
         /// </summary>
-        /// <param name="ocspReq">
-        /// 
-        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspRequest"/>
-        /// to be wrapped
+        /// <param name="certId">
+        /// CertID wrapper
         /// </param>
-        public OCSPReqBCFips(ICertificateID certId, byte[] documentId)
-        {
-            throw new NotImplementedException();
+        /// <param name="documentId">
+        /// byte array
+        /// </param>
+        public OCSPReqBCFips(ICertificateID certId, byte[] documentId) {
+            // create details for nonce extension
+            IDictionary extensions = new Hashtable();
+            
+            extensions[OcspObjectIdentifiers.PkixOcspNonce] = new X509Extension(false, new DerOctetString(
+                new DerOctetString(documentId).GetEncoded()));
+            X509Extensions x509Extensions = new X509Extensions(extensions);
+
+            Asn1EncodableVector vector = new Asn1EncodableVector();
+            vector.Add(new Request(((CertificateIDBCFips) certId).GetCertificateID(), (X509Extensions)null));
+            Asn1Sequence requestsList = new DerSequence(vector);
+            TbsRequest request = new TbsRequest(null, requestsList, x509Extensions);
+            
+            ocspReq = new OcspRequest(request, null);
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

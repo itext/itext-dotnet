@@ -13,5 +13,10 @@ namespace iText.Commons.Bouncycastle.Math {
         /// Calls toString with radix for the wrapped BigInteger.
         /// </summary>
         string ToString(int radix);
+
+        /// <summary>
+        /// Calls ValueOf method for the wrapped BigInteger.
+        /// </summary>
+        IBigInteger ValueOf(long value);
     }
 }

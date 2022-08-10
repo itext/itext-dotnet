@@ -300,7 +300,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     // c)
                     IIDigest md = null;
                     IBigInteger i_1 = new IBigInteger(1, JavaUtil.ArraysCopyOf(e, 16));
-                    int remainder = i_1.Remainder(IBigInteger.ValueOf(3)).GetIntValue();
+                    int remainder = i_1.Remainder(iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger().ValueOf
+                        (3)).GetIntValue();
                     switch (remainder) {
                         case 0: {
                             md = mdSha256;

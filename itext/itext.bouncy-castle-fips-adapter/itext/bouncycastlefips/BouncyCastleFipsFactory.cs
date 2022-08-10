@@ -25,6 +25,7 @@ using iText.Bouncycastlefips.Cert.Ocsp;
 using iText.Bouncycastlefips.Cms;
 using iText.Bouncycastlefips.Cms.Jcajce;
 using iText.Bouncycastlefips.Crypto;
+using iText.Bouncycastlefips.Math;
 using iText.Bouncycastlefips.Operator.Jcajce;
 using iText.Bouncycastlefips.Security;
 using iText.Bouncycastlefips.Tsp;
@@ -559,7 +560,7 @@ namespace iText.Bouncycastlefips {
 
         public virtual ICMSEnvelopedData CreateCMSEnvelopedData(byte[] bytes) {
             try {
-                return new CMSEnvelopedDataBCFips(new CMSEnvelopedData(bytes));
+                return new CMSEnvelopedDataBCFips(new CmsEnvelopedData(bytes));
             }
             catch (CmsException e) {
                 throw new CMSExceptionBCFips(e);
@@ -567,16 +568,12 @@ namespace iText.Bouncycastlefips {
         }
 
         public virtual ITimeStampRequestGenerator CreateTimeStampRequestGenerator() {
-            return new TimeStampRequestGeneratorBCFips(new TimeStampRequestGenerator());
+            return new TimeStampRequestGeneratorBCFips();
         }
 
         public virtual ITimeStampResponse CreateTimeStampResponse(byte[] respBytes) {
-            try {
-                return new TimeStampResponseBCFips(new TimeStampResponse(respBytes));
-            }
-            catch (TspException e) {
-                throw new TSPExceptionBCFips(e);
-            }
+            Asn1InputStream input = new Asn1InputStream(respBytes);
+            return new TimeStampResponseBCFips(TimeStampResp.GetInstance(input.ReadObject()));
         }
 
         public virtual AbstractOCSPException CreateAbstractOCSPException(Exception e) {
@@ -848,6 +845,10 @@ namespace iText.Bouncycastlefips {
         
         public IBouncyCastleTestConstantsFactory GetBouncyCastleFactoryTestUtil() {
             return BOUNCY_CASTLE_FIPS_TEST_CONSTANTS;
+        }
+        
+        public IBigInteger CreateBigInteger() {
+            return BigIntegerBCFips.GetInstance();
         }
     }
 }

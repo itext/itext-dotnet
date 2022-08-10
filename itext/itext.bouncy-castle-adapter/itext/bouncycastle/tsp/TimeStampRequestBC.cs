@@ -21,7 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Math;
+using iText.Bouncycastle.Math;
+using iText.Commons.Bouncycastle.Math;
 using Org.BouncyCastle.Tsp;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
@@ -62,8 +63,8 @@ namespace iText.Bouncycastle.Tsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual BigInteger GetNonce() {
-            return timeStampRequest.GetNonce();
+        public virtual IBigInteger GetNonce() {
+            return new BigIntegerBC(timeStampRequest.Nonce);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

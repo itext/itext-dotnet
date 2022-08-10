@@ -1,9 +1,7 @@
 using System;
 using System.IO;
-using iText.Bouncycastlefips.Asn1.Tsp;
 using iText.Bouncycastlefips.Cert;
 using iText.Bouncycastlefips.Crypto;
-using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
@@ -11,6 +9,7 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ess;
 using Org.BouncyCastle.Asn1.Nist;
 using Org.BouncyCastle.Asn1.Oiw;
+using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Asn1.X500;
 using Org.BouncyCastle.Asn1.X509;
@@ -18,6 +17,7 @@ using Org.BouncyCastle.Cert;
 using Org.BouncyCastle.Cms;
 using Org.BouncyCastle.Operators;
 using Org.BouncyCastle.Utilities;
+using ContentInfo = Org.BouncyCastle.Asn1.Cms.ContentInfo;
 
 namespace iText.Bouncycastlefips.Tsp {
     /// <summary>
@@ -53,10 +53,48 @@ namespace iText.Bouncycastlefips.Tsp {
             this.certID = new CertID(certID);
         }
 
+        public TimeStampTokenBCFips(ContentInfo contentInfo) {
+	        CmsSignedData signedData = new CmsSignedData(contentInfo);
+	        tsToken = signedData;
+	        if (!tsToken.SignedContent.ContentType.Equals(PkcsObjectIdentifiers.IdCTTstInfo)) {
+		        throw new CmsException("ContentInfo object not for a time stamp.");
+	        }
+	        var signers = tsToken.GetSignerInfos().GetAll();
+	        if (signers.Count != 1) {
+		        throw new ArgumentException("Time-stamp token signed by " + signers.Count +
+		                                    " signers, but it must contain just the TSA signature.");
+	        }
+	        var signerEnum = signers.GetEnumerator();
+	        signerEnum.MoveNext();
+	        tsaSignerInfo = signerEnum.Current;
+	        var content = tsToken.SignedContent;
+	        MemoryStream bOut = new MemoryStream();
+	        content.Write(bOut);
+	        tstInfo = TstInfo.GetInstance(Asn1Object.FromByteArray(bOut.ToArray()));
+	        Org.BouncyCastle.Asn1.Cms.Attribute attr = tsaSignerInfo.SignedAttributes
+		        [PkcsObjectIdentifiers.IdAASigningCertificate];
+	        if (attr != null) {
+		        if (attr.AttrValues[0] is SigningCertificateV2) {
+			        SigningCertificateV2 signCert = SigningCertificateV2.GetInstance(attr.AttrValues[0]);
+			        certID = new CertID(EssCertIDv2.GetInstance(signCert.GetCerts()[0]));
+		        } else {
+			        SigningCertificate signCert = SigningCertificate.GetInstance(attr.AttrValues[0]);
+			        certID = new CertID(EssCertID.GetInstance(signCert.GetCerts()[0]));
+		        }
+	        } else {
+		        attr = tsaSignerInfo.SignedAttributes[PkcsObjectIdentifiers.IdAASigningCertificateV2];
+		        if (attr == null) {
+			        throw new CertificateException("no signing certificate attribute found, time stamp invalid.");
+		        }
+		        SigningCertificateV2 signCertV2 = SigningCertificateV2.GetInstance(attr.AttrValues[0]);
+		        certID = new CertID(EssCertIDv2.GetInstance(signCertV2.GetCerts()[0]));
+	        }
+        }
+
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Tsp.CmsSignedData"/>.
+        /// <see cref="CmsSignedData"/>.
         /// </returns>
         public virtual CmsSignedData GetCmsSignedData() {
             return tsToken;
@@ -65,7 +103,7 @@ namespace iText.Bouncycastlefips.Tsp {
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Tsp.SignerInformation"/>.
+        /// <see cref="SignerInformation"/>.
         /// </returns>
         public virtual SignerInformation GetSignerInformation() {
 	        return tsaSignerInfo;
@@ -83,15 +121,15 @@ namespace iText.Bouncycastlefips.Tsp {
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Tsp.CmsSignedData"/>.
+        /// <see cref="CmsSignedData"/>.
         /// </returns>
         public virtual Asn1Encodable GetCertID() {
 	        return certID.Cert;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ITSTInfo GetTimeStampInfo() {
-            return new TSTInfoBCFips(tstInfo);
+        public virtual ITimeStampTokenInfo GetTimeStampInfo() {
+            return new TimeStampTokenInfoBCFips(tstInfo);
         }
 
         /// <summary><inheritDoc/></summary>
