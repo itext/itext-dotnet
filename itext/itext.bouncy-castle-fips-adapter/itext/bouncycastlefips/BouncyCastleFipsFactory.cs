@@ -850,5 +850,9 @@ namespace iText.Bouncycastlefips {
         public IBigInteger CreateBigInteger() {
             return BigIntegerBCFips.GetInstance();
         }
+
+        public IBigInteger CreateBigInteger(int i, byte[] array) {
+            return new BigIntegerBCFips(new BigInteger(i, array));
+        }
     }
 }

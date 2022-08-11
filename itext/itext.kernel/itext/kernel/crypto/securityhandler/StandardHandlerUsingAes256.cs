@@ -299,7 +299,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     byte[] e = cipher.ProcessBlock(k1, 0, k1.Length);
                     // c)
                     IIDigest md = null;
-                    IBigInteger i_1 = new IBigInteger(1, JavaUtil.ArraysCopyOf(e, 16));
+                    IBigInteger i_1 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger(1, 
+                        JavaUtil.ArraysCopyOf(e, 16));
                     int remainder = i_1.Remainder(iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger().ValueOf
                         (3)).GetIntValue();
                     switch (remainder) {

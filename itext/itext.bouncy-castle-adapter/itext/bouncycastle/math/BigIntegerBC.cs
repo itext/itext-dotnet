@@ -57,6 +57,11 @@ namespace iText.Bouncycastle.Math {
             return new BigIntegerBC(BigInteger.ValueOf(value));
         }
 
+        /// <summary><inheritDoc/></summary>
+        public IBigInteger Remainder(IBigInteger n) {
+            return new BigIntegerBC(bigInteger.Remainder(((BigIntegerBC) n).GetBigInteger()));
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {

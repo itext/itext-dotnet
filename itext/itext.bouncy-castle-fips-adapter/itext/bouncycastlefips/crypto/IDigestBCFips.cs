@@ -69,6 +69,11 @@ namespace iText.Bouncycastlefips.Crypto {
             Update(buf, 0, buf.Length);
         }
 
+        /// <summary><inheritDoc/></summary>
+        public void Reset() {
+            Digest();
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {

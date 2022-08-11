@@ -18,5 +18,10 @@ namespace iText.Commons.Bouncycastle.Math {
         /// Calls ValueOf method for the wrapped BigInteger.
         /// </summary>
         IBigInteger ValueOf(long value);
+
+        /// <summary>
+        /// Calls Remainder method for the wrapped BigInteger.
+        /// </summary>
+        IBigInteger Remainder(IBigInteger n);
     }
 }

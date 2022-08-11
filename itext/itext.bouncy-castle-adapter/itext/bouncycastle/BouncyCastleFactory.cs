@@ -788,5 +788,9 @@ namespace iText.Bouncycastle {
         public IBigInteger CreateBigInteger() {
             return BigIntegerBC.GetInstance();
         }
+        
+        public IBigInteger CreateBigInteger(int i, byte[] array) {
+            return new BigIntegerBC(new BigInteger(i, array));
+        }
     }
 }

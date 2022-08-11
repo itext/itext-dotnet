@@ -19,6 +19,7 @@ namespace iText.Commons.Bouncycastle.Crypto {
         /// Calls actual
         /// <c>Digest</c>
         /// method for the wrapped IDigest object.
+        /// Leaves the digest reset.
         /// </summary>
         /// <returns>
         /// byte array.
@@ -42,5 +43,12 @@ namespace iText.Commons.Bouncycastle.Crypto {
         /// </summary>
         /// <param name="buf">byte array buffer</param>
         void Update(byte[] buf);
+
+        /// <summary>
+        /// Calls actual
+        /// <c>Reset</c>
+        /// method for the wrapped IDigest object.
+        /// </summary>
+        void Reset();
     }
 }

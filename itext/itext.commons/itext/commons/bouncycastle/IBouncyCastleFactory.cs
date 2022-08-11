@@ -328,5 +328,7 @@ namespace iText.Commons.Bouncycastle {
         IBouncyCastleTestConstantsFactory GetBouncyCastleFactoryTestUtil();
 
         IBigInteger CreateBigInteger();
+        
+        IBigInteger CreateBigInteger(int i, byte[] array);
     }
 }

@@ -57,6 +57,11 @@ namespace iText.Bouncycastlefips.Math {
             return new BigIntegerBCFips(BigInteger.ValueOf(value));
         }
 
+        /// <summary><inheritDoc/></summary>
+        public IBigInteger Remainder(IBigInteger n) {
+            return new BigIntegerBCFips(bigInteger.Remainder(((BigIntegerBCFips) n).GetBigInteger()));
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {

@@ -54,7 +54,12 @@ namespace iText.Bouncycastle.Crypto {
         public void Update(byte[] buf) {
             Update(buf, 0, buf.Length);
         }
-        
+
+        /// <summary><inheritDoc/></summary>
+        public void Reset() {
+            iDigest.Reset();
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {
