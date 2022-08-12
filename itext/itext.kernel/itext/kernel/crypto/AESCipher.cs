@@ -41,41 +41,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using Java.Security;
-using Javax.Crypto;
-using Javax.Crypto.Spec;
-using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Security;
 using iText.Bouncycastleconnector;
-using iText.Commons;
-using iText.Commons.Bouncycastle;
-using iText.Commons.Bouncycastle.Security;
-using iText.Kernel.Exceptions;
-using iText.Kernel.Logs;
+using iText.Commons.Bouncycastle.Crypto;
 
 namespace iText.Kernel.Crypto {
     /// <summary>Creates an AES Cipher with CBC and padding PKCS5/7.</summary>
     /// <author>Paulo Soares</author>
     public class AESCipher {
-        private const String CIPHER_WITH_PKCS5_PADDING = "AES/CBC/PKCS5Padding";
-
-        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
-            ();
-
-        private static Cipher cipher;
-
-        static AESCipher() {
-            try {
-                cipher = Cipher.GetInstance(CIPHER_WITH_PKCS5_PADDING, BOUNCY_CASTLE_FACTORY.CreateProvider());
-            }
-            catch (SecurityUtilityException e) {
-                throw new PdfException(KernelExceptionMessageConstant.ERROR_WHILE_INITIALIZING_AES_CIPHER, e);
-            }
-            catch (NoSuchPaddingException e) {
-                throw new PdfException(KernelExceptionMessageConstant.ERROR_WHILE_INITIALIZING_AES_CIPHER, e);
-            }
-        }
+        private ICipher cipher;
 
         /// <summary>Creates a new instance of AESCipher</summary>
         /// <param name="forEncryption">
@@ -85,16 +58,7 @@ namespace iText.Kernel.Crypto {
         /// <param name="key">the key to be used in the cipher</param>
         /// <param name="iv">initialization vector to be used in cipher</param>
         public AESCipher(bool forEncryption, byte[] key, byte[] iv) {
-            try {
-                cipher.Init(forEncryption ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new 
-                    IvParameterSpec(iv));
-            }
-            catch (InvalidKeyException e) {
-                throw new PdfException(KernelExceptionMessageConstant.ERROR_WHILE_INITIALIZING_AES_CIPHER, e);
-            }
-            catch (InvalidAlgorithmParameterException e) {
-                throw new PdfException(KernelExceptionMessageConstant.ERROR_WHILE_INITIALIZING_AES_CIPHER, e);
-            }
+            cipher = BouncyCastleFactoryCreator.GetFactory().CreateCipher(forEncryption, key, iv);
         }
 
         public virtual byte[] Update(byte[] inp, int inpOff, int inpLen) {
@@ -102,19 +66,7 @@ namespace iText.Kernel.Crypto {
         }
 
         public virtual byte[] DoFinal() {
-            try {
-                return cipher.DoFinal();
-            }
-            catch (IllegalBlockSizeException e) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(AesDecryptor));
-                logger.LogInformation(e, KernelLogMessageConstant.ERROR_WHILE_FINALIZING_AES_CIPHER);
-                return null;
-            }
-            catch (BadPaddingException e) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(AesDecryptor));
-                logger.LogInformation(e, KernelLogMessageConstant.ERROR_WHILE_FINALIZING_AES_CIPHER);
-                return null;
-            }
+            return cipher.DoFinal();
         }
     }
 }

@@ -64,6 +64,7 @@ using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.Encoders;
 using Org.BouncyCastle.Utilities.IO;
 using ContentInfo = Org.BouncyCastle.Asn1.Cms.ContentInfo;
+using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
 using SignedData = Org.BouncyCastle.Asn1.Cms.SignedData;
 
 namespace iText.Bouncycastlefips {
@@ -853,6 +854,10 @@ namespace iText.Bouncycastlefips {
 
         public IBigInteger CreateBigInteger(int i, byte[] array) {
             return new BigIntegerBCFips(new BigInteger(i, array));
+        }
+
+        public ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv) {
+            return new CipherBCFips(forEncryption, key, iv);
         }
     }
 }

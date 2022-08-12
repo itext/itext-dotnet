@@ -330,5 +330,7 @@ namespace iText.Commons.Bouncycastle {
         IBigInteger CreateBigInteger();
         
         IBigInteger CreateBigInteger(int i, byte[] array);
+        
+        ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv);
     }
 }

@@ -60,6 +60,7 @@ using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;
 using ICertificateID = iText.Commons.Bouncycastle.Cert.Ocsp.ICertificateID;
+using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
 using ISingleResp = iText.Commons.Bouncycastle.Cert.Ocsp.ISingleResp;
 
 namespace iText.Bouncycastle {
@@ -791,6 +792,10 @@ namespace iText.Bouncycastle {
         
         public IBigInteger CreateBigInteger(int i, byte[] array) {
             return new BigIntegerBC(new BigInteger(i, array));
+        }
+        
+        public ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv) {
+            return new CipherBC(forEncryption, key, iv);
         }
     }
 }
