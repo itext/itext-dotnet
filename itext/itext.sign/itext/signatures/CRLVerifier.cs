@@ -129,7 +129,7 @@ namespace iText.Signatures {
                 return false;
             }
             // We only check CRLs valid on the signing date for which the issuer matches
-            if (crl.IssuerDN.Equals(signCert.GetIssuerDN()) && signDate.Before(crl.NextUpdate)) {
+            if (crl.GetIssuerDN().Equals(signCert.GetIssuerDN()) && signDate.Before(crl.GetNextUpdate())) {
                 // the signing certificate may not be revoked
                 if (IsSignatureValid(crl, issuerCert) && crl.IsRevoked(signCert)) {
                     throw new VerificationException(signCert, "The certificate has been revoked.");

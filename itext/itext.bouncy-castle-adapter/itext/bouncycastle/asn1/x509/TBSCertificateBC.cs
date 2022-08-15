@@ -57,7 +57,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
 
         /// <summary><inheritDoc/></summary>
         public virtual ISubjectPublicKeyInfo GetSubjectPublicKeyInfo() {
-            return new SubjectPublicKeyInfoBC(GetTBSCertificate().GetSubjectPublicKeyInfo());
+            return new SubjectPublicKeyInfoBC(GetTBSCertificate().SubjectPublicKeyInfo);
         }
 
         /// <summary><inheritDoc/></summary>

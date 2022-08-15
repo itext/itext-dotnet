@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Utilities;
 using iText.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Util;
@@ -74,7 +75,7 @@ namespace iText.Bouncycastle.Asn1.Util {
             if (obj is ASN1EncodableBC) {
                 obj = ((ASN1EncodableBC)obj).GetEncodable();
             }
-            return Asn1Dump.DumpAsString(obj, b);
+            return Asn1Dump.DumpAsString((Asn1Encodable)obj, b);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -82,7 +83,7 @@ namespace iText.Bouncycastle.Asn1.Util {
             if (obj is ASN1EncodableBC) {
                 obj = ((ASN1EncodableBC)obj).GetEncodable();
             }
-            return Asn1Dump.DumpAsString(obj);
+            return Asn1Dump.DumpAsString((Asn1Encodable)obj);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

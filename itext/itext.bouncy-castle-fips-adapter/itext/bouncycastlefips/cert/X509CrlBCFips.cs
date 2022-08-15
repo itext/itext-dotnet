@@ -1,7 +1,12 @@
 using System;
+using iText.Bouncycastlefips.Asn1.X500;
+using iText.Bouncycastlefips.Crypto;
+using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Cert;
+using Org.BouncyCastle.Operators;
 
 namespace iText.Bouncycastlefips.Cert {
     /// <summary>
@@ -33,6 +38,21 @@ namespace iText.Bouncycastlefips.Cert {
         /// <summary><inheritDoc/></summary>
         public bool IsRevoked(IX509Certificate cert) {
             return x509Crl.IsRevoked(((X509CertificateBCFips)cert).GetCertificate());
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IX500Name GetIssuerDN() {
+            return new X500NameBCFips(x509Crl.IssuerDN);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public DateTime GetNextUpdate() {
+            return x509Crl.NextUpdate.Value;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public void Verify(IPublicKey publicKey) {
+            x509Crl.Verify(new PkixVerifierFactoryProvider(((PublicKeyBCFips) publicKey).GetPublicKey()));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

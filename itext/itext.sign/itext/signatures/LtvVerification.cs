@@ -198,7 +198,7 @@ namespace iText.Signatures {
             IX509Certificate parent;
             foreach (IX509Certificate certificate in certs) {
                 parent = (IX509Certificate)certificate;
-                if (!cert.IssuerDN.Equals(parent.SubjectDN)) {
+                if (!cert.GetIssuerDN().Equals(parent.GetSubjectDN())) {
                     continue;
                 }
                 try {

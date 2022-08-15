@@ -96,7 +96,7 @@ namespace iText.Signatures {
         public CrlClientOnline(IX509Certificate[] chain) {
             for (int i = 0; i < chain.Length; i++) {
                 IX509Certificate cert = (IX509Certificate)chain[i];
-                LOGGER.LogInformation("Checking certificate: " + cert.SubjectDN);
+                LOGGER.LogInformation("Checking certificate: " + cert.GetSubjectDN());
                 String url = null;
                 url = CertificateUtil.GetCRLURL(cert);
                 if (url != null) {

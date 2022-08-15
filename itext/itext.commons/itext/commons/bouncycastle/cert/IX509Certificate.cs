@@ -83,5 +83,13 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <param name="time">DateTime object</param>
         void CheckValidity(DateTime time);
+
+        /// <summary>
+        /// Returns actual
+        /// <c>SubjectDN</c>
+        /// property for the wrapped X509Certificate object.
+        /// </summary>
+        /// <returns>X500Name wrapper.</returns>
+        IX500Name GetSubjectDN();
     }
 }

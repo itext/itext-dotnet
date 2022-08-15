@@ -3,8 +3,7 @@ using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Security;
 
-namespace iText.Bouncycastle.Security
-{
+namespace iText.Bouncycastle.Security {
     /// <summary>Wrapper class for <see cref="Org.BouncyCastle.Security.GeneralSecurityException"/>.</summary>
     public class GeneralSecurityExceptionBC : AbstractGeneralSecurityException {
         private readonly GeneralSecurityException exception;

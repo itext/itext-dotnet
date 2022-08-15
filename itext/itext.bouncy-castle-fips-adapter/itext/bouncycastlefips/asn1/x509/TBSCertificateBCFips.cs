@@ -57,7 +57,7 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
 
         /// <summary><inheritDoc/></summary>
         public virtual ISubjectPublicKeyInfo GetSubjectPublicKeyInfo() {
-            return new SubjectPublicKeyInfoBCFips(GetTBSCertificate().GetSubjectPublicKeyInfo());
+            return new SubjectPublicKeyInfoBCFips(GetTBSCertificate().SubjectPublicKeyInfo);
         }
 
         /// <summary><inheritDoc/></summary>

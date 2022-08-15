@@ -76,7 +76,7 @@ namespace iText.Signatures {
         public override String ToString() {
             StringBuilder sb = new StringBuilder();
             if (certificate != null) {
-                sb.Append(certificate.SubjectDN.ToString());
+                sb.Append(certificate.GetSubjectDN().ToString());
                 sb.Append(" verified with ");
             }
             sb.Append(verifierClass.FullName);
