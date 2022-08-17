@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -109,7 +109,7 @@ namespace iText.Signatures.Sign {
             String caCertP12FileName = CERTS_SRC + "rootRsa.p12";
             String srcFileName = SOURCE_FOLDER + "helloWorldDoc.pdf";
             String ltvFileName = DESTINATION_FOLDER + "ltvEnabledSingleSignatureNoCrlDataTest.pdf";
-            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertP12FileName, PASSWORD);
+            IX509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertP12FileName, PASSWORD);
             IExternalSignature pks = PrepareSignatureHandler(signCertP12FileName);
             TestTsaClient testTsa = PrepareTsaClient(tsaCertP12FileName);
             TestOcspClient testOcspClient = PrepareOcspClientForIssuer(intermediateCertP12FileName, caCertP12FileName);
@@ -128,7 +128,7 @@ namespace iText.Signatures.Sign {
             public _ICrlClient_148() {
             }
 
-            public ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url) {
+            public ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
                 return null;
             }
         }
@@ -141,7 +141,7 @@ namespace iText.Signatures.Sign {
             String caCertP12FileName = CERTS_SRC + "rootRsa.p12";
             String srcFileName = SOURCE_FOLDER + "helloWorldDoc.pdf";
             String ltvFileName = DESTINATION_FOLDER + "ltvEnabledSingleSignatureNoOcspDataTest.pdf";
-            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertP12FileName, PASSWORD);
+            IX509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertP12FileName, PASSWORD);
             IExternalSignature pks = PrepareSignatureHandler(signCertP12FileName);
             TestTsaClient testTsa = PrepareTsaClient(tsaCertP12FileName);
             TestCrlClient testCrlClient = PrepareCrlClientForIssuer(caCertP12FileName, intermediateCertP12FileName);
@@ -180,15 +180,15 @@ namespace iText.Signatures.Sign {
         }
 
         private static IExternalSignature PrepareSignatureHandler(String signCertP12FileName) {
-            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertP12FileName, PASSWORD, PASSWORD);
+            IPrivateKey signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertP12FileName, PASSWORD, PASSWORD);
             return new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
         }
 
         private static TestCrlClient PrepareCrlClientForIssuer(params String[] issuerCertP12FileNames) {
             TestCrlClient testCrlClient = new TestCrlClient();
             foreach (String issuerP12File in issuerCertP12FileNames) {
-                X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(issuerP12File, PASSWORD)[0];
-                ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(issuerP12File, PASSWORD, PASSWORD);
+                IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(issuerP12File, PASSWORD)[0];
+                IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(issuerP12File, PASSWORD, PASSWORD);
                 testCrlClient.AddBuilderForCertIssuer(caCert, caPrivateKey);
             }
             return testCrlClient;
@@ -197,17 +197,17 @@ namespace iText.Signatures.Sign {
         private static TestOcspClient PrepareOcspClientForIssuer(params String[] issuerCertP12FileNames) {
             TestOcspClient ocspClient = new TestOcspClient();
             foreach (String issuerP12File in issuerCertP12FileNames) {
-                X509Certificate issuerCertificate = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(issuerP12File, PASSWORD
+                IX509Certificate issuerCertificate = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(issuerP12File, PASSWORD
                     )[0];
-                ICipherParameters issuerPrivateKey = Pkcs12FileHelper.ReadFirstKey(issuerP12File, PASSWORD, PASSWORD);
+                IPrivateKey issuerPrivateKey = Pkcs12FileHelper.ReadFirstKey(issuerP12File, PASSWORD, PASSWORD);
                 ocspClient.AddBuilderForCertIssuer(issuerCertificate, issuerPrivateKey);
             }
             return ocspClient;
         }
 
         private static TestTsaClient PrepareTsaClient(String tsaCertP12FileName) {
-            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertP12FileName, PASSWORD);
-            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertP12FileName, PASSWORD, PASSWORD);
+            IX509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertP12FileName, PASSWORD);
+            IPrivateKey tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertP12FileName, PASSWORD, PASSWORD);
             return new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
         }
 

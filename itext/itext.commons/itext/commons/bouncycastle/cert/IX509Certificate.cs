@@ -91,5 +91,14 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <returns>X500Name wrapper.</returns>
         IX500Name GetSubjectDN();
+
+        /// <summary>
+        /// Returns actual
+        /// <c>EndDate</c>
+        /// property of the certificate structure
+        /// for the wrapped X509Certificate object.
+        /// </summary>
+        /// <returns>String time value.</returns>
+        string GetEndDateTime();
     }
 }

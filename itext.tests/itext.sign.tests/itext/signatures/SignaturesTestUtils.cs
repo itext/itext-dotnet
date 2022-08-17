@@ -22,7 +22,7 @@ Copyright (c) 1998-2022 iText Group NV
  */
  
 using System;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Signatures
 {
@@ -42,8 +42,8 @@ namespace iText.Signatures
         /// </summary>
         /// <param name="certificate">certificate for validation.</param>
         /// <returns>expected string.</returns>
-        public static String GetExpiredMessage(X509Certificate certificate) {
-            return EXPIRED_CERTIFICATE_DATE_PREFIX_MESSAGE + certificate.CertificateStructure.EndDate.GetTime();
+        public static String GetExpiredMessage(IX509Certificate certificate) {
+            return EXPIRED_CERTIFICATE_DATE_PREFIX_MESSAGE + certificate.GetEndDateTime();
         }
     }
 }

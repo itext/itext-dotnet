@@ -22,10 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
@@ -122,9 +122,9 @@ namespace iText.Signatures {
             int tokenSizeEstimate = 4096;
             TSAClientBouncyCastle tsaClientBouncyCastle = new TSAClientBouncyCastle(url, userName, password, tokenSizeEstimate
                 , digestAlgorithm);
-            IDigest digest = tsaClientBouncyCastle.GetMessageDigest();
+            IIDigest digest = tsaClientBouncyCastle.GetMessageDigest();
             NUnit.Framework.Assert.IsNotNull(digest);
-            NUnit.Framework.Assert.AreEqual(digestAlgorithm, digest.AlgorithmName);
+            NUnit.Framework.Assert.AreEqual(digestAlgorithm, digest.GetAlgorithmName());
         }
 
         [NUnit.Framework.Test]
@@ -171,9 +171,9 @@ namespace iText.Signatures {
             private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
                 .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-            private readonly ICipherParameters tsaPrivateKey;
+            private readonly IPrivateKey tsaPrivateKey;
 
-            private readonly IList<X509Certificate> tsaCertificateChain;
+            private readonly IList<IX509Certificate> tsaCertificateChain;
 
             private readonly String signatureAlgorithm;
 

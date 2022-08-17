@@ -41,10 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Testutils.Client;
@@ -79,11 +79,11 @@ namespace iText.Signatures.Sign {
             String srcFileName = sourceFolder + "signedTwice.pdf";
             String ltvFileName = destinationFolder + "ltvEnabledTest01.pdf";
             String ltvFileName2 = destinationFolder + "ltvEnabledTest02.pdf";
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
-            X509Certificate interCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(interCertFileName, password)[
-                0];
-            ICipherParameters interPrivateKey = Pkcs12FileHelper.ReadFirstKey(interCertFileName, password, password);
+            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
+            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
+            IX509Certificate interCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(interCertFileName, password
+                )[0];
+            IPrivateKey interPrivateKey = Pkcs12FileHelper.ReadFirstKey(interCertFileName, password, password);
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(interCert, interPrivateKey).AddBuilderForCertIssuer
                 (caCert, caPrivateKey);
             TestCrlClient testCrlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);

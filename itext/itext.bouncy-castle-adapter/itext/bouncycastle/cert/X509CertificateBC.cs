@@ -93,6 +93,11 @@ namespace iText.Bouncycastle.Cert {
             return new X500NameBC(certificate.SubjectDN);
         }
 
+        /// <summary><inheritDoc/></summary>
+        public string GetEndDateTime() {
+            return certificate.CertificateStructure.EndDate.GetTime();
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {

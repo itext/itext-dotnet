@@ -24,12 +24,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -55,9 +55,9 @@ namespace iText.Signatures {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
-        private static X509Certificate[] chain;
+        private static IX509Certificate[] chain;
 
-        private static ICipherParameters pk;
+        private static IPrivateKey pk;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Init() {
@@ -191,7 +191,7 @@ namespace iText.Signatures {
             PdfDocument outDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "singleSignatureNotEmptyCRL.pdf"));
             SignatureUtil sigUtil = new SignatureUtil(outDocument);
             PdfPKCS7 pkcs7 = sigUtil.ReadSignatureData("Signature1");
-            IList<X509Crl> crls = pkcs7.GetCRLs().Select((crl) => (X509Crl)crl).ToList();
+            IList<IX509Crl> crls = pkcs7.GetCRLs().Select((crl) => (IX509Crl)crl).ToList();
             NUnit.Framework.Assert.AreEqual(2, crls.Count);
             NUnit.Framework.Assert.AreEqual(crls[0].GetEncoded(), File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER
                 , "firstCrl.bin")));
@@ -244,7 +244,7 @@ namespace iText.Signatures {
             PdfPKCS7 pkcs7 = CreateSimplePdfPKCS7();
             pkcs7.basicResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1InputStream
                 (File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject());
-            pkcs7.signCerts = JavaUtil.ArraysAsList(new X509Certificate[] { null, null });
+            pkcs7.signCerts = JavaUtil.ArraysAsList(new IX509Certificate[] { null, null });
             NUnit.Framework.Assert.IsFalse(pkcs7.IsRevocationValid());
         }
 

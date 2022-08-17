@@ -22,9 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.X509;
-using iText.Bouncycastleconnector;
-using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.Kernel.Colors;
@@ -61,10 +59,7 @@ namespace iText.Signatures {
 
         public static readonly char[] PASSWORD = "kspass".ToCharArray();
 
-        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
-            ();
-
-        private static X509Certificate[] chain;
+        private static IX509Certificate[] chain;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -132,7 +127,7 @@ namespace iText.Signatures {
         public virtual void CertificateSetGetTest() {
             PdfSignatureAppearance signatureAppearance = GetTestSignatureAppearance();
             NUnit.Framework.Assert.IsNull(signatureAppearance.GetCertificate());
-            X509Certificate testCertificate = chain[0];
+            IX509Certificate testCertificate = chain[0];
             signatureAppearance.SetCertificate(testCertificate);
             NUnit.Framework.Assert.AreEqual(testCertificate, signatureAppearance.GetCertificate());
         }

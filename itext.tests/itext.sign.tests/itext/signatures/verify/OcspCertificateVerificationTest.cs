@@ -21,12 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
-using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Signatures;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
@@ -54,33 +54,33 @@ namespace iText.Signatures.Verify {
 
         private const String ocspServiceUrl = "http://localhost:9000/demo/ocsp/ocsp-service";
 
-        private static X509Certificate checkCert;
+        private static IX509Certificate checkCert;
 
-        private static X509Certificate rootCert;
+        private static IX509Certificate rootCert;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
-            checkCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(signOcspCert, password)[0];
-            rootCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(rootOcspCert, password)[0];
+            checkCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(signOcspCert, password)[0];
+            rootCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(rootOcspCert, password)[0];
         }
 
         [NUnit.Framework.Test]
         public virtual void KeyStoreWithRootOcspCertificateTest() {
-            IBasicOCSPResp response = GetOcspResponse();
+            IBasicOCSPResponse response = GetOcspResponse();
             NUnit.Framework.Assert.IsTrue(CertificateVerification.VerifyOcspCertificates(response, Pkcs12FileHelper.InitStore
                 (rootOcspCert, password)));
         }
 
         [NUnit.Framework.Test]
         public virtual void KeyStoreWithSignOcspCertificateTest() {
-            IBasicOCSPResp response = GetOcspResponse();
+            IBasicOCSPResponse response = GetOcspResponse();
             NUnit.Framework.Assert.IsFalse(CertificateVerification.VerifyOcspCertificates(response, Pkcs12FileHelper.InitStore
                 (signOcspCert, password)));
         }
 
         [NUnit.Framework.Test]
         public virtual void KeyStoreWithNotOcspAndOcspCertificatesTest() {
-            IBasicOCSPResp response = GetOcspResponse();
+            IBasicOCSPResponse response = GetOcspResponse();
             NUnit.Framework.Assert.IsTrue(CertificateVerification.VerifyOcspCertificates(response, Pkcs12FileHelper.InitStore
                 (notOcspAndOcspCert, password)));
         }
@@ -92,9 +92,9 @@ namespace iText.Signatures.Verify {
                 (signOcspCert, password)));
         }
 
-        private static IBasicOCSPResp GetOcspResponse() {
+        private static IBasicOCSPResponse GetOcspResponse() {
             TestOcspClient testClient = new TestOcspClient();
-            ICipherParameters key = Pkcs12FileHelper.ReadFirstKey(rootOcspCert, password, password);
+            IPrivateKey key = Pkcs12FileHelper.ReadFirstKey(rootOcspCert, password, password);
             testClient.AddBuilderForCertIssuer(rootCert, key);
             byte[] ocspResponseBytes = testClient.GetEncoded(checkCert, rootCert, ocspServiceUrl);
             IASN1Primitive var2 = FACTORY.CreateASN1Primitive(ocspResponseBytes);

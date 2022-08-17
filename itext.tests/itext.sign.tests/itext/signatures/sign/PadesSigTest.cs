@@ -42,13 +42,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -157,8 +157,8 @@ namespace iText.Signatures.Sign {
         private void SignApproval(String signCertFileName, String outFileName, ISignaturePolicyIdentifier sigPolicyIdentifier
             , SignaturePolicyInfo sigPolicyInfo) {
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
-            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
-            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            IX509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
+            IPrivateKey signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
                 new StampingProperties());

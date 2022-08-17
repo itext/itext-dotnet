@@ -70,7 +70,7 @@ namespace iText.Bouncycastle {
     /// and creates bouncy-castle classes instances.
     /// </summary>
     public class BouncyCastleFactory : IBouncyCastleFactory {
-        private static readonly String PROVIDER_NAME = new BouncyCastleProvider().GetName();
+        private static readonly String PROVIDER_NAME = "BC";
         private static readonly BouncyCastleTestConstantsFactory BOUNCY_CASTLE_TEST_CONSTANTS = new BouncyCastleTestConstantsFactory();
 
         public virtual IASN1ObjectIdentifier CreateASN1ObjectIdentifier(IASN1Encodable encodable) {
@@ -328,10 +328,6 @@ namespace iText.Bouncycastle {
                 .GetEncodable()));
         }
 
-        public virtual Java.Security.Provider CreateProvider() {
-            return new BouncyCastleProvider();
-        }
-
         public virtual String GetProviderName() {
             return PROVIDER_NAME;
         }
@@ -570,8 +566,7 @@ namespace iText.Bouncycastle {
         public virtual ITimeStampResponse CreateTimeStampResponse(byte[] respBytes) {
             try {
                 return new TimeStampResponseBC(new TimeStampResponse(respBytes));
-            }
-            catch (TspException e) {
+            } catch (TspException e) {
                 throw new TSPExceptionBC(e);
             }
         }
@@ -640,13 +635,12 @@ namespace iText.Bouncycastle {
         }
 
         public virtual IX500Name CreateX500Name(IX509Certificate certificate) {
-			byte[] tbsCertificate = certificate.GetTbsCertificate();
-   			if (tbsCertificate.Length != 0) {            
-				return new X500NameBC(X500Name.GetInstance(TbsCertificateStructure.GetInstance(Asn1Object.FromByteArray(certificate
-                    .GetTbsCertificate())).Subject));
- 			} else {
-            	return null;
-        	}
+            byte[] tbsCertificate = certificate.GetTbsCertificate();
+            if (tbsCertificate.Length != 0) {
+                return new X500NameBC(X509Name.GetInstance(TbsCertificateStructure.GetInstance(Asn1Object.FromByteArray(
+                    certificate.GetTbsCertificate())).Subject));
+            }
+            return null;
         }
 
         public virtual IX500Name CreateX500Name(String s) {
@@ -796,6 +790,10 @@ namespace iText.Bouncycastle {
         
         public ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv) {
             return new CipherBC(forEncryption, key, iv);
+        }
+        
+        public IX509Crl CreateNullCrl() {
+            return new X509CrlBC(null);
         }
     }
 }

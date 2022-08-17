@@ -42,10 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -82,11 +82,11 @@ namespace iText.Signatures.Sign {
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String signCertFileName = certsSrc + "signCertRsa01.p12";
             String tsaCertFileName = certsSrc + "tsCertRsa.p12";
-            X509Certificate[] signRsaChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
-            ICipherParameters signRsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            IX509Certificate[] signRsaChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
+            IPrivateKey signRsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
             IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
-            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
-            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
+            IX509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
+            IPrivateKey tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
                 new StampingProperties());
             signer.SetFieldName("Signature1");
@@ -104,8 +104,8 @@ namespace iText.Signatures.Sign {
             String outFileName = destinationFolder + "padesSignatureLevelLTTest01.pdf";
             String srcFileName = sourceFolder + "signedPAdES-T.pdf";
             String caCertFileName = certsSrc + "rootRsa.p12";
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
+            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
+            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             ICrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName), new StampingProperties
@@ -124,8 +124,8 @@ namespace iText.Signatures.Sign {
             String outFileName = destinationFolder + "padesSignatureLevelLTATest01.pdf";
             String srcFileName = sourceFolder + "signedPAdES-LT.pdf";
             String tsaCertFileName = certsSrc + "tsCertRsa.p12";
-            X509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
-            ICipherParameters tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
+            IX509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
+            IPrivateKey tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
                 new StampingProperties().UseAppendMode());
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);

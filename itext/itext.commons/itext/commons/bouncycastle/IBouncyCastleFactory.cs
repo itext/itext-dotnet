@@ -130,8 +130,6 @@ namespace iText.Commons.Bouncycastle {
 
         IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm, IASN1Encodable encodable);
 
-        Provider CreateProvider();
-
         String GetProviderName();
 
         IJceKeyTransEnvelopedRecipient CreateJceKeyTransEnvelopedRecipient(IPrivateKey privateKey);
@@ -332,5 +330,7 @@ namespace iText.Commons.Bouncycastle {
         IBigInteger CreateBigInteger(int i, byte[] array);
         
         ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv);
+        
+        IX509Crl CreateNullCrl();
     }
 }

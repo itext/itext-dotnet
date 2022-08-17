@@ -44,11 +44,12 @@ using System;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Security.Certificates;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
-using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -76,16 +77,16 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ValidOcspTest01() {
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
+            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
+            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
             NUnit.Framework.Assert.IsTrue(VerifyTest(builder));
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidRevokedOcspTest01() {
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
+            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
+            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
             builder.SetCertificateStatus(FACTORY.CreateRevokedStatus(DateTimeUtil.GetCurrentUtcTime().AddDays(-20), FACTORY
                 .CreateCRLReason().GetKeyCompromise()));
@@ -94,8 +95,8 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void InvalidUnknownOcspTest01() {
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
+            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
+            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
             builder.SetCertificateStatus(FACTORY.CreateUnknownStatus());
             NUnit.Framework.Assert.IsFalse(VerifyTest(builder));
@@ -103,8 +104,8 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void InvalidOutdatedOcspTest01() {
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
+            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
+            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
             DateTime thisUpdate = DateTimeUtil.GetCurrentTime().AddDays(-30);
             DateTime nextUpdate = DateTimeUtil.GetCurrentTime().AddDays(-15);
@@ -115,13 +116,13 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ExpiredIssuerCertTest01() {
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(certsSrc + "intermediateExpiredCert.p12"
+            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(certsSrc + "intermediateExpiredCert.p12"
                 , password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(certsSrc + "intermediateExpiredCert.p12", password
+            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(certsSrc + "intermediateExpiredCert.p12", password
                 , password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
-            NUnit.Framework.Assert.IsTrue(VerifyTest(builder, certsSrc + "signCertRsaWithExpiredChain.p12", caCert.NotBefore
-                ));
+            NUnit.Framework.Assert.IsTrue(VerifyTest(builder, certsSrc + "signCertRsaWithExpiredChain.p12", caCert.GetNotBefore
+                ()));
         }
 
         [NUnit.Framework.Test]
@@ -161,40 +162,40 @@ namespace iText.Signatures.Verify {
 
         private bool VerifyTest(TestOcspResponseBuilder rootRsaOcspBuilder, String checkCertFileName, DateTime checkDate
             ) {
-            X509Certificate checkCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(checkCertFileName, password)[
-                0];
-            X509Certificate rootCert = rootRsaOcspBuilder.GetIssuerCert();
+            IX509Certificate checkCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(checkCertFileName, password
+                )[0];
+            IX509Certificate rootCert = rootRsaOcspBuilder.GetIssuerCert();
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(rootCert, rootRsaOcspBuilder);
             byte[] basicOcspRespBytes = ocspClient.GetEncoded(checkCert, rootCert, null);
             IASN1Primitive var2 = FACTORY.CreateASN1Primitive(basicOcspRespBytes);
-            IBasicOCSPResp basicOCSPResp = FACTORY.CreateBasicOCSPResp(FACTORY.CreateBasicOCSPResponse(var2));
+            IBasicOCSPResponse basicOCSPResp = FACTORY.CreateBasicOCSPResp(FACTORY.CreateBasicOCSPResponse(var2));
             OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
             return ocspVerifier.Verify(basicOCSPResp, checkCert, rootCert, checkDate);
         }
 
         public virtual bool VerifyAuthorizedOCSPResponderTest(DateTime ocspResponderCertStartDate, DateTime ocspResponderCertEndDate
             , DateTime checkDate) {
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(certsSrc + "intermediateRsa.p12"
+            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(certsSrc + "intermediateRsa.p12"
                 , password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(certsSrc + "intermediateRsa.p12", password, 
-                password);
+            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(certsSrc + "intermediateRsa.p12", password, password
+                );
             String checkCertFileName = certsSrc + "signCertRsaWithChain.p12";
-            X509Certificate checkCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(checkCertFileName, password)[
-                0];
+            IX509Certificate checkCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(checkCertFileName, password
+                )[0];
             RsaKeyPairGenerator keyGen = SignTestPortUtil.BuildRSA2048KeyPairGenerator();
             AsymmetricCipherKeyPair key = keyGen.GenerateKeyPair();
-            ICipherParameters ocspRespPrivateKey = key.Private;
-            AsymmetricKeyParameter ocspRespPublicKey = key.Public;
+            IPrivateKey ocspRespPrivateKey = key.Private;
+            IPublicKey ocspRespPublicKey = key.Public;
             TestCertificateBuilder certBuilder = new TestCertificateBuilder(ocspRespPublicKey, caCert, caPrivateKey, "CN=iTextTestOCSPResponder, OU=test, O=iText"
                 );
             certBuilder.SetStartDate(ocspResponderCertStartDate);
             certBuilder.SetEndDate(ocspResponderCertEndDate);
-            X509Certificate ocspResponderCert = certBuilder.BuildAuthorizedOCSPResponderCert();
+            IX509Certificate ocspResponderCert = certBuilder.BuildAuthorizedOCSPResponderCert();
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(ocspResponderCert, ocspRespPrivateKey);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
             byte[] basicOcspRespBytes = ocspClient.GetEncoded(checkCert, caCert, null);
             IASN1Primitive var2 = FACTORY.CreateASN1Primitive(basicOcspRespBytes);
-            IBasicOCSPResp basicOCSPResp = FACTORY.CreateBasicOCSPResp(FACTORY.CreateBasicOCSPResponse(var2));
+            IBasicOCSPResponse basicOCSPResp = FACTORY.CreateBasicOCSPResp(FACTORY.CreateBasicOCSPResponse(var2));
             OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
             return ocspVerifier.Verify(basicOCSPResp, checkCert, caCert, checkDate);
         }

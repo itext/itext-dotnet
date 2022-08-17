@@ -22,7 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -38,14 +39,14 @@ namespace iText.Signatures {
 
         private const String CRL_DISTRIBUTION_POINT = "http://www.example.com/";
 
-        private static X509Certificate checkCert;
+        private static IX509Certificate checkCert;
 
         private static ICollection<byte[]> listOfByteArrays;
 
         [NUnit.Framework.Test]
         public virtual void CheckUnknownPdfExceptionWhenCrlIsNull() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => listOfByteArrays = new CrlClientOffline
-                ((X509Crl)null).GetEncoded(null, ""));
+                (BouncyCastleFactoryCreator.GetFactory().CreateNullCrl()).GetEncoded(null, ""));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION, e.Message);
         }
 
@@ -130,11 +131,11 @@ namespace iText.Signatures {
             return stream.GetBytes();
         }
 
-        private static ICollection<byte[]> ValidateCrlBytes(byte[] testBytes, X509Certificate checkCert, String crlDistPoint
+        private static ICollection<byte[]> ValidateCrlBytes(byte[] testBytes, IX509Certificate checkCert, String crlDistPoint
             ) {
             CrlClientOffline crlClientOffline = new CrlClientOffline(testBytes);
-            checkCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(SOURCE_FOLDER + "crlDistPoint.p12", PASSWORD)
-                [0];
+            checkCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(SOURCE_FOLDER + "crlDistPoint.p12", PASSWORD
+                )[0];
             listOfByteArrays = crlClientOffline.GetEncoded(checkCert, crlDistPoint);
             //These checks are enough, because there is exactly one element in the collection,
             //and these are the same test bytes 

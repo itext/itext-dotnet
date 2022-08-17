@@ -11,6 +11,7 @@ namespace iText.Bouncycastlefips.Crypto {
     /// </summary>
     public class IDigestBCFips : IIDigest {
         private readonly IStreamCalculator<IBlockResult> iDigest;
+        private string algorithmName;
 
         /// <summary>
         /// Creates new wrapper instance for digest.
@@ -33,6 +34,7 @@ namespace iText.Bouncycastlefips.Crypto {
         public IDigestBCFips(string hashAlgorithm) {
             FipsShs.Parameters parameters = GetMessageDigestParams(hashAlgorithm);
             IDigestFactory<FipsShs.Parameters> factory = CryptoServicesRegistrar.CreateService(parameters);
+            this.algorithmName = factory.AlgorithmDetails.Algorithm.Name;
             this.iDigest = factory.CreateCalculator();
         }
 
@@ -42,6 +44,12 @@ namespace iText.Bouncycastlefips.Crypto {
         /// </returns>
         public virtual IStreamCalculator<IBlockResult> GetIDigest() {
             return iDigest;
+        }
+        
+        /// <summary>Sets algorithm name.</summary>
+        /// <param name = "algorithmName">algorithm name</param>
+        public virtual void SetAlgorithmName(string algorithmName) {
+            this.algorithmName = algorithmName;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -72,6 +80,11 @@ namespace iText.Bouncycastlefips.Crypto {
         /// <summary><inheritDoc/></summary>
         public void Reset() {
             Digest();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public string GetAlgorithmName() {
+            return algorithmName;
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

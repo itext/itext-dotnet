@@ -42,10 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -80,8 +80,8 @@ namespace iText.Signatures.Sign {
             String outFileName = destinationFolder + "sequentialSignOfFileWithAnnots.pdf";
             String srcFileName = sourceFolder + "signedWithAnnots.pdf";
             String cmpFileName = sourceFolder + "cmp_sequentialSignOfFileWithAnnots.pdf";
-            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
-            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            IX509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
+            IPrivateKey signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
             String signatureName = "Signature2";
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
@@ -100,8 +100,8 @@ namespace iText.Signatures.Sign {
             String outFileName = destinationFolder + "secondSignOfTagged.pdf";
             String srcFileName = sourceFolder + "taggedAndSignedDoc.pdf";
             String cmpFileName = sourceFolder + "cmp_secondSignOfTagged.pdf";
-            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
-            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            IX509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
+            IPrivateKey signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
             String signatureName = "Signature2";
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 

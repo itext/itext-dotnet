@@ -42,10 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.IO.Font.Constants;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
@@ -106,7 +106,7 @@ namespace iText.Kernel.Crypto {
         /// <summary>Owner password.</summary>
         public static byte[] OWNER = "World".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
 
-        private ICipherParameters privateKey;
+        private IPrivateKey privateKey;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -552,8 +552,8 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithCertificate(String filename, int encryptionType, int compression) {
             String outFileName = destinationFolder + filename;
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
-            X509Certificate cert = GetPublicCertificate(CERT);
-            PdfWriter writer = new PdfWriter(outFileName, new WriterProperties().SetPublicKeyEncryption(new X509Certificate
+            IX509Certificate cert = GetPublicCertificate(CERT);
+            PdfWriter writer = new PdfWriter(outFileName, new WriterProperties().SetPublicKeyEncryption(new IX509Certificate
                 [] { cert }, new int[] { permissions }, encryptionType).AddXmpMetadata());
             writer.SetCompressionLevel(compression);
             PdfDocument document = new PdfDocument(writer);
@@ -575,12 +575,12 @@ namespace iText.Kernel.Crypto {
             CheckEncryptedWithCertificateDocumentAppending(filename, cert);
         }
 
-        public virtual X509Certificate GetPublicCertificate(String path) {
+        public virtual IX509Certificate GetPublicCertificate(String path) {
             FileStream @is = new FileStream(path, FileMode.Open, FileAccess.Read);
             return CryptoUtil.ReadPublicCertificate(@is);
         }
 
-        public virtual ICipherParameters GetPrivateKey() {
+        public virtual IPrivateKey GetPrivateKey() {
             if (privateKey == null) {
                 privateKey = CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore(new FileStream(PRIVATE_KEY, FileMode.Open, FileAccess.Read
                     ), "sandbox", PRIVATE_KEY_PASS);
@@ -612,7 +612,7 @@ namespace iText.Kernel.Crypto {
             document.Close();
         }
 
-        public virtual void CheckDecryptedWithCertificateContent(String filename, X509Certificate certificate, String
+        public virtual void CheckDecryptedWithCertificateContent(String filename, IX509Certificate certificate, String
              pageContent) {
             String src = destinationFolder + filename;
             PdfReader reader = new PdfReader(src, new ReaderProperties().SetPublicKeySecurityParams(certificate, GetPrivateKey
@@ -642,7 +642,7 @@ namespace iText.Kernel.Crypto {
         }
 
         // basically this is comparing content of decrypted by itext document with content of encrypted document
-        public virtual void CheckEncryptedWithCertificateDocumentStamping(String filename, X509Certificate certificate
+        public virtual void CheckEncryptedWithCertificateDocumentStamping(String filename, IX509Certificate certificate
             ) {
             String srcFileName = destinationFolder + filename;
             String outFileName = destinationFolder + "stamped_" + filename;
@@ -677,7 +677,7 @@ namespace iText.Kernel.Crypto {
             }
         }
 
-        public virtual void CheckEncryptedWithCertificateDocumentAppending(String filename, X509Certificate certificate
+        public virtual void CheckEncryptedWithCertificateDocumentAppending(String filename, IX509Certificate certificate
             ) {
             String srcFileName = destinationFolder + filename;
             String outFileName = destinationFolder + "appended_" + filename;

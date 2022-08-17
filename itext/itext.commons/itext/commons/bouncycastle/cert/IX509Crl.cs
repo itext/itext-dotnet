@@ -40,5 +40,13 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <param name="publicKey">public key to verify</param>
         void Verify(IPublicKey publicKey);
+
+        /// <summary>
+        /// Calls actual
+        /// <c>GetEncoded</c>
+        /// method for the wrapped X509Crl object.
+        /// </summary>
+        /// <returns>encoded array</returns>
+        byte[] GetEncoded();
     }
 }

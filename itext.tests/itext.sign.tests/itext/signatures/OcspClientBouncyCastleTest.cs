@@ -42,11 +42,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Net;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
@@ -71,9 +72,9 @@ namespace iText.Signatures {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
-        private static X509Certificate checkCert;
+        private static IX509Certificate checkCert;
 
-        private static X509Certificate rootCert;
+        private static IX509Certificate rootCert;
 
         private static TestOcspResponseBuilder builder;
 
@@ -84,7 +85,7 @@ namespace iText.Signatures {
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {
             builder = CreateBuilder(BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood());
-            checkCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(signOcspCert, password)[0];
+            checkCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(signOcspCert, password)[0];
             rootCert = builder.GetIssuerCert();
         }
 
@@ -141,7 +142,7 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void GetBasicOcspRespTest() {
             OcspClientBouncyCastle ocspClientBouncyCastle = CreateOcspClient();
-            IBasicOCSPResp basicOCSPResp = ocspClientBouncyCastle.GetBasicOCSPResp(checkCert, rootCert, ocspServiceUrl
+            IBasicOCSPResponse basicOCSPResp = ocspClientBouncyCastle.GetBasicOCSPResp(checkCert, rootCert, ocspServiceUrl
                 );
             NUnit.Framework.Assert.IsNotNull(basicOCSPResp);
             NUnit.Framework.Assert.IsTrue(basicOCSPResp.GetResponses().Length > 0);
@@ -150,7 +151,8 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void GetBasicOcspRespNullTest() {
             OcspClientBouncyCastle ocspClientBouncyCastle = new OcspClientBouncyCastle(null);
-            IBasicOCSPResp basicOCSPResp = ocspClientBouncyCastle.GetBasicOCSPResp(checkCert, null, ocspServiceUrl);
+            IBasicOCSPResponse basicOCSPResp = ocspClientBouncyCastle.GetBasicOCSPResp(checkCert, null, ocspServiceUrl
+                );
             NUnit.Framework.Assert.IsNull(basicOCSPResp);
         }
 
@@ -158,7 +160,7 @@ namespace iText.Signatures {
         [LogMessage("OCSP response could not be verified")]
         public virtual void GetBasicOCSPRespLogMessageTest() {
             OcspClientBouncyCastle ocspClientBouncyCastle = CreateOcspClient();
-            IBasicOCSPResp basicOCSPResp = ocspClientBouncyCastle.GetBasicOCSPResp(null, null, null);
+            IBasicOCSPResponse basicOCSPResp = ocspClientBouncyCastle.GetBasicOCSPResp(null, null, null);
             NUnit.Framework.Assert.IsNull(basicOCSPResp);
         }
 
@@ -205,8 +207,8 @@ namespace iText.Signatures {
         }
 
         private static TestOcspResponseBuilder CreateBuilder(ICertificateStatus status) {
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(rootOcspCert, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(rootOcspCert, password, password);
+            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(rootOcspCert, password)[0];
+            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(rootOcspCert, password, password);
             return new TestOcspResponseBuilder(caCert, caPrivateKey, status);
         }
 
@@ -218,11 +220,11 @@ namespace iText.Signatures {
                 testOcspBuilder = testBuilder;
             }
 
-            internal override IOCSPResp GetOcspResponse(X509Certificate chCert, X509Certificate rCert, String url) {
+            internal override IOCSPResp GetOcspResponse(IX509Certificate chCert, IX509Certificate rCert, String url) {
                 try {
-                    ICertificateID id = SignTestPortUtil.GenerateCertificateId(rootCert, checkCert.SerialNumber, BOUNCY_CASTLE_FACTORY
+                    ICertificateID id = SignTestPortUtil.GenerateCertificateId(rootCert, checkCert.GetSerialNumber(), BOUNCY_CASTLE_FACTORY
                         .CreateCertificateID().GetHashSha1());
-                    IBasicOCSPResp basicOCSPResp = testOcspBuilder.MakeOcspResponseObject(SignTestPortUtil.GenerateOcspRequestWithNonce
+                    IBasicOCSPResponse basicOCSPResp = testOcspBuilder.MakeOcspResponseObject(SignTestPortUtil.GenerateOcspRequestWithNonce
                         (id).GetEncoded());
                     return BOUNCY_CASTLE_FACTORY.CreateOCSPRespBuilder().Build(BOUNCY_CASTLE_FACTORY.CreateOCSPRespBuilderInstance
                         ().GetSuccessful(), basicOCSPResp);

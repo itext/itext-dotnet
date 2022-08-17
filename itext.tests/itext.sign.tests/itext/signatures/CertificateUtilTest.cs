@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Test;
 using iText.Test.Signutils;
 
@@ -35,7 +35,7 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void GetTSAURLAdobeExtensionTest() {
-            X509Certificate tsaCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCert.p12"
+            IX509Certificate tsaCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCert.p12"
                 , PASSWORD)[0];
             String url = CertificateUtil.GetTSAURL(tsaCert);
             NUnit.Framework.Assert.AreEqual("https://itextpdf.com/en", url);
@@ -43,15 +43,15 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void GetTSAURLUsualTimestampCertificateTest() {
-            X509Certificate tsaCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "tsCertRsa.p12", PASSWORD
-                )[0];
+            IX509Certificate tsaCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "tsCertRsa.p12", 
+                PASSWORD)[0];
             String url = CertificateUtil.GetTSAURL(tsaCert);
             NUnit.Framework.Assert.IsNull(url);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetTSAURLAdobeExtensionNotTaggedTest() {
-            X509Certificate tsaCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCertWithoutTag.p12"
+            IX509Certificate tsaCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCertWithoutTag.p12"
                 , PASSWORD)[0];
             NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => CertificateUtil.GetTSAURL(tsaCert));
         }

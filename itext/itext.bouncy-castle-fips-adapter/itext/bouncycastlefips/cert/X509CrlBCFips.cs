@@ -55,6 +55,11 @@ namespace iText.Bouncycastlefips.Cert {
             x509Crl.Verify(new PkixVerifierFactoryProvider(((PublicKeyBCFips) publicKey).GetPublicKey()));
         }
 
+        /// <summary><inheritDoc/></summary>
+        public byte[] GetEncoded() {
+            return x509Crl.GetEncoded();
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {

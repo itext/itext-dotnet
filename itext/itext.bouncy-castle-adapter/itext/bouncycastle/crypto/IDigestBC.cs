@@ -60,6 +60,11 @@ namespace iText.Bouncycastle.Crypto {
             iDigest.Reset();
         }
 
+        /// <summary><inheritDoc/></summary>
+        public string GetAlgorithmName() {
+            return iDigest.AlgorithmName;
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {

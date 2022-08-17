@@ -42,11 +42,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Security;
 using iText.Forms;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -148,8 +148,8 @@ namespace iText.Signatures.Sign {
             String outFileName = destinationFolder + "deferredHashCalcAndSignTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_deferredHashCalcAndSignTest01.pdf";
             String signCertFileName = certsSrc + "signCertRsa01.p12";
-            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
-            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            IX509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
+            IPrivateKey signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
             IExternalSignatureContainer extSigContainer = new SignDeferredTest.CmsDeferredSigner(signPrivateKey, signChain
                 );
             String sigFieldName = "DeferredSignature1";
@@ -190,8 +190,8 @@ namespace iText.Signatures.Sign {
             byte[] preSignedBytes = baos.ToArray();
             // sign the hash
             String signCertFileName = certsSrc + "signCertRsa01.p12";
-            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
-            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            IX509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
+            IPrivateKey signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
             byte[] cmsSignature = SignDocBytesHash(docBytesHash, signPrivateKey, signChain);
             // fill the signature to the presigned document
             SignDeferredTest.ReadySignatureSigner extSigContainer = new SignDeferredTest.ReadySignatureSigner(cmsSignature
@@ -235,8 +235,7 @@ namespace iText.Signatures.Sign {
             return docBytesHash;
         }
 
-        internal static byte[] SignDocBytesHash(byte[] docBytesHash, ICipherParameters pk, X509Certificate[] chain
-            ) {
+        internal static byte[] SignDocBytesHash(byte[] docBytesHash, IPrivateKey pk, IX509Certificate[] chain) {
             if (pk == null || chain == null) {
                 return null;
             }
@@ -250,18 +249,18 @@ namespace iText.Signatures.Sign {
                 pkcs7.SetExternalDigest(attrSign, null, signature.GetEncryptionAlgorithm());
                 signatureContent = pkcs7.GetEncodedPKCS7(docBytesHash);
             }
-            catch (GeneralSecurityException) {
+            catch (AbstractGeneralSecurityException) {
             }
             // dummy catch clause
             return signatureContent;
         }
 
         internal class CmsDeferredSigner : IExternalSignatureContainer {
-            private ICipherParameters pk;
+            private IPrivateKey pk;
 
-            private X509Certificate[] chain;
+            private IX509Certificate[] chain;
 
-            public CmsDeferredSigner(ICipherParameters pk, X509Certificate[] chain) {
+            public CmsDeferredSigner(IPrivateKey pk, IX509Certificate[] chain) {
                 this.pk = pk;
                 this.chain = chain;
             }

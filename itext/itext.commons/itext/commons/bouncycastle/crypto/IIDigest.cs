@@ -50,5 +50,13 @@ namespace iText.Commons.Bouncycastle.Crypto {
         /// method for the wrapped IDigest object.
         /// </summary>
         void Reset();
+
+        /// <summary>
+        /// Gets actual
+        /// <c>AlgorithmName</c>
+        /// for the wrapped IDigest object.
+        /// </summary>
+        /// <returns>algorithm name.</returns>
+        string GetAlgorithmName();
     }
 }

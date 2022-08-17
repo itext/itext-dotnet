@@ -42,11 +42,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -60,27 +60,27 @@ namespace iText.Signatures.Testutils.Client {
         private readonly IDictionary<String, TestOcspResponseBuilder> issuerIdToResponseBuilder = new LinkedDictionary
             <String, TestOcspResponseBuilder>();
 
-        public virtual TestOcspClient AddBuilderForCertIssuer(X509Certificate cert, ICipherParameters privateKey) {
-            issuerIdToResponseBuilder.Put(cert.SerialNumber.ToString(16), new TestOcspResponseBuilder(cert, privateKey
+        public virtual TestOcspClient AddBuilderForCertIssuer(IX509Certificate cert, IPrivateKey privateKey) {
+            issuerIdToResponseBuilder.Put(cert.GetSerialNumber().ToString(16), new TestOcspResponseBuilder(cert, privateKey
                 ));
             return this;
         }
 
-        public virtual TestOcspClient AddBuilderForCertIssuer(X509Certificate cert, TestOcspResponseBuilder builder
+        public virtual TestOcspClient AddBuilderForCertIssuer(IX509Certificate cert, TestOcspResponseBuilder builder
             ) {
-            issuerIdToResponseBuilder.Put(cert.SerialNumber.ToString(16), builder);
+            issuerIdToResponseBuilder.Put(cert.GetSerialNumber().ToString(16), builder);
             return this;
         }
 
-        public virtual byte[] GetEncoded(X509Certificate checkCert, X509Certificate issuerCert, String url) {
+        public virtual byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
             byte[] bytes = null;
             try {
-                ICertificateID id = SignTestPortUtil.GenerateCertificateId(issuerCert, checkCert.SerialNumber, BOUNCY_CASTLE_FACTORY
+                ICertificateID id = SignTestPortUtil.GenerateCertificateId(issuerCert, checkCert.GetSerialNumber(), BOUNCY_CASTLE_FACTORY
                     .CreateCertificateID().GetHashSha1());
-                TestOcspResponseBuilder builder = issuerIdToResponseBuilder.Get(issuerCert.SerialNumber.ToString(16));
+                TestOcspResponseBuilder builder = issuerIdToResponseBuilder.Get(issuerCert.GetSerialNumber().ToString(16));
                 if (builder == null) {
                     throw new ArgumentException("This TestOcspClient instance is not capable of providing OCSP response for the given issuerCert:"
-                         + issuerCert.SubjectDN.ToString());
+                         + issuerCert.GetSubjectDN().ToString());
                 }
                 bytes = builder.MakeOcspResponse(SignTestPortUtil.GenerateOcspRequestWithNonce(id).GetEncoded());
             }

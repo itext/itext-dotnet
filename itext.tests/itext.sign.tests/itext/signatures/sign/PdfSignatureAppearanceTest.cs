@@ -44,10 +44,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.IO.Image;
@@ -77,9 +77,9 @@ namespace iText.Signatures.Sign {
 
         public static readonly char[] PASSWORD = "kspass".ToCharArray();
 
-        private X509Certificate[] chain;
+        private IX509Certificate[] chain;
 
-        private ICipherParameters pk;
+        private IPrivateKey pk;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {

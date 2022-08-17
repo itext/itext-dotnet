@@ -41,7 +41,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Signatures.Testutils;
-using Org.BouncyCastle.Utilities.Collections;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -57,7 +56,7 @@ namespace iText.Signatures
         {
             X509MockCertificate cert = new X509MockCertificate();
 
-            ISet criticalExtensions = new HashSet();
+            ISet<string> criticalExtensions = new HashSet<string>();
 
             criticalExtensions.Add(OID.X509Extensions.KEY_USAGE);
             criticalExtensions.Add(OID.X509Extensions.BASIC_CONSTRAINTS);
@@ -74,7 +73,7 @@ namespace iText.Signatures
         {
             X509MockCertificate cert = new X509MockCertificate();
 
-            ISet criticalExtensions = new HashSet();
+            ISet<string> criticalExtensions = new HashSet<string>();
 
             criticalExtensions.Add(OID.X509Extensions.BASIC_CONSTRAINTS);
 
@@ -88,7 +87,7 @@ namespace iText.Signatures
         {
             X509MockCertificate cert = new X509MockCertificate();
 
-            ISet criticalExtensions = new HashSet();
+            ISet<string> criticalExtensions = new HashSet<string>();
 
             criticalExtensions.Add(OID.X509Extensions.EXTENDED_KEY_USAGE);
 
@@ -107,7 +106,7 @@ namespace iText.Signatures
         {
             X509MockCertificate cert = new X509MockCertificate();
 
-            ISet criticalExtensions = new HashSet();
+            ISet<string> criticalExtensions = new HashSet<string>();
 
             criticalExtensions.Add(OID.X509Extensions.EXTENDED_KEY_USAGE);
 
@@ -139,7 +138,7 @@ namespace iText.Signatures
         {
             X509MockCertificate cert = new X509MockCertificate();
 
-            ISet criticalExtensions = new HashSet();
+            ISet<string> criticalExtensions = new HashSet<string>();
 
             criticalExtensions.Add("Totally not supported OID");
 

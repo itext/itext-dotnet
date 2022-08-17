@@ -23,10 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
-using iText.Bouncycastleconnector;
-using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Pdf;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
@@ -36,9 +34,6 @@ using iText.Test.Signutils;
 namespace iText.Signatures {
     [NUnit.Framework.Category("UnitTest")]
     public class LtvVerificationTest : ExtendedITextTest {
-        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
-            ();
-
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/LtvVerificationTest/";
 
@@ -90,8 +85,8 @@ namespace iText.Signatures {
                 ().UseAppendMode())) {
                 LtvVerification verification = new LtvVerification(pdfDocument_1);
                 String rootCertPath = CERT_FOLDER_PATH + "rootRsa.p12";
-                X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(rootCertPath, PASSWORD)[0];
-                ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(rootCertPath, PASSWORD, PASSWORD);
+                IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(rootCertPath, PASSWORD)[0];
+                IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(rootCertPath, PASSWORD, PASSWORD);
                 verification.AddVerification("TestSignature", null, new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey
                     ), LtvVerification.CertificateOption.SIGNING_CERTIFICATE, LtvVerification.Level.CRL, LtvVerification.CertificateInclusion
                     .NO);

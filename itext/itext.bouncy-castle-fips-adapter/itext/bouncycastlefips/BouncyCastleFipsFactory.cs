@@ -74,7 +74,7 @@ namespace iText.Bouncycastlefips {
     /// and creates bouncy-castle FIPS classes instances.
     /// </summary>
     public class BouncyCastleFipsFactory : IBouncyCastleFactory {
-        private static readonly String PROVIDER_NAME = new BouncyCastleFipsProvider().GetName();
+        private static readonly String PROVIDER_NAME = "BCFIPS";
         private static readonly BouncyCastleFipsTestConstantsFactory BOUNCY_CASTLE_FIPS_TEST_CONSTANTS = new BouncyCastleFipsTestConstantsFactory();
 
         public virtual IASN1ObjectIdentifier CreateASN1ObjectIdentifier(IASN1Encodable encodable) {
@@ -331,10 +331,6 @@ namespace iText.Bouncycastlefips {
             ASN1EncodableBCFips encodableBCFips = (ASN1EncodableBCFips)encodable;
             return new AlgorithmIdentifierBCFips(new AlgorithmIdentifier(algorithmBCFips.GetASN1ObjectIdentifier(), encodableBCFips
                 .GetEncodable()));
-        }
-
-        public virtual Java.Security.Provider CreateProvider() {
-            return new BouncyCastleFipsProvider();
         }
 
         public virtual String GetProviderName() {
@@ -645,13 +641,12 @@ namespace iText.Bouncycastlefips {
             if (tbsCertificate.Length != 0) {
                 return new X500NameBCFips(X500Name.GetInstance(TbsCertificateStructure.GetInstance(Asn1Object.FromByteArray
                     (certificate.GetTbsCertificate())).Subject));
-            } else {
-                return null;
             }
+            return null;
         }
 
         public virtual IX500Name CreateX500Name(String s) {
-            return new X500NameBCFips(new X509Name(s));
+            return new X500NameBCFips(new X500Name(s));
         }
 
         public virtual IRespID CreateRespID(IX500Name x500Name) {
@@ -858,6 +853,10 @@ namespace iText.Bouncycastlefips {
 
         public ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv) {
             return new CipherBCFips(forEncryption, key, iv);
+        }
+
+        public IX509Crl CreateNullCrl() {
+            return new X509CrlBCFips(null);
         }
     }
 }
