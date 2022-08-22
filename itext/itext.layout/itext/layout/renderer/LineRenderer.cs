@@ -219,7 +219,7 @@ namespace iText.Layout.Renderer {
                     MinMaxWidth kidMinMaxWidth = FloatingHelper.CalculateMinMaxWidthForFloat((AbstractRenderer)childRenderer, 
                         kidFloatPropertyVal);
                     float floatingBoxFullWidth = kidMinMaxWidth.GetMaxWidth();
-                    // TODO width will be recalculated on float layout;
+                    // Width will be recalculated on float layout;
                     // also not taking it into account (i.e. not setting it on child renderer) results in differences with html
                     // when floating span is split on other line;
                     // TODO DEVSIX-1730: may be process floating spans as inline blocks always?
@@ -248,7 +248,6 @@ namespace iText.Layout.Renderer {
                         if (!childWidthWasReplaced) {
                             minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMinWidth();
                         }
-                        // TODO if percents width was used, max width might be huge
                         maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMaxWidth();
                         widthHandler.UpdateMinChildWidth(minChildWidth + AbstractRenderer.EPS);
                         widthHandler.UpdateMaxChildWidth(maxChildWidth + AbstractRenderer.EPS);
@@ -1576,8 +1575,6 @@ namespace iText.Layout.Renderer {
         private float DecreaseRelativeWidthByChildAdditionalWidth(IRenderer childRenderer, float normalizedChildWidth
             ) {
             // Decrease the calculated width by margins, paddings and borders so that even for 100% width the content definitely fits.
-            // TODO Actually, from html/css point of view - this is wrong, however we still do it, in order to avoid NOTHING due to
-            // horizontal overflow. Probably remove this when overflow-x is supported.
             if (childRenderer is AbstractRenderer) {
                 Rectangle dummyRect = new Rectangle(normalizedChildWidth, 0);
                 ((AbstractRenderer)childRenderer).ApplyMargins(dummyRect, false);

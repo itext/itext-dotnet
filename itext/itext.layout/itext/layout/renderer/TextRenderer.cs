@@ -494,7 +494,8 @@ namespace iText.Layout.Renderer {
                                                 lineCopy.Add(font.GetGlyph(hyphenationConfig.GetHyphenSymbol()));
                                                 lineCopy.end++;
                                                 line = lineCopy;
-                                                // TODO these values are based on whole word. recalculate properly based on hyphenated part
+                                                // TODO DEVSIX-7010 recalculate line properties in case of word hyphenation.
+                                                // These values are based on whole word. Recalculate properly based on hyphenated part.
                                                 currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
                                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
