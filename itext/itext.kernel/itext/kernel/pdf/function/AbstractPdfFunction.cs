@@ -81,11 +81,15 @@ namespace iText.Kernel.Pdf.Function {
         protected internal AbstractPdfFunction(T pdfObject, int functionType, double[] domain, double[] range)
             : base(pdfObject) {
             this.functionType = functionType;
-            this.domain = JavaUtil.ArraysCopyOf(domain, domain.Length);
-            this.range = JavaUtil.ArraysCopyOf(range, range.Length);
+            if (domain != null) {
+                this.domain = JavaUtil.ArraysCopyOf(domain, domain.Length);
+                pdfObject.Put(PdfName.Domain, new PdfArray(domain));
+            }
+            if (range != null) {
+                this.range = JavaUtil.ArraysCopyOf(range, range.Length);
+                pdfObject.Put(PdfName.Range, new PdfArray(range));
+            }
             pdfObject.Put(PdfName.FunctionType, new PdfNumber(functionType));
-            pdfObject.Put(PdfName.Domain, new PdfArray(domain));
-            pdfObject.Put(PdfName.Range, new PdfArray(range));
         }
 
         /// <summary>Constructs a PdfFunction from an existing PdfObject.</summary>
