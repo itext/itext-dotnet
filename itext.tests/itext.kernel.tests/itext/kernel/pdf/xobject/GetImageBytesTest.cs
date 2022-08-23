@@ -56,7 +56,7 @@ namespace iText.Kernel.Pdf.Xobject {
     [NUnit.Framework.Category("Integration test")]
     public class GetImageBytesTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/xobject/GetImageBytesTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/xobject" + "/GetImageBytesTest/";
 
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/xobject/GetImageBytesTest/";
@@ -138,28 +138,33 @@ namespace iText.Kernel.Pdf.Xobject {
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithICCBasedAsAlternative() {
             // TODO: DEVSIX-3538 (update test after fix)
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("separationCSWithICCBasedAsAlternative.pdf"
-                , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported
-                , PdfName.Separation), e.Message);
+            TestFile("separationCSWithICCBasedAsAlternative.pdf", "Im1", "png");
         }
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceCMYKAsAlternative() {
             // TODO: DEVSIX-3538 (update test after fix)
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("separationCSWithDeviceCMYKAsAlternative.pdf"
-                , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported
-                , PdfName.Separation), e.Message);
+            NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => {
+                TestFile("separationCSWithDeviceCMYKAsAlternative.pdf", "Im1", "png");
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestGrayScalePng() {
+            TestFile("grayImages.pdf", "Im1", "png");
         }
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceRGBAsAlternative() {
             // TODO: DEVSIX-3538 (update test after fix)
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("separationCSWithDeviceRgbAsAlternative.pdf"
-                , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported
-                , PdfName.Separation), e.Message);
+            TestFile("separationCSWithDeviceRgbAsAlternative.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestSeparationCSWithDeviceRGBAsAlternative2() {
+            // TODO: DEVSIX-3538 (update test after fix)
+            TestFile("spotColorImagesSmall.pdf", "Im1", "png");
         }
 
         [NUnit.Framework.Test]
@@ -201,40 +206,11 @@ namespace iText.Kernel.Pdf.Xobject {
                 ), e.Message);
         }
 
-        private class ImageExtractor : IEventListener {
-            private IList<byte[]> images = new List<byte[]>();
-
-            public virtual void EventOccurred(IEventData data, EventType type) {
-                switch (type) {
-                    case EventType.RENDER_IMAGE: {
-                        ImageRenderInfo renderInfo = (ImageRenderInfo)data;
-                        byte[] bytes = renderInfo.GetImage().GetImageBytes();
-                        this.images.Add(bytes);
-                        break;
-                    }
-
-                    default: {
-                        break;
-                    }
-                }
-            }
-
-            public virtual ICollection<EventType> GetSupportedEvents() {
-                return null;
-            }
-
-            public virtual IList<byte[]> GetImages() {
-                return this.images;
-            }
-
-            internal ImageExtractor(GetImageBytesTest _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly GetImageBytesTest _enclosing;
+        private void TestFile(String filename, String objectid, String expectedImageFormat) {
+            TestFile(filename, objectid, expectedImageFormat, false);
         }
 
-        private void TestFile(String filename, String objectid, String expectedImageFormat) {
+        private void TestFile(String filename, String objectid, String expectedImageFormat, bool saveResult) {
             using (PdfReader reader = new PdfReader(SOURCE_FOLDER + filename)) {
                 using (PdfDocument pdfDocument = new PdfDocument(reader)) {
                     PdfResources resources = pdfDocument.GetPage(1).GetResources();
@@ -247,6 +223,10 @@ namespace iText.Kernel.Pdf.Xobject {
                     PdfImageXObject img = new PdfImageXObject((PdfStream)obj);
                     NUnit.Framework.Assert.AreEqual(expectedImageFormat, img.IdentifyImageFileExtension());
                     byte[] result = img.GetImageBytes(true);
+                    if (saveResult) {
+                        System.IO.File.WriteAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, filename.JSubstring(0, filename.Length 
+                            - 4) + ".new." + expectedImageFormat), result);
+                    }
                     byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, filename.JSubstring(0, filename.
                         Length - 4) + "." + expectedImageFormat));
                     if (img.IdentifyImageFileExtension().Equals("tif")) {
@@ -374,6 +354,39 @@ namespace iText.Kernel.Pdf.Xobject {
 
         private byte[] SubArray(byte[] array, int beg, int end) {
             return JavaUtil.ArraysCopyOfRange(array, beg, end + 1);
+        }
+
+        private class ImageExtractor : IEventListener {
+            private readonly IList<byte[]> images = new List<byte[]>();
+
+            public virtual void EventOccurred(IEventData data, EventType type) {
+                switch (type) {
+                    case EventType.RENDER_IMAGE: {
+                        ImageRenderInfo renderInfo = (ImageRenderInfo)data;
+                        byte[] bytes = renderInfo.GetImage().GetImageBytes();
+                        this.images.Add(bytes);
+                        break;
+                    }
+
+                    default: {
+                        break;
+                    }
+                }
+            }
+
+            public virtual ICollection<EventType> GetSupportedEvents() {
+                return null;
+            }
+
+            public virtual IList<byte[]> GetImages() {
+                return this.images;
+            }
+
+            internal ImageExtractor(GetImageBytesTest _enclosing) {
+                this._enclosing = _enclosing;
+            }
+
+            private readonly GetImageBytesTest _enclosing;
         }
     }
 }

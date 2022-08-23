@@ -259,13 +259,11 @@ namespace iText.Layout.Renderer {
                     if (lineHasContent) {
                         float indentFromLastLine = previousDescent - lastLineBottomLeadingIndent - (leading != null ? processedRenderer
                             .GetTopLeadingIndent(leading) : 0) - processedRenderer.GetMaxAscent();
-                        // TODO this is a workaround. To be refactored
-                        if (processedRenderer != null && processedRenderer.ContainsImage()) {
+                        if (processedRenderer.ContainsImage()) {
                             indentFromLastLine += previousDescent;
                         }
                         deltaY = lastYLine + indentFromLastLine - processedRenderer.GetYLine();
                         lastLineBottomLeadingIndent = leading != null ? processedRenderer.GetBottomLeadingIndent(leading) : 0;
-                        // TODO this is a workaround. To be refactored
                         if (lastLineBottomLeadingIndent < 0 && processedRenderer.ContainsImage()) {
                             lastLineBottomLeadingIndent = 0;
                         }
