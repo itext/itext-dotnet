@@ -76,7 +76,6 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>Append another CSS style sheet to this one.</summary>
         /// <param name="anotherCssStyleSheet">the other CSS style sheet</param>
         public virtual void AppendCssStyleSheet(iText.StyledXmlParser.Css.CssStyleSheet anotherCssStyleSheet) {
-            // TODO move this functionality to the parser (parse into)
             statements.AddAll(anotherCssStyleSheet.statements);
         }
 
