@@ -1,3 +1,25 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2022 iText Group NV
+Authors: iText Software.
+
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
+
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
@@ -8,7 +30,7 @@ namespace iText.Kernel.Pdf.Tagutils {
     public class AccessibilityPropertiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SetAccessibilityPropertiesTest() {
-            AccessibilityProperties properties = new _AccessibilityProperties_21();
+            AccessibilityProperties properties = new _AccessibilityProperties_43();
             NUnit.Framework.Assert.IsNotNull(properties.SetRole(StandardRoles.DIV));
             NUnit.Framework.Assert.IsNotNull(properties.SetLanguage("EN-GB"));
             NUnit.Framework.Assert.IsNotNull(properties.SetActualText("actualText"));
@@ -26,14 +48,14 @@ namespace iText.Kernel.Pdf.Tagutils {
             NUnit.Framework.Assert.IsNotNull(properties.AddRef(new TagTreePointer(CreateTestDocument())));
         }
 
-        private sealed class _AccessibilityProperties_21 : AccessibilityProperties {
-            public _AccessibilityProperties_21() {
+        private sealed class _AccessibilityProperties_43 : AccessibilityProperties {
+            public _AccessibilityProperties_43() {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void GetAccessibilityPropertiesTest() {
-            AccessibilityProperties properties = new _AccessibilityProperties_42();
+            AccessibilityProperties properties = new _AccessibilityProperties_64();
             NUnit.Framework.Assert.IsNull(properties.GetRole());
             NUnit.Framework.Assert.IsNull(properties.GetLanguage());
             NUnit.Framework.Assert.IsNull(properties.GetActualText());
@@ -44,8 +66,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             NUnit.Framework.Assert.IsNull(properties.GetNamespace());
         }
 
-        private sealed class _AccessibilityProperties_42 : AccessibilityProperties {
-            public _AccessibilityProperties_42() {
+        private sealed class _AccessibilityProperties_64 : AccessibilityProperties {
+            public _AccessibilityProperties_64() {
             }
         }
 
