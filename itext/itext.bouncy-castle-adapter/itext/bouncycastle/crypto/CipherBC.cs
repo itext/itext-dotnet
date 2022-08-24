@@ -1,4 +1,5 @@
 using System;
+using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
@@ -78,6 +79,32 @@ namespace iText.Bouncycastle.Crypto {
                 return outp2;
             }
             return outp;
+        }
+        
+        /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
+        public override bool Equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || GetType() != o.GetType()) {
+                return false;
+            }
+            CipherBC that = (CipherBC)o;
+            return Object.Equals(cipher, that.cipher);
+        }
+
+        /// <summary>Returns a hash code value based on the wrapped object.</summary>
+        public override int GetHashCode() {
+            return JavaUtil.ArraysHashCode(cipher);
+        }
+
+        /// <summary>
+        /// Delegates
+        /// <c>toString</c>
+        /// method call to the wrapped object.
+        /// </summary>
+        public override String ToString() {
+            return cipher.ToString();
         }
     }
 }

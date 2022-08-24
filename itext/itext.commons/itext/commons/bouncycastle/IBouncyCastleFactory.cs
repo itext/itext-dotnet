@@ -17,6 +17,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Cms.Jcajce;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Crypto.Generators;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
@@ -183,8 +184,6 @@ namespace iText.Commons.Bouncycastle {
 
         ICertificateStatus CreateCertificateStatus();
 
-        IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus);
-
         IRevokedStatus CreateRevokedStatus(DateTime date, int i);
 
         IASN1Primitive CreateASN1Primitive(byte[] array);
@@ -332,5 +331,9 @@ namespace iText.Commons.Bouncycastle {
         ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv);
         
         IX509Crl CreateNullCrl();
+
+        ITimeStampToken CreateTimeStampToken(IContentInfo contentInfo);
+
+        IRsaKeyPairGenerator CreateRsa2048KeyPairGenerator();
     }
 }

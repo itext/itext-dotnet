@@ -42,8 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iText.Bouncycastleconnector;
-using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.IO.Font.Constants;
@@ -79,8 +77,6 @@ namespace iText.Kernel.Crypto {
     /// </remarks>
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfEncryptionTest : ExtendedITextTest {
-        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
-
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/crypto/PdfEncryptionTest/";
 

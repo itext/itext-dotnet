@@ -1,40 +1,26 @@
-﻿using System;
+using System;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
-using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Security.Certificates;
 
-namespace iText.Bouncycastlefips.Security {
-    /// <summary>Wrapper class for <see cref="Org.BouncyCastle.Security.GeneralSecurityException"/>.</summary>
-    public class GeneralSecurityExceptionBCFips : AbstractGeneralSecurityException {
-        private readonly GeneralSecurityException exception;
+namespace iText.Bouncycastle.Security {
+    /// <summary>Wrapper class for <see cref="ExpiredExceptionBC"/>.</summary>
+    public class CertificateExpiredExceptionBC : AbstractCertificateExpiredException {
+        private readonly CertificateExpiredException exception;
 
         /// <summary>
-        /// Creates new wrapper for <see cref="Org.BouncyCastle.Security.GeneralSecurityException"/>.
+        /// Creates new wrapper for <see cref="CertificateExpiredException"/>.
         /// </summary>
         /// <param name="exception">
-        /// <see cref="Org.BouncyCastle.Security.GeneralSecurityException"/> to be wrapped
+        /// <see cref="CertificateExpiredException"/> to be wrapped
         /// </param>
-        public GeneralSecurityExceptionBCFips(GeneralSecurityException exception) {
+        public CertificateExpiredExceptionBC(CertificateExpiredException exception) {
             this.exception = exception;
         }
 
-        /// <summary>
-        /// Creates new wrapper for <see cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// using another exception.
-        /// </summary>
-        /// <param name="exceptionMessage">
-        /// Another exception message to be used during instance creation
-        /// </param>
-        /// <param name="exception">
-        /// Another exception to be used during instance creation
-        /// </param>
-        public GeneralSecurityExceptionBCFips(string exceptionMessage, Exception exception) : this(
-            new GeneralSecurityException(exceptionMessage, exception)) {
-        }
-
         /// <summary>Get actual org.bouncycastle object being wrapped.</summary>
-        /// <returns>wrapped <see cref="Org.BouncyCastle.Security.GeneralSecurityException"/>.</returns>
-        public GeneralSecurityException GetException() {
+        /// <returns>wrapped <see cref="CertificateExpiredException"/>.</returns>
+        public CertificateExpiredException GetException() {
             return exception;
         }
         
@@ -47,7 +33,7 @@ namespace iText.Bouncycastlefips.Security {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            GeneralSecurityExceptionBCFips that = (GeneralSecurityExceptionBCFips)o;
+            CertificateExpiredExceptionBC that = (CertificateExpiredExceptionBC)o;
             return Object.Equals(exception, that.exception);
         }
 

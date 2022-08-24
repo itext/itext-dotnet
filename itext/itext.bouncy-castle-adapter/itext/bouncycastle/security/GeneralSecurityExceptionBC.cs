@@ -70,10 +70,6 @@ namespace iText.Bouncycastle.Security {
         /// <c>getMessage</c>
         /// method call to the wrapped exception.
         /// </summary>
-        public override String Message {
-            get {
-                return exception.Message;
-            }
-        }
+        public override String Message => exception.Message;
     }
 }

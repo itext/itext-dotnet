@@ -100,5 +100,13 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <returns>String time value.</returns>
         string GetEndDateTime();
+
+        /// <summary>
+        /// Returns actual
+        /// <c>NotBefore</c>
+        /// property for the wrapped X509Certificate object.
+        /// </summary>
+        /// <returns>DateTime value.</returns>
+        DateTime GetNotBefore();
     }
 }

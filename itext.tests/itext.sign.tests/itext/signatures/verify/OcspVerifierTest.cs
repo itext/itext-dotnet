@@ -41,15 +41,14 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Generators;
-using Org.BouncyCastle.Security.Certificates;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Crypto.Generators;
+using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -150,8 +149,8 @@ namespace iText.Signatures.Verify {
             DateTime ocspResponderCertStartDate = DateTimeUtil.Parse("15/10/2005", "dd/MM/yyyy");
             DateTime ocspResponderCertEndDate = DateTimeUtil.Parse("15/10/2010", "dd/MM/yyyy");
             DateTime checkDate = DateTimeUtil.GetCurrentUtcTime();
-            NUnit.Framework.Assert.Catch(typeof(CertificateExpiredException), () => VerifyAuthorizedOCSPResponderTest(
-                ocspResponderCertStartDate, ocspResponderCertEndDate, checkDate));
+            NUnit.Framework.Assert.Catch(typeof(AbstractCertificateExpiredException), () => VerifyAuthorizedOCSPResponderTest
+                (ocspResponderCertStartDate, ocspResponderCertEndDate, checkDate));
         }
 
         // Not getting here because of exception
@@ -168,7 +167,7 @@ namespace iText.Signatures.Verify {
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(rootCert, rootRsaOcspBuilder);
             byte[] basicOcspRespBytes = ocspClient.GetEncoded(checkCert, rootCert, null);
             IASN1Primitive var2 = FACTORY.CreateASN1Primitive(basicOcspRespBytes);
-            IBasicOCSPResponse basicOCSPResp = FACTORY.CreateBasicOCSPResp(FACTORY.CreateBasicOCSPResponse(var2));
+            IBasicOCSPResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(var2);
             OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
             return ocspVerifier.Verify(basicOCSPResp, checkCert, rootCert, checkDate);
         }
@@ -182,10 +181,10 @@ namespace iText.Signatures.Verify {
             String checkCertFileName = certsSrc + "signCertRsaWithChain.p12";
             IX509Certificate checkCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(checkCertFileName, password
                 )[0];
-            RsaKeyPairGenerator keyGen = SignTestPortUtil.BuildRSA2048KeyPairGenerator();
-            AsymmetricCipherKeyPair key = keyGen.GenerateKeyPair();
-            IPrivateKey ocspRespPrivateKey = key.Private;
-            IPublicKey ocspRespPublicKey = key.Public;
+            IRsaKeyPairGenerator keyGen = SignTestPortUtil.BuildRSA2048KeyPairGenerator();
+            IAsymmetricCipherKeyPair key = keyGen.GenerateKeyPair();
+            IPrivateKey ocspRespPrivateKey = key.GetPrivateKey();
+            IPublicKey ocspRespPublicKey = key.GetPublicKey();
             TestCertificateBuilder certBuilder = new TestCertificateBuilder(ocspRespPublicKey, caCert, caPrivateKey, "CN=iTextTestOCSPResponder, OU=test, O=iText"
                 );
             certBuilder.SetStartDate(ocspResponderCertStartDate);
@@ -195,7 +194,7 @@ namespace iText.Signatures.Verify {
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
             byte[] basicOcspRespBytes = ocspClient.GetEncoded(checkCert, caCert, null);
             IASN1Primitive var2 = FACTORY.CreateASN1Primitive(basicOcspRespBytes);
-            IBasicOCSPResponse basicOCSPResp = FACTORY.CreateBasicOCSPResp(FACTORY.CreateBasicOCSPResponse(var2));
+            IBasicOCSPResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(var2);
             OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
             return ocspVerifier.Verify(basicOCSPResp, checkCert, caCert, checkDate);
         }

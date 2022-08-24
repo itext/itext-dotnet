@@ -98,7 +98,7 @@ namespace iText.Signatures.Verify {
             testClient.AddBuilderForCertIssuer(rootCert, key);
             byte[] ocspResponseBytes = testClient.GetEncoded(checkCert, rootCert, ocspServiceUrl);
             IASN1Primitive var2 = FACTORY.CreateASN1Primitive(ocspResponseBytes);
-            return FACTORY.CreateBasicOCSPResp(FACTORY.CreateBasicOCSPResponse(var2));
+            return FACTORY.CreateBasicOCSPResponse(var2);
         }
     }
 }

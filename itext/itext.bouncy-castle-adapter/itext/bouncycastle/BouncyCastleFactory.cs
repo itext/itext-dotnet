@@ -30,6 +30,7 @@ using iText.Bouncycastle.Cert.Ocsp;
 using iText.Bouncycastle.Cms;
 using iText.Bouncycastle.Cms.Jcajce;
 using iText.Bouncycastle.Crypto;
+using iText.Bouncycastle.Crypto.Generators;
 using iText.Bouncycastle.Math;
 using iText.Bouncycastle.Operator.Jcajce;
 using iText.Bouncycastle.Security;
@@ -51,6 +52,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Cms.Jcajce;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Crypto.Generators;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
@@ -444,16 +446,8 @@ namespace iText.Bouncycastle {
             return CertificateStatusBC.GetInstance();
         }
 
-        public virtual IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus) {
-            CertificateStatusBC certificateStatusBC = (CertificateStatusBC)certificateStatus;
-            if (certificateStatusBC.GetCertificateStatus() is RevokedStatus) {
-                return new RevokedStatusBC((RevokedStatus)certificateStatusBC.GetCertificateStatus());
-            }
-            return null;
-        }
-
         public virtual IRevokedStatus CreateRevokedStatus(DateTime date, int i) {
-            return new RevokedStatusBC(new RevokedStatus(date, i));
+            return new RevokedStatusBC(date, i);
         }
 
         public virtual IASN1Primitive CreateASN1Primitive(byte[] array) {
@@ -532,8 +526,8 @@ namespace iText.Bouncycastle {
                 )));
         }
 
-        public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, BigInteger value) {
-            return new IssuerAndSerialNumberBC(issuer, value);
+        public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, IBigInteger value) {
+            return new IssuerAndSerialNumberBC(issuer, ((BigIntegerBC)value).GetBigInteger());
         }
 
         public virtual IRecipientIdentifier CreateRecipientIdentifier(IIssuerAndSerialNumber issuerAndSerialNumber
@@ -576,7 +570,7 @@ namespace iText.Bouncycastle {
         }
 
         public virtual IUnknownStatus CreateUnknownStatus() {
-            return new UnknownStatusBC(new UnknownStatus());
+            return new UnknownStatusBC();
         }
 
         public virtual IASN1Dump CreateASN1Dump() {
@@ -794,6 +788,14 @@ namespace iText.Bouncycastle {
         
         public IX509Crl CreateNullCrl() {
             return new X509CrlBC(null);
+        }
+
+        public ITimeStampToken CreateTimeStampToken(IContentInfo contentInfo) {
+            return new TimeStampTokenBC(new TimeStampToken(((ContentInfoBC)contentInfo).GetContentInfo()));
+        }
+
+        public IRsaKeyPairGenerator CreateRsa2048KeyPairGenerator() {
+            return new RsaKeyPairGeneratorBC();
         }
     }
 }

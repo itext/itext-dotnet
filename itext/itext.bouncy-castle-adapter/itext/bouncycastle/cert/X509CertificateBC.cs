@@ -98,6 +98,11 @@ namespace iText.Bouncycastle.Cert {
             return certificate.CertificateStructure.EndDate.GetTime();
         }
 
+        /// <summary><inheritDoc/></summary>
+        public DateTime GetNotBefore() {
+            return certificate.NotBefore;
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {

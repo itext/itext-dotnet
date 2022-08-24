@@ -43,21 +43,23 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.IO;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Crypto.Generators;
+using iText.Kernel.Pdf;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Prng;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using iText.Kernel.Pdf;
-using Org.BouncyCastle.Crypto.Generators;
-using Org.BouncyCastle.Crypto.Prng;
-using Org.BouncyCastle.Security.Certificates;
 
 namespace iText.Signatures.Testutils {
     public class SignTestPortUtil {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         public static CertificateID GenerateCertificateId(X509Certificate issuerCert, BigInteger serialNumber, String hashAlgorithm) {
             return new CertificateID(hashAlgorithm, issuerCert, serialNumber);
         }
@@ -83,10 +85,8 @@ namespace iText.Signatures.Testutils {
             return new X509CrlParser().ReadCrl(input);
         }
         
-        public static RsaKeyPairGenerator BuildRSA2048KeyPairGenerator() {
-            RsaKeyPairGenerator keyGen = new RsaKeyPairGenerator();
-            keyGen.Init(new KeyGenerationParameters(new SecureRandom(new VmpcRandomGenerator()), 2048));
-            return keyGen;
+        public static IRsaKeyPairGenerator BuildRSA2048KeyPairGenerator() {
+            return FACTORY.CreateRsa2048KeyPairGenerator();
         }
     }
 }

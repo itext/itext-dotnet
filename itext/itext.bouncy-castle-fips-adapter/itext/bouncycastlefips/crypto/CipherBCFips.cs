@@ -1,4 +1,5 @@
 using System;
+using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Fips;
 using Org.BouncyCastle.Crypto.Paddings;
@@ -57,6 +58,33 @@ namespace iText.Bouncycastlefips.Crypto {
         public byte[] DoFinal() {
             cipher.Stream.Close();
             return memoryStream.ToArray();
+        }
+        
+        /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
+        public override bool Equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || GetType() != o.GetType()) {
+                return false;
+            }
+            CipherBCFips that = (CipherBCFips)o;
+            return Object.Equals(cipher, that.cipher) &&
+                   Object.Equals(memoryStream, that.memoryStream);
+        }
+
+        /// <summary>Returns a hash code value based on the wrapped object.</summary>
+        public override int GetHashCode() {
+            return JavaUtil.ArraysHashCode<object>(cipher, memoryStream);
+        }
+
+        /// <summary>
+        /// Delegates
+        /// <c>toString</c>
+        /// method call to the wrapped object.
+        /// </summary>
+        public override String ToString() {
+            return cipher.ToString();
         }
     }
 }

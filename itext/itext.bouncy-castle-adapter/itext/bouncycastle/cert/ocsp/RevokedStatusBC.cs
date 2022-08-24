@@ -20,35 +20,47 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Org.BouncyCastle.Ocsp;
+using System;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace iText.Bouncycastle.Cert.Ocsp {
     /// <summary>
-    /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Ocsp.RevokedStatus"/>.
+    /// Wrapper class for revoked
+    /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
     /// </summary>
     public class RevokedStatusBC : CertificateStatusBC, IRevokedStatus {
         /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Ocsp.RevokedStatus"/>.
+        /// Creates new wrapper instance for revoked
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
         /// </summary>
         /// <param name="certificateStatus">
-        /// 
-        /// <see cref="Org.BouncyCastle.Ocsp.RevokedStatus"/>
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>
         /// to be wrapped
         /// </param>
-        public RevokedStatusBC(RevokedStatus certificateStatus)
-            : base(certificateStatus) {
+        public RevokedStatusBC(CertStatus certificateStatus)
+            : base(certificateStatus.TagNo == 1 ? certificateStatus : null) {
         }
 
+        /// <summary>
+        /// Creates new wrapper instance for revoked
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
+        /// </summary>
+        /// <param name="date">date to create RevokedInfo</param>
+        /// <param name="i">CrlReason int value</param>
+        public RevokedStatusBC(DateTime date, int i) 
+            : base(new CertStatus(new RevokedInfo(new DerGeneralizedTime(date), new CrlReason(i)))) {
+        }
+        
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Ocsp.RevokedStatus"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
         /// </returns>
-        public virtual RevokedStatus GetRevokedStatus() {
-            return (RevokedStatus)base.GetCertificateStatus();
+        public virtual CertStatus GetRevokedStatus() {
+            return base.GetCertificateStatus();
         }
     }
 }

@@ -25,6 +25,7 @@ using iText.Bouncycastlefips.Cert.Ocsp;
 using iText.Bouncycastlefips.Cms;
 using iText.Bouncycastlefips.Cms.Jcajce;
 using iText.Bouncycastlefips.Crypto;
+using iText.Bouncycastlefips.Crypto.Generators;
 using iText.Bouncycastlefips.Math;
 using iText.Bouncycastlefips.Operator.Jcajce;
 using iText.Bouncycastlefips.Security;
@@ -46,6 +47,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Cms.Jcajce;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Crypto.Generators;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
@@ -449,16 +451,8 @@ namespace iText.Bouncycastlefips {
             return CertificateStatusBCFips.GetInstance();
         }
 
-        public virtual IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus) {
-            CertificateStatusBCFips certificateStatusBCFips = (CertificateStatusBCFips)certificateStatus;
-            if (certificateStatusBCFips.GetCertificateStatus() is RevokedStatus) {
-                return new RevokedStatusBCFips((RevokedStatus)certificateStatusBCFips.GetCertificateStatus());
-            }
-            return null;
-        }
-
         public virtual IRevokedStatus CreateRevokedStatus(DateTime date, int i) {
-            return new RevokedStatusBCFips(new RevokedStatus(date, i));
+            return new RevokedStatusBCFips(date, i);
         }
 
         public virtual IASN1Primitive CreateASN1Primitive(byte[] array) {
@@ -537,8 +531,8 @@ namespace iText.Bouncycastlefips {
                 ()));
         }
 
-        public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, BigInteger value) {
-            return new IssuerAndSerialNumberBCFips(issuer, value);
+        public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, IBigInteger value) {
+            return new IssuerAndSerialNumberBCFips(issuer, ((BigIntegerBCFips)value).GetBigInteger());
         }
 
         public virtual IRecipientIdentifier CreateRecipientIdentifier(IIssuerAndSerialNumber issuerAndSerialNumber
@@ -578,7 +572,7 @@ namespace iText.Bouncycastlefips {
         }
 
         public virtual IUnknownStatus CreateUnknownStatus() {
-            return new UnknownStatusBCFips(new UnknownStatus());
+            return new UnknownStatusBCFips();
         }
 
         public virtual IASN1Dump CreateASN1Dump() {
@@ -857,6 +851,14 @@ namespace iText.Bouncycastlefips {
 
         public IX509Crl CreateNullCrl() {
             return new X509CrlBCFips(null);
+        }
+        
+        public ITimeStampToken CreateTimeStampToken(IContentInfo contentInfo) {
+            return new TimeStampTokenBCFips(((ContentInfoBCFips)contentInfo).GetContentInfo());
+        }
+
+        public IRsaKeyPairGenerator CreateRsa2048KeyPairGenerator() {
+            return new RsaKeyPairGeneratorBCFips();
         }
     }
 }

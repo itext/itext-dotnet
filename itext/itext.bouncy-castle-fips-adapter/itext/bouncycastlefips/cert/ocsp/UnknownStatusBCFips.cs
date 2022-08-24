@@ -20,35 +20,44 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Org.BouncyCastle.Ocsp;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <summary>
-    /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Ocsp.UnknownStatus"/>.
+    /// Wrapper class for unknown
+    /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
     /// </summary>
     public class UnknownStatusBCFips : CertificateStatusBCFips, IUnknownStatus {
         /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Ocsp.UnknownStatus"/>.
+        /// Creates new wrapper instance for unknown
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
         /// </summary>
         /// <param name="certificateStatus">
         /// 
-        /// <see cref="Org.BouncyCastle.Ocsp.UnknownStatus"/>
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>
         /// to be wrapped
         /// </param>
-        public UnknownStatusBCFips(UnknownStatus certificateStatus)
-            : base(certificateStatus) {
+        public UnknownStatusBCFips(CertStatus certificateStatus)
+            : base(certificateStatus.TagNo == 2 ? certificateStatus : null) {
+        }
+
+        /// <summary>
+        /// Creates new wrapper instance for unknown
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
+        /// </summary>
+        public UnknownStatusBCFips() 
+            : base(new CertStatus(2, DerNull.Instance)) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Ocsp.UnknownStatus"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
         /// </returns>
-        public virtual UnknownStatus GetUnknownStatus() {
-            return (UnknownStatus)base.GetCertificateStatus();
+        public virtual CertStatus GetUnknownStatus() {
+            return base.GetCertificateStatus();
         }
     }
 }
