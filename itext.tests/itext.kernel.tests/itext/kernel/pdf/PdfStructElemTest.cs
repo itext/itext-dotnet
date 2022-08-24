@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font.Constants;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
@@ -108,7 +109,7 @@ namespace iText.Kernel.Pdf {
             page1.Flush();
             page2.Flush();
             document.Close();
-            CompareResult("structElemTest01.pdf", "cmp_structElemTest01.pdf", "diff_structElem_01_");
+            CompareResult("structElemTest01.pdf", "cmp_structElemTest01.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -137,7 +138,7 @@ namespace iText.Kernel.Pdf {
             canvas.Release();
             page.Flush();
             document.Close();
-            CompareResult("structElemTest02.pdf", "cmp_structElemTest02.pdf", "diff_structElem_02_");
+            CompareResult("structElemTest02.pdf", "cmp_structElemTest02.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -243,7 +244,7 @@ namespace iText.Kernel.Pdf {
             canvas.Release();
             page.Flush();
             document.Close();
-            CompareResult("structElemTest04.pdf", "cmp_structElemTest04.pdf", "diff_structElem_04_");
+            CompareResult("structElemTest04.pdf", "cmp_structElemTest04.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -279,7 +280,7 @@ namespace iText.Kernel.Pdf {
             canvas.EndText();
             canvas.Release();
             document.Close();
-            CompareResult("structElemTest05.pdf", "cmp_structElemTest05.pdf", "diff_structElem_05_");
+            CompareResult("structElemTest05.pdf", "cmp_structElemTest05.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -304,7 +305,7 @@ namespace iText.Kernel.Pdf {
             canvas.EndText();
             canvas.Release();
             document.Close();
-            CompareResult("structElemTest06.pdf", "cmp_structElemTest06.pdf", "diff_structElem_06_");
+            CompareResult("structElemTest06.pdf", "cmp_structElemTest06.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -340,7 +341,7 @@ namespace iText.Kernel.Pdf {
             document.GetStructTreeRoot().AddNamespace(@namespace);
             page.Flush();
             document.Close();
-            CompareResult("structElemTest07.pdf", "cmp_structElemTest07.pdf", "diff_structElem_07_");
+            CompareResult("structElemTest07.pdf", "cmp_structElemTest07.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -370,7 +371,7 @@ namespace iText.Kernel.Pdf {
             firstPage.Flush();
             secondPage.Flush();
             document.Close();
-            CompareResult("structElemTest08.pdf", "cmp_structElemTest08.pdf", "diff_structElem_08_");
+            CompareResult("structElemTest08.pdf", "cmp_structElemTest08.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -381,7 +382,7 @@ namespace iText.Kernel.Pdf {
                 writer);
             document.RemovePage(1);
             document.Close();
-            CompareResult("structElemTest09.pdf", "cmp_structElemTest09.pdf", "diff_structElem_09_");
+            CompareResult("structElemTest09.pdf", "cmp_structElemTest09.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -401,7 +402,7 @@ namespace iText.Kernel.Pdf {
             source.CopyPagesTo(50, 52, destination);
             destination.Close();
             source.Close();
-            CompareResult("structTreeCopyingTest01.pdf", "cmp_structTreeCopyingTest01.pdf", "diff_copying_01_");
+            CompareResult("structTreeCopyingTest01.pdf", "cmp_structTreeCopyingTest01.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -416,7 +417,7 @@ namespace iText.Kernel.Pdf {
             source.CopyPagesTo(1, 5, destination);
             destination.Close();
             source.Close();
-            CompareResult("structTreeCopyingTest02.pdf", "cmp_structTreeCopyingTest02.pdf", "diff_copying_02_");
+            CompareResult("structTreeCopyingTest02.pdf", "cmp_structTreeCopyingTest02.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -448,7 +449,7 @@ namespace iText.Kernel.Pdf {
             }
             destination.Close();
             source.Close();
-            CompareResult("structTreeCopyingTest04.pdf", "cmp_structTreeCopyingTest04.pdf", "diff_copying_04_");
+            CompareResult("structTreeCopyingTest04.pdf", "cmp_structTreeCopyingTest04.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -462,7 +463,7 @@ namespace iText.Kernel.Pdf {
             document.Close();
             document1.Close();
             document2.Close();
-            CompareResult("structTreeCopyingTest05.pdf", "cmp_structTreeCopyingTest05.pdf", "diff_copying_05_");
+            CompareResult("structTreeCopyingTest05.pdf", "cmp_structTreeCopyingTest05.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -476,7 +477,7 @@ namespace iText.Kernel.Pdf {
             source.CopyPagesTo(1, source.GetNumberOfPages(), destination);
             destination.Close();
             source.Close();
-            CompareResult("structTreeCopyingTest06.pdf", "cmp_structTreeCopyingTest06.pdf", "diff_copying_06_");
+            CompareResult("structTreeCopyingTest06.pdf", "cmp_structTreeCopyingTest06.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -506,7 +507,7 @@ namespace iText.Kernel.Pdf {
             document1.CopyPagesTo(1, 1, document);
             document.Close();
             document1.Close();
-            CompareResult("structTreeCopyingTest07.pdf", "cmp_structTreeCopyingTest07.pdf", "diff_copying_07_");
+            CompareResult("structTreeCopyingTest07.pdf", "cmp_structTreeCopyingTest07.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -518,7 +519,7 @@ namespace iText.Kernel.Pdf {
             document1.CopyPagesTo(1, 1, document, 2);
             document.Close();
             document1.Close();
-            CompareResult("structTreeCopyingTest08.pdf", "cmp_structTreeCopyingTest08.pdf", "diff_copying_08_");
+            CompareResult("structTreeCopyingTest08.pdf", "cmp_structTreeCopyingTest08.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -531,7 +532,7 @@ namespace iText.Kernel.Pdf {
             document1.CopyPagesTo(1, 1, document, 4);
             document.Close();
             document1.Close();
-            CompareResult("structTreeCopyingTest09.pdf", "cmp_structTreeCopyingTest09.pdf", "diff_copying_09_");
+            CompareResult("structTreeCopyingTest09.pdf", "cmp_structTreeCopyingTest09.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -547,7 +548,7 @@ namespace iText.Kernel.Pdf {
             document.Close();
             document1.Close();
             document2.Close();
-            CompareResult("structTreeCopyingTest10.pdf", "cmp_structTreeCopyingTest10.pdf", "diff_copying_10_");
+            CompareResult("structTreeCopyingTest10.pdf", "cmp_structTreeCopyingTest10.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -564,7 +565,28 @@ namespace iText.Kernel.Pdf {
             document.Close();
             document1.Close();
             document2.Close();
-            CompareResult("structTreeCopyingTest11.pdf", "cmp_structTreeCopyingTest11.pdf", "diff_copying_11_");
+            CompareResult("structTreeCopyingTest11.pdf", "cmp_structTreeCopyingTest11.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructTreeCopyingToPartiallyFlushedDocumentTest() {
+            String outFile = "structTreeCopyingToPartiallyFlushedDocumentTest.pdf";
+            PdfDocument resultDoc = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            resultDoc.SetTagged();
+            PdfDocument document1 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox.pdf"));
+            document1.CopyPagesTo(1, 1, resultDoc);
+            resultDoc.FlushCopiedObjects(document1);
+            document1.Close();
+            PdfDocument document2 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox.pdf"));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                document2.CopyPagesTo(1, 1, resultDoc);
+            }
+            );
+            // TODO DEVSIX-7005 after exception is gone add assertion for the resulting document
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.TAG_STRUCTURE_COPYING_FAILED_IT_MIGHT_BE_CORRUPTED_IN_ONE_OF_THE_DOCUMENTS
+                , e.Message);
+            document2.Close();
+            resultDoc.Close();
         }
 
         [NUnit.Framework.Test]
@@ -610,12 +632,11 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        private void CompareResult(String outFileName, String cmpFileName, String diffNamePrefix) {
+        private void CompareResult(String outFileName, String cmpFileName) {
             CompareTool compareTool = new CompareTool();
             String outPdf = destinationFolder + outFileName;
             String cmpPdf = sourceFolder + cmpFileName;
-            String contentDifferences = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, diffNamePrefix
-                );
+            String contentDifferences = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             String taggedStructureDifferences = compareTool.CompareTagStructures(outPdf, cmpPdf);
             String errorMessage = "";
             errorMessage += taggedStructureDifferences == null ? "" : taggedStructureDifferences + "\n";
