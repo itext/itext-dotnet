@@ -71,7 +71,7 @@ namespace iText.Layout.Renderer {
             int tagType = AccessibleTypes.IdentifyType(role);
             PdfDictionary attributes = new PdfDictionary();
             attributes.Put(PdfName.O, PdfName.Layout);
-            //TODO WritingMode attribute applying when needed
+            // TODO DEVSIX-7016 WritingMode attribute applying when needed
             ApplyCommonLayoutAttributes(renderer, attributes);
             if (tagType == AccessibleTypes.BlockLevel) {
                 ApplyBlockLevelLayoutAttributes(role, renderer, attributes);

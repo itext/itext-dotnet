@@ -1683,7 +1683,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        //TODO is behavior of copying all properties in split case common to all renderers?
         protected internal virtual IDictionary<int, Object> GetOwnProperties() {
             return properties;
         }

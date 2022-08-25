@@ -265,8 +265,119 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual("en-Us", language);
             properties.SetLanguage("EN-GB");
             pointer.MoveToRoot().MoveToKid(2, StandardRoles.P).GetProperties().SetRole(StandardRoles.H6);
+            String role = pointer.GetProperties().GetRole();
+            NUnit.Framework.Assert.AreEqual("H6", role);
             document.Close();
             CompareResult("tagTreePointerTest08.pdf", "cmp_tagTreePointerTest08.pdf", "diff08_");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChangeExistedBackedAccessibilityPropertiesTest() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "changeExistedBackedAccessibilityPropertiesTest.pdf", 
+                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                );
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "taggedDocument2.pdf"), writer);
+            TagTreePointer pointer = new TagTreePointer(document);
+            AccessibilityProperties properties = pointer.MoveToKid(StandardRoles.DIV).GetProperties();
+            String altDescription = "Alternate Description";
+            properties.SetAlternateDescription(altDescription);
+            NUnit.Framework.Assert.AreEqual(altDescription, properties.GetAlternateDescription());
+            String expansion = "expansion";
+            properties.SetExpansion(expansion);
+            NUnit.Framework.Assert.AreEqual(expansion, properties.GetExpansion());
+            properties.SetNamespace(new PdfNamespace(StandardNamespaces.PDF_2_0));
+            NUnit.Framework.Assert.AreEqual(StandardNamespaces.PDF_2_0, properties.GetNamespace().GetNamespaceName());
+            String phoneme = "phoneme";
+            properties.SetPhoneme(phoneme);
+            NUnit.Framework.Assert.AreEqual(phoneme, properties.GetPhoneme());
+            String phoneticAlphabet = "Phonetic Alphabet";
+            properties.SetPhoneticAlphabet(phoneticAlphabet);
+            NUnit.Framework.Assert.AreEqual(phoneticAlphabet, properties.GetPhoneticAlphabet());
+            document.Close();
+            CompareResult("changeExistedBackedAccessibilityPropertiesTest.pdf", "cmp_changeExistedBackedAccessibilityPropertiesTest.pdf"
+                , "diffBackProp01_");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveExistedBackedAccessibilityPropertiesTest() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "removeExistedBackedAccessibilityPropertiesTest.pdf", 
+                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                );
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "taggedDocument2.pdf"), writer);
+            TagTreePointer pointer = new TagTreePointer(document);
+            AccessibilityProperties properties = pointer.MoveToKid(StandardRoles.DIV).GetProperties();
+            NUnit.Framework.Assert.IsNotNull(properties.GetAttributesList());
+            NUnit.Framework.Assert.IsNotNull(properties.AddAttributes(0, null));
+            properties.ClearAttributes();
+            NUnit.Framework.Assert.IsTrue(properties.GetAttributesList().IsEmpty());
+            properties.AddRef(pointer);
+            NUnit.Framework.Assert.IsFalse(properties.GetRefsList().IsEmpty());
+            properties.ClearRefs();
+            NUnit.Framework.Assert.IsTrue(properties.GetRefsList().IsEmpty());
+            document.Close();
+            CompareResult("removeExistedBackedAccessibilityPropertiesTest.pdf", "cmp_removeExistedBackedAccessibilityPropertiesTest.pdf"
+                , "diffBackProp02_");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetDefaultAccessibilityPropertiesTest() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "setDefaultAccessibilityPropertiesTest.pdf", new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "taggedDocument2.pdf"), writer);
+            TagTreePointer pointer = new TagTreePointer(document);
+            AccessibilityProperties properties = new DefaultAccessibilityProperties(StandardRoles.DIV);
+            properties.SetRole(StandardRoles.H6);
+            NUnit.Framework.Assert.AreEqual(StandardRoles.H6, properties.GetRole());
+            String actualText = "Test text";
+            properties.SetActualText(actualText);
+            NUnit.Framework.Assert.AreEqual(actualText, properties.GetActualText());
+            String language = "EN-GB";
+            properties.SetLanguage(language);
+            NUnit.Framework.Assert.AreEqual(language, properties.GetLanguage());
+            String alternateDescription = "Alternate Description";
+            properties.SetAlternateDescription(alternateDescription);
+            NUnit.Framework.Assert.AreEqual(alternateDescription, properties.GetAlternateDescription());
+            String expansion = "expansion";
+            properties.SetExpansion(expansion);
+            NUnit.Framework.Assert.AreEqual(expansion, properties.GetExpansion());
+            properties.SetNamespace(new PdfNamespace(StandardNamespaces.PDF_2_0));
+            NUnit.Framework.Assert.AreEqual(StandardNamespaces.PDF_2_0, properties.GetNamespace().GetNamespaceName());
+            String phoneme = "phoneme";
+            properties.SetPhoneme(phoneme);
+            NUnit.Framework.Assert.AreEqual(phoneme, properties.GetPhoneme());
+            String phoneticAlphabet = "phoneticAlphabet";
+            properties.SetPhoneticAlphabet(phoneticAlphabet);
+            NUnit.Framework.Assert.AreEqual(phoneticAlphabet, properties.GetPhoneticAlphabet());
+            properties.AddRef(pointer);
+            NUnit.Framework.Assert.IsFalse(properties.GetRefsList().IsEmpty());
+            pointer.AddTag(properties);
+            document.Close();
+            CompareResult("setDefaultAccessibilityPropertiesTest.pdf", "cmp_setDefaultAccessibilityPropertiesTest.pdf"
+                , "diffDefaultProp01_");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveDefaultAccessibilityPropertiesTest() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "removeDefaultAccessibilityPropertiesTest.pdf", new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "taggedDocument2.pdf"), writer);
+            TagTreePointer pointer = new TagTreePointer(document);
+            AccessibilityProperties properties = new DefaultAccessibilityProperties(StandardRoles.DIV);
+            PdfStructureAttributes testAttr = new PdfStructureAttributes("test");
+            testAttr.AddIntAttribute("N", 4);
+            properties.AddAttributes(testAttr);
+            properties.AddAttributes(1, testAttr);
+            properties.GetAttributesList();
+            properties.ClearAttributes();
+            NUnit.Framework.Assert.IsTrue(properties.GetAttributesList().IsEmpty());
+            properties.AddRef(pointer);
+            NUnit.Framework.Assert.IsFalse(properties.GetRefsList().IsEmpty());
+            properties.ClearRefs();
+            NUnit.Framework.Assert.IsTrue(properties.GetRefsList().IsEmpty());
+            pointer.AddTag(properties);
+            document.Close();
+            CompareResult("removeDefaultAccessibilityPropertiesTest.pdf", "cmp_removeDefaultAccessibilityPropertiesTest.pdf"
+                , "diffDefaultProp02_");
         }
 
         [NUnit.Framework.Test]
