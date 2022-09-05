@@ -336,7 +336,8 @@ namespace iText.Layout.Renderer {
                 return new LayoutResult(null == overflowRenderer ? LayoutResult.FULL : LayoutResult.PARTIAL, occupiedArea, 
                     splitRenderer, overflowRenderer, this);
             }
-            // Notice that placed item is a son of the first ListItemRenderer (otherwise there would be now FORCED_PLACEMENT applied)
+            // Notice that placed item is a son of the first ListItemRenderer (otherwise there would be now
+            // FORCED_PLACEMENT applied)
             IRenderer firstListItemRenderer = splitRenderer.GetChildRenderers()[0];
             iText.Layout.Renderer.ListRenderer newOverflowRenderer = (iText.Layout.Renderer.ListRenderer)CreateOverflowRenderer
                 (LayoutResult.PARTIAL);
@@ -380,7 +381,8 @@ namespace iText.Layout.Renderer {
                     listItemNum = (childRenderers[i].GetProperty<int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) != null) ? (int)childRenderers
                         [i].GetProperty<int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) : listItemNum;
                     IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum, childRenderers[i]);
-                    if (BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION))) {
+                    if (currentSymbolRenderer != null && BaseDirection.RIGHT_TO_LEFT == this.GetProperty<BaseDirection?>(Property
+                        .BASE_DIRECTION)) {
                         currentSymbolRenderer.SetProperty(Property.BASE_DIRECTION, BaseDirection.RIGHT_TO_LEFT);
                     }
                     LayoutResult listSymbolLayoutResult = null;
