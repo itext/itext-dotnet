@@ -20,13 +20,44 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Commons.Bouncycastle.Asn1;
-
 namespace iText.Commons.Bouncycastle.Asn1.Ocsp {
     /// <summary>
     /// This interface represents the wrapper for OCSPResponse that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IOCSPResponse : IASN1Encodable {
+    public interface IOCSPResponse : IASN1Encodable
+    {
+        
+        /// <summary>
+        /// Calls actual
+        /// <c>GetEncoded</c>
+        /// method for the wrapped OCSPResponse object.
+        /// </summary>
+        /// <returns>the default encoding for the wrapped object.</returns>
+        byte[] GetEncoded();
+        
+        /// <summary>
+        /// Calls actual
+        /// <c>GetStatus</c>
+        /// method for the wrapped OCSPResponse object.
+        /// </summary>
+        /// <returns>status value.</returns>
+        int GetStatus();
+
+        /// <summary>
+        /// Calls actual
+        /// <c>GetResponseObject</c>
+        /// method for the wrapped OCSPResponse object.
+        /// </summary>
+        /// <returns>response object.</returns>
+        object GetResponseObject();
+        
+        /// <summary>
+        /// Gets
+        /// <c>SUCCESSFUL</c>
+        /// constant for the wrapped OCSPResp.
+        /// </summary>
+        /// <returns>OCSPResp.SUCCESSFUL value.</returns>
+        int GetSuccessful();
     }
 }

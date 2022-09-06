@@ -94,15 +94,15 @@ namespace iText.Signatures {
         public virtual IBasicOCSPResponse GetBasicOCSPResp(IX509Certificate checkCert, IX509Certificate rootCert, 
             String url) {
             try {
-                IOCSPResp ocspResponse = GetOcspResponse(checkCert, rootCert, url);
+                IOCSPResponse ocspResponse = GetOcspResponse(checkCert, rootCert, url);
                 if (ocspResponse == null) {
                     return null;
                 }
                 if (ocspResponse.GetStatus() != BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus().GetSuccessful()) {
                     return null;
                 }
-                IBasicOCSPResponse basicResponse = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResp(ocspResponse.GetResponseObject
-                    ());
+                IBasicOCSPResponse basicResponse = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(ocspResponse
+                    .GetResponseObject());
                 if (verifier != null) {
                     verifier.IsValidResponse(basicResponse, rootCert, DateTimeUtil.GetCurrentUtcTime());
                 }
@@ -169,11 +169,11 @@ namespace iText.Signatures {
         /// </param>
         /// <returns>
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IOCSPResp"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IOCSPResponse"/>
         /// an OCSP response wrapper
         /// </returns>
-        internal virtual IOCSPResp GetOcspResponse(IX509Certificate checkCert, IX509Certificate rootCert, String url
-            ) {
+        internal virtual IOCSPResponse GetOcspResponse(IX509Certificate checkCert, IX509Certificate rootCert, String
+             url) {
             if (checkCert == null || rootCert == null) {
                 return null;
             }
@@ -188,7 +188,7 @@ namespace iText.Signatures {
             byte[] array = request.GetEncoded();
             Uri urlt = new Uri(url);
             Stream @in = SignUtils.GetHttpResponseForOcspRequest(array, urlt);
-            return BOUNCY_CASTLE_FACTORY.CreateOCSPResp(StreamUtil.InputStreamToArray(@in));
+            return BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(StreamUtil.InputStreamToArray(@in));
         }
     }
 }

@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Asn1.Ocsp;
 using iText.Bouncycastlefips.Cert;
+using iText.Bouncycastlefips.Cert.Ocsp;
 using iText.Bouncycastlefips.Crypto;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Cert;
 using Org.BouncyCastle.Crypto;
@@ -68,6 +71,23 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
                 certificates.Add(new X509CertificateBCFips(new X509Certificate(asn1Object.GetEncoded())));
             }
             return certificates;
+        }
+
+        public byte[] GetEncoded()
+        {
+            return GetBasicOCSPResponse().GetEncoded();
+        }
+
+        public ISingleResp[] GetResponses()
+        {
+            Asn1Sequence s = GetBasicOCSPResponse().TbsResponseData.Responses;
+            ISingleResp[] rs = new ISingleResp[s.Count];
+
+            for(int i = 0; i != rs.Length; ++i) {
+                rs[i] = new SingleRespBCFips(SingleResponse.GetInstance(s.GetEncoded()[i]));
+            }
+
+            return rs;
         }
     }
 }

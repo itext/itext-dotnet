@@ -45,7 +45,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Security.Certificates;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
@@ -53,6 +52,7 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Operator;
+using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 
 namespace iText.Signatures {
@@ -252,7 +252,7 @@ namespace iText.Signatures {
                                 break;
                             }
                         }
-                        catch (CertificateParsingException) {
+                        catch (AbstractCertificateParsingException) {
                         }
                     }
                     // Certificate signing the ocsp response is not found in ocsp response's certificate chain received

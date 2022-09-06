@@ -124,6 +124,8 @@ namespace iText.Commons.Bouncycastle {
         ISigningCertificateV2 CreateSigningCertificateV2(IASN1Sequence sequence);
 
         IBasicOCSPResponse CreateBasicOCSPResponse(IASN1Primitive primitive);
+        
+        IBasicOCSPResponse CreateBasicOCSPResponse(object response);
 
         IOCSPObjectIdentifiers CreateOCSPObjectIdentifiers();
 
@@ -162,12 +164,12 @@ namespace iText.Commons.Bouncycastle {
         IASN1String CreateASN1String(IASN1Encodable encodable);
 
         IASN1Primitive CreateASN1Primitive(IASN1Encodable encodable);
+        
+        IOCSPResponse CreateOCSPResponse(IOCSPResponse ocspResponse);
+        
+        IOCSPResponse CreateOCSPResponse(byte[] bytes);
 
-        IOCSPResp CreateOCSPResp(IOCSPResponse ocspResponse);
-
-        IOCSPResp CreateOCSPResp(byte[] bytes);
-
-        IOCSPResp CreateOCSPResp();
+        IOCSPResponse CreateOCSPResponse();
 
         IOCSPResponse CreateOCSPResponse(IOCSPResponseStatus respStatus, IResponseBytes responseBytes);
 
@@ -183,6 +185,8 @@ namespace iText.Commons.Bouncycastle {
         IOCSPResponseStatus CreateOCSPResponseStatus();
 
         ICertificateStatus CreateCertificateStatus();
+        
+        IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus);
 
         IRevokedStatus CreateRevokedStatus(DateTime date, int i);
 

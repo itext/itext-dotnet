@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
@@ -108,5 +109,13 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <returns>DateTime value.</returns>
         DateTime GetNotBefore();
+
+        /// <summary>
+        /// Returns actual
+        /// <c>ExtendedKeyUsage</c>
+        /// property for the wrapped X509Certificate object.
+        /// </summary>
+        /// <returns>List of object identifiers represented as Strings.</returns>
+        IList GetExtendedKeyUsage();
     }
 }

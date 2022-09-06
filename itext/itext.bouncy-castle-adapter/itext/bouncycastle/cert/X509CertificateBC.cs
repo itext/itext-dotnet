@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using iText.Bouncycastle.Asn1;
 using iText.Bouncycastle.Asn1.X500;
@@ -101,6 +102,11 @@ namespace iText.Bouncycastle.Cert {
         /// <summary><inheritDoc/></summary>
         public DateTime GetNotBefore() {
             return certificate.NotBefore;
+        }
+
+        public IList GetExtendedKeyUsage()
+        {
+            return certificate.GetExtendedKeyUsage();
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

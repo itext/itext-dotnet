@@ -241,12 +241,12 @@ namespace iText.Signatures {
 
         private static byte[] BuildOCSPResponse(byte[] basicOcspResponse) {
             IDEROctetString doctet = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(basicOcspResponse);
-            IOCSPResponseStatus respStatus = BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus(BOUNCY_CASTLE_FACTORY.CreateOCSPRespBuilderInstance
+            IOCSPResponseStatus respStatus = BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus(BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus
                 ().GetSuccessful());
             IResponseBytes responseBytes = BOUNCY_CASTLE_FACTORY.CreateResponseBytes(BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers
                 ().GetIdPkixOcspBasic(), doctet);
             IOCSPResponse ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(respStatus, responseBytes);
-            return BOUNCY_CASTLE_FACTORY.CreateOCSPResp(ocspResponse).GetEncoded();
+            return BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(ocspResponse).GetEncoded();
         }
 
         private PdfName GetSignatureHashKey(String signatureName) {

@@ -45,9 +45,9 @@ namespace iText.Commons.Bouncycastle.Cert.Ocsp {
         /// <param name="basicOCSPResp">BasicOCSPResp wrapper</param>
         /// <returns>
         /// 
-        /// <see cref="IOCSPResp"/>
+        /// <see cref="IOCSPResponse"/>
         /// the wrapper for built OCSPResp object.
         /// </returns>
-        IOCSPResp Build(int i, IBasicOCSPResponse basicOCSPResp);
+        IOCSPResponse Build(int i, IBasicOCSPResponse basicOCSPResp);
     }
 }

@@ -20,9 +20,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
+using System;
+using System.IO;
 using Org.BouncyCastle.Asn1.Ocsp;
-using iText.Bouncycastle.Asn1;
+using iText.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Ocsp;
 
 namespace iText.Bouncycastle.Asn1.Ocsp {
     /// <summary>
@@ -30,6 +35,9 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
     /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspResponse"/>.
     /// </summary>
     public class OCSPResponseBC : ASN1EncodableBC, IOCSPResponse {
+        
+        private const int SUCCESSFUL = Org.BouncyCastle.Asn1.Ocsp.OcspResponseStatus.Successful;
+
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspResponse"/>.
@@ -61,6 +69,46 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
         /// </returns>
         public virtual OcspResponse GetOcspResponse() {
             return (OcspResponse)GetEncodable();
+        }
+
+        public byte[] GetEncoded()
+        {
+            return GetOcspResponse().GetEncoded();
+        }
+
+        public int GetStatus()
+        {
+            return GetOcspResponse().ResponseStatus.Value.IntValue;
+        }
+
+        public object GetResponseObject()
+        {
+            ResponseBytes rb = this.GetOcspResponse().ResponseBytes;
+
+            if (rb == null)
+                return null;
+
+            if (rb.ResponseType.Equals(OcspObjectIdentifiers.PkixOcspBasic))
+            {
+                try
+                {
+                    MemoryStream input = new MemoryStream(rb.Response.GetOctets(), false);
+                    Asn1InputStream asn1 = new Asn1InputStream(input, rb.Response.GetOctets().Length);
+                    Asn1Object result = asn1.ReadObject();
+                    return BasicOcspResponse.GetInstance(result);
+                }
+                catch (Exception e)
+                {
+                    throw new OCSPExceptionBC((OcspException)e);
+                }
+            }
+
+            return rb.Response;
+        }
+
+        public int GetSuccessful()
+        {
+            return SUCCESSFUL;
         }
     }
 }

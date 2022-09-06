@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
 
 namespace iText.Commons.Bouncycastle.Asn1.Ocsp {
     /// <summary>
@@ -30,5 +31,21 @@ namespace iText.Commons.Bouncycastle.Asn1.Ocsp {
         /// </summary>
         /// <returns>list of wrapped certificates.</returns>
         IEnumerable<IX509Certificate> GetCerts();
+        
+        /// <summary>
+        /// Calls actual
+        /// <c>GetEncoded</c>
+        /// method for the wrapped BasicOCSPResponse object.
+        /// </summary>
+        /// <returns>the default encoding for the wrapped object.</returns>
+        byte[] GetEncoded();
+
+        /// <summary>
+        /// Calls actual
+        /// <c>GetResponses</c>
+        /// method for the wrapped BasicOCSPResponse object.
+        /// </summary>
+        /// <returns>wrapped SingleResp list.</returns>
+        ISingleResp[] GetResponses();
     }
 }

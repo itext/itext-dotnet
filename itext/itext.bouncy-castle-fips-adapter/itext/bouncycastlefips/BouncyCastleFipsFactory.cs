@@ -317,6 +317,14 @@ namespace iText.Bouncycastlefips {
             return new BasicOCSPResponseBCFips(BasicOcspResponse.GetInstance(primitiveBCFips.GetPrimitive()));
         }
 
+        public IBasicOCSPResponse CreateBasicOCSPResponse(object response)
+        {
+            if (response is BasicOcspResponse) {
+                return new BasicOCSPResponseBCFips((BasicOcspResponse) response);
+            }
+            return null;
+        }
+
         public virtual IOCSPObjectIdentifiers CreateOCSPObjectIdentifiers() {
             return OCSPObjectIdentifiersBCFips.GetInstance();
         }
@@ -409,15 +417,16 @@ namespace iText.Bouncycastlefips {
             return null;
         }
 
-        public virtual IOCSPResp CreateOCSPResp(IOCSPResponse ocspResponse) {
-            return new OCSPRespBCFips(ocspResponse);
+        public IOCSPResponse CreateOCSPResponse(IOCSPResponse ocspResponse)
+        {
+            return ocspResponse;
         }
 
-        public virtual IOCSPResp CreateOCSPResp(byte[] bytes) {
-            return new OCSPRespBCFips(new OcspResp(bytes));
+        public virtual IOCSPResponse CreateOCSPResponse(byte[] bytes) {
+            return new OCSPResponseBCFips(OcspResponse.GetInstance(new Asn1InputStream(bytes).ReadObject()));
         }
 
-        public virtual IOCSPResp CreateOCSPResp() {
+        public virtual IOCSPResponse CreateOCSPResponse() {
             return OCSPRespBCFips.GetInstance();
         }
 
@@ -450,6 +459,14 @@ namespace iText.Bouncycastlefips {
         public virtual ICertificateStatus CreateCertificateStatus() {
             return CertificateStatusBCFips.GetInstance();
         }
+
+        public IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus)
+        {
+            CertificateStatusBCFips certificateStatusBcFips = (CertificateStatusBCFips) certificateStatus;
+            if (certificateStatusBcFips.GetCertificateStatus() is CertStatus) {
+                return new RevokedStatusBCFips((CertStatus) certificateStatusBcFips.GetCertificateStatus());
+            }
+            return null;        }
 
         public virtual IRevokedStatus CreateRevokedStatus(DateTime date, int i) {
             return new RevokedStatusBCFips(date, i);

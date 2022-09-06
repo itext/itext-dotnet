@@ -25,8 +25,8 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         private static readonly iText.Bouncycastle.Cert.Ocsp.CertificateIDBC INSTANCE = new iText.Bouncycastle.Cert.Ocsp.CertificateIDBC
             (null);
 
-        private static readonly AlgorithmIdentifierBC HASH_SHA1 = new AlgorithmIdentifierBC(
-            new AlgorithmIdentifier(new DerObjectIdentifier(HashAlgorithmName.SHA1.Name), DerNull.Instance));
+        private static readonly ASN1ObjectIdentifierBC  HASH_SHA1 =
+            new ASN1ObjectIdentifierBC(new DerObjectIdentifier(HashAlgorithmName.SHA1.Name));
 
         private readonly CertID certificateID;
 
@@ -98,7 +98,7 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IAlgorithmIdentifier GetHashSha1() {
+        public virtual IASN1ObjectIdentifier GetHashSha1() {
             return HASH_SHA1;
         }
 

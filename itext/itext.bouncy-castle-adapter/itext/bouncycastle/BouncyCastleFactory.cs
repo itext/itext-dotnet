@@ -313,6 +313,14 @@ namespace iText.Bouncycastle {
             return new BasicOCSPResponseBC(BasicOcspResponse.GetInstance(primitiveBC.GetPrimitive()));
         }
 
+        public IBasicOCSPResponse CreateBasicOCSPResponse(object response) {
+            if (response is BasicOcspResponse) {
+                return new BasicOCSPResponseBC((BasicOcspResponse) response);
+            }
+            return null;
+            
+        }
+
         public virtual IOCSPObjectIdentifiers CreateOCSPObjectIdentifiers() {
             return OCSPObjectIdentifiersBC.GetInstance();
         }
@@ -404,16 +412,14 @@ namespace iText.Bouncycastle {
             return null;
         }
 
-        public virtual IOCSPResp CreateOCSPResp(IOCSPResponse ocspResponse) {
-            return new OCSPRespBC(ocspResponse);
+        public IOCSPResponse CreateOCSPResponse(IOCSPResponse ocspResponse)
+        {
+            return ocspResponse;
         }
 
-        public virtual IOCSPResp CreateOCSPResp(byte[] bytes) {
-            return new OCSPRespBC(new OcspResp(bytes));
-        }
-
-        public virtual IOCSPResp CreateOCSPResp() {
-            return OCSPRespBC.GetInstance();
+        public IOCSPResponse CreateOCSPResponse(byte[] bytes)
+        {
+            return new OCSPResponseBC(OcspResponse.GetInstance(new Asn1InputStream(bytes).ReadObject()));
         }
 
         public virtual IOCSPResponse CreateOCSPResponse(IOCSPResponseStatus respStatus, IResponseBytes responseBytes
@@ -444,6 +450,15 @@ namespace iText.Bouncycastle {
 
         public virtual ICertificateStatus CreateCertificateStatus() {
             return CertificateStatusBC.GetInstance();
+        }
+
+        public IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus)
+        {
+            CertificateStatusBC certificateStatusBC = (CertificateStatusBC) certificateStatus;
+            if (certificateStatusBC.GetCertificateStatus() is CertStatus) {
+                return new RevokedStatusBC((CertStatus) certificateStatusBC.GetCertificateStatus());
+            }
+            return null;
         }
 
         public virtual IRevokedStatus CreateRevokedStatus(DateTime date, int i) {

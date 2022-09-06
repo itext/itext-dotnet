@@ -323,9 +323,9 @@ namespace iText.Signatures {
             }
             for (int i = 0; i < ocsparray.Size(); i++) {
                 PdfStream stream = ocsparray.GetAsStream(i);
-                IOCSPResp ocspResponse;
+                IOCSPResponse ocspResponse;
                 try {
-                    ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResp(stream.GetBytes());
+                    ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(stream.GetBytes());
                 }
                 catch (System.IO.IOException e) {
                     throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
@@ -333,7 +333,7 @@ namespace iText.Signatures {
                 }
                 if (ocspResponse.GetStatus() == 0) {
                     try {
-                        ocsps.Add(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResp(ocspResponse.GetResponseObject()));
+                        ocsps.Add(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(ocspResponse.GetResponseObject()));
                     }
                     catch (AbstractOCSPException e) {
                         throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
