@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.Commons.Actions;
 using iText.Commons.Utils;
 using iText.Test;
@@ -82,12 +83,18 @@ namespace iText.Commons.Actions.Contexts {
         [NUnit.Framework.Test]
         public virtual void UnregisterNamespaceTest() {
             String testNamespace = "com.hello.world";
+            String testNamespaceWithCapitals = "com.Bye.World";
+            IList<String> testNamespaces = JavaUtil.ArraysAsList(testNamespace, testNamespaceWithCapitals);
             ContextManager manager = new ContextManager();
             NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespace));
-            manager.RegisterGenericContext(JavaUtil.ArraysAsList(testNamespace), JavaUtil.ArraysAsList("myProduct"));
+            NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespaceWithCapitals));
+            manager.RegisterGenericContext(testNamespaces, JavaUtil.ArraysAsList("myProduct"));
             NUnit.Framework.Assert.AreEqual(testNamespace, manager.GetRecognisedNamespace(testNamespace + ".MyClass"));
-            manager.UnregisterContext(JavaUtil.ArraysAsList(testNamespace));
+            NUnit.Framework.Assert.AreEqual(testNamespaceWithCapitals.ToLowerInvariant(), manager.GetRecognisedNamespace
+                (testNamespaceWithCapitals + ".MyClass"));
+            manager.UnregisterContext(testNamespaces);
             NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespace));
+            NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespaceWithCapitals));
         }
 
         [NUnit.Framework.Test]
