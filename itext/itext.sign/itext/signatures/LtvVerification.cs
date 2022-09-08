@@ -246,7 +246,7 @@ namespace iText.Signatures {
             IResponseBytes responseBytes = BOUNCY_CASTLE_FACTORY.CreateResponseBytes(BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers
                 ().GetIdPkixOcspBasic(), doctet);
             IOCSPResponse ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(respStatus, responseBytes);
-            return BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(ocspResponse).GetEncoded();
+            return ocspResponse.GetEncoded();
         }
 
         private PdfName GetSignatureHashKey(String signatureName) {

@@ -417,35 +417,48 @@ namespace iText.Bouncycastlefips {
             return null;
         }
 
-        public IOCSPResponse CreateOCSPResponse(IOCSPResponse ocspResponse)
-        {
-            return ocspResponse;
-        }
-
         public virtual IOCSPResponse CreateOCSPResponse(byte[] bytes) {
             return new OCSPResponseBCFips(OcspResponse.GetInstance(new Asn1InputStream(bytes).ReadObject()));
         }
 
         public virtual IOCSPResponse CreateOCSPResponse() {
-            return OCSPRespBCFips.GetInstance();
+            return OCSPResponseBCFips.GetInstance();
         }
 
-        public virtual IOCSPResponse CreateOCSPResponse(IOCSPResponseStatus respStatus, IResponseBytes responseBytes
-            ) {
+        public virtual IOCSPResponse CreateOCSPResponse(IOCSPResponseStatus respStatus, IResponseBytes responseBytes) {
             return new OCSPResponseBCFips(respStatus, responseBytes);
+        }
+
+        public IOCSPResponse CreateOCSPResponse(int respStatus, object response) {
+            if (response == null) {
+                return new OCSPResponseBCFips(new OcspResponse(new OcspResponseStatus(respStatus), null));
+            }
+            BasicOcspResponse basicResp = null;
+            if (response is IBasicOCSPResponse) {
+                basicResp = ((BasicOCSPResponseBCFips)response).GetBasicOCSPResponse();
+                if (basicResp == null) {
+                    return new OCSPResponseBCFips(new OcspResponse(new OcspResponseStatus(respStatus), null));
+                }
+            }
+            if (response is BasicOcspResponse) {
+                basicResp = (BasicOcspResponse)response;
+            }
+            if (basicResp == null) {
+                throw new OCSPExceptionBCFips(new Exception("unknown response object"));
+            }
+            Asn1OctetString octs;
+            try {
+                octs = new DerOctetString(((BasicOcspResponse)response).GetEncoded());
+            } catch (Exception e) {
+                throw new OCSPExceptionBCFips(new Exception("can't encode object.", e));
+            }
+            ResponseBytes rb = new ResponseBytes(OcspObjectIdentifiers.PkixOcspBasic, octs);
+            return new OCSPResponseBCFips(new OcspResponse(new OcspResponseStatus(respStatus), rb));
         }
 
         public virtual IResponseBytes CreateResponseBytes(IASN1ObjectIdentifier asn1ObjectIdentifier, IDEROctetString
              derOctetString) {
             return new ResponseBytesBCFips(asn1ObjectIdentifier, derOctetString);
-        }
-
-        public virtual IOCSPRespBuilder CreateOCSPRespBuilderInstance() {
-            return OCSPRespBuilderBCFips.GetInstance();
-        }
-
-        public virtual IOCSPRespBuilder CreateOCSPRespBuilder() {
-            return new OCSPRespBuilderBCFips(new OCSPRespGenerator());
         }
 
         public virtual IOCSPResponseStatus CreateOCSPResponseStatus(int status) {
@@ -460,13 +473,9 @@ namespace iText.Bouncycastlefips {
             return CertificateStatusBCFips.GetInstance();
         }
 
-        public IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus)
-        {
-            CertificateStatusBCFips certificateStatusBcFips = (CertificateStatusBCFips) certificateStatus;
-            if (certificateStatusBcFips.GetCertificateStatus() is CertStatus) {
-                return new RevokedStatusBCFips((CertStatus) certificateStatusBcFips.GetCertificateStatus());
-            }
-            return null;        }
+        public IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus) {
+            return new RevokedStatusBCFips(((CertificateStatusBCFips)certificateStatus).GetCertificateStatus());
+        }
 
         public virtual IRevokedStatus CreateRevokedStatus(DateTime date, int i) {
             return new RevokedStatusBCFips(date, i);
@@ -585,7 +594,7 @@ namespace iText.Bouncycastlefips {
         }
 
         public virtual AbstractOCSPException CreateAbstractOCSPException(Exception e) {
-            return new OCSPExceptionBCFips(new OcspException(e.Message));
+            return new OCSPExceptionBCFips(e);
         }
 
         public virtual IUnknownStatus CreateUnknownStatus() {

@@ -165,20 +165,15 @@ namespace iText.Commons.Bouncycastle {
 
         IASN1Primitive CreateASN1Primitive(IASN1Encodable encodable);
         
-        IOCSPResponse CreateOCSPResponse(IOCSPResponse ocspResponse);
-        
         IOCSPResponse CreateOCSPResponse(byte[] bytes);
 
         IOCSPResponse CreateOCSPResponse();
 
         IOCSPResponse CreateOCSPResponse(IOCSPResponseStatus respStatus, IResponseBytes responseBytes);
 
-        IResponseBytes CreateResponseBytes(IASN1ObjectIdentifier asn1ObjectIdentifier, IDEROctetString derOctetString
-            );
+        IOCSPResponse CreateOCSPResponse(int respStatus, object ocspRespObject);
 
-        IOCSPRespBuilder CreateOCSPRespBuilderInstance();
-
-        IOCSPRespBuilder CreateOCSPRespBuilder();
+        IResponseBytes CreateResponseBytes(IASN1ObjectIdentifier asn1ObjectIdentifier, IDEROctetString derOctetString);
 
         IOCSPResponseStatus CreateOCSPResponseStatus(int status);
 

@@ -41,7 +41,7 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         /// to be wrapped
         /// </param>
         public RevokedStatusBC(CertStatus certificateStatus)
-            : base(certificateStatus.TagNo == 1 ? certificateStatus : null) {
+            : base(certificateStatus != null && certificateStatus.TagNo == 1 ? certificateStatus : null) {
         }
 
         /// <summary>

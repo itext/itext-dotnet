@@ -176,7 +176,7 @@ namespace iText.Signatures {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_REVOKED)]
         public virtual void OcspStatusIsRevokedTest() {
             IRevokedStatus status = BOUNCY_CASTLE_FACTORY.CreateRevokedStatus(DateTimeUtil.GetCurrentUtcTime().AddDays
-                (-20), BOUNCY_CASTLE_FACTORY.CreateOCSPResp().GetSuccessful());
+                (-20), BOUNCY_CASTLE_FACTORY.CreateOCSPResponse().GetSuccessful());
             TestOcspResponseBuilder responseBuilder = CreateBuilder(status);
             OcspClientBouncyCastle ocspClientBouncyCastle = CreateTestOcspClient(responseBuilder);
             byte[] encoded = ocspClientBouncyCastle.GetEncoded(checkCert, rootCert, ocspServiceUrl);
@@ -220,13 +220,13 @@ namespace iText.Signatures {
                 testOcspBuilder = testBuilder;
             }
 
-            internal override IOCSPResp GetOcspResponse(IX509Certificate chCert, IX509Certificate rCert, String url) {
+            internal override IOCSPResponse GetOcspResponse(IX509Certificate chCert, IX509Certificate rCert, String url) {
                 try {
                     ICertificateID id = SignTestPortUtil.GenerateCertificateId(rootCert, checkCert.GetSerialNumber(), BOUNCY_CASTLE_FACTORY
                         .CreateCertificateID().GetHashSha1());
                     IBasicOCSPResponse basicOCSPResp = testOcspBuilder.MakeOcspResponseObject(SignTestPortUtil.GenerateOcspRequestWithNonce
                         (id).GetEncoded());
-                    return BOUNCY_CASTLE_FACTORY.CreateOCSPRespBuilder().Build(BOUNCY_CASTLE_FACTORY.CreateOCSPRespBuilderInstance
+                    return BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus
                         ().GetSuccessful(), basicOCSPResp);
                 }
                 catch (Exception e) {

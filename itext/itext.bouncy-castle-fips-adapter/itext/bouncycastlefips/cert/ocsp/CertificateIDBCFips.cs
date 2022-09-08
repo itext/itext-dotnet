@@ -24,8 +24,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
     public class CertificateIDBCFips : ICertificateID {
         private static readonly CertificateIDBCFips INSTANCE = new CertificateIDBCFips(null);
 
-        private static readonly ASN1ObjectIdentifierBCFips  HASH_SHA1 =
-            new ASN1ObjectIdentifierBCFips(new DerObjectIdentifier(HashAlgorithmName.SHA1.Name));
+        private static readonly string HASH_SHA1 = HashAlgorithmName.SHA1.Name;
 
         private readonly CertID certificateID;
 
@@ -97,7 +96,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier GetHashSha1() {
+        public virtual string GetHashSha1() {
             return HASH_SHA1;
         }
 

@@ -25,8 +25,8 @@ namespace iText.Commons.Bouncycastle.Cert.Ocsp {
         /// <c>getHashSha1</c>
         /// constant for the wrapped CertificateID.
         /// </summary>
-        /// <returns>CertificateID.HASH_SHA1 wrapper.</returns>
-        IASN1ObjectIdentifier  GetHashSha1();
+        /// <returns>CertificateID.HASH_SHA1 value.</returns>
+        string GetHashSha1();
 
         /// <summary>
         /// Calls actual

@@ -35,8 +35,9 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
     /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspResponse"/>.
     /// </summary>
     public class OCSPResponseBC : ASN1EncodableBC, IOCSPResponse {
-        
-        private const int SUCCESSFUL = Org.BouncyCastle.Asn1.Ocsp.OcspResponseStatus.Successful;
+        private static readonly OCSPResponseBC INSTANCE = new OCSPResponseBC(null);
+
+        private const int SUCCESSFUL = OcspResponseStatus.Successful;
 
         /// <summary>
         /// Creates new wrapper instance for
@@ -62,6 +63,16 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
                 ).GetResponseBytes())) {
         }
 
+        /// <summary>Gets wrapper instance.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="OCSPResponseBC"/>
+        /// instance.
+        /// </returns>
+        public static OCSPResponseBC GetInstance() {
+            return INSTANCE;
+        }
+
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
@@ -71,43 +82,37 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
             return (OcspResponse)GetEncodable();
         }
 
-        public byte[] GetEncoded()
-        {
+        /// <summary><inheritDoc/></summary>
+        public byte[] GetEncoded() {
             return GetOcspResponse().GetEncoded();
         }
 
-        public int GetStatus()
-        {
+        /// <summary><inheritDoc/></summary>
+        public int GetStatus() {
             return GetOcspResponse().ResponseStatus.Value.IntValue;
         }
 
-        public object GetResponseObject()
-        {
-            ResponseBytes rb = this.GetOcspResponse().ResponseBytes;
-
-            if (rb == null)
+        /// <summary><inheritDoc/></summary>
+        public object GetResponseObject() {
+            ResponseBytes rb = GetOcspResponse().ResponseBytes;
+            if (rb == null) {
                 return null;
-
-            if (rb.ResponseType.Equals(OcspObjectIdentifiers.PkixOcspBasic))
-            {
-                try
-                {
+            }
+            if (rb.ResponseType.Equals(OcspObjectIdentifiers.PkixOcspBasic)) {
+                try {
                     MemoryStream input = new MemoryStream(rb.Response.GetOctets(), false);
                     Asn1InputStream asn1 = new Asn1InputStream(input, rb.Response.GetOctets().Length);
                     Asn1Object result = asn1.ReadObject();
                     return BasicOcspResponse.GetInstance(result);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new OCSPExceptionBC((OcspException)e);
                 }
             }
-
             return rb.Response;
         }
 
-        public int GetSuccessful()
-        {
+        /// <summary><inheritDoc/></summary>
+        public int GetSuccessful() {
             return SUCCESSFUL;
         }
     }

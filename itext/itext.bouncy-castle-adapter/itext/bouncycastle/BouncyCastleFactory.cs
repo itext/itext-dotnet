@@ -412,32 +412,48 @@ namespace iText.Bouncycastle {
             return null;
         }
 
-        public IOCSPResponse CreateOCSPResponse(IOCSPResponse ocspResponse)
-        {
-            return ocspResponse;
-        }
-
-        public IOCSPResponse CreateOCSPResponse(byte[] bytes)
-        {
+        public IOCSPResponse CreateOCSPResponse(byte[] bytes) {
             return new OCSPResponseBC(OcspResponse.GetInstance(new Asn1InputStream(bytes).ReadObject()));
         }
 
-        public virtual IOCSPResponse CreateOCSPResponse(IOCSPResponseStatus respStatus, IResponseBytes responseBytes
-            ) {
+        public virtual IOCSPResponse CreateOCSPResponse() {
+            return OCSPResponseBC.GetInstance();
+        }
+
+        public virtual IOCSPResponse CreateOCSPResponse(IOCSPResponseStatus respStatus, IResponseBytes responseBytes) {
             return new OCSPResponseBC(respStatus, responseBytes);
+        }
+
+        public IOCSPResponse CreateOCSPResponse(int respStatus, object response) {
+            if (response == null) {
+                return new OCSPResponseBC(new OcspResponse(new OcspResponseStatus(respStatus), null));
+            }
+            BasicOcspResponse basicResp = null;
+            if (response is IBasicOCSPResponse) {
+                basicResp = ((BasicOCSPResponseBC)response).GetBasicOCSPResponse();
+                if (basicResp == null) {
+                    return new OCSPResponseBC(new OcspResponse(new OcspResponseStatus(respStatus), null));
+                }
+            }
+            if (response is BasicOcspResponse) {
+                basicResp = (BasicOcspResponse)response;
+            }
+            if (basicResp == null) {
+                throw new OCSPExceptionBC(new OcspException("unknown response object"));
+            }
+            Asn1OctetString octs;
+            try {
+                octs = new DerOctetString(((BasicOcspResponse)response).GetEncoded());
+            } catch (Exception e) {
+                throw new OCSPExceptionBC(new OcspException("can't encode object.", e));
+            }
+            ResponseBytes rb = new ResponseBytes(OcspObjectIdentifiers.PkixOcspBasic, octs);
+            return new OCSPResponseBC(new OcspResponse(new OcspResponseStatus(respStatus), rb));
         }
 
         public virtual IResponseBytes CreateResponseBytes(IASN1ObjectIdentifier asn1ObjectIdentifier, IDEROctetString
              derOctetString) {
             return new ResponseBytesBC(asn1ObjectIdentifier, derOctetString);
-        }
-
-        public virtual IOCSPRespBuilder CreateOCSPRespBuilderInstance() {
-            return OCSPRespBuilderBC.GetInstance();
-        }
-
-        public virtual IOCSPRespBuilder CreateOCSPRespBuilder() {
-            return new OCSPRespBuilderBC(new OCSPRespGenerator());
         }
 
         public virtual IOCSPResponseStatus CreateOCSPResponseStatus(int status) {
@@ -452,13 +468,8 @@ namespace iText.Bouncycastle {
             return CertificateStatusBC.GetInstance();
         }
 
-        public IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus)
-        {
-            CertificateStatusBC certificateStatusBC = (CertificateStatusBC) certificateStatus;
-            if (certificateStatusBC.GetCertificateStatus() is CertStatus) {
-                return new RevokedStatusBC((CertStatus) certificateStatusBC.GetCertificateStatus());
-            }
-            return null;
+        public IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus) {
+            return new RevokedStatusBC(((CertificateStatusBC) certificateStatus).GetCertificateStatus());
         }
 
         public virtual IRevokedStatus CreateRevokedStatus(DateTime date, int i) {

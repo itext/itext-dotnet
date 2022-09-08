@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System;
 using System.IO;
+using iText.Bouncycastlefips.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
@@ -32,7 +34,8 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
     /// <see cref="Org.BouncyCastle.Asn1.Ocsp.OcspResponse"/>.
     /// </summary>
     public class OCSPResponseBCFips : ASN1EncodableBCFips, IOCSPResponse {
-        
+        private static readonly OCSPResponseBCFips INSTANCE = new OCSPResponseBCFips(null);
+
         private const int SUCCESSFUL = OcspResponseStatus.Successful;
 
         /// <summary>
@@ -59,6 +62,16 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
                 )responseBytes).GetResponseBytes())) {
         }
 
+        /// <summary>Gets wrapper instance.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="OCSPResponseBCFips"/>
+        /// instance.
+        /// </returns>
+        public static OCSPResponseBCFips GetInstance() {
+            return INSTANCE;
+        }
+        
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
@@ -68,36 +81,37 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
             return (OcspResponse)GetEncodable();
         }
 
-        public byte[] GetEncoded()
-        {
+        /// <summary><inheritDoc/></summary>
+        public byte[] GetEncoded() {
             return GetOcspResponse().GetEncoded();
         }
 
-        public int GetStatus()
-        {
+        /// <summary><inheritDoc/></summary>
+        public int GetStatus() {
             return GetOcspResponse().ResponseStatus.Value.IntValue;
         }
 
-        public object GetResponseObject()
-        {
-            ResponseBytes rb = this.GetOcspResponse().ResponseBytes;
-
-            if (rb == null)
+        /// <summary><inheritDoc/></summary>
+        public object GetResponseObject() {
+            ResponseBytes rb = GetOcspResponse().ResponseBytes;
+            if (rb == null) {
                 return null;
-
-            if (rb.ResponseType.Equals(OcspObjectIdentifiers.PkixOcspBasic))
-            {
-                MemoryStream input = new MemoryStream(rb.Response.GetOctets(), false);
-                Asn1InputStream asn1 = new Asn1InputStream(input, rb.Response.GetOctets().Length);
-                Asn1Object result = asn1.ReadObject();
-                return BasicOcspResponse.GetInstance(result);
             }
-
+            if (rb.ResponseType.Equals(OcspObjectIdentifiers.PkixOcspBasic)) {
+                try {
+                    MemoryStream input = new MemoryStream(rb.Response.GetOctets(), false);
+                    Asn1InputStream asn1 = new Asn1InputStream(input, rb.Response.GetOctets().Length);
+                    Asn1Object result = asn1.ReadObject();
+                    return BasicOcspResponse.GetInstance(result);
+                } catch (Exception e) {
+                    throw new OCSPExceptionBCFips(e);
+                }
+            }
             return rb.Response;
         }
 
-        public int GetSuccessful()
-        {
+        /// <summary><inheritDoc/></summary>
+        public int GetSuccessful() {
             return SUCCESSFUL;
         }
     }

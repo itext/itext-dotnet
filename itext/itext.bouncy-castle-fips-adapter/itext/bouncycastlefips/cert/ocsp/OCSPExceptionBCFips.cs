@@ -21,37 +21,43 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Ocsp;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
 
 namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <summary>
-    /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Ocsp.OcspException"/>.
+    /// Wrapper class for <see cref="System.ArgumentException"/>
+    /// or <see cref="System.ArgumentNullException"/>, etc.
+    /// which can be thrown in OCSP-related classes.
     /// </summary>
     public class OCSPExceptionBCFips : AbstractOCSPException {
-        private readonly OcspException exception;
+        private readonly Exception exception;
 
         /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Ocsp.OcspException"/>.
+        /// Creates new wrapper instance for OCSP exception.
         /// </summary>
         /// <param name="exception">
-        /// 
-        /// <see cref="Org.BouncyCastle.Ocsp.OcspException"/>
-        /// to be wrapped
+        /// <see cref="Exception"/> to be wrapped
         /// </param>
-        public OCSPExceptionBCFips(OcspException exception) {
+        public OCSPExceptionBCFips(Exception exception) {
             this.exception = exception;
         }
 
-        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+        /// <summary>
+        /// Creates new wrapper instance for OCSP exception.
+        /// </summary>
+        /// <param name="exceptionMessage">
+        /// message for the <see cref="Exception"/> to be wrapped
+        /// </param>
+        public OCSPExceptionBCFips(string exceptionMessage) {
+            this.exception = new Exception(exceptionMessage);
+        }
+
+        /// <summary>Gets actual OCSP exception being wrapped.</summary>
         /// <returns>
-        /// wrapped
-        /// <see cref="Org.BouncyCastle.Ocsp.OcspException"/>.
+        /// wrapped exception.
         /// </returns>
-        public virtual OcspException GetException() {
+        public virtual Exception GetException() {
             return exception;
         }
 
