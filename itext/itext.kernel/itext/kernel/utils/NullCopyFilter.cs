@@ -41,52 +41,32 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using iText.IO.Source;
-using iText.Kernel.Utils;
+using iText.Kernel.Pdf;
 
-namespace iText.Kernel.Pdf {
-    /// <summary>Representation of the null object in the PDF specification.</summary>
-    public class PdfNull : PdfPrimitiveObject {
-        public static readonly iText.Kernel.Pdf.PdfNull PDF_NULL = new iText.Kernel.Pdf.PdfNull(true);
+namespace iText.Kernel.Utils {
+    /// <summary>
+    /// A no-op
+    /// <see cref="ICopyFilter"/>
+    /// instance, used as default.
+    /// </summary>
+    public sealed class NullCopyFilter : ICopyFilter {
+        private static readonly iText.Kernel.Utils.NullCopyFilter INSTANCE = new iText.Kernel.Utils.NullCopyFilter
+            ();
 
-        private static readonly byte[] NullContent = ByteUtils.GetIsoBytes("null");
-
-        /// <summary>Creates a PdfNull instance.</summary>
-        public PdfNull()
-            : base() {
+        private NullCopyFilter() {
         }
 
-        private PdfNull(bool directOnly)
-            : base(directOnly) {
+        /// <summary>
+        /// Getter for an instance of
+        /// <see cref="NullCopyFilter"/>.
+        /// </summary>
+        /// <returns>NullCopyFilter instance</returns>
+        public static iText.Kernel.Utils.NullCopyFilter GetInstance() {
+            return INSTANCE;
         }
 
-        public override byte GetObjectType() {
-            return NULL;
-        }
-
-        public override String ToString() {
-            return "null";
-        }
-
-        protected internal override void GenerateContent() {
-            content = NullContent;
-        }
-
-        //Here we create new object, because if we use static object it can cause unpredictable behavior during copy objects
-        protected internal override PdfObject NewInstance() {
-            return new iText.Kernel.Pdf.PdfNull();
-        }
-
-        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
-        }
-
-        public override bool Equals(Object obj) {
-            return this == obj || obj != null && GetType() == obj.GetType();
-        }
-
-        public override int GetHashCode() {
-            return 0;
+        public bool ShouldProcess(PdfObject newParent, PdfName name, PdfObject value) {
+            return true;
         }
     }
 }

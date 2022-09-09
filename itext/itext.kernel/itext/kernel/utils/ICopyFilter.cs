@@ -41,52 +41,21 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using iText.IO.Source;
-using iText.Kernel.Utils;
+using iText.Kernel.Pdf;
 
-namespace iText.Kernel.Pdf {
-    /// <summary>Representation of the null object in the PDF specification.</summary>
-    public class PdfNull : PdfPrimitiveObject {
-        public static readonly iText.Kernel.Pdf.PdfNull PDF_NULL = new iText.Kernel.Pdf.PdfNull(true);
-
-        private static readonly byte[] NullContent = ByteUtils.GetIsoBytes("null");
-
-        /// <summary>Creates a PdfNull instance.</summary>
-        public PdfNull()
-            : base() {
-        }
-
-        private PdfNull(bool directOnly)
-            : base(directOnly) {
-        }
-
-        public override byte GetObjectType() {
-            return NULL;
-        }
-
-        public override String ToString() {
-            return "null";
-        }
-
-        protected internal override void GenerateContent() {
-            content = NullContent;
-        }
-
-        //Here we create new object, because if we use static object it can cause unpredictable behavior during copy objects
-        protected internal override PdfObject NewInstance() {
-            return new iText.Kernel.Pdf.PdfNull();
-        }
-
-        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
-        }
-
-        public override bool Equals(Object obj) {
-            return this == obj || obj != null && GetType() == obj.GetType();
-        }
-
-        public override int GetHashCode() {
-            return 0;
-        }
+namespace iText.Kernel.Utils {
+    /// <summary>A filter class to be used while copying pdf components.</summary>
+    public interface ICopyFilter {
+        /// <summary>Verifies whether a PdfObject should be copied in the copying flow.</summary>
+        /// <remarks>
+        /// Verifies whether a PdfObject should be copied in the copying flow.
+        /// The filter class has to take care of alternative ways to process the PdfObject if needed.
+        /// When more than one filter should be used, it is upon the user to chain them together.
+        /// </remarks>
+        /// <param name="newParent">the parent in the target of the PdfObject to be checked</param>
+        /// <param name="name">the name of the PdfObject if the parent is a PdfDictionary</param>
+        /// <param name="value">the PdfObject toi be checked</param>
+        /// <returns>true, the PdfObject will be copied, false it will not be copied</returns>
+        bool ShouldProcess(PdfObject newParent, PdfName name, PdfObject value);
     }
 }

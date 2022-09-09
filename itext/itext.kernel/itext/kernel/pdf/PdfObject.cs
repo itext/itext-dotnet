@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     public abstract class PdfObject {
@@ -149,15 +150,18 @@ namespace iText.Kernel.Pdf {
         /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
         public void Flush(bool canBeInObjStm) {
             if (IsFlushed() || GetIndirectReference() == null || GetIndirectReference().IsFree()) {
-                // TODO DEVSIX-744: here we should take into account and log the case when object is MustBeIndirect, but has no indirect reference
+                // TODO DEVSIX-744: here we should take into account and log the case when object is MustBeIndirect,
+                //  but has no indirect reference
                 //            Logger logger = LoggerFactory.getLogger(PdfObject.class);
                 //            if (isFlushed()) {
                 //                logger.warn("Meaningless call, the object has already flushed");
                 //            } else if (isIndirect()){
-                //                logger.warn("Meaningless call, the object will be transformed into indirect on closing, but at the moment it doesn't have an indirect reference and therefore couldn't be flushed. " +
+                //                logger.warn("Meaningless call, the object will be transformed into indirect on closing," +
+                //                " but at the moment it doesn't have an indirect reference and therefore couldn't be flushed. " +
                 //                        "To flush it now call makeIndirect(PdfDocument) method before calling flush() method.");
                 //            } else {
-                //                logger.warn("Meaningless call, the object is direct object. It will be flushed along with the indirect object that contains it.");
+                //                logger.warn("Meaningless call, the object is direct object. It will be flushed along with" +
+                //                " the indirect object that contains it.");
                 //            }
                 return;
             }
@@ -268,11 +272,22 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <returns>cloned object.</returns>
         public virtual PdfObject Clone() {
+            return Clone(NullCopyFilter.GetInstance());
+        }
+
+        /// <summary>Creates clone of the object which belongs to the same document as original object.</summary>
+        /// <remarks>
+        /// Creates clone of the object which belongs to the same document as original object.
+        /// New object shall not be used in other documents.
+        /// </remarks>
+        /// <param name="filter">Filter what will be copied or not</param>
+        /// <returns>cloned object.</returns>
+        public virtual PdfObject Clone(ICopyFilter filter) {
             PdfObject newObject = NewInstance();
             if (indirectReference != null || CheckState(MUST_BE_INDIRECT)) {
                 newObject.SetState(MUST_BE_INDIRECT);
             }
-            newObject.CopyContent(this, null);
+            newObject.CopyContent(this, null, filter);
             return newObject;
         }
 
@@ -280,33 +295,87 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Copies object to a specified document.
         /// <br /><br />
-        /// NOTE: Works only for objects that are read from document opened in reading mode, otherwise an exception is thrown.
+        /// NOTE: Works only for objects that are read from document opened in reading mode,
+        /// otherwise an exception is thrown.
         /// </remarks>
         /// <param name="document">document to copy object to.</param>
         /// <returns>copied object.</returns>
         public virtual PdfObject CopyTo(PdfDocument document) {
-            return CopyTo(document, true);
+            return CopyTo(document, true, NullCopyFilter.GetInstance());
         }
 
         /// <summary>Copies object to a specified document.</summary>
         /// <remarks>
         /// Copies object to a specified document.
         /// <br /><br />
-        /// NOTE: Works only for objects that are read from document opened in reading mode, otherwise an exception is thrown.
+        /// NOTE: Works only for objects that are read from document opened in reading mode,
+        /// otherwise an exception is thrown.
         /// </remarks>
         /// <param name="document">document to copy object to.</param>
         /// <param name="allowDuplicating">
         /// indicates if to allow copy objects which already have been copied.
-        /// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
-        /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
+        /// If object is associated with any indirect reference and allowDuplicating is
+        /// false then already existing reference will be returned instead of copying object.
+        /// If allowDuplicating is true then object will be copied and new indirect
+        /// reference will be assigned.
         /// </param>
         /// <returns>copied object.</returns>
         public virtual PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
+            return CopyTo(document, allowDuplicating, NullCopyFilter.GetInstance());
+        }
+
+        /// <summary>Copies object to a specified document.</summary>
+        /// <remarks>
+        /// Copies object to a specified document.
+        /// <br /><br />
+        /// NOTE: Works only for objects that are read from document opened in reading mode,
+        /// otherwise an exception is thrown.
+        /// </remarks>
+        /// <param name="document">document to copy object to.</param>
+        /// <param name="copyFilter">
+        /// 
+        /// <see cref="iText.Kernel.Utils.ICopyFilter"/>
+        /// a filter to apply while copying arrays and dictionaries
+        /// Use
+        /// <see cref="iText.Kernel.Utils.NullCopyFilter"/>
+        /// for no filtering
+        /// </param>
+        /// <returns>copied object.</returns>
+        public virtual PdfObject CopyTo(PdfDocument document, ICopyFilter copyFilter) {
+            return CopyTo(document, true, copyFilter);
+        }
+
+        /// <summary>Copies object to a specified document.</summary>
+        /// <remarks>
+        /// Copies object to a specified document.
+        /// <br /><br />
+        /// NOTE: Works only for objects that are read from document opened in reading mode,
+        /// otherwise an exception is thrown.
+        /// </remarks>
+        /// <param name="document">document to copy object to.</param>
+        /// <param name="allowDuplicating">
+        /// indicates if to allow copy objects which already have been copied.
+        /// If object is associated with any indirect reference and allowDuplicating is false
+        /// then already existing reference will be returned instead of copying object.
+        /// If allowDuplicating is true then object will be copied and new indirect reference
+        /// will be assigned.
+        /// </param>
+        /// <param name="copyFilter">
+        /// 
+        /// <see cref="iText.Kernel.Utils.ICopyFilter"/>
+        /// a filter to apply while copying arrays and dictionaries
+        /// Use
+        /// <see cref="iText.Kernel.Utils.NullCopyFilter"/>
+        /// for no filtering
+        /// </param>
+        /// <returns>copied object.</returns>
+        public virtual PdfObject CopyTo(PdfDocument document, bool allowDuplicating, ICopyFilter copyFilter) {
             if (document == null) {
                 throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_FOR_COPY_TO_CANNOT_BE_NULL);
             }
             if (indirectReference != null) {
-                // TODO checkState(MUST_BE_INDIRECT) now is always false, because indirectReference != null. See also DEVSIX-602
+                // TODO checkState(MUST_BE_INDIRECT) now is always false, because indirectReference != null. See also
+                //  DEVSIX-602
                 if (indirectReference.GetWriter() != null || CheckState(MUST_BE_INDIRECT)) {
                     throw new PdfException(KernelExceptionMessageConstant.CANNOT_COPY_INDIRECT_OBJECT_FROM_THE_DOCUMENT_THAT_IS_BEING_WRITTEN
                         );
@@ -315,13 +384,16 @@ namespace iText.Kernel.Pdf {
                     throw new BadPasswordException(BadPasswordException.PdfReaderNotOpenedWithOwnerPassword);
                 }
             }
-            return ProcessCopying(document, allowDuplicating);
+            return ProcessCopying(document, allowDuplicating, copyFilter);
         }
 
-        /// <summary>Sets the 'modified' flag to the indirect object, the flag denotes that the object was modified since the document opening.
-        ///     </summary>
+        /// <summary>
+        /// Sets the 'modified' flag to the indirect object, the flag denotes that the object was modified since
+        /// the document opening.
+        /// </summary>
         /// <remarks>
-        /// Sets the 'modified' flag to the indirect object, the flag denotes that the object was modified since the document opening.
+        /// Sets the 'modified' flag to the indirect object, the flag denotes that the object was modified since
+        /// the document opening.
         /// It is recommended to set this flag after changing any PDF object.
         /// <para />
         /// For example flag is used in the append mode (see
@@ -465,6 +537,11 @@ namespace iText.Kernel.Pdf {
             return GetObjectType() == INDIRECT_REFERENCE;
         }
 
+        protected internal virtual PdfObject SetIndirectReference(PdfIndirectReference indirectReference) {
+            this.indirectReference = indirectReference;
+            return this;
+        }
+
         /// <summary>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfLiteral</c>.
@@ -480,11 +557,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Creates new instance of object.</summary>
         /// <returns>new instance of object.</returns>
         protected internal abstract PdfObject NewInstance();
-
-        protected internal virtual PdfObject SetIndirectReference(PdfIndirectReference indirectReference) {
-            this.indirectReference = indirectReference;
-            return this;
-        }
 
         /// <summary>Checks state of the flag of current object.</summary>
         /// <param name="state">special flag to check</param>
@@ -519,9 +591,32 @@ namespace iText.Kernel.Pdf {
         /// <param name="from">object to copy content from.</param>
         /// <param name="document">document to copy object to.</param>
         protected internal virtual void CopyContent(PdfObject from, PdfDocument document) {
+            CopyContent(from, document, NullCopyFilter.GetInstance());
+        }
+
+        /// <summary>Copies object content from object 'from'.</summary>
+        /// <param name="from">object to copy content from.</param>
+        /// <param name="document">document to copy object to.</param>
+        /// <param name="filter">
+        /// 
+        /// <see cref="iText.Kernel.Utils.ICopyFilter"/>
+        /// a filter that will apply on dictionaries and array
+        /// Use
+        /// <see cref="iText.Kernel.Utils.NullCopyFilter"/>
+        /// for no filtering
+        /// </param>
+        protected internal virtual void CopyContent(PdfObject from, PdfDocument document, ICopyFilter filter) {
             if (IsFlushed()) {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_COPY_FLUSHED_OBJECT, this);
             }
+        }
+
+        internal static bool EqualContent(PdfObject obj1, PdfObject obj2) {
+            PdfObject direct1 = obj1 != null && obj1.IsIndirectReference() ? ((PdfIndirectReference)obj1).GetRefersTo(
+                true) : obj1;
+            PdfObject direct2 = obj2 != null && obj2.IsIndirectReference() ? ((PdfIndirectReference)obj2).GetRefersTo(
+                true) : obj2;
+            return direct1 != null && direct1.Equals(direct2);
         }
 
         /// <summary>
@@ -554,18 +649,62 @@ namespace iText.Kernel.Pdf {
         ///     </param>
         /// <param name="allowDuplicating">
         /// indicates if to allow copy objects which already have been copied.
-        /// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
-        /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
+        /// If object is associated with any indirect reference and allowDuplicating is false then
+        /// already existing reference will be returned instead of copying object.
+        /// If allowDuplicating is true then object will be copied and new indirect
+        /// reference will be assigned.
         /// </param>
         /// <returns>copied object.</returns>
         internal virtual PdfObject ProcessCopying(PdfDocument documentTo, bool allowDuplicating) {
+            return ProcessCopying(documentTo, allowDuplicating, NullCopyFilter.GetInstance());
+        }
+
+        /// <summary>
+        /// Processes two cases of object copying:
+        /// <list type="number">
+        /// <item><description>copying to the other document
+        /// </description></item>
+        /// <item><description>cloning inside of the current document
+        /// </description></item>
+        /// </list>
+        /// </summary>
+        /// <remarks>
+        /// Processes two cases of object copying:
+        /// <list type="number">
+        /// <item><description>copying to the other document
+        /// </description></item>
+        /// <item><description>cloning inside of the current document
+        /// </description></item>
+        /// </list>
+        /// <para />
+        /// This two cases are distinguished by the state of
+        /// <c>document</c>
+        /// parameter:
+        /// the second case is processed if
+        /// <c>document</c>
+        /// is
+        /// <see langword="null"/>.
+        /// </remarks>
+        /// <param name="documentTo">if not null: document to copy object to; otherwise indicates that object is to be cloned.
+        ///     </param>
+        /// <param name="allowDuplicating">
+        /// indicates if to allow copy objects which already have been copied.
+        /// If object is associated with any indirect reference and allowDuplicating is false then
+        /// already existing reference will be returned instead of copying object.
+        /// If allowDuplicating is true then object will be copied and new indirect reference will
+        /// be assigned.
+        /// </param>
+        /// <param name="filter">filters what will be copies or not</param>
+        /// <returns>copied object.</returns>
+        internal virtual PdfObject ProcessCopying(PdfDocument documentTo, bool allowDuplicating, ICopyFilter filter
+            ) {
             if (documentTo != null) {
                 //copyTo case
                 PdfWriter writer = documentTo.GetWriter();
                 if (writer == null) {
                     throw new PdfException(KernelExceptionMessageConstant.CANNOT_COPY_TO_DOCUMENT_OPENED_IN_READING_MODE);
                 }
-                return writer.CopyObject(this, documentTo, allowDuplicating);
+                return writer.CopyObject(this, documentTo, allowDuplicating, filter);
             }
             else {
                 //clone case
@@ -579,14 +718,6 @@ namespace iText.Kernel.Pdf {
                 }
                 return obj.Clone();
             }
-        }
-
-        internal static bool EqualContent(PdfObject obj1, PdfObject obj2) {
-            PdfObject direct1 = obj1 != null && obj1.IsIndirectReference() ? ((PdfIndirectReference)obj1).GetRefersTo(
-                true) : obj1;
-            PdfObject direct2 = obj2 != null && obj2.IsIndirectReference() ? ((PdfIndirectReference)obj2).GetRefersTo(
-                true) : obj2;
-            return direct1 != null && direct1.Equals(direct2);
         }
     }
 }

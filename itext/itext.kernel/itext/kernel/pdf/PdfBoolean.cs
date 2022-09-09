@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Source;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     public class PdfBoolean : PdfPrimitiveObject {
@@ -91,8 +92,8 @@ namespace iText.Kernel.Pdf {
             return new iText.Kernel.Pdf.PdfBoolean();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
-            base.CopyContent(from, document);
+        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
+            base.CopyContent(from, document, copyFilter);
             iText.Kernel.Pdf.PdfBoolean @bool = (iText.Kernel.Pdf.PdfBoolean)from;
             value = @bool.value;
         }

@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     /// <summary>A representation of a Dictionary as described by the PDF Specification.</summary>
@@ -144,8 +145,10 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Returns the value associated to this key as a PdfDictionary.</summary>
-        /// <remarks>Returns the value associated to this key as a PdfDictionary. If the value isn't a PdfDictionary, null is returned.
-        ///     </remarks>
+        /// <remarks>
+        /// Returns the value associated to this key as a PdfDictionary.
+        /// If the value isn't a PdfDictionary, null is returned.
+        /// </remarks>
         /// <param name="key">the key of which the associated value needs to be returned</param>
         /// <returns>PdfDictionary associated with this key</returns>
         public virtual iText.Kernel.Pdf.PdfDictionary GetAsDictionary(PdfName key) {
@@ -418,6 +421,31 @@ namespace iText.Kernel.Pdf {
         /// <returns>copied dictionary.</returns>
         public virtual iText.Kernel.Pdf.PdfDictionary CopyTo(PdfDocument document, IList<PdfName> excludeKeys, bool
              allowDuplicating) {
+            return CopyTo(document, excludeKeys, allowDuplicating, NullCopyFilter.GetInstance());
+        }
+
+        /// <summary>Copies dictionary to specified document.</summary>
+        /// <remarks>
+        /// Copies dictionary to specified document.
+        /// It's possible to pass a list of keys to exclude when copying.
+        /// </remarks>
+        /// <param name="document">document to copy dictionary to.</param>
+        /// <param name="excludeKeys">list of objects to exclude when copying dictionary.</param>
+        /// <param name="allowDuplicating">
+        /// 
+        /// <see cref="PdfObject.CopyTo(PdfDocument, bool)"/>
+        /// </param>
+        /// <param name="copyFilter">
+        /// 
+        /// <see cref="iText.Kernel.Utils.ICopyFilter"/>
+        /// a filter to apply while copying arrays and dictionaries
+        /// Use
+        /// <see cref="iText.Kernel.Utils.NullCopyFilter"/>
+        /// for no filtering
+        /// </param>
+        /// <returns>copied dictionary.</returns>
+        public virtual iText.Kernel.Pdf.PdfDictionary CopyTo(PdfDocument document, IList<PdfName> excludeKeys, bool
+             allowDuplicating, ICopyFilter copyFilter) {
             IDictionary<PdfName, PdfObject> excluded = new SortedDictionary<PdfName, PdfObject>();
             foreach (PdfName key in excludeKeys) {
                 PdfObject obj = map.Get(key);
@@ -426,7 +454,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             iText.Kernel.Pdf.PdfDictionary dictionary = (iText.Kernel.Pdf.PdfDictionary)CopyTo(document, allowDuplicating
-                );
+                , copyFilter);
             map.AddAll(excluded);
             return dictionary;
         }
@@ -463,11 +491,19 @@ namespace iText.Kernel.Pdf {
             return new iText.Kernel.Pdf.PdfDictionary();
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override void CopyContent(PdfObject from, PdfDocument document) {
-            base.CopyContent(from, document);
+            CopyContent(from, document, NullCopyFilter.GetInstance());
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
+            base.CopyContent(from, document, copyFilter);
             iText.Kernel.Pdf.PdfDictionary dictionary = (iText.Kernel.Pdf.PdfDictionary)from;
             foreach (KeyValuePair<PdfName, PdfObject> entry in dictionary.map) {
-                map.Put(entry.Key, entry.Value.ProcessCopying(document, false));
+                if (copyFilter.ShouldProcess(this, entry.Key, entry.Value)) {
+                    map.Put(entry.Key, entry.Value.ProcessCopying(document, false, copyFilter));
+                }
             }
         }
 

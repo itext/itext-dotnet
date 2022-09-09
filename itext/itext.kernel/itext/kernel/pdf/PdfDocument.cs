@@ -74,14 +74,26 @@ using iText.Kernel.XMP.Options;
 namespace iText.Kernel.Pdf {
     /// <summary>Main enter point to work with PDF document.</summary>
     public class PdfDocument : IEventDispatcher, IDisposable {
-        private static IPdfPageFactory pdfPageFactory = new PdfPageFactory();
+        private static readonly IPdfPageFactory pdfPageFactory = new PdfPageFactory();
 
-        /// <summary>Default page size.</summary>
+        protected internal readonly StampingProperties properties;
+
+        /// <summary>List of indirect objects used in the document.</summary>
+        internal readonly PdfXrefTable xref = new PdfXrefTable();
+
+        private readonly IDictionary<PdfIndirectReference, PdfFont> documentFonts = new Dictionary<PdfIndirectReference
+            , PdfFont>();
+
+        private readonly SequenceId documentId;
+
+        /// <summary>To be adjusted destinations.</summary>
         /// <remarks>
-        /// Default page size.
-        /// New page by default will be created with this size.
+        /// To be adjusted destinations.
+        /// Key - originating page on the source document
+        /// Value - a hashmap of Parent pdf objects and destinations to be updated
         /// </remarks>
-        private PageSize defaultPageSize = PageSize.DEFAULT;
+        private readonly IList<PdfDocument.DestinationMutationInfo> pendingDestinationMutations = new List<PdfDocument.DestinationMutationInfo
+            >();
 
         protected internal EventDispatcher eventDispatcher = new EventDispatcher();
 
@@ -114,20 +126,9 @@ namespace iText.Kernel.Pdf {
         /// <summary>Document version.</summary>
         protected internal PdfVersion pdfVersion = PdfVersion.PDF_1_7;
 
-        /// <summary>The original (first) id when the document is read initially.</summary>
-        private PdfString originalDocumentId;
-
-        /// <summary>The original modified (second) id when the document is read initially.</summary>
-        private PdfString modifiedDocumentId;
-
-        /// <summary>List of indirect objects used in the document.</summary>
-        internal readonly PdfXrefTable xref = new PdfXrefTable();
-
         protected internal FingerPrint fingerPrint;
 
         protected internal SerializeOptions serializeOptions = new SerializeOptions();
-
-        protected internal readonly StampingProperties properties;
 
         protected internal PdfStructTreeRoot structTreeRoot;
 
@@ -144,23 +145,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>flag determines whether to write unused objects to result document</summary>
         protected internal bool flushUnusedObjects = false;
 
-        private IDictionary<PdfIndirectReference, PdfFont> documentFonts = new Dictionary<PdfIndirectReference, PdfFont
-            >();
-
-        private PdfFont defaultFont = null;
-
         protected internal TagStructureContext tagStructureContext;
-
-        private SequenceId documentId;
-
-        /// <summary>Yet not copied link annotations from the other documents.</summary>
-        /// <remarks>
-        /// Yet not copied link annotations from the other documents.
-        /// Key - page from the source document, which contains this annotation.
-        /// Value - link annotation from the source document.
-        /// </remarks>
-        private LinkedDictionary<PdfPage, IList<PdfLinkAnnotation>> linkAnnotations = new LinkedDictionary<PdfPage
-            , IList<PdfLinkAnnotation>>();
 
         /// <summary>Cache of already serialized objects from this document for smart mode.</summary>
         internal IDictionary<PdfIndirectReference, byte[]> serializedObjectsCache = new Dictionary<PdfIndirectReference
@@ -168,6 +153,21 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Handler which will be used for decompression of pdf streams.</summary>
         internal MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
+
+        /// <summary>Default page size.</summary>
+        /// <remarks>
+        /// Default page size.
+        /// New page by default will be created with this size.
+        /// </remarks>
+        private PageSize defaultPageSize = PageSize.DEFAULT;
+
+        /// <summary>The original (first) id when the document is read initially.</summary>
+        private PdfString originalDocumentId;
+
+        /// <summary>The original modified (second) id when the document is read initially.</summary>
+        private PdfString modifiedDocumentId;
+
+        private PdfFont defaultFont = null;
 
         private EncryptedEmbeddedStreamsHandler encryptedEmbeddedStreamsHandler;
 
@@ -259,18 +259,18 @@ namespace iText.Kernel.Pdf {
             Open(writer.properties.pdfVersion);
         }
 
-        /// <summary>Use this method to set the XMP Metadata.</summary>
-        /// <param name="xmpMetadata">The xmpMetadata to set.</param>
-        protected internal virtual void SetXmpMetadata(byte[] xmpMetadata) {
-            this.xmpMetadata = xmpMetadata;
-        }
-
         /// <summary>Sets the XMP Metadata.</summary>
         /// <param name="xmpMeta">the xmpMetadata to set</param>
         /// <param name="serializeOptions">serialization options</param>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
             this.serializeOptions = serializeOptions;
             SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
+        }
+
+        /// <summary>Use this method to set the XMP Metadata.</summary>
+        /// <param name="xmpMetadata">The xmpMetadata to set.</param>
+        protected internal virtual void SetXmpMetadata(byte[] xmpMetadata) {
+            this.xmpMetadata = xmpMetadata;
         }
 
         /// <summary>Sets the XMP Metadata.</summary>
@@ -586,23 +586,27 @@ namespace iText.Kernel.Pdf {
             return info;
         }
 
-        /// <summary>
+        /// <summary>Gets original document id</summary>
+        /// <remarks>
         /// Gets original document id
+        /// <para />
         /// In order to set originalDocumentId
         /// <see cref="WriterProperties.SetInitialDocumentId(PdfString)"/>
         /// should be used
-        /// </summary>
+        /// </remarks>
         /// <returns>original dccument id</returns>
         public virtual PdfString GetOriginalDocumentId() {
             return originalDocumentId;
         }
 
-        /// <summary>
+        /// <summary>Gets modified document id</summary>
+        /// <remarks>
         /// Gets modified document id
+        /// <para />
         /// In order to set modifiedDocumentId
         /// <see cref="WriterProperties.SetModifiedDocumentId(PdfString)"/>
         /// should be used
-        /// </summary>
+        /// </remarks>
         /// <returns>modified document id</returns>
         public virtual PdfString GetModifiedDocumentId() {
             return modifiedDocumentId;
@@ -878,7 +882,8 @@ namespace iText.Kernel.Pdf {
                     trailer.Put(PdfName.Root, catalog.GetPdfObject());
                     trailer.Put(PdfName.Info, GetDocumentInfo().GetPdfObject());
                     //By this time original and modified document ids should always be not null due to initializing in
-                    // either writer properties, or in the writer init section on document open or from pdfreader. So we shouldn't worry about it being null next
+                    // either writer properties, or in the writer init section on document open or from pdfreader. So we
+                    // shouldn't worry about it being null next
                     PdfObject fileId = PdfEncryption.CreateInfoId(ByteUtils.GetIsoBytes(originalDocumentId.GetValue()), ByteUtils
                         .GetIsoBytes(modifiedDocumentId.GetValue()));
                     xref.WriteXrefTableAndTrailer(this, fileId, crypto);
@@ -1044,8 +1049,10 @@ namespace iText.Kernel.Pdf {
         /// destinations names in the source document.
         /// </remarks>
         /// <param name="pageFrom">1-based start of the range of pages to be copied.</param>
-        /// <param name="pageTo">1-based end (inclusive) of the range of pages to be copied. This page is included in list of copied pages.
-        ///     </param>
+        /// <param name="pageTo">
+        /// 1-based end (inclusive) of the range of pages to be copied. This page is included in list
+        /// of copied pages.
+        /// </param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="insertBeforePage">a position where to insert copied pages.</param>
         /// <param name="copier">
@@ -1087,8 +1094,10 @@ namespace iText.Kernel.Pdf {
         /// destinations names in the source document.
         /// </remarks>
         /// <param name="pageFrom">1-based start of the range of pages to be copied.</param>
-        /// <param name="pageTo">1-based end (inclusive) of the range of pages to be copied. This page is included in list of copied pages.
-        ///     </param>
+        /// <param name="pageTo">
+        /// 1-based end (inclusive) of the range of pages to be copied. This page is included in list of
+        /// copied pages.
+        /// </param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <returns>list of new copied pages</returns>
         public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iText.Kernel.Pdf.PdfDocument toDocument
@@ -1119,8 +1128,10 @@ namespace iText.Kernel.Pdf {
         /// destinations names in the source document.
         /// </remarks>
         /// <param name="pageFrom">1-based start of the range of pages to be copied.</param>
-        /// <param name="pageTo">1-based end (inclusive) of the range of pages to be copied. This page is included in list of copied pages.
-        ///     </param>
+        /// <param name="pageTo">
+        /// 1-based end (inclusive) of the range of pages to be copied. This page is included in list of
+        /// copied pages.
+        /// </param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="copier">
         /// a copier which bears a special copy logic. May be null.
@@ -1188,6 +1199,7 @@ namespace iText.Kernel.Pdf {
             if (pagesToCopy.IsEmpty()) {
                 return JavaCollectionsUtil.EmptyList<PdfPage>();
             }
+            pendingDestinationMutations.Clear();
             CheckClosingStatus();
             IList<PdfPage> copiedPages = new List<PdfPage>();
             IDictionary<PdfPage, PdfPage> page2page = new LinkedDictionary<PdfPage, PdfPage>();
@@ -1222,7 +1234,7 @@ namespace iText.Kernel.Pdf {
                 }
                 lastCopiedPageNum = (int)pageNum;
             }
-            CopyLinkAnnotations(toDocument, page2page);
+            ResolveDestinations(toDocument, page2page);
             // Copying OCGs should go after copying LinkAnnotations
             if (GetCatalog() != null && GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties) != null) {
                 OcgPropertiesCopier.CopyOCGProperties(this, toDocument, page2page);
@@ -1577,7 +1589,8 @@ namespace iText.Kernel.Pdf {
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method is very similar to
         /// <see cref="AddFileAttachment(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec)"/>.
-        /// However, besides adding file description to Names tree, it adds file to array value of the AF key in the document catalog.
+        /// However, besides adding file description to Names tree, it adds file to array value of the AF key in the document
+        /// catalog.
         /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
         /// </remarks>
@@ -1921,26 +1934,16 @@ namespace iText.Kernel.Pdf {
             return documentId;
         }
 
-        /// <summary>Sets a persistent XMP metadata serialization options.</summary>
-        /// <param name="serializeOptions">serialize options</param>
-        public virtual void SetSerializeOptions(SerializeOptions serializeOptions) {
-            this.serializeOptions = serializeOptions;
-        }
-
         /// <summary>Gets a persistent XMP metadata serialization options.</summary>
         /// <returns>serialize options</returns>
         public virtual SerializeOptions GetSerializeOptions() {
             return this.serializeOptions;
         }
 
-        /// <summary>Gets list of indirect references.</summary>
-        /// <returns>list of indirect references.</returns>
-        internal virtual PdfXrefTable GetXref() {
-            return xref;
-        }
-
-        internal virtual bool IsDocumentFont(PdfIndirectReference indRef) {
-            return indRef != null && documentFonts.ContainsKey(indRef);
+        /// <summary>Sets a persistent XMP metadata serialization options.</summary>
+        /// <param name="serializeOptions">serialize options</param>
+        public virtual void SetSerializeOptions(SerializeOptions serializeOptions) {
+            this.serializeOptions = serializeOptions;
         }
 
         /// <summary>
@@ -1952,6 +1955,10 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Save the link annotation in a temporary storage for further copying.</summary>
+        /// <remarks>
+        /// Save the link annotation in a temporary storage for further copying.
+        /// Save destinations in a temporary storage for further copying.
+        /// </remarks>
         /// <param name="page">
         /// just copied
         /// <see cref="PdfPage"/>
@@ -1962,13 +1969,30 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
         /// itself.
         /// </param>
+        [System.ObsoleteAttribute(@"will be removed in next major version, it is being replaced with storeDestinationToReaddress"
+            )]
         protected internal virtual void StoreLinkAnnotation(PdfPage page, PdfLinkAnnotation annotation) {
-            IList<PdfLinkAnnotation> pageAnnotations = linkAnnotations.Get(page);
-            if (pageAnnotations == null) {
-                pageAnnotations = new List<PdfLinkAnnotation>();
-                linkAnnotations.Put(page, pageAnnotations);
-            }
-            pageAnnotations.Add(annotation);
+        }
+
+        /// <summary>Save destinations in a temporary storage for further copying.</summary>
+        /// <param name="destination">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Navigation.PdfDestination"/>
+        /// to be updated itself.
+        /// </param>
+        /// <param name="onPageAvailable">
+        /// a destination consumer that will handle the copying when the
+        /// destination still resolves, it gets the new destination as input
+        /// </param>
+        /// <param name="onPageNotAvailable">
+        /// a destination consumer that will handle the copying when the
+        /// destination is not available, it gets the original destination
+        /// as input
+        /// </param>
+        protected internal virtual void StoreDestinationToReaddress(PdfDestination destination, Action<PdfDestination
+            > onPageAvailable, Action<PdfDestination> onPageNotAvailable) {
+            pendingDestinationMutations.Add(new PdfDocument.DestinationMutationInfo(destination, onPageAvailable, onPageNotAvailable
+                ));
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
@@ -1999,7 +2023,8 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Initializes document.</summary>
         /// <param name="newPdfVersion">
-        /// new pdf version of the resultant file if stamper is used and the version needs to be changed,
+        /// new pdf version of the resultant file if stamper is used and the version needs to be
+        /// changed,
         /// or
         /// <see langword="null"/>
         /// otherwise
@@ -2121,9 +2146,11 @@ namespace iText.Kernel.Pdf {
                     writer.crypto = reader.decrypt;
                     if (newPdfVersion != null) {
                         // In PDF 1.4, a PDF version can also be specified in the Version entry of the document catalog,
-                        // essentially updating the version associated with the file by overriding the one specified in the file header
+                        // essentially updating the version associated with the file by overriding the one specified in
+                        // the file header
                         if (pdfVersion.CompareTo(PdfVersion.PDF_1_4) >= 0) {
-                            // If the header specifies a later version, or if this entry is absent, the document conforms to the
+                            // If the header specifies a later version, or if this entry is absent, the document conforms
+                            // to the
                             // version specified in the header.
                             // So only update the version if it is older than the one in the header
                             if (newPdfVersion.CompareTo(reader.headerPdfVersion) > 0) {
@@ -2192,7 +2219,8 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         protected internal virtual void UpdateXmpMetadata() {
             try {
-                // We add PDF producer info in any case, and the valid way to do it for PDF 2.0 in only in metadata, not in the info dictionary.
+                // We add PDF producer info in any case, and the valid way to do it for PDF 2.0 in only in metadata, not
+                // in the info dictionary.
                 if (xmpMetadata != null || writer.properties.addXmpMetadata || pdfVersion.CompareTo(PdfVersion.PDF_2_0) >=
                      0) {
                     SetXmpMetadata(UpdateDefaultXmpMetadata());
@@ -2298,14 +2326,6 @@ namespace iText.Kernel.Pdf {
             return pdfPageFactory;
         }
 
-        internal virtual bool DoesStreamBelongToEmbeddedFile(PdfStream stream) {
-            return encryptedEmbeddedStreamsHandler.IsStreamStoredAsEmbedded(stream);
-        }
-
-        internal virtual bool HasAcroForm() {
-            return GetCatalog().GetPdfObject().ContainsKey(PdfName.AcroForm);
-        }
-
         /// <summary>
         /// Initializes the new instance of document's structure tree root
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>.
@@ -2327,6 +2347,24 @@ namespace iText.Kernel.Pdf {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
                 logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED);
             }
+        }
+
+        /// <summary>Gets list of indirect references.</summary>
+        /// <returns>list of indirect references.</returns>
+        internal virtual PdfXrefTable GetXref() {
+            return xref;
+        }
+
+        internal virtual bool IsDocumentFont(PdfIndirectReference indRef) {
+            return indRef != null && documentFonts.ContainsKey(indRef);
+        }
+
+        internal virtual bool DoesStreamBelongToEmbeddedFile(PdfStream stream) {
+            return encryptedEmbeddedStreamsHandler.IsStreamStoredAsEmbedded(stream);
+        }
+
+        internal virtual bool HasAcroForm() {
+            return GetCatalog().GetPdfObject().ContainsKey(PdfName.AcroForm);
         }
 
         private void TryFlushTagStructure(bool isAppendMode) {
@@ -2374,60 +2412,19 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private void CopyLinkAnnotations(iText.Kernel.Pdf.PdfDocument toDocument, IDictionary<PdfPage, PdfPage> page2page
+        private void ResolveDestinations(iText.Kernel.Pdf.PdfDocument toDocument, IDictionary<PdfPage, PdfPage> page2page
             ) {
-            IList<PdfName> excludedKeys = new List<PdfName>();
-            excludedKeys.Add(PdfName.Dest);
-            excludedKeys.Add(PdfName.A);
-            foreach (KeyValuePair<PdfPage, IList<PdfLinkAnnotation>> entry in linkAnnotations) {
-                // We don't want to copy those link annotations, which reference to pages which weren't copied.
-                foreach (PdfLinkAnnotation annot in entry.Value) {
-                    bool toCopyAnnot = true;
-                    PdfDestination copiedDest = null;
-                    PdfDictionary copiedAction = null;
-                    PdfObject dest = annot.GetDestinationObject();
-                    if (dest != null) {
-                        // If link annotation has destination object, we try to copy this destination.
-                        // Destination is not copied if it points to the not copied page, and therefore the whole
-                        // link annotation is not copied.
-                        copiedDest = GetCatalog().CopyDestination(dest, page2page, toDocument);
-                        toCopyAnnot = copiedDest != null;
-                    }
-                    else {
-                        // Link annotation may have associated action. If it is GoTo type, we try to copy it's destination.
-                        // GoToR and GoToE also contain destinations, but they point not to pages of the current document,
-                        // so we just copy them as is. If it is action of any other type, it is also just copied as is.
-                        PdfDictionary action = annot.GetAction();
-                        if (action != null) {
-                            if (PdfName.GoTo.Equals(action.Get(PdfName.S))) {
-                                copiedAction = action.CopyTo(toDocument, JavaUtil.ArraysAsList(PdfName.D), false);
-                                PdfDestination goToDest = GetCatalog().CopyDestination(action.Get(PdfName.D), page2page, toDocument);
-                                if (goToDest != null) {
-                                    copiedAction.Put(PdfName.D, goToDest.GetPdfObject());
-                                }
-                                else {
-                                    toCopyAnnot = false;
-                                }
-                            }
-                            else {
-                                copiedAction = (PdfDictionary)action.CopyTo(toDocument, false);
-                            }
-                        }
-                    }
-                    if (toCopyAnnot) {
-                        PdfLinkAnnotation newAnnot = (PdfLinkAnnotation)PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument
-                            , excludedKeys, true));
-                        if (copiedDest != null) {
-                            newAnnot.SetDestination(copiedDest);
-                        }
-                        if (copiedAction != null) {
-                            newAnnot.SetAction(copiedAction);
-                        }
-                        entry.Key.AddAnnotation(-1, newAnnot, false);
-                    }
+            foreach (PdfDocument.DestinationMutationInfo mutation in pendingDestinationMutations) {
+                PdfDestination copiedDest = null;
+                copiedDest = GetCatalog().CopyDestination(mutation.GetOriginalDestination().GetPdfObject(), page2page, toDocument
+                    );
+                if (copiedDest == null) {
+                    mutation.HandleDestinationUnavailable();
+                }
+                else {
+                    mutation.HandleDestinationAvailable(copiedDest);
                 }
             }
-            linkAnnotations.Clear();
         }
 
         /// <summary>This method copies all given outlines</summary>
@@ -2567,6 +2564,33 @@ namespace iText.Kernel.Pdf {
 
         private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
             return xmpMeta.GetProperty(schemaNS, propName) != null;
+        }
+
+        private class DestinationMutationInfo {
+            private readonly PdfDestination originalDestination;
+
+            private readonly Action<PdfDestination> onDestinationAvailable;
+
+            private readonly Action<PdfDestination> onDestinationNotAvailable;
+
+            public DestinationMutationInfo(PdfDestination originalDestination, Action<PdfDestination> onDestinationAvailable
+                , Action<PdfDestination> onDestinationNotAvailable) {
+                this.originalDestination = originalDestination;
+                this.onDestinationAvailable = onDestinationAvailable;
+                this.onDestinationNotAvailable = onDestinationNotAvailable;
+            }
+
+            public virtual void HandleDestinationAvailable(PdfDestination newDestination) {
+                onDestinationAvailable(newDestination);
+            }
+
+            public virtual void HandleDestinationUnavailable() {
+                onDestinationNotAvailable(originalDestination);
+            }
+
+            public virtual PdfDestination GetOriginalDestination() {
+                return originalDestination;
+            }
         }
 
         void System.IDisposable.Dispose() {

@@ -46,6 +46,7 @@ using System.Collections;
 using System.Collections.Generic;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     /// <summary>A representation of an array as described in the PDF specification.</summary>
@@ -571,11 +572,13 @@ namespace iText.Kernel.Pdf {
             return new iText.Kernel.Pdf.PdfArray();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
-            base.CopyContent(from, document);
+        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
+            base.CopyContent(from, document, copyFilter);
             iText.Kernel.Pdf.PdfArray array = (iText.Kernel.Pdf.PdfArray)from;
             foreach (PdfObject entry in array.list) {
-                Add(entry.ProcessCopying(document, false));
+                if (copyFilter.ShouldProcess(this, null, entry)) {
+                    Add(entry.ProcessCopying(document, false, copyFilter));
+                }
             }
         }
 
