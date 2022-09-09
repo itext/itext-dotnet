@@ -21,8 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Bouncycastle.Crypto;
 using Org.BouncyCastle.Cms;
 using iText.Commons.Bouncycastle.Cms;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 
 namespace iText.Bouncycastle.Cms {
@@ -56,9 +58,9 @@ namespace iText.Bouncycastle.Cms {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual byte[] GetContent(IRecipient recipient) {
+        public virtual byte[] GetContent(IPrivateKey key) {
             try {
-                return recipientInformation.GetContent(((RecipientBC)recipient).GetRecipient());
+                return recipientInformation.GetContent(((PrivateKeyBC)key).GetPrivateKey());
             }
             catch (CmsException e) {
                 throw new CMSExceptionBC(e);
@@ -67,7 +69,7 @@ namespace iText.Bouncycastle.Cms {
 
         /// <summary><inheritDoc/></summary>
         public virtual IRecipientId GetRID() {
-            return new RecipientIdBC(recipientInformation.GetRID());
+            return new RecipientIdBC(recipientInformation.RecipientID);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

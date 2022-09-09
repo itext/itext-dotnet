@@ -21,11 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Cms;
 using iText.Bouncycastlefips.Cert;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Cms;
 
 namespace iText.Bouncycastlefips.Cms {
     /// <summary>
@@ -33,7 +33,7 @@ namespace iText.Bouncycastlefips.Cms {
     /// <see cref="Org.BouncyCastle.Cms.RecipientId"/>.
     /// </summary>
     public class RecipientIdBCFips : IRecipientId {
-        private readonly RecipientId recipientId;
+        private readonly IRecipientID<RecipientInformation> recipientId;
 
         /// <summary>
         /// Creates new wrapper instance for
@@ -44,7 +44,7 @@ namespace iText.Bouncycastlefips.Cms {
         /// <see cref="Org.BouncyCastle.Cms.RecipientId"/>
         /// to be wrapped
         /// </param>
-        public RecipientIdBCFips(RecipientId recipientId) {
+        public RecipientIdBCFips(IRecipientID<RecipientInformation> recipientId) {
             this.recipientId = recipientId;
         }
 
@@ -53,7 +53,7 @@ namespace iText.Bouncycastlefips.Cms {
         /// wrapped
         /// <see cref="Org.BouncyCastle.Cms.RecipientId"/>.
         /// </returns>
-        public virtual RecipientId GetRecipientId() {
+        public virtual IRecipientID<RecipientInformation> GetRecipientId() {
             return recipientId;
         }
 

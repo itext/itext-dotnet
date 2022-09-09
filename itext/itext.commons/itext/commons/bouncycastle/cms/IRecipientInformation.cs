@@ -20,6 +20,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
+using iText.Commons.Bouncycastle.Crypto;
+
 namespace iText.Commons.Bouncycastle.Cms {
     /// <summary>
     /// This interface represents the wrapper for RecipientInformation that provides the ability
@@ -31,9 +34,9 @@ namespace iText.Commons.Bouncycastle.Cms {
         /// <c>getContent</c>
         /// method for the wrapped RecipientInformation object.
         /// </summary>
-        /// <param name="recipient">wrapper for recipient object to use to recover content encryption key</param>
+        /// <param name="key">wrapper for recipient object to use to recover content encryption key</param>
         /// <returns>the content inside the EnvelopedData this RecipientInformation is associated with.</returns>
-        byte[] GetContent(IRecipient recipient);
+        byte[] GetContent(IPrivateKey key);
 
         /// <summary>
         /// Calls actual

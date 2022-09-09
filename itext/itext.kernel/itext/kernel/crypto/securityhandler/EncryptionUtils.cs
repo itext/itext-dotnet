@@ -44,33 +44,36 @@ address: sales@itextpdf.com
 
 using System;
 using System.Globalization;
+using System.Security.Cryptography;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Cms;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Cms;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
+using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     internal sealed class EncryptionUtils {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
         internal static byte[] GenerateSeed(int seedLength) {
             return IVGenerator.GetIV(seedLength);
         }
 
-        internal static byte[] FetchEnvelopedData(ICipherParameters certificateKey, X509Certificate certificate, PdfArray recipients) {
+        internal static byte[] FetchEnvelopedData(IPrivateKey certificateKey, IX509Certificate certificate, PdfArray recipients) {
             bool foundRecipient = false;
             byte[] envelopedData = null;
             for (int i = 0; i < recipients.Size(); i++) {
                 try {
                     PdfString recipient = recipients.GetAsString(i);
-                    CmsEnvelopedData data = new CmsEnvelopedData(recipient.GetValueBytes());
-
-                    foreach (RecipientInformation recipientInfo in data.GetRecipientInfos().GetRecipients()) {
-                        if (recipientInfo.RecipientID.Match(certificate) && !foundRecipient) {
-                            envelopedData = recipientInfo.GetContent(certificateKey);
+                    ICMSEnvelopedData data = FACTORY.CreateCMSEnvelopedData(recipient.GetValueBytes());
+                    foreach (IRecipientInformation recipientInfo in data.GetRecipientInfos().GetRecipients()) {
+                        if (recipientInfo.GetRID().Match(
+                                FACTORY.CreateX509CertificateHolder(certificate.GetEncoded())) && !foundRecipient) { 
+                            envelopedData = recipientInfo.GetContent(certificateKey); 
                             foundRecipient = true;
                         }
                     }
@@ -84,13 +87,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return envelopedData;
         }
 
-        internal static byte[] CipherBytes(X509Certificate x509Certificate, byte[] abyte0, AlgorithmIdentifier algorithmidentifier) {
-            IBufferedCipher cipher = CipherUtilities.GetCipher(algorithmidentifier.ObjectID);
-            cipher.Init(true, x509Certificate.GetPublicKey());
-            byte[] outp = new byte[10000];
-            int len = cipher.DoFinal(abyte0, outp, 0);
-            byte[] abyte1 = new byte[len];
-            Array.Copy(outp, 0, abyte1, 0, len);
+        internal static byte[] CipherBytes(IX509Certificate x509Certificate, byte[] abyte0, IAlgorithmIdentifier algorithmidentifier) {
+            ICipher cipher = FACTORY.CreateCipher(true, x509Certificate.GetEncoded(),
+                algorithmidentifier.GetAlgorithm().GetId().GetBytes());
+            cipher.Update(abyte0, 0, abyte0.Length);
+            byte[] abyte1 = cipher.DoFinal();
 
             return abyte1;
         }
@@ -129,35 +130,29 @@ namespace iText.Kernel.Crypto.Securityhandler {
             String s = "1.2.840.113549.3.2";
             DERForRecipientParams parameters = new DERForRecipientParams();
 
-            byte[] outp = new byte[100];
-            DerObjectIdentifier derob = new DerObjectIdentifier(s);
-            // keyp
+            IASN1ObjectIdentifier derob = FACTORY.CreateASN1ObjectIdentifier(s);
+
             byte[] abyte0 = IVGenerator.GetIV(16);
-            IBufferedCipher cf = CipherUtilities.GetCipher(derob);
-            KeyParameter kp = new KeyParameter(abyte0);
-            byte[] iv = IVGenerator.GetIV(cf.GetBlockSize());
-            ParametersWithIV piv = new ParametersWithIV(kp, iv);
-            cf.Init(true, piv);
-            int len = cf.DoFinal(@in, outp, 0);
+            byte[] iv = IVGenerator.GetIV(8);
+            ICryptoTransform encryptor = RC2.Create().CreateEncryptor(abyte0, iv);
 
-            byte[] abyte1 = new byte[len];
-            Array.Copy(outp, 0, abyte1, 0, len);
+            byte[] abyte1 = encryptor.TransformFinalBlock(@in, 0, @in.Length);
 
-            Asn1EncodableVector ev = new Asn1EncodableVector();
-            ev.Add(new DerInteger(58));
-            ev.Add(new DerOctetString(iv));
-            DerSequence seq = new DerSequence(ev);
+            IASN1EncodableVector ev = FACTORY.CreateASN1EncodableVector();
+            ev.Add(FACTORY.CreateASN1Integer(58));
+            ev.Add(FACTORY.CreateDEROctetString(iv));
+            IDERSequence seq =  FACTORY.CreateDERSequence(ev);
 
             parameters.abyte0 = abyte0;
             parameters.abyte1 = abyte1;
-            parameters.algorithmIdentifier = new AlgorithmIdentifier(derob, seq);
+            parameters.algorithmIdentifier = FACTORY.CreateAlgorithmIdentifier(derob, seq);
             return parameters;
         }
 
         internal class DERForRecipientParams {
             internal byte[] abyte0;
             internal byte[] abyte1;
-            internal AlgorithmIdentifier algorithmIdentifier;
+            internal IAlgorithmIdentifier algorithmIdentifier;
         }
     }
 }

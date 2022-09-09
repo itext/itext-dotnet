@@ -33,7 +33,7 @@ namespace iText.Bouncycastle.Cms {
     /// <see cref="Org.BouncyCastle.Cms.RecipientId"/>.
     /// </summary>
     public class RecipientIdBC : IRecipientId {
-        private readonly RecipientId recipientId;
+        private readonly RecipientID recipientId;
 
         /// <summary>
         /// Creates new wrapper instance for
@@ -44,7 +44,7 @@ namespace iText.Bouncycastle.Cms {
         /// <see cref="Org.BouncyCastle.Cms.RecipientId"/>
         /// to be wrapped
         /// </param>
-        public RecipientIdBC(RecipientId recipientId) {
+        public RecipientIdBC(RecipientID recipientId) {
             this.recipientId = recipientId;
         }
 
@@ -53,7 +53,7 @@ namespace iText.Bouncycastle.Cms {
         /// wrapped
         /// <see cref="Org.BouncyCastle.Cms.RecipientId"/>.
         /// </returns>
-        public virtual RecipientId GetRecipientId() {
+        public virtual RecipientID GetRecipientId() {
             return recipientId;
         }
 
