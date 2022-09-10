@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using iText.Commons.Utils;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     public class PdfIndirectReference : PdfObject, IComparable<iText.Kernel.Pdf.PdfIndirectReference> {
@@ -311,6 +312,9 @@ namespace iText.Kernel.Pdf {
 
         protected internal override PdfObject NewInstance() {
             return PdfNull.PDF_NULL;
+        }
+
+        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
         }
 
         protected internal override void CopyContent(PdfObject from, PdfDocument document) {

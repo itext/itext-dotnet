@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Commons.Utils;
 using iText.IO.Font;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     public class PdfLiteral : PdfPrimitiveObject {
@@ -109,8 +110,8 @@ namespace iText.Kernel.Pdf {
             return new iText.Kernel.Pdf.PdfLiteral();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
-            base.CopyContent(from, document);
+        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
+            base.CopyContent(from, document, copyFilter);
             iText.Kernel.Pdf.PdfLiteral literal = (iText.Kernel.Pdf.PdfLiteral)from;
             this.content = literal.GetInternalContent();
         }

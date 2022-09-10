@@ -46,6 +46,7 @@ using System.Text;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     /// <summary>
@@ -361,8 +362,8 @@ namespace iText.Kernel.Pdf {
             return new iText.Kernel.Pdf.PdfString();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
-            base.CopyContent(from, document);
+        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
+            base.CopyContent(from, document, copyFilter);
             iText.Kernel.Pdf.PdfString @string = (iText.Kernel.Pdf.PdfString)from;
             value = @string.value;
             hexWriting = @string.hexWriting;

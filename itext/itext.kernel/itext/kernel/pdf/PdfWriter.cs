@@ -48,6 +48,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Source;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     public class PdfWriter : PdfOutputStream {
@@ -56,6 +57,9 @@ namespace iText.Kernel.Pdf {
         private static readonly byte[] endobj = ByteUtils.GetIsoBytes("\nendobj\n");
 
         protected internal WriterProperties properties;
+
+        //forewarned is forearmed
+        protected internal bool isUserWarnedAboutAcroFormCopying;
 
         /// <summary>Currently active object stream.</summary>
         /// <remarks>
@@ -75,9 +79,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Is used in smart mode to serialize and store serialized objects content.</summary>
         private SmartModePdfObjectsSerializer smartModeSerializer = new SmartModePdfObjectsSerializer();
-
-        //forewarned is forearmed
-        protected internal bool isUserWarnedAboutAcroFormCopying;
 
         /// <summary>Create a PdfWriter writing to the passed File and with default writer properties.</summary>
         /// <param name="file">File to write to.</param>
@@ -164,24 +165,6 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
-        /// <summary>Gets the current object stream.</summary>
-        /// <returns>object stream.</returns>
-        internal virtual PdfObjectStream GetObjectStream() {
-            if (!IsFullCompression()) {
-                return null;
-            }
-            if (objectStream == null) {
-                objectStream = new PdfObjectStream(document);
-            }
-            else {
-                if (objectStream.GetSize() == PdfObjectStream.MAX_OBJ_STREAM_SIZE) {
-                    objectStream.Flush();
-                    objectStream = new PdfObjectStream(objectStream);
-                }
-            }
-            return objectStream;
-        }
-
         protected internal virtual void InitCryptoIfSpecified(PdfVersion version) {
             EncryptionProperties encryptProps = properties.encryptionProperties;
             if (properties.IsStandardEncryptionUsed()) {
@@ -245,8 +228,31 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Copies a PdfObject either stand alone or as part of the PdfDocument passed as documentTo.</summary>
+        /// <param name="obj">object to copy</param>
+        /// <param name="documentTo">optional target document</param>
+        /// <param name="allowDuplicating">allow that some objects will become duplicated by this action</param>
+        /// <returns>the copies object</returns>
         protected internal virtual PdfObject CopyObject(PdfObject obj, PdfDocument documentTo, bool allowDuplicating
             ) {
+            return CopyObject(obj, documentTo, allowDuplicating, NullCopyFilter.GetInstance());
+        }
+
+        /// <summary>Copies a PdfObject either stand alone or as part of the PdfDocument passed as documentTo.</summary>
+        /// <param name="obj">object to copy</param>
+        /// <param name="documentTo">optional target document</param>
+        /// <param name="allowDuplicating">allow that some objects will become duplicated by this action</param>
+        /// <param name="copyFilter">
+        /// 
+        /// <see cref="iText.Kernel.Utils.ICopyFilter"/>
+        /// a filter to apply while copying arrays and dictionaries
+        /// *             Use
+        /// <see cref="iText.Kernel.Utils.NullCopyFilter"/>
+        /// for no filtering
+        /// </param>
+        /// <returns>the copies object</returns>
+        protected internal virtual PdfObject CopyObject(PdfObject obj, PdfDocument documentTo, bool allowDuplicating
+            , ICopyFilter copyFilter) {
             if (obj is PdfIndirectReference) {
                 obj = ((PdfIndirectReference)obj).GetRefersTo();
             }
@@ -283,7 +289,7 @@ namespace iText.Kernel.Pdf {
                 }
                 copiedObjects.Put(indirectReference, indRef);
             }
-            newObject.CopyContent(obj, documentTo);
+            newObject.CopyContent(obj, documentTo, copyFilter);
             return newObject;
         }
 
@@ -370,6 +376,24 @@ namespace iText.Kernel.Pdf {
                 objectStream.Flush();
                 objectStream = null;
             }
+        }
+
+        /// <summary>Gets the current object stream.</summary>
+        /// <returns>object stream.</returns>
+        internal virtual PdfObjectStream GetObjectStream() {
+            if (!IsFullCompression()) {
+                return null;
+            }
+            if (objectStream == null) {
+                objectStream = new PdfObjectStream(document);
+            }
+            else {
+                if (objectStream.GetSize() == PdfObjectStream.MAX_OBJ_STREAM_SIZE) {
+                    objectStream.Flush();
+                    objectStream = new PdfObjectStream(objectStream);
+                }
+            }
+            return objectStream;
         }
 
         /// <summary>Flush all copied objects.</summary>
