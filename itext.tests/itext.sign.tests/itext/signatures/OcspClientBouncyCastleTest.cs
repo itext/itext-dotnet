@@ -56,7 +56,7 @@ using iText.Test.Attributes;
 using iText.Test.Signutils;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("Bouncy-castle unit test")]
     public class OcspClientBouncyCastleTest : ExtendedITextTest {
         private static readonly String ocspCertsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/OcspClientBouncyCastleTest/";
@@ -220,14 +220,15 @@ namespace iText.Signatures {
                 testOcspBuilder = testBuilder;
             }
 
-            internal override IOCSPResponse GetOcspResponse(IX509Certificate chCert, IX509Certificate rCert, String url) {
+            internal override IOCSPResponse GetOcspResponse(IX509Certificate chCert, IX509Certificate rCert, String url
+                ) {
                 try {
                     ICertificateID id = SignTestPortUtil.GenerateCertificateId(rootCert, checkCert.GetSerialNumber(), BOUNCY_CASTLE_FACTORY
                         .CreateCertificateID().GetHashSha1());
                     IBasicOCSPResponse basicOCSPResp = testOcspBuilder.MakeOcspResponseObject(SignTestPortUtil.GenerateOcspRequestWithNonce
                         (id).GetEncoded());
-                    return BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus
-                        ().GetSuccessful(), basicOCSPResp);
+                    return BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus().GetSuccessful
+                        (), basicOCSPResp);
                 }
                 catch (Exception e) {
                     throw BOUNCY_CASTLE_FACTORY.CreateAbstractOCSPException(e);

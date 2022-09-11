@@ -29,7 +29,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("Bouncy-castle unit test")]
     public class CertificateInfoTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 

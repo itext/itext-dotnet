@@ -50,7 +50,7 @@ using iText.Test;
 using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("Bouncy-castle integration test")]
     public class LtvWithTwoSignaturesTest : ExtendedITextTest {
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";

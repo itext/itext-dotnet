@@ -101,8 +101,8 @@ namespace iText.Signatures {
                 if (ocspResponse.GetStatus() != BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus().GetSuccessful()) {
                     return null;
                 }
-                IBasicOCSPResponse basicResponse = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(ocspResponse
-                    .GetResponseObject());
+                IBasicOCSPResponse basicResponse = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(ocspResponse.GetResponseObject
+                    ());
                 if (verifier != null) {
                     verifier.IsValidResponse(basicResponse, rootCert, DateTimeUtil.GetCurrentUtcTime());
                 }

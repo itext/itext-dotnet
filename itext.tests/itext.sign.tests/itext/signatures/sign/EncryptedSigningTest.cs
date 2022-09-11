@@ -33,7 +33,7 @@ using iText.Test;
 using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("Bouncy-castle integration test")]
     public class EncryptedSigningTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 

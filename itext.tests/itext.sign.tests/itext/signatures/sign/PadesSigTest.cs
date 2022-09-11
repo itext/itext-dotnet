@@ -57,7 +57,7 @@ using iText.Test;
 using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("Bouncy-castle integration test")]
     public class PadesSigTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
