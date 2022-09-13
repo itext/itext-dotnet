@@ -209,7 +209,8 @@ namespace iText.Layout.Renderer {
                     );
                 bool isLastLineReLaidOut = false;
                 if (result.GetStatus() == LayoutResult.NOTHING) {
-                    //Re-layout last line if it doesn't fit
+                    //relayouting the child for allowing the vertical overflow in order to take into account the negative
+                    // leading adjustment in case of a clipped-height context
                     if (layoutContext.IsClippedHeight()) {
                         OverflowPropertyValue? previousOverflowProperty = currentRenderer.GetProperty<OverflowPropertyValue?>(Property
                             .OVERFLOW_Y);
