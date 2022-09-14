@@ -909,8 +909,8 @@ namespace iText.Kernel.Utils {
                     using (PdfReader readerCmp = new PdfReader(cmpPdf, GetCmpReaderProperties())) {
                         using (PdfDocument cmpDocument = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo
                             (metaInfo))) {
-                            String[] cmpInfo = ConvertInfo(cmpDocument.GetDocumentInfo());
-                            String[] outInfo = ConvertInfo(outDocument.GetDocumentInfo());
+                            String[] cmpInfo = ConvertDocInfoToStrings(cmpDocument.GetDocumentInfo());
+                            String[] outInfo = ConvertDocInfoToStrings(outDocument.GetDocumentInfo());
                             for (int i = 0; i < cmpInfo.Length; ++i) {
                                 if (!cmpInfo[i].Equals(outInfo[i])) {
                                     message = MessageFormatUtil.Format("Document info fail. Expected: \"{0}\", actual: \"{1}\"", cmpInfo[i], outInfo
@@ -1030,7 +1030,16 @@ namespace iText.Kernel.Utils {
             return message;
         }
 
-        internal virtual String[] ConvertInfo(PdfDocumentInfo info) {
+        /// <summary>Converts document info into a string array.</summary>
+        /// <remarks>
+        /// Converts document info into a string array.
+        /// <para />
+        /// Converts document info into a string array. It can be used to compare PdfDocumentInfo later on.
+        /// Default implementation retrieves title, author, subject, keywords and producer.
+        /// </remarks>
+        /// <param name="info">an instance of PdfDocumentInfo to be converted.</param>
+        /// <returns>String array with all the document info tester is interested in.</returns>
+        protected internal virtual String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
             String[] convertedInfo = new String[] { "", "", "", "", "" };
             String infoValue = info.GetTitle();
             if (infoValue != null) {
