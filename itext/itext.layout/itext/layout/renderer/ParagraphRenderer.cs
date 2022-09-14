@@ -207,7 +207,19 @@ namespace iText.Layout.Renderer {
                     (floatOverflowedToNextPageWithNothing);
                 LineLayoutResult result = (LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(lineLayoutContext
                     );
+                bool isLastLineReLaidOut = false;
                 if (result.GetStatus() == LayoutResult.NOTHING) {
+                    //relayouting the child for allowing the vertical overflow in order to take into account the negative
+                    // leading adjustment in case of a clipped-height context
+                    if (layoutContext.IsClippedHeight()) {
+                        OverflowPropertyValue? previousOverflowProperty = currentRenderer.GetProperty<OverflowPropertyValue?>(Property
+                            .OVERFLOW_Y);
+                        currentRenderer.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+                        lineLayoutContext.SetClippedHeight(true);
+                        result = (LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(lineLayoutContext);
+                        currentRenderer.SetProperty(Property.OVERFLOW_Y, previousOverflowProperty);
+                        isLastLineReLaidOut = true;
+                    }
                     float? lineShiftUnderFloats = FloatingHelper.CalculateLineShiftUnderFloats(floatRendererAreas, layoutBox);
                     if (lineShiftUnderFloats != null) {
                         layoutBox.DecreaseHeight((float)lineShiftUnderFloats);
@@ -273,8 +285,14 @@ namespace iText.Layout.Renderer {
                         deltaY = processedRenderer != null && leading != null ? -processedRenderer.GetTopLeadingIndent(leading) : 
                             0;
                     }
-                    isFit = leading == null || processedRenderer.GetOccupiedArea().GetBBox().GetY() + deltaY >= layoutBox.GetY
-                        ();
+                    if (isLastLineReLaidOut) {
+                        isFit = leading == null || processedRenderer.GetOccupiedArea().GetBBox().GetY() + deltaY - lastLineBottomLeadingIndent
+                             >= layoutBox.GetY();
+                    }
+                    else {
+                        isFit = leading == null || processedRenderer.GetOccupiedArea().GetBBox().GetY() + deltaY >= layoutBox.GetY
+                            ();
+                    }
                 }
                 if (!isFit && (null == processedRenderer || IsOverflowFit(overflowY))) {
                     if (currentAreaPos + 1 < areas.Count) {
