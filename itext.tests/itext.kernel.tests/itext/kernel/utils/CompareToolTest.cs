@@ -259,5 +259,33 @@ namespace iText.Kernel.Utils {
             secondDocument.Close();
             NUnit.Framework.Assert.IsNotNull(new CompareTool().CompareLinkAnnotations(firstPdf, secondPdf));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertDocInfoToStringsTest() {
+            String inPdf = sourceFolder + "test.pdf";
+            CompareTool compareTool = new _T945289912(this);
+            using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
+                using (PdfDocument doc = new PdfDocument(reader)) {
+                    String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
+                    NUnit.Framework.Assert.AreEqual("very long title to compare later on", docInfo[0]);
+                    NUnit.Framework.Assert.AreEqual("itext7core", docInfo[1]);
+                    NUnit.Framework.Assert.AreEqual("test file", docInfo[2]);
+                    NUnit.Framework.Assert.AreEqual("new job", docInfo[3]);
+                    NUnit.Framework.Assert.AreEqual("Adobe Acrobat Pro DC (64-bit) <version>", docInfo[4]);
+                }
+            }
+        }
+
+        internal class _T945289912 : CompareTool {
+            protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
+                return base.ConvertDocInfoToStrings(info);
+            }
+
+            internal _T945289912(CompareToolTest _enclosing) {
+                this._enclosing = _enclosing;
+            }
+
+            private readonly CompareToolTest _enclosing;
+        }
     }
 }
