@@ -233,7 +233,7 @@ namespace iText.Forms.Xfa
 		/// <summary>Extracts DOM nodes from an XFA document.</summary>
 		/// <param name="domDocument">
 		/// an XFA file as a
-		/// <see cref="Document">
+		/// <see cref="System.Xml.Linq.XDocument">
 		/// DOM
 		/// document
 		/// </see>
@@ -242,7 +242,7 @@ namespace iText.Forms.Xfa
 		/// a
 		/// <see cref="System.Collections.IDictionary{K, V}"/>
 		/// of XFA packet names and their associated
-		/// <see cref="Org.W3c.Dom.Node">DOM nodes</see>
+		/// <see cref="System.Xml.Linq.XNode">DOM nodes</see>
 		/// </returns>
 		public static IDictionary<String, XNode> ExtractXFANodes(XDocument domDocument)
 		{
@@ -522,14 +522,14 @@ namespace iText.Forms.Xfa
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <remarks>
-		/// Replaces the XFA data under datasets/data. Accepts a
-		/// <see cref="Org.Xml.Sax.InputSource">SAX input source</see>
+		/// Replaces the XFA data under datasets/data. Accepts an
+		/// <see cref="System.Xml.XmlReader">XML reader</see>
 		/// to fill this object with XFA data. The resulting DOM
 		/// document may be modified.
 		/// </remarks>
 		/// <param name="is">
 		/// the
-		/// <see cref="Org.Xml.Sax.InputSource">SAX input source</see>
+		/// <see cref="System.Xml.XmlReader">XML reader</see>
 		/// </param>
 		public virtual void FillXfaForm(XmlReader @is)
 		{
@@ -538,13 +538,13 @@ namespace iText.Forms.Xfa
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <remarks>
-		/// Replaces the XFA data under datasets/data. Accepts a
-		/// <see cref="Org.Xml.Sax.InputSource">SAX input source</see>
+		/// Replaces the XFA data under datasets/data. Accepts an
+		/// <see cref="System.Xml.XmlReader">XML reader</see>
 		/// to fill this object with XFA data.
 		/// </remarks>
 		/// <param name="is">
 		/// the
-		/// <see cref="Org.Xml.Sax.InputSource">SAX input source</see>
+		/// <see cref="System.Xml.XmlReader">XML reader</see>
 		/// </param>
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
 		public virtual void FillXfaForm(XmlReader @is, bool readOnly) {
@@ -554,7 +554,7 @@ namespace iText.Forms.Xfa
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <param name="node">
 		/// the input
-		/// <see cref="Org.W3c.Dom.Node"/>
+		/// <see cref="System.Xml.Linq.XNode"/>
 		/// </param>
 		public virtual void FillXfaForm(XNode node)
 		{
@@ -564,7 +564,7 @@ namespace iText.Forms.Xfa
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <param name="node">
 		/// the input
-		/// <see cref="Org.W3c.Dom.Node"/>
+		/// <see cref="System.Xml.Linq.XNode"/>
 		/// </param>
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
 		public virtual void FillXfaForm(XNode node, bool readOnly)
