@@ -21,25 +21,25 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Ocsp;
 
 namespace iText.Bouncycastle.Cert.Ocsp {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Cert.Ocsp.Req"/>.
+    /// <see cref="Req"/>.
     /// </summary>
     public class ReqBC : IReq {
         private readonly Req req;
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.Req"/>.
+        /// <see cref="Req"/>.
         /// </summary>
         /// <param name="req">
         /// 
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.Req"/>
+        /// <see cref="Req"/>
         /// to be wrapped
         /// </param>
         public ReqBC(Req req) {
@@ -49,7 +49,7 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.Req"/>.
+        /// <see cref="Req"/>.
         /// </returns>
         public virtual Req GetReq() {
             return req;
@@ -57,7 +57,7 @@ namespace iText.Bouncycastle.Cert.Ocsp {
 
         /// <summary><inheritDoc/></summary>
         public virtual ICertificateID GetCertID() {
-            return new CertificateIDBC(req.GetCertID());
+            return new CertificateIDBC(req.GetCertID().ToAsn1Object());
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

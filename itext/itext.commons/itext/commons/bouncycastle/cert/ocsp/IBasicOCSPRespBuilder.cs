@@ -76,6 +76,6 @@ namespace iText.Commons.Bouncycastle.Cert.Ocsp {
         /// <see cref="IBasicOCSPResponse"/>
         /// wrapper for built BasicOCSPResp object.
         /// </returns>
-        IBasicOCSPResponse Build(IContentSigner signer, IX509CertificateHolder[] chain, DateTime time);
+        IBasicOCSPResponse Build(IContentSigner signer, IX509Certificate[] chain, DateTime time);
     }
 }

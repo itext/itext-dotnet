@@ -21,63 +21,84 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Cert.Ocsp;
-using Org.BouncyCastle.Ocsp;
+using System.Collections;
 using iText.Bouncycastlefips.Asn1.X509;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <summary>
-    /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Cert.Ocsp.OCSPReqBuilder"/>.
+    /// Wrapper class for OCSPReqBuilder"/>.
     /// </summary>
     public class OCSPReqBuilderBCFips : IOCSPReqBuilder {
-        private readonly OCSPReqBuilder reqBuilder;
+        private IList list = new ArrayList();
+        private GeneralName requestorName = null;
+        private X509Extensions requestExtensions;
 
         /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.OCSPReqBuilder"/>.
+        /// Creates new wrapper instance for OCSPReqBuilder.
         /// </summary>
-        /// <param name="reqBuilder">
-        /// 
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.OCSPReqBuilder"/>
-        /// to be wrapped
-        /// </param>
-        public OCSPReqBuilderBCFips(OCSPReqBuilder reqBuilder) {
-            this.reqBuilder = reqBuilder;
+        public OCSPReqBuilderBCFips() {
         }
 
-        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
-        /// <returns>
-        /// wrapped
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.OCSPReqBuilder"/>.
-        /// </returns>
-        public virtual OCSPReqBuilder GetReqBuilder() {
-            return reqBuilder;
+        /// <summary>
+        /// Creates new wrapper instance for OCSPReqBuilder.
+        /// </summary>
+        /// <param name="list">Requests array</param>
+        /// <param name="requestorName">requestor name</param>
+        /// <param name="requestExtensions">X509 extensions</param>
+        public OCSPReqBuilderBCFips(IList list, GeneralName requestorName, X509Extensions requestExtensions) {
+            this.list = list;
+            this.requestorName = requestorName;
+            this.requestExtensions = requestExtensions;
         }
 
+        /// <summary>Gets list of added requests.</summary>
+        /// <returns>Requests list.</returns>
+        public virtual IList GetList() {
+            return list;
+        }
+
+        /// <summary>Gets requestorName field.</summary>
+        /// <returns>Requestor name.</returns>
+        public virtual GeneralName GetRequestorName() {
+            return requestorName;
+        }
+        
+        /// <summary>Gets requestExtensions field.</summary>
+        /// <returns>Request Extensions.</returns>
+        public virtual X509Extensions GetRequestExtensions() {
+            return requestExtensions;
+        }
+        
         /// <summary><inheritDoc/></summary>
         public virtual IOCSPReqBuilder SetRequestExtensions(IExtensions extensions) {
-            reqBuilder.SetRequestExtensions(((ExtensionsBCFips)extensions).GetExtensions());
+            requestExtensions = ((ExtensionsBCFips)extensions).GetX509Extensions();
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual IOCSPReqBuilder AddRequest(ICertificateID certificateID) {
-            reqBuilder.AddRequest(((CertificateIDBCFips)certificateID).GetCertificateID());
+            list.Add(new Request(((CertificateIDBCFips)certificateID).GetCertificateID(), null));
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual IOCSPReq Build() {
-            try {
-                return new OCSPReqBCFips(reqBuilder.Build());
+            Asn1EncodableVector requests = new Asn1EncodableVector();
+            foreach (Request reqObj in list) {
+                try {
+                    requests.Add(reqObj);
+                } catch (Exception e) {
+                    throw new OCSPExceptionBCFips("exception creating Request");
+                }
             }
-            catch (OcspException e) {
-                throw new OCSPExceptionBCFips(e);
-            }
+            TbsRequest tbsReq = new TbsRequest(requestorName, new DerSequence(requests), requestExtensions);
+            return new OCSPReqBCFips(new OcspRequest(tbsReq, null));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>
@@ -91,12 +112,14 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
             }
             iText.Bouncycastlefips.Cert.Ocsp.OCSPReqBuilderBCFips that = (iText.Bouncycastlefips.Cert.Ocsp.OCSPReqBuilderBCFips
                 )o;
-            return Object.Equals(reqBuilder, that.reqBuilder);
+            return Object.Equals(list, that.list) &&
+                   Object.Equals(requestorName, that.requestorName) &&
+                   Object.Equals(requestExtensions, that.requestExtensions);
         }
 
         /// <summary>Returns a hash code value based on the wrapped object.</summary>
         public override int GetHashCode() {
-            return JavaUtil.ArraysHashCode(reqBuilder);
+            return JavaUtil.ArraysHashCode<object>(list, requestorName, requestExtensions);
         }
 
         /// <summary>
@@ -105,7 +128,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// method call to the wrapped object.
         /// </summary>
         public override String ToString() {
-            return reqBuilder.ToString();
+            return list + " " + requestorName + " " + requestExtensions;
         }
     }
 }

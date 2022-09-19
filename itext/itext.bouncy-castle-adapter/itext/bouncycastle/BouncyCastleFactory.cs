@@ -33,6 +33,7 @@ using iText.Bouncycastle.Crypto;
 using iText.Bouncycastle.Crypto.Generators;
 using iText.Bouncycastle.Math;
 using iText.Bouncycastle.Openssl;
+using iText.Bouncycastle.Operator;
 using iText.Bouncycastle.Operator.Jcajce;
 using iText.Bouncycastle.Security;
 using iText.Bouncycastle.Tsp;
@@ -61,13 +62,12 @@ using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using Org.BouncyCastle.Asn1.Tsp;
+using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Utilities;
 using ICertificateID = iText.Commons.Bouncycastle.Cert.Ocsp.ICertificateID;
 using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
 using ISingleResp = iText.Commons.Bouncycastle.Cert.Ocsp.ISingleResp;
-using Time = Org.BouncyCastle.Asn1.X509.Time;
 
 namespace iText.Bouncycastle {
     /// <summary>
@@ -379,20 +379,24 @@ namespace iText.Bouncycastle {
             return new JcaX509CertificateHolderBC(new JcaX509CertificateHolder(certificate));
         }
 
-        public virtual IExtension CreateExtension(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString
+        public virtual IExtensions CreateExtensions(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString
              octetString) {
             IDictionary extension = new Hashtable();
             extension.Add(((ASN1ObjectIdentifierBC)objectIdentifier).GetASN1ObjectIdentifier(),
                 new X509Extension(critical, ((ASN1OctetStringBC)octetString).GetASN1OctetString()));
-            return new ExtensionBC(new X509Extensions(extension));
+            return new ExtensionsBC(new X509Extensions(extension));
         }
 
-        public virtual IExtension CreateExtension() {
-            return ExtensionBC.GetInstance();
+        public IExtensions CreateExtensions(IDictionary objectIdentifier) {
+            return new ExtensionsBC(new X509Extensions(objectIdentifier));
+        }
+
+        public virtual IExtensions CreateExtensions() {
+            return ExtensionsBC.GetInstance();
         }
 
         public virtual IOCSPReqBuilder CreateOCSPReqBuilder() {
-            return new OCSPReqBuilderBC(new OCSPReqBuilder());
+            return new OCSPReqBuilderBC(new OcspReqGenerator());
         }
 
         public virtual ISigPolicyQualifierInfo CreateSigPolicyQualifierInfo(IASN1ObjectIdentifier objectIdentifier
@@ -636,7 +640,7 @@ namespace iText.Bouncycastle {
         }
 
         public virtual ITimeStampResponseGenerator CreateTimeStampResponseGenerator(ITimeStampTokenGenerator tokenGenerator
-            , ICollection<String> algorithms) {
+            , IList algorithms) {
             return new TimeStampResponseGeneratorBC(tokenGenerator, algorithms);
         }
 
@@ -653,9 +657,9 @@ namespace iText.Bouncycastle {
             return new JcaSignerInfoGeneratorBuilderBC(digestCalcProviderProvider);
         }
 
-        public virtual ITimeStampTokenGenerator CreateTimeStampTokenGenerator(ISignerInfoGenerator siGen, IDigestCalculator
-             dgCalc, IASN1ObjectIdentifier policy) {
-            return new TimeStampTokenGeneratorBC(siGen, dgCalc, policy);
+        public ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate certificate, 
+            string allowedDigest, string policyOid) {
+            return new TimeStampTokenGeneratorBC(pk, certificate, allowedDigest, policyOid);
         }
 
         public virtual IX500Name CreateX500Name(IX509Certificate certificate) {
@@ -687,11 +691,9 @@ namespace iText.Bouncycastle {
             return new X509v2CRLBuilderBC(x500Name, date);
         }
 
-        public virtual IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(X509Certificate signingCert, 
-            BigInteger certSerialNumber, DateTime startDate, DateTime endDate, IX500Name subjectDnName, AsymmetricKeyParameter
-             publicKey) {
-            return new JcaX509v3CertificateBuilderBC(signingCert, certSerialNumber, startDate, endDate, subjectDnName, 
-                publicKey);
+        public virtual IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(IX509Certificate signingCert, 
+            IBigInteger number, DateTime startDate, DateTime endDate, IX500Name subjectDnName, IPublicKey publicKey) {
+            return new JcaX509v3CertificateBuilderBC(signingCert, number, startDate, endDate, subjectDnName, publicKey);
         }
 
         public virtual IBasicConstraints CreateBasicConstraints(bool b) {
@@ -811,7 +813,11 @@ namespace iText.Bouncycastle {
         public IBigInteger CreateBigInteger(int i, byte[] array) {
             return new BigIntegerBC(new BigInteger(i, array));
         }
-        
+
+        public IBigInteger CreateBigInteger(string str) {
+            return new BigIntegerBC(new BigInteger(str));
+        }
+
         public ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv) {
             return new CipherBC(forEncryption, key, iv);
         }
@@ -826,6 +832,30 @@ namespace iText.Bouncycastle {
 
         public IRsaKeyPairGenerator CreateRsa2048KeyPairGenerator() {
             return new RsaKeyPairGeneratorBC();
+        }
+
+        public IContentSigner CreateContentSigner(string signatureAlgorithm, IPrivateKey signingKey) {
+            return new ContentSignerBC(new Asn1SignatureFactory(signatureAlgorithm, 
+                (AsymmetricKeyParameter)((PrivateKeyBC) signingKey).GetPrivateKey()));
+        }
+
+        public IAuthorityKeyIdentifier CreateAuthorityKeyIdentifier(ISubjectPublicKeyInfo issuerPublicKeyInfo) {
+            return new AuthorityKeyIdentifierBC(new AuthorityKeyIdentifier(
+                ((SubjectPublicKeyInfoBC)issuerPublicKeyInfo).GetSubjectPublicKeyInfo()));
+        }
+
+        public ISubjectKeyIdentifier CreateSubjectKeyIdentifier(ISubjectPublicKeyInfo subjectPublicKeyInfo) {
+            return new SubjectKeyIdentifierBC(new SubjectKeyIdentifier(
+                ((SubjectPublicKeyInfoBC)subjectPublicKeyInfo).GetSubjectPublicKeyInfo()));
+        }
+
+        public bool IsNullExtension(IExtension ext) {
+            return ((ExtensionBC)ext).GetX509Extension() == null;
+        }
+        
+        public IExtension CreateExtension(bool b, IDEROctetString octetString) {
+            return new ExtensionBC(new X509Extension(b, 
+                ((DEROctetStringBC)octetString).GetDEROctetString()));
         }
         
         public IPEMParser CreatePEMParser(TextReader reader, char[] password) {

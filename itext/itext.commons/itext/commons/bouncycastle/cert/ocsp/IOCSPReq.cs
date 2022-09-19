@@ -14,5 +14,21 @@ namespace iText.Commons.Bouncycastle.Cert.Ocsp {
         /// </summary>
         /// <returns>the default encoding for the wrapped object.</returns>
         byte[] GetEncoded();
+
+        /// <summary>
+        /// Calls actual
+        /// <c>GetRequestList</c>
+        /// method for the wrapped OCSPReq object.
+        /// </summary>
+        /// <returns>the array of the wrapped Req objects.</returns>
+        IReq[] GetRequestList();
+
+        /// Calls actual
+        /// <c>GetExtension</c>
+        /// method for the <c>RequestExtensions</c>
+        /// field of the wrapped OCSPReq object.
+        /// </summary>
+        /// <returns>Extension wrapper.</returns>
+        IExtension GetExtension(IASN1ObjectIdentifier objectIdentifier);
     }
 }

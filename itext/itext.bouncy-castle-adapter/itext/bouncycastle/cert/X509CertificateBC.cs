@@ -104,8 +104,8 @@ namespace iText.Bouncycastle.Cert {
             return certificate.NotBefore;
         }
 
-        public IList GetExtendedKeyUsage()
-        {
+        /// <summary><inheritDoc/></summary>
+        public IList GetExtendedKeyUsage() {
             return certificate.GetExtendedKeyUsage();
         }
 

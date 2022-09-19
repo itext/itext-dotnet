@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Bouncycastle.Asn1;
@@ -152,10 +153,12 @@ namespace iText.Commons.Bouncycastle {
 
         IJcaX509CertificateHolder CreateJcaX509CertificateHolder(IX509Certificate certificate);
 
-        IExtension CreateExtension(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString octetString
+        IExtensions CreateExtensions(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString octetString
             );
 
-        IExtension CreateExtension();
+        IExtensions CreateExtensions(IDictionary objectIdentifier);
+
+        IExtensions CreateExtensions();
 
         IOCSPReqBuilder CreateOCSPReqBuilder();
 
@@ -250,8 +253,7 @@ namespace iText.Commons.Bouncycastle {
 
         IJcaCertStore CreateJcaCertStore(IList<IX509Certificate> certificates);
 
-        ITimeStampResponseGenerator CreateTimeStampResponseGenerator(ITimeStampTokenGenerator tokenGenerator, ICollection
-            <String> algorithms);
+        ITimeStampResponseGenerator CreateTimeStampResponseGenerator(ITimeStampTokenGenerator tokenGenerator, IList algorithms);
 
         ITimeStampRequest CreateTimeStampRequest(byte[] bytes);
 
@@ -260,8 +262,8 @@ namespace iText.Commons.Bouncycastle {
         IJcaSignerInfoGeneratorBuilder CreateJcaSignerInfoGeneratorBuilder(IDigestCalculatorProvider digestCalcProviderProvider
             );
 
-        ITimeStampTokenGenerator CreateTimeStampTokenGenerator(ISignerInfoGenerator siGen, IDigestCalculator dgCalc
-            , IASN1ObjectIdentifier policy);
+        ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate cert, 
+            string allowedDigest, string policyOid);
 
         IX500Name CreateX500Name(IX509Certificate certificate);
 
@@ -275,8 +277,8 @@ namespace iText.Commons.Bouncycastle {
 
         IX509v2CRLBuilder CreateX509v2CRLBuilder(IX500Name x500Name, DateTime thisUpdate);
 
-        IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(IX509Certificate signingCert, IBigInteger certSerialNumber
-            , DateTime startDate, DateTime endDate, IX500Name subjectDnName, IPublicKey publicKey);
+        IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(IX509Certificate signingCert, 
+            IBigInteger number, DateTime startDate, DateTime endDate, IX500Name subjectDnName, IPublicKey publicKey);
 
         IBasicConstraints CreateBasicConstraints(bool b);
 
@@ -327,6 +329,8 @@ namespace iText.Commons.Bouncycastle {
         IBigInteger CreateBigInteger();
         
         IBigInteger CreateBigInteger(int i, byte[] array);
+
+        IBigInteger CreateBigInteger(string str);
         
         ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv);
         
@@ -335,7 +339,17 @@ namespace iText.Commons.Bouncycastle {
         ITimeStampToken CreateTimeStampToken(IContentInfo contentInfo);
 
         IRsaKeyPairGenerator CreateRsa2048KeyPairGenerator();
-        
+
         IPEMParser CreatePEMParser(TextReader reader, char[] password);
+
+        IContentSigner CreateContentSigner(string signatureAlgorithm, IPrivateKey signingKey);
+        
+        IAuthorityKeyIdentifier CreateAuthorityKeyIdentifier(ISubjectPublicKeyInfo issuerPublicKeyInfo);
+        
+        ISubjectKeyIdentifier CreateSubjectKeyIdentifier(ISubjectPublicKeyInfo subjectPublicKeyInfo);
+        
+        bool IsNullExtension(IExtension ext);
+        
+        IExtension CreateExtension(bool b, IDEROctetString octetString);
     }
 }

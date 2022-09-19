@@ -21,37 +21,36 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Operator;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Fips;
 
 namespace iText.Bouncycastlefips.Operator {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Operator.DigestCalculator"/>.
+    /// IDigestFactory<IParameters<FipsDigestAlgorithm>>.
     /// </summary>
     public class DigestCalculatorBCFips : IDigestCalculator {
-        private readonly DigestCalculator digestCalculator;
+        private readonly IDigestFactory<IParameters<FipsDigestAlgorithm>> digestCalculator;
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Operator.DigestCalculator"/>.
+        /// IDigestFactory<IParameters<FipsDigestAlgorithm>>.
         /// </summary>
         /// <param name="digestCalculator">
-        /// 
-        /// <see cref="Org.BouncyCastle.Operator.DigestCalculator"/>
+        /// IDigestFactory<IParameters<FipsDigestAlgorithm>>
         /// to be wrapped
         /// </param>
-        public DigestCalculatorBCFips(DigestCalculator digestCalculator) {
+        public DigestCalculatorBCFips(IDigestFactory<IParameters<FipsDigestAlgorithm>> digestCalculator) {
             this.digestCalculator = digestCalculator;
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
-        /// wrapped
-        /// <see cref="Org.BouncyCastle.Operator.DigestCalculator"/>.
+        /// wrapped IDigestFactory<IParameters<FipsDigestAlgorithm>>.
         /// </returns>
-        public virtual DigestCalculator GetDigestCalculator() {
+        public virtual IDigestFactory<IParameters<FipsDigestAlgorithm>> GetDigestCalculator() {
             return digestCalculator;
         }
 

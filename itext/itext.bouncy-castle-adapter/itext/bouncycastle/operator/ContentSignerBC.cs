@@ -21,37 +21,37 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Operator;
+using Org.BouncyCastle.Crypto.Operators;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Utils;
 
 namespace iText.Bouncycastle.Operator {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Operator.ContentSigner"/>.
+    /// <see cref="Org.BouncyCastle.Crypto.Operators.Asn1SignatureFactory"/>.
     /// </summary>
     public class ContentSignerBC : IContentSigner {
-        private readonly ContentSigner contentSigner;
+        private readonly Asn1SignatureFactory contentSigner;
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Operator.ContentSigner"/>.
+        /// <see cref="Org.BouncyCastle.Crypto.Operators.Asn1SignatureFactory"/>.
         /// </summary>
         /// <param name="contentSigner">
         /// 
-        /// <see cref="Org.BouncyCastle.Operator.ContentSigner"/>
+        /// <see cref="Org.BouncyCastle.Crypto.Operators.Asn1SignatureFactory"/>
         /// to be wrapped
         /// </param>
-        public ContentSignerBC(ContentSigner contentSigner) {
+        public ContentSignerBC(Asn1SignatureFactory contentSigner) {
             this.contentSigner = contentSigner;
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Operator.ContentSigner"/>.
+        /// <see cref="Org.BouncyCastle.Crypto.Operators.Asn1SignatureFactory"/>.
         /// </returns>
-        public virtual ContentSigner GetContentSigner() {
+        public virtual Asn1SignatureFactory GetContentSigner() {
             return contentSigner;
         }
 

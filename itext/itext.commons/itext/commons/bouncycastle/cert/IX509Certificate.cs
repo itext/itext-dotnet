@@ -111,9 +111,9 @@ namespace iText.Commons.Bouncycastle.Cert {
         DateTime GetNotBefore();
 
         /// <summary>
-        /// Returns actual
-        /// <c>ExtendedKeyUsage</c>
-        /// property for the wrapped X509Certificate object.
+        /// Calls actual
+        /// <c>GetExtendedKeyUsage</c>
+        /// method for the wrapped X509Certificate object.
         /// </summary>
         /// <returns>List of object identifiers represented as Strings.</returns>
         IList GetExtendedKeyUsage();

@@ -21,103 +21,79 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Cert.Jcajce;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Security.Certificates;
-using Org.BouncyCastle.X509;
 using iText.Bouncycastlefips.Asn1;
 using iText.Bouncycastlefips.Asn1.X500;
-using iText.Bouncycastlefips.Cert;
+using iText.Bouncycastlefips.Crypto;
+using iText.Bouncycastlefips.Math;
 using iText.Bouncycastlefips.Operator;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Jcajce;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Cert;
 
 namespace iText.Bouncycastlefips.Cert.Jcajce {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Cert.Jcajce.JcaX509v3CertificateBuilder"/>.
+    /// <see cref="X509V3CertificateGenerator"/>.
     /// </summary>
     public class JcaX509v3CertificateBuilderBCFips : IJcaX509v3CertificateBuilder {
-        private readonly JcaX509v3CertificateBuilder certificateBuilder;
+        private readonly X509V3CertificateGenerator certificateBuilder;
 
         /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Jcajce.JcaX509v3CertificateBuilder"/>.
+        /// Creates new wrapper instance for <see cref="X509V3CertificateGenerator"/>.
         /// </summary>
         /// <param name="certificateBuilder">
-        /// 
-        /// <see cref="Org.BouncyCastle.Cert.Jcajce.JcaX509v3CertificateBuilder"/>
+        /// <see cref="X509V3CertificateGenerator"/>
         /// to be wrapped
         /// </param>
-        public JcaX509v3CertificateBuilderBCFips(JcaX509v3CertificateBuilder certificateBuilder) {
+        public JcaX509v3CertificateBuilderBCFips(X509V3CertificateGenerator certificateBuilder) {
             this.certificateBuilder = certificateBuilder;
         }
-
+        
         /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Jcajce.JcaX509v3CertificateBuilder"/>.
+        /// Creates new wrapper instance for <see cref="X509V3CertificateGenerator"/>.
         /// </summary>
-        /// <param name="signingCert">
-        /// X509Certificate to create
-        /// <see cref="Org.BouncyCastle.Cert.Jcajce.JcaX509v3CertificateBuilder"/>
-        /// </param>
-        /// <param name="certSerialNumber">
-        /// BigInteger to create
-        /// <see cref="Org.BouncyCastle.Cert.Jcajce.JcaX509v3CertificateBuilder"/>
-        /// </param>
-        /// <param name="startDate">
-        /// start date to create
-        /// <see cref="Org.BouncyCastle.Cert.Jcajce.JcaX509v3CertificateBuilder"/>
-        /// </param>
-        /// <param name="endDate">
-        /// end date to create
-        /// <see cref="Org.BouncyCastle.Cert.Jcajce.JcaX509v3CertificateBuilder"/>
-        /// </param>
-        /// <param name="subjectDnName">
-        /// X500Name wrapper to create
-        /// <see cref="Org.BouncyCastle.Cert.Jcajce.JcaX509v3CertificateBuilder"/>
-        /// </param>
-        /// <param name="publicKey">
-        /// PublicKey to create
-        /// <see cref="Org.BouncyCastle.Cert.Jcajce.JcaX509v3CertificateBuilder"/>
-        /// </param>
-        public JcaX509v3CertificateBuilderBCFips(X509Certificate signingCert, BigInteger certSerialNumber, DateTime
-             startDate, DateTime endDate, IX500Name subjectDnName, AsymmetricKeyParameter publicKey)
-            : this(new JcaX509v3CertificateBuilder(signingCert, certSerialNumber, startDate, endDate, ((X500NameBCFips
-                )subjectDnName).GetX500Name(), publicKey)) {
+        /// <param name="signingCert">to get issuerDN to set</param>
+        /// <param name="number">certificate serial number to set</param>
+        /// <param name="startDate">to set</param>
+        /// <param name="endDate">to set</param>
+        /// <param name="subjectDn">to set</param>
+        /// <param name="publicKey">to set</param>
+        public JcaX509v3CertificateBuilderBCFips(IX509Certificate signingCert, IBigInteger number, DateTime startDate, 
+            DateTime endDate, IX500Name subjectDn, IPublicKey publicKey) {
+            certificateBuilder = new X509V3CertificateGenerator();
+            certificateBuilder.SetIssuerDN(((X500NameBCFips) signingCert.GetIssuerDN()).GetX500Name());
+            certificateBuilder.SetSerialNumber(((BigIntegerBCFips) number).GetBigInteger());
+            certificateBuilder.SetNotBefore(startDate);
+            certificateBuilder.SetNotAfter(endDate);
+            certificateBuilder.SetSubjectDN(((X500NameBCFips) subjectDn).GetX500Name());
+            certificateBuilder.SetPublicKey(((PublicKeyBCFips) publicKey).GetPublicKey());
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
-        /// wrapped
-        /// <see cref="Org.BouncyCastle.Cert.Jcajce.JcaX509v3CertificateBuilder"/>.
+        /// wrapped <see cref="X509V3CertificateGenerator"/>.
         /// </returns>
-        public virtual JcaX509v3CertificateBuilder GetCertificateBuilder() {
+        public virtual X509V3CertificateGenerator GetCertificateBuilder() {
             return certificateBuilder;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IX509CertificateHolder Build(IContentSigner contentSigner) {
-            return new X509CertificateHolderBCFips(certificateBuilder.Build(((ContentSignerBCFips)contentSigner).GetContentSigner
-                ()));
+        public IJcaX509v3CertificateBuilder AddExtension(IASN1ObjectIdentifier extensionOid, bool critical, IASN1Encodable extensionValue) {
+            certificateBuilder.AddExtension(((ASN1ObjectIdentifierBCFips) extensionOid).GetASN1ObjectIdentifier(),
+                critical, ((ASN1EncodableBCFips) extensionValue).GetEncodable());
+            return this;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IJcaX509v3CertificateBuilder AddExtension(IASN1ObjectIdentifier extensionOID, bool critical
-            , IASN1Encodable extensionValue) {
-            try {
-                certificateBuilder.AddExtension(((ASN1ObjectIdentifierBCFips)extensionOID).GetASN1ObjectIdentifier(), critical
-                    , ((ASN1EncodableBCFips)extensionValue).GetEncodable());
-                return this;
-            }
-            catch (CertificateEncodingException e) {
-                throw new CertIOExceptionBCFips(e);
-            }
+        public IX509Certificate Build(IContentSigner contentSigner) {
+            return new X509CertificateBCFips(certificateBuilder.Generate(
+                ((ContentSignerBCFips) contentSigner).GetContentSigner()));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

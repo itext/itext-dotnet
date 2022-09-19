@@ -67,9 +67,9 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// <param name="signer">ContentSigner wrapper</param>
         /// <returns>
         /// 
-        /// <see cref="IX509CRLHolder"/>
+        /// <see cref="IX509Crl"/>
         /// the wrapper for built X509CRLHolder object.
         /// </returns>
-        IX509CRLHolder Build(IContentSigner signer);
+        IX509Crl Build(IContentSigner signer);
     }
 }

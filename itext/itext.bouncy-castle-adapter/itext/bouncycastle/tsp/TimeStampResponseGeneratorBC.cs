@@ -21,8 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using Org.BouncyCastle.Math;
+using System.Collections;
+using iText.Bouncycastle.Math;
+using iText.Commons.Bouncycastle.Math;
 using Org.BouncyCastle.Tsp;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
@@ -54,8 +55,7 @@ namespace iText.Bouncycastle.Tsp {
         /// </summary>
         /// <param name="tokenGenerator">TimeStampTokenGenerator wrapper</param>
         /// <param name="algorithms">set of algorithm strings</param>
-        public TimeStampResponseGeneratorBC(ITimeStampTokenGenerator tokenGenerator, ICollection<String> algorithms
-            )
+        public TimeStampResponseGeneratorBC(ITimeStampTokenGenerator tokenGenerator, IList algorithms)
             : this(new TimeStampResponseGenerator(((TimeStampTokenGeneratorBC)tokenGenerator).GetTimeStampTokenGenerator
                 (), algorithms)) {
         }
@@ -70,13 +70,11 @@ namespace iText.Bouncycastle.Tsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ITimeStampResponse Generate(ITimeStampRequest request, BigInteger bigInteger, DateTime date
-            ) {
+        public virtual ITimeStampResponse Generate(ITimeStampRequest request, IBigInteger bigInteger, DateTime date) {
             try {
                 return new TimeStampResponseBC(timeStampResponseGenerator.Generate(((TimeStampRequestBC)request).GetTimeStampRequest
-                    (), bigInteger, date));
-            }
-            catch (TspException e) {
+                    (), ((BigIntegerBC)bigInteger).GetBigInteger(), date));
+            } catch (TspException e) {
                 throw new TSPExceptionBC(e);
             }
         }

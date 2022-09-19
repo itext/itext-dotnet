@@ -1,5 +1,9 @@
 using System;
 using System.Collections;
+using iText.Bouncycastle.Asn1;
+using iText.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using Org.BouncyCastle.Ocsp;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
@@ -63,6 +67,22 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         /// <summary><inheritDoc/></summary>
         public virtual byte[] GetEncoded() {
             return ocspReq.GetEncoded();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IReq[] GetRequestList() {
+            Req[] reqs = ocspReq.GetRequestList();
+            IReq[] wrappedReqs = new IReq[reqs.Length];
+            for (int i = 0; i < reqs.Length; ++i) {
+                wrappedReqs[i] = new ReqBC(reqs[i]);
+            }
+            return wrappedReqs;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IExtension GetExtension(IASN1ObjectIdentifier objectIdentifier) {
+            return new ExtensionBC(ocspReq.RequestExtensions.GetExtension(
+                ((ASN1ObjectIdentifierBC) objectIdentifier).GetASN1ObjectIdentifier()));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

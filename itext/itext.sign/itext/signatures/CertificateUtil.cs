@@ -72,7 +72,7 @@ namespace iText.Signatures {
         public static String GetCRLURL(IX509Certificate certificate) {
             IASN1Primitive obj;
             try {
-                obj = GetExtensionValue(certificate, FACTORY.CreateExtension().GetCRlDistributionPoints().GetId());
+                obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetCRlDistributionPoints().GetId());
             }
             catch (System.IO.IOException) {
                 obj = null;
@@ -118,7 +118,7 @@ namespace iText.Signatures {
         public static String GetOCSPURL(IX509Certificate certificate) {
             IASN1Primitive obj;
             try {
-                obj = GetExtensionValue(certificate, FACTORY.CreateExtension().GetAuthorityInfoAccess().GetId());
+                obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
                 if (obj == null) {
                     return null;
                 }

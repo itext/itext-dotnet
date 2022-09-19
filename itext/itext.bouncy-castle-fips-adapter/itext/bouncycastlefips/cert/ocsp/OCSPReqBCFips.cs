@@ -1,5 +1,9 @@
 using System;
 using System.Collections;
+using iText.Bouncycastlefips.Asn1;
+using iText.Bouncycastlefips.Asn1.X509;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Asn1;
@@ -65,6 +69,22 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// <summary><inheritDoc/></summary>
         public virtual byte[] GetEncoded() {
             return ocspReq.GetEncoded();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IReq[] GetRequestList() {
+            Asn1Sequence reqs = ocspReq.TbsRequest.RequestList;
+            IReq[] wrappedReqs = new IReq[reqs.Count];
+            for (int i = 0; i < reqs.Count; ++i) {
+                wrappedReqs[i] = new ReqBCFips(Request.GetInstance(reqs[i]));
+            }
+            return wrappedReqs;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IExtension GetExtension(IASN1ObjectIdentifier objectIdentifier) {
+            return new ExtensionBCFips(ocspReq.TbsRequest.RequestExtensions.GetExtension(
+                ((ASN1ObjectIdentifierBCFips) objectIdentifier).GetASN1ObjectIdentifier()));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

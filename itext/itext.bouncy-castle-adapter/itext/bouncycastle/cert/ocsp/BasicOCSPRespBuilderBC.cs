@@ -21,86 +21,93 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Cert;
-using Org.BouncyCastle.Cert.Ocsp;
+using iText.Bouncycastle.Asn1.Ocsp;
 using Org.BouncyCastle.Ocsp;
 using iText.Bouncycastle.Asn1.X509;
-using iText.Bouncycastle.Cert;
 using iText.Bouncycastle.Operator;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.X509;
 
 namespace iText.Bouncycastle.Cert.Ocsp {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>.
+    /// <see cref="BasicOcspRespGenerator"/>.
     /// </summary>
     public class BasicOCSPRespBuilderBC : IBasicOCSPRespBuilder {
-        private readonly BasicOCSPRespBuilder basicOCSPRespBuilder;
+        private readonly BasicOcspRespGenerator basicOCSPRespBuilder;
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>.
+        /// <see cref="BasicOcspRespGenerator"/>.
         /// </summary>
         /// <param name="basicOCSPRespBuilder">
         /// 
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>
+        /// <see cref="BasicOcspRespGenerator"/>
         /// to be wrapped
         /// </param>
-        public BasicOCSPRespBuilderBC(BasicOCSPRespBuilder basicOCSPRespBuilder) {
+        public BasicOCSPRespBuilderBC(BasicOcspRespGenerator basicOCSPRespBuilder) {
             this.basicOCSPRespBuilder = basicOCSPRespBuilder;
         }
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>.
+        /// <see cref="BasicOcspRespGenerator"/>.
         /// </summary>
         /// <param name="respID">
         /// RespID wrapper to create
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>
+        /// <see cref="BasicOcspRespGenerator"/>
         /// to be wrapped
         /// </param>
         public BasicOCSPRespBuilderBC(IRespID respID)
-            : this(new BasicOCSPRespBuilder(((RespIDBC)respID).GetRespID())) {
+            : this(new BasicOcspRespGenerator(((RespIDBC)respID).GetRespID())) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>.
+        /// <see cref="BasicOcspRespGenerator"/>.
         /// </returns>
-        public virtual BasicOCSPRespBuilder GetBasicOCSPRespBuilder() {
+        public virtual BasicOcspRespGenerator GetBasicOCSPRespBuilder() {
             return basicOCSPRespBuilder;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual IBasicOCSPRespBuilder SetResponseExtensions(IExtensions extensions) {
-            basicOCSPRespBuilder.SetResponseExtensions(((ExtensionsBC)extensions).GetExtensions());
+            basicOCSPRespBuilder.SetResponseExtensions(((ExtensionsBC)extensions).GetX509Extensions());
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual IBasicOCSPRespBuilder AddResponse(ICertificateID certID, ICertificateStatus certificateStatus
             , DateTime time, DateTime time1, IExtensions extensions) {
-            basicOCSPRespBuilder.AddResponse(((CertificateIDBC)certID).GetCertificateID(), ((CertificateStatusBC)certificateStatus
-                ).GetCertificateStatus(), time, time1, ((ExtensionsBC)extensions).GetExtensions());
+            CertificateStatus status = certificateStatus is IUnknownStatus ? new UnknownStatus()
+                : certificateStatus is IRevokedStatus ? new RevokedStatus(
+                    RevokedInfo.GetInstance(((RevokedStatusBC)certificateStatus).GetRevokedStatus().Status))
+                : CertificateStatus.Good;
+            basicOCSPRespBuilder.AddResponse(new CertificateID(((CertificateIDBC)certID).GetCertificateID()), 
+                status, time, time1, ((ExtensionsBC)extensions).GetX509Extensions());
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IBasicOCSPResp Build(IContentSigner signer, IX509CertificateHolder[] chain, DateTime time) {
+        public IBasicOCSPResponse Build(IContentSigner signer, IX509Certificate[] chain, DateTime time) {
             try {
-                X509CertificateHolder[] certificateHolders = new X509CertificateHolder[chain.Length];
+                X509Certificate[] certificates = new X509Certificate[chain.Length];
                 for (int i = 0; i < chain.Length; ++i) {
-                    certificateHolders[i] = ((X509CertificateHolderBC)chain[i]).GetCertificateHolder();
+                    certificates[i] = ((X509CertificateBC)chain[i]).GetCertificate();
                 }
-                return new BasicOCSPRespBC(basicOCSPRespBuilder.Build(((ContentSignerBC)signer).GetContentSigner(), certificateHolders
-                    , time));
-            }
-            catch (OcspException e) {
+                BasicOcspResp resp = basicOCSPRespBuilder.Generate(
+                    ((ContentSignerBC)signer).GetContentSigner(), certificates, time);
+                return new BasicOCSPResponseBC(BasicOcspResponse.GetInstance(
+                   new Asn1InputStream(resp.GetEncoded()).ReadObject()));
+            } catch (OcspException e) {
                 throw new OCSPExceptionBC(e);
             }
         }

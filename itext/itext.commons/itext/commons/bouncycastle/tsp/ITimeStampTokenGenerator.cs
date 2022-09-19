@@ -21,7 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Commons.Bouncycastle.Cert.Jcajce;
+using System.Collections.Generic;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Math;
 
 namespace iText.Commons.Bouncycastle.Tsp {
@@ -39,12 +40,12 @@ namespace iText.Commons.Bouncycastle.Tsp {
         void SetAccuracySeconds(int i);
 
         /// <summary>
-        /// Calls actual
-        /// <c>addCertificates</c>
+        /// Creates certificates collection and calls actual
+        /// <c>SetCertificates</c>
         /// method for the wrapped TimeStampTokenGenerator object.
         /// </summary>
-        /// <param name="jcaCertStore">the wrapper for the JcaCertStore to add</param>
-        void AddCertificates(IJcaCertStore jcaCertStore);
+        /// <param name="certificateChain">certificates collection to set</param>
+        void SetCertificates(IList<IX509Certificate> certificateChain);
 
         /// <summary>
         /// Calls actual

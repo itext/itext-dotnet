@@ -20,106 +20,62 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Org.BouncyCastle.Asn1.X509;
-using iText.Bouncycastle.Asn1;
-using iText.Commons.Bouncycastle.Asn1;
+using System;
 using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace iText.Bouncycastle.Asn1.X509 {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Asn1.X509.X509Extensions"/>.
+    /// <see cref="X509Extension"/>.
     /// </summary>
-    public class ExtensionBC : ASN1EncodableBC, IExtension {
-        private static readonly iText.Bouncycastle.Asn1.X509.ExtensionBC INSTANCE = new iText.Bouncycastle.Asn1.X509.ExtensionBC
-            (null);
-
-        private static readonly ASN1ObjectIdentifierBC C_RL_DISTRIBUTION_POINTS = new ASN1ObjectIdentifierBC(X509Extensions.CrlDistributionPoints
-            );
-
-        private static readonly ASN1ObjectIdentifierBC AUTHORITY_INFO_ACCESS = new ASN1ObjectIdentifierBC(X509Extensions.AuthorityInfoAccess
-            );
-
-        private static readonly ASN1ObjectIdentifierBC BASIC_CONSTRAINTS = new ASN1ObjectIdentifierBC(X509Extensions.BasicConstraints
-            );
-
-        private static readonly ASN1ObjectIdentifierBC KEY_USAGE = new ASN1ObjectIdentifierBC(X509Extensions.KeyUsage
-            );
-
-        private static readonly ASN1ObjectIdentifierBC EXTENDED_KEY_USAGE = new ASN1ObjectIdentifierBC(X509Extensions.ExtendedKeyUsage
-            );
-
-        private static readonly ASN1ObjectIdentifierBC AUTHORITY_KEY_IDENTIFIER = new ASN1ObjectIdentifierBC(X509Extensions.AuthorityKeyIdentifier
-            );
-
-        private static readonly ASN1ObjectIdentifierBC SUBJECT_KEY_IDENTIFIER = new ASN1ObjectIdentifierBC(X509Extensions.SubjectKeyIdentifier
-            );
+    public class ExtensionBC : IExtension {
+        private readonly X509Extension extension;
 
         /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Extensions"/>.
+        /// Creates new wrapper instance for <see cref="X509Extension"/>.
         /// </summary>
         /// <param name="extension">
-        /// 
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Extensions"/>
+        /// <see cref="X509Extension"/>
         /// to be wrapped
         /// </param>
-        public ExtensionBC(X509Extensions extension)
-            : base(extension) {
-        }
-
-        /// <summary>Gets wrapper instance.</summary>
-        /// <returns>
-        /// 
-        /// <see cref="ExtensionBC"/>
-        /// instance.
-        /// </returns>
-        public static iText.Bouncycastle.Asn1.X509.ExtensionBC GetInstance() {
-            return INSTANCE;
+        public ExtensionBC(X509Extension extension) {
+            this.extension = extension;
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
-        /// wrapped
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Extensions"/>.
+        /// wrapped <see cref="X509Extension"/>.
         /// </returns>
-        public virtual X509Extensions GetExtension() {
-            return (X509Extensions)GetEncodable();
+        public virtual X509Extension GetX509Extension() {
+            return extension;
         }
 
-        /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier GetCRlDistributionPoints() {
-            return C_RL_DISTRIBUTION_POINTS;
+        /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
+        public override bool Equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || GetType() != o.GetType()) {
+                return false;
+            }
+            ExtensionBC that = (ExtensionBC)o;
+            return Object.Equals(extension, that.extension);
         }
 
-        /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier GetAuthorityInfoAccess() {
-            return AUTHORITY_INFO_ACCESS;
+        /// <summary>Returns a hash code value based on the wrapped object.</summary>
+        public override int GetHashCode() {
+            return JavaUtil.ArraysHashCode(extension);
         }
 
-        /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier GetBasicConstraints() {
-            return BASIC_CONSTRAINTS;
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier GetKeyUsage() {
-            return KEY_USAGE;
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier GetExtendedKeyUsage() {
-            return EXTENDED_KEY_USAGE;
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier GetAuthorityKeyIdentifier() {
-            return AUTHORITY_KEY_IDENTIFIER;
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier GetSubjectKeyIdentifier() {
-            return SUBJECT_KEY_IDENTIFIER;
+        /// <summary>
+        /// Delegates
+        /// <c>toString</c>
+        /// method call to the wrapped object.
+        /// </summary>
+        public override String ToString() {
+            return extension.ToString();
         }
     }
 }

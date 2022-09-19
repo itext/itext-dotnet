@@ -21,18 +21,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Math;
+using System.Collections.Generic;
+using System.Linq;
 using Org.BouncyCastle.Tsp;
-using iText.Bouncycastle.Asn1;
-using iText.Bouncycastle.Cert.Jcajce;
-using iText.Bouncycastle.Cms;
-using iText.Bouncycastle.Operator;
-using iText.Commons.Bouncycastle.Asn1;
-using iText.Commons.Bouncycastle.Cert.Jcajce;
-using iText.Commons.Bouncycastle.Cms;
-using iText.Commons.Bouncycastle.Operator;
+using iText.Bouncycastle.Cert;
+using iText.Bouncycastle.Crypto;
+using iText.Bouncycastle.Math;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.X509.Store;
 
 namespace iText.Bouncycastle.Tsp {
     /// <summary>
@@ -59,17 +60,16 @@ namespace iText.Bouncycastle.Tsp {
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Tsp.TimeStampTokenGenerator"/>.
         /// </summary>
-        /// <param name="siGen">SignerInfoGenerator wrapper</param>
-        /// <param name="dgCalc">DigestCalculator wrapper</param>
-        /// <param name="policy">ASN1ObjectIdentifier wrapper</param>
-        public TimeStampTokenGeneratorBC(ISignerInfoGenerator siGen, IDigestCalculator dgCalc, IASN1ObjectIdentifier
-             policy) {
+        /// <param name="pk">AsymmetricKeyParameter wrapper</param>
+        /// <param name="cert">X509Certificate wrapper</param>
+        /// <param name="allowedDigest">allowed digest</param>
+        /// <param name="policyOid">policy OID</param>
+        public TimeStampTokenGeneratorBC(IPrivateKey pk, IX509Certificate cert,
+            string allowedDigest, string policyOid) {
             try {
-                this.timeStampTokenGenerator = new TimeStampTokenGenerator(((SignerInfoGeneratorBC)siGen).GetSignerInfoGenerator
-                    (), ((DigestCalculatorBC)dgCalc).GetDigestCalculator(), ((ASN1ObjectIdentifierBC)policy).GetASN1ObjectIdentifier
-                    ());
-            }
-            catch (TspException e) {
+                timeStampTokenGenerator = new TimeStampTokenGenerator((AsymmetricKeyParameter)((PrivateKeyBC)pk)
+                    .GetPrivateKey(), ((X509CertificateBC)cert).GetCertificate(), allowedDigest, policyOid);
+            } catch (TspException e) {
                 throw new TSPExceptionBC(e);
             }
         }
@@ -89,17 +89,17 @@ namespace iText.Bouncycastle.Tsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void AddCertificates(IJcaCertStore jcaCertStore) {
-            timeStampTokenGenerator.AddCertificates(((JcaCertStoreBC)jcaCertStore).GetJcaCertStore());
+        public virtual void SetCertificates(IList<IX509Certificate> certificateChain) {
+            timeStampTokenGenerator.SetCertificates(X509StoreFactory.Create("Certificate/Collection", 
+                new X509CollectionStoreParameters(certificateChain.ToList())));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ITimeStampToken Generate(ITimeStampRequest request, BigInteger bigInteger, DateTime date) {
+        public virtual ITimeStampToken Generate(ITimeStampRequest request, IBigInteger bigInteger, DateTime date) {
             try {
                 return new TimeStampTokenBC(timeStampTokenGenerator.Generate(((TimeStampRequestBC)request).GetTimeStampRequest
-                    (), bigInteger, date));
-            }
-            catch (TspException e) {
+                    (), ((BigIntegerBC)bigInteger).GetBigInteger(), date));
+            } catch (TspException e) {
                 throw new TSPExceptionBC(e);
             }
         }

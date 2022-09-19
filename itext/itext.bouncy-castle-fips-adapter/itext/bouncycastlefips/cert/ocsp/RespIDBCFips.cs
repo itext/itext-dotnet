@@ -21,51 +21,51 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Cert.Ocsp;
 using iText.Bouncycastlefips.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Cert.Ocsp.RespID"/>.
+    /// <see cref="ResponderID"/>.
     /// </summary>
     public class RespIDBCFips : IRespID {
-        private readonly RespID respID;
+        private readonly ResponderID respID;
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.RespID"/>.
+        /// <see cref="ResponderID"/>.
         /// </summary>
         /// <param name="respID">
         /// 
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.RespID"/>
+        /// <see cref="ResponderID"/>
         /// to be wrapped
         /// </param>
-        public RespIDBCFips(RespID respID) {
+        public RespIDBCFips(ResponderID respID) {
             this.respID = respID;
         }
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.RespID"/>.
+        /// <see cref="ResponderID"/>.
         /// </summary>
         /// <param name="x500Name">
         /// X500Name wrapper to create
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.RespID"/>
+        /// <see cref="ResponderID"/>
         /// </param>
         public RespIDBCFips(IX500Name x500Name)
-            : this(new RespID(((X500NameBCFips)x500Name).GetX500Name())) {
+            : this(new ResponderID(((X500NameBCFips)x500Name).GetX500Name())) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.RespID"/>.
+        /// <see cref="ResponderID"/>.
         /// </returns>
-        public virtual RespID GetRespID() {
+        public virtual ResponderID GetRespID() {
             return respID;
         }
 

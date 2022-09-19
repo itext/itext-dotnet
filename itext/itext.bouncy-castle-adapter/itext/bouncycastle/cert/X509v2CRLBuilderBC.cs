@@ -21,64 +21,67 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Cert;
-using Org.BouncyCastle.Math;
 using iText.Bouncycastle.Asn1.X500;
+using iText.Bouncycastle.Math;
 using iText.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Utils;
+using Org.BouncyCastle.X509;
 
 namespace iText.Bouncycastle.Cert {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Cert.X509v2CRLBuilder"/>.
+    /// <see cref="X509V2CrlGenerator"/>.
     /// </summary>
     public class X509v2CRLBuilderBC : IX509v2CRLBuilder {
-        private readonly X509v2CRLBuilder builder;
+        private readonly X509V2CrlGenerator builder;
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.X509v2CRLBuilder"/>.
+        /// <see cref="X509V2CrlGenerator"/>.
         /// </summary>
         /// <param name="builder">
         /// 
-        /// <see cref="Org.BouncyCastle.Cert.X509v2CRLBuilder"/>
+        /// <see cref="X509V2CrlGenerator"/>
         /// to be wrapped
         /// </param>
-        public X509v2CRLBuilderBC(X509v2CRLBuilder builder) {
+        public X509v2CRLBuilderBC(X509V2CrlGenerator builder) {
             this.builder = builder;
         }
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.X509v2CRLBuilder"/>.
+        /// <see cref="X509V2CrlGenerator"/>.
         /// </summary>
         /// <param name="x500Name">
         /// X500Name wrapper to create
-        /// <see cref="Org.BouncyCastle.Cert.X509v2CRLBuilder"/>
+        /// <see cref="X509V2CrlGenerator"/>
         /// </param>
         /// <param name="date">
         /// Date to create
-        /// <see cref="Org.BouncyCastle.Cert.X509v2CRLBuilder"/>
+        /// <see cref="X509V2CrlGenerator"/>
         /// </param>
-        public X509v2CRLBuilderBC(IX500Name x500Name, DateTime date)
-            : this(new X509v2CRLBuilder(((X500NameBC)x500Name).GetX500Name(), date)) {
+        public X509v2CRLBuilderBC(IX500Name x500Name, DateTime date) {
+            builder = new X509V2CrlGenerator();
+            builder.SetIssuerDN(((X500NameBC)x500Name).GetX500Name());
+            builder.SetThisUpdate(date);
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Cert.X509v2CRLBuilder"/>.
+        /// <see cref="X509V2CrlGenerator"/>.
         /// </returns>
-        public virtual X509v2CRLBuilder GetBuilder() {
+        public virtual X509V2CrlGenerator GetBuilder() {
             return builder;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IX509v2CRLBuilder AddCRLEntry(BigInteger bigInteger, DateTime date, int i) {
-            builder.AddCRLEntry(bigInteger, date, i);
+        public virtual IX509v2CRLBuilder AddCRLEntry(IBigInteger bigInteger, DateTime date, int i) {
+            builder.AddCrlEntry(((BigIntegerBC)bigInteger).GetBigInteger(), date, i);
             return this;
         }
 
@@ -89,8 +92,8 @@ namespace iText.Bouncycastle.Cert {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IX509CRLHolder Build(IContentSigner signer) {
-            return new X509CRLHolderBC(builder.Build(((ContentSignerBC)signer).GetContentSigner()));
+        public virtual IX509Crl Build(IContentSigner signer) {
+            return new X509CrlBC(builder.Generate(((ContentSignerBC)signer).GetContentSigner()));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

@@ -21,89 +21,135 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections;
+using System.IO;
+using iText.Bouncycastlefips.Asn1.Ocsp;
 using Org.BouncyCastle.Cert;
-using Org.BouncyCastle.Cert.Ocsp;
-using Org.BouncyCastle.Ocsp;
 using iText.Bouncycastlefips.Asn1.X509;
-using iText.Bouncycastlefips.Cert;
 using iText.Bouncycastlefips.Operator;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Crypto;
 
 namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <summary>
-    /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>.
+    /// Wrapper class for generator for basic OCSP response objects.
     /// </summary>
     public class BasicOCSPRespBuilderBCFips : IBasicOCSPRespBuilder {
-        private readonly BasicOCSPRespBuilder basicOCSPRespBuilder;
+        private readonly IList list = new ArrayList();
+        private X509Extensions responseExtensions;
+        private ResponderID responderID;
 
         /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>.
+        /// Creates new basic OCSP response objects generator wrapper instance.
         /// </summary>
-        /// <param name="basicOCSPRespBuilder">
-        /// 
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>
-        /// to be wrapped
-        /// </param>
-        public BasicOCSPRespBuilderBCFips(BasicOCSPRespBuilder basicOCSPRespBuilder) {
-            this.basicOCSPRespBuilder = basicOCSPRespBuilder;
+        /// <param name="list">single responses array</param>
+        /// <param name="responseExtensions">X509Extensions</param>
+        /// <param name="responderID">resp ID</param>
+        public BasicOCSPRespBuilderBCFips(IList list, X509Extensions responseExtensions, ResponderID responderID) {
+            this.list = list;
+            this.responseExtensions = responseExtensions;
+            this.responderID = responderID;
         }
 
         /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>.
+        /// Creates new basic OCSP response objects generator wrapper instance.
         /// </summary>
-        /// <param name="respID">
-        /// RespID wrapper to create
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>
-        /// to be wrapped
-        /// </param>
-        public BasicOCSPRespBuilderBCFips(IRespID respID)
-            : this(new BasicOCSPRespBuilder(((RespIDBCFips)respID).GetRespID())) {
+        /// <param name="respID">RespID wrapper to create generator</param>
+        public BasicOCSPRespBuilderBCFips(IRespID respID) {
+            responderID = ((RespIDBCFips)respID).GetRespID();
         }
 
-        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
-        /// <returns>
-        /// wrapped
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.BasicOCSPRespBuilder"/>.
-        /// </returns>
-        public virtual BasicOCSPRespBuilder GetBasicOCSPRespBuilder() {
-            return basicOCSPRespBuilder;
+        /// <summary>Gets single responses list being wrapped.</summary>
+        /// <returns>List field.</returns>
+        public virtual IList GetList() {
+            return list;
+        }
+        
+        /// <summary>Gets responseExtensions being wrapped.</summary>
+        /// <returns>ResponseExtensions field.</returns>
+        public virtual X509Extensions GetResponseExtensions() {
+            return responseExtensions;
+        }
+        
+        /// <summary>Gets responderID being wrapped.</summary>
+        /// <returns>ResponderID field.</returns>
+        public virtual ResponderID GetResponderID() {
+            return responderID;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual IBasicOCSPRespBuilder SetResponseExtensions(IExtensions extensions) {
-            basicOCSPRespBuilder.SetResponseExtensions(((ExtensionsBCFips)extensions).GetExtensions());
+            responseExtensions = ((ExtensionsBCFips)extensions).GetX509Extensions();
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IBasicOCSPRespBuilder AddResponse(ICertificateID certID, ICertificateStatus certificateStatus
-            , DateTime time, DateTime time1, IExtensions extensions) {
-            basicOCSPRespBuilder.AddResponse(((CertificateIDBCFips)certID).GetCertificateID(), ((CertificateStatusBCFips
-                )certificateStatus).GetCertificateStatus(), time, time1, ((ExtensionsBCFips)extensions).GetExtensions(
-                ));
+        public virtual IBasicOCSPRespBuilder AddResponse(ICertificateID certID, ICertificateStatus certificateStatus, 
+            DateTime time, DateTime time1, IExtensions extensions) {
+            list.Add(new SingleResponse(((CertificateIDBCFips)certID).GetCertificateID(), ((CertificateStatusBCFips
+                )certificateStatus).GetCertificateStatus(), new DerGeneralizedTime(time), 
+                new DerGeneralizedTime(time1), ((ExtensionsBCFips)extensions).GetX509Extensions()));
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IBasicOCSPResp Build(IContentSigner signer, IX509CertificateHolder[] chain, DateTime time) {
-            try {
-                X509CertificateHolder[] certificateHolders = new X509CertificateHolder[chain.Length];
-                for (int i = 0; i < chain.Length; ++i) {
-                    certificateHolders[i] = ((X509CertificateHolderBCFips)chain[i]).GetCertificateHolder();
+        public virtual IBasicOCSPResponse Build(IContentSigner signer, IX509Certificate[] wrappersChain,
+            DateTime producedAt) {
+            X509Certificate[] chain = new X509Certificate[wrappersChain.Length];
+            for (int i = 0; i < wrappersChain.Length; ++i) {
+                chain[i] = ((X509CertificateBCFips)wrappersChain[i]).GetCertificate();
+            }
+            ISignatureFactory<AlgorithmIdentifier> signatureCalculator =
+                ((ContentSignerBCFips)signer).GetContentSigner();
+            if (signatureCalculator == null) {
+                throw new ArgumentException("no signature calculator specified");
+            }
+            AlgorithmIdentifier signingAlgID = signatureCalculator.AlgorithmDetails;
+            DerObjectIdentifier signingAlgorithm = signingAlgID.Algorithm;
+            Asn1EncodableVector responses = new Asn1EncodableVector();
+            foreach (SingleResponse respObj in list) {
+                try {
+                    responses.Add(respObj);
+                } catch (Exception e) {
+                    throw new OCSPExceptionBCFips("exception creating Request" + e);
                 }
-                return new BasicOCSPRespBCFips(basicOCSPRespBuilder.Build(((ContentSignerBCFips)signer).GetContentSigner()
-                    , certificateHolders, time));
             }
-            catch (OcspException e) {
-                throw new OCSPExceptionBCFips(e);
+            ResponseData tbsResp = new ResponseData(responderID, new DerGeneralizedTime(producedAt),
+                new DerSequence(responses), responseExtensions);
+            DerBitString bitSig;
+            try {
+                IStreamCalculator<IBlockResult> streamCalculator = signatureCalculator.CreateCalculator();
+                byte[] encoded = tbsResp.GetDerEncoded();
+                streamCalculator.Stream.Write(encoded, 0, encoded.Length);
+                streamCalculator.Stream.Dispose();
+                bitSig = new DerBitString(streamCalculator.GetResult().Collect());
+            } catch (Exception e) {
+                throw new OCSPExceptionBCFips("exception processing TBSRequest: " + e);
             }
+            AlgorithmIdentifier sigAlgId = new AlgorithmIdentifier(signingAlgorithm);
+            DerSequence chainSeq = null;
+            if (chain.Length > 0) {
+                Asn1EncodableVector v = new Asn1EncodableVector();
+                try {
+                    for (int i = 0; i != chain.Length; i++) {
+                        v.Add(X509CertificateStructure.GetInstance(Asn1Object.FromByteArray(chain[i].GetEncoded())));
+                    }
+                } catch (IOException e) {
+                    throw new OCSPExceptionBCFips("error processing certs" + e);
+                } catch (CertificateEncodingException e) {
+                    throw new OCSPExceptionBCFips("error encoding certs" + e);
+                }
+                chainSeq = new DerSequence(v);
+            }
+            return new BasicOCSPResponseBCFips(new BasicOcspResponse(tbsResp, sigAlgId, bitSig, chainSeq));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>
@@ -117,12 +163,14 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
             }
             iText.Bouncycastlefips.Cert.Ocsp.BasicOCSPRespBuilderBCFips that = (iText.Bouncycastlefips.Cert.Ocsp.BasicOCSPRespBuilderBCFips
                 )o;
-            return Object.Equals(basicOCSPRespBuilder, that.basicOCSPRespBuilder);
+            return Object.Equals(list, that.list) &&
+                   Object.Equals(responseExtensions, that.responseExtensions) &&
+                   Object.Equals(responderID, that.responderID);
         }
 
         /// <summary>Returns a hash code value based on the wrapped object.</summary>
         public override int GetHashCode() {
-            return JavaUtil.ArraysHashCode(basicOCSPRespBuilder);
+            return JavaUtil.ArraysHashCode<object>(list, responseExtensions, responderID);
         }
 
         /// <summary>
@@ -131,7 +179,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// method call to the wrapped object.
         /// </summary>
         public override String ToString() {
-            return basicOCSPRespBuilder.ToString();
+            return list + " " + responseExtensions + " " + responderID;
         }
     }
 }

@@ -21,64 +21,74 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Tsp;
+using System.Collections;
+using System.IO;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Cmp;
+using Org.BouncyCastle.Asn1.Cms;
+using Org.BouncyCastle.Asn1.Tsp;
+using Org.BouncyCastle.Utilities.Date;
 
 namespace iText.Bouncycastlefips.Tsp {
     /// <summary>
-    /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Tsp.TimeStampResponseGenerator"/>.
+    /// Wrapper class for TimeStampResponse generator.
     /// </summary>
     public class TimeStampResponseGeneratorBCFips : ITimeStampResponseGenerator {
-        private readonly TimeStampResponseGenerator timeStampResponseGenerator;
+        private readonly TimeStampTokenGeneratorBCFips tokenGenerator;
+        private readonly IList acceptedAlgorithms;
 
         /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Tsp.TimeStampResponseGenerator"/>.
+        /// Creates new wrapper instance for TimeStampResponse generator.
         /// </summary>
-        /// <param name="timeStampResponseGenerator">
-        /// 
-        /// <see cref="Org.BouncyCastle.Tsp.TimeStampResponseGenerator"/>
-        /// to be wrapped
-        /// </param>
-        public TimeStampResponseGeneratorBCFips(TimeStampResponseGenerator timeStampResponseGenerator) {
-            this.timeStampResponseGenerator = timeStampResponseGenerator;
+        /// <param name="tokenGenerator">TimeStampToken generator wrapper</param>
+        /// <param name="algorithms">list of algorithm strings</param>
+        public TimeStampResponseGeneratorBCFips(TimeStampTokenGeneratorBCFips tokenGenerator, IList algorithms) { 
+            this.tokenGenerator = tokenGenerator;
+            this.acceptedAlgorithms = algorithms;
         }
 
-        /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Tsp.TimeStampResponseGenerator"/>.
-        /// </summary>
-        /// <param name="tokenGenerator">TimeStampTokenGenerator wrapper</param>
-        /// <param name="algorithms">set of algorithm strings</param>
-        public TimeStampResponseGeneratorBCFips(ITimeStampTokenGenerator tokenGenerator, ICollection<String> algorithms
-            )
-            : this(new TimeStampResponseGenerator(((TimeStampTokenGeneratorBCFips)tokenGenerator).GetTimeStampTokenGenerator
-                (), algorithms)) {
+        /// <summary>Gets ITimeStampTokenGenerator field.</summary>
+        /// <returns>TokenGenerator field.</returns>
+        public virtual ITimeStampTokenGenerator GetTimeStampTokenGenerator() {
+            return tokenGenerator;
         }
 
-        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
-        /// <returns>
-        /// wrapped
-        /// <see cref="Org.BouncyCastle.Tsp.TimeStampResponseGenerator"/>.
-        /// </returns>
-        public virtual TimeStampResponseGenerator GetTimeStampResponseGenerator() {
-            return timeStampResponseGenerator;
+        /// <summary>Gets list of accepted algorithms.</summary>
+        /// <returns>AcceptedAlgorithms field.</returns>
+        public virtual IList GetAcceptedAlgorithms() {
+            return acceptedAlgorithms;
         }
-
+        
         /// <summary><inheritDoc/></summary>
-        public virtual ITimeStampResponse Generate(ITimeStampRequest request, BigInteger bigInteger, DateTime date
-            ) {
+        public virtual ITimeStampResponse Generate(ITimeStampRequest req, IBigInteger bigInteger, DateTime date) {
+            TimeStampResp resp;
             try {
-                return new TimeStampResponseBCFips(timeStampResponseGenerator.Generate(((TimeStampRequestBCFips)request).GetTimeStampRequest
-                    (), bigInteger, date));
+                if (!acceptedAlgorithms.Contains(((TimeStampRequestBCFips)req).GetTimeStampRequest()
+                        .MessageImprint.HashAlgorithm.Algorithm.Id)) {
+                    throw new Exception("request contains unknown algorithm");
+                }
+                PkiStatusInfo pkiStatusInfo = new PkiStatusInfo(new DerSequence(
+                    new Asn1EncodableVector(new DerInteger((int)PkiStatus.Granted)) 
+                    { new PkiFreeText(new DerSequence(new DerUtf8String("Operation Okay"))) }));
+
+                ContentInfo tstTokenContentInfo;
+                try {
+                    ITimeStampToken token = tokenGenerator.Generate(req, bigInteger, new DateTimeObject(date).Value);
+                    byte[] encoded = token.GetEncoded();
+                    tstTokenContentInfo = ContentInfo.GetInstance(Asn1Object.FromByteArray(encoded));
+                } catch (IOException e) {
+                    throw new Exception("Timestamp token received cannot be converted to ContentInfo", e);
+                }
+                resp = new TimeStampResp(pkiStatusInfo, tstTokenContentInfo);
+            } catch (Exception e) {
+                resp = new TimeStampResp(new PkiStatusInfo(new DerSequence(
+                    new Asn1EncodableVector(new DerInteger((int)PkiStatus.Rejection)) 
+                        { new PkiFreeText(new DerSequence(new DerUtf8String(e.Message))) })), null);
             }
-            catch (TspException e) {
-                throw new TSPExceptionBCFips(e);
-            }
+            return new TimeStampResponseBCFips(resp);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>
@@ -90,14 +100,14 @@ namespace iText.Bouncycastlefips.Tsp {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            iText.Bouncycastlefips.Tsp.TimeStampResponseGeneratorBCFips that = (iText.Bouncycastlefips.Tsp.TimeStampResponseGeneratorBCFips
-                )o;
-            return Object.Equals(timeStampResponseGenerator, that.timeStampResponseGenerator);
+            TimeStampResponseGeneratorBCFips that = (TimeStampResponseGeneratorBCFips)o;
+            return Object.Equals(tokenGenerator, that.tokenGenerator) &&
+                   Object.Equals(acceptedAlgorithms, that.acceptedAlgorithms);
         }
 
         /// <summary>Returns a hash code value based on the wrapped object.</summary>
         public override int GetHashCode() {
-            return JavaUtil.ArraysHashCode(timeStampResponseGenerator);
+            return JavaUtil.ArraysHashCode<object>(tokenGenerator, acceptedAlgorithms);
         }
 
         /// <summary>
@@ -106,7 +116,7 @@ namespace iText.Bouncycastlefips.Tsp {
         /// method call to the wrapped object.
         /// </summary>
         public override String ToString() {
-            return timeStampResponseGenerator.ToString();
+            return tokenGenerator + " " + acceptedAlgorithms;
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using iText.Bouncycastle.Crypto;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ess;
@@ -28,6 +29,7 @@ using iText.Bouncycastlefips.Crypto;
 using iText.Bouncycastlefips.Crypto.Generators;
 using iText.Bouncycastlefips.Math;
 using iText.Bouncycastlefips.Openssl;
+using iText.Bouncycastlefips.Operator;
 using iText.Bouncycastlefips.Operator.Jcajce;
 using iText.Bouncycastlefips.Security;
 using iText.Bouncycastlefips.Tsp;
@@ -63,6 +65,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Fips;
 using Org.BouncyCastle.Crypto.General;
 using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Operators;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;
@@ -383,20 +386,24 @@ namespace iText.Bouncycastlefips {
             return new JcaX509CertificateHolderBCFips(new JcaX509CertificateHolder(certificate));
         }
 
-        public virtual IExtension CreateExtension(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString
+        public virtual IExtensions CreateExtensions(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString
              octetString) {
             IDictionary extension = new Hashtable();
             extension.Add(((ASN1ObjectIdentifierBCFips)objectIdentifier).GetASN1ObjectIdentifier(),
                 new X509Extension(critical, ((ASN1OctetStringBCFips)octetString).GetOctetString()));
-            return new ExtensionBCFips(new X509Extensions(extension));
+            return new ExtensionsBCFips(new X509Extensions(extension));
         }
 
-        public virtual IExtension CreateExtension() {
-            return ExtensionBCFips.GetInstance();
+        public IExtensions CreateExtensions(IDictionary objectIdentifier) {
+            return new ExtensionsBCFips(new X509Extensions(objectIdentifier));
+        }
+        
+        public virtual IExtensions CreateExtensions() {
+            return ExtensionsBCFips.GetInstance();
         }
 
         public virtual IOCSPReqBuilder CreateOCSPReqBuilder() {
-            return new OCSPReqBuilderBCFips(new OCSPReqBuilder());
+            return new OCSPReqBuilderBCFips();
         }
 
         public virtual ISigPolicyQualifierInfo CreateSigPolicyQualifierInfo(IASN1ObjectIdentifier objectIdentifier
@@ -637,12 +644,12 @@ namespace iText.Bouncycastlefips {
         }
 
         public virtual ITimeStampResponseGenerator CreateTimeStampResponseGenerator(ITimeStampTokenGenerator tokenGenerator
-            , ICollection<String> algorithms) {
-            return new TimeStampResponseGeneratorBCFips(tokenGenerator, algorithms);
+            , IList algorithms) {
+            return new TimeStampResponseGeneratorBCFips((TimeStampTokenGeneratorBCFips)tokenGenerator, algorithms);
         }
 
         public virtual ITimeStampRequest CreateTimeStampRequest(byte[] bytes) {
-            return new TimeStampRequestBCFips(new TimeStampRequest(bytes));
+            return new TimeStampRequestBCFips(TimeStampReq.GetInstance(new Asn1InputStream(bytes).ReadObject()));
         }
 
         public virtual IJcaContentSignerBuilder CreateJcaContentSignerBuilder(String algorithm) {
@@ -654,9 +661,9 @@ namespace iText.Bouncycastlefips {
             return new JcaSignerInfoGeneratorBuilderBCFips(digestCalcProviderProvider);
         }
 
-        public virtual ITimeStampTokenGenerator CreateTimeStampTokenGenerator(ISignerInfoGenerator siGen, IDigestCalculator
-             dgCalc, IASN1ObjectIdentifier policy) {
-            return new TimeStampTokenGeneratorBCFips(siGen, dgCalc, policy);
+        public ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate certificate, 
+            string allowedDigest, string policyOid) {
+            return new TimeStampTokenGeneratorBCFips(pk, certificate, allowedDigest, policyOid);
         }
 
         public virtual IX500Name CreateX500Name(IX509Certificate certificate) {
@@ -681,18 +688,16 @@ namespace iText.Bouncycastlefips {
         }
 
         public virtual IOCSPReq CreateOCSPReq(byte[] requestBytes) {
-            return new OCSPReqBCFips(new OcspReq(requestBytes));
+            return new OCSPReqBCFips(OcspRequest.GetInstance(new Asn1InputStream(requestBytes).ReadObject()));
         }
 
-        public virtual IX509v2CRLBuilder CreateX509v2CRLBuilder(IX500Name x500Name, DateTime date) {
-            return new X509v2CRLBuilderBCFips(x500Name, date);
+        public virtual IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(IX509Certificate signingCert, 
+            IBigInteger number, DateTime startDate, DateTime endDate, IX500Name subjectDn, IPublicKey publicKey) {
+            return new JcaX509v3CertificateBuilderBCFips(signingCert, number, startDate, endDate, subjectDn, publicKey);
         }
 
-        public virtual IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(X509Certificate signingCert, 
-            BigInteger certSerialNumber, DateTime startDate, DateTime endDate, IX500Name subjectDnName, AsymmetricKeyParameter
-             publicKey) {
-            return new JcaX509v3CertificateBuilderBCFips(signingCert, certSerialNumber, startDate, endDate, subjectDnName
-                , publicKey);
+        public virtual IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder() {
+            return new JcaX509v3CertificateBuilderBCFips(new X509V3CertificateGenerator());
         }
 
         public virtual IBasicConstraints CreateBasicConstraints(bool b) {
@@ -874,6 +879,10 @@ namespace iText.Bouncycastlefips {
             return new BigIntegerBCFips(new BigInteger(i, array));
         }
 
+        public IBigInteger CreateBigInteger(string str) {
+            return new BigIntegerBCFips(new BigInteger(str));
+        }
+
         public ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv) {
             return new CipherBCFips(forEncryption, key, iv);
         }
@@ -892,6 +901,48 @@ namespace iText.Bouncycastlefips {
 
         public IPEMParser CreatePEMParser(TextReader reader, char[] password) {
             return new PEMParserBCFips(new OpenSslPemReader(reader), password);
+        }
+
+        public IContentSigner CreateContentSigner(string signatureAlgorithm, IPrivateKey signingKey) {
+            ISignatureFactory<AlgorithmIdentifier> factory = null;
+            ISignatureFactoryService signatureFactoryProvider =
+                CryptoServicesRegistrar.CreateService(((PrivateKeyBCFips) signingKey).GetPrivateKey(), new SecureRandom());
+            if ("SHA256WithRSA".Equals(signatureAlgorithm)) {
+                factory = new PkixSignatureFactory(signatureFactoryProvider.
+                    CreateSignatureFactory(FipsRsa.Pkcs1v15.WithDigest(FipsShs.Sha256)));
+            }
+            if ("SHA1WithRSA".Equals(signatureAlgorithm)) {
+                factory = new PkixSignatureFactory(signatureFactoryProvider.
+                    CreateSignatureFactory(FipsRsa.Pkcs1v15.WithDigest(FipsShs.Sha1)));
+            }
+            if ("SHA1WithDSA".Equals(signatureAlgorithm)) {
+                factory = new PkixSignatureFactory(signatureFactoryProvider.
+                    CreateSignatureFactory(FipsDsa.Dsa.WithDigest(FipsShs.Sha1)));
+            }
+            if ("SHA1WithECDSA".Equals(signatureAlgorithm)) {
+                factory = new PkixSignatureFactory(signatureFactoryProvider.
+                    CreateSignatureFactory(FipsEC.Dsa.WithDigest(FipsShs.Sha1)));
+            }
+            return new ContentSignerBCFips(factory);
+        }
+
+        public IAuthorityKeyIdentifier CreateAuthorityKeyIdentifier(ISubjectPublicKeyInfo issuerPublicKeyInfo) {
+            return new AuthorityKeyIdentifierBCFips(new AuthorityKeyIdentifier(
+                ((SubjectPublicKeyInfoBCFips)issuerPublicKeyInfo).GetSubjectPublicKeyInfo()));
+        }
+
+        public ISubjectKeyIdentifier CreateSubjectKeyIdentifier(ISubjectPublicKeyInfo subjectPublicKeyInfo) {
+            return new SubjectKeyIdentifierBCFips(new SubjectKeyIdentifier(
+                ((SubjectPublicKeyInfoBCFips)subjectPublicKeyInfo).GetSubjectPublicKeyInfo()));
+        }
+
+        public bool IsNullExtension(IExtension ext) {
+            return ((ExtensionBCFips)ext).GetX509Extension() == null;
+        }
+
+        public IExtension CreateExtension(bool b, IDEROctetString octetString) {
+            return new ExtensionBCFips(new X509Extension(b, 
+                ((DEROctetStringBCFips)octetString).GetDEROctetString()));
         }
     }
 }

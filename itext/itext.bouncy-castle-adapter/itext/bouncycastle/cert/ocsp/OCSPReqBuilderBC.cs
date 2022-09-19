@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Cert.Ocsp;
 using Org.BouncyCastle.Ocsp;
 using iText.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Asn1.X509;
@@ -31,51 +30,50 @@ using iText.Commons.Utils;
 namespace iText.Bouncycastle.Cert.Ocsp {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Cert.Ocsp.OCSPReqBuilder"/>.
+    /// <see cref="Org.BouncyCastle.Ocsp.OcspReqGenerator"/>.
     /// </summary>
     public class OCSPReqBuilderBC : IOCSPReqBuilder {
-        private readonly OCSPReqBuilder reqBuilder;
+        private readonly OcspReqGenerator reqBuilder;
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.OCSPReqBuilder"/>.
+        /// <see cref="Org.BouncyCastle.Ocsp.OcspReqGenerator"/>.
         /// </summary>
         /// <param name="reqBuilder">
         /// 
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.OCSPReqBuilder"/>
+        /// <see cref="Org.BouncyCastle.Ocsp.OcspReqGenerator"/>
         /// to be wrapped
         /// </param>
-        public OCSPReqBuilderBC(OCSPReqBuilder reqBuilder) {
+        public OCSPReqBuilderBC(OcspReqGenerator reqBuilder) {
             this.reqBuilder = reqBuilder;
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.OCSPReqBuilder"/>.
+        /// <see cref="Org.BouncyCastle.Ocsp.OcspReqGenerator"/>.
         /// </returns>
-        public virtual OCSPReqBuilder GetReqBuilder() {
+        public virtual OcspReqGenerator GetReqBuilder() {
             return reqBuilder;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual IOCSPReqBuilder SetRequestExtensions(IExtensions extensions) {
-            reqBuilder.SetRequestExtensions(((ExtensionsBC)extensions).GetExtensions());
+            reqBuilder.SetRequestExtensions(((ExtensionsBC)extensions).GetX509Extensions());
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual IOCSPReqBuilder AddRequest(ICertificateID certificateID) {
-            reqBuilder.AddRequest(((CertificateIDBC)certificateID).GetCertificateID());
+            reqBuilder.AddRequest(new CertificateID(((CertificateIDBC)certificateID).GetCertificateID()));
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual IOCSPReq Build() {
             try {
-                return new OCSPReqBC(reqBuilder.Build());
-            }
-            catch (OcspException e) {
+                return new OCSPReqBC(reqBuilder.Generate());
+            } catch (OcspException e) {
                 throw new OCSPExceptionBC(e);
             }
         }

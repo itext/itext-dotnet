@@ -21,43 +21,43 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Cert.Ocsp.Req"/>.
+    /// <see cref="Org.BouncyCastle.Asn1.Ocsp.Request"/>.
     /// </summary>
     public class ReqBCFips : IReq {
-        private readonly Req req;
+        private readonly Request req;
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.Req"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.Request"/>.
         /// </summary>
         /// <param name="req">
         /// 
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.Req"/>
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.Request"/>
         /// to be wrapped
         /// </param>
-        public ReqBCFips(Req req) {
+        public ReqBCFips(Request req) {
             this.req = req;
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Cert.Ocsp.Req"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.Request"/>.
         /// </returns>
-        public virtual Req GetReq() {
+        public virtual Request GetReq() {
             return req;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual ICertificateID GetCertID() {
-            return new CertificateIDBCFips(req.GetCertID());
+            return new CertificateIDBCFips(req.ReqCert);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

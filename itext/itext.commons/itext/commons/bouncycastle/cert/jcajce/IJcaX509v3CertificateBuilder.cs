@@ -37,7 +37,7 @@ namespace iText.Commons.Bouncycastle.Cert.Jcajce {
         /// </summary>
         /// <param name="contentSigner">ContentSigner wrapper</param>
         /// <returns>{IX509CertificateHolder} wrapper for built X509CertificateHolder object.</returns>
-        IX509CertificateHolder Build(IContentSigner contentSigner);
+        IX509Certificate Build(IContentSigner contentSigner);
 
         /// <summary>
         /// Calls actual
