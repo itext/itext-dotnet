@@ -59,19 +59,11 @@ namespace iText.Kernel.Crypto {
     /// </summary>
     public static class CryptoUtil {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
-
-        //TODO DEVSIX-6995 Move away from PKCS#12 related utilities when moving classes 
-        //to the new approach with BC and BCFips.
+        
         public static IX509Certificate ReadPublicCertificate(Stream s) {
             return FACTORY.CreateX509Certificate(s);
         }
 
-        //TODO DEVSIX-6995 Move away from PKCS#12 related utilities when moving classes 
-        //to the new approach with BC and BCFips.
-        public static IPrivateKey ReadPrivateKeyFromPkcs12KeyStore(Stream keyStore, String pkAlias, char[] pkPassword) {
-            return null; //new Pkcs12Store(keyStore, pkPassword).GetKey(pkAlias).Key;
-        }
-        
         /// <summary>
         /// Creates <see cref="DerOutputStream"/> instance which can be an implementation of one of the ASN1 encodings
         /// writing logic. This method also asserts for unexpected ASN1 encodings.

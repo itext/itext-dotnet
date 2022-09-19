@@ -45,9 +45,9 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("Bouncy-castle integration test")]
@@ -70,16 +70,15 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void AddLtvInfo() {
-            String caCertFileName = certsSrc + "rootRsa.p12";
-            String interCertFileName = certsSrc + "intermediateRsa.p12";
+            String caCertFileName = certsSrc + "rootRsa.pem";
+            String interCertFileName = certsSrc + "intermediateRsa.pem";
             String srcFileName = sourceFolder + "signedTwice.pdf";
             String ltvFileName = destinationFolder + "ltvEnabledTest01.pdf";
             String ltvFileName2 = destinationFolder + "ltvEnabledTest02.pdf";
-            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
-            IX509Certificate interCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(interCertFileName, password
-                )[0];
-            IPrivateKey interPrivateKey = Pkcs12FileHelper.ReadFirstKey(interCertFileName, password, password);
+            IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
+            IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertFileName, password);
+            IX509Certificate interCert = (IX509Certificate)PemFileHelper.ReadFirstChain(interCertFileName)[0];
+            IPrivateKey interPrivateKey = PemFileHelper.ReadFirstKey(interCertFileName, password);
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(interCert, interPrivateKey).AddBuilderForCertIssuer
                 (caCert, caPrivateKey);
             TestCrlClient testCrlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);

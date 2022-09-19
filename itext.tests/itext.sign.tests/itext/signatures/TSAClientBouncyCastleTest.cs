@@ -30,9 +30,9 @@ using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
+using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures {
     [NUnit.Framework.Category("Bouncy-castle unit test")]
@@ -185,9 +185,9 @@ namespace iText.Signatures {
                 : base(url) {
                 this.signatureAlgorithm = signatureAlgorithm;
                 this.allowedDigest = allowedDigest;
-                tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.p12", PASSWORD, PASSWORD);
-                String tsaCertFileName = CERTS_SRC + "tsCertRsa.p12";
-                tsaCertificateChain = JavaUtil.ArraysAsList(Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, PASSWORD));
+                tsaPrivateKey = PemFileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.pem", PASSWORD);
+                String tsaCertFileName = CERTS_SRC + "tsCertRsa.pem";
+                tsaCertificateChain = JavaUtil.ArraysAsList(PemFileHelper.ReadFirstChain(tsaCertFileName));
             }
 
             public byte[] GetExpectedTsaResponseBytes() {

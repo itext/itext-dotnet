@@ -53,7 +53,6 @@ using iText.Signatures;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("Bouncy-castle integration test")]
@@ -143,9 +142,9 @@ namespace iText.Signatures.Sign {
             String srcFileName = sourceFolder + "templateForSignCMSDeferred.pdf";
             String outFileName = destinationFolder + "deferredHashCalcAndSignTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_deferredHashCalcAndSignTest01.pdf";
-            String signCertFileName = certsSrc + "signCertRsa01.p12";
-            IX509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
-            IPrivateKey signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            String signCertFileName = certsSrc + "signCertRsa01.pem";
+            IX509Certificate[] signChain = PemFileHelper.ReadFirstChain(signCertFileName);
+            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
             IExternalSignatureContainer extSigContainer = new SignDeferredTest.CmsDeferredSigner(signPrivateKey, signChain
                 );
             String sigFieldName = "DeferredSignature1";
@@ -185,9 +184,9 @@ namespace iText.Signatures.Sign {
             byte[] docBytesHash = external.GetDocBytesHash();
             byte[] preSignedBytes = baos.ToArray();
             // sign the hash
-            String signCertFileName = certsSrc + "signCertRsa01.p12";
-            IX509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
-            IPrivateKey signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            String signCertFileName = certsSrc + "signCertRsa01.pem";
+            IX509Certificate[] signChain = PemFileHelper.ReadFirstChain(signCertFileName);
+            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
             byte[] cmsSignature = SignDocBytesHash(docBytesHash, signPrivateKey, signChain);
             // fill the signature to the presigned document
             SignDeferredTest.ReadySignatureSigner extSigContainer = new SignDeferredTest.ReadySignatureSigner(cmsSignature

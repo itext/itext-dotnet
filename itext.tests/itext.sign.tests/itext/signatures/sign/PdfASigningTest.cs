@@ -56,7 +56,6 @@ using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
 using iText.Test.Pdfa;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("Bouncy-castle integration test")]
@@ -68,7 +67,7 @@ namespace iText.Signatures.Sign {
              + "/test/itext/signatures/sign/PdfASigningTest/";
 
         public static readonly String keystorePath = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/signCertRsa01.p12";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/signCertRsa01.pem";
 
         public static readonly char[] password = "testpass".ToCharArray();
 
@@ -86,8 +85,8 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.SetUp]
         public virtual void Init() {
-            pk = Pkcs12FileHelper.ReadFirstKey(keystorePath, password, password);
-            chain = Pkcs12FileHelper.ReadFirstChain(keystorePath, password);
+            pk = PemFileHelper.ReadFirstKey(keystorePath, password);
+            chain = PemFileHelper.ReadFirstChain(keystorePath);
         }
 
         [NUnit.Framework.Test]

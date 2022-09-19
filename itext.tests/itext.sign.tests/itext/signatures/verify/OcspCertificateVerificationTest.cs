@@ -28,10 +28,10 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
 using iText.Test.Attributes;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Verify {
     [NUnit.Framework.Category("Bouncy-castle unit test")]
@@ -44,11 +44,11 @@ namespace iText.Signatures.Verify {
         private static readonly String ocspCertsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/verify/OcspCertificateVerificationTest/";
 
-        private static readonly String rootOcspCert = ocspCertsSrc + "ocspRootRsa.p12";
+        private static readonly String rootOcspCert = ocspCertsSrc + "ocspRootRsa.pem";
 
-        private static readonly String signOcspCert = ocspCertsSrc + "ocspSignRsa.p12";
+        private static readonly String signOcspCert = ocspCertsSrc + "ocspSignRsa.pem";
 
-        private static readonly String notOcspAndOcspCert = ocspCertsSrc + "notOcspAndOcspCertificates.p12";
+        private static readonly String notOcspAndOcspCert = ocspCertsSrc + "notOcspAndOcspCertificates.pem";
 
         private static readonly char[] password = "testpass".ToCharArray();
 
@@ -60,41 +60,41 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
-            checkCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(signOcspCert, password)[0];
-            rootCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(rootOcspCert, password)[0];
+            checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(signOcspCert)[0];
+            rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootOcspCert)[0];
         }
 
         [NUnit.Framework.Test]
         public virtual void KeyStoreWithRootOcspCertificateTest() {
             IBasicOCSPResponse response = GetOcspResponse();
-            NUnit.Framework.Assert.IsTrue(CertificateVerification.VerifyOcspCertificates(response, Pkcs12FileHelper.InitStore
-                (rootOcspCert, password)));
+            NUnit.Framework.Assert.IsTrue(CertificateVerification.VerifyOcspCertificates(response, PemFileHelper.InitStore
+                (rootOcspCert)));
         }
 
         [NUnit.Framework.Test]
         public virtual void KeyStoreWithSignOcspCertificateTest() {
             IBasicOCSPResponse response = GetOcspResponse();
-            NUnit.Framework.Assert.IsFalse(CertificateVerification.VerifyOcspCertificates(response, Pkcs12FileHelper.InitStore
-                (signOcspCert, password)));
+            NUnit.Framework.Assert.IsFalse(CertificateVerification.VerifyOcspCertificates(response, PemFileHelper.InitStore
+                (signOcspCert)));
         }
 
         [NUnit.Framework.Test]
         public virtual void KeyStoreWithNotOcspAndOcspCertificatesTest() {
             IBasicOCSPResponse response = GetOcspResponse();
-            NUnit.Framework.Assert.IsTrue(CertificateVerification.VerifyOcspCertificates(response, Pkcs12FileHelper.InitStore
-                (notOcspAndOcspCert, password)));
+            NUnit.Framework.Assert.IsTrue(CertificateVerification.VerifyOcspCertificates(response, PemFileHelper.InitStore
+                (notOcspAndOcspCert)));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(ANY_LOG_MESSAGE)]
         public virtual void KeyStoreWithNotOcspCertificateTest() {
-            NUnit.Framework.Assert.IsFalse(CertificateVerification.VerifyOcspCertificates(null, Pkcs12FileHelper.InitStore
-                (signOcspCert, password)));
+            NUnit.Framework.Assert.IsFalse(CertificateVerification.VerifyOcspCertificates(null, PemFileHelper.InitStore
+                (signOcspCert)));
         }
 
         private static IBasicOCSPResponse GetOcspResponse() {
             TestOcspClient testClient = new TestOcspClient();
-            IPrivateKey key = Pkcs12FileHelper.ReadFirstKey(rootOcspCert, password, password);
+            IPrivateKey key = PemFileHelper.ReadFirstKey(rootOcspCert, password);
             testClient.AddBuilderForCertIssuer(rootCert, key);
             byte[] ocspResponseBytes = testClient.GetEncoded(checkCert, rootCert, ocspServiceUrl);
             IASN1Primitive var2 = FACTORY.CreateASN1Primitive(ocspResponseBytes);

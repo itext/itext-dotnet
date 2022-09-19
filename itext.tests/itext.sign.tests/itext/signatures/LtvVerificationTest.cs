@@ -26,10 +26,10 @@ using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Pdf;
+using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
 using iText.Test.Attributes;
-using iText.Test.Signutils;
 
 namespace iText.Signatures {
     [NUnit.Framework.Category("Bouncy-castle unit test")]
@@ -84,9 +84,9 @@ namespace iText.Signatures {
             using (PdfDocument pdfDocument_1 = new PdfDocument(new PdfReader(input), new PdfWriter(baos), new StampingProperties
                 ().UseAppendMode())) {
                 LtvVerification verification = new LtvVerification(pdfDocument_1);
-                String rootCertPath = CERT_FOLDER_PATH + "rootRsa.p12";
-                IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(rootCertPath, PASSWORD)[0];
-                IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(rootCertPath, PASSWORD, PASSWORD);
+                String rootCertPath = CERT_FOLDER_PATH + "rootRsa.pem";
+                IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertPath)[0];
+                IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(rootCertPath, PASSWORD);
                 verification.AddVerification("TestSignature", null, new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey
                     ), LtvVerification.CertificateOption.SIGNING_CERTIFICATE, LtvVerification.Level.CRL, LtvVerification.CertificateInclusion
                     .NO);

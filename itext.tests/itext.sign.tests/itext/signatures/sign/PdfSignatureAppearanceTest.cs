@@ -56,8 +56,8 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("Bouncy-castle integration test")]
@@ -69,9 +69,9 @@ namespace iText.Signatures.Sign {
              + "/test/itext/signatures/sign/PdfSignatureAppearanceTest/";
 
         public static readonly String KEYSTORE_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfSignatureAppearanceTest/test.p12";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfSignatureAppearanceTest/test.pem";
 
-        public static readonly char[] PASSWORD = "kspass".ToCharArray();
+        public static readonly char[] PASSWORD = "testpass".ToCharArray();
 
         private IX509Certificate[] chain;
 
@@ -84,8 +84,8 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.SetUp]
         public virtual void Init() {
-            pk = Pkcs12FileHelper.ReadFirstKey(KEYSTORE_PATH, PASSWORD, PASSWORD);
-            chain = Pkcs12FileHelper.ReadFirstChain(KEYSTORE_PATH, PASSWORD);
+            pk = PemFileHelper.ReadFirstKey(KEYSTORE_PATH, PASSWORD);
+            chain = PemFileHelper.ReadFirstChain(KEYSTORE_PATH);
         }
 
         [NUnit.Framework.Test]

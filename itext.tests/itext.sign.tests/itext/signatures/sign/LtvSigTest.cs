@@ -51,7 +51,6 @@ using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("Bouncy-castle integration test")]
@@ -74,8 +73,8 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void LtvEnabledTest01() {
-            String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.p12";
-            String caCertP12FileName = CERTS_SRC + "rootRsa.p12";
+            String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.pem";
+            String caCertP12FileName = CERTS_SRC + "rootRsa.pem";
             String srcFileName = SOURCE_FOLDER + "signedDoc.pdf";
             String ltvFileName = DESTINATION_FOLDER + "ltvEnabledTest01.pdf";
             String ltvTsFileName = DESTINATION_FOLDER + "ltvEnabledTsTest01.pdf";
@@ -99,17 +98,17 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void LtvEnabledSingleSignatureNoCrlDataTest() {
-            String signCertP12FileName = CERTS_SRC + "signCertRsaWithChain.p12";
-            String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.p12";
-            String intermediateCertP12FileName = CERTS_SRC + "intermediateRsa.p12";
-            String caCertP12FileName = CERTS_SRC + "rootRsa.p12";
+            String signCertP12FileName = CERTS_SRC + "signCertRsaWithChain.pem";
+            String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.pem";
+            String intermediateCertP12FileName = CERTS_SRC + "intermediateRsa.pem";
+            String caCertP12FileName = CERTS_SRC + "rootRsa.pem";
             String srcFileName = SOURCE_FOLDER + "helloWorldDoc.pdf";
             String ltvFileName = DESTINATION_FOLDER + "ltvEnabledSingleSignatureNoCrlDataTest.pdf";
-            IX509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertP12FileName, PASSWORD);
+            IX509Certificate[] signChain = PemFileHelper.ReadFirstChain(signCertP12FileName);
             IExternalSignature pks = PrepareSignatureHandler(signCertP12FileName);
             TestTsaClient testTsa = PrepareTsaClient(tsaCertP12FileName);
             TestOcspClient testOcspClient = PrepareOcspClientForIssuer(intermediateCertP12FileName, caCertP12FileName);
-            ICollection<ICrlClient> crlNotAvailableList = JavaUtil.ArraysAsList((ICrlClient)null, new _ICrlClient_148(
+            ICollection<ICrlClient> crlNotAvailableList = JavaUtil.ArraysAsList((ICrlClient)null, new _ICrlClient_149(
                 ));
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(ltvFileName, FileMode.Create), 
                 new StampingProperties());
@@ -120,8 +119,8 @@ namespace iText.Signatures.Sign {
                 ));
         }
 
-        private sealed class _ICrlClient_148 : ICrlClient {
-            public _ICrlClient_148() {
+        private sealed class _ICrlClient_149 : ICrlClient {
+            public _ICrlClient_149() {
             }
 
             public ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
@@ -131,13 +130,13 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void LtvEnabledSingleSignatureNoOcspDataTest() {
-            String signCertP12FileName = CERTS_SRC + "signCertRsaWithChain.p12";
-            String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.p12";
-            String intermediateCertP12FileName = CERTS_SRC + "intermediateRsa.p12";
-            String caCertP12FileName = CERTS_SRC + "rootRsa.p12";
+            String signCertP12FileName = CERTS_SRC + "signCertRsaWithChain.pem";
+            String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.pem";
+            String intermediateCertP12FileName = CERTS_SRC + "intermediateRsa.pem";
+            String caCertP12FileName = CERTS_SRC + "rootRsa.pem";
             String srcFileName = SOURCE_FOLDER + "helloWorldDoc.pdf";
             String ltvFileName = DESTINATION_FOLDER + "ltvEnabledSingleSignatureNoOcspDataTest.pdf";
-            IX509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertP12FileName, PASSWORD);
+            IX509Certificate[] signChain = PemFileHelper.ReadFirstChain(signCertP12FileName);
             IExternalSignature pks = PrepareSignatureHandler(signCertP12FileName);
             TestTsaClient testTsa = PrepareTsaClient(tsaCertP12FileName);
             TestCrlClient testCrlClient = PrepareCrlClientForIssuer(caCertP12FileName, intermediateCertP12FileName);
@@ -152,8 +151,8 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void SecondLtvOriginalHasNoVri01() {
-            String tsaCertFileName = CERTS_SRC + "tsCertRsa.p12";
-            String caCertFileName = CERTS_SRC + "rootRsa.p12";
+            String tsaCertFileName = CERTS_SRC + "tsCertRsa.pem";
+            String caCertFileName = CERTS_SRC + "rootRsa.pem";
             String srcFileName = SOURCE_FOLDER + "ltvEnabledNoVriEntry.pdf";
             String ltvFileName = DESTINATION_FOLDER + "secondLtvOriginalHasNoVri01.pdf";
             String ltvTsFileName = DESTINATION_FOLDER + "secondLtvOriginalHasNoVriTs01.pdf";
@@ -176,15 +175,15 @@ namespace iText.Signatures.Sign {
         }
 
         private static IExternalSignature PrepareSignatureHandler(String signCertP12FileName) {
-            IPrivateKey signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertP12FileName, PASSWORD, PASSWORD);
+            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertP12FileName, PASSWORD);
             return new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
         }
 
         private static TestCrlClient PrepareCrlClientForIssuer(params String[] issuerCertP12FileNames) {
             TestCrlClient testCrlClient = new TestCrlClient();
             foreach (String issuerP12File in issuerCertP12FileNames) {
-                IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(issuerP12File, PASSWORD)[0];
-                IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(issuerP12File, PASSWORD, PASSWORD);
+                IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(issuerP12File)[0];
+                IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(issuerP12File, PASSWORD);
                 testCrlClient.AddBuilderForCertIssuer(caCert, caPrivateKey);
             }
             return testCrlClient;
@@ -193,17 +192,16 @@ namespace iText.Signatures.Sign {
         private static TestOcspClient PrepareOcspClientForIssuer(params String[] issuerCertP12FileNames) {
             TestOcspClient ocspClient = new TestOcspClient();
             foreach (String issuerP12File in issuerCertP12FileNames) {
-                IX509Certificate issuerCertificate = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(issuerP12File, PASSWORD
-                    )[0];
-                IPrivateKey issuerPrivateKey = Pkcs12FileHelper.ReadFirstKey(issuerP12File, PASSWORD, PASSWORD);
+                IX509Certificate issuerCertificate = (IX509Certificate)PemFileHelper.ReadFirstChain(issuerP12File)[0];
+                IPrivateKey issuerPrivateKey = PemFileHelper.ReadFirstKey(issuerP12File, PASSWORD);
                 ocspClient.AddBuilderForCertIssuer(issuerCertificate, issuerPrivateKey);
             }
             return ocspClient;
         }
 
         private static TestTsaClient PrepareTsaClient(String tsaCertP12FileName) {
-            IX509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertP12FileName, PASSWORD);
-            IPrivateKey tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertP12FileName, PASSWORD, PASSWORD);
+            IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertP12FileName);
+            IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertP12FileName, PASSWORD);
             return new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
         }
 

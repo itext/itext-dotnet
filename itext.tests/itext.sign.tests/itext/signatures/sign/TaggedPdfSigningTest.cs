@@ -32,7 +32,6 @@ using iText.Kernel.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("Bouncy-castle integration test")]
@@ -59,8 +58,8 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.SetUp]
         public virtual void Init() {
-            pk = Pkcs12FileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.p12", PASSWORD, PASSWORD);
-            chain = Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "signCertRsa01.p12", PASSWORD);
+            pk = PemFileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.pem", PASSWORD);
+            chain = PemFileHelper.ReadFirstChain(CERTS_SRC + "signCertRsa01.pem");
         }
 
         [NUnit.Framework.Test]

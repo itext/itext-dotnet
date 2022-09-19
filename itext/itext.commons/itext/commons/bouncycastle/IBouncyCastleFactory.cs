@@ -19,6 +19,7 @@ using iText.Commons.Bouncycastle.Cms.Jcajce;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Crypto.Generators;
 using iText.Commons.Bouncycastle.Math;
+using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Security;
@@ -334,5 +335,7 @@ namespace iText.Commons.Bouncycastle {
         ITimeStampToken CreateTimeStampToken(IContentInfo contentInfo);
 
         IRsaKeyPairGenerator CreateRsa2048KeyPairGenerator();
+        
+        IPEMParser CreatePEMParser(TextReader reader, char[] password);
     }
 }

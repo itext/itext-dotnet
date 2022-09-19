@@ -32,6 +32,7 @@ using iText.Bouncycastle.Cms.Jcajce;
 using iText.Bouncycastle.Crypto;
 using iText.Bouncycastle.Crypto.Generators;
 using iText.Bouncycastle.Math;
+using iText.Bouncycastle.Openssl;
 using iText.Bouncycastle.Operator.Jcajce;
 using iText.Bouncycastle.Security;
 using iText.Bouncycastle.Tsp;
@@ -54,16 +55,19 @@ using iText.Commons.Bouncycastle.Cms.Jcajce;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Crypto.Generators;
 using iText.Commons.Bouncycastle.Math;
+using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using Org.BouncyCastle.Asn1.Tsp;
+using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;
 using ICertificateID = iText.Commons.Bouncycastle.Cert.Ocsp.ICertificateID;
 using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
 using ISingleResp = iText.Commons.Bouncycastle.Cert.Ocsp.ISingleResp;
+using Time = Org.BouncyCastle.Asn1.X509.Time;
 
 namespace iText.Bouncycastle {
     /// <summary>
@@ -822,6 +826,25 @@ namespace iText.Bouncycastle {
 
         public IRsaKeyPairGenerator CreateRsa2048KeyPairGenerator() {
             return new RsaKeyPairGeneratorBC();
+        }
+        
+        public IPEMParser CreatePEMParser(TextReader reader, char[] password) {
+            if (password == null) {
+                return new PEMParserBC(new PemReader(reader));
+            }
+            return new PEMParserBC(new PemReader(reader, new BouncyCastlePasswordFinder(password)));
+        }
+
+        private class BouncyCastlePasswordFinder : IPasswordFinder {
+            private readonly char[] password;
+
+            public BouncyCastlePasswordFinder(char[] password) {
+                this.password = password;
+            }
+            
+            public char[] GetPassword() {
+                return password;
+            }
         }
     }
 }

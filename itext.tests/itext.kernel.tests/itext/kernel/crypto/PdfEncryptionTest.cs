@@ -83,11 +83,11 @@ namespace iText.Kernel.Crypto {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/crypto/PdfEncryptionTest/";
 
-        public static readonly char[] PRIVATE_KEY_PASS = "kspass".ToCharArray();
+        public static readonly char[] PRIVATE_KEY_PASS = "testpass".ToCharArray();
 
         public static readonly String CERT = sourceFolder + "test.cer";
 
-        public static readonly String PRIVATE_KEY = sourceFolder + "test.p12";
+        public static readonly String PRIVATE_KEY = sourceFolder + "test.pem";
 
         internal const String pageTextContent = "Hello world!";
 
@@ -268,9 +268,8 @@ namespace iText.Kernel.Crypto {
         [NUnit.Framework.Test]
         public virtual void OpenEncryptedDocWithWrongPrivateKey() {
             using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
-                ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore(
-                new FileStream(sourceFolder + "wrong.p12", FileMode.Open, FileAccess.Read), "demo", "password".ToCharArray
-                ())))) {
+                ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), PemFileHelper.ReadPrivateKeyFromPemFile(new 
+                FileStream(sourceFolder + "wrong.pem", FileMode.Open, FileAccess.Read), PRIVATE_KEY_PASS)))) {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
                 NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PDF_DECRYPTION, e.Message);
             }
@@ -279,9 +278,8 @@ namespace iText.Kernel.Crypto {
         [NUnit.Framework.Test]
         public virtual void OpenEncryptedDocWithWrongCertificateAndPrivateKey() {
             using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
-                ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore
-                (new FileStream(sourceFolder + "wrong.p12", FileMode.Open, FileAccess.Read), "demo", "password".ToCharArray
-                ())))) {
+                ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), PemFileHelper.ReadPrivateKeyFromPemFile
+                (new FileStream(sourceFolder + "wrong.pem", FileMode.Open, FileAccess.Read), PRIVATE_KEY_PASS)))) {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
                 NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.BAD_CERTIFICATE_AND_KEY, e.Message);
             }
@@ -578,8 +576,8 @@ namespace iText.Kernel.Crypto {
 
         public virtual IPrivateKey GetPrivateKey() {
             if (privateKey == null) {
-                privateKey = CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore(new FileStream(PRIVATE_KEY, FileMode.Open, FileAccess.Read
-                    ), "sandbox", PRIVATE_KEY_PASS);
+                privateKey = PemFileHelper.ReadPrivateKeyFromPemFile(new FileStream(PRIVATE_KEY, FileMode.Open, FileAccess.Read
+                    ), PRIVATE_KEY_PASS);
             }
             return privateKey;
         }

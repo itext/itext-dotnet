@@ -56,7 +56,6 @@ using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
 using iText.Test.Attributes;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Verify {
     [NUnit.Framework.Category("Bouncy-castle unit test")]
@@ -83,10 +82,9 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ValidCertificateChain01() {
-            IX509Certificate[] certChain = Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "signCertRsaWithChain.p12", PASSWORD
-                );
-            String caCertFileName = CERTS_SRC + "rootRsa.p12";
-            List<IX509Certificate> caKeyStore = Pkcs12FileHelper.InitStore(caCertFileName, PASSWORD);
+            IX509Certificate[] certChain = PemFileHelper.ReadFirstChain(CERTS_SRC + "signCertRsaWithChain.pem");
+            String caCertFileName = CERTS_SRC + "rootRsa.pem";
+            List<IX509Certificate> caKeyStore = PemFileHelper.InitStore(caCertFileName);
             IList<VerificationException> verificationExceptions = CertificateVerification.VerifyCertificates(certChain
                 , caKeyStore);
             NUnit.Framework.Assert.IsTrue(verificationExceptions.IsEmpty());
@@ -94,31 +92,31 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void TimestampCertificateAndKeyStoreCorrespondTest() {
-            String tsaCertFileName = CERTS_SRC + "tsCertRsa.p12";
-            List<IX509Certificate> caKeyStore = Pkcs12FileHelper.InitStore(tsaCertFileName, PASSWORD);
+            String tsaCertFileName = CERTS_SRC + "tsCertRsa.pem";
+            List<IX509Certificate> caKeyStore = PemFileHelper.InitStore(tsaCertFileName);
             NUnit.Framework.Assert.IsTrue(VerifyTimestampCertificates(tsaCertFileName, caKeyStore));
         }
 
         [NUnit.Framework.Test]
         [LogMessage("certificate hash does not match certID hash.")]
         public virtual void TimestampCertificateAndKeyStoreDoNotCorrespondTest() {
-            String tsaCertFileName = CERTS_SRC + "tsCertRsa.p12";
-            String notTsaCertFileName = CERTS_SRC + "rootRsa.p12";
-            List<IX509Certificate> caKeyStore = Pkcs12FileHelper.InitStore(notTsaCertFileName, PASSWORD);
+            String tsaCertFileName = CERTS_SRC + "tsCertRsa.pem";
+            String notTsaCertFileName = CERTS_SRC + "rootRsa.pem";
+            List<IX509Certificate> caKeyStore = PemFileHelper.InitStore(notTsaCertFileName);
             NUnit.Framework.Assert.IsFalse(VerifyTimestampCertificates(tsaCertFileName, caKeyStore));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(ANY_LOG_MESSAGE)]
         public virtual void KeyStoreWithoutCertificatesTest() {
-            String tsaCertFileName = CERTS_SRC + "tsCertRsa.p12";
+            String tsaCertFileName = CERTS_SRC + "tsCertRsa.pem";
             NUnit.Framework.Assert.IsFalse(VerifyTimestampCertificates(tsaCertFileName, null));
         }
 
         [NUnit.Framework.Test]
         public virtual void ExpiredCertificateTest() {
-            IX509Certificate expiredCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "expiredCert.p12"
-                , PASSWORD)[0];
+            IX509Certificate expiredCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "expiredCert.pem"
+                )[0];
             String verificationResult = CertificateVerification.VerifyCertificate(expiredCert, null);
             String expectedResultString = SignaturesTestUtils.GetExpiredMessage(expiredCert);
             NUnit.Framework.Assert.AreEqual(expectedResultString, verificationResult);
@@ -126,20 +124,19 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void UnsupportedCriticalExtensionTest() {
-            IX509Certificate unsupportedExtensionCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + 
-                "unsupportedCriticalExtensionCert.p12", PASSWORD)[0];
+            IX509Certificate unsupportedExtensionCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "unsupportedCriticalExtensionCert.pem"
+                )[0];
             String verificationResult = CertificateVerification.VerifyCertificate(unsupportedExtensionCert, null);
             NUnit.Framework.Assert.AreEqual(CertificateVerification.HAS_UNSUPPORTED_EXTENSIONS, verificationResult);
         }
 
         [NUnit.Framework.Test]
         public virtual void ClrWithGivenCertificateTest() {
-            String caCertFileName = CERTS_SRC + "rootRsa.p12";
-            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, PASSWORD)[0];
-            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, PASSWORD, PASSWORD);
-            String checkCertFileName = CERTS_SRC + "signCertRsa01.p12";
-            IX509Certificate checkCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(checkCertFileName, PASSWORD
-                )[0];
+            String caCertFileName = CERTS_SRC + "rootRsa.pem";
+            IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
+            IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertFileName, PASSWORD);
+            String checkCertFileName = CERTS_SRC + "signCertRsa01.pem";
+            IX509Certificate checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(checkCertFileName)[0];
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, DateTimeUtil.GetCurrentUtcTime().AddDays
                 (COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME));
             crlBuilder.AddCrlEntry(caCert, DateTimeUtil.GetCurrentUtcTime().AddDays(COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME
@@ -165,8 +162,8 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ValidCertWithEmptyCrlCollectionTest() {
-            String caCertFileName = CERTS_SRC + "rootRsa.p12";
-            IX509Certificate rootCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, PASSWORD)[0];
+            String caCertFileName = CERTS_SRC + "rootRsa.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
             String verificationResult = CertificateVerification.VerifyCertificate(rootCert, JavaCollectionsUtil.EmptyList
                 <IX509Crl>());
             NUnit.Framework.Assert.IsNull(verificationResult);
@@ -175,13 +172,11 @@ namespace iText.Signatures.Verify {
         [NUnit.Framework.Test]
         public virtual void ValidCertWithCrlDoesNotContainCertTest() {
             int COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME = -1;
-            String rootCertFileName = CERTS_SRC + "rootRsa.p12";
-            IX509Certificate rootCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(rootCertFileName, PASSWORD)[
-                0];
-            String certForAddingToCrlName = CERTS_SRC + "signCertRsa01.p12";
-            IX509Certificate certForCrl = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(certForAddingToCrlName, PASSWORD
-                )[0];
-            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(certForAddingToCrlName, PASSWORD, PASSWORD);
+            String rootCertFileName = CERTS_SRC + "rootRsa.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
+            String certForAddingToCrlName = CERTS_SRC + "signCertRsa01.pem";
+            IX509Certificate certForCrl = (IX509Certificate)PemFileHelper.ReadFirstChain(certForAddingToCrlName)[0];
+            IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(certForAddingToCrlName, PASSWORD);
             TestCrlBuilder crlForCheckBuilder = new TestCrlBuilder(certForCrl, caPrivateKey, DateTimeUtil.GetCurrentUtcTime
                 ().AddDays(COUNTER_TO_MAKE_CRL_AVAILABLE_AT_THE_CURRENT_TIME));
             TestCrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(crlForCheckBuilder);
@@ -206,10 +201,10 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ValidCertChainWithEmptyKeyStoreTest() {
-            String validCertChainFileName = CERTS_SRC + "signCertRsaWithChain.p12";
-            String emptyCertChain = CERTS_SRC + "emptyCertChain.p12";
-            IX509Certificate[] validCertChain = Pkcs12FileHelper.ReadFirstChain(validCertChainFileName, PASSWORD);
-            List<IX509Certificate> emptyKeyStore = Pkcs12FileHelper.InitStore(emptyCertChain, PASSWORD);
+            String validCertChainFileName = CERTS_SRC + "signCertRsaWithChain.pem";
+            String emptyCertChain = CERTS_SRC + "emptyCertChain.pem";
+            IX509Certificate[] validCertChain = PemFileHelper.ReadFirstChain(validCertChainFileName);
+            List<IX509Certificate> emptyKeyStore = PemFileHelper.InitStore(emptyCertChain);
             IList<VerificationException> resultedExceptionList = CertificateVerification.VerifyCertificates(validCertChain
                 , emptyKeyStore, (ICollection<IX509Crl>)null);
             String expectedResult = MessageFormatUtil.Format(SignExceptionMessageConstant.CERTIFICATE_TEMPLATE_FOR_EXCEPTION_MESSAGE
@@ -221,10 +216,10 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ValidCertChainWithRootCertAsKeyStoreTest() {
-            String validCertChainFileName = CERTS_SRC + "signCertRsaWithChain.p12";
-            String emptyCertChain = CERTS_SRC + "rootRsa.p12";
-            IX509Certificate[] validCertChain = Pkcs12FileHelper.ReadFirstChain(validCertChainFileName, PASSWORD);
-            List<IX509Certificate> emptyKeyStore = Pkcs12FileHelper.InitStore(emptyCertChain, PASSWORD);
+            String validCertChainFileName = CERTS_SRC + "signCertRsaWithChain.pem";
+            String emptyCertChain = CERTS_SRC + "rootRsa.pem";
+            IX509Certificate[] validCertChain = PemFileHelper.ReadFirstChain(validCertChainFileName);
+            List<IX509Certificate> emptyKeyStore = PemFileHelper.InitStore(emptyCertChain);
             IList<VerificationException> resultedExceptionList = CertificateVerification.VerifyCertificates(validCertChain
                 , emptyKeyStore, (ICollection<IX509Crl>)null);
             NUnit.Framework.Assert.AreEqual(0, resultedExceptionList.Count);
@@ -232,8 +227,8 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void CertChainWithExpiredCertTest() {
-            String validCertChainFileName = CERTS_SRC + "signCertRsaWithExpiredChain.p12";
-            IX509Certificate[] validCertChain = Pkcs12FileHelper.ReadFirstChain(validCertChainFileName, PASSWORD);
+            String validCertChainFileName = CERTS_SRC + "signCertRsaWithExpiredChain.pem";
+            IX509Certificate[] validCertChain = PemFileHelper.ReadFirstChain(validCertChainFileName);
             IX509Certificate expectedExpiredCert = (IX509Certificate)validCertChain[1];
             String expiredCertName = FACTORY.CreateX500Name(expectedExpiredCert).ToString();
             IX509Certificate rootCert = (IX509Certificate)validCertChain[2];
@@ -251,8 +246,8 @@ namespace iText.Signatures.Verify {
 
         private static bool VerifyTimestampCertificates(String tsaClientCertificate, List<IX509Certificate> caKeyStore
             ) {
-            IX509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaClientCertificate, PASSWORD);
-            IPrivateKey tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaClientCertificate, PASSWORD, PASSWORD);
+            IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaClientCertificate);
+            IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaClientCertificate, PASSWORD);
             TestTsaClient testTsaClient = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             byte[] tsaCertificateBytes = testTsaClient.GetTimeStampToken(testTsaClient.GetMessageDigest().Digest());
             ITimeStampToken timeStampToken = FACTORY.CreateTimeStampToken(FACTORY.CreateContentInfo(FACTORY.CreateASN1Sequence

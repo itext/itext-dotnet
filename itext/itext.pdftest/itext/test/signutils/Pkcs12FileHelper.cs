@@ -49,6 +49,9 @@ using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.X509;
 
 namespace iText.Test.Signutils {
+    /// <summary>
+    /// This class doesn't support bouncy-castle FIPS so it shall not be used in itextcore.
+    /// </summary>
     public sealed class Pkcs12FileHelper {
         private Pkcs12FileHelper() {
         }

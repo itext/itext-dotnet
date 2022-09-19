@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures {
     [NUnit.Framework.Category("Bouncy-castle unit test")]
@@ -31,28 +31,25 @@ namespace iText.Signatures {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-        private static readonly char[] PASSWORD = "testpass".ToCharArray();
-
         [NUnit.Framework.Test]
         public virtual void GetTSAURLAdobeExtensionTest() {
-            IX509Certificate tsaCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCert.p12"
-                , PASSWORD)[0];
+            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCert.pem"
+                )[0];
             String url = CertificateUtil.GetTSAURL(tsaCert);
             NUnit.Framework.Assert.AreEqual("https://itextpdf.com/en", url);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetTSAURLUsualTimestampCertificateTest() {
-            IX509Certificate tsaCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "tsCertRsa.p12", 
-                PASSWORD)[0];
+            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "tsCertRsa.pem")[0];
             String url = CertificateUtil.GetTSAURL(tsaCert);
             NUnit.Framework.Assert.IsNull(url);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetTSAURLAdobeExtensionNotTaggedTest() {
-            IX509Certificate tsaCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCertWithoutTag.p12"
-                , PASSWORD)[0];
+            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCertWithoutTag.pem"
+                )[0];
             NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => CertificateUtil.GetTSAURL(tsaCert));
         }
     }

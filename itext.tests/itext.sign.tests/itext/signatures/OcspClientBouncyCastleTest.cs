@@ -53,7 +53,6 @@ using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Test;
 using iText.Test.Attributes;
-using iText.Test.Signutils;
 
 namespace iText.Signatures {
     [NUnit.Framework.Category("Bouncy-castle unit test")]
@@ -61,9 +60,9 @@ namespace iText.Signatures {
         private static readonly String ocspCertsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/OcspClientBouncyCastleTest/";
 
-        private static readonly String rootOcspCert = ocspCertsSrc + "ocspRootRsa.p12";
+        private static readonly String rootOcspCert = ocspCertsSrc + "ocspRootRsa.pem";
 
-        private static readonly String signOcspCert = ocspCertsSrc + "ocspSignRsa.p12";
+        private static readonly String signOcspCert = ocspCertsSrc + "ocspSignRsa.pem";
 
         private static readonly char[] password = "testpass".ToCharArray();
 
@@ -85,7 +84,7 @@ namespace iText.Signatures {
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {
             builder = CreateBuilder(BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood());
-            checkCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(signOcspCert, password)[0];
+            checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(signOcspCert)[0];
             rootCert = builder.GetIssuerCert();
         }
 
@@ -207,8 +206,8 @@ namespace iText.Signatures {
         }
 
         private static TestOcspResponseBuilder CreateBuilder(ICertificateStatus status) {
-            IX509Certificate caCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(rootOcspCert, password)[0];
-            IPrivateKey caPrivateKey = Pkcs12FileHelper.ReadFirstKey(rootOcspCert, password, password);
+            IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootOcspCert)[0];
+            IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(rootOcspCert, password);
             return new TestOcspResponseBuilder(caCert, caPrivateKey, status);
         }
 

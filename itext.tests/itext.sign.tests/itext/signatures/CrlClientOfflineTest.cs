@@ -26,8 +26,8 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
+using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures {
     [NUnit.Framework.Category("UnitTest")]
@@ -35,11 +35,7 @@ namespace iText.Signatures {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/CrlClientOfflineTest/";
 
-        private static readonly char[] PASSWORD = "password".ToCharArray();
-
         private const String CRL_DISTRIBUTION_POINT = "http://www.example.com/";
-
-        private static IX509Certificate checkCert;
 
         private static ICollection<byte[]> listOfByteArrays;
 
@@ -52,74 +48,74 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlEmptyByteArrayRealArgsTest() {
-            ValidateCrlBytes(null, checkCert, CRL_DISTRIBUTION_POINT);
+            ValidateCrlBytes(null, CRL_DISTRIBUTION_POINT);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlEmptyByteArrayWithoutArgsTest() {
-            ValidateCrlBytes(null, null, "");
+            ValidateCrlBytes(null, "");
         }
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlEmptyByteArrayUrlIsEmptyTest() {
-            ValidateCrlBytes(null, checkCert, "");
+            ValidateCrlBytes(null, "");
         }
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlEmptyByteArrayNonExistingUrlTest() {
-            ValidateCrlBytes(null, checkCert, "http://nonexistingurl.com");
+            ValidateCrlBytes(null, "http://nonexistingurl.com");
         }
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlEmptyByteArrayCertIsNullNonExistingUrlTest() {
-            ValidateCrlBytes(null, null, "http://nonexistingurl.com");
+            ValidateCrlBytes(null, "http://nonexistingurl.com");
         }
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlEmptyByteArrayCertIsNullUrlIsRealTest() {
-            ValidateCrlBytes(null, null, CRL_DISTRIBUTION_POINT);
+            ValidateCrlBytes(null, CRL_DISTRIBUTION_POINT);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlObjectRealArgsTest() {
             String fileName = SOURCE_FOLDER + "pdfWithCrl.pdf";
             byte[] testBytes = ObtainCrlFromPdf(fileName);
-            ValidateCrlBytes(testBytes, checkCert, CRL_DISTRIBUTION_POINT);
+            ValidateCrlBytes(testBytes, CRL_DISTRIBUTION_POINT);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlObjectWithoutCertAndUrlTest() {
             String fileName = SOURCE_FOLDER + "pdfWithCrl.pdf";
             byte[] testBytes = ObtainCrlFromPdf(fileName);
-            ValidateCrlBytes(testBytes, null, "");
+            ValidateCrlBytes(testBytes, "");
         }
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlObjectUrlIsEmptyTest() {
             String fileName = SOURCE_FOLDER + "pdfWithCrl.pdf";
             byte[] testBytes = ObtainCrlFromPdf(fileName);
-            ValidateCrlBytes(testBytes, checkCert, "");
+            ValidateCrlBytes(testBytes, "");
         }
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlObjectNonExistingUrlTest() {
             String fileName = SOURCE_FOLDER + "pdfWithCrl.pdf";
             byte[] testBytes = ObtainCrlFromPdf(fileName);
-            ValidateCrlBytes(testBytes, checkCert, "http://nonexistingurl.com");
+            ValidateCrlBytes(testBytes, "http://nonexistingurl.com");
         }
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlObjectCertIsNullNonExistingUrlTest() {
             String fileName = SOURCE_FOLDER + "pdfWithCrl.pdf";
             byte[] testBytes = ObtainCrlFromPdf(fileName);
-            ValidateCrlBytes(testBytes, null, "http://nonexistingurl.com");
+            ValidateCrlBytes(testBytes, "http://nonexistingurl.com");
         }
 
         [NUnit.Framework.Test]
         public virtual void GetEncodedFromCrlObjectCertIsNullUrlIsRealTest() {
             String fileName = SOURCE_FOLDER + "pdfWithCrl.pdf";
             byte[] testBytes = ObtainCrlFromPdf(fileName);
-            ValidateCrlBytes(testBytes, null, CRL_DISTRIBUTION_POINT);
+            ValidateCrlBytes(testBytes, CRL_DISTRIBUTION_POINT);
         }
 
         //Get CRL from PDF. We expect the PDF to contain an array of CRLs from which we only take the first
@@ -131,17 +127,15 @@ namespace iText.Signatures {
             return stream.GetBytes();
         }
 
-        private static ICollection<byte[]> ValidateCrlBytes(byte[] testBytes, IX509Certificate checkCert, String crlDistPoint
-            ) {
+        private static void ValidateCrlBytes(byte[] testBytes, String crlDistPoint) {
             CrlClientOffline crlClientOffline = new CrlClientOffline(testBytes);
-            checkCert = (IX509Certificate)Pkcs12FileHelper.ReadFirstChain(SOURCE_FOLDER + "crlDistPoint.p12", PASSWORD
+            IX509Certificate checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + "crlDistPoint.pem"
                 )[0];
             listOfByteArrays = crlClientOffline.GetEncoded(checkCert, crlDistPoint);
             //These checks are enough, because there is exactly one element in the collection,
             //and these are the same test bytes 
             NUnit.Framework.Assert.AreEqual(1, listOfByteArrays.Count);
             NUnit.Framework.Assert.IsTrue(listOfByteArrays.Contains(testBytes));
-            return listOfByteArrays;
         }
     }
 }

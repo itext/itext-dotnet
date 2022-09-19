@@ -50,7 +50,6 @@ using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("Bouncy-castle integration test")]
@@ -73,11 +72,11 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void TimestampTest01() {
-            String tsaCertFileName = certsSrc + "tsCertRsa.p12";
+            String tsaCertFileName = certsSrc + "tsCertRsa.pem";
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String outFileName = destinationFolder + "timestampTest01.pdf";
-            IX509Certificate[] tsaChain = Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, password);
-            IPrivateKey tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(tsaCertFileName, password, password);
+            IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
+            IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
                 new StampingProperties());
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
