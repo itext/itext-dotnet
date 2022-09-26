@@ -78,6 +78,19 @@ namespace iText.Commons.Utils {
         }
 
         /// <summary>
+        /// Checks whether is provided file not empty.
+        /// </summary>
+        /// <param name="path">the path to the file to be checked on emptiness</param>
+        /// <returns><CODE>true</CODE> if such file is not empty, <CODE>false</CODE> otherwise</returns>
+        public static bool IsFileNotEmpty(String path) {
+            if (!String.IsNullOrEmpty(path)) {
+                FileInfo f = new FileInfo(path);
+                return f.Exists && f.Length > 0;
+            }
+            return false;
+        }
+        
+        /// <summary>
         /// Checks whether there is a directory at the provided path.
         /// </summary>
         /// <param name="path">the path to the directory to be checked on existence</param>

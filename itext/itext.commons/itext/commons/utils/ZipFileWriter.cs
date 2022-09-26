@@ -45,7 +45,7 @@ namespace iText.Commons.Utils {
                 throw new IOException(CommonsExceptionMessageConstant.FILE_NAME_CAN_NOT_BE_NULL);
             }
 
-            if (FileUtil.FileExists(archivePath) || FileUtil.DirectoryExists(archivePath)) {
+            if (FileUtil.IsFileNotEmpty(archivePath) || FileUtil.DirectoryExists(archivePath)) {
                 throw new IOException(MessageFormatUtil.Format(CommonsExceptionMessageConstant.FILE_NAME_ALREADY_EXIST,
                     archivePath));
             }
