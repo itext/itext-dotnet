@@ -17,7 +17,7 @@ namespace iText.Bouncycastlefips.Crypto {
         private string lastHashAlgorithm;
         private string lastEncryptionAlgorithm;
 
-        private IDigestBCFips digest;
+        private IStreamCalculator<IBlockResult> digest;
 
         /// <summary>
         /// Creates new wrapper instance for signer.
@@ -50,22 +50,24 @@ namespace iText.Bouncycastlefips.Crypto {
 
         /// <summary><inheritDoc/></summary>
         public void Update(byte[] buf, int off, int len) {
-            digest.Update(buf, off, len);
+            using (Stream digStream = digest.Stream) {
+                digStream.Write(buf, off, len);
+            }
         }
 
         /// <summary><inheritDoc/></summary>
-        public void Update(byte[] digest) { 
-            Update(digest, 0, digest.Length);
+        public void Update(byte[] dig) { 
+            Update(dig, 0, dig.Length);
         }
 
         /// <summary><inheritDoc/></summary>
-        public bool VerifySignature(byte[] digest) {
-            return iSigner.GetResult().IsVerified(digest);
+        public bool VerifySignature(byte[] dig) {
+            return iSigner.GetResult().IsVerified(dig);
         }
 
         /// <summary><inheritDoc/></summary>
         public byte[] GenerateSignature() {
-            return digest.Digest();
+            return digest.GetResult().Collect();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -119,20 +121,20 @@ namespace iText.Bouncycastlefips.Crypto {
         private void InitSignature(AsymmetricRsaPrivateKey key, string hashAlgorithm, string encAlgorithm) {
             ISignatureFactoryService signatureFactoryProvider =
                 CryptoServicesRegistrar.CreateService(key, new SecureRandom());
-            FipsShs.Parameters parameters = IDigestBCFips.GetMessageDigestParams(hashAlgorithm);
+            FipsShs.Parameters parameters = GetMessageDigestParams(hashAlgorithm);
             switch (encAlgorithm) {
                 case "RSA": {
                     ISignatureFactory<FipsRsa.SignatureParameters> rsaSig =
                         signatureFactoryProvider.CreateSignatureFactory(
                             FipsRsa.Pkcs1v15.WithDigest(parameters));
-                    digest = new IDigestBCFips(rsaSig.CreateCalculator());
+                    digest = rsaSig.CreateCalculator();
                     break;
                 }
                 case "DSA": {
                     ISignatureFactory<FipsEC.SignatureParameters> rsaSig =
                         signatureFactoryProvider.CreateSignatureFactory(
                             FipsEC.Dsa.WithDigest(parameters));
-                    digest = new IDigestBCFips(rsaSig.CreateCalculator());
+                    digest = rsaSig.CreateCalculator();
                     break;
                 }
             }
@@ -176,6 +178,30 @@ namespace iText.Bouncycastlefips.Crypto {
                             FipsEC.Dsa.WithDigest(parameters)));
                     iSigner = rsaSig.CreateCalculator();
                     break;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Gets Message Digest parameters.
+        /// </summary>
+        /// <param name="hashAlgorithm">hash algorithm</param>
+        private static FipsShs.Parameters GetMessageDigestParams(String hashAlgorithm) {
+            switch (hashAlgorithm) {
+                case "2.16.840.1.101.3.4.2.1":
+                case "SHA-256": {
+                    return FipsShs.Sha256;
+                }
+                case "2.16.840.1.101.3.4.2.3":
+                case "SHA-512": {
+                    return FipsShs.Sha512;
+                }
+                case "1.3.14.3.2.26":
+                case "SHA-1": {
+                    return FipsShs.Sha1;
+                }
+                default: {
+                    throw new ArgumentException("Hash algorithm " + hashAlgorithm + "is not supported");
                 }
             }
         }

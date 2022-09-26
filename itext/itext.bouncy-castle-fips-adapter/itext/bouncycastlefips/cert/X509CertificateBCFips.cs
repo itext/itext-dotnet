@@ -69,7 +69,7 @@ namespace iText.Bouncycastlefips.Cert {
         
         /// <summary><inheritDoc/></summary>
         public IASN1OctetString GetExtensionValue(string oid) {
-            return new ASN1OctetStringBCFips((Asn1OctetString) Asn1OctetString.FromByteArray(
+            return new ASN1OctetStringBCFips(new DerOctetString(
                 certificate.GetExtensionValue(new DerObjectIdentifier(oid))));
         }
 

@@ -1,11 +1,9 @@
 using System;
 using System.Security.Cryptography;
 using iText.Bouncycastlefips.Asn1;
-using iText.Bouncycastlefips.Asn1.X509;
 using iText.Bouncycastlefips.Crypto;
 using iText.Bouncycastlefips.Math;
 using iText.Commons.Bouncycastle.Asn1;
-using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Math;
@@ -24,7 +22,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
     public class CertificateIDBCFips : ICertificateID {
         private static readonly CertificateIDBCFips INSTANCE = new CertificateIDBCFips(null);
 
-        private static readonly string HASH_SHA1 = HashAlgorithmName.SHA1.Name;
+        private static readonly string HASH_SHA1 = CryptoConfig.MapNameToOID("SHA1");
 
         private readonly CertID certificateID;
 

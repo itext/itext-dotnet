@@ -1,27 +1,25 @@
 using System;
-using System.IO;
+using System.Security.Cryptography;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Fips;
 
 namespace iText.Bouncycastlefips.Crypto {
     /// <summary>
-    /// Wrapper class for IStreamCalculator<IBlockResult> digest.
+    /// Wrapper class for System.Security.Cryptography.HashAlgorithm digest.
     /// </summary>
     public class IDigestBCFips : IIDigest {
-        private readonly IStreamCalculator<IBlockResult> iDigest;
+        private readonly HashAlgorithm digest;
         private string algorithmName;
 
         /// <summary>
         /// Creates new wrapper instance for digest.
         /// </summary>
-        /// <param name="iDigest">
+        /// <param name="digest">
         /// 
-        /// IStreamCalculator<IBlockResult> to be wrapped
+        /// System.Security.Cryptography.HashAlgorithm to be wrapped
         /// </param>
-        public IDigestBCFips(IStreamCalculator<IBlockResult> iDigest) {
-            this.iDigest = iDigest;
+        public IDigestBCFips(HashAlgorithm digest) {
+            this.digest = digest;
         }
 
         /// <summary>
@@ -29,21 +27,20 @@ namespace iText.Bouncycastlefips.Crypto {
         /// </summary>
         /// <param name="hashAlgorithm">
         /// 
-        /// hash algorithm to create IStreamCalculator<IBlockResult>
+        /// hash algorithm to create System.Security.Cryptography.HashAlgorithm
         /// </param>
         public IDigestBCFips(string hashAlgorithm) {
-            FipsShs.Parameters parameters = GetMessageDigestParams(hashAlgorithm);
-            IDigestFactory<FipsShs.Parameters> factory = CryptoServicesRegistrar.CreateService(parameters);
-            this.algorithmName = factory.AlgorithmDetails.Algorithm.Name;
-            this.iDigest = factory.CreateCalculator();
+            Oid oid = new Oid(hashAlgorithm);
+            digest = HashAlgorithm.Create(oid.FriendlyName);
+            algorithmName = oid.FriendlyName;
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
-        /// wrapped IStreamCalculator<IBlockResult>.
+        /// wrapped System.Security.Cryptography.HashAlgorithm.
         /// </returns>
-        public virtual IStreamCalculator<IBlockResult> GetIDigest() {
-            return iDigest;
+        public virtual HashAlgorithm GetIDigest() {
+            return digest;
         }
         
         /// <summary>Sets algorithm name.</summary>
@@ -53,23 +50,20 @@ namespace iText.Bouncycastlefips.Crypto {
         }
 
         /// <summary><inheritDoc/></summary>
-        public byte[] Digest(byte[] enc2) {
-            using (Stream digestStream = iDigest.Stream) {
-                digestStream.Write(enc2, 0, enc2.Length);
-            }
-            return Digest();
+        public byte[] Digest(byte[] enc) {
+            return digest.ComputeHash(enc);
         }
 
         /// <summary><inheritDoc/></summary>
         public byte[] Digest() {
-            return iDigest.GetResult().Collect();
+            byte[] output = digest.Hash;
+            digest.Clear();
+            return output;
         }
 
         /// <summary><inheritDoc/></summary>
         public void Update(byte[] buf, int off, int len) {
-            using (Stream digStream = iDigest.Stream) {
-                digStream.Write(buf, off, len);
-            }
+            digest.ComputeHash(buf, off, len);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -96,12 +90,12 @@ namespace iText.Bouncycastlefips.Crypto {
                 return false;
             }
             IDigestBCFips that = (IDigestBCFips)o;
-            return Object.Equals(iDigest, that.iDigest);
+            return Object.Equals(digest, that.digest);
         }
 
         /// <summary>Returns a hash code value based on the wrapped object.</summary>
         public override int GetHashCode() {
-            return JavaUtil.ArraysHashCode(iDigest);
+            return JavaUtil.ArraysHashCode(digest);
         }
 
         /// <summary>
@@ -110,28 +104,7 @@ namespace iText.Bouncycastlefips.Crypto {
         /// method call to the wrapped object.
         /// </summary>
         public override String ToString() {
-            return iDigest.ToString();
-        }
-
-        /// <summary>
-        /// Gets Message Digest parameters.
-        /// </summary>
-        /// <param name="hashAlgorithm">hash algorithm</param>
-        public static FipsShs.Parameters GetMessageDigestParams(String hashAlgorithm) {
-            switch (hashAlgorithm) {
-                case "SHA-256": {
-                    return FipsShs.Sha256;
-                }
-                case "SHA-512": {
-                    return FipsShs.Sha512;
-                }
-                case "SHA-1": {
-                    return FipsShs.Sha1;
-                }
-                default: {
-                    throw new ArgumentException("Hash algorithm " + hashAlgorithm + "is not supported");
-                }
-            }
+            return digest.ToString();
         }
     }
 }

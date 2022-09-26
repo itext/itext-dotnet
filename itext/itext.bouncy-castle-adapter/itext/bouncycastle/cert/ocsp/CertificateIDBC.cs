@@ -1,10 +1,7 @@
 using System;
-using System.Security.Cryptography;
 using iText.Bouncycastle.Asn1;
-using iText.Bouncycastle.Asn1.X509;
 using iText.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Asn1;
-using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Math;
@@ -26,7 +23,7 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         private static readonly iText.Bouncycastle.Cert.Ocsp.CertificateIDBC INSTANCE = new iText.Bouncycastle.Cert.Ocsp.CertificateIDBC
             (null);
 
-        private static readonly string HASH_SHA1 = HashAlgorithmName.SHA1.Name;
+        private static readonly string HASH_SHA1 = CertificateID.HashSha1;
 
         private readonly CertID certificateID;
 
