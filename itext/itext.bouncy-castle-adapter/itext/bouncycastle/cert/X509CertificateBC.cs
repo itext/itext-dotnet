@@ -5,12 +5,14 @@ using iText.Bouncycastle.Asn1;
 using iText.Bouncycastle.Asn1.X500;
 using iText.Bouncycastle.Crypto;
 using iText.Bouncycastle.Math;
+using iText.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
 namespace iText.Bouncycastle.Cert {
@@ -72,7 +74,12 @@ namespace iText.Bouncycastle.Cert {
 
         /// <summary><inheritDoc/></summary>
         public void Verify(IPublicKey issuerPublicKey) {
-            certificate.Verify(((PublicKeyBC)issuerPublicKey).GetPublicKey());
+            try {
+                certificate.Verify(((PublicKeyBC)issuerPublicKey).GetPublicKey());
+            }
+            catch (GeneralSecurityException e) {
+                throw new GeneralSecurityExceptionBC(e);
+            }
         }
 
         /// <summary><inheritDoc/></summary>

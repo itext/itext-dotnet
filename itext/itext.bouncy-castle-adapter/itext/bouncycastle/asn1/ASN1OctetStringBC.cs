@@ -52,7 +52,7 @@ namespace iText.Bouncycastle.Asn1 {
 
         /// <summary><inheritDoc/></summary>
         public byte[] GetDerEncoded() {
-            return GetASN1OctetString().GetDerEncoded();
+            return !IsNull() ? GetASN1OctetString().GetDerEncoded() : null;
         }
     }
 }

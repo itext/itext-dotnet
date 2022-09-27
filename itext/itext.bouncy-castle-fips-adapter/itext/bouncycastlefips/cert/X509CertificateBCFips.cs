@@ -5,6 +5,7 @@ using iText.Bouncycastlefips.Asn1;
 using iText.Bouncycastlefips.Asn1.X500;
 using iText.Bouncycastlefips.Crypto;
 using iText.Bouncycastlefips.Math;
+using iText.Bouncycastlefips.Security;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
@@ -14,6 +15,7 @@ using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Operators;
+using Org.BouncyCastle.Security;
 
 namespace iText.Bouncycastlefips.Cert {
     /// <summary>
@@ -77,7 +79,12 @@ namespace iText.Bouncycastlefips.Cert {
         public void Verify(IPublicKey issuerPublicKey) {
             PkixVerifierFactoryProvider factoryProvider = new PkixVerifierFactoryProvider(
                 ((PublicKeyBCFips) issuerPublicKey).GetPublicKey());
-            certificate.Verify(factoryProvider);
+            try {
+                certificate.Verify(factoryProvider);
+            }
+            catch (GeneralSecurityException e) {
+                throw new GeneralSecurityExceptionBCFips(e);
+            }        
         }
         
         /// <summary><inheritDoc/></summary>

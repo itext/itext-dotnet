@@ -52,7 +52,7 @@ namespace iText.Bouncycastlefips.Asn1 {
         
         /// <summary><inheritDoc/></summary>
         public byte[] GetDerEncoded() {
-            return GetOctetString().GetDerEncoded();
+            return !IsNull() ? GetOctetString().GetDerEncoded() : null;
         }
     }
 }

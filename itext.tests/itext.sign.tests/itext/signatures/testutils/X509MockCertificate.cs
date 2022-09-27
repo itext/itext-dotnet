@@ -89,9 +89,8 @@ namespace iText.Signatures.Testutils
             throw new NotImplementedException();
         }
 
-        public byte[] GetTbsCertificate()
-        {
-            throw new NotImplementedException();
+        public byte[] GetTbsCertificate() {
+            return Array.Empty<byte>();
         }
 
         public IASN1OctetString GetExtensionValue(string oid)

@@ -451,7 +451,7 @@ namespace iText.Bouncycastle {
             }
             Asn1OctetString octs;
             try {
-                octs = new DerOctetString(((BasicOcspResponse)response).GetEncoded());
+                octs = new DerOctetString(((BasicOCSPResponseBC)response).GetEncoded());
             } catch (Exception e) {
                 throw new OCSPExceptionBC(new OcspException("can't encode object.", e));
             }
@@ -477,7 +477,11 @@ namespace iText.Bouncycastle {
         }
 
         public IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus) {
-            return new RevokedStatusBC(((CertificateStatusBC) certificateStatus).GetCertificateStatus());
+            CertStatus certStatus = ((CertificateStatusBC) certificateStatus).GetCertificateStatus();
+            if (certStatus != null && certStatus.TagNo == 1) {
+                return new RevokedStatusBC(certStatus);
+            }
+            return null;
         }
 
         public virtual IRevokedStatus CreateRevokedStatus(DateTime date, int i) {

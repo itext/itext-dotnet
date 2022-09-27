@@ -458,7 +458,7 @@ namespace iText.Bouncycastlefips {
             }
             Asn1OctetString octs;
             try {
-                octs = new DerOctetString(((BasicOcspResponse)response).GetEncoded());
+                octs = new DerOctetString(((BasicOCSPResponseBCFips)response).GetEncoded());
             } catch (Exception e) {
                 throw new OCSPExceptionBCFips(new Exception("can't encode object.", e));
             }
@@ -484,7 +484,11 @@ namespace iText.Bouncycastlefips {
         }
 
         public IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus) {
-            return new RevokedStatusBCFips(((CertificateStatusBCFips)certificateStatus).GetCertificateStatus());
+            CertStatus certStatus = ((CertificateStatusBCFips) certificateStatus).GetCertificateStatus();
+            if (certStatus != null && certStatus.TagNo == 1) {
+                return new RevokedStatusBCFips(certStatus);
+            }
+            return null;
         }
 
         public virtual IRevokedStatus CreateRevokedStatus(DateTime date, int i) {
