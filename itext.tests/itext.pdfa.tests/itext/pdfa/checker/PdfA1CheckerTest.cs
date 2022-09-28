@@ -91,9 +91,16 @@ namespace iText.Pdfa.Checker {
         public virtual void CheckValidCatalog() {
             pdfA1Checker.CheckCatalogValidEntries(new PdfDictionary());
         }
+
         // checkCatalogValidEntries doesn't change the state of any object
         // and doesn't return any value. The only result is exception which
         // was or wasn't thrown. Successful scenario is tested here therefore
         // no assertion is provided
+        [NUnit.Framework.Test]
+        public virtual void CheckSignatureTest() {
+            PdfDictionary dict = new PdfDictionary();
+            pdfA1Checker.CheckSignature(dict);
+            NUnit.Framework.Assert.IsTrue(pdfA1Checker.ObjectIsChecked(dict));
+        }
     }
 }

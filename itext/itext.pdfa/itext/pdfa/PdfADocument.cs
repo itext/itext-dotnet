@@ -85,6 +85,8 @@ namespace iText.Pdfa {
 
         private bool alreadyLoggedThatPageFlushingWasNotPerformed = false;
 
+        private bool isPdfADocument = true;
+
         /// <summary>Constructs a new PdfADocument for writing purposes, i.e. from scratch.</summary>
         /// <remarks>
         /// Constructs a new PdfADocument for writing purposes, i.e. from scratch. A
@@ -139,16 +141,25 @@ namespace iText.Pdfa {
             : this(reader, writer, new StampingProperties()) {
         }
 
-        /// <summary>Open a PDF/A document in stamping mode.</summary>
+        /// <summary>Opens a PDF/A document in stamping mode.</summary>
         /// <param name="reader">PDF reader.</param>
         /// <param name="writer">PDF writer.</param>
         /// <param name="properties">properties of the stamping process</param>
         public PdfADocument(PdfReader reader, PdfWriter writer, StampingProperties properties)
+            : this(reader, writer, properties, false) {
+        }
+
+        internal PdfADocument(PdfReader reader, PdfWriter writer, StampingProperties properties, bool tolerant)
             : base(reader, writer, properties) {
             PdfAConformanceLevel conformanceLevel = reader.GetPdfAConformanceLevel();
             if (conformanceLevel == null) {
-                throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
-                    );
+                if (tolerant) {
+                    isPdfADocument = false;
+                }
+                else {
+                    throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
+                        );
+                }
             }
             SetChecker(conformanceLevel);
         }
@@ -159,6 +170,10 @@ namespace iText.Pdfa {
 
         public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
             ) {
+            if (!isPdfADocument) {
+                base.CheckIsoConformance(obj, key, resources, contentStream);
+                return;
+            }
             CanvasGraphicsState gState;
             PdfDictionary currentColorSpaces = null;
             if (resources != null) {
@@ -222,6 +237,11 @@ namespace iText.Pdfa {
                     checker.CheckXrefTable((PdfXrefTable)obj);
                     break;
                 }
+
+                case IsoKey.SIGNATURE: {
+                    checker.CheckSignature((PdfDictionary)obj);
+                    break;
+                }
             }
         }
 
@@ -235,7 +255,12 @@ namespace iText.Pdfa {
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
         /// </returns>
         public virtual PdfAConformanceLevel GetConformanceLevel() {
-            return checker.GetConformanceLevel();
+            if (isPdfADocument) {
+                return checker.GetConformanceLevel();
+            }
+            else {
+                return null;
+            }
         }
 
         internal virtual void LogThatPdfAPageFlushingWasNotPerformed() {
@@ -248,6 +273,10 @@ namespace iText.Pdfa {
         }
 
         protected override void AddCustomMetadataExtensions(XMPMeta xmpMeta) {
+            if (!isPdfADocument) {
+                base.AddCustomMetadataExtensions(xmpMeta);
+                return;
+            }
             if (this.IsTagged()) {
                 try {
                     if (xmpMeta.GetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART) != null) {
@@ -263,6 +292,10 @@ namespace iText.Pdfa {
         }
 
         protected override void UpdateXmpMetadata() {
+            if (!isPdfADocument) {
+                base.UpdateXmpMetadata();
+                return;
+            }
             try {
                 XMPMeta xmpMeta = UpdateDefaultXmpMetadata();
                 xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, checker.GetConformanceLevel().GetPart());
@@ -278,10 +311,19 @@ namespace iText.Pdfa {
         }
 
         protected override void CheckIsoConformance() {
-            checker.CheckDocument(catalog);
+            if (isPdfADocument) {
+                checker.CheckDocument(catalog);
+            }
+            else {
+                base.CheckIsoConformance();
+            }
         }
 
         protected override void FlushObject(PdfObject pdfObject, bool canBeInObjStm) {
+            if (!isPdfADocument) {
+                base.FlushObject(pdfObject, canBeInObjStm);
+                return;
+            }
             MarkObjectAsMustBeFlushed(pdfObject);
             if (isClosing || checker.ObjectIsChecked(pdfObject)) {
                 base.FlushObject(pdfObject, canBeInObjStm);
@@ -297,8 +339,10 @@ namespace iText.Pdfa {
         }
 
         protected override void FlushFonts() {
-            foreach (PdfFont pdfFont in GetDocumentFonts()) {
-                checker.CheckFont(pdfFont);
+            if (isPdfADocument) {
+                foreach (PdfFont pdfFont in GetDocumentFonts()) {
+                    checker.CheckFont(pdfFont);
+                }
             }
             base.FlushFonts();
         }
@@ -312,6 +356,9 @@ namespace iText.Pdfa {
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
         /// </param>
         protected internal virtual void SetChecker(PdfAConformanceLevel conformanceLevel) {
+            if (!isPdfADocument) {
+                return;
+            }
             switch (conformanceLevel.GetPart()) {
                 case "1": {
                     checker = new PdfA1Checker(conformanceLevel);
@@ -332,11 +379,21 @@ namespace iText.Pdfa {
 
         /// <summary>Initializes tagStructureContext to track necessary information of document's tag structure.</summary>
         protected override void InitTagStructureContext() {
-            tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.GetConformanceLevel()));
+            if (isPdfADocument) {
+                tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.GetConformanceLevel()));
+            }
+            else {
+                base.InitTagStructureContext();
+            }
         }
 
         protected override IPdfPageFactory GetPageFactory() {
-            return pdfAPageFactory;
+            if (isPdfADocument) {
+                return pdfAPageFactory;
+            }
+            else {
+                return base.GetPageFactory();
+            }
         }
 
         internal virtual bool IsClosing() {
