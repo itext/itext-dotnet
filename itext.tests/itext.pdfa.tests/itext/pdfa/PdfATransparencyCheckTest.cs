@@ -101,9 +101,10 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "transparencyAndCS.pdf";
             String cmpPdf = cmpFolder + "cmp_transparencyAndCS.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformanceLevel.PDF_A_3B, null);
-            PdfPage page = pdfDocument.AddNewPage();
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
+            PdfPage page = pdfDocument.AddNewPage();
+            page.GetResources().SetDefaultGray(new PdfCieBasedCs.CalGray(GetCalGrayArray()));
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState();
             PdfExtGState state = new PdfExtGState();
@@ -117,6 +118,7 @@ namespace iText.Pdfa {
             groupObj.Put(PdfName.S, PdfName.Transparency);
             page.GetPdfObject().Put(PdfName.Group, groupObj);
             PdfPage page2 = pdfDocument.AddNewPage();
+            page2.GetResources().SetDefaultGray(new PdfCieBasedCs.CalGray(GetCalGrayArray()));
             canvas = new PdfCanvas(page2);
             canvas.SaveState();
             canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 2 without transparency").EndText
@@ -183,12 +185,12 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
+            page.GetResources().SetDefaultGray(new PdfCieBasedCs.CalGray(GetCalGrayArray()));
             canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 1").EndText();
             PdfDictionary groupObj = new PdfDictionary();
             groupObj.Put(PdfName.Type, PdfName.Group);
             groupObj.Put(PdfName.S, PdfName.Transparency);
             page.GetPdfObject().Put(PdfName.Group, groupObj);
-            page.GetResources().SetDefaultGray(new PdfCieBasedCs.CalGray(GetCalGrayArray()));
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);
         }
