@@ -249,7 +249,7 @@ namespace iText.IO.Font {
 
         public override String ToString() {
             String name = GetFontName();
-            return name.Length > 0 ? name : base.ToString();
+            return name != null && name.Length > 0 ? name : base.ToString();
         }
     }
 }

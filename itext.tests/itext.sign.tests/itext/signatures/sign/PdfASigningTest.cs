@@ -51,6 +51,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Pdfa.Exceptions;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
@@ -120,6 +121,30 @@ namespace iText.Signatures.Sign {
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(@out));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FailedSigningPdfA2DocumentTest() {
+            String src = sourceFolder + "simplePdfADocument.pdf";
+            String @out = destinationFolder + "signedPdfADocument2.pdf";
+            PdfReader reader = new PdfReader(new FileStream(src, FileMode.Open, FileAccess.Read));
+            PdfSigner signer = new PdfSigner(reader, new FileStream(@out, FileMode.Create), new StampingProperties());
+            signer.SetFieldLockDict(new PdfSigFieldLock());
+            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            int x = 36;
+            int y = 548;
+            int w = 200;
+            int h = 100;
+            Rectangle rect = new Rectangle(x, y, w, h);
+            PdfFont font = PdfFontFactory.CreateFont("Helvetica", "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason("pdfA test").SetLocation("TestCity"
+                ).SetLayer2Font(font).SetReuseAppearance(false).SetPageRect(rect);
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => signer.SignDetached(pks
+                , chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Helvetica"), e.Message);
         }
 
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters

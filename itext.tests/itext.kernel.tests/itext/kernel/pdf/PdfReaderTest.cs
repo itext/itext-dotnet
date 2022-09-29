@@ -2053,6 +2053,14 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void GetPdfAConformanceLevelPdfDocumentNotReadTest() {
+            PdfReader getModifiedFileIdReader = PdfDocumentNotReadTestInit();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => getModifiedFileIdReader.GetPdfAConformanceLevel
+                ());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void XrefStreamPointsItselfTest() {
             String fileName = SOURCE_FOLDER + "xrefStreamPointsItself.pdf";
             using (PdfReader pdfReader = new PdfReader(fileName)) {

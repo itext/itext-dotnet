@@ -205,10 +205,10 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void InitPdfaDocumentTest() {
-            // TODO DEVSIX-5910 The wrapped document should be recognized as Pdf/A
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimplePdfaDocument())), new ByteArrayOutputStream
                 (), new StampingProperties());
-            NUnit.Framework.Assert.IsFalse(signer.GetDocument() is PdfADocument);
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1A, ((PdfAAgnosticPdfDocument)signer.GetDocument
+                ()).GetConformanceLevel());
         }
 
         [NUnit.Framework.Test]
