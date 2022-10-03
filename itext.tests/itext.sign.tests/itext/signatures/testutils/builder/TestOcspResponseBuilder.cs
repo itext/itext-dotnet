@@ -115,15 +115,16 @@ namespace iText.Signatures.Testutils.Builder {
                 .GetIdPkixOcspNonce());
             if (!FACTORY.IsNullExtension(extNonce)) {
                 // TODO ensure
-                IExtensions responseExtensionses = FACTORY.CreateExtensions(new Dictionary<IASN1ObjectIdentifier, IExtension>() {
+                IExtensions responseExtensions = FACTORY.CreateExtensions(new Dictionary<IASN1ObjectIdentifier, IExtension>() {
                 {
                     FACTORY.CreateOCSPObjectIdentifiers().GetIdPkixOcspNonce(), extNonce
                 }});
-                responseBuilder.SetResponseExtensions(responseExtensionses);
+                responseBuilder.SetResponseExtensions(responseExtensions);
             }
 
             foreach (IReq req in requestList) {
-                responseBuilder.AddResponse(req.GetCertID(), certificateStatus, thisUpdate.ToUniversalTime(), nextUpdate.ToUniversalTime(), null);
+                responseBuilder.AddResponse(req.GetCertID(), certificateStatus, thisUpdate.ToUniversalTime(), nextUpdate.ToUniversalTime(), 
+                    FACTORY.CreateExtensions());
             }
             DateTime time = DateTimeUtil.GetCurrentUtcTime();
             return responseBuilder.Build(FACTORY.CreateContentSigner(SIGN_ALG, issuerPrivateKey), new IX509Certificate[] { issuerCert }, time);

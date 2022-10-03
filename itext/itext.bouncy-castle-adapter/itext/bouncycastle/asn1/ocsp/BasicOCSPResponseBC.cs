@@ -4,7 +4,6 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using iText.Bouncycastle.Cert;
 using iText.Bouncycastle.Cert.Ocsp;
 using iText.Bouncycastle.Crypto;
-using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
@@ -66,20 +65,18 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
             return certificates;
         }
 
-        public byte[] GetEncoded()
-        {
+        /// <summary><inheritDoc/></summary>
+        public byte[] GetEncoded() {
             return GetBasicOCSPResponse().GetEncoded();
         }
 
-        public ISingleResp[] GetResponses()
-        {
+        /// <summary><inheritDoc/></summary>
+        public ISingleResp[] GetResponses() {
             Asn1Sequence s = GetBasicOCSPResponse().TbsResponseData.Responses;
             ISingleResp[] rs = new ISingleResp[s.Count];
-
-            for(int i = 0; i != rs.Length; ++i) {
-                rs[i] = new SingleRespBC(SingleResponse.GetInstance(s.GetEncoded()[i]));
+            for (int i = 0; i != rs.Length; ++i) {
+                rs[i] = new SingleRespBC(SingleResponse.GetInstance(Asn1Sequence.GetInstance(s[i].GetEncoded())));
             }
-
             return rs;
         }
     }

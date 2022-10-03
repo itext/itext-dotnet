@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Org.BouncyCastle.Cms;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Utils;
@@ -59,7 +61,7 @@ namespace iText.Bouncycastle.Cms {
         /// <summary><inheritDoc/></summary>
         public virtual ICollection<IRecipientInformation> GetRecipients() {
             List<IRecipientInformation> iRecipientInformations = new List<IRecipientInformation>();
-            ICollection<RecipientInformation> recipients = recipientInformationStore.GetRecipients();
+            ICollection recipients = recipientInformationStore.GetRecipients();
             foreach (RecipientInformation recipient in recipients) {
                 iRecipientInformations.Add(new RecipientInformationBC(recipient));
             }
@@ -68,7 +70,7 @@ namespace iText.Bouncycastle.Cms {
 
         /// <summary><inheritDoc/></summary>
         public virtual IRecipientInformation Get(IRecipientId id) {
-            return new RecipientInformationBC(recipientInformationStore.Get(((RecipientIdBC)id).GetRecipientId()));
+            return new RecipientInformationBC(recipientInformationStore[((RecipientIdBC)id).GetRecipientId()]);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

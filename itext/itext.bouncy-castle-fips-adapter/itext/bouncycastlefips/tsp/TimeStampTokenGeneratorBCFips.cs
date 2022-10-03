@@ -64,7 +64,7 @@ namespace iText.Bouncycastlefips.Tsp {
         /// <param name="policyOid">policy OID</param>
         public TimeStampTokenGeneratorBCFips(IPrivateKey pk, IX509Certificate cert, 
             string allowedDigest, string policyOid) {
-            string signatureName = allowedDigest + "With" + pk.GetAlgorithm();
+            string signatureName = allowedDigest + "with" + pk.GetAlgorithm();
 
             SignerInfoGenerator signerInfoGen = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider())
                 .WithSignedAttributeGenerator(
@@ -92,7 +92,7 @@ namespace iText.Bouncycastlefips.Tsp {
             if (assocCert.GetExtensionValue(X509Extensions.ExtendedKeyUsage) == null) {
                 throw new Exception("Certificate must have an ExtendedKeyUsage extension.");
             }
-            if (!assocCert.GetCriticalExtensionOids().Contains(X509Extensions.ExtendedKeyUsage.Id)) {
+            if (!new X509CertificateBCFips(assocCert).GetCriticalExtensionOids().Contains(X509Extensions.ExtendedKeyUsage.Id)) {
                 throw new Exception("Certificate must have an ExtendedKeyUsage extension marked as critical.");
             }
             try {

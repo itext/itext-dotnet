@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using iText.Bouncycastle.Crypto;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ess;
@@ -24,13 +23,11 @@ using iText.Bouncycastlefips.Cert;
 using iText.Bouncycastlefips.Cert.Jcajce;
 using iText.Bouncycastlefips.Cert.Ocsp;
 using iText.Bouncycastlefips.Cms;
-using iText.Bouncycastlefips.Cms.Jcajce;
 using iText.Bouncycastlefips.Crypto;
 using iText.Bouncycastlefips.Crypto.Generators;
 using iText.Bouncycastlefips.Math;
 using iText.Bouncycastlefips.Openssl;
 using iText.Bouncycastlefips.Operator;
-using iText.Bouncycastlefips.Operator.Jcajce;
 using iText.Bouncycastlefips.Security;
 using iText.Bouncycastlefips.Tsp;
 using iText.Commons.Bouncycastle;
@@ -95,6 +92,10 @@ namespace iText.Bouncycastlefips {
 
         public virtual IASN1ObjectIdentifier CreateASN1ObjectIdentifier(String str) {
             return new ASN1ObjectIdentifierBCFips(str);
+        }
+        
+        public virtual IX509v2CRLBuilder CreateX509v2CRLBuilder(IX500Name x500Name, DateTime date) {
+            return new X509v2CRLBuilderBCFips(x500Name, date);
         }
 
         public virtual IASN1ObjectIdentifier CreateASN1ObjectIdentifierInstance(Object @object) {
@@ -353,49 +354,17 @@ namespace iText.Bouncycastlefips {
             return PROVIDER_NAME;
         }
 
-        public virtual IJceKeyTransEnvelopedRecipient CreateJceKeyTransEnvelopedRecipient(ICipherParameters privateKey
-            ) {
-            return new JceKeyTransEnvelopedRecipientBCFips(new JceKeyTransEnvelopedRecipient(privateKey));
-        }
-
-        public virtual IJcaContentVerifierProviderBuilder CreateJcaContentVerifierProviderBuilder() {
-            return new JcaContentVerifierProviderBuilderBCFips(new JcaContentVerifierProviderBuilder());
-        }
-
-        public virtual IJcaSimpleSignerInfoVerifierBuilder CreateJcaSimpleSignerInfoVerifierBuilder() {
-            return new JcaSimpleSignerInfoVerifierBuilderBCFips(new JcaSimpleSignerInfoVerifierBuilder());
-        }
-
-        public virtual IJcaX509CertificateConverter CreateJcaX509CertificateConverter() {
-            return new JcaX509CertificateConverterBCFips(new JcaX509CertificateConverter());
-        }
-
-        public virtual IJcaDigestCalculatorProviderBuilder CreateJcaDigestCalculatorProviderBuilder() {
-            return new JcaDigestCalculatorProviderBuilderBCFips(new JcaDigestCalculatorProviderBuilder());
-        }
-
         public virtual ICertificateID CreateCertificateID() {
             return CertificateIDBCFips.GetInstance();
         }
 
-        public virtual IX509CertificateHolder CreateX509CertificateHolder(byte[] bytes) {
-            return new X509CertificateHolderBCFips(bytes);
-        }
-
-        public virtual IJcaX509CertificateHolder CreateJcaX509CertificateHolder(X509Certificate certificate) {
-            return new JcaX509CertificateHolderBCFips(new JcaX509CertificateHolder(certificate));
-        }
-
-        public virtual IExtensions CreateExtensions(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString
-             octetString) {
-            IDictionary extension = new Hashtable();
-            extension.Add(((ASN1ObjectIdentifierBCFips)objectIdentifier).GetASN1ObjectIdentifier(),
-                new X509Extension(critical, ((ASN1OctetStringBCFips)octetString).GetOctetString()));
-            return new ExtensionsBCFips(new X509Extensions(extension));
-        }
-
         public IExtensions CreateExtensions(IDictionary objectIdentifier) {
-            return new ExtensionsBCFips(new X509Extensions(objectIdentifier));
+            IDictionary dictionary = new Dictionary<DerObjectIdentifier, X509Extension>();
+            foreach (var key in objectIdentifier.Keys) {
+                dictionary.Add(((ASN1ObjectIdentifierBCFips)key).GetASN1ObjectIdentifier(), 
+                    ((ExtensionBCFips)objectIdentifier[key]).GetX509Extension());
+            }
+            return new ExtensionsBCFips(new X509Extensions(dictionary));
         }
         
         public virtual IExtensions CreateExtensions() {
@@ -643,10 +612,6 @@ namespace iText.Bouncycastlefips {
             return null;
         }
 
-        public virtual IJcaCertStore CreateJcaCertStore(IList<X509Certificate> certificates) {
-            return new JcaCertStoreBCFips(new JcaCertStore(certificates));
-        }
-
         public virtual ITimeStampResponseGenerator CreateTimeStampResponseGenerator(ITimeStampTokenGenerator tokenGenerator
             , IList algorithms) {
             return new TimeStampResponseGeneratorBCFips((TimeStampTokenGeneratorBCFips)tokenGenerator, algorithms);
@@ -654,15 +619,6 @@ namespace iText.Bouncycastlefips {
 
         public virtual ITimeStampRequest CreateTimeStampRequest(byte[] bytes) {
             return new TimeStampRequestBCFips(TimeStampReq.GetInstance(new Asn1InputStream(bytes).ReadObject()));
-        }
-
-        public virtual IJcaContentSignerBuilder CreateJcaContentSignerBuilder(String algorithm) {
-            return new JcaContentSignerBuilderBCFips(new JcaContentSignerBuilder(algorithm));
-        }
-
-        public virtual IJcaSignerInfoGeneratorBuilder CreateJcaSignerInfoGeneratorBuilder(IDigestCalculatorProvider
-             digestCalcProviderProvider) {
-            return new JcaSignerInfoGeneratorBuilderBCFips(digestCalcProviderProvider);
         }
 
         public ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate certificate, 
@@ -724,13 +680,10 @@ namespace iText.Bouncycastlefips {
             return new ExtendedKeyUsageBCFips(purposeId);
         }
 
-        public virtual IX509ExtensionUtils CreateX509ExtensionUtils(IDigestCalculator digestCalculator) {
-            return new X509ExtensionUtilsBCFips(digestCalculator);
-        }
-
-        public virtual ISubjectPublicKeyInfo CreateSubjectPublicKeyInfo(Object @object) {
-            return new SubjectPublicKeyInfoBCFips(@object is ASN1EncodableBCFips ? ((ASN1EncodableBCFips)@object).GetEncodable
-                () : @object);
+        public virtual ISubjectPublicKeyInfo CreateSubjectPublicKeyInfo(IPublicKey publicKey) {
+            return new SubjectPublicKeyInfoBCFips(new SubjectPublicKeyInfo(new AlgorithmIdentifier(
+                    PkcsObjectIdentifiers.RsaEncryption, DerNull.Instance), 
+                ((PublicKeyBCFips)publicKey).GetPublicKey().GetEncoded()));
         }
 
         public virtual ICRLReason CreateCRLReason() {
@@ -754,6 +707,8 @@ namespace iText.Bouncycastlefips {
                     return (X509CertificateBCFips) obj;
                 case X509Certificate certificate:
                     return new X509CertificateBCFips(certificate);
+                case byte[] encoded:
+                    return new X509CertificateBCFips(new X509Certificate(X509CertificateStructure.GetInstance(encoded)));
                 default:
                     return null;
             }
@@ -831,7 +786,8 @@ namespace iText.Bouncycastlefips {
         public List<IX509Certificate> ReadAllCerts(byte[] contentsKey) {
             List<IX509Certificate> certs = new List<IX509Certificate>();
             X509Certificate cert;
-            while ((cert = ReadCertificate(new MemoryStream(contentsKey))) != null) {
+            MemoryStream stream = new MemoryStream(contentsKey);
+            while ((cert = ReadCertificate(stream)) != null) {
                 certs.Add(new X509CertificateBCFips(cert));
             }
             return certs;
@@ -910,23 +866,27 @@ namespace iText.Bouncycastlefips {
         public IContentSigner CreateContentSigner(string signatureAlgorithm, IPrivateKey signingKey) {
             ISignatureFactory<AlgorithmIdentifier> factory = null;
             ISignatureFactoryService signatureFactoryProvider =
-                CryptoServicesRegistrar.CreateService(((PrivateKeyBCFips) signingKey).GetPrivateKey(), new SecureRandom());
-            if ("SHA256WithRSA".Equals(signatureAlgorithm)) {
-                factory = new PkixSignatureFactory(signatureFactoryProvider.
-                    CreateSignatureFactory(FipsRsa.Pkcs1v15.WithDigest(FipsShs.Sha256)));
+                CryptoServicesRegistrar.CreateService((ICryptoServiceType<ISignatureFactoryService>)
+                    ((PrivateKeyBCFips) signingKey).GetPrivateKey(), new SecureRandom());
+            switch (signatureAlgorithm.ToUpper()) {
+                case "SHA256WITHRSA":
+                    factory = new PkixSignatureFactory(signatureFactoryProvider.
+                        CreateSignatureFactory(FipsRsa.Pkcs1v15.WithDigest(FipsShs.Sha256)));
+                    break;
+                case "SHA1WITHRSA":
+                    factory = new PkixSignatureFactory(signatureFactoryProvider.
+                        CreateSignatureFactory(FipsRsa.Pkcs1v15.WithDigest(FipsShs.Sha1)));
+                    break;
+                case "SHA1WITHDSA":
+                    factory = new PkixSignatureFactory(signatureFactoryProvider.
+                        CreateSignatureFactory(FipsDsa.Dsa.WithDigest(FipsShs.Sha1)));
+                    break;
+                case "SHA1WITHECDSA":
+                    factory = new PkixSignatureFactory(signatureFactoryProvider.
+                        CreateSignatureFactory(FipsEC.Dsa.WithDigest(FipsShs.Sha1)));
+                    break;
             }
-            if ("SHA1WithRSA".Equals(signatureAlgorithm)) {
-                factory = new PkixSignatureFactory(signatureFactoryProvider.
-                    CreateSignatureFactory(FipsRsa.Pkcs1v15.WithDigest(FipsShs.Sha1)));
-            }
-            if ("SHA1WithDSA".Equals(signatureAlgorithm)) {
-                factory = new PkixSignatureFactory(signatureFactoryProvider.
-                    CreateSignatureFactory(FipsDsa.Dsa.WithDigest(FipsShs.Sha1)));
-            }
-            if ("SHA1WithECDSA".Equals(signatureAlgorithm)) {
-                factory = new PkixSignatureFactory(signatureFactoryProvider.
-                    CreateSignatureFactory(FipsEC.Dsa.WithDigest(FipsShs.Sha1)));
-            }
+
             return new ContentSignerBCFips(factory);
         }
 

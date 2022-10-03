@@ -20,9 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using Org.BouncyCastle.Asn1.X509;
-using iText.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X509;
 
 namespace iText.Bouncycastle.Asn1.X509 {
@@ -42,19 +40,6 @@ namespace iText.Bouncycastle.Asn1.X509 {
         /// </param>
         public SubjectPublicKeyInfoBC(SubjectPublicKeyInfo subjectPublicKeyInfo)
             : base(subjectPublicKeyInfo) {
-        }
-
-        /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Asn1.X509.SubjectPublicKeyInfo"/>.
-        /// </summary>
-        /// <param name="obj">
-        /// to get
-        /// <see cref="Org.BouncyCastle.Asn1.X509.SubjectPublicKeyInfo"/>
-        /// instance to be wrapped
-        /// </param>
-        public SubjectPublicKeyInfoBC(Object obj)
-            : base(SubjectPublicKeyInfo.GetInstance(obj)) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

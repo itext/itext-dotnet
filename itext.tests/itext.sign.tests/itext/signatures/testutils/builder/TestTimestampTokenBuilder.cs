@@ -106,7 +106,7 @@ namespace iText.Signatures.Testutils.Builder {
         private static ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate cert,
             String allowedDigest, String policyOid) {
             return FACTORY.CreateTimeStampTokenGenerator(pk, cert,
-                DigestAlgorithms.GetAllowedDigest(allowedDigest), policyOid);
+                DigestAlgorithms.GetDigest(DigestAlgorithms.GetAllowedDigest(allowedDigest)), policyOid);
         }
 
     }

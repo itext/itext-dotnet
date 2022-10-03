@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Security.Cryptography;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
@@ -9,6 +10,7 @@ namespace iText.Bouncycastlefips.Crypto {
     /// </summary>
     public class IDigestBCFips : IIDigest {
         private readonly HashAlgorithm digest;
+        private MemoryStream stream;
         private string algorithmName;
 
         /// <summary>
@@ -20,6 +22,7 @@ namespace iText.Bouncycastlefips.Crypto {
         /// </param>
         public IDigestBCFips(HashAlgorithm digest) {
             this.digest = digest;
+            stream = new MemoryStream();
         }
 
         /// <summary>
@@ -30,9 +33,14 @@ namespace iText.Bouncycastlefips.Crypto {
         /// hash algorithm to create System.Security.Cryptography.HashAlgorithm
         /// </param>
         public IDigestBCFips(string hashAlgorithm) {
-            Oid oid = new Oid(hashAlgorithm);
-            digest = HashAlgorithm.Create(oid.FriendlyName);
-            algorithmName = oid.FriendlyName;
+            stream = new MemoryStream();
+            digest = HashAlgorithm.Create(hashAlgorithm);
+            algorithmName = hashAlgorithm;
+            if (digest == null) {
+                Oid oid = new Oid(hashAlgorithm);
+                digest = HashAlgorithm.Create(oid.FriendlyName);
+                algorithmName = oid.FriendlyName;
+            }
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
@@ -56,14 +64,13 @@ namespace iText.Bouncycastlefips.Crypto {
 
         /// <summary><inheritDoc/></summary>
         public byte[] Digest() {
-            byte[] output = digest.Hash;
-            digest.Clear();
-            return output;
+            stream.Position = 0;
+            return digest.ComputeHash(stream);
         }
 
         /// <summary><inheritDoc/></summary>
         public void Update(byte[] buf, int off, int len) {
-            digest.ComputeHash(buf, off, len);
+            stream.Write(buf, off, len);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -73,7 +80,7 @@ namespace iText.Bouncycastlefips.Crypto {
 
         /// <summary><inheritDoc/></summary>
         public void Reset() {
-            Digest();
+            stream = new MemoryStream();
         }
 
         /// <summary><inheritDoc/></summary>

@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Org.BouncyCastle.Tsp;
@@ -33,6 +34,7 @@ using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.X509;
 using Org.BouncyCastle.X509.Store;
 
 namespace iText.Bouncycastle.Tsp {
@@ -91,7 +93,8 @@ namespace iText.Bouncycastle.Tsp {
         /// <summary><inheritDoc/></summary>
         public virtual void SetCertificates(IList<IX509Certificate> certificateChain) {
             timeStampTokenGenerator.SetCertificates(X509StoreFactory.Create("Certificate/Collection", 
-                new X509CollectionStoreParameters(certificateChain.ToList())));
+                new X509CollectionStoreParameters(certificateChain.Select(certificate => 
+                    ((X509CertificateBC)certificate).GetCertificate()).ToList())));
         }
 
         /// <summary><inheritDoc/></summary>

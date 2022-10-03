@@ -1,32 +1,32 @@
 using System;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
-using Org.BouncyCastle.Crypto.Asymmetric;
+using Org.BouncyCastle.Crypto;
 
 namespace iText.Bouncycastlefips.Crypto {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Crypto.Asymmetric.AsymmetricRsaPrivateKey"/>.
+    /// <see cref="IAsymmetricPrivateKey"/>.
     /// </summary>
     public class PrivateKeyBCFips: IPrivateKey {
-        private readonly AsymmetricRsaPrivateKey privateKey;
+        private readonly IAsymmetricPrivateKey privateKey;
 
         /// <summary>
-        /// Creates new wrapper instance for <see cref="Org.BouncyCastle.Crypto.Asymmetric.AsymmetricRsaPrivateKey"/>.
+        /// Creates new wrapper instance for <see cref="IAsymmetricPrivateKey"/>.
         /// </summary>
         /// <param name="privateKey">
-        /// <see cref="Org.BouncyCastle.Crypto.Asymmetric.AsymmetricRsaPrivateKey"/>
+        /// <see cref="IAsymmetricPrivateKey"/>
         /// to be wrapped
         /// </param>
-        public PrivateKeyBCFips(AsymmetricRsaPrivateKey privateKey) {
+        public PrivateKeyBCFips(IAsymmetricPrivateKey privateKey) {
             this.privateKey = privateKey;
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
-        /// wrapped <see cref="Org.BouncyCastle.Crypto.Asymmetric.AsymmetricRsaPrivateKey"/>.
+        /// wrapped <see cref="IAsymmetricPrivateKey"/>.
         /// </returns>
-        public virtual AsymmetricRsaPrivateKey GetPrivateKey() {
+        public virtual IAsymmetricPrivateKey GetPrivateKey() {
             return privateKey;
         }
         

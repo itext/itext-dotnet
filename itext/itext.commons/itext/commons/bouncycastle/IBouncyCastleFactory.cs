@@ -137,24 +137,7 @@ namespace iText.Commons.Bouncycastle {
 
         String GetProviderName();
 
-        IJceKeyTransEnvelopedRecipient CreateJceKeyTransEnvelopedRecipient(IPrivateKey privateKey);
-
-        IJcaContentVerifierProviderBuilder CreateJcaContentVerifierProviderBuilder();
-
-        IJcaSimpleSignerInfoVerifierBuilder CreateJcaSimpleSignerInfoVerifierBuilder();
-
-        IJcaX509CertificateConverter CreateJcaX509CertificateConverter();
-
-        IJcaDigestCalculatorProviderBuilder CreateJcaDigestCalculatorProviderBuilder();
-
         ICertificateID CreateCertificateID();
-
-        IX509CertificateHolder CreateX509CertificateHolder(byte[] bytes);
-
-        IJcaX509CertificateHolder CreateJcaX509CertificateHolder(IX509Certificate certificate);
-
-        IExtensions CreateExtensions(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString octetString
-            );
 
         IExtensions CreateExtensions(IDictionary objectIdentifier);
 
@@ -251,16 +234,9 @@ namespace iText.Commons.Bouncycastle {
 
         IASN1UTCTime CreateASN1UTCTime(IASN1Encodable encodable);
 
-        IJcaCertStore CreateJcaCertStore(IList<IX509Certificate> certificates);
-
         ITimeStampResponseGenerator CreateTimeStampResponseGenerator(ITimeStampTokenGenerator tokenGenerator, IList algorithms);
 
         ITimeStampRequest CreateTimeStampRequest(byte[] bytes);
-
-        IJcaContentSignerBuilder CreateJcaContentSignerBuilder(String algorithm);
-
-        IJcaSignerInfoGeneratorBuilder CreateJcaSignerInfoGeneratorBuilder(IDigestCalculatorProvider digestCalcProviderProvider
-            );
 
         ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate cert, 
             string allowedDigest, string policyOid);
@@ -290,9 +266,7 @@ namespace iText.Commons.Bouncycastle {
 
         IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeId purposeId);
 
-        IX509ExtensionUtils CreateX509ExtensionUtils(IDigestCalculator digestCalculator);
-
-        ISubjectPublicKeyInfo CreateSubjectPublicKeyInfo(Object obj);
+        ISubjectPublicKeyInfo CreateSubjectPublicKeyInfo(IPublicKey publicKey);
 
         ICRLReason CreateCRLReason();
 

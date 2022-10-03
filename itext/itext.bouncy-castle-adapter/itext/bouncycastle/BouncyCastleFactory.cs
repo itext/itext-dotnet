@@ -28,13 +28,11 @@ using iText.Bouncycastle.Cert;
 using iText.Bouncycastle.Cert.Jcajce;
 using iText.Bouncycastle.Cert.Ocsp;
 using iText.Bouncycastle.Cms;
-using iText.Bouncycastle.Cms.Jcajce;
 using iText.Bouncycastle.Crypto;
 using iText.Bouncycastle.Crypto.Generators;
 using iText.Bouncycastle.Math;
 using iText.Bouncycastle.Openssl;
 using iText.Bouncycastle.Operator;
-using iText.Bouncycastle.Operator.Jcajce;
 using iText.Bouncycastle.Security;
 using iText.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle;
@@ -346,37 +344,8 @@ namespace iText.Bouncycastle {
             return PROVIDER_NAME;
         }
 
-        public virtual IJceKeyTransEnvelopedRecipient CreateJceKeyTransEnvelopedRecipient(ICipherParameters privateKey
-            ) {
-            return new JceKeyTransEnvelopedRecipientBC(new JceKeyTransEnvelopedRecipient(privateKey));
-        }
-
-        public virtual IJcaContentVerifierProviderBuilder CreateJcaContentVerifierProviderBuilder() {
-            return new JcaContentVerifierProviderBuilderBC(new JcaContentVerifierProviderBuilder());
-        }
-
-        public virtual IJcaSimpleSignerInfoVerifierBuilder CreateJcaSimpleSignerInfoVerifierBuilder() {
-            return new JcaSimpleSignerInfoVerifierBuilderBC(new JcaSimpleSignerInfoVerifierBuilder());
-        }
-
-        public virtual IJcaX509CertificateConverter CreateJcaX509CertificateConverter() {
-            return new JcaX509CertificateConverterBC(new JcaX509CertificateConverter());
-        }
-
-        public virtual IJcaDigestCalculatorProviderBuilder CreateJcaDigestCalculatorProviderBuilder() {
-            return new JcaDigestCalculatorProviderBuilderBC(new JcaDigestCalculatorProviderBuilder());
-        }
-
         public virtual ICertificateID CreateCertificateID() {
             return CertificateIDBC.GetInstance();
-        }
-
-        public virtual IX509CertificateHolder CreateX509CertificateHolder(byte[] bytes) {
-            return new X509CertificateHolderBC(bytes);
-        }
-
-        public virtual IJcaX509CertificateHolder CreateJcaX509CertificateHolder(X509Certificate certificate) {
-            return new JcaX509CertificateHolderBC(new JcaX509CertificateHolder(certificate));
         }
 
         public virtual IExtensions CreateExtensions(IASN1ObjectIdentifier objectIdentifier, bool critical, IASN1OctetString
@@ -388,7 +357,12 @@ namespace iText.Bouncycastle {
         }
 
         public IExtensions CreateExtensions(IDictionary objectIdentifier) {
-            return new ExtensionsBC(new X509Extensions(objectIdentifier));
+            IDictionary dictionary = new Dictionary<DerObjectIdentifier, X509Extension>();
+            foreach (var key in objectIdentifier.Keys) {
+                dictionary.Add(((ASN1ObjectIdentifierBC)key).GetASN1ObjectIdentifier(), 
+                    ((ExtensionBC)objectIdentifier[key]).GetX509Extension());
+            }
+            return new ExtensionsBC(new X509Extensions(dictionary));
         }
 
         public virtual IExtensions CreateExtensions() {
@@ -639,10 +613,6 @@ namespace iText.Bouncycastle {
             return null;
         }
 
-        public virtual IJcaCertStore CreateJcaCertStore(IList<X509Certificate> certificates) {
-            return new JcaCertStoreBC(new JcaCertStore(certificates));
-        }
-
         public virtual ITimeStampResponseGenerator CreateTimeStampResponseGenerator(ITimeStampTokenGenerator tokenGenerator
             , IList algorithms) {
             return new TimeStampResponseGeneratorBC(tokenGenerator, algorithms);
@@ -650,15 +620,6 @@ namespace iText.Bouncycastle {
 
         public virtual ITimeStampRequest CreateTimeStampRequest(byte[] bytes) {
             return new TimeStampRequestBC(new TimeStampRequest(bytes));
-        }
-
-        public virtual IJcaContentSignerBuilder CreateJcaContentSignerBuilder(String algorithm) {
-            return new JcaContentSignerBuilderBC(new JcaContentSignerBuilder(algorithm));
-        }
-
-        public virtual IJcaSignerInfoGeneratorBuilder CreateJcaSignerInfoGeneratorBuilder(IDigestCalculatorProvider
-             digestCalcProviderProvider) {
-            return new JcaSignerInfoGeneratorBuilderBC(digestCalcProviderProvider);
         }
 
         public ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate certificate, 
@@ -720,13 +681,9 @@ namespace iText.Bouncycastle {
             return new ExtendedKeyUsageBC(purposeId);
         }
 
-        public virtual IX509ExtensionUtils CreateX509ExtensionUtils(IDigestCalculator digestCalculator) {
-            return new X509ExtensionUtilsBC(digestCalculator);
-        }
-
-        public virtual ISubjectPublicKeyInfo CreateSubjectPublicKeyInfo(Object @object) {
-            return new SubjectPublicKeyInfoBC(@object is ASN1EncodableBC ? ((ASN1EncodableBC)@object).GetEncodable() : 
-                @object);
+        public virtual ISubjectPublicKeyInfo CreateSubjectPublicKeyInfo(IPublicKey publicKey) {
+            return new SubjectPublicKeyInfoBC(SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(
+                ((PublicKeyBC)publicKey).GetPublicKey()));
         }
 
         public virtual ICRLReason CreateCRLReason() {
@@ -750,6 +707,8 @@ namespace iText.Bouncycastle {
                     return (X509CertificateBC) obj;
                 case X509Certificate certificate:
                     return new X509CertificateBC(certificate);
+                case byte[] encoded:
+                    return new X509CertificateBC(new X509CertificateParser().ReadCertificate(encoded));
                 default:
                     return null;
             }
@@ -772,7 +731,7 @@ namespace iText.Bouncycastle {
         }
         
         public IX500Name CreateX500NameInstance(IASN1Encodable issuer) {
-            return new X500NameBC(X509Name.GetInstance(issuer));
+            return new X500NameBC(X509Name.GetInstance(((ASN1EncodableBC)issuer).GetEncodable()));
         }
 
         public IOCSPReq CreateOCSPReq(ICertificateID certId, byte[] documentId) {

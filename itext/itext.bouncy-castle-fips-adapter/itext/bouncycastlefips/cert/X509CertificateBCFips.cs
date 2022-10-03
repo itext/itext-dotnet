@@ -90,15 +90,19 @@ namespace iText.Bouncycastlefips.Cert {
         /// <summary><inheritDoc/></summary>
         public ISet<string> GetCriticalExtensionOids() {
             ISet<string> set = new HashSet<string>();
-            foreach (string oid in certificate.GetCriticalExtensionOids()) {
-                set.Add(oid);
+            foreach (DerObjectIdentifier oid in certificate.GetCriticalExtensionOids()) {
+                set.Add(oid.Id);
             }
             return set;
         }
 
         /// <summary><inheritDoc/></summary>
         public void CheckValidity(DateTime time) {
-            certificate.CheckValidity(time);
+            try {
+                certificate.CheckValidity(time);
+            } catch (CertificateExpiredException e) {
+                throw new CertificateExpiredExceptionBCFips(e);
+            }
         }
 
         /// <summary><inheritDoc/></summary>

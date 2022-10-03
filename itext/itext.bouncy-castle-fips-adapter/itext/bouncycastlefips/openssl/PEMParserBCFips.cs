@@ -7,6 +7,7 @@ using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Cert;
+using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Operators;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
@@ -101,11 +102,11 @@ namespace iText.Bouncycastlefips.Openssl {
             return parser.ToString();
         }
         
-        private static AsymmetricRsaPrivateKey GeneratePrivateKey(
+        private static IAsymmetricPrivateKey GeneratePrivateKey(
             Pkcs8EncryptedPrivateKeyInfo encryptedPrivateKeyInfo, char[] password) {
             PrivateKeyInfo privateKeyInfo = encryptedPrivateKeyInfo.DecryptPrivateKeyInfo(
                 new PkixPbeDecryptorProviderBuilder().Build(password));
-            return (AsymmetricRsaPrivateKey)AsymmetricKeyFactory.CreatePrivateKey(privateKeyInfo.GetEncoded());
+            return AsymmetricKeyFactory.CreatePrivateKey(privateKeyInfo.GetEncoded());
         }
     }
 }

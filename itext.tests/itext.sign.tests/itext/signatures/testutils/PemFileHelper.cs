@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -24,7 +25,8 @@ namespace iText.Signatures.Testutils {
         }
 
         public static List<IX509Certificate> InitStore(String pemFileName) {
-            return new List<IX509Certificate>(ReadFirstChain(pemFileName));
+            var chain = ReadFirstChain(pemFileName);
+            return chain.Length > 0 ? new List<IX509Certificate> { chain[0] } : chain.ToList();
         }
 
         private static IList<IX509Certificate> ReadCertificates(String pemFileName) {

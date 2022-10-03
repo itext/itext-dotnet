@@ -13,6 +13,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
 
 namespace iText.Bouncycastle.Cert {
@@ -93,7 +94,11 @@ namespace iText.Bouncycastle.Cert {
 
         /// <summary><inheritDoc/></summary>
         public void CheckValidity(DateTime time) {
-            certificate.CheckValidity(time);
+            try {
+                certificate.CheckValidity(time);
+            } catch (CertificateExpiredException e) {
+                throw new CertificateExpiredExceptionBC(e);
+            }
         }
 
         /// <summary><inheritDoc/></summary>

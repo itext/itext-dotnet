@@ -115,10 +115,12 @@ namespace iText.Bouncycastlefips.Crypto {
         }
 
         private void InitSign(IPrivateKey key, string hashAlgorithm, string encrAlgorithm) {
-            InitSignature(((PrivateKeyBCFips) key).GetPrivateKey(), hashAlgorithm, encrAlgorithm);
+            InitSignature((ICryptoServiceType<ISignatureFactoryService>)
+                ((PrivateKeyBCFips) key).GetPrivateKey(), hashAlgorithm, encrAlgorithm);
         }
 
-        private void InitSignature(AsymmetricRsaPrivateKey key, string hashAlgorithm, string encAlgorithm) {
+        private void InitSignature(ICryptoServiceType<ISignatureFactoryService> key, 
+            string hashAlgorithm, string encAlgorithm) {
             ISignatureFactoryService signatureFactoryProvider =
                 CryptoServicesRegistrar.CreateService(key, new SecureRandom());
             FipsShs.Parameters parameters = GetMessageDigestParams(hashAlgorithm);
@@ -142,37 +144,16 @@ namespace iText.Bouncycastlefips.Crypto {
 
         private void InitVerifySignature(AsymmetricRsaPublicKey key, String hashAlgorithm, String encrAlgorithm) {
             IVerifierFactoryService verifierFactoryProvider = CryptoServicesRegistrar.CreateService(key);
-            FipsShs.Parameters parameters;
-            switch (hashAlgorithm) {
-                case "SHA-256": {
-                    parameters = FipsShs.Sha256;
-                    break;
-                }
-                case "SHA-512": {
-                    parameters = FipsShs.Sha512;
-                    break;
-                }
-                case "SHA-1": {
-                    parameters = FipsShs.Sha1;
-                    break;
-                }
-                default: {
-                    throw new ArgumentException("Hash algorithm " + hashAlgorithm + "is not supported");
-                }
-            }
-            
-            switch (encrAlgorithm)
-            {
-                case "RSA":
-                {
+            FipsShs.Parameters parameters = GetMessageDigestParams(hashAlgorithm);
+            switch (encrAlgorithm) {
+                case "RSA": {
                     IVerifierFactory<FipsRsa.SignatureParameters> rsaSig =
                         verifierFactoryProvider.CreateVerifierFactory((
                             FipsRsa.Pkcs1v15.WithDigest(parameters)));
                     iSigner = rsaSig.CreateCalculator();
                     break;
                 }
-                case "DSA":
-                {
+                case "DSA": {
                     IVerifierFactory<FipsEC.SignatureParameters> rsaSig =
                         verifierFactoryProvider.CreateVerifierFactory((
                             FipsEC.Dsa.WithDigest(parameters)));
@@ -188,21 +169,14 @@ namespace iText.Bouncycastlefips.Crypto {
         /// <param name="hashAlgorithm">hash algorithm</param>
         private static FipsShs.Parameters GetMessageDigestParams(String hashAlgorithm) {
             switch (hashAlgorithm) {
-                case "2.16.840.1.101.3.4.2.1":
-                case "SHA-256": {
+                case "SHA256":
                     return FipsShs.Sha256;
-                }
-                case "2.16.840.1.101.3.4.2.3":
-                case "SHA-512": {
+                case "SHA512":
                     return FipsShs.Sha512;
-                }
-                case "1.3.14.3.2.26":
-                case "SHA-1": {
+                case "SHA1":
                     return FipsShs.Sha1;
-                }
-                default: {
-                    throw new ArgumentException("Hash algorithm " + hashAlgorithm + "is not supported");
-                }
+                default: 
+                    throw new ArgumentException("Hash algorithm " + hashAlgorithm + " is not supported");
             }
         }
     }
