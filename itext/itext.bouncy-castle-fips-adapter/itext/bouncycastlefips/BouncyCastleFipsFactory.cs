@@ -30,6 +30,7 @@ using iText.Bouncycastlefips.Openssl;
 using iText.Bouncycastlefips.Operator;
 using iText.Bouncycastlefips.Security;
 using iText.Bouncycastlefips.Tsp;
+using iText.Bouncycastlefips.X509;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Cms;
@@ -54,6 +55,7 @@ using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
+using iText.Commons.Bouncycastle.X509;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Asn1.X500;
@@ -360,7 +362,7 @@ namespace iText.Bouncycastlefips {
 
         public IExtensions CreateExtensions(IDictionary objectIdentifier) {
             IDictionary dictionary = new Dictionary<DerObjectIdentifier, X509Extension>();
-            foreach (var key in objectIdentifier.Keys) {
+            foreach (IASN1ObjectIdentifier key in objectIdentifier.Keys) {
                 dictionary.Add(((ASN1ObjectIdentifierBCFips)key).GetASN1ObjectIdentifier(), 
                     ((ExtensionBCFips)objectIdentifier[key]).GetX509Extension());
             }
@@ -782,36 +784,9 @@ namespace iText.Bouncycastlefips {
         public IISigner CreateISigner() {
             return new ISignerBCFips(null);
         }
-        
-        public List<IX509Certificate> ReadAllCerts(byte[] contentsKey) {
-            List<IX509Certificate> certs = new List<IX509Certificate>();
-            X509Certificate cert;
-            MemoryStream stream = new MemoryStream(contentsKey);
-            while ((cert = ReadCertificate(stream)) != null) {
-                certs.Add(new X509CertificateBCFips(cert));
-            }
-            return certs;
-        }
-        
-        private static X509Certificate ReadCertificate(MemoryStream stream) {
-            PushbackStream pushbackStream = new PushbackStream(stream);
-            int tag = pushbackStream.ReadByte();
-            if (tag < 0) {
-                return null;
-            }
-            pushbackStream.Unread(tag);
-            Asn1Sequence seq = (Asn1Sequence)(new Asn1InputStream(pushbackStream).ReadObject());
-            if (seq.Count > 1 && seq[0] is DerObjectIdentifier) {
-                if (seq[0].Equals(PkcsObjectIdentifiers.SignedData)) {
-                    Asn1Set sData = SignedData.GetInstance(
-                        Asn1Sequence.GetInstance((Asn1TaggedObject) seq[1], true)).Certificates;
-                    object obj = sData[0];
-                    if (obj is Asn1Sequence) {
-                        return new X509Certificate(X509CertificateStructure.GetInstance(obj));
-                    }
-                }
-            }
-            return new X509Certificate(X509CertificateStructure.GetInstance(seq));
+
+        public IX509CertificateParser CreateX509CertificateParser() {
+            return new X509CertificateParserBCFips();
         }
 
         public AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage,
@@ -845,6 +820,18 @@ namespace iText.Bouncycastlefips {
 
         public ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv) {
             return new CipherBCFips(forEncryption, key, iv);
+        }
+
+        public ICipher CreateCipher(bool forEncryption, IPublicKey key, IAlgorithmIdentifier algorithmIdentifier) {
+            return new CipherBCFips(forEncryption, key, algorithmIdentifier);
+        }
+        
+        public ICipherCBCnoPad CreateCipherCbCnoPad(bool forEncryption, byte[] key, byte[] iv) {
+            return new CipherCBCnoPadBCFips(forEncryption, key, iv);
+        }
+        
+        public ICipherCBCnoPad CreateCipherCbCnoPad(bool forEncryption, byte[] key) {
+            return new CipherCBCnoPadBCFips(forEncryption, key);
         }
 
         public IX509Crl CreateNullCrl() {
@@ -886,7 +873,6 @@ namespace iText.Bouncycastlefips {
                         CreateSignatureFactory(FipsEC.Dsa.WithDigest(FipsShs.Sha1)));
                     break;
             }
-
             return new ContentSignerBCFips(factory);
         }
 

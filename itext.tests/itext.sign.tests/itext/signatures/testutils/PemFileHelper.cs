@@ -25,7 +25,7 @@ namespace iText.Signatures.Testutils {
         }
 
         public static List<IX509Certificate> InitStore(String pemFileName) {
-            var chain = ReadFirstChain(pemFileName);
+            IX509Certificate[] chain = ReadFirstChain(pemFileName);
             return chain.Length > 0 ? new List<IX509Certificate> { chain[0] } : chain.ToList();
         }
 

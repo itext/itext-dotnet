@@ -67,7 +67,7 @@ namespace iText.Bouncycastlefips.Tsp {
 	        var signerEnum = signers.GetEnumerator();
 	        signerEnum.MoveNext();
 	        tsaSignerInfo = signerEnum.Current;
-	        var content = tsToken.SignedContent;
+	        ICmsTypedData content = tsToken.SignedContent;
 	        MemoryStream bOut = new MemoryStream();
 	        content.Write(bOut);
 	        tstInfo = TstInfo.GetInstance(Asn1Object.FromByteArray(bOut.ToArray()));

@@ -48,7 +48,7 @@ namespace iText.Kernel.Crypto {
     /// <summary>Creates an AES Cipher with CBC and no padding.</summary>
     /// <author>Paulo Soares</author>
     public class AESCipherCBCnoPad {
-        private static ICipher cipher;
+        private static ICipherCBCnoPad cipher;
 
         /// <summary>Creates a new instance of AESCipher with CBC and no padding</summary>
         /// <param name="forEncryption">
@@ -56,8 +56,8 @@ namespace iText.Kernel.Crypto {
         /// encryption, if false for decryption
         /// </param>
         /// <param name="key">the key to be used in the cipher</param>
-        public AESCipherCBCnoPad(bool forEncryption, byte[] key)
-            : this(forEncryption, key, new byte[16]) {
+        public AESCipherCBCnoPad(bool forEncryption, byte[] key) {
+            cipher = BouncyCastleFactoryCreator.GetFactory().CreateCipherCbCnoPad(forEncryption, key);
         }
 
         /// <summary>Creates a new instance of AESCipher with CBC and no padding</summary>
@@ -68,11 +68,18 @@ namespace iText.Kernel.Crypto {
         /// <param name="key">the key to be used in the cipher</param>
         /// <param name="initVector">initialization vector to be used in cipher</param>
         public AESCipherCBCnoPad(bool forEncryption, byte[] key, byte[] initVector) {
-            cipher = BouncyCastleFactoryCreator.GetFactory().CreateCipher(forEncryption, key, initVector);
+            cipher = BouncyCastleFactoryCreator.GetFactory().CreateCipherCbCnoPad(forEncryption, key, initVector);
         }
 
+        /// <summary>
+        /// Processes data block using created cipher.
+        /// </summary>
+        /// <param name="inp">Input data bytes</param>
+        /// <param name="inpOff">Input data offset</param>
+        /// <param name="inpLen">Input data length</param>
+        /// <returns>Processed bytes</returns>
         public virtual byte[] ProcessBlock(byte[] inp, int inpOff, int inpLen) {
-            return cipher.Update(inp, inpOff, inpLen);
+            return cipher.ProcessBlock(inp, inpOff, inpLen);
         }
     }
 }

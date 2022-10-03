@@ -35,6 +35,7 @@ using iText.Bouncycastle.Openssl;
 using iText.Bouncycastle.Operator;
 using iText.Bouncycastle.Security;
 using iText.Bouncycastle.Tsp;
+using iText.Bouncycastle.X509;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Cms;
@@ -59,6 +60,7 @@ using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
+using iText.Commons.Bouncycastle.X509;
 using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.OpenSsl;
@@ -358,7 +360,7 @@ namespace iText.Bouncycastle {
 
         public IExtensions CreateExtensions(IDictionary objectIdentifier) {
             IDictionary dictionary = new Dictionary<DerObjectIdentifier, X509Extension>();
-            foreach (var key in objectIdentifier.Keys) {
+            foreach (IASN1ObjectIdentifier key in objectIdentifier.Keys) {
                 dictionary.Add(((ASN1ObjectIdentifierBC)key).GetASN1ObjectIdentifier(), 
                     ((ExtensionBC)objectIdentifier[key]).GetX509Extension());
             }
@@ -742,14 +744,8 @@ namespace iText.Bouncycastle {
             return new ISignerBC(null);
         }
         
-        public List<IX509Certificate> ReadAllCerts(byte[] contentsKey) {
-            X509CertificateParser cf = new X509CertificateParser();
-            List<IX509Certificate> certs = new List<IX509Certificate>();
-
-            foreach (X509Certificate cc in cf.ReadCertificates(contentsKey)) {
-                certs.Add(new X509CertificateBC(cc));
-            }
-            return certs;
+        public IX509CertificateParser CreateX509CertificateParser() {
+            return new X509CertificateParserBC(new X509CertificateParser());
         }
 
         public AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage,
@@ -783,6 +779,18 @@ namespace iText.Bouncycastle {
 
         public ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv) {
             return new CipherBC(forEncryption, key, iv);
+        }
+
+        public ICipher CreateCipher(bool forEncryption, IPublicKey key, IAlgorithmIdentifier algorithmIdentifier) {
+            return new CipherBC(forEncryption, key, algorithmIdentifier);
+        }
+
+        public ICipherCBCnoPad CreateCipherCbCnoPad(bool forEncryption, byte[] key, byte[] iv) {
+            return new CipherCBCnoPadBC(forEncryption, key, iv);
+        }
+        
+        public ICipherCBCnoPad CreateCipherCbCnoPad(bool forEncryption, byte[] key) {
+            return new CipherCBCnoPadBC(forEncryption, key);
         }
         
         public IX509Crl CreateNullCrl() {

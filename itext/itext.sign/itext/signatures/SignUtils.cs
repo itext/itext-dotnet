@@ -93,7 +93,7 @@ namespace iText.Signatures {
 
         internal static byte[] GetExtensionValueByOid(IX509Certificate certificate, String oid) {
             IASN1OctetString extensionValue = certificate.GetExtensionValue(oid);
-            return extensionValue != null ? extensionValue.GetDerEncoded() : null;
+            return extensionValue.IsNull() ? null : extensionValue.GetDerEncoded();
         }
 
         internal static IIDigest GetMessageDigest(String hashAlgorithm) {
@@ -155,7 +155,7 @@ namespace iText.Signatures {
         }
 
         internal static List<IX509Certificate> ReadAllCerts(byte[] contentsKey) {
-            return FACTORY.ReadAllCerts(contentsKey);
+            return FACTORY.CreateX509CertificateParser().ReadAllCerts(contentsKey);
         }
 
         internal static T GetFirstElement<T>(IEnumerable<T> enumerable) {

@@ -1,4 +1,7 @@
 using System;
+using iText.Bouncycastlefips.Asn1.X509;
+using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Fips;
@@ -38,6 +41,10 @@ namespace iText.Bouncycastlefips.Crypto {
             IBlockCipherBuilder<IParameters<Algorithm>> cipherBuilder = forEncryption ?
                 provider.CreateBlockEncryptorBuilder(FipsAes.Cbc.WithIV(iv)) : provider.CreateBlockDecryptorBuilder(FipsAes.Cbc.WithIV(iv));
             cipher = cipherBuilder.BuildPaddedCipher(memoryStream, new Pkcs7Padding());
+        }
+
+        public CipherBCFips(bool forEncryption, IPublicKey key, IAlgorithmIdentifier algorithmIdentifier) : 
+            this(forEncryption, ((PublicKeyBCFips)key).GetPublicKey().GetEncoded(), algorithmIdentifier.GetAlgorithm().GetEncoded()) {
         }
         
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

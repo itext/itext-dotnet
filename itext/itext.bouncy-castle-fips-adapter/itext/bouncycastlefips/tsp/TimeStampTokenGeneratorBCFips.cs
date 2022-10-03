@@ -153,10 +153,7 @@ namespace iText.Bouncycastlefips.Tsp {
             if (accuracySeconds > 0) {
                 accuracy = new Accuracy(new DerInteger(accuracySeconds), null, null);
             }
-            DerInteger nonce = null;
-            if (request.GetNonce() != null) {
-                nonce = new DerInteger(request.GetNonce().GetIntValue());
-            }
+            DerInteger nonce = req.Nonce;
             DerObjectIdentifier tsaPolicy = new DerObjectIdentifier(tsaPolicyOID);
             if (req.ReqPolicy != null) {
                 tsaPolicy = req.ReqPolicy;
@@ -172,8 +169,8 @@ namespace iText.Bouncycastlefips.Tsp {
                 signedDataGenerator.AddCertificates(x509Certs);
             }
             signedDataGenerator.AddSignerInfoGenerator(signerInfoGenerator);
-            CmsSignedData signedData = signedDataGenerator.Generate(new CmsProcessableByteArray
-                (derEncodedTstInfo), true);
+            CmsSignedData signedData = signedDataGenerator.Generate(
+                new CmsProcessableByteArray(PkcsObjectIdentifiers.IdCTTstInfo, derEncodedTstInfo), true);
             return new TimeStampTokenBCFips(signedData.ToAsn1Structure());
         }
 

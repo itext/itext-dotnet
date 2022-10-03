@@ -3,7 +3,6 @@ using System.IO;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Asymmetric;
 using Org.BouncyCastle.Crypto.Fips;
 using Org.BouncyCastle.Security;
 
@@ -110,19 +109,16 @@ namespace iText.Bouncycastlefips.Crypto {
         }
 
         private void InitVerify(IPublicKey publicKey, String hashAlgorithm, String encrAlgorithm) {
-            InitVerifySignature((AsymmetricRsaPublicKey) ((PublicKeyBCFips)publicKey).GetPublicKey(), 
-                hashAlgorithm, encrAlgorithm);
+            InitVerifySignature(((PublicKeyBCFips)publicKey).GetPublicKey(), hashAlgorithm, encrAlgorithm);
         }
 
         private void InitSign(IPrivateKey key, string hashAlgorithm, string encrAlgorithm) {
-            InitSignature((ICryptoServiceType<ISignatureFactoryService>)
-                ((PrivateKeyBCFips) key).GetPrivateKey(), hashAlgorithm, encrAlgorithm);
+            InitSignature(((PrivateKeyBCFips) key).GetPrivateKey(), hashAlgorithm, encrAlgorithm);
         }
 
-        private void InitSignature(ICryptoServiceType<ISignatureFactoryService> key, 
-            string hashAlgorithm, string encAlgorithm) {
+        private void InitSignature(IAsymmetricKey key, string hashAlgorithm, string encAlgorithm) {
             ISignatureFactoryService signatureFactoryProvider =
-                CryptoServicesRegistrar.CreateService(key, new SecureRandom());
+                CryptoServicesRegistrar.CreateService((ICryptoServiceType<ISignatureFactoryService>)key, new SecureRandom());
             FipsShs.Parameters parameters = GetMessageDigestParams(hashAlgorithm);
             switch (encAlgorithm) {
                 case "RSA": {
@@ -133,6 +129,14 @@ namespace iText.Bouncycastlefips.Crypto {
                     break;
                 }
                 case "DSA": {
+                    ISignatureFactory<FipsDsa.SignatureParameters> rsaSig =
+                        signatureFactoryProvider.CreateSignatureFactory(
+                            FipsDsa.Dsa.WithDigest(parameters));
+                    digest = rsaSig.CreateCalculator();
+                    break;
+                }
+                case "ECDSA":
+                case "EC": {
                     ISignatureFactory<FipsEC.SignatureParameters> rsaSig =
                         signatureFactoryProvider.CreateSignatureFactory(
                             FipsEC.Dsa.WithDigest(parameters));
@@ -142,21 +146,28 @@ namespace iText.Bouncycastlefips.Crypto {
             }
         }
 
-        private void InitVerifySignature(AsymmetricRsaPublicKey key, String hashAlgorithm, String encrAlgorithm) {
-            IVerifierFactoryService verifierFactoryProvider = CryptoServicesRegistrar.CreateService(key);
+        private void InitVerifySignature(IAsymmetricKey key, String hashAlgorithm, String encrAlgorithm) {
+            IVerifierFactoryService verifierFactoryProvider =
+                CryptoServicesRegistrar.CreateService((ICryptoServiceType<IVerifierFactoryService>)key);
             FipsShs.Parameters parameters = GetMessageDigestParams(hashAlgorithm);
+
             switch (encrAlgorithm) {
                 case "RSA": {
                     IVerifierFactory<FipsRsa.SignatureParameters> rsaSig =
-                        verifierFactoryProvider.CreateVerifierFactory((
-                            FipsRsa.Pkcs1v15.WithDigest(parameters)));
+                        verifierFactoryProvider.CreateVerifierFactory(FipsRsa.Pkcs1v15.WithDigest(parameters));
                     iSigner = rsaSig.CreateCalculator();
                     break;
                 }
                 case "DSA": {
+                    IVerifierFactory<FipsDsa.SignatureParameters> rsaSig =
+                        verifierFactoryProvider.CreateVerifierFactory(FipsDsa.Dsa.WithDigest(parameters));
+                    iSigner = rsaSig.CreateCalculator();
+                    break;
+                }
+                case "ECDSA":
+                case "EC": {
                     IVerifierFactory<FipsEC.SignatureParameters> rsaSig =
-                        verifierFactoryProvider.CreateVerifierFactory((
-                            FipsEC.Dsa.WithDigest(parameters)));
+                        verifierFactoryProvider.CreateVerifierFactory(FipsEC.Dsa.WithDigest(parameters));
                     iSigner = rsaSig.CreateCalculator();
                     break;
                 }
@@ -169,14 +180,18 @@ namespace iText.Bouncycastlefips.Crypto {
         /// <param name="hashAlgorithm">hash algorithm</param>
         private static FipsShs.Parameters GetMessageDigestParams(String hashAlgorithm) {
             switch (hashAlgorithm) {
-                case "SHA256":
+                case "SHA256": {
                     return FipsShs.Sha256;
-                case "SHA512":
+                }
+                case "SHA512": {
                     return FipsShs.Sha512;
-                case "SHA1":
+                }
+                case "SHA1": {
                     return FipsShs.Sha1;
-                default: 
+                }
+                default: {
                     throw new ArgumentException("Hash algorithm " + hashAlgorithm + " is not supported");
+                }
             }
         }
     }

@@ -71,8 +71,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     PdfString recipient = recipients.GetAsString(i);
                     ICMSEnvelopedData data = FACTORY.CreateCMSEnvelopedData(recipient.GetValueBytes());
                     foreach (IRecipientInformation recipientInfo in data.GetRecipientInfos().GetRecipients()) {
-                        if (recipientInfo.GetRID().Match(
-                                FACTORY.CreateX509CertificateHolder(certificate.GetEncoded())) && !foundRecipient) { 
+                        if (recipientInfo.GetRID().Match(certificate) && !foundRecipient) { 
                             envelopedData = recipientInfo.GetContent(certificateKey); 
                             foundRecipient = true;
                         }
@@ -88,8 +87,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         internal static byte[] CipherBytes(IX509Certificate x509Certificate, byte[] abyte0, IAlgorithmIdentifier algorithmidentifier) {
-            ICipher cipher = FACTORY.CreateCipher(true, x509Certificate.GetEncoded(),
-                algorithmidentifier.GetAlgorithm().GetId().GetBytes());
+            ICipher cipher = FACTORY.CreateCipher(true, x509Certificate.GetPublicKey(), algorithmidentifier);
             cipher.Update(abyte0, 0, abyte0.Length);
             byte[] abyte1 = cipher.DoFinal();
 

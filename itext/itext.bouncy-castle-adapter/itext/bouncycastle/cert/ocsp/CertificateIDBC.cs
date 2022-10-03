@@ -57,7 +57,7 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>
         /// </param>
         public CertificateIDBC(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
-            AlgorithmIdentifier hashAlgId = new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm));
+            AlgorithmIdentifier hashAlgId = new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm), DerNull.Instance);
 
             X509Name issuerName = PrincipalUtilities.GetSubjectX509Principal(((X509CertificateBC)issuerCert).GetCertificate());
             byte[] issuerNameHash = DigestUtilities.CalculateDigest(hashAlgorithm, issuerName.GetEncoded());

@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using Org.BouncyCastle.Asn1.X509;
+using iText.Bouncycastlefips.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X509;
 
 namespace iText.Bouncycastlefips.Asn1.X509 {

@@ -1,33 +1,37 @@
 using System;
+using iText.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Paddings;
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
 using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
 
 namespace iText.Bouncycastle.Crypto {
     /// <summary>
-    /// Wrapper class for PaddedBufferedBlockCipher.
+    /// Wrapper class for IBufferedCipher.
     /// </summary>
     public class CipherBC : ICipher {
-        private readonly PaddedBufferedBlockCipher cipher;
+        private readonly IBufferedCipher cipher;
         
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="PaddedBufferedBlockCipher"/>.
+        /// <see cref="IBufferedCipher"/>.
         /// </summary>
         /// <param name="cipher">
-        /// <see cref="PaddedBufferedBlockCipher"/> to be wrapped
+        /// <see cref="IBufferedCipher"/> to be wrapped
         /// </param>
-        public CipherBC(PaddedBufferedBlockCipher cipher) {
+        public CipherBC(IBufferedCipher cipher) {
             this.cipher = cipher;
         }
         
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="PaddedBufferedBlockCipher"/>.
+        /// <see cref="IBufferedCipher"/>.
         /// </summary>
         /// <param name="forEncryption">boolean value</param>
         /// <param name="key">byte array</param>
@@ -40,12 +44,17 @@ namespace iText.Bouncycastle.Crypto {
             ParametersWithIV piv = new ParametersWithIV(kp, iv);
             cipher.Init(forEncryption, piv);
         }
+
+        public CipherBC(bool forEncryption, IPublicKey key, IAlgorithmIdentifier algorithmIdentifier) {
+            cipher = CipherUtilities.GetCipher(((AlgorithmIdentifierBC)algorithmIdentifier).GetAlgorithmIdentifier().Algorithm);
+            cipher.Init(forEncryption, ((PublicKeyBC)key).GetPublicKey());
+        }
         
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
-        /// wrapped PaddedBufferedBlockCipher<IBlockResult>.
+        /// wrapped IBufferedCipher<IBlockResult>.
         /// </returns>
-        public virtual PaddedBufferedBlockCipher GetICipher() {
+        public virtual IBufferedCipher GetICipher() {
             return cipher;
         }
 

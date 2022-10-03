@@ -25,6 +25,7 @@ using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
+using iText.Commons.Bouncycastle.X509;
 
 namespace iText.Commons.Bouncycastle {
     /// <summary>
@@ -289,8 +290,8 @@ namespace iText.Commons.Bouncycastle {
         IOCSPReq CreateOCSPReq(ICertificateID certId, byte[] documentId);
         
         IISigner CreateISigner();
-        
-        List<IX509Certificate> ReadAllCerts(byte[] contentsKey);
+
+        IX509CertificateParser CreateX509CertificateParser();
 
         AbstractGeneralSecurityException CreateGeneralSecurityException(string exceptionMessage, Exception exception);
         
@@ -307,6 +308,12 @@ namespace iText.Commons.Bouncycastle {
         IBigInteger CreateBigInteger(string str);
         
         ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv);
+        
+        ICipher CreateCipher(bool forEncryption, IPublicKey key, IAlgorithmIdentifier algorithmIdentifier);
+
+        ICipherCBCnoPad CreateCipherCbCnoPad(bool forEncryption, byte[] key, byte[] iv);
+        
+        ICipherCBCnoPad CreateCipherCbCnoPad(bool forEncryption, byte[] key);
         
         IX509Crl CreateNullCrl();
 

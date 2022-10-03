@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Org.BouncyCastle.Cms;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Utils;

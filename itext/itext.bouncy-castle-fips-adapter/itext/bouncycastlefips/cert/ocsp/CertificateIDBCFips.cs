@@ -56,7 +56,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>
         /// </param>
         public CertificateIDBCFips(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
-            AlgorithmIdentifier hashAlgId = new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm));
+            AlgorithmIdentifier hashAlgId = new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm), DerNull.Instance);
 
             X500Name issuerName = ((X509CertificateBCFips)issuerCert).GetCertificate().SubjectDN;
             byte[] issuerNameHash = new IDigestBCFips(hashAlgorithm).Digest(issuerName.GetEncoded());

@@ -59,7 +59,7 @@ namespace iText.Bouncycastlefips.Cms {
         /// <summary><inheritDoc/></summary>
         public virtual ICollection<IRecipientInformation> GetRecipients() {
             List<IRecipientInformation> iRecipientInformations = new List<IRecipientInformation>();
-            ICollection<RecipientInformation> recipients = recipientInformationStore.GetRecipients();
+            ICollection<RecipientInformation> recipients = recipientInformationStore.GetAll();
             foreach (RecipientInformation recipient in recipients) {
                 iRecipientInformations.Add(new RecipientInformationBCFips(recipient));
             }
@@ -68,8 +68,8 @@ namespace iText.Bouncycastlefips.Cms {
 
         /// <summary><inheritDoc/></summary>
         public virtual IRecipientInformation Get(IRecipientId id) {
-            return new RecipientInformationBCFips(recipientInformationStore.Get(((RecipientIdBCFips)id).GetRecipientId
-                ()));
+            return new RecipientInformationBCFips(recipientInformationStore[((RecipientIdBCFips)id).GetRecipientId
+                ()]);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>
