@@ -680,7 +680,7 @@ namespace iText.Bouncycastle {
         public virtual IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeId purposeId) {
             return new ExtendedKeyUsageBC(purposeId);
         }
-
+        
         public virtual ISubjectPublicKeyInfo CreateSubjectPublicKeyInfo(IPublicKey publicKey) {
             return new SubjectPublicKeyInfoBC(SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(
                 ((PublicKeyBC)publicKey).GetPublicKey()));

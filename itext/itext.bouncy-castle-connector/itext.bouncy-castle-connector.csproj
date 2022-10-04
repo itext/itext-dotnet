@@ -24,12 +24,8 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\itext.bouncy-castle-adapter\itext.bouncy-castle-adapter.csproj">
-      <PrivateAssets>all</PrivateAssets>
-    </ProjectReference>
-	<ProjectReference Include="..\itext.bouncy-castle-fips-adapter\itext.bouncy-castle-fips-adapter.csproj">
-      <PrivateAssets>all</PrivateAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\itext.bouncy-castle-adapter\itext.bouncy-castle-adapter.csproj" />
+	<ProjectReference Include="..\itext.bouncy-castle-fips-adapter\itext.bouncy-castle-fips-adapter.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />

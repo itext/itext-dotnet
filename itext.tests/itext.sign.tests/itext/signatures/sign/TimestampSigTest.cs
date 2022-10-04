@@ -52,7 +52,7 @@ using iText.Signatures.Testutils.Client;
 using iText.Test;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("Bouncy-castle integration test")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class TimestampSigTest : ExtendedITextTest {
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";

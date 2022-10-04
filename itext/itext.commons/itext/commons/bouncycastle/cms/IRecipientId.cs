@@ -35,6 +35,6 @@ namespace iText.Commons.Bouncycastle.Cms {
         /// </summary>
         /// <param name="holder">X509CertificateHolder wrapper</param>
         /// <returns>boolean value.</returns>
-        bool Match(IX509CertificateHolder holder);
+        bool Match(IX509Certificate certificate);
     }
 }

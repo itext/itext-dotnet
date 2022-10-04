@@ -30,7 +30,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Crypto {
-    [NUnit.Framework.Category("Bouncy-castle unit test")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class CryptoUtilTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 

@@ -27,12 +27,6 @@
     <ProjectReference Include="..\itext.pdfa\itext.pdfa.csproj" />
 	<ProjectReference Include="..\itext.bouncy-castle-connector\itext.bouncy-castle-connector.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.9" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
-  </ItemGroup>
   <PropertyGroup>
     <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
   </PropertyGroup>

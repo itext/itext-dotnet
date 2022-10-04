@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of the iText (R) project.
 Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
@@ -33,7 +33,7 @@ namespace iText.Bouncycastlefips.Cms {
     /// <see cref="Org.BouncyCastle.Cms.RecipientId"/>.
     /// </summary>
     public class RecipientIdBCFips : IRecipientId {
-        private readonly IRecipientID<RecipientInformation> recipientId;
+        private readonly KeyTransRecipientID recipientId;
 
         /// <summary>
         /// Creates new wrapper instance for
@@ -44,7 +44,7 @@ namespace iText.Bouncycastlefips.Cms {
         /// <see cref="Org.BouncyCastle.Cms.RecipientId"/>
         /// to be wrapped
         /// </param>
-        public RecipientIdBCFips(IRecipientID<RecipientInformation> recipientId) {
+        public RecipientIdBCFips(KeyTransRecipientID recipientId) {
             this.recipientId = recipientId;
         }
 
@@ -58,8 +58,8 @@ namespace iText.Bouncycastlefips.Cms {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual bool Match(IX509CertificateHolder holder) {
-            return recipientId.Match(((X509CertificateHolderBCFips)holder).GetCertificateHolder());
+        public virtual bool Match(IX509Certificate certificate) {
+            return recipientId.Match(((X509CertificateBCFips)certificate).GetCertificate());
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

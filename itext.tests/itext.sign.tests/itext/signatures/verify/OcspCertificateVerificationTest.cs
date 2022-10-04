@@ -34,7 +34,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Signatures.Verify {
-    [NUnit.Framework.Category("Bouncy-castle unit test")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class OcspCertificateVerificationTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 

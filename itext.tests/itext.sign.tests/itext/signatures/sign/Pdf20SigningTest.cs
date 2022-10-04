@@ -36,7 +36,7 @@ using iText.Signatures.Testutils;
 using iText.Test;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("Bouncy-castle integration test")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class Pdf20SigningTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/Pdf20SigningTest/";

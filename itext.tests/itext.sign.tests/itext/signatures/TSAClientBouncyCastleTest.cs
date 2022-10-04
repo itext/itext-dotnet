@@ -35,7 +35,7 @@ using iText.Signatures.Testutils.Builder;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("Bouncy-castle unit test")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class TSAClientBouncyCastleTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();

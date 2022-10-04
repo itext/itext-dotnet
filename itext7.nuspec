@@ -21,12 +21,10 @@
       <group targetFramework="net461">
         <dependency id="itext7.commons" version="8.0.0-SNAPSHOT" />
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
-        <dependency id="Portable.BouncyCastle" version="1.8.9" />
       </group>
       <group targetFramework="netstandard2.0">
         <dependency id="itext7.commons" version="8.0.0-SNAPSHOT" />
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
-        <dependency id="Portable.BouncyCastle" version="1.8.9" />
         <dependency id="System.Diagnostics.Process" version="4.3.0" />
         <dependency id="System.Globalization.Extensions" version="4.3.0" />
         <dependency id="System.Runtime.Loader" version="4.3.0" />

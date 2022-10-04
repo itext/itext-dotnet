@@ -48,7 +48,7 @@ using iText.Signatures.Testutils;
 using iText.Test;
 
 namespace iText.Signatures.Verify {
-    [NUnit.Framework.Category("Bouncy-castle integration test")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class LtvVerifierTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/verify/LtvVerifierTest/";

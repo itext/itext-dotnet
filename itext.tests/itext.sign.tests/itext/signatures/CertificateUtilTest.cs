@@ -26,7 +26,7 @@ using iText.Signatures.Testutils;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("Bouncy-castle unit test")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class CertificateUtilTest : ExtendedITextTest {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";

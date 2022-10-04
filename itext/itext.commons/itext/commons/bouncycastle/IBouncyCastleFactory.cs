@@ -16,13 +16,11 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Jcajce;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
-using iText.Commons.Bouncycastle.Cms.Jcajce;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Crypto.Generators;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
-using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle.X509;
@@ -266,7 +264,7 @@ namespace iText.Commons.Bouncycastle {
         IKeyPurposeId CreateKeyPurposeId();
 
         IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeId purposeId);
-
+        
         ISubjectPublicKeyInfo CreateSubjectPublicKeyInfo(IPublicKey publicKey);
 
         ICRLReason CreateCRLReason();

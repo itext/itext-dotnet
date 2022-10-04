@@ -49,7 +49,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("Bouncy-castle integration test")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfStreamTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfStreamTest/";

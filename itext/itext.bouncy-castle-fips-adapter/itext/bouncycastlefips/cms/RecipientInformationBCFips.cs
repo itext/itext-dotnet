@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of the iText (R) project.
 Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
@@ -72,7 +72,7 @@ namespace iText.Bouncycastlefips.Cms {
 
         /// <summary><inheritDoc/></summary>
         public virtual IRecipientId GetRID() {
-            return new RecipientIdBCFips(recipientInformation.RecipientID);
+            return new RecipientIdBCFips((KeyTransRecipientID)recipientInformation.RecipientID);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

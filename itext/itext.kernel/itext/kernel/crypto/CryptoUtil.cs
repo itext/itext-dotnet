@@ -50,7 +50,6 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
-using Org.BouncyCastle.Asn1;
 
 namespace iText.Kernel.Crypto {
     /// <summary>

@@ -676,7 +676,7 @@ namespace iText.Bouncycastlefips {
         public virtual IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeId purposeId) {
             return new ExtendedKeyUsageBCFips(purposeId);
         }
-
+        
         public virtual ISubjectPublicKeyInfo CreateSubjectPublicKeyInfo(IPublicKey publicKey) {
             return new SubjectPublicKeyInfoBCFips(new SubjectPublicKeyInfo(new AlgorithmIdentifier(
                     PkcsObjectIdentifiers.RsaEncryption, DerNull.Instance), 

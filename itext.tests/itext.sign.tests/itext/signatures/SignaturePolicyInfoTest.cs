@@ -50,7 +50,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("Bouncy-castle unit test")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class SignaturePolicyInfoTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();

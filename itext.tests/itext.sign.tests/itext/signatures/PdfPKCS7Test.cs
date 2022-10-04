@@ -39,7 +39,7 @@ using iText.Signatures.Testutils.Client;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("Bouncy-castle unit test")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class PdfPKCS7Test : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/PdfPKCS7Test/";

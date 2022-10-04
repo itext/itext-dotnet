@@ -26,6 +26,7 @@ using iText.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Utils;
+using Org.BouncyCastle.X509;
 
 namespace iText.Bouncycastle.Cms {
     /// <summary>
@@ -58,8 +59,8 @@ namespace iText.Bouncycastle.Cms {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual bool Match(IX509CertificateHolder holder) {
-            return recipientId.Match(((X509CertificateHolderBC)holder).GetCertificateHolder());
+        public virtual bool Match(IX509Certificate certificate) {
+            return recipientId.Match(((X509CertificateBC)certificate).GetCertificate());
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

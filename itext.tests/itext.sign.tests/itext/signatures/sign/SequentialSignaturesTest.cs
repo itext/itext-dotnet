@@ -51,7 +51,7 @@ using iText.Signatures.Testutils;
 using iText.Test;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("Bouncy-castle integration test")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class SequentialSignaturesTest : ExtendedITextTest {
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
