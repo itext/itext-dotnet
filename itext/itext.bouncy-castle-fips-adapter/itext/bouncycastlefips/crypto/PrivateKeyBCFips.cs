@@ -32,7 +32,8 @@ namespace iText.Bouncycastlefips.Crypto {
         
         /// <summary><inheritDoc/></summary>
         public String GetAlgorithm() {
-            return privateKey.Algorithm.Name;
+            string name = privateKey.Algorithm.Name;
+            return "EC".Equals(name) ? "ECDSA" : name;
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

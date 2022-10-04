@@ -54,13 +54,13 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
                     ((PublicKeyBCFips)cert.GetPublicKey()).GetPublicKey());
             IVerifierFactory<FipsRsa.SignatureParameters> rsaVer =
                 verifierFactoryProvider.CreateVerifierFactory(
-                    FipsRsa.Pkcs1v15.WithDigest(FipsShs.Sha1));
+                    FipsRsa.Pkcs1v15.WithDigest(FipsShs.Sha256));
             IStreamCalculator<IVerifier> verCalc = rsaVer.CreateCalculator();
             using (Stream verStream = verCalc.Stream) {
                 verStream.Write(GetBasicOCSPResponse().TbsResponseData.GetDerEncoded(), 
                     0, GetBasicOCSPResponse().TbsResponseData.GetDerEncoded().Length);
             }
-            return verCalc.GetResult().IsVerified(cert.GetEncoded());
+            return verCalc.GetResult().IsVerified(GetBasicOCSPResponse().GetSignatureOctets());
         }
 
         /// <summary><inheritDoc/></summary>

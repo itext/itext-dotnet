@@ -62,7 +62,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
             byte[] issuerNameHash = new IDigestBCFips(hashAlgorithm).Digest(issuerName.GetEncoded());
 
             IAsymmetricPublicKey issuerKey = ((X509CertificateBCFips)issuerCert).GetCertificate().GetPublicKey();
-            SubjectPublicKeyInfo info = new SubjectPublicKeyInfo(hashAlgId, issuerKey.GetEncoded());
+            SubjectPublicKeyInfo info = SubjectPublicKeyInfo.GetInstance(issuerKey.GetEncoded());
             byte[] issuerKeyHash = new IDigestBCFips(hashAlgorithm).Digest(info.PublicKeyData.GetBytes());
 
             this.certificateID = new CertID(hashAlgId, new DerOctetString(issuerNameHash),

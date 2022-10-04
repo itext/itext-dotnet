@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using iText.Bouncycastlefips.Cert;
 using iText.Bouncycastlefips.Crypto;
@@ -59,14 +61,14 @@ namespace iText.Bouncycastlefips.Tsp {
 	        if (!tsToken.SignedContent.ContentType.Equals(PkcsObjectIdentifiers.IdCTTstInfo)) {
 		        throw new CmsException("ContentInfo object not for a time stamp.");
 	        }
-	        var signers = tsToken.GetSignerInfos().GetAll();
+	        ICollection<SignerInformation> signers = tsToken.GetSignerInfos().GetAll();
 	        if (signers.Count != 1) {
 		        throw new ArgumentException("Time-stamp token signed by " + signers.Count +
 		                                    " signers, but it must contain just the TSA signature.");
 	        }
-	        var signerEnum = signers.GetEnumerator();
+	        IEnumerator signerEnum = signers.GetEnumerator();
 	        signerEnum.MoveNext();
-	        tsaSignerInfo = signerEnum.Current;
+	        tsaSignerInfo = (SignerInformation) signerEnum.Current;
 	        ICmsTypedData content = tsToken.SignedContent;
 	        MemoryStream bOut = new MemoryStream();
 	        content.Write(bOut);
@@ -134,7 +136,7 @@ namespace iText.Bouncycastlefips.Tsp {
 
         /// <summary><inheritDoc/></summary>
         public virtual byte[] GetEncoded() {
-            return tsToken.GetEncoded();
+            return tsToken.ToAsn1Structure().GetEncoded(Asn1Encodable.Der);
         }
 
         /// <summary><inheritDoc/></summary>

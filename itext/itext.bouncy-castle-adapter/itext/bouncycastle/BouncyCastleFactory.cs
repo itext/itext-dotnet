@@ -830,9 +830,6 @@ namespace iText.Bouncycastle {
         }
         
         public IPEMParser CreatePEMParser(TextReader reader, char[] password) {
-            if (password == null) {
-                return new PEMParserBC(new PemReader(reader));
-            }
             return new PEMParserBC(new PemReader(reader, new BouncyCastlePasswordFinder(password)));
         }
 

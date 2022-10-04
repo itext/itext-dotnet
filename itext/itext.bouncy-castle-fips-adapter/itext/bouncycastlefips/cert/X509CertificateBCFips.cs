@@ -122,7 +122,15 @@ namespace iText.Bouncycastlefips.Cert {
 
         /// <summary><inheritDoc/></summary>
         public IList GetExtendedKeyUsage() {
-            return certificate.GetExtendedKeyUsage();
+            IList list = new ArrayList();
+            IList oids = certificate.GetExtendedKeyUsage();
+            if (oids == null) {
+                return null;
+            }
+            foreach (DerObjectIdentifier oid in certificate.GetExtendedKeyUsage()) {
+                list.Add(oid.Id);
+            }
+            return list;
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

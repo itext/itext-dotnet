@@ -66,7 +66,8 @@ namespace iText.Bouncycastlefips.Tsp {
             string allowedDigest, string policyOid) {
             string signatureName = allowedDigest + "with" + pk.GetAlgorithm();
 
-            SignerInfoGenerator signerInfoGen = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider())
+            SignerInfoGenerator signerInfoGen = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider(), 
+                    new SignatureEncryptionAlgorithmFinder())
                 .WithSignedAttributeGenerator(
                     new DefaultSignedAttributeTableGenerator(
                         new Org.BouncyCastle.Asn1.Cms.AttributeTable(new Hashtable())))
@@ -112,13 +113,15 @@ namespace iText.Bouncycastlefips.Tsp {
                 stream.Flush();
                 stream.Close();
                 if (digestCalculator.AlgorithmDetails.Algorithm.Equals(OiwObjectIdentifiers.IdSha1)) {
-                    signerInfoGenerator = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider())
+                    signerInfoGenerator = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider(), 
+                            new SignatureEncryptionAlgorithmFinder())
                         .WithSignedAttributeGenerator(new TableGen(signerInfoGen, 
                             new EssCertID(calculator.GetResult().Collect(), null)))
                         .Build(((ContentSignerBCFips) new BouncyCastleFipsFactory()
                             .CreateContentSigner(signatureName, pk)).GetContentSigner(), signerInfoGen.AssociatedCertificate);
                 } else {
-                    signerInfoGenerator = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider())
+                    signerInfoGenerator = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider(), 
+                            new SignatureEncryptionAlgorithmFinder())
                         .WithSignedAttributeGenerator(new TableGen2(signerInfoGen, 
                             new EssCertIDv2(calculator.GetResult().Collect(), null)))
                         .Build(((ContentSignerBCFips) new BouncyCastleFipsFactory()
@@ -215,7 +218,8 @@ namespace iText.Bouncycastlefips.Tsp {
             }
 
             public AttributeTable GetAttributes(IDictionary<string, object> parameters) {
-                AttributeTable tab = infoGen.SignedAttributeTableGenerator.GetAttributes(parameters);
+                AttributeTable tab = infoGen.SignedAttributeTableGenerator.GetAttributes(parameters)
+                    .Remove(PkcsObjectIdentifiers.id_aa_cmsAlgorithmProtect);
                 if (tab[PkcsObjectIdentifiers.IdAASigningCertificate] == null) {
                     return tab.Add(PkcsObjectIdentifiers.IdAASigningCertificate, new SigningCertificate(essCertID));
                 }
@@ -233,11 +237,18 @@ namespace iText.Bouncycastlefips.Tsp {
             }
 
             public AttributeTable GetAttributes(IDictionary<string, object> parameters) {
-                AttributeTable tab = infoGen.SignedAttributeTableGenerator.GetAttributes(parameters);
+                AttributeTable tab = infoGen.SignedAttributeTableGenerator.GetAttributes(parameters)
+                    .Remove(PkcsObjectIdentifiers.id_aa_cmsAlgorithmProtect);
                 if (tab[PkcsObjectIdentifiers.IdAASigningCertificateV2] == null) {
                     return tab.Add(PkcsObjectIdentifiers.IdAASigningCertificateV2, new SigningCertificateV2(essCertID));
                 }
                 return tab;
+            }
+        }
+
+        private class SignatureEncryptionAlgorithmFinder : ISignatureEncryptionAlgorithmFinder {
+            public AlgorithmIdentifier FindEncryptionAlgorithm(AlgorithmIdentifier signatureAlgorithm) {
+                return signatureAlgorithm;
             }
         }
     }

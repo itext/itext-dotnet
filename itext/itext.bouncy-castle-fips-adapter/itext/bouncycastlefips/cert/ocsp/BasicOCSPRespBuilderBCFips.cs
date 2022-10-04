@@ -128,13 +128,14 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
             try {
                 IStreamCalculator<IBlockResult> streamCalculator = signatureCalculator.CreateCalculator();
                 byte[] encoded = tbsResp.GetDerEncoded();
-                streamCalculator.Stream.Write(encoded, 0, encoded.Length);
-                streamCalculator.Stream.Dispose();
-                bitSig = new DerBitString(streamCalculator.GetResult().Collect());
+                using (Stream stream = streamCalculator.Stream) {
+                    stream.Write(encoded, 0, encoded.Length);
+                    bitSig = new DerBitString(streamCalculator.GetResult().Collect());
+                }
             } catch (Exception e) {
                 throw new OCSPExceptionBCFips("exception processing TBSRequest: " + e);
             }
-            AlgorithmIdentifier sigAlgId = new AlgorithmIdentifier(signingAlgorithm);
+            AlgorithmIdentifier sigAlgId = new AlgorithmIdentifier(signingAlgorithm, DerNull.Instance);
             DerSequence chainSeq = null;
             if (chain.Length > 0) {
                 Asn1EncodableVector v = new Asn1EncodableVector();
