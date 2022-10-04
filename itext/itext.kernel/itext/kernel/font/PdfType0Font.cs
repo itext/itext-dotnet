@@ -200,6 +200,10 @@ namespace iText.Kernel.Font {
             subset = false;
         }
 
+        /// <summary>Get Unicode mapping name from ordering.</summary>
+        /// <param name="ordering">the text ordering to base to unicode mapping on</param>
+        /// <param name="horizontal">identifies whether the encoding is horizontal or vertical</param>
+        /// <returns>Unicode mapping name</returns>
         public static String GetUniMapFromOrdering(String ordering, bool horizontal) {
             String result = null;
             switch (ordering) {

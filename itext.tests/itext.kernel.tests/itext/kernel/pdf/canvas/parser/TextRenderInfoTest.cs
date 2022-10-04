@@ -78,7 +78,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// </remarks>
         [NUnit.Framework.Test]
         public virtual void TestUnicodeEmptyString() {
-            //@LogMessages(messages = {@LogMessage(messageTemplate = IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, count = 2)})
             StringBuilder sb = new StringBuilder();
             String inFile = "japanese_text.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inFile));
