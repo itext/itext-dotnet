@@ -89,5 +89,19 @@ namespace iText.Kernel.Font {
             type0Font.AppendGlyphs(textWithThreeSurrogatePairs, 0, textWithThreeSurrogatePairs.Length - 1, glyphs);
             NUnit.Framework.Assert.AreEqual(3, glyphs.Count);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void GetUniMapFromOrderingTest() {
+            NUnit.Framework.Assert.AreEqual("UniCNS-UTF16-H", PdfType0Font.GetUniMapFromOrdering("CNS1", true));
+            NUnit.Framework.Assert.AreEqual("UniCNS-UTF16-V", PdfType0Font.GetUniMapFromOrdering("CNS1", false));
+            NUnit.Framework.Assert.AreEqual("UniJIS-UTF16-H", PdfType0Font.GetUniMapFromOrdering("Japan1", true));
+            NUnit.Framework.Assert.AreEqual("UniJIS-UTF16-V", PdfType0Font.GetUniMapFromOrdering("Japan1", false));
+            NUnit.Framework.Assert.AreEqual("UniKS-UTF16-H", PdfType0Font.GetUniMapFromOrdering("Korea1", true));
+            NUnit.Framework.Assert.AreEqual("UniKS-UTF16-V", PdfType0Font.GetUniMapFromOrdering("Korea1", false));
+            NUnit.Framework.Assert.AreEqual("UniGB-UTF16-H", PdfType0Font.GetUniMapFromOrdering("GB1", true));
+            NUnit.Framework.Assert.AreEqual("UniGB-UTF16-V", PdfType0Font.GetUniMapFromOrdering("GB1", false));
+            NUnit.Framework.Assert.AreEqual("Identity-H", PdfType0Font.GetUniMapFromOrdering("Identity", true));
+            NUnit.Framework.Assert.AreEqual("Identity-V", PdfType0Font.GetUniMapFromOrdering("Identity", false));
+        }
     }
 }

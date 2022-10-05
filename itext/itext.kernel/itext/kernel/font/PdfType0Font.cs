@@ -137,7 +137,8 @@ namespace iText.Kernel.Font {
             if (cmap.IsName() && (PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap).GetValue()) || PdfEncodings.IDENTITY_V
                 .Equals(((PdfName)cmap).GetValue()))) {
                 if (toUnicodeCMap == null) {
-                    String uniMap = GetUniMapFromOrdering(GetOrdering(cidFont));
+                    String uniMap = GetUniMapFromOrdering(GetOrdering(cidFont), PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap)
+                        .GetValue()));
                     toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(uniMap);
                     if (toUnicodeCMap == null) {
                         toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(PdfEncodings.IDENTITY_H);
@@ -152,7 +153,7 @@ namespace iText.Kernel.Font {
             }
             else {
                 String cidFontName = cidFont.GetAsName(PdfName.BaseFont).GetValue();
-                String uniMap = GetUniMapFromOrdering(GetOrdering(cidFont));
+                String uniMap = GetUniMapFromOrdering(GetOrdering(cidFont), true);
                 if (uniMap != null && uniMap.StartsWith("Uni") && CidFontProperties.IsCidFont(cidFontName, uniMap)) {
                     try {
                         fontProgram = FontProgramFactory.CreateFont(cidFontName);
@@ -178,7 +179,8 @@ namespace iText.Kernel.Font {
                         , cidFontName, cmap));
                 }
             }
-            // DescendantFonts is a one-element array specifying the CIDFont dictionary that is the descendant of this Type 0 font.
+            // DescendantFonts is a one-element array specifying the CIDFont dictionary
+            // that is the descendant of this Type 0 font.
             PdfDictionary cidFontDictionary = fontDictionary.GetAsArray(PdfName.DescendantFonts).GetAsDictionary(0);
             // Required according to the spec
             PdfName subtype = cidFontDictionary.GetAsName(PdfName.Subtype);
@@ -198,6 +200,53 @@ namespace iText.Kernel.Font {
             subset = false;
         }
 
+        /// <summary>Get Unicode mapping name from ordering.</summary>
+        /// <param name="ordering">the text ordering to base to unicode mapping on</param>
+        /// <param name="horizontal">identifies whether the encoding is horizontal or vertical</param>
+        /// <returns>Unicode mapping name</returns>
+        public static String GetUniMapFromOrdering(String ordering, bool horizontal) {
+            String result = null;
+            switch (ordering) {
+                case "CNS1": {
+                    result = "UniCNS-UTF16-";
+                    break;
+                }
+
+                case "Japan1": {
+                    result = "UniJIS-UTF16-";
+                    break;
+                }
+
+                case "Korea1": {
+                    result = "UniKS-UTF16-";
+                    break;
+                }
+
+                case "GB1": {
+                    result = "UniGB-UTF16-";
+                    break;
+                }
+
+                case "Identity": {
+                    result = "Identity-";
+                    break;
+                }
+
+                default: {
+                    return null;
+                }
+            }
+            if (horizontal) {
+                return result + 'H';
+            }
+            return result + 'V';
+        }
+
+        /// <summary>Get Unicode mapping name from ordering.</summary>
+        /// <param name="ordering">the text ordering to base to unicode mapping on</param>
+        /// <returns>Unicode mapping name</returns>
+        [System.ObsoleteAttribute(@"Replaced by GetUniMapFromOrdering(System.String, bool) for proper handling of IDENTITY_V encoding."
+            )]
         public static String GetUniMapFromOrdering(String ordering) {
             switch (ordering) {
                 case "CNS1": {

@@ -49,7 +49,6 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Canvas.Parser {
     [NUnit.Framework.Category("Integration test")]
@@ -78,7 +77,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// Japanese. TextRenderInfo threw an AIOOBE for some characters.
         /// </remarks>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, Count = 2)]
         public virtual void TestUnicodeEmptyString() {
             StringBuilder sb = new StringBuilder();
             String inFile = "japanese_text.pdf";
