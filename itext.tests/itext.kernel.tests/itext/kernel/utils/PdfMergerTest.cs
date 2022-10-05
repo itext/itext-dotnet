@@ -458,6 +458,9 @@ namespace iText.Kernel.Utils {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
                 ));
+            // We have to compare visually also because compareByContent doesn't catch the differences in OCGs with the same names
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(mergedDocument, cmpDocument, destinationFolder
+                , "diff_"));
         }
 
         private void MergePdfs(IList<FileInfo> sources, String destination) {
