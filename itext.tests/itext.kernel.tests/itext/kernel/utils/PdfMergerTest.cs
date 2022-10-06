@@ -439,6 +439,30 @@ namespace iText.Kernel.Utils {
                 ));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void MergeWithSameNamedOCGTest() {
+            String firstPdfDocument = sourceFolder + "sameNamdOCGSource.pdf";
+            String secondPdfDocument = sourceFolder + "doc2.pdf";
+            String cmpDocument = sourceFolder + "cmp_MergeWithSameNamedOCG.pdf";
+            String mergedDocument = destinationFolder + "mergeWithSameNamedOCG.pdf";
+            using (PdfDocument documentA = new PdfDocument(new PdfReader(firstPdfDocument))) {
+                using (PdfDocument documentB = new PdfDocument(new PdfReader(secondPdfDocument))) {
+                    using (PdfDocument mergedPdf = new PdfDocument(new PdfWriter(mergedDocument))) {
+                        mergedPdf.GetWriter().SetSmartMode(true);
+                        PdfMerger merger = new PdfMerger(mergedPdf, false, true);
+                        merger.Merge(documentA, 1, documentA.GetNumberOfPages());
+                        merger.Merge(documentB, 1, documentB.GetNumberOfPages());
+                        merger.Close();
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+            // We have to compare visually also because compareByContent doesn't catch the differences in OCGs with the same names
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(mergedDocument, cmpDocument, destinationFolder
+                , "diff_"));
+        }
+
         private void MergePdfs(IList<FileInfo> sources, String destination) {
             PdfDocument mergedDoc = new PdfDocument(new PdfWriter(destination));
             PdfMerger merger = new PdfMerger(mergedDoc);
