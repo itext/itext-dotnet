@@ -48,7 +48,6 @@ using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -229,7 +228,8 @@ namespace iText.Layout.Renderer {
                     symbolRenderer.Move(dxPosition, 0);
                 }
                 // consider page area without margins
-                Rectangle effectiveArea = ObtainEffectiveArea(drawContext);
+                RootRenderer root = GetRootRenderer();
+                Rectangle effectiveArea = root.GetCurrentArea().GetBBox();
                 // symbols are not drawn here, because they are in page margins
                 if (!isRtl && symbolRenderer.GetOccupiedArea().GetBBox().GetRight() > effectiveArea.GetLeft() || isRtl && 
                     symbolRenderer.GetOccupiedArea().GetBBox().GetLeft() < effectiveArea.GetRight()) {
@@ -357,36 +357,6 @@ namespace iText.Layout.Renderer {
                     GetValue() * ascenderDescender[1] / TextRenderer.TEXT_SPACE_COEFF };
             }
             return new float[] { 0, 0 };
-        }
-
-        private Rectangle ObtainEffectiveArea(DrawContext drawContext) {
-            PdfDocument pdfDocument = drawContext.GetDocument();
-            // for the time being iText creates a single symbol renderer for a list.
-            // This renderer will be used for all the items across all the pages, which mean that it could
-            // be layouted at page i and used at page j, j>i.
-            int pageNumber = parent.GetOccupiedArea().GetPageNumber();
-            Rectangle pageSize;
-            if (pageNumber != 0) {
-                PdfPage page = pdfDocument.GetPage(pageNumber);
-                pageSize = page.GetPageSize();
-            }
-            else {
-                pageSize = pdfDocument.GetDefaultPageSize();
-            }
-            RootRenderer rootRenderer = this.GetRootRenderer();
-            //TODO DEVSIX-6372 Obtaining DocumentRenderer's margins results in a ClassCastException
-            float?[] margins = new float?[] { rootRenderer.GetProperty<float?>(Property.MARGIN_TOP), rootRenderer.GetProperty
-                <float?>(Property.MARGIN_RIGHT), rootRenderer.GetProperty<float?>(Property.MARGIN_BOTTOM), rootRenderer
-                .GetProperty<float?>(Property.MARGIN_LEFT) };
-            for (int i = 0; i < margins.Length; i++) {
-                margins[i] = ReplaceIfNull(margins[i], 0f);
-            }
-            return new Rectangle(pageSize).ApplyMargins((float)margins[0], (float)margins[1], (float)margins[2], (float
-                )margins[3], false);
-        }
-
-        private static float ReplaceIfNull(float? value, float defaultValue) {
-            return (float)(null == value ? defaultValue : value);
         }
     }
 }
