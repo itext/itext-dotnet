@@ -116,12 +116,12 @@ namespace iText.Commons.Actions.Contexts {
 
         internal virtual String GetRecognisedNamespace(String className) {
             if (className != null) {
+                String normalizedClassName = Normalize(className);
                 // If both "a" and "a.b" namespaces are registered,
                 // iText should consider the context of "a.b" for an "a.b" event,
                 // that's why the contexts are sorted by the length of the namespace
                 foreach (String @namespace in contextMappings.Keys) {
-                    //Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces
-                    if (className.ToLowerInvariant().StartsWith(@namespace)) {
+                    if (normalizedClassName.StartsWith(@namespace)) {
                         return @namespace;
                     }
                 }
@@ -131,7 +131,7 @@ namespace iText.Commons.Actions.Contexts {
 
         internal virtual void UnregisterContext(ICollection<String> namespaces) {
             foreach (String @namespace in namespaces) {
-                contextMappings.JRemove(@namespace);
+                contextMappings.JRemove(Normalize(@namespace));
             }
         }
 
@@ -145,9 +145,13 @@ namespace iText.Commons.Actions.Contexts {
         internal virtual void RegisterGenericContext(ICollection<String> namespaces, ICollection<String> products) {
             GenericContext context = new GenericContext(products);
             foreach (String @namespace in namespaces) {
-                //Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces
-                contextMappings.Put(@namespace.ToLowerInvariant(), context);
+                contextMappings.Put(Normalize(@namespace), context);
             }
+        }
+
+        private static String Normalize(String @namespace) {
+            // Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces
+            return @namespace.ToLowerInvariant();
         }
 
         private class LengthComparator : IComparer<String> {

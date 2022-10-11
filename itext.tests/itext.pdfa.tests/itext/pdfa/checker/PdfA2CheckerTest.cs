@@ -50,6 +50,7 @@ using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa.Checker {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfA2CheckerTest : ExtendedITextTest {
         private PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B);
 
@@ -310,6 +311,43 @@ namespace iText.Pdfa.Checker {
                 pdfA2Checker.CheckColor(color, new PdfDictionary(), true, null);
             }
             );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckSignatureTest() {
+            PdfDictionary signatureDict = CreateSignatureDict();
+            pdfA2Checker.CheckSignature(signatureDict);
+            NUnit.Framework.Assert.IsTrue(pdfA2Checker.ObjectIsChecked(signatureDict));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckSignatureDigestMethodTest() {
+            PdfDictionary signatureDict = CreateSignatureDict();
+            PdfArray types = (PdfArray)signatureDict.Get(PdfName.Reference);
+            PdfDictionary reference = (PdfDictionary)types.Get(0);
+            PdfArray digestMethod = new PdfArray();
+            digestMethod.Add(new PdfName("SHA256"));
+            reference.Put(PdfName.DigestMethod, digestMethod);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckSignature
+                (signatureDict));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.SIGNATURE_REFERENCES_DICTIONARY_SHALL_NOT_CONTAIN_DIGESTLOCATION_DIGESTMETHOD_DIGESTVALUE
+                , e.Message);
+        }
+
+        private static PdfDictionary CreateSignatureDict() {
+            PdfDictionary signatureDict = new PdfDictionary();
+            PdfDictionary reference = new PdfDictionary();
+            PdfDictionary transformParams = new PdfDictionary();
+            transformParams.Put(PdfName.P, new PdfNumber(1));
+            transformParams.Put(PdfName.V, new PdfName("1.2"));
+            transformParams.Put(PdfName.Type, PdfName.TransformParams);
+            reference.Put(PdfName.TransformMethod, PdfName.DocMDP);
+            reference.Put(PdfName.Type, PdfName.SigRef);
+            reference.Put(PdfName.TransformParams, transformParams);
+            PdfArray types = new PdfArray();
+            types.Add(reference);
+            signatureDict.Put(PdfName.Reference, types);
+            return signatureDict;
         }
     }
 }

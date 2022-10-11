@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfEncryptionUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ReadEncryptEmbeddedFilesOnlyFromPdfDocumentCorrectEntryTest() {

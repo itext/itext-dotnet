@@ -27,6 +27,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Crypto {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfReaderCustomFilterTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/crypto/PdfReaderCustomFilterTest/";

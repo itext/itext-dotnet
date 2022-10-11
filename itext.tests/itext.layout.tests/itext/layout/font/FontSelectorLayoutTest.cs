@@ -50,6 +50,7 @@ using iText.Layout.Element;
 using iText.Test;
 
 namespace iText.Layout.Font {
+    [NUnit.Framework.Category("Integration test")]
     public class FontSelectorLayoutTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/NonBreakingHyphenTest/";

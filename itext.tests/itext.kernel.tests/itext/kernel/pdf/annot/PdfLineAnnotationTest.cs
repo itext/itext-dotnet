@@ -47,6 +47,7 @@ using iText.Kernel.Pdf.Colorspace;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Annot {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfLineAnnotationTest : ExtendedITextTest {
         private const float FLOAT_EPSILON_COMPARISON = 1E-6f;
 
@@ -54,7 +55,8 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual void GetLineTest() {
             float[] lineArray = new float[] { 1f, 1f, 1f, 1f };
             PdfLineAnnotation pdfLineAnnotation = new PdfLineAnnotation(new Rectangle(10, 10), lineArray);
-            NUnit.Framework.Assert.AreEqual(lineArray, pdfLineAnnotation.GetLine().ToFloatArray());
+            iText.Test.TestUtil.AreEqual(lineArray, pdfLineAnnotation.GetLine().ToFloatArray(), FLOAT_EPSILON_COMPARISON
+                );
         }
 
         [NUnit.Framework.Test]
@@ -78,8 +80,8 @@ namespace iText.Kernel.Pdf.Annot {
             PdfLineAnnotation pdfLineAnnotation = new PdfLineAnnotation(new PdfDictionary());
             PdfArray array = new PdfArray(new float[] { 1, 2 });
             pdfLineAnnotation.SetDashPattern(array);
-            NUnit.Framework.Assert.AreEqual(array.ToFloatArray(), pdfLineAnnotation.GetBorderStyle().GetAsArray(PdfName
-                .D).ToFloatArray());
+            iText.Test.TestUtil.AreEqual(array.ToFloatArray(), pdfLineAnnotation.GetBorderStyle().GetAsArray(PdfName.D
+                ).ToFloatArray(), FLOAT_EPSILON_COMPARISON);
         }
 
         [NUnit.Framework.Test]
@@ -87,8 +89,8 @@ namespace iText.Kernel.Pdf.Annot {
             PdfLineAnnotation pdfLineAnnotation = new PdfLineAnnotation(new PdfDictionary());
             PdfArray lineEndingStyles = new PdfArray(new float[] { 1, 2 });
             pdfLineAnnotation.SetLineEndingStyles(lineEndingStyles);
-            NUnit.Framework.Assert.AreEqual(lineEndingStyles.ToFloatArray(), pdfLineAnnotation.GetLineEndingStyles().ToFloatArray
-                ());
+            iText.Test.TestUtil.AreEqual(lineEndingStyles.ToFloatArray(), pdfLineAnnotation.GetLineEndingStyles().ToFloatArray
+                (), FLOAT_EPSILON_COMPARISON);
         }
 
         [NUnit.Framework.Test]
@@ -188,7 +190,7 @@ namespace iText.Kernel.Pdf.Annot {
             PdfLineAnnotation pdfLineAnnotation = new PdfLineAnnotation(new PdfDictionary());
             PdfArray offset = new PdfArray(new float[] { 1, 1 });
             pdfLineAnnotation.SetCaptionOffset(offset);
-            NUnit.Framework.Assert.AreEqual(offset.ToFloatArray(), pdfLineAnnotation.GetCaptionOffset().ToFloatArray()
+            iText.Test.TestUtil.AreEqual(offset.ToFloatArray(), pdfLineAnnotation.GetCaptionOffset().ToFloatArray(), FLOAT_EPSILON_COMPARISON
                 );
         }
 
@@ -197,7 +199,8 @@ namespace iText.Kernel.Pdf.Annot {
             PdfLineAnnotation pdfLineAnnotation = new PdfLineAnnotation(new PdfDictionary());
             float[] offset = new float[] { 1, 1 };
             pdfLineAnnotation.SetCaptionOffset(offset);
-            NUnit.Framework.Assert.AreEqual(offset, pdfLineAnnotation.GetCaptionOffset().ToFloatArray());
+            iText.Test.TestUtil.AreEqual(offset, pdfLineAnnotation.GetCaptionOffset().ToFloatArray(), FLOAT_EPSILON_COMPARISON
+                );
         }
     }
 }

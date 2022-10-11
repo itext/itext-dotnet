@@ -25,6 +25,7 @@ using iText.Commons.Actions.Data;
 using iText.Test;
 
 namespace iText.Commons.Actions {
+    [NUnit.Framework.Category("Unit test")]
     public class AbstractProductITextEventTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NullProductDataTest() {

@@ -26,6 +26,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Unit test")]
     public class PageFlushingHelperUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FlushingInUnsafeModeTest() {

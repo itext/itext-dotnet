@@ -26,6 +26,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Filters {
+    [NUnit.Framework.Category("Unit test")]
     public class ASCII85DecodeFilterTest : ExtendedITextTest {
         public static readonly String SOURCE_FILE = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/filters/ASCII85.bin";

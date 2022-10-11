@@ -26,6 +26,7 @@ using System.Linq;
 using iText.Test;
 
 namespace iText.Commons.Utils {
+    [NUnit.Framework.Category("Unit test")]
     [NUnit.Framework.TestFixtureSource("DataSourceTestFixtureData")]
     public class MessageFormatUtilTest : ExtendedITextTest {
         private String expectedResult;

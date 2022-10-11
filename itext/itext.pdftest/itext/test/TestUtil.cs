@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using NUnit.Framework;
 
 namespace iText.Test {
     public static class TestUtil {
@@ -51,6 +52,16 @@ namespace iText.Test {
                 projectDirectoryInfo = projectDirectoryInfo.Parent;
             }
             return projectDirectoryInfo.Parent.FullName;
+        }
+
+        public static void AreEqual(double[] expected, double[] actual, double margin)
+        {
+            Assert.That(actual, Is.EqualTo(expected).Within(margin));
+        }
+        
+        public static void AreEqual(float[] expected, float[] actual, float margin)
+        {
+            Assert.That(actual, Is.EqualTo(expected).Within(margin));
         }
     }
 }

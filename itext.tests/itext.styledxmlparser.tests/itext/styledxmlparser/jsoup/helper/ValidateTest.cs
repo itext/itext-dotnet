@@ -24,6 +24,7 @@ using System;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Helper {
+    [NUnit.Framework.Category("Unit test")]
     public class ValidateTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestNotNull() {

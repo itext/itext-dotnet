@@ -31,6 +31,7 @@ using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Processors.Impl {
+    [NUnit.Framework.Category("Unit test")]
     public class SvgProcessorResultUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ContextParameterCannotBeNullTest() {

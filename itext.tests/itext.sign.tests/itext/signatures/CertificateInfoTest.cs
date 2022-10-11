@@ -27,6 +27,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Signatures {
+    [NUnit.Framework.Category("Unit test")]
     public class CertificateInfoTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void X500InvalidDirectoryConstructorTest() {

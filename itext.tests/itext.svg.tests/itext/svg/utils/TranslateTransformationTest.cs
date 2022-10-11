@@ -46,6 +46,7 @@ using iText.Svg.Exceptions;
 using iText.Test;
 
 namespace iText.Svg.Utils {
+    [NUnit.Framework.Category("Unit test")]
     public class TranslateTransformationTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalTranslateTest() {

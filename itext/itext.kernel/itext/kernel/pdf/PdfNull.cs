@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Source;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Representation of the null object in the PDF specification.</summary>
@@ -77,7 +78,7 @@ namespace iText.Kernel.Pdf {
             return new iText.Kernel.Pdf.PdfNull();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
+        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
         }
 
         public override bool Equals(Object obj) {

@@ -49,6 +49,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Geom {
+    [NUnit.Framework.Category("Unit test")]
     public class RectangleTest : ExtendedITextTest {
         private const float OVERLAP_EPSILON = 0.1f;
 

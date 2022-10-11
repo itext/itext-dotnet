@@ -543,6 +543,18 @@ namespace iText.Layout.Element {
             return (T)(Object)this;
         }
 
+        /// <summary>Give this element a neutral role.</summary>
+        /// <remarks>
+        /// Give this element a neutral role. See also
+        /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties.SetRole(System.String)"/>.
+        /// </remarks>
+        /// <returns>this Element</returns>
+        public virtual T SetNeutralRole() {
+            this.GetAccessibilityProperties().SetRole(null);
+            // cast to Object is necessary for autoporting reasons
+            return (T)(Object)this;
+        }
+
         public abstract AccessibilityProperties GetAccessibilityProperties();
     }
 }

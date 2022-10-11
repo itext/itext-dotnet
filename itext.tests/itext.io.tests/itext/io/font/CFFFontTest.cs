@@ -25,6 +25,7 @@ using iText.IO.Source;
 using iText.Test;
 
 namespace iText.IO.Font {
+    [NUnit.Framework.Category("Unit test")]
     public class CFFFontTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/sharedFontsResourceFiles/";

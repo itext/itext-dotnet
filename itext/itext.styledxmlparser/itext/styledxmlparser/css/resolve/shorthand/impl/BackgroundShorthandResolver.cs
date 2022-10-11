@@ -205,7 +205,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             bool propertyProcessedCorrectly = true;
             foreach (String value in props) {
                 int slashCharInd = value.IndexOf('/');
-                if (slashCharInd > 0 && slashCharInd < value.Length - 1 && !slashEncountered && !value.Contains("url(")) {
+                if (slashCharInd > 0 && slashCharInd < value.Length - 1 && !slashEncountered && !value.Contains("url(") &&
+                     !value.Contains("device-cmyk(")) {
                     slashEncountered = true;
                     propertyProcessedCorrectly = ProcessValueWithSlash(value, slashCharInd, resolvedProps, usedTypes);
                 }

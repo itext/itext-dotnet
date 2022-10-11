@@ -45,6 +45,7 @@ using iText.IO.Font.Otf;
 using iText.Test;
 
 namespace iText.Layout.Splitting {
+    [NUnit.Framework.Category("Unit test")]
     public class DefaultSplitCharacterTest : ExtendedITextTest {
         internal static IList<Glyph> glyphs = new List<Glyph>();
 

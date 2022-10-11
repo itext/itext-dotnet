@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using iText.Test;
 
 namespace iText.Kernel.Geom {
+    [NUnit.Framework.Category("Unit test")]
     public class MatrixTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestMultiply() {

@@ -57,6 +57,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
+    [NUnit.Framework.Category("Integration test")]
     public class ListTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/ListTest/";
@@ -595,6 +596,56 @@ namespace iText.Layout {
             li.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePercentValue(50));
             li.SetBackgroundColor(ColorConstants.BLUE);
             l.Add(li);
+            document.Add(l);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ListItemWithImageSymbolPositionTest() {
+            String outFileName = destinationFolder + "listItemWithImageSymbolPositionTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_listItemWithImageSymbolPositionTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            List l = new List();
+            l.SetMarginLeft(50);
+            l.SetSymbolIndent(20);
+            l.SetListSymbol("\u2022");
+            l.SetBackgroundColor(ColorConstants.GREEN);
+            ImageData img = ImageDataFactory.Create(sourceFolder + "red.png");
+            PdfImageXObject xObject = new PdfImageXObject(img);
+            ListItem listItemImg1 = new ListItem();
+            listItemImg1.Add(new iText.Layout.Element.Image(xObject).SetHeight(30));
+            listItemImg1.SetProperty(Property.LIST_SYMBOL_POSITION, ListSymbolPosition.INSIDE);
+            l.Add(listItemImg1);
+            ListItem listItemImg2 = new ListItem();
+            listItemImg2.Add(new iText.Layout.Element.Image(xObject).SetHeight(30));
+            listItemImg2.SetProperty(Property.LIST_SYMBOL_POSITION, ListSymbolPosition.OUTSIDE);
+            l.Add(listItemImg2);
+            document.Add(l);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        // TODO DEVSIX-6877 wrapping list item content in a div causes the bullet to be misaligned
+        [NUnit.Framework.Test]
+        public virtual void ListItemWrappedDivSymbolInside() {
+            String outFileName = destinationFolder + "listItemWrappedDivSymbolInside.pdf";
+            String cmpFileName = sourceFolder + "cmp_listItemWrappedDivSymbolInside.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            List l = new List();
+            l.SetMarginLeft(50);
+            l.SetListSymbol("\u2022");
+            l.SetBackgroundColor(ColorConstants.GREEN);
+            l.Add("Regular item 1");
+            ListItem listItem = new ListItem();
+            listItem.Add(new Div().Add(new Paragraph("Wrapped text")));
+            listItem.SetProperty(Property.LIST_SYMBOL_POSITION, ListSymbolPosition.INSIDE);
+            l.Add(listItem);
+            l.Add("Regular item 2");
             document.Add(l);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

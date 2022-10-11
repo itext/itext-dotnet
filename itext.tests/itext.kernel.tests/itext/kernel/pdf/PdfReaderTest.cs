@@ -53,6 +53,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfReaderTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfReaderTest/";
@@ -2048,6 +2049,14 @@ namespace iText.Kernel.Pdf {
 
         private void ReadingNotCompletedTest(PdfReader reader) {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetPdfAConformanceLevelPdfDocumentNotReadTest() {
+            PdfReader getModifiedFileIdReader = PdfDocumentNotReadTestInit();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => getModifiedFileIdReader.GetPdfAConformanceLevel
+                ());
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 

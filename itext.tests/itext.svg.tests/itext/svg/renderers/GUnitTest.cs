@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using iText.Test;
 
 namespace iText.Svg.Renderers {
+    [NUnit.Framework.Category("Integration test")]
     public class GUnitTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/gunit/";

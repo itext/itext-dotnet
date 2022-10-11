@@ -81,7 +81,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 return JavaUtil.ArraysAsList(new CssDeclaration(widthPropName, shorthandExpression), new CssDeclaration(stylePropName
                     , shorthandExpression), new CssDeclaration(colorPropName, shorthandExpression));
             }
-            String[] props = iText.Commons.Utils.StringUtil.Split(shorthandExpression, "\\s+");
+            IList<String> props = CssUtils.ExtractShorthandProperties(shorthandExpression)[0];
             String borderColorValue = null;
             String borderStyleValue = null;
             String borderWidthValue = null;

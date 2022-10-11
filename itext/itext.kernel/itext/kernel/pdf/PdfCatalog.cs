@@ -52,11 +52,22 @@ using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Collection;
 using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     /// <summary>The root of a document’s object hierarchy.</summary>
     public class PdfCatalog : PdfObjectWrapper<PdfDictionary> {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfCatalog));
+
+        private const String ROOT_OUTLINE_TITLE = "Outlines";
+
+        private static readonly ICollection<PdfName> PAGE_MODES = JavaCollectionsUtil.UnmodifiableSet(new HashSet<
+            PdfName>(JavaUtil.ArraysAsList(PdfName.UseNone, PdfName.UseOutlines, PdfName.UseThumbs, PdfName.FullScreen
+            , PdfName.UseOC, PdfName.UseAttachments)));
+
+        private static readonly ICollection<PdfName> PAGE_LAYOUTS = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <PdfName>(JavaUtil.ArraysAsList(PdfName.SinglePage, PdfName.OneColumn, PdfName.TwoColumnLeft, PdfName.
+            TwoColumnRight, PdfName.TwoPageLeft, PdfName.TwoPageRight)));
 
         private readonly PdfPagesTree pageTree;
 
@@ -80,24 +91,15 @@ namespace iText.Kernel.Pdf {
         /// <summary>The document’s optional content properties dictionary.</summary>
         protected internal PdfOCProperties ocProperties;
 
-        private const String ROOT_OUTLINE_TITLE = "Outlines";
-
         private PdfOutline outlines;
 
         //This HashMap contents all pages of the document and outlines associated to them
-        private IDictionary<PdfObject, IList<PdfOutline>> pagesWithOutlines = new Dictionary<PdfObject, IList<PdfOutline
-            >>();
+        private readonly IDictionary<PdfObject, IList<PdfOutline>> pagesWithOutlines = new Dictionary<PdfObject, IList
+            <PdfOutline>>();
 
-        //This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
+        //This flag determines if Outline tree of the document has been built via calling getOutlines method.
+        // If this flag is false all outline operations will be ignored
         private bool outlineMode;
-
-        private static readonly ICollection<PdfName> PAGE_MODES = JavaCollectionsUtil.UnmodifiableSet(new HashSet<
-            PdfName>(JavaUtil.ArraysAsList(PdfName.UseNone, PdfName.UseOutlines, PdfName.UseThumbs, PdfName.FullScreen
-            , PdfName.UseOC, PdfName.UseAttachments)));
-
-        private static readonly ICollection<PdfName> PAGE_LAYOUTS = JavaCollectionsUtil.UnmodifiableSet(new HashSet
-            <PdfName>(JavaUtil.ArraysAsList(PdfName.SinglePage, PdfName.OneColumn, PdfName.TwoColumnLeft, PdfName.
-            TwoColumnRight, PdfName.TwoPageLeft, PdfName.TwoPageRight)));
 
         /// <summary>
         /// Create
@@ -147,8 +149,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfArray"/>
         /// ,
         /// <see cref="PdfDictionary"/>
-        /// , etc),
-        /// then you should address directly those objects, e.g.:
+        /// , etc), then you should address directly those objects, e.g.:
         /// <c>
         /// PdfCatalog pdfCatalog = pdfDoc.getCatalog();
         /// PdfDictionary ocProps = pdfCatalog.getAsDictionary(PdfName.OCProperties);
@@ -201,6 +202,10 @@ namespace iText.Kernel.Pdf {
             logger.LogWarning("PdfCatalog cannot be flushed manually");
         }
 
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
+            return true;
+        }
+
         /// <summary>A value specifying a destination that shall be displayed when the document is opened.</summary>
         /// <remarks>
         /// A value specifying a destination that shall be displayed when the document is opened.
@@ -246,6 +251,15 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>Get page mode of the document.</summary>
+        /// <returns>
+        /// current instance of
+        /// <see cref="PdfCatalog"/>
+        /// </returns>
+        public virtual PdfName GetPageMode() {
+            return GetPdfObject().GetAsName(PdfName.PageMode);
+        }
+
         /// <summary>This method sets a page mode of the document.</summary>
         /// <remarks>
         /// This method sets a page mode of the document.
@@ -272,13 +286,10 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
-        /// <summary>Get page mode of the document.</summary>
-        /// <returns>
-        /// current instance of
-        /// <see cref="PdfCatalog"/>
-        /// </returns>
-        public virtual PdfName GetPageMode() {
-            return GetPdfObject().GetAsName(PdfName.PageMode);
+        /// <summary>Get page layout of the document.</summary>
+        /// <returns>name object of page layout that shall be used when document is opened</returns>
+        public virtual PdfName GetPageLayout() {
+            return GetPdfObject().GetAsName(PdfName.PageLayout);
         }
 
         /// <summary>This method sets a page layout of the document</summary>
@@ -295,10 +306,16 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
-        /// <summary>Get page layout of the document.</summary>
-        /// <returns>name object of page layout that shall be used when document is opened</returns>
-        public virtual PdfName GetPageLayout() {
-            return GetPdfObject().GetAsName(PdfName.PageLayout);
+        /// <summary>Get viewer preferences of the document.</summary>
+        /// <returns>dictionary of viewer preferences</returns>
+        public virtual PdfViewerPreferences GetViewerPreferences() {
+            PdfDictionary viewerPreferences = GetPdfObject().GetAsDictionary(PdfName.ViewerPreferences);
+            if (viewerPreferences != null) {
+                return new PdfViewerPreferences(viewerPreferences);
+            }
+            else {
+                return null;
+            }
         }
 
         /// <summary>
@@ -316,18 +333,6 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfCatalog SetViewerPreferences(PdfViewerPreferences preferences) {
             return Put(PdfName.ViewerPreferences, preferences.GetPdfObject());
-        }
-
-        /// <summary>Get viewer preferences of the document.</summary>
-        /// <returns>dictionary of viewer preferences</returns>
-        public virtual PdfViewerPreferences GetViewerPreferences() {
-            PdfDictionary viewerPreferences = GetPdfObject().GetAsDictionary(PdfName.ViewerPreferences);
-            if (viewerPreferences != null) {
-                return new PdfViewerPreferences(viewerPreferences);
-            }
-            else {
-                return null;
-            }
         }
 
         /// <summary>This method gets Names tree from the catalog.</summary>
@@ -361,6 +366,12 @@ namespace iText.Kernel.Pdf {
             return pageLabels;
         }
 
+        /// <summary>Get natural language.</summary>
+        /// <returns>natural language</returns>
+        public virtual PdfString GetLang() {
+            return GetPdfObject().GetAsString(PdfName.Lang);
+        }
+
         /// <summary>An entry specifying the natural language, and optionally locale.</summary>
         /// <remarks>
         /// An entry specifying the natural language, and optionally locale. Use this
@@ -374,12 +385,6 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public virtual void SetLang(PdfString lang) {
             Put(PdfName.Lang, lang);
-        }
-
-        /// <summary>Get natural language.</summary>
-        /// <returns>natural language</returns>
-        public virtual PdfString GetLang() {
-            return GetPdfObject().GetAsString(PdfName.Lang);
         }
 
         /// <summary>
@@ -476,10 +481,6 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect() {
-            return true;
-        }
-
         /// <summary>
         /// True indicates that getOCProperties() was called, may have been modified,
         /// and thus its dictionary needs to be reconstructed.
@@ -524,7 +525,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>This method returns a complete outline tree of the whole document.</summary>
         /// <param name="updateOutlines">
         /// if the flag is true, the method read the whole document and creates outline tree.
-        /// If false the method gets cached outline tree (if it was cached via calling getOutlines method before).
+        /// If false the method gets cached outline tree (if it was cached via calling
+        /// getOutlines method before).
         /// </param>
         /// <returns>
         /// fully initialized
@@ -568,8 +570,10 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This flag determines if Outline tree of the document has been built via calling getOutlines method.
         ///     </summary>
-        /// <remarks>This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
-        ///     </remarks>
+        /// <remarks>
+        /// This flag determines if Outline tree of the document has been built via calling getOutlines method.
+        /// If this flag is false all outline operations will be ignored
+        /// </remarks>
         /// <returns>state of outline mode.</returns>
         internal virtual bool IsOutlineMode() {
             return outlineMode;
@@ -707,8 +711,9 @@ namespace iText.Kernel.Pdf {
                 PdfObject pageObject = ((PdfArray)dest).Get(0);
                 foreach (PdfPage oldPage in page2page.Keys) {
                     if (oldPage.GetPdfObject() == pageObject) {
-                        // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied
-                        PdfArray copiedArray = (PdfArray)dest.CopyTo(toDocument, false);
+                        // in the copiedArray old page ref will be correctly replaced by the new page ref
+                        // as this page is already copied
+                        PdfArray copiedArray = (PdfArray)dest.CopyTo(toDocument, false, NullCopyFilter.GetInstance());
                         d = new PdfExplicitDestination(copiedArray);
                         break;
                     }
@@ -729,11 +734,12 @@ namespace iText.Kernel.Pdf {
                             if (oldPage.GetPdfObject() == pageObject) {
                                 d = new PdfStringDestination(srcDestName);
                                 if (!IsEqualSameNameDestExist(page2page, toDocument, srcDestName, srcDestArray, oldPage)) {
-                                    // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied
+                                    // in the copiedArray old page ref will be correctly replaced by the new page ref as this
+                                    // page is already copied
                                     PdfArray copiedArray = (PdfArray)srcDestArray.CopyTo(toDocument, false);
-                                    // here we can safely replace first item of the array because array of NamedDestination or StringDestination
-                                    // never refers to page in another document via PdfNumber, but should always refer to page within current document
-                                    // via page object reference.
+                                    // here we can safely replace first item of the array because array of NamedDestination or
+                                    // StringDestination never refers to page in another document via PdfNumber, but should
+                                    // always refer to page within current document via page object reference.
                                     copiedArray.Set(0, page2page.Get(oldPage).GetPdfObject());
                                     toDocument.AddNamedDestination(srcDestName, copiedArray);
                                 }

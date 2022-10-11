@@ -24,6 +24,7 @@ using iText.IO.Source;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfPagesTreeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GenerateTreeDocHasNoPagesTest() {

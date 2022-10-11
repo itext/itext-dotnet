@@ -57,6 +57,7 @@ using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfA2GraphicsCheckTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
@@ -230,6 +231,62 @@ namespace iText.Pdfa {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
             NUnit.Framework.Assert.AreEqual(PdfAConformanceException.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT
                 , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultTextColorCheckTest() {
+            String outPdf = destinationFolder + "defaultColorCheck.pdf";
+            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformanceLevel.PDF_A_2B, null);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("some text").EndText().RestoreState
+                ();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.IF_DEVICE_RGB_CMYK_GRAY_USED_IN_FILE_THAT_FILE_SHALL_CONTAIN_PDFA_OUTPUTINTENT_OR_DEFAULT_RGB_CMYK_GRAY_IN_USAGE_CONTEXT
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultTextColorCheckForInvisibleTextTest() {
+            String outPdf = destinationFolder + "defaultColorCheckInvisibleText.pdf";
+            String cmpPdf = cmpFolder + "cmp_pdfA2b_defaultColorCheckInvisibleText.pdf";
+            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformanceLevel.PDF_A_2B, null);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            canvas.BeginText().SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.INVISIBLE).MoveText(36, 750).
+                SetFontAndSize(font, 16).ShowText("some text").EndText().RestoreState();
+            pdfDocument.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultStrokeColorCheckTest() {
+            String outPdf = destinationFolder + "defaultColorCheck.pdf";
+            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformanceLevel.PDF_A_2B, null);
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            float[] whitePoint = new float[] { 0.9505f, 1f, 1.089f };
+            float[] gamma = new float[] { 2.2f, 2.2f, 2.2f };
+            float[] matrix = new float[] { 0.4124f, 0.2126f, 0.0193f, 0.3576f, 0.7152f, 0.1192f, 0.1805f, 0.0722f, 0.9505f
+                 };
+            PdfCieBasedCs.CalRgb calRgb = new PdfCieBasedCs.CalRgb(whitePoint, null, gamma, matrix);
+            canvas.GetResources().SetDefaultRgb(calRgb);
+            canvas.SetFillColor(ColorConstants.BLUE);
+            canvas.MoveTo(pdfDocument.GetDefaultPageSize().GetLeft(), pdfDocument.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(pdfDocument.GetDefaultPageSize().GetRight(), pdfDocument.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(pdfDocument.GetDefaultPageSize().GetRight(), pdfDocument.GetDefaultPageSize().GetTop());
+            canvas.Stroke();
+            // We set fill color but stroked so the exception should be thrown
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.IF_DEVICE_RGB_CMYK_GRAY_USED_IN_FILE_THAT_FILE_SHALL_CONTAIN_PDFA_OUTPUTINTENT_OR_DEFAULT_RGB_CMYK_GRAY_IN_USAGE_CONTEXT
+                ), e.Message);
         }
 
         [NUnit.Framework.Test]

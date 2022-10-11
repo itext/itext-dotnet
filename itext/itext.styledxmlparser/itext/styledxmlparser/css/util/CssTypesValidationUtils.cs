@@ -21,8 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel.Colors;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Validate;
 
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class for CSS types validating operations.</summary>
@@ -76,8 +76,8 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="value">the value</param>
         /// <returns>true, if the value contains a color property</returns>
         public static bool IsColorProperty(String value) {
-            return value.StartsWith("rgb(") || value.StartsWith("rgba(") || value.StartsWith("#") || WebColors.NAMES.Contains
-                (value.ToLowerInvariant()) || CommonCssConstants.TRANSPARENT.Equals(value);
+            return CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants.COLOR, value)
+                );
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to parent value.</summary>

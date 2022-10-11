@@ -28,6 +28,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfStructTreeRootUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CannotMovePageInPartlyFlushedDocTest() {

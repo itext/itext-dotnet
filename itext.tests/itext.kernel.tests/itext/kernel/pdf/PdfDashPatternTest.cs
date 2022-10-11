@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfDashPatternTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ConstructorNoParamTest() {

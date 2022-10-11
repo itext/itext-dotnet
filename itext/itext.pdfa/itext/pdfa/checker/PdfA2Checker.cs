@@ -312,6 +312,23 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        public override void CheckSignature(PdfDictionary signatureDict) {
+            if (IsAlreadyChecked(signatureDict)) {
+                return;
+            }
+            PdfArray references = signatureDict.GetAsArray(PdfName.Reference);
+            if (references != null) {
+                for (int i = 0; i < references.Size(); i++) {
+                    PdfDictionary referenceDict = references.GetAsDictionary(i);
+                    if (referenceDict.ContainsKey(PdfName.DigestLocation) || referenceDict.ContainsKey(PdfName.DigestMethod) ||
+                         referenceDict.ContainsKey(PdfName.DigestValue)) {
+                        throw new PdfAConformanceException(PdfAConformanceException.SIGNATURE_REFERENCES_DICTIONARY_SHALL_NOT_CONTAIN_DIGESTLOCATION_DIGESTMETHOD_DIGESTVALUE
+                            );
+                    }
+                }
+            }
+        }
+
         protected internal override void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
             String encoding = trueTypeFont.GetFontEncoding().GetBaseEncoding();
             // non-symbolic true type font will always has an encoding entry in font dictionary in itext7
@@ -476,17 +493,7 @@ namespace iText.Pdfa.Checker {
                     if (PdfName.DocMDP.Equals(dictKey)) {
                         PdfDictionary signatureDict = permissions.GetAsDictionary(PdfName.DocMDP);
                         if (signatureDict != null) {
-                            PdfArray references = signatureDict.GetAsArray(PdfName.Reference);
-                            if (references != null) {
-                                for (int i = 0; i < references.Size(); i++) {
-                                    PdfDictionary referenceDict = references.GetAsDictionary(i);
-                                    if (referenceDict.ContainsKey(PdfName.DigestLocation) || referenceDict.ContainsKey(PdfName.DigestMethod) ||
-                                         referenceDict.ContainsKey(PdfName.DigestValue)) {
-                                        throw new PdfAConformanceException(PdfAConformanceException.SIGNATURE_REFERENCES_DICTIONARY_SHALL_NOT_CONTAIN_DIGESTLOCATION_DIGESTMETHOD_DIGESTVALUE
-                                            );
-                                    }
-                                }
-                            }
+                            CheckSignature(signatureDict);
                         }
                     }
                     else {

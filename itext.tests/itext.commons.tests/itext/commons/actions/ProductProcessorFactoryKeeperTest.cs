@@ -24,6 +24,7 @@ using iText.Commons.Actions.Processors;
 using iText.Test;
 
 namespace iText.Commons.Actions {
+    [NUnit.Framework.Category("Unit test")]
     public class ProductProcessorFactoryKeeperTest : ExtendedITextTest {
         [NUnit.Framework.TearDown]
         public virtual void AfterEach() {

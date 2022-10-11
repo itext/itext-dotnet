@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Commons.Utils;
 using iText.IO.Source;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     /// <summary>
@@ -266,8 +267,8 @@ namespace iText.Kernel.Pdf {
             isDouble = true;
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
-            base.CopyContent(from, document);
+        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
+            base.CopyContent(from, document, copyFilter);
             iText.Kernel.Pdf.PdfNumber number = (iText.Kernel.Pdf.PdfNumber)from;
             value = number.value;
             isDouble = number.isDouble;

@@ -114,8 +114,31 @@ namespace iText.Kernel.Pdf.Colorspace {
                 : this(GetSeparationCsArray(name, alternateSpace, tintTransform)) {
             }
 
+            /// <summary>Creates a new separation color space.</summary>
+            /// <param name="name">The name for the separation color</param>
+            /// <param name="alternateSpace">The alternate colorspace</param>
+            /// <param name="tintTransform">
+            /// The function how the transform colors in the separation color space
+            /// to the alternate color space
+            /// </param>
+            [System.ObsoleteAttribute(@"This constructor has been replaced by Separation(System.String, PdfColorSpace, iText.Kernel.Pdf.Function.IPdfFunction)"
+                )]
             public Separation(String name, PdfColorSpace alternateSpace, PdfFunction tintTransform)
                 : this(new PdfName(name), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject()) {
+                if (!tintTransform.CheckCompatibilityWithColorSpace(alternateSpace)) {
+                    throw new PdfException(KernelExceptionMessageConstant.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
+                }
+            }
+
+            /// <summary>Creates a new separation color space.</summary>
+            /// <param name="name">The name for the separation color</param>
+            /// <param name="alternateSpace">The alternate colorspace</param>
+            /// <param name="tintTransform">
+            /// The function how the transform colors in the separation color space
+            /// to the alternate color space
+            /// </param>
+            public Separation(String name, PdfColorSpace alternateSpace, IPdfFunction tintTransform)
+                : this(new PdfName(name), alternateSpace.GetPdfObject(), tintTransform.GetAsPdfObject()) {
                 if (!tintTransform.CheckCompatibilityWithColorSpace(alternateSpace)) {
                     throw new PdfException(KernelExceptionMessageConstant.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
                 }
@@ -131,6 +154,16 @@ namespace iText.Kernel.Pdf.Colorspace {
 
             public virtual PdfName GetName() {
                 return ((PdfArray)GetPdfObject()).GetAsName(1);
+            }
+
+            /// <summary>Gets the function to calulate a separation color value to an alternative colorspace.</summary>
+            /// <returns>
+            /// a
+            /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+            /// to perform the calculation
+            /// </returns>
+            public virtual IPdfFunction GetTintTransformation() {
+                return PdfFunctionFactory.Create(((PdfArray)GetPdfObject()).Get(3));
             }
 
             private static PdfArray GetSeparationCsArray(PdfName name, PdfObject alternateSpace, PdfObject tintTransform
@@ -156,10 +189,28 @@ namespace iText.Kernel.Pdf.Colorspace {
                 : this(GetDeviceNCsArray(names, alternateSpace, tintTransform)) {
             }
 
+            /// <summary>Creates a new DeviceN colorspace.</summary>
+            /// <param name="names">the names of the components</param>
+            /// <param name="alternateSpace">the alternate colorspace</param>
+            /// <param name="tintTransform">the function to transform colors to the alternate colorspace</param>
+            [System.ObsoleteAttribute(@"Use constructor DeviceN(System.Collections.Generic.IList{E}, PdfColorSpace, iText.Kernel.Pdf.Function.IPdfFunction) instead."
+                )]
             public DeviceN(IList<String> names, PdfColorSpace alternateSpace, PdfFunction tintTransform)
                 : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject()) {
-                if (tintTransform.GetInputSize() != GetNumberOfComponents() || tintTransform.GetOutputSize() != alternateSpace
-                    .GetNumberOfComponents()) {
+                if (tintTransform.GetInputSize() != numOfComponents || tintTransform.GetOutputSize() != alternateSpace.GetNumberOfComponents
+                    ()) {
+                    throw new PdfException(KernelExceptionMessageConstant.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
+                }
+            }
+
+            /// <summary>Creates a new DiviceN colorspace.</summary>
+            /// <param name="names">the names of the components</param>
+            /// <param name="alternateSpace">the alternate colorspace</param>
+            /// <param name="tintTransform">the function to transform colors to the alternate colorspace</param>
+            public DeviceN(IList<String> names, PdfColorSpace alternateSpace, IPdfFunction tintTransform)
+                : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetAsPdfObject()) {
+                if (tintTransform.GetInputSize() != numOfComponents || tintTransform.GetOutputSize() != alternateSpace.GetNumberOfComponents
+                    ()) {
                     throw new PdfException(KernelExceptionMessageConstant.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
                 }
             }
@@ -197,9 +248,31 @@ namespace iText.Kernel.Pdf.Colorspace {
                 : this(GetNChannelCsArray(names, alternateSpace, tintTransform, attributes)) {
             }
 
+            /// <summary>Creates a new NChannel colorspace.</summary>
+            /// <param name="names">the names for the components</param>
+            /// <param name="alternateSpace">the alternative colorspace</param>
+            /// <param name="tintTransform">the function to transform colors to the alternate color space</param>
+            /// <param name="attributes">NChannel specific attributes</param>
+            [System.ObsoleteAttribute(@"Use constructor NChannel(iText.Kernel.Pdf.PdfArray, iText.Kernel.Pdf.PdfObject, iText.Kernel.Pdf.PdfObject, iText.Kernel.Pdf.PdfDictionary) NChannel instead"
+                )]
             public NChannel(IList<String> names, PdfColorSpace alternateSpace, PdfFunction tintTransform, PdfDictionary
                  attributes)
                 : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject(), attributes) {
+                if (tintTransform.GetInputSize() != 1 || tintTransform.GetOutputSize() != alternateSpace.GetNumberOfComponents
+                    ()) {
+                    throw new PdfException(KernelExceptionMessageConstant.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
+                }
+            }
+
+            /// <summary>Creates a new NChannel colorspace.</summary>
+            /// <param name="names">the names for the components</param>
+            /// <param name="alternateSpace">the alternative colorspace</param>
+            /// <param name="tintTransform">the function to transform colors to the alternate color space</param>
+            /// <param name="attributes">NChannel specific attributes</param>
+            public NChannel(IList<String> names, PdfColorSpace alternateSpace, IPdfFunction tintTransform, PdfDictionary
+                 attributes)
+                : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetAsPdfObject(), attributes
+                    ) {
                 if (tintTransform.GetInputSize() != 1 || tintTransform.GetOutputSize() != alternateSpace.GetNumberOfComponents
                     ()) {
                     throw new PdfException(KernelExceptionMessageConstant.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
@@ -215,10 +288,6 @@ namespace iText.Kernel.Pdf.Colorspace {
         }
 
         public class Pattern : PdfColorSpace {
-            protected internal override bool IsWrappedObjectMustBeIndirect() {
-                return false;
-            }
-
             public Pattern()
                 : base(PdfName.Pattern) {
             }
@@ -230,9 +299,21 @@ namespace iText.Kernel.Pdf.Colorspace {
             public override int GetNumberOfComponents() {
                 return 0;
             }
+
+            protected internal override bool IsWrappedObjectMustBeIndirect() {
+                return false;
+            }
         }
 
         public class UncoloredTilingPattern : PdfSpecialCs.Pattern {
+            public UncoloredTilingPattern(PdfArray pdfObject)
+                : base(pdfObject) {
+            }
+
+            public UncoloredTilingPattern(PdfColorSpace underlyingColorSpace)
+                : base(new PdfArray(JavaUtil.ArraysAsList(PdfName.Pattern, underlyingColorSpace.GetPdfObject()))) {
+            }
+
             /// <summary>
             /// To manually flush a
             /// <c>PdfObject</c>
@@ -253,24 +334,16 @@ namespace iText.Kernel.Pdf.Colorspace {
                 base.Flush();
             }
 
-            protected internal override bool IsWrappedObjectMustBeIndirect() {
-                return true;
-            }
-
-            public UncoloredTilingPattern(PdfArray pdfObject)
-                : base(pdfObject) {
-            }
-
-            public UncoloredTilingPattern(PdfColorSpace underlyingColorSpace)
-                : base(new PdfArray(JavaUtil.ArraysAsList(PdfName.Pattern, underlyingColorSpace.GetPdfObject()))) {
+            public virtual PdfColorSpace GetUnderlyingColorSpace() {
+                return PdfColorSpace.MakeColorSpace(((PdfArray)GetPdfObject()).Get(1));
             }
 
             public override int GetNumberOfComponents() {
                 return PdfColorSpace.MakeColorSpace(((PdfArray)GetPdfObject()).Get(1)).GetNumberOfComponents();
             }
 
-            public virtual PdfColorSpace GetUnderlyingColorSpace() {
-                return PdfColorSpace.MakeColorSpace(((PdfArray)GetPdfObject()).Get(1));
+            protected internal override bool IsWrappedObjectMustBeIndirect() {
+                return true;
             }
         }
     }

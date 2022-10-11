@@ -51,6 +51,7 @@ using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Integration test")]
     public class FontToUnicodeTest : ExtendedITextTest {
         public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";

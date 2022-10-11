@@ -25,6 +25,7 @@ using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Token queue tests.</summary>
+    [NUnit.Framework.Category("Unit test")]
     public class TokenQueueTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ChompBalanced() {

@@ -33,6 +33,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Copy {
+    [NUnit.Framework.Category("Integration test")]
     public class PdfAnnotationCopyingTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfAnnotationCopyingTest/";
@@ -126,7 +127,6 @@ namespace iText.Kernel.Pdf.Copy {
 
         [NUnit.Framework.Test]
         public virtual void CopySameLinksWithGoToSmartModeTest() {
-            // TODO DEVSIX-4238 Update cmp file after the ticket DEVSIX-4238 will be resolved
             String cmpFilePath = SOURCE_FOLDER + "cmp_copySameLinksWithGoToSmartMode.pdf";
             String outFilePath = DESTINATION_FOLDER + "copySameLinksWithGoToSmartMode.pdf";
             CopyLinksGoToActionTest(outFilePath, true, false);
@@ -136,7 +136,6 @@ namespace iText.Kernel.Pdf.Copy {
 
         [NUnit.Framework.Test]
         public virtual void CopyDiffDestLinksWithGoToSmartModeTest() {
-            // TODO DEVSIX-4238 Update cmp file after the ticket DEVSIX-4238 will be resolved
             String cmpFilePath = SOURCE_FOLDER + "cmp_copyDiffDestLinksWithGoToSmartMode.pdf";
             String outFilePath = DESTINATION_FOLDER + "copyDiffDestLinksWithGoToSmartMode.pdf";
             CopyLinksGoToActionTest(outFilePath, false, false);
@@ -146,7 +145,6 @@ namespace iText.Kernel.Pdf.Copy {
 
         [NUnit.Framework.Test]
         public virtual void CopyDiffDisplayLinksWithGoToSmartModeTest() {
-            // TODO DEVSIX-4238 Update cmp file after the ticket DEVSIX-4238 will be resolved
             String cmpFilePath = SOURCE_FOLDER + "cmp_copyDiffDisplayLinksWithGoToSmartMode.pdf";
             String outFilePath = DESTINATION_FOLDER + "copyDiffDisplayLinksWithGoToSmartMode.pdf";
             CopyLinksGoToActionTest(outFilePath, false, true);
@@ -155,7 +153,6 @@ namespace iText.Kernel.Pdf.Copy {
         }
 
         [NUnit.Framework.Test]
-        // TODO: DEVSIX-6090 (update cmp file after fixing the issue)
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void CopyPagesWithWidgetAnnotGoToActionExplicitDestTest() {
             String srcFilePath = SOURCE_FOLDER + "pageToCopyWithWidgetAnnotGoToActionExplicitDest.pdf";
@@ -165,7 +162,6 @@ namespace iText.Kernel.Pdf.Copy {
         }
 
         [NUnit.Framework.Test]
-        // TODO: DEVSIX-6090 (update cmp file after fixing the issue)
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void CopyPagesWithWidgetAnnotGoToActionNamedDestTest() {
             String srcFilePath = SOURCE_FOLDER + "pageToCopyWithWidgetAnnotGoToActionNamedDest.pdf";
@@ -176,7 +172,6 @@ namespace iText.Kernel.Pdf.Copy {
 
         [NUnit.Framework.Test]
         public virtual void CopyPagesWithScreenAnnotGoToActionExplicitDestTest() {
-            // TODO: DEVSIX-6090 (update cmp file after fixing the issue)
             String srcFilePath = SOURCE_FOLDER + "pageToCopyWithScreenAnnotGoToActionExplicitDest.pdf";
             String cmpFilePath = SOURCE_FOLDER + "cmp_copyPagesWithScreenAnnotGoToActionExplicitDest.pdf";
             String outFilePath = DESTINATION_FOLDER + "copyPagesWithScreenAnnotGoToActionExplicitDest.pdf";

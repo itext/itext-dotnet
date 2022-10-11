@@ -26,6 +26,7 @@ using iText.StyledXmlParser.Node;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Pseudo {
+    [NUnit.Framework.Category("Unit test")]
     public class CssPseudoElementNodeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetPseudoElementNameTest() {

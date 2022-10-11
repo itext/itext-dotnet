@@ -36,6 +36,7 @@ namespace iText.Kernel.Colors.Gradients {
     /// Tests related to stop colors work omitted here as they would be equivalent to tests in
     /// <see cref="LinearGradientBuilderTest"/>
     /// </remarks>
+    [NUnit.Framework.Category("Integration test")]
     public class StrategyBasedLinearGradientBuilderTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/colors/gradients/StrategyBasedLinearGradientBuilderTest/";

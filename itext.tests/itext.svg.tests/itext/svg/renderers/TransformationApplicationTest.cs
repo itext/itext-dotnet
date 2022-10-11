@@ -51,6 +51,7 @@ using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers {
+    [NUnit.Framework.Category("Unit test")]
     public class TransformationApplicationTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalDrawTest() {

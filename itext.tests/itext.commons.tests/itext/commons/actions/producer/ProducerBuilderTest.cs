@@ -34,6 +34,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Commons.Actions.Producer {
+    [NUnit.Framework.Category("Unit test")]
     public class ProducerBuilderTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void EmptyEventsProducerLineTest() {

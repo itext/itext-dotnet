@@ -24,6 +24,7 @@ using iText.Kernel.Geom;
 using iText.Test;
 
 namespace iText.Layout.Properties {
+    [NUnit.Framework.Category("Unit test")]
     public class TransformTest : ExtendedITextTest {
         // AffineTransform.TYPE_UNKNOWN
         private const float type = -1;
@@ -32,7 +33,7 @@ namespace iText.Layout.Properties {
         public virtual void CreateDefaultSingleTransformTest() {
             Transform.SingleTransform defaultSingleTransform = new Transform.SingleTransform();
             UnitValue[] defaultUnitValues = defaultSingleTransform.GetUnitValues();
-            NUnit.Framework.Assert.AreEqual(new float[] { 1f, 0f, 0f, 1f }, defaultSingleTransform.GetFloats());
+            iText.Test.TestUtil.AreEqual(new float[] { 1f, 0f, 0f, 1f }, defaultSingleTransform.GetFloats(), 0);
             NUnit.Framework.Assert.AreEqual(2, defaultUnitValues.Length);
             NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(0), defaultUnitValues[0]);
             NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(0), defaultUnitValues[1]);

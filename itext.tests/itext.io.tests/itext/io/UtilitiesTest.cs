@@ -44,6 +44,7 @@ using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO {
+    [NUnit.Framework.Category("Unit test")]
     public class UtilitiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestShortener() {

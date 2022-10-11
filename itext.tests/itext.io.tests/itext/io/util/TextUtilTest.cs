@@ -45,6 +45,7 @@ using iText.IO.Font.Otf;
 using iText.Test;
 
 namespace iText.IO.Util {
+    [NUnit.Framework.Category("Unit test")]
     public class TextUtilTest : ExtendedITextTest {
         private Glyph carriageReturn;
 

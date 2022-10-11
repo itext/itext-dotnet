@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Test;
 
 namespace iText.Commons.Utils {
+    [NUnit.Framework.Category("Unit test")]
     public class MapUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NullMapsAreEqualTest() {

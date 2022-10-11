@@ -484,7 +484,6 @@ namespace iText.Layout.Renderer {
             floatRendererAreas = new List<Rectangle>();
             UpdateCurrentArea(overflowResult);
             initialCurrentArea = currentArea == null ? null : currentArea.Clone();
-            // TODO how bout currentArea == null ?
             AddWaitingNextPageRenderers();
         }
 

@@ -29,6 +29,7 @@ using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
+    [NUnit.Framework.Category("Unit test")]
     public class PreserveAspectRatioSvgNodeRendererUnitTest : ExtendedITextTest {
         private static readonly Rectangle VIEWPORT_VALUE = PageSize.DEFAULT;
 

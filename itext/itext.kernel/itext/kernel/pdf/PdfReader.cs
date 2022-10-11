@@ -671,7 +671,10 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual PdfAConformanceLevel GetPdfAConformanceLevel() {
             if (pdfAConformanceLevel == null) {
-                if (pdfDocument != null && pdfDocument.GetXmpMetadata() != null) {
+                if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                    throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                }
+                if (pdfDocument.GetXmpMetadata() != null) {
                     try {
                         pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(XMPMetaFactory.ParseFromBuffer(pdfDocument
                             .GetXmpMetadata()));

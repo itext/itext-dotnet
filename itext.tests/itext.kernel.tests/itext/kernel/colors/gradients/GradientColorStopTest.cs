@@ -23,12 +23,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Test;
 
 namespace iText.Kernel.Colors.Gradients {
+    [NUnit.Framework.Category("Unit test")]
     public class GradientColorStopTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalizationTest() {
             GradientColorStop stopToTest = new GradientColorStop(new float[] { -0.5f, 1.5f, 0.5f, 0.5f }, 1.5, GradientColorStop.OffsetType
                 .AUTO).SetHint(1.5, GradientColorStop.HintOffsetType.NONE);
-            NUnit.Framework.Assert.AreEqual(new float[] { 0f, 1f, 0.5f }, stopToTest.GetRgbArray());
+            iText.Test.TestUtil.AreEqual(new float[] { 0f, 1f, 0.5f }, stopToTest.GetRgbArray(), 1e-10f);
             NUnit.Framework.Assert.AreEqual(0, stopToTest.GetOffset(), 1e-10);
             NUnit.Framework.Assert.AreEqual(GradientColorStop.OffsetType.AUTO, stopToTest.GetOffsetType());
             NUnit.Framework.Assert.AreEqual(0, stopToTest.GetHintOffset(), 1e-10);
@@ -39,7 +40,7 @@ namespace iText.Kernel.Colors.Gradients {
         public virtual void CornerCasesTest() {
             GradientColorStop stopToTest = new GradientColorStop((float[])null, 1.5, GradientColorStop.OffsetType.AUTO
                 ).SetHint(1.5, GradientColorStop.HintOffsetType.NONE);
-            NUnit.Framework.Assert.AreEqual(new float[] { 0f, 0f, 0f }, stopToTest.GetRgbArray());
+            iText.Test.TestUtil.AreEqual(new float[] { 0f, 0f, 0f }, stopToTest.GetRgbArray(), 1e-10f);
             NUnit.Framework.Assert.AreEqual(0, stopToTest.GetOffset(), 1e-10);
             NUnit.Framework.Assert.AreEqual(GradientColorStop.OffsetType.AUTO, stopToTest.GetOffsetType());
             NUnit.Framework.Assert.AreEqual(0, stopToTest.GetHintOffset(), 1e-10);

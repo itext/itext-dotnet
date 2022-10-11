@@ -27,6 +27,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Test;
 
 namespace iText.Layout {
+    [NUnit.Framework.Category("Unit test")]
     public class CanvasUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CanvasImmediateFlushConstructorTest() {

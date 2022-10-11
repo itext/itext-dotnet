@@ -29,6 +29,7 @@ using iText.Commons.Actions.Sequence;
 using iText.Test;
 
 namespace iText.Commons.Actions {
+    [NUnit.Framework.Category("Unit test")]
     public class AbstractITextConfigurationEventTest : ExtendedITextTest {
         [NUnit.Framework.TearDown]
         public virtual void After() {

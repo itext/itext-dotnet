@@ -45,6 +45,7 @@ using iText.Kernel.Font;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfTextArrayTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void AddNZeroTest() {

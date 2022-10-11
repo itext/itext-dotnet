@@ -28,6 +28,7 @@ using iText.Commons.Logs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace iText.Commons.Utils
 {
@@ -39,6 +40,19 @@ namespace iText.Commons.Utils
         private JsonUtil()
         {
             // empty constructor
+        }
+        
+        /// <summary>
+        /// Compares two json strings without considering the order of the elements.
+        /// </summary>
+        /// <param name="expectedString">expected json string</param>
+        /// <param name="toCompare">string for comparison</param>
+        /// <returns>true if two json string are equals, false otherwise</returns>
+        public static bool AreTwoJsonObjectEquals(String expectedString, String toCompare) {
+            JObject expectedObject = JObject.Parse(expectedString);
+            JObject actualObject = JObject.Parse(toCompare);
+            
+            return JObject.DeepEquals(expectedObject, actualObject);
         }
         
         /// <summary>

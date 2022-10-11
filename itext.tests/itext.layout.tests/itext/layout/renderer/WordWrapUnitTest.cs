@@ -38,6 +38,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
+    [NUnit.Framework.Category("Unit test")]
     public class WordWrapUnitTest : ExtendedITextTest {
         public static readonly String THAI_FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/NotoSansThai-Regular.ttf";

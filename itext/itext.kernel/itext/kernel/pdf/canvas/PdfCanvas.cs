@@ -204,6 +204,10 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const float IDENTITY_MATRIX_EPS = 1e-4f;
 
+        // Flag showing whether to check the color on drawing or not
+        // Normally the color is checked on setColor but not the default one which is DeviceGray.BLACK
+        private bool defaultDeviceGrayBlackColorCheckRequired = true;
+
         /// <summary>a LIFO stack of graphics state saved states.</summary>
         protected internal Stack<CanvasGraphicsState> gsStack = new Stack<CanvasGraphicsState>();
 
@@ -502,6 +506,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="text">the text to write</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas NewlineShowText(String text) {
+            CheckDefaultDeviceGrayBlackColor(GetColorKeyForText());
             ShowTextInt(text);
             contentStream.GetOutputStream().WriteByte('\'').WriteNewLine();
             return this;
@@ -515,6 +520,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas NewlineShowText(float wordSpacing, float charSpacing, String
              text) {
+            CheckDefaultDeviceGrayBlackColor(GetColorKeyForText());
             contentStream.GetOutputStream().WriteFloat(wordSpacing).WriteSpace().WriteFloat(charSpacing);
             ShowTextInt(text);
             contentStream.GetOutputStream().WriteByte('"').WriteNewLine();
@@ -620,6 +626,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="text">text to show.</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(String text) {
+            CheckDefaultDeviceGrayBlackColor(GetColorKeyForText());
             ShowTextInt(text);
             contentStream.GetOutputStream().WriteBytes(Tj);
             return this;
@@ -641,6 +648,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(GlyphLine text, IEnumerator<GlyphLine.GlyphLinePart
             > iterator) {
+            CheckDefaultDeviceGrayBlackColor(GetColorKeyForText());
             document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
             PdfFont font;
             if ((font = currentGs.GetFont()) == null) {
@@ -799,6 +807,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// </param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(PdfArray textArray) {
+            CheckDefaultDeviceGrayBlackColor(GetColorKeyForText());
             document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
             if (currentGs.GetFont() == null) {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
@@ -1103,6 +1112,7 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ClosePathEoFillStroke() {
+            CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.FILL_AND_STROKE);
             contentStream.GetOutputStream().WriteBytes(bStar);
             return this;
         }
@@ -1111,6 +1121,7 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ClosePathFillStroke() {
+            CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.FILL_AND_STROKE);
             contentStream.GetOutputStream().WriteBytes(b);
             return this;
         }
@@ -1125,6 +1136,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Strokes the path.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas Stroke() {
+            CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.STROKE);
             contentStream.GetOutputStream().WriteBytes(S);
             return this;
         }
@@ -1159,6 +1171,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Fills current path.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas Fill() {
+            CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.FILL);
             contentStream.GetOutputStream().WriteBytes(f);
             return this;
         }
@@ -1167,6 +1180,7 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas FillStroke() {
+            CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.FILL_AND_STROKE);
             contentStream.GetOutputStream().WriteBytes(B);
             return this;
         }
@@ -1174,6 +1188,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>EOFills current path.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas EoFill() {
+            CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.FILL);
             contentStream.GetOutputStream().WriteBytes(fStar);
             return this;
         }
@@ -1181,6 +1196,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Fills the path, using the even-odd rule to determine the region to fill and strokes it.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas EoFillStroke() {
+            CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.FILL_AND_STROKE);
             contentStream.GetOutputStream().WriteBytes(BStar);
             return this;
         }
@@ -2377,6 +2393,49 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
+        private void CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode checkColorMode) {
+            if (defaultDeviceGrayBlackColorCheckRequired) {
+                // It's enough to check DeviceGray.BLACK once for fill color or stroke color
+                // But it's still important to do not check fill color if it's not used and vice versa
+                if (currentGs.GetFillColor() == DeviceGray.BLACK && (checkColorMode == PdfCanvas.CheckColorMode.FILL || checkColorMode
+                     == PdfCanvas.CheckColorMode.FILL_AND_STROKE)) {
+                    document.CheckIsoConformance(currentGs, IsoKey.FILL_COLOR, resources, contentStream);
+                    defaultDeviceGrayBlackColorCheckRequired = false;
+                }
+                else {
+                    if (currentGs.GetStrokeColor() == DeviceGray.BLACK && (checkColorMode == PdfCanvas.CheckColorMode.STROKE ||
+                         checkColorMode == PdfCanvas.CheckColorMode.FILL_AND_STROKE)) {
+                        document.CheckIsoConformance(currentGs, IsoKey.STROKE_COLOR, resources, contentStream);
+                        defaultDeviceGrayBlackColorCheckRequired = false;
+                    }
+                }
+            }
+        }
+
+        // Nothing
+        private PdfCanvas.CheckColorMode GetColorKeyForText() {
+            switch (currentGs.GetTextRenderingMode()) {
+                case PdfCanvasConstants.TextRenderingMode.FILL:
+                case PdfCanvasConstants.TextRenderingMode.FILL_CLIP: {
+                    return PdfCanvas.CheckColorMode.FILL;
+                }
+
+                case PdfCanvasConstants.TextRenderingMode.STROKE:
+                case PdfCanvasConstants.TextRenderingMode.STROKE_CLIP: {
+                    return PdfCanvas.CheckColorMode.STROKE;
+                }
+
+                case PdfCanvasConstants.TextRenderingMode.FILL_STROKE:
+                case PdfCanvasConstants.TextRenderingMode.FILL_STROKE_CLIP: {
+                    return PdfCanvas.CheckColorMode.FILL_AND_STROKE;
+                }
+
+                default: {
+                    return PdfCanvas.CheckColorMode.NONE;
+                }
+            }
+        }
+
         private static PdfStream GetPageStream(PdfPage page) {
             PdfStream stream = page.GetLastContentStream();
             return stream == null || stream.GetOutputStream() == null || stream.ContainsKey(PdfName.Filter) ? page.NewContentStreamAfter
@@ -2409,6 +2468,13 @@ namespace iText.Kernel.Pdf.Canvas {
         private static bool IsIdentityMatrix(float a, float b, float c, float d, float e, float f) {
             return Math.Abs(1 - a) < IDENTITY_MATRIX_EPS && Math.Abs(b) < IDENTITY_MATRIX_EPS && Math.Abs(c) < IDENTITY_MATRIX_EPS
                  && Math.Abs(1 - d) < IDENTITY_MATRIX_EPS && Math.Abs(e) < IDENTITY_MATRIX_EPS && Math.Abs(f) < IDENTITY_MATRIX_EPS;
+        }
+
+        private enum CheckColorMode {
+            NONE,
+            FILL,
+            STROKE,
+            FILL_AND_STROKE
         }
     }
 }

@@ -28,6 +28,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Commons.Utils {
+    [NUnit.Framework.Category("Unit test")]
     public class JsonUtilTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/commons/utils/JsonUtilTest/";
@@ -50,7 +51,7 @@ namespace iText.Commons.Utils {
             JsonUtilTest.ClassWithEnum classWithEnum = CreateClassWithEnumObject();
             String resultString = JsonUtil.SerializeToString(classWithEnum);
             String cmpString = GetJsonStringFromFile(cmp);
-            NUnit.Framework.Assert.AreEqual(cmpString, resultString);
+            NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(cmpString, resultString));
         }
 
         [NUnit.Framework.Test]
@@ -73,7 +74,7 @@ namespace iText.Commons.Utils {
             JsonUtilTest.ClassWithEnum classWithEnum = CreateClassWithEnumObject();
             String resultString = JsonUtil.SerializeToMinimalString(classWithEnum);
             String compareString = GetJsonStringFromFile(cmp);
-            NUnit.Framework.Assert.AreEqual(compareString, resultString);
+            NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(compareString, resultString));
         }
 
         [NUnit.Framework.Test]
@@ -140,7 +141,7 @@ namespace iText.Commons.Utils {
             JsonUtilTest.ComplexStructure complexStructure = CreateComplexStructureObject();
             String resultString = JsonUtil.SerializeToString(complexStructure);
             String compareString = GetJsonStringFromFile(cmp);
-            NUnit.Framework.Assert.AreEqual(compareString, resultString);
+            NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(compareString, resultString));
         }
 
         [NUnit.Framework.Test]
@@ -163,7 +164,7 @@ namespace iText.Commons.Utils {
             JsonUtilTest.ComplexStructure complexStructure = CreateComplexStructureObject();
             String resultString = JsonUtil.SerializeToMinimalString(complexStructure);
             String compareString = GetJsonStringFromFile(cmp);
-            NUnit.Framework.Assert.AreEqual(compareString, resultString);
+            NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(compareString, resultString));
         }
 
         [NUnit.Framework.Test]
@@ -186,7 +187,7 @@ namespace iText.Commons.Utils {
             JsonUtilTest.ClassWithDefaultValue complexStructure = CreateClassWithDefaultValueObject(null, 4, null);
             String resultString = JsonUtil.SerializeToString(complexStructure);
             String compareString = GetJsonStringFromFile(cmp);
-            NUnit.Framework.Assert.AreEqual(compareString, resultString);
+            NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(compareString, resultString));
         }
 
         [NUnit.Framework.Test]
@@ -208,7 +209,7 @@ namespace iText.Commons.Utils {
             JsonUtilTest.ClassWithDefaultValue complexStructure = CreateClassWithDefaultValueObject(null, 4, null);
             String resultString = JsonUtil.SerializeToMinimalString(complexStructure);
             String compareString = GetJsonStringFromFile(cmp);
-            NUnit.Framework.Assert.AreEqual(compareString, resultString);
+            NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(compareString, resultString));
         }
 
         [NUnit.Framework.Test]

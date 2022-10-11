@@ -25,6 +25,7 @@ using iText.StyledXmlParser.Jsoup.Select;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
+    [NUnit.Framework.Category("Unit test")]
     public class LeafNodeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void DoesNotGetAttributesTooEasily() {

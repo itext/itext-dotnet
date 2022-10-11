@@ -55,6 +55,7 @@ using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 
@@ -508,23 +509,11 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>.
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument, IPdfPageExtraCopier copier) {
-            PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, PAGE_EXCLUDED_KEYS, true);
+            ICopyFilter copyFilter = new DestinationResolverCopyFilter(this.GetDocument(), toDocument);
+            PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, PAGE_EXCLUDED_KEYS, true, copyFilter);
             iText.Kernel.Pdf.PdfPage page = GetDocument().GetPageFactory().CreatePdfPage(dictionary);
-            CopyInheritedProperties(page, toDocument);
-            foreach (PdfAnnotation annot in GetAnnotations()) {
-                if (PdfName.Link.Equals(annot.GetSubtype())) {
-                    GetDocument().StoreLinkAnnotation(page, (PdfLinkAnnotation)annot);
-                }
-                else {
-                    PdfAnnotation newAnnot = PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument, JavaUtil.ArraysAsList
-                        (PdfName.P, PdfName.Parent), true));
-                    if (PdfName.Widget.Equals(annot.GetSubtype())) {
-                        RebuildFormFieldParent(annot.GetPdfObject(), newAnnot.GetPdfObject(), toDocument);
-                    }
-                    // P will be set in PdfPage#addAnnotation; Parent will be regenerated in PdfPageExtraCopier.
-                    page.AddAnnotation(-1, newAnnot, false);
-                }
-            }
+            CopyInheritedProperties(page, toDocument, NullCopyFilter.GetInstance());
+            CopyAnnotations(toDocument, page, copyFilter);
             if (copier != null) {
                 copier.Copy(this, page);
             }
@@ -553,14 +542,15 @@ namespace iText.Kernel.Pdf {
                 }
                 PdfObject obj = GetPdfObject().Get(key);
                 if (!xObject.GetPdfObject().ContainsKey(key)) {
-                    PdfObject copyObj = obj.CopyTo(toDocument, false);
+                    PdfObject copyObj = obj.CopyTo(toDocument, false, NullCopyFilter.GetInstance());
                     xObject.GetPdfObject().Put(key, copyObj);
                 }
             }
             xObject.GetPdfObject().GetOutputStream().Write(GetContentBytes());
             //Copy inherited resources
             if (!xObject.GetPdfObject().ContainsKey(PdfName.Resources)) {
-                PdfObject copyResource = GetResources().GetPdfObject().CopyTo(toDocument, true);
+                PdfObject copyResource = GetResources().GetPdfObject().CopyTo(toDocument, true, NullCopyFilter.GetInstance
+                    ());
                 xObject.GetPdfObject().Put(PdfName.Resources, copyResource);
             }
             return xObject;
@@ -1646,6 +1636,21 @@ namespace iText.Kernel.Pdf {
             return contentStream;
         }
 
+        private void CopyAnnotations(PdfDocument toDocument, iText.Kernel.Pdf.PdfPage page, ICopyFilter copyFilter
+            ) {
+            foreach (PdfAnnotation annot in GetAnnotations()) {
+                if (copyFilter.ShouldProcess(page.GetPdfObject(), null, annot.GetPdfObject())) {
+                    PdfAnnotation newAnnot = PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument, JavaUtil.ArraysAsList
+                        (PdfName.P, PdfName.Parent), true, copyFilter));
+                    if (PdfName.Widget.Equals(annot.GetSubtype())) {
+                        RebuildFormFieldParent(annot.GetPdfObject(), newAnnot.GetPdfObject(), toDocument);
+                    }
+                    // P will be set in PdfPage#addAnnotation; Parent will be regenerated in PdfPageExtraCopier.
+                    page.AddAnnotation(-1, newAnnot, false);
+                }
+            }
+        }
+
         private void FlushResourcesContentStreams() {
             FlushResourcesContentStreams(GetResources().GetPdfObject());
             PdfArray annots = GetAnnots(false);
@@ -1704,10 +1709,11 @@ namespace iText.Kernel.Pdf {
             obj.MakeIndirect(GetDocument()).Flush();
         }
 
-        private void CopyInheritedProperties(iText.Kernel.Pdf.PdfPage copyPdfPage, PdfDocument pdfDocument) {
+        private void CopyInheritedProperties(iText.Kernel.Pdf.PdfPage copyPdfPage, PdfDocument pdfDocument, ICopyFilter
+             copyFilter) {
             if (copyPdfPage.GetPdfObject().Get(PdfName.Resources) == null) {
                 PdfObject copyResource = pdfDocument.GetWriter().CopyObject(GetResources().GetPdfObject(), pdfDocument, false
-                    );
+                    , copyFilter);
                 copyPdfPage.GetPdfObject().Put(PdfName.Resources, copyResource);
             }
             if (copyPdfPage.GetPdfObject().Get(PdfName.MediaBox) == null) {
@@ -1739,10 +1745,10 @@ namespace iText.Kernel.Pdf {
             PdfDictionary oldParent = field.GetAsDictionary(PdfName.Parent);
             if (oldParent != null) {
                 PdfDictionary newParent = oldParent.CopyTo(toDocument, JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName
-                    .Parent), false);
+                    .Parent), false, NullCopyFilter.GetInstance());
                 if (newParent.IsFlushed()) {
                     newParent = oldParent.CopyTo(toDocument, JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName.Parent), true
-                        );
+                        , NullCopyFilter.GetInstance());
                 }
                 RebuildFormFieldParent(oldParent, newParent, toDocument);
                 PdfArray kids = newParent.GetAsArray(PdfName.Kids);

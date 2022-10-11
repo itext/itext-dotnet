@@ -230,6 +230,8 @@ namespace iText.Kernel.Pdf {
             foreach (PdfIndirectReference fromOcgRef in fromOcgsToCopy) {
                 PdfDictionary toOcg = (PdfDictionary)fromOcgRef.GetRefersTo().CopyTo(toDocument, false);
                 String currentLayerName = toOcg.GetAsString(PdfName.Name).ToUnicodeString();
+                // Here we check on existed layer names only in destination document but not in source document.
+                // That is why there is no something like layerNames.add(currentLayerName); after this if statement
                 if (layerNames.Contains(currentLayerName)) {
                     hasConflictingNames = true;
                     int i = 0;

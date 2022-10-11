@@ -54,6 +54,7 @@ namespace iText.Kernel.Pdf {
         STROKE_COLOR,
         TAG_STRUCTURE_ELEMENT,
         FONT_GLYPHS,
-        XREF_TABLE
+        XREF_TABLE,
+        SIGNATURE
     }
 }

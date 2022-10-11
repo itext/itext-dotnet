@@ -45,6 +45,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Colors {
+    [NUnit.Framework.Category("Unit test")]
     public class DeviceRgbTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void MakeDarkerTest() {

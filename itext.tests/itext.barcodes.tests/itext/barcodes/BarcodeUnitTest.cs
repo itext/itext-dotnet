@@ -26,6 +26,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Barcodes {
+    [NUnit.Framework.Category("Unit test")]
     public class BarcodeUnitTest : ExtendedITextTest {
         private const double EPS = 0.0001;
 

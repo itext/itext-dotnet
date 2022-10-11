@@ -47,6 +47,7 @@ using iText.IO.Exceptions;
 using iText.Test;
 
 namespace iText.IO.Util {
+    [NUnit.Framework.Category("Integration test")]
     public class GhostscriptHelperTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/util/GhostscriptHelperTest/";

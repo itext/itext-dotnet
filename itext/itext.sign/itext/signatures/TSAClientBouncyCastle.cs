@@ -120,8 +120,11 @@ namespace iText.Signatures {
         /// the same imprint length).
         /// </remarks>
         /// <param name="url">Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")</param>
-        /// <param name="username">user(account) name</param>
-        /// <param name="password">password</param>
+        /// <param name="username">user(account) name, optional</param>
+        /// <param name="password">
+        /// password, optional if used in combination with username, the credentials will be used in
+        /// basic authentication. Use only in combination with a https url to ensure encryption
+        /// </param>
         /// <param name="tokSzEstimate">estimated size of received time stamp token (DER encoded)</param>
         /// <param name="digestAlgorithm">is a hash algorithm</param>
         public TSAClientBouncyCastle(String url, String username, String password, int tokSzEstimate, String digestAlgorithm

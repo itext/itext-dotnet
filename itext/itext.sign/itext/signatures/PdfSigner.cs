@@ -188,13 +188,7 @@ namespace iText.Signatures {
 
         protected internal virtual PdfDocument InitDocument(PdfReader reader, PdfWriter writer, StampingProperties
              properties) {
-            PdfAConformanceLevel conformanceLevel = reader.GetPdfAConformanceLevel();
-            if (null == conformanceLevel) {
-                return new PdfDocument(reader, writer, properties);
-            }
-            else {
-                return new PdfADocument(reader, writer, properties);
-            }
+            return new PdfAAgnosticPdfDocument(reader, writer, properties);
         }
 
         /// <summary>Gets the signature date.</summary>
@@ -761,6 +755,7 @@ namespace iText.Signatures {
                 document.GetCatalog().Put(PdfName.Perms, docmdp);
                 document.GetCatalog().SetModified();
             }
+            document.CheckIsoConformance(cryptoDictionary.GetPdfObject(), IsoKey.SIGNATURE);
             cryptoDictionary.GetPdfObject().Flush(false);
             document.Close();
             range = new long[exclusionLocations.Count * 2];

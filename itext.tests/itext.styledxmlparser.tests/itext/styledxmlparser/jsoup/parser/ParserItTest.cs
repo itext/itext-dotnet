@@ -28,6 +28,7 @@ using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Longer running Parser tests.</summary>
+    [NUnit.Framework.Category("Unit test")]
     public class ParserItTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestIssue1251() {

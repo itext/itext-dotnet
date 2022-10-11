@@ -26,6 +26,7 @@ using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
+    [NUnit.Framework.Category("Unit test")]
     public class TraversorTest : ExtendedITextTest {
         // Note: NodeTraversor.traverse(new NodeVisitor) is tested in
         // ElementsTest#traverse()

@@ -44,6 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.Kernel.Geom {
+    [NUnit.Framework.Category("Unit test")]
     public class AffineTransformTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SelfTest() {
@@ -228,7 +229,7 @@ namespace iText.Kernel.Geom {
             double[] src = new double[] { 2d, 2d, 2d, 2d, 2d, 2d };
             double[] dest = new double[6];
             affineTransform.Transform(src, 1, dest, 1, 2);
-            NUnit.Framework.Assert.AreEqual(expected, dest);
+            iText.Test.TestUtil.AreEqual(expected, dest, 0);
         }
 
         [NUnit.Framework.Test]
@@ -237,7 +238,7 @@ namespace iText.Kernel.Geom {
             double[] expected = new double[] { 2d, 2d, 13d, 18d, 13d, 18d };
             double[] src = new double[] { 2d, 2d, 2d, 2d, 2d, 2d };
             affineTransform.Transform(src, 1, src, 2, 2);
-            NUnit.Framework.Assert.AreEqual(expected, src);
+            iText.Test.TestUtil.AreEqual(expected, src, 0);
         }
 
         [NUnit.Framework.Test]
@@ -247,7 +248,7 @@ namespace iText.Kernel.Geom {
             float[] src = new float[] { 2f, 2f, 2f, 2f, 2f, 2f };
             float[] dest = new float[6];
             affineTransform.Transform(src, 1, dest, 1, 2);
-            NUnit.Framework.Assert.AreEqual(expected, dest);
+            iText.Test.TestUtil.AreEqual(expected, dest, 0);
         }
 
         [NUnit.Framework.Test]
@@ -256,7 +257,7 @@ namespace iText.Kernel.Geom {
             float[] expected = new float[] { 2f, 2f, 13f, 18f, 13f, 18f };
             float[] src = new float[] { 2f, 2f, 2f, 2f, 2f, 2f };
             affineTransform.Transform(src, 1, src, 2, 2);
-            NUnit.Framework.Assert.AreEqual(expected, src);
+            iText.Test.TestUtil.AreEqual(expected, src, 0);
         }
 
         [NUnit.Framework.Test]
@@ -266,7 +267,7 @@ namespace iText.Kernel.Geom {
             float[] src = new float[] { 2f, 2f, 2f, 2f, 2f, 2f };
             double[] dest = new double[6];
             affineTransform.Transform(src, 1, dest, 1, 2);
-            NUnit.Framework.Assert.AreEqual(expected, dest);
+            iText.Test.TestUtil.AreEqual(expected, dest, 0);
         }
 
         [NUnit.Framework.Test]
@@ -276,7 +277,7 @@ namespace iText.Kernel.Geom {
             double[] src = new double[] { 2d, 2d, 2d, 2d, 2d, 2d };
             float[] dest = new float[6];
             affineTransform.Transform(src, 1, dest, 1, 2);
-            NUnit.Framework.Assert.AreEqual(expected, dest);
+            iText.Test.TestUtil.AreEqual(expected, dest, 0);
         }
 
         [NUnit.Framework.Test]
@@ -305,7 +306,7 @@ namespace iText.Kernel.Geom {
             double[] src = new double[] { 2d, 2d, 2d, 2d, 2d, 2d };
             double[] dest = new double[6];
             affineTransform.DeltaTransform(src, 1, dest, 1, 2);
-            NUnit.Framework.Assert.AreEqual(expected, dest);
+            iText.Test.TestUtil.AreEqual(expected, dest, 0);
         }
 
         [NUnit.Framework.Test]
@@ -334,7 +335,7 @@ namespace iText.Kernel.Geom {
             double[] src = new double[] { 2d, 2d, 2d, 2d, 2d, 2d };
             double[] dest = new double[6];
             affineTransform.InverseTransform(src, 1, dest, 1, 2);
-            NUnit.Framework.Assert.AreEqual(expected, dest);
+            iText.Test.TestUtil.AreEqual(expected, dest, 0);
         }
 
         [NUnit.Framework.Test]
@@ -344,7 +345,7 @@ namespace iText.Kernel.Geom {
             float[] src = new float[] { 2f, 2f, 2f, 2f, 2f, 2f };
             float[] dest = new float[6];
             affineTransform.InverseTransform(src, 1, dest, 1, 2);
-            NUnit.Framework.Assert.AreEqual(expected, dest);
+            iText.Test.TestUtil.AreEqual(expected, dest, 0);
         }
     }
 }

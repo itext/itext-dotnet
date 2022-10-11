@@ -52,6 +52,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
+    [NUnit.Framework.Category("Unit test")]
     public class TableWidthsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestprocessCellRemainWidth01() {

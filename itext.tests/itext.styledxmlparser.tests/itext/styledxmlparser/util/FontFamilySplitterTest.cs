@@ -46,6 +46,7 @@ using System.Text;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Util {
+    [NUnit.Framework.Category("Unit test")]
     public class FontFamilySplitterTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FontFamilySplitter() {

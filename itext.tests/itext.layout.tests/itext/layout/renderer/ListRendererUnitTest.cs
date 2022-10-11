@@ -29,6 +29,7 @@ using iText.Layout.Properties;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
+    [NUnit.Framework.Category("Unit test")]
     public class ListRendererUnitTest : RendererUnitTest {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]

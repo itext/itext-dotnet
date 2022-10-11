@@ -25,6 +25,7 @@ using System.Xml;
 using iText.Test;
 
 namespace iText.Forms.Xfdf {
+    [NUnit.Framework.Category("Unit test")]
     public class XfdfWriterUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FieldEmptyValueUnitTest() {

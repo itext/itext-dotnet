@@ -44,6 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Util {
+    [NUnit.Framework.Category("Unit test")]
     public class WhiteSpaceUtilUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CollapseConsecutiveWhiteSpacesTest() {

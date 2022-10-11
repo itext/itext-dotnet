@@ -61,6 +61,8 @@ namespace iText.Kernel.Colors {
         /// <summary>HashMap containing all the names and corresponding color values.</summary>
         public static readonly WebColors NAMES = new WebColors();
 
+        private const long serialVersionUID = 6350366251375926010L;
+
         private const double RGB_MAX_VAL = 255.0;
 
         static WebColors() {
@@ -230,6 +232,44 @@ namespace iText.Kernel.Colors {
             }
         }
 
+        /// <summary>Gives you a DeviceCmyk based on a name.</summary>
+        /// <param name="name">'device-cmyk(c, m, y, k)' structure</param>
+        /// <returns>the corresponding DeviceCmyk object. Never returns null.</returns>
+        public static DeviceCmyk GetCMYKColor(String name) {
+            float[] cmykColor = GetCMYKArray(name);
+            if (cmykColor == null) {
+                return new DeviceCmyk(0, 0, 0, 100);
+            }
+            else {
+                return new DeviceCmyk(cmykColor[0], cmykColor[1], cmykColor[2], cmykColor[3]);
+            }
+        }
+
+        /// <summary>Gives an array of five floats that contain CMYK values and opacity, each value is between 0 and 1.
+        ///     </summary>
+        /// <param name="name">'device-cmyk(c, m, y, k)' structure</param>
+        /// <returns>the corresponding array of five floats, or <c>null</c> if parsing failed.</returns>
+        public static float[] GetCMYKArray(String name) {
+            float[] color = null;
+            try {
+                String colorName = name.ToLowerInvariant();
+                if (colorName.StartsWith("device-cmyk(")) {
+                    String delim = "device-cmyk()/, \t\r\n\f";
+                    StringTokenizer tok = new StringTokenizer(colorName, delim);
+                    color = new float[] { 0, 0, 0, 1, 1 };
+                    ParseCMYKColors(color, tok);
+                    if (tok.HasMoreTokens()) {
+                        color[4] = GetAlphaChannelValue(tok.NextToken());
+                    }
+                }
+            }
+            catch (Exception) {
+                // Will just return null in this case
+                color = null;
+            }
+            return color;
+        }
+
         /// <summary>Gives an array of four floats that contain RGBA values, each value is between 0 and 1.</summary>
         /// <param name="name">
         /// a name such as black, violet, cornflowerblue or #RGB or
@@ -314,6 +354,16 @@ namespace iText.Kernel.Colors {
             }
         }
 
+        private static void ParseCMYKColors(float[] color, StringTokenizer tok) {
+            for (int k = 0; k < 4; ++k) {
+                if (tok.HasMoreTokens()) {
+                    color[k] = GetCMYKChannelValue(tok.NextToken());
+                    color[k] = Math.Max(0, color[k]);
+                    color[k] = Math.Min(1f, color[k]);
+                }
+            }
+        }
+
         /// <summary>
         /// A web color string without the leading # will be 3 or 6 characters long
         /// and all those characters will be hex digits.
@@ -345,6 +395,15 @@ namespace iText.Kernel.Colors {
             else {
                 return (float)(Convert.ToInt32(rgbChannel, System.Globalization.CultureInfo.InvariantCulture) / RGB_MAX_VAL
                     );
+            }
+        }
+
+        private static float GetCMYKChannelValue(String cmykChannel) {
+            if (cmykChannel.EndsWith("%")) {
+                return ParsePercentValue(cmykChannel);
+            }
+            else {
+                return (float)(float.Parse(cmykChannel, System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 

@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.Test {
+    [NUnit.Framework.Category("Unit test")]
     public class LoggerHelperTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NotEqualMessageWithSimilarStartTest() {

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using iText.Test;
 
 namespace iText.Kernel.Utils.Objectpathitems {
+    [NUnit.Framework.Category("Unit test")]
     public class OffsetPathItemTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void EqualsAndHashCodeTest() {

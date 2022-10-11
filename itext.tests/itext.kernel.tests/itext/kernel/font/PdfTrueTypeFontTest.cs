@@ -27,6 +27,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Font {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfTrueTypeFontTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/font/PdfTrueTypeFontTest/";
@@ -53,8 +54,7 @@ namespace iText.Kernel.Font {
 
         [NUnit.Framework.Test]
         public virtual void IsNotBuiltInTest() {
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSans-Regular_v.1.8.2.ttf", PdfEncodings.WINANSI
-                );
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSans-Regular.ttf", PdfEncodings.WINANSI);
             NUnit.Framework.Assert.IsTrue(font is PdfTrueTypeFont);
             NUnit.Framework.Assert.IsFalse(((PdfTrueTypeFont)font).IsBuiltInFont());
         }

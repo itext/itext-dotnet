@@ -27,6 +27,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfStreamUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CannotCreatePdfStreamWithoutDocumentTest() {

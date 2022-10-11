@@ -1290,8 +1290,7 @@ namespace iText.Layout.Renderer {
                 if (abstractChild.IsRelativePosition()) {
                     abstractChild.ApplyRelativePositioningTranslation(false);
                 }
-                Div outlines = new Div();
-                outlines.GetAccessibilityProperties().SetRole(null);
+                Div outlines = new Div().SetNeutralRole();
                 if (transformProp != null) {
                     outlines.SetProperty(Property.TRANSFORM, transformProp);
                 }
@@ -1684,7 +1683,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        //TODO is behavior of copying all properties in split case common to all renderers?
         protected internal virtual IDictionary<int, Object> GetOwnProperties() {
             return properties;
         }

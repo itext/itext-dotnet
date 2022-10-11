@@ -47,6 +47,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Representation of a stream as described in the PDF Specification.</summary>
@@ -405,7 +406,11 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal override void CopyContent(PdfObject from, PdfDocument document) {
-            base.CopyContent(from, document);
+            CopyContent(from, document, NullCopyFilter.GetInstance());
+        }
+
+        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
+            base.CopyContent(from, document, copyFilter);
             iText.Kernel.Pdf.PdfStream stream = (iText.Kernel.Pdf.PdfStream)from;
             System.Diagnostics.Debug.Assert(inputStream == null, "Try to copy the PdfStream that has been just created."
                 );

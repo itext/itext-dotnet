@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.Text;
 using iText.Commons.Utils;
 using iText.IO.Source;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     public class PdfName : PdfPrimitiveObject, IComparable<iText.Kernel.Pdf.PdfName> {
@@ -1994,8 +1995,8 @@ namespace iText.Kernel.Pdf {
             return new iText.Kernel.Pdf.PdfName();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
-            base.CopyContent(from, document);
+        protected internal override void CopyContent(PdfObject from, PdfDocument document, ICopyFilter copyFilter) {
+            base.CopyContent(from, document, copyFilter);
             iText.Kernel.Pdf.PdfName name = (iText.Kernel.Pdf.PdfName)from;
             value = name.value;
         }

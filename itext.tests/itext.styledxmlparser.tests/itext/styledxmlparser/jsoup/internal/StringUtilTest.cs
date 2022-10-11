@@ -25,6 +25,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Internal {
+    [NUnit.Framework.Category("Unit test")]
     public class StringUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Join() {

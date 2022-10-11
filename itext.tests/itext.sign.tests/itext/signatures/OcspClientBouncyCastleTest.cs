@@ -53,6 +53,7 @@ using iText.Test.Attributes;
 using iText.Test.Signutils;
 
 namespace iText.Signatures {
+    [NUnit.Framework.Category("Unit test")]
     public class OcspClientBouncyCastleTest : ExtendedITextTest {
         private static readonly String ocspCertsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/OcspClientBouncyCastleTest/";

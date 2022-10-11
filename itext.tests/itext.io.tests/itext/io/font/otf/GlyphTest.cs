@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Test;
 
 namespace iText.IO.Font.Otf {
+    [NUnit.Framework.Category("Unit test")]
     public class GlyphTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void HasPlacementIfAnchorDeltaNonZeroTest() {

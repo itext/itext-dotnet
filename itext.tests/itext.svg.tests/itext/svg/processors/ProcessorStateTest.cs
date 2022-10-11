@@ -47,6 +47,7 @@ using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Processors {
+    [NUnit.Framework.Category("Unit test")]
     public class ProcessorStateTest : ExtendedITextTest {
         /// <summary>Push test</summary>
         [NUnit.Framework.Test]

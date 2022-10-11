@@ -49,6 +49,7 @@ using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO.Image {
+    [NUnit.Framework.Category("Unit test")]
     public class TiffTest : ExtendedITextTest {
         private const double DELTA = 1e-5;
 

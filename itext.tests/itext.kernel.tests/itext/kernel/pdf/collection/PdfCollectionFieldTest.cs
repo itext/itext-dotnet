@@ -47,6 +47,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Collection {
+    [NUnit.Framework.Category("Unit test")]
     public class PdfCollectionFieldTest : ExtendedITextTest {
         private static readonly PdfName[] ALLOWED_PDF_NAMES = new PdfName[] { PdfName.D, PdfName.N, PdfName.F, PdfName
             .Desc, PdfName.ModDate, PdfName.CreationDate, PdfName.Size };

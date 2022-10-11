@@ -45,6 +45,7 @@ using iText.Svg.Exceptions;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Factories {
+    [NUnit.Framework.Category("Unit test")]
     public class DefaultSvgNodeRendererFactoryTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CreateSvgNodeRenderer() {

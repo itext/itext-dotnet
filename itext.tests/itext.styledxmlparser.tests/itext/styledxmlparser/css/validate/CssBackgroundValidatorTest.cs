@@ -24,6 +24,7 @@ using iText.StyledXmlParser.Css.Validate.Impl.Datatype;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Validate {
+    [NUnit.Framework.Category("Unit test")]
     public class CssBackgroundValidatorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NullValueTest() {

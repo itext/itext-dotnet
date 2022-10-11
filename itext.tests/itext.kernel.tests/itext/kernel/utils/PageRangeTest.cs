@@ -46,6 +46,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Utils {
+    [NUnit.Framework.Category("Unit test")]
     public class PageRangeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void AddSingleTest() {

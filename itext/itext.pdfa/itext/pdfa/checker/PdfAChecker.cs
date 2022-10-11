@@ -127,7 +127,7 @@ namespace iText.Pdfa.Checker {
         /// <remarks>
         /// Contains some objects that are already checked.
         /// NOTE: Not all objects that were checked are stored in that set. This set is used for avoiding double checks for
-        /// actions, xObjects and page objects; and for letting those objects to be manually flushed.
+        /// actions, signatures, xObjects and page objects; and for letting those objects to be manually flushed.
         /// Use this mechanism carefully: objects that are able to be changed (or at least if object's properties
         /// that shall be checked are able to be changed) shouldn't be marked as checked if they are not to be
         /// flushed immediately.
@@ -282,6 +282,16 @@ namespace iText.Pdfa.Checker {
             // We don't check tag structure as there are no strict constraints,
             // so we just mark tag structure elements to be able to flush them
             checkedObjects.Add(obj);
+        }
+
+        /// <summary>This method checks compliance of the signature dictionary</summary>
+        /// <param name="signatureDict">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the signature.
+        /// </param>
+        public virtual void CheckSignature(PdfDictionary signatureDict) {
+            checkedObjects.Add(signatureDict);
         }
 
         /// <summary>

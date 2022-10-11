@@ -27,6 +27,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
+    [NUnit.Framework.Category("Unit test")]
     public class BackgroundSizeCalculationUtilUnitTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/BackgroundImageTest/";
@@ -40,7 +41,7 @@ namespace iText.Layout.Renderer {
             BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).Build();
             float[] widthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 200f, 
                 300f);
-            NUnit.Framework.Assert.AreEqual(new float[] { 45f, 45f }, widthAndHeight);
+            iText.Test.TestUtil.AreEqual(new float[] { 45f, 45f }, widthAndHeight, delta);
         }
 
         [NUnit.Framework.Test]
@@ -51,7 +52,7 @@ namespace iText.Layout.Renderer {
             backgroundImage.GetBackgroundSize().SetBackgroundSizeToCover();
             float[] widthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 200f, 
                 300f);
-            NUnit.Framework.Assert.AreEqual(new float[] { 300f, 300f }, widthAndHeight);
+            iText.Test.TestUtil.AreEqual(new float[] { 300f, 300f }, widthAndHeight, delta);
         }
 
         [NUnit.Framework.Test]
@@ -62,7 +63,7 @@ namespace iText.Layout.Renderer {
             backgroundImage.GetBackgroundSize().SetBackgroundSizeToContain();
             float[] widthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 200f, 
                 300f);
-            NUnit.Framework.Assert.AreEqual(new float[] { 200f, 200.000015f }, widthAndHeight);
+            iText.Test.TestUtil.AreEqual(new float[] { 200f, 200.000015f }, widthAndHeight, delta);
         }
 
         [NUnit.Framework.Test]
@@ -72,7 +73,7 @@ namespace iText.Layout.Renderer {
             backgroundImage.GetBackgroundSize().SetBackgroundSizeToContain();
             float[] widthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 200f, 
                 300f);
-            NUnit.Framework.Assert.AreEqual(new float[] { 200f, 112.5f }, widthAndHeight);
+            iText.Test.TestUtil.AreEqual(new float[] { 200f, 112.5f }, widthAndHeight, delta);
         }
 
         [NUnit.Framework.Test]
@@ -82,7 +83,7 @@ namespace iText.Layout.Renderer {
             backgroundImage.GetBackgroundSize().SetBackgroundSizeToCover();
             float[] widthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 200f, 
                 300f);
-            NUnit.Framework.Assert.AreEqual(new float[] { 533.3333f, 300f }, widthAndHeight);
+            iText.Test.TestUtil.AreEqual(new float[] { 533.3333f, 300f }, widthAndHeight, delta);
         }
     }
 }
