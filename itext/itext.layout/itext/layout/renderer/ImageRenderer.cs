@@ -180,11 +180,19 @@ namespace iText.Layout.Renderer {
             // indicates whether the placement is forced
             bool isPlacingForced = false;
             if (width > layoutBox.GetWidth() + EPS || height > layoutBox.GetHeight() + EPS) {
-                if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || (width > layoutBox.GetWidth() && processOverflowX
-                    ) || (height > layoutBox.GetHeight() && processOverflowY)) {
+                if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                     isPlacingForced = true;
                 }
                 else {
+                    isPlacingForced = true;
+                    if (width > layoutBox.GetWidth() + EPS) {
+                        isPlacingForced &= processOverflowX;
+                    }
+                    if (height > layoutBox.GetHeight() + EPS) {
+                        isPlacingForced &= processOverflowY;
+                    }
+                }
+                if (!isPlacingForced) {
                     ApplyMargins(initialOccupiedAreaBBox, true);
                     ApplyBorderBox(initialOccupiedAreaBBox, true);
                     occupiedArea.GetBBox().SetHeight(initialOccupiedAreaBBox.GetHeight());
