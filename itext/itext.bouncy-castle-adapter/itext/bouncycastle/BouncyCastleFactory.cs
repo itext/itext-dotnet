@@ -51,13 +51,11 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Jcajce;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
-using iText.Commons.Bouncycastle.Cms.Jcajce;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Crypto.Generators;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
-using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle.X509;
@@ -781,10 +779,6 @@ namespace iText.Bouncycastle {
             return new CipherBC(forEncryption, key, iv);
         }
 
-        public ICipher CreateCipher(bool forEncryption, IPublicKey key, IAlgorithmIdentifier algorithmIdentifier) {
-            return new CipherBC(forEncryption, key, algorithmIdentifier);
-        }
-
         public ICipherCBCnoPad CreateCipherCbCnoPad(bool forEncryption, byte[] key, byte[] iv) {
             return new CipherCBCnoPadBC(forEncryption, key, iv);
         }
@@ -828,7 +822,17 @@ namespace iText.Bouncycastle {
             return new ExtensionBC(new X509Extension(b, 
                 ((DEROctetStringBC)octetString).GetDEROctetString()));
         }
-        
+
+        public byte[] CreateCipherBytes(IX509Certificate x509Certificate, byte[] abyte0, IAlgorithmIdentifier algorithmidentifier) {
+            IBufferedCipher cipher = CipherUtilities.GetCipher(((AlgorithmIdentifierBC) algorithmidentifier).GetAlgorithmIdentifier().Algorithm);
+            cipher.Init(true, ((PublicKeyBC)x509Certificate.GetPublicKey()).GetPublicKey());
+            byte[] outp = new byte[10000];
+            int len = cipher.DoFinal(abyte0, outp, 0);
+            byte[] abyte1 = new byte[len];
+            Array.Copy(outp, 0, abyte1, 0, len);
+            return abyte1;
+        }
+
         public IPEMParser CreatePEMParser(TextReader reader, char[] password) {
             return new PEMParserBC(new PemReader(reader, new BouncyCastlePasswordFinder(password)));
         }

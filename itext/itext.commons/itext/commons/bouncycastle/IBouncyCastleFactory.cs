@@ -308,8 +308,6 @@ namespace iText.Commons.Bouncycastle {
         IBigInteger CreateBigInteger(string str);
         
         ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv);
-        
-        ICipher CreateCipher(bool forEncryption, IPublicKey key, IAlgorithmIdentifier algorithmIdentifier);
 
         ICipherCBCnoPad CreateCipherCbCnoPad(bool forEncryption, byte[] key, byte[] iv);
         
@@ -330,7 +328,9 @@ namespace iText.Commons.Bouncycastle {
         ISubjectKeyIdentifier CreateSubjectKeyIdentifier(ISubjectPublicKeyInfo subjectPublicKeyInfo);
         
         bool IsNullExtension(IExtension ext);
-        
+
         IExtension CreateExtension(bool b, IDEROctetString octetString);
+
+        byte[] CreateCipherBytes(IX509Certificate x509Certificate, byte[] abyte0, IAlgorithmIdentifier algorithmidentifier);
     }
 }

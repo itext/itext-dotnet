@@ -119,7 +119,7 @@ namespace iText.Bouncycastlefips.Crypto {
         private void InitSignature(IAsymmetricKey key, string hashAlgorithm, string encAlgorithm) {
             ISignatureFactoryService signatureFactoryProvider =
                 CryptoServicesRegistrar.CreateService((ICryptoServiceType<ISignatureFactoryService>)key, new SecureRandom());
-            FipsShs.Parameters parameters = GetMessageDigestParams(hashAlgorithm);
+            FipsShs.Parameters parameters = IDigestBCFips.GetMessageDigestParams(hashAlgorithm);
             switch (encAlgorithm) {
                 case "RSA": {
                     ISignatureFactory<FipsRsa.SignatureParameters> rsaSig =
@@ -135,8 +135,7 @@ namespace iText.Bouncycastlefips.Crypto {
                     digest = rsaSig.CreateCalculator();
                     break;
                 }
-                case "ECDSA":
-                case "EC": {
+                case "ECDSA": {
                     ISignatureFactory<FipsEC.SignatureParameters> rsaSig =
                         signatureFactoryProvider.CreateSignatureFactory(
                             FipsEC.Dsa.WithDigest(parameters));
@@ -149,7 +148,7 @@ namespace iText.Bouncycastlefips.Crypto {
         private void InitVerifySignature(IAsymmetricKey key, String hashAlgorithm, String encrAlgorithm) {
             IVerifierFactoryService verifierFactoryProvider =
                 CryptoServicesRegistrar.CreateService((ICryptoServiceType<IVerifierFactoryService>)key);
-            FipsShs.Parameters parameters = GetMessageDigestParams(hashAlgorithm);
+            FipsShs.Parameters parameters = IDigestBCFips.GetMessageDigestParams(hashAlgorithm);
 
             switch (encrAlgorithm) {
                 case "RSA": {
@@ -170,27 +169,6 @@ namespace iText.Bouncycastlefips.Crypto {
                         verifierFactoryProvider.CreateVerifierFactory(FipsEC.Dsa.WithDigest(parameters));
                     iSigner = rsaSig.CreateCalculator();
                     break;
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Gets Message Digest parameters.
-        /// </summary>
-        /// <param name="hashAlgorithm">hash algorithm</param>
-        private static FipsShs.Parameters GetMessageDigestParams(String hashAlgorithm) {
-            switch (hashAlgorithm) {
-                case "SHA256": {
-                    return FipsShs.Sha256;
-                }
-                case "SHA512": {
-                    return FipsShs.Sha512;
-                }
-                case "SHA1": {
-                    return FipsShs.Sha1;
-                }
-                default: {
-                    throw new ArgumentException("Hash algorithm " + hashAlgorithm + " is not supported");
                 }
             }
         }

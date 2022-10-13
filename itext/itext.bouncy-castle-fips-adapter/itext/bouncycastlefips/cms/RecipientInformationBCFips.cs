@@ -27,6 +27,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Cms;
 using Org.BouncyCastle.Operators;
+using Org.BouncyCastle.Security;
 
 namespace iText.Bouncycastlefips.Cms {
     /// <summary>
@@ -61,7 +62,8 @@ namespace iText.Bouncycastlefips.Cms {
         /// <summary><inheritDoc/></summary>
         public virtual byte[] GetContent(IPrivateKey key) {
             try {
-                return recipientInformation.GetContent(new CmsKeyTransEnvelopedRecipient(((PrivateKeyBCFips)key).GetPrivateKey()));
+                return recipientInformation.GetContent(new CmsKeyTransEnvelopedRecipient(
+                    ((PrivateKeyBCFips)key).GetPrivateKey(), new SecureRandom()));
             }
             catch (CmsException e) {
                 throw new CMSExceptionBCFips(e);

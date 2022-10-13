@@ -54,11 +54,16 @@ using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
-using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     internal sealed class EncryptionUtils {
+        // 256-bit AES-CBC, PKCS#5 padding
+        // Not ideal, but the best that the PDF standard allows.
+        public const String ENVELOPE_ENCRYPTION_ALGORITHM_OID = "2.16.840.1.101.3.4.1.42";
+        public const int ENVELOPE_ENCRYPTION_KEY_LENGTH = 256;
+
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         internal static byte[] GenerateSeed(int seedLength) {
             return IVGenerator.GetIV(seedLength);
         }
@@ -87,11 +92,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         internal static byte[] CipherBytes(IX509Certificate x509Certificate, byte[] abyte0, IAlgorithmIdentifier algorithmidentifier) {
-            ICipher cipher = FACTORY.CreateCipher(true, x509Certificate.GetPublicKey(), algorithmidentifier);
-            cipher.Update(abyte0, 0, abyte0.Length);
-            byte[] abyte1 = cipher.DoFinal();
-
-            return abyte1;
+            return FACTORY.CreateCipherBytes(x509Certificate, abyte0, algorithmidentifier);
         }
 
         // TODO Review this method and it's usages. It is used in bouncy castle sources in itextsharp, so we need to be carefull about it in case we update BouncyCastle.
@@ -115,35 +116,24 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         internal static DERForRecipientParams CalculateDERForRecipientParams(byte[] @in) {
-            /*
-             According to ISO 32000-2 (7.6.5.3 Public-key encryption algorithms) RC-2 algorithm is outdated
-             and should be replaced with a safer one 256-bit AES-CBC:
-                 The algorithms that shall be used to encrypt the enveloped data in the CMS object are:
-                 - RC4 with key lengths up to 256-bits (deprecated);
-                 - DES, Triple DES, RC2 with key lengths up to 128 bits (deprecated);
-                 - 128-bit AES in Cipher Block Chaining (CBC) mode (deprecated);
-                 - 192-bit AES in CBC mode (deprecated);
-                 - 256-bit AES in CBC mode.
-             */
-            String s = "1.2.840.113549.3.2";
             DERForRecipientParams parameters = new DERForRecipientParams();
 
-            IASN1ObjectIdentifier derob = FACTORY.CreateASN1ObjectIdentifier(s);
+            IASN1ObjectIdentifier derob = FACTORY.CreateASN1ObjectIdentifier(ENVELOPE_ENCRYPTION_ALGORITHM_OID);
 
-            byte[] abyte0 = IVGenerator.GetIV(16);
-            byte[] iv = IVGenerator.GetIV(8);
-            ICryptoTransform encryptor = RC2.Create().CreateEncryptor(abyte0, iv);
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            byte[] abyte0 = new byte[ENVELOPE_ENCRYPTION_KEY_LENGTH / 8];
+            rng.GetBytes(abyte0);
+            
+            byte[] iv = IVGenerator.GetIV(16);
+            ICryptoTransform encryptor = Aes.Create().CreateEncryptor(abyte0, iv);
 
             byte[] abyte1 = encryptor.TransformFinalBlock(@in, 0, @in.Length);
 
-            IASN1EncodableVector ev = FACTORY.CreateASN1EncodableVector();
-            ev.Add(FACTORY.CreateASN1Integer(58));
-            ev.Add(FACTORY.CreateDEROctetString(iv));
-            IDERSequence seq =  FACTORY.CreateDERSequence(ev);
-
+            // AES-256-CBC takes an octet string with the IV in the parameters field
+            IASN1Encodable envelopeAlgoParams = FACTORY.CreateDEROctetString(iv);
             parameters.abyte0 = abyte0;
             parameters.abyte1 = abyte1;
-            parameters.algorithmIdentifier = FACTORY.CreateAlgorithmIdentifier(derob, seq);
+            parameters.algorithmIdentifier = FACTORY.CreateAlgorithmIdentifier(derob, envelopeAlgoParams);
             return parameters;
         }
 

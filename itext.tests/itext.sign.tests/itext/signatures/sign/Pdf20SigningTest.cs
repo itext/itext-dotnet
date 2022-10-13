@@ -139,7 +139,7 @@ namespace iText.Signatures.Sign {
             String outPdf = DESTINATION_FOLDER + "signPdf2Cades.pdf";
             Rectangle rect = new Rectangle(30, 200, 200, 100);
             String fieldName = "Signature1";
-            Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.RIPEMD160, PdfSigner.CryptoStandard.CADES, "Test 1"
+            Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1"
                 , "TestCity", rect, false, true, PdfSigner.NOT_CERTIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 , GetTestMap(rect)));

@@ -1,14 +1,10 @@
 using System;
-using iText.Bouncycastle.Asn1.X509;
-using iText.Commons.Bouncycastle.Asn1.X509;
-using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Paddings;
 using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Security;
 using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
 
 namespace iText.Bouncycastle.Crypto {
@@ -45,11 +41,6 @@ namespace iText.Bouncycastle.Crypto {
             cipher.Init(forEncryption, piv);
         }
 
-        public CipherBC(bool forEncryption, IPublicKey key, IAlgorithmIdentifier algorithmIdentifier) {
-            cipher = CipherUtilities.GetCipher(((AlgorithmIdentifierBC)algorithmIdentifier).GetAlgorithmIdentifier().Algorithm);
-            cipher.Init(forEncryption, ((PublicKeyBC)key).GetPublicKey());
-        }
-        
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped IBufferedCipher<IBlockResult>.

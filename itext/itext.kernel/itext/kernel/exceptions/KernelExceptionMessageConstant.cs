@@ -258,6 +258,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE = "Function is not compatible with " + "ColorSpace.";
 
+        public const String HASH_ALGORITHM_IS_NOT_SUPPORTED_IN_FIPS = "Hash algorithm {0} is not supported in fips";
+
         public const String ILLEGAL_CHARACTER_IN_ASCIIHEXDECODE = "illegal character in ASCIIHexDecode.";
 
         public const String ILLEGAL_CHARACTER_IN_ASCII85DECODE = "Illegal character in ASCII85Decode.";

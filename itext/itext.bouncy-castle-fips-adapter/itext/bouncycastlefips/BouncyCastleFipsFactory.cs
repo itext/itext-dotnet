@@ -46,13 +46,11 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Jcajce;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
-using iText.Commons.Bouncycastle.Cms.Jcajce;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Crypto.Generators;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
-using iText.Commons.Bouncycastle.Operator.Jcajce;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle.X509;
@@ -61,14 +59,11 @@ using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Asn1.X500;
 using Org.BouncyCastle.Cert;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Asymmetric;
 using Org.BouncyCastle.Crypto.Fips;
-using Org.BouncyCastle.Crypto.General;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Operators;
-using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Utilities;
-using Org.BouncyCastle.Utilities.Encoders;
 using Org.BouncyCastle.Utilities.IO;
 using ContentInfo = Org.BouncyCastle.Asn1.Cms.ContentInfo;
 using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
@@ -821,10 +816,6 @@ namespace iText.Bouncycastlefips {
         public ICipher CreateCipher(bool forEncryption, byte[] key, byte[] iv) {
             return new CipherBCFips(forEncryption, key, iv);
         }
-
-        public ICipher CreateCipher(bool forEncryption, IPublicKey key, IAlgorithmIdentifier algorithmIdentifier) {
-            return new CipherBCFips(forEncryption, key, algorithmIdentifier);
-        }
         
         public ICipherCBCnoPad CreateCipherCbCnoPad(bool forEncryption, byte[] key, byte[] iv) {
             return new CipherCBCnoPadBCFips(forEncryption, key, iv);
@@ -893,6 +884,14 @@ namespace iText.Bouncycastlefips {
         public IExtension CreateExtension(bool b, IDEROctetString octetString) {
             return new ExtensionBCFips(new X509Extension(b, 
                 ((DEROctetStringBCFips)octetString).GetDEROctetString()));
+        }
+
+        public byte[] CreateCipherBytes(IX509Certificate x509Certificate, byte[] abyte0, IAlgorithmIdentifier algorithmidentifier) {
+            IKeyWrapper<FipsRsa.OaepWrapParameters> keyWrapper =
+                CryptoServicesRegistrar.CreateService((AsymmetricRsaPublicKey)((PublicKeyBCFips)x509Certificate.GetPublicKey()).GetPublicKey(), new SecureRandom())
+                    .CreateKeyWrapper(FipsRsa.WrapOaep.WithDigest(FipsShs.Sha1));
+
+            return keyWrapper.Wrap(abyte0).Collect();
         }
     }
 }

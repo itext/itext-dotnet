@@ -14,6 +14,7 @@ namespace iText.Bouncycastlefips.Crypto {
         private readonly System.Security.Cryptography.MD5 md5 = null;
         private MemoryStream stream = new MemoryStream();
         private string algorithmName;
+        private long pos = 0;
 
         /// <summary>
         /// Creates new wrapper instance for digest.
@@ -62,7 +63,8 @@ namespace iText.Bouncycastlefips.Crypto {
         /// <summary><inheritDoc/></summary>
         public byte[] Digest(byte[] enc2) {
             if (md5 != null) {
-                return md5.ComputeHash(enc2);
+                Update(enc2);
+                return Digest();
             }
             using (Stream digestStream = iDigest.Stream) {
                 digestStream.Write(enc2, 0, enc2.Length);
@@ -73,7 +75,9 @@ namespace iText.Bouncycastlefips.Crypto {
         /// <summary><inheritDoc/></summary>
         public byte[] Digest() {
             if (md5 != null) {
-                stream.Position = 0;
+                long lastPos = stream.Position;
+                stream.Position = pos;
+                pos = lastPos;
                 return md5.ComputeHash(stream);
             }
             return iDigest.GetResult().Collect();
@@ -99,6 +103,7 @@ namespace iText.Bouncycastlefips.Crypto {
         public void Reset() {
             if (md5 != null) {
                 stream = new MemoryStream();
+                pos = 0;
             } else {
                 Digest();
             }
@@ -162,7 +167,7 @@ namespace iText.Bouncycastlefips.Crypto {
                     return FipsShs.Sha384;
                 }
                 default: {
-                    throw new ArgumentException("Hash algorithm " + hashAlgorithm + " is not supported");
+                    throw new ArgumentException("Hash algorithm " + hashAlgorithm + " is not supported in fips");
                 }
             }
         }
