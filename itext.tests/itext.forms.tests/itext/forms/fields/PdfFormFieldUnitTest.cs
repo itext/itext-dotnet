@@ -34,7 +34,7 @@ using iText.Layout.Renderer;
 using iText.Test;
 
 namespace iText.Forms.Fields {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfFormFieldUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CannotGetRectangleIfKidsIsNullTest() {

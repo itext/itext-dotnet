@@ -27,7 +27,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class AbstractTableTest : ExtendedITextTest {
         internal static Document AddTableBelowToCheckThatOccupiedAreaIsCorrect(Document doc) {
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants

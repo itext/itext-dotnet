@@ -45,7 +45,7 @@ using iText.Test.Pdfa;
 using iText.Test.Utils;
 
 namespace iText.Test {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class VeraPdfLoggerValidationTest : ExtendedITextTest {
         internal static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdftest/cmp/VeraPdfLoggerValidationTest/";

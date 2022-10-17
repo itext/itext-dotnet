@@ -49,7 +49,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Forms.Xfa {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class XfaSecurityTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/xfa/XfaSecurityTest/";

@@ -28,7 +28,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Safety {
     /// <summary>Tests for the cleaner.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CleanerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SimpleBehaviourTest() {

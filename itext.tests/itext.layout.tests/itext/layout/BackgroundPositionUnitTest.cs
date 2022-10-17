@@ -24,7 +24,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class BackgroundPositionUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void DefaultConstructorTest() {

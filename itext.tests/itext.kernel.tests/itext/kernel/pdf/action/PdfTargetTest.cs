@@ -30,7 +30,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Action {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfTargetTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CreateInstanceTest() {

@@ -26,7 +26,7 @@ using iText.Kernel.Utils.Objectpathitems;
 using iText.Test;
 
 namespace iText.Kernel.Utils {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CompareToolObjectPathTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void BaseEqualsTest() {

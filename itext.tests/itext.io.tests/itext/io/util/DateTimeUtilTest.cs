@@ -45,7 +45,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.IO.Util {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class DateTimeUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void WrappingDateWithCalendarTest() {

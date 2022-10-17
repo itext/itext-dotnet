@@ -48,7 +48,7 @@ using iText.Kernel.Actions.Ecosystem;
 using iText.Test;
 
 namespace iText.Kernel.Actions.Events {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class ITextCoreProductEventTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void OpenDocumentEventTest() {

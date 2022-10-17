@@ -46,7 +46,7 @@ using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssMatchesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void MatchesEmptySelectorItemTest() {

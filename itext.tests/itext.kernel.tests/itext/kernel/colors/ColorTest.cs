@@ -47,7 +47,7 @@ using iText.Kernel.Pdf.Colorspace;
 using iText.Test;
 
 namespace iText.Kernel.Colors {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class ColorTest : ExtendedITextTest {
         private const float EPS = 1e-4f;
 

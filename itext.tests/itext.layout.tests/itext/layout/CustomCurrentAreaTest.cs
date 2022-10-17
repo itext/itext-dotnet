@@ -30,7 +30,7 @@ using iText.Layout.Renderer;
 using iText.Test;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class CustomCurrentAreaTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/CustomCurrentAreaTest/";

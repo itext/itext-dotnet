@@ -51,7 +51,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CrlClientOnlineTest : ExtendedITextTest {
         private static readonly String certSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/CrlClientOnlineTest/";

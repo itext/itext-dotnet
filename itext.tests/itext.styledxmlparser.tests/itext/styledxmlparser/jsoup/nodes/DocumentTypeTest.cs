@@ -26,7 +26,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for the DocumentType node</summary>
     /// <author>Jonathan Hedley, http://jonathanhedley.com/</author>
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class DocumentTypeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ConstructorValidationOkWithBlankName() {

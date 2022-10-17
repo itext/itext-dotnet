@@ -29,7 +29,7 @@ using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     [NUnit.Framework.TestFixtureSource("LocalesTestFixtureData")]
     public class MultiLocaleTest : ExtendedITextTest {
         private readonly CultureInfo defaultLocale = System.Threading.Thread.CurrentThread.CurrentUICulture;

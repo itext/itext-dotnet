@@ -48,7 +48,7 @@ using iText.StyledXmlParser.Css;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssShorthandResolverTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void BorderBottomTest01() {

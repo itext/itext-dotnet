@@ -27,7 +27,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class ClipperBridgeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SquareClippingTest() {

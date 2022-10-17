@@ -51,7 +51,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Crypto {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class UnencryptedWrapperTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/crypto/UnencryptedWrapperTest/";

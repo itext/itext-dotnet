@@ -32,7 +32,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Canvas {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfCanvasInlineImagesTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/canvas/PdfCanvasInlineImagesTest/";

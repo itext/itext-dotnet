@@ -51,7 +51,7 @@ using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa.Checker {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfA2CheckerTransparencyTest : ExtendedITextTest {
         private PdfA2Checker pdfA2Checker;
 

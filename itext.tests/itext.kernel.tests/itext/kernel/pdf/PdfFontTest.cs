@@ -58,7 +58,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfFontTest : ExtendedITextTest {
         public const int PageCount = 1;
 

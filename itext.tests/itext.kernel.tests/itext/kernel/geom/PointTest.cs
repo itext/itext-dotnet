@@ -44,7 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.Kernel.Geom {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PointTest : ExtendedITextTest {
         private static double EPSILON_COMPARISON = 1E-12;
 

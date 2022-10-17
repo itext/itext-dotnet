@@ -52,7 +52,7 @@ using iText.Kernel.Pdf.Colorspace;
 using iText.Test;
 
 namespace iText.Pdfa.Checker {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfACheckerTest : ExtendedITextTest {
         private PdfAChecker pdfAChecker;
 

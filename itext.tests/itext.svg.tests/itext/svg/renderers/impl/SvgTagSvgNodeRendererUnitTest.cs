@@ -49,7 +49,7 @@ using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class SvgTagSvgNodeRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CalculateNestedViewportSameAsParentTest() {

@@ -27,7 +27,7 @@ using iText.StyledXmlParser.Exceptions;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class LimitedInputStreamTest : ExtendedITextTest {
         private readonly String baseUri = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/styledxmlparser/resolver/retrieveStreamTest/";

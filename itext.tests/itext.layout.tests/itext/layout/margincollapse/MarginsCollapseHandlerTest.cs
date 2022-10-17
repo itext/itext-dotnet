@@ -48,7 +48,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Margincollapse {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class MarginsCollapseHandlerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 2)]

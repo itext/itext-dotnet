@@ -26,7 +26,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Filters {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class ASCIIHexDecodeFilterTest : ExtendedITextTest {
         public static readonly String SOURCE_FILE = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/filters/ASCIIHex.bin";

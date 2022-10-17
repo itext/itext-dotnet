@@ -24,7 +24,7 @@ using System;
 using iText.Test;
 
 namespace iText.Commons.Utils {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class ProcessInfoTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetExitCodeTest() {

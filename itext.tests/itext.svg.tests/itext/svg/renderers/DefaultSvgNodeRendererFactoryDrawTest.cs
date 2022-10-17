@@ -48,7 +48,7 @@ using iText.Svg.Renderers.Factories;
 using iText.Test;
 
 namespace iText.Svg.Renderers {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class DefaultSvgNodeRendererFactoryDrawTest : ExtendedITextTest {
         private readonly ISvgNodeRendererFactory fact = new DummySvgNodeFactory();
 

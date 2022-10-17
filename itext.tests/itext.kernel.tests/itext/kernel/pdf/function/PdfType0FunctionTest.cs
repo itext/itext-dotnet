@@ -26,7 +26,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Function {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfType0FunctionTest : ExtendedITextTest {
         protected internal const double DELTA = 1e-12;
 

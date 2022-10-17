@@ -44,7 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.IO.Util {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class ImageMagickHelperUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void VerifyValidIntegerFuzzValue() {

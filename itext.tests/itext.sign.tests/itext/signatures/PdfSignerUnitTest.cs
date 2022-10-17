@@ -38,7 +38,7 @@ using iText.Test;
 using iText.Test.Signutils;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfSignerUnitTest : ExtendedITextTest {
         private static readonly byte[] OWNER = "owner".GetBytes();
 

@@ -58,7 +58,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class DefaultLayoutTest : ExtendedITextTest {
         public static float EPS = 0.001f;
 

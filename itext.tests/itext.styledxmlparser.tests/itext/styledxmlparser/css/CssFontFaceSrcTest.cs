@@ -29,7 +29,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssFontFaceSrcTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/styledxmlparser/css/CssFontFaceSrcTest/";

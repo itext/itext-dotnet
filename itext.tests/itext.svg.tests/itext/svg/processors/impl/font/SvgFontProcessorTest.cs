@@ -49,7 +49,7 @@ using iText.Svg.Processors.Impl;
 using iText.Test;
 
 namespace iText.Svg.Processors.Impl.Font {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class SvgFontProcessorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void AddFontFaceFontsTest() {

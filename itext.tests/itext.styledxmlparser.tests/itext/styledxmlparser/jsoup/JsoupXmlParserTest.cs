@@ -49,7 +49,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Jsoup {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class JsoupXmlParserTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestXmlDeclarationAndComment() {

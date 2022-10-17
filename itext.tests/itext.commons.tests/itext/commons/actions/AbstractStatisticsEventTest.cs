@@ -28,7 +28,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Commons.Actions {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class AbstractStatisticsEventTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ConstructorTest() {

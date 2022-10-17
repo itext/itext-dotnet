@@ -27,7 +27,7 @@ using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Integration {
     /// <summary>Check that we can extend Safelist methods</summary>
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class SafelistExtensionTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CanCustomizeSafeTests() {

@@ -49,7 +49,7 @@ using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO.Font.Otf {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class GlyphLineTest : ExtendedITextTest {
         private static IList<Glyph> ConstructGlyphListFromString(String text, TrueTypeFont font) {
             IList<Glyph> glyphList = new List<Glyph>();

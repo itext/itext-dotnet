@@ -25,7 +25,7 @@ using iText.IO.Font;
 using iText.Test;
 
 namespace iText.IO.Font.Otf {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class OpenTypeFontTableReaderTest : ExtendedITextTest {
         private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/OpenTypeFontTableReaderTest/";

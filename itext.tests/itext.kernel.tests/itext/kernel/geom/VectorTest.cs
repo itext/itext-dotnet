@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using iText.Test;
 
 namespace iText.Kernel.Geom {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class VectorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestCrossVector() {

@@ -44,7 +44,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfNumberTest : ExtendedITextTest {
         private const double DELTA = 0.0001;
 

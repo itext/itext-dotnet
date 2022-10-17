@@ -48,7 +48,7 @@ using iText.Layout.Hyphenation;
 using iText.Test;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class HyphenateTest : ExtendedITextTest {
         private IList<HyphenateTest.TestParams> @params = JavaUtil.ArraysAsList(new HyphenateTest.TestParams("af")
             , 

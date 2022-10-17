@@ -51,7 +51,7 @@ using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class SvgDrawContextTest : ExtendedITextTest {
         private PdfDocument tokenDoc;
 

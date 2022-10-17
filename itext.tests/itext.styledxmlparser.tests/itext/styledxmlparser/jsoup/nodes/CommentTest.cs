@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CommentTest : ExtendedITextTest {
         private Comment comment = new Comment(" This is one heck of a comment! ");
 

@@ -49,7 +49,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas.Draw {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class SolidLineTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void DefaultSolidLineTest01() {

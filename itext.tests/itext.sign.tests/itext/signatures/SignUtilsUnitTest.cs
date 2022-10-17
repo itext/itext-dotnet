@@ -24,7 +24,7 @@ using System;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class SignUtilsUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Add180SecTest() {

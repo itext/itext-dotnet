@@ -30,7 +30,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css.Util {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssDimensionParsingUtilsTest : ExtendedITextTest {
         private const float EPS = 0.0001f;
 

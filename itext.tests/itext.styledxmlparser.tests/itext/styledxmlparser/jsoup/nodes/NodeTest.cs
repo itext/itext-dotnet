@@ -30,7 +30,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests Nodes</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class NodeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void HandlesBaseUri() {

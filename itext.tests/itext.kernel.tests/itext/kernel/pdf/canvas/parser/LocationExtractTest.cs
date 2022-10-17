@@ -54,7 +54,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
     /// It uses RegexBasedLocationExtractionStrategy, and searches for the word "Alice" in the book
     /// "Alice in Wonderland" by Lewis Caroll on page 1.
     /// </remarks>
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class LocationExtractTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/LocationExtractionTest/";

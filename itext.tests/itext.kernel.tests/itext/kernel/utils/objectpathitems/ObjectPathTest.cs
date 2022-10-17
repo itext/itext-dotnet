@@ -46,7 +46,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Utils.Objectpathitems {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class ObjectPathTest : ExtendedITextTest {
         private PdfDocument testCmp;
 

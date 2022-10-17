@@ -31,7 +31,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Font {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfFontUnitTest : ExtendedITextTest {
         public const int FONT_METRICS_DESCENT = -40;
 

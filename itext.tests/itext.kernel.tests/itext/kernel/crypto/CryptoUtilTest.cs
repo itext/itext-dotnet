@@ -28,7 +28,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Crypto {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CryptoUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CreateBerStreamTest() {

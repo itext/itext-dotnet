@@ -35,7 +35,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Tests for the Parser</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class HtmlParserTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ParsesSimpleDocument() {

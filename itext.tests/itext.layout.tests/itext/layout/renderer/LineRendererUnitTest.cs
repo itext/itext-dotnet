@@ -55,7 +55,7 @@ using iText.Layout.Properties;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class LineRendererUnitTest : RendererUnitTest {
         private const double EPS = 1e-5;
 

@@ -45,7 +45,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Collection {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfCollectionSchemaTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FieldAddingTest() {

@@ -26,7 +26,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Select {
     /// <summary>Tests for the Selector Query Parser.</summary>
     /// <author>Jonathan Hedley</author>
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class QueryParserTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestOrGetsCorrectPrecedence() {

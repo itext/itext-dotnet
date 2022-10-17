@@ -28,7 +28,7 @@ using iText.Kernel.Pdf.Navigation;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Copy {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfDestinationCopyingTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfDestinationCopyingTest/";

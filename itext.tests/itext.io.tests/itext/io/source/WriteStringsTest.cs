@@ -44,7 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.IO.Source {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class WriteStringsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void WriteStringTest() {

@@ -60,7 +60,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class CanvasTest : ExtendedITextTest {
         private static readonly TestConfigurationEvent CONFIGURATION_ACCESS = new TestConfigurationEvent();
 

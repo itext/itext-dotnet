@@ -47,7 +47,7 @@ using iText.Kernel.Pdf.Colorspace;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Annot {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfLineAnnotationTest : ExtendedITextTest {
         private const float FLOAT_EPSILON_COMPARISON = 1E-6f;
 

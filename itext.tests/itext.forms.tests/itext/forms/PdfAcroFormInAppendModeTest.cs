@@ -28,7 +28,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Forms {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAcroFormInAppendModeTest : ExtendedITextTest {
         private const String TEST_NAME = "PdfAcroFormInAppendModeTest/";
 

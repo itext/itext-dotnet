@@ -47,7 +47,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Layout.Properties {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PropertyTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void PropertyUniquenessTest() {

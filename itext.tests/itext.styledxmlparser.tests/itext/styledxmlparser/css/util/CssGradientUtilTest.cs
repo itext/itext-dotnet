@@ -28,7 +28,7 @@ using iText.StyledXmlParser.Exceptions;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Util {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssGradientUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NullValueTest() {

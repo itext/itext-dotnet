@@ -44,7 +44,7 @@ using iText.Commons.Actions.Data;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class FingerPrintTest : ExtendedITextTest {
         private ProductData productData;
 

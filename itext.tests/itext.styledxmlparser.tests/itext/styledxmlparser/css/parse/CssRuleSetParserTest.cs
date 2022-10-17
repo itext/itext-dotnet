@@ -26,7 +26,7 @@ using iText.StyledXmlParser.Css;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Parse {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssRuleSetParserTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ParsePropertyDeclarationsTest() {

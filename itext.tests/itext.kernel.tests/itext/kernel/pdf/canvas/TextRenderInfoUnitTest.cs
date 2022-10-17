@@ -50,7 +50,7 @@ using iText.Kernel.Pdf.Canvas.Parser.Data;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class TextRenderInfoUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TextExtractGlyphAverageWidth() {

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class RectangleSvgNodeRendererUnitTest : ExtendedITextTest {
         private const float EPSILON = 0.00001f;
 

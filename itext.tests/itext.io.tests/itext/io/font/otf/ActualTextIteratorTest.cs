@@ -44,7 +44,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.IO.Font.Otf {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class ActualTextIteratorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestActualTestParts() {

@@ -28,7 +28,7 @@ using iText.StyledXmlParser.Jsoup.Select;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class TokeniserStateTest : ExtendedITextTest {
         internal readonly char[] whiteSpace = new char[] { '\t', '\n', '\r', '\f', ' ' };
 

@@ -46,7 +46,7 @@ using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Css.Impl {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class SvgNodeRendererInheritanceResolverUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ApplyInheritanceToSubTreeFillTest() {

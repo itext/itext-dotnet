@@ -44,7 +44,7 @@ using iText.StyledXmlParser.Css;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Resolve {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssInheritanceUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void IsInheritablePositiveTest() {

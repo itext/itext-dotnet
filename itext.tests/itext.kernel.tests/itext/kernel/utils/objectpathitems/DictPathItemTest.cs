@@ -44,7 +44,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Utils.Objectpathitems {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class DictPathItemTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void EqualsAndHashCodeTest() {

@@ -44,7 +44,7 @@ using iText.IO.Font;
 using iText.Test;
 
 namespace iText.IO {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class AdobeGlyphListTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestGlyphListCount() {

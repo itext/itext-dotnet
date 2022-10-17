@@ -44,7 +44,7 @@ using iText.Svg.Renderers.Path.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Path {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PathShapeMapperTest : ExtendedITextTest {
         private static IPathShapeMapper mapper;
 

@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class GroupSvgNodeRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NoObjectBoundingBoxTest() {
