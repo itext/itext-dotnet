@@ -153,7 +153,6 @@ namespace iText.Layout {
                 inlineDiv.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
                 doc.Add(new Div().Add(floatingDiv).Add(new Paragraph().Add(inlineDiv)));
             }
-            // TODO DEVSIX-5796 inline-block should be wrapped to the next line
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder));
         }
     }
