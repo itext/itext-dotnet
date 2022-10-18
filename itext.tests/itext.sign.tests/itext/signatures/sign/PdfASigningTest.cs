@@ -121,7 +121,7 @@ namespace iText.Signatures.Sign {
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(@out));
         }
-        
+
         [NUnit.Framework.Test]
         public virtual void FailedSigningPdfA2DocumentTest() {
             String src = sourceFolder + "simplePdfADocument.pdf";
@@ -145,9 +145,9 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), e.Message);
         }
-        
+
         protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
-            pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
+             pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode) {
             Sign(src, name, dest, chain, pk, digestAlgorithm, subfilter, reason, location, rectangleForNewField, setReuseAppearance
                 , isAppendMode, PdfSigner.NOT_CERTIFIED, null);

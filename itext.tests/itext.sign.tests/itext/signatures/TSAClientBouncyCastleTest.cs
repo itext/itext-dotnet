@@ -152,7 +152,7 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void GetTimeStampTokenFailureExceptionTest() {
-            String allowedDigest = "MD5";
+            String allowedDigest = "SHA1";
             String signatureAlgorithm = "SHA256withRSA";
             String url = "url";
             TSAClientBouncyCastleTest.CustomTsaClientBouncyCastle tsaClientBouncyCastle = new TSAClientBouncyCastleTest.CustomTsaClientBouncyCastle

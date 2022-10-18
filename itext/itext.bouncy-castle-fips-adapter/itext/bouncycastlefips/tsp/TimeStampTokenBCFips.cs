@@ -178,7 +178,7 @@ namespace iText.Bouncycastlefips.Tsp {
 		        throw new CertificateException("Certificate must have an ExtendedKeyUsage extension.");
 	        }
 
-	        if (!cert.GetCriticalExtensionOids().Contains(X509Extensions.ExtendedKeyUsage.Id)) {
+	        if (!cert.GetCriticalExtensionOids().Contains(X509Extensions.ExtendedKeyUsage)) {
 		        throw new CertificateException("Certificate must have an ExtendedKeyUsage extension marked as critical.");
 	        }
 

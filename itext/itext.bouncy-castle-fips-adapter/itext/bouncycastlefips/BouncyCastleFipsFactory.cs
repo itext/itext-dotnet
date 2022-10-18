@@ -710,9 +710,7 @@ namespace iText.Bouncycastlefips {
                     return null;
             }
         }
-        
-        //TODO DEVSIX-6995 Move away from PKCS#12 related utilities when moving classes 
-        //to the new approach with BC and BCFips.
+
         public virtual IX509Certificate CreateX509Certificate(Stream s) {
             PushbackStream pushbackStream = new PushbackStream(s);
             int tag = pushbackStream.ReadByte();
@@ -720,19 +718,11 @@ namespace iText.Bouncycastlefips {
                 return null;
             }
             pushbackStream.Unread(tag);
-            Asn1Sequence seq = (Asn1Sequence)(new Asn1InputStream(pushbackStream).ReadObject());
-            if (seq.Count > 1 && seq[0] is DerObjectIdentifier) {
-                if (seq[0].Equals(PkcsObjectIdentifiers.SignedData)) {
-                    Asn1Set sData = SignedData.GetInstance(
-                        Asn1Sequence.GetInstance((Asn1TaggedObject) seq[1], true)).Certificates;
-                    object obj = sData[0];
-                    if (obj is Asn1Sequence) {
-                        return new X509CertificateBCFips(new X509Certificate(
-                            X509CertificateStructure.GetInstance(obj)));
-                    }
-                }
+            if (tag != 0x30) {
+                // assume ascii PEM encoded.
+                return ReadPemCertificate(pushbackStream);
             }
-            return new X509CertificateBCFips(new X509Certificate(X509CertificateStructure.GetInstance(seq)));
+            return ReadDerCertificate(pushbackStream);
         }
 
         public IX509Crl CreateX509Crl(Stream input) {
@@ -892,6 +882,33 @@ namespace iText.Bouncycastlefips {
                     .CreateKeyWrapper(FipsRsa.WrapOaep.WithDigest(FipsShs.Sha1));
 
             return keyWrapper.Wrap(abyte0).Collect();
+        }
+        
+        private IX509Certificate ReadPemCertificate(PushbackStream pushbackStream) {
+            using (TextReader file = new StreamReader(pushbackStream)) {
+                PEMParserBCFips parser = new PEMParserBCFips(new OpenSslPemReader(file), null);
+                Object readObject = parser.ReadObject();
+                if (readObject is IX509Certificate) {
+                    return (IX509Certificate)readObject;
+                }
+            }
+            return new X509CertificateBCFips(null); 
+        }
+
+        private IX509Certificate ReadDerCertificate(PushbackStream pushbackStream) {
+            Asn1Sequence seq = (Asn1Sequence) new Asn1InputStream(pushbackStream).ReadObject();
+            if (seq.Count > 1 && seq[0] is DerObjectIdentifier) {
+                if (seq[0].Equals(PkcsObjectIdentifiers.SignedData)) {
+                    Asn1Set sData = SignedData.GetInstance(
+                        Asn1Sequence.GetInstance((Asn1TaggedObject) seq[1], true)).Certificates;
+                    object obj = sData[0];
+                    if (obj is Asn1Sequence) {
+                        return new X509CertificateBCFips(new X509Certificate(
+                            X509CertificateStructure.GetInstance(obj)));
+                    }
+                }
+            }
+            return new X509CertificateBCFips(new X509Certificate(X509CertificateStructure.GetInstance(seq)));
         }
     }
 }

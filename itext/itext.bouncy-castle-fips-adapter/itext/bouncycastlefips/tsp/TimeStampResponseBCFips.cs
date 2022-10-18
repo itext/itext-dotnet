@@ -27,6 +27,7 @@ using iText.Commons.Bouncycastle.Asn1.Cmp;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Asn1.Cmp;
+using Org.BouncyCastle.Asn1.Ess;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Cms;
@@ -111,7 +112,10 @@ namespace iText.Bouncycastlefips.Tsp {
 
         /// <summary><inheritDoc/></summary>
         public virtual ITimeStampToken GetTimeStampToken() {
-            return new TimeStampTokenBCFips(timeStampResponse.TimeStampToken);
+            return timeStampResponse.TimeStampToken == null ? 
+                new TimeStampTokenBCFips(null, null, null, (EssCertID)null) :
+                new TimeStampTokenBCFips(timeStampResponse.TimeStampToken);
+            
         }
 
         /// <summary><inheritDoc/></summary>

@@ -10,7 +10,7 @@ namespace iText.Bouncycastlefips.Crypto {
     /// <summary>
     /// Wrapper class for IStreamCalculator<IVerifier> signer.
     /// </summary>
-    public class ISignerBCFips: IISigner {
+    public class ISignerBCFips : IISigner {
         private IStreamCalculator<IVerifier> iSigner;
         
         private string lastHashAlgorithm;
@@ -49,8 +49,14 @@ namespace iText.Bouncycastlefips.Crypto {
 
         /// <summary><inheritDoc/></summary>
         public void Update(byte[] buf, int off, int len) {
-            using (Stream digStream = digest.Stream) {
-                digStream.Write(buf, off, len);
+            if (digest != null) {
+                using (Stream digStream = digest.Stream) {
+                    digStream.Write(buf, off, len);
+                }
+            } else {
+                using (Stream sigStream = iSigner.Stream) {
+                    sigStream.Write(buf, off, len);
+                }
             }
         }
 

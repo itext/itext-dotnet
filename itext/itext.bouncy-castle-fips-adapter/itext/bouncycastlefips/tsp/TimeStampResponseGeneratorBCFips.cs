@@ -65,9 +65,11 @@ namespace iText.Bouncycastlefips.Tsp {
         /// <summary><inheritDoc/></summary>
         public virtual ITimeStampResponse Generate(ITimeStampRequest req, IBigInteger bigInteger, DateTime date) {
             TimeStampResp resp;
+            int failureCode = 0;
             try {
                 if (!acceptedAlgorithms.Contains(((TimeStampRequestBCFips)req).GetTimeStampRequest()
                         .MessageImprint.HashAlgorithm.Algorithm.Id)) {
+                    failureCode = PkiFailureInfo.BadAlg;
                     throw new Exception("request contains unknown algorithm");
                 }
                 PkiStatusInfo pkiStatusInfo = new PkiStatusInfo(new DerSequence(
@@ -85,8 +87,11 @@ namespace iText.Bouncycastlefips.Tsp {
                 resp = new TimeStampResp(pkiStatusInfo, tstTokenContentInfo);
             } catch (Exception e) {
                 resp = new TimeStampResp(new PkiStatusInfo(new DerSequence(
-                    new Asn1EncodableVector(new DerInteger((int)PkiStatus.Rejection)) 
-                        { new PkiFreeText(new DerSequence(new DerUtf8String(e.Message))) })), null);
+                    new Asn1EncodableVector(new DerInteger((int)PkiStatus.Rejection))
+                    {
+                        new PkiFreeText(new DerSequence(new DerUtf8String(e.Message))),
+                        failureCode == 0 ? null : new PkiFailureInfo(failureCode)
+                    })), null);
             }
             return new TimeStampResponseBCFips(resp);
         }
