@@ -88,6 +88,10 @@ namespace iText.Test.Signutils {
             return pk;
         }
 
+        public static ICipherParameters ReadPrivateKeyFromPkcs12KeyStore(Stream keyStore, String pkAlias, char[] pkPassword) {
+            return new Pkcs12Store(keyStore, pkPassword).GetKey(pkAlias).Key;
+        }
+
         public static List<X509Certificate> InitStore(String p12FileName, char[] ksPass) {
             List<X509Certificate> certStore = new List<X509Certificate>();
             string alias = null;
