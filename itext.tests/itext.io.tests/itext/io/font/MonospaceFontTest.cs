@@ -24,7 +24,7 @@ using System;
 using iText.Test;
 
 namespace iText.IO.Font {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class MonospaceFontTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/MonospaceFontTest/";

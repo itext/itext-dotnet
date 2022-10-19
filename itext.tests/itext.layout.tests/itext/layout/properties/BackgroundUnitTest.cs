@@ -24,7 +24,7 @@ using iText.Kernel.Colors;
 using iText.Test;
 
 namespace iText.Layout.Properties {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class BackgroundUnitTest : ExtendedITextTest {
         internal const float EPS = 0.00001f;
 

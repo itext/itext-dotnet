@@ -58,7 +58,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfPagesTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfPagesTest/";

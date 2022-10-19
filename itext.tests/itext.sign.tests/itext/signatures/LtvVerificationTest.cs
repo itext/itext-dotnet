@@ -32,7 +32,7 @@ using iText.Test.Attributes;
 using iText.Test.Signutils;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class LtvVerificationTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/LtvVerificationTest/";

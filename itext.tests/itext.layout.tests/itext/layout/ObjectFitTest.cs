@@ -34,7 +34,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class ObjectFitTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/ObjectFitTest/";

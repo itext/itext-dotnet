@@ -27,7 +27,7 @@ using iText.StyledXmlParser.Css.Selector;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssRuleSetTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void AddCssRuleSetWithNormalImportantDeclarationsTest() {

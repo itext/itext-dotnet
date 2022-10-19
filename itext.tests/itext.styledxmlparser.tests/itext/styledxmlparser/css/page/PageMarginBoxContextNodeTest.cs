@@ -28,7 +28,7 @@ using iText.StyledXmlParser.Node;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Page {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PageMarginBoxContextNodeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void DefaultBehaviourTest() {

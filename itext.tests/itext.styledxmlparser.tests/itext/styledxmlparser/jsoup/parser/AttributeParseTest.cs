@@ -29,7 +29,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Test suite for attribute parser.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class AttributeParseTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ParsesRoughAttributeString() {

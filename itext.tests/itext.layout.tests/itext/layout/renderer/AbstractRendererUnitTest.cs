@@ -62,7 +62,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class AbstractRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CreateXObjectTest() {

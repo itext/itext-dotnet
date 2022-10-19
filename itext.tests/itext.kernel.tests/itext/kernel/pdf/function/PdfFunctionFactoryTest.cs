@@ -26,7 +26,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Function {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfFunctionFactoryTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestCreateFunctionType0() {

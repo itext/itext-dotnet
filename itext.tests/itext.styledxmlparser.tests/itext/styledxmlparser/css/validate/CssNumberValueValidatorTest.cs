@@ -24,7 +24,7 @@ using iText.StyledXmlParser.Css.Validate.Impl.Datatype;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Validate {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssNumberValueValidatorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ZeroValueTest() {

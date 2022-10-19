@@ -32,7 +32,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Tests XmlTreeBuilder.</summary>
     /// <author>Jonathan Hedley</author>
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class XmlTreeBuilderTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestSimpleXmlParse() {

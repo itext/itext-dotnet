@@ -27,7 +27,7 @@ using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssTest : ExtendedITextTest {
         private Document html = null;
 

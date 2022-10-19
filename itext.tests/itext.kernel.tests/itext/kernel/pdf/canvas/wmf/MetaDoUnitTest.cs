@@ -29,7 +29,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas.Wmf {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class MetaDoUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void InputStreamShallBeStartFromSpecificValueTest() {

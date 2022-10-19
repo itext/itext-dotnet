@@ -44,7 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.Kernel.Geom {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class AffineTransformTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SelfTest() {

@@ -25,7 +25,7 @@ using iText.Commons.Ecosystem;
 using iText.Test;
 
 namespace iText.Commons.Actions.Confirmations {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class ConfirmEventTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ConstructorWithSequenceIdTest() {

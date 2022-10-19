@@ -31,7 +31,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Commons.Actions.Producer {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class UsedProductsPlaceholderPopulatorTest : ExtendedITextTest {
         private readonly UsedProductsPlaceholderPopulator populator = new UsedProductsPlaceholderPopulator();
 

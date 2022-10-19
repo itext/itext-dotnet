@@ -27,7 +27,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Tagutils {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class TagStructureContextUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NoTagStructureInNonTaggedDocumentTest() {

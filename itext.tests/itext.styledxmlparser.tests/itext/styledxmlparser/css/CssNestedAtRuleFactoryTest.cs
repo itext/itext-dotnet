@@ -24,7 +24,7 @@ using iText.StyledXmlParser.Css.Page;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssNestedAtRuleFactoryTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestCreatingNestedRule() {

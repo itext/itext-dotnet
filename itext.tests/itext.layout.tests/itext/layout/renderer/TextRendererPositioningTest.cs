@@ -31,7 +31,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class TextRendererPositioningTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/TextRendererPositioningTest/";

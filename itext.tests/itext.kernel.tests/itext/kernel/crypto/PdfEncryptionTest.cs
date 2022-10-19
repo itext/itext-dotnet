@@ -75,7 +75,7 @@ namespace iText.Kernel.Crypto {
     /// Extension (JCE) Unlimited Strength Jurisdiction Policy Files. These JARs
     /// are available for download from http://java.oracle.com/ in eligible countries.
     /// </remarks>
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfEncryptionTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/crypto/PdfEncryptionTest/";

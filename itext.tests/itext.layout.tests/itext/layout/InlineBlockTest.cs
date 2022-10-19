@@ -47,10 +47,11 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class InlineBlockTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/InlineBlockTest/";
@@ -131,6 +132,28 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WrappingAfter100PercentWidthFloatTest() {
+            String name = "wrappingAfter100PercentWidthFloatTest.pdf";
+            String output = destinationFolder + name;
+            String cmp = sourceFolder + "cmp_" + name;
+            using (Document doc = new Document(new PdfDocument(new PdfWriter(output)))) {
+                Div floatingDiv = new Div().SetWidth(UnitValue.CreatePercentValue(100)).SetHeight(10).SetBorder(new SolidBorder
+                    (1)).SetBackgroundColor(ColorConstants.RED);
+                floatingDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+                floatingDiv.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+                floatingDiv.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+                Div inlineDiv = new Div().SetWidth(UnitValue.CreatePercentValue(100)).SetHeight(10).SetBorder(new SolidBorder
+                    (1))
+                                // gold color
+                                .SetBackgroundColor(new DeviceRgb(255, 215, 0));
+                inlineDiv.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+                inlineDiv.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+                doc.Add(new Div().Add(floatingDiv).Add(new Paragraph().Add(inlineDiv)));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder));
         }
     }
 }

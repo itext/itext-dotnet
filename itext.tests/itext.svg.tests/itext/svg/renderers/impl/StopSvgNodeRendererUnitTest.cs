@@ -48,7 +48,7 @@ using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class StopSvgNodeRendererUnitTest : ExtendedITextTest {
         private const float DELTA = 0;
 

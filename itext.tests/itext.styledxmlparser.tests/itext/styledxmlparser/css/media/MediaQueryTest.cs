@@ -44,7 +44,7 @@ using System.Collections.Generic;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Media {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class MediaQueryTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void MatchTest() {

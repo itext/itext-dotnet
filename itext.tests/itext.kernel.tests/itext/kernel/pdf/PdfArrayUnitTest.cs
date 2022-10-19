@@ -25,7 +25,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfArrayUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CannotConvertArrayOfPdfStringsToArrayOfBooleansTest() {

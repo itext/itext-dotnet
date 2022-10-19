@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using iText.Test;
 
 namespace iText.Layout.Font {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class FontCharacteristicsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestDefaultFontCharacteristics() {

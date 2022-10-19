@@ -24,7 +24,7 @@ using iText.Kernel.Geom;
 using iText.Test;
 
 namespace iText.Layout.Properties {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class BackgroundRepeatUnitTest : ExtendedITextTest {
         private const double EPSILON = 0.000001;
 

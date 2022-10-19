@@ -27,7 +27,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class BackgroundSizeCalculationUtilUnitTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/BackgroundImageTest/";

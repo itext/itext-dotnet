@@ -36,7 +36,7 @@ using iText.Layout.Testutil;
 using iText.Test;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class DocumentTest : ExtendedITextTest {
         private static readonly TestConfigurationEvent CONFIGURATION_ACCESS = new TestConfigurationEvent();
 

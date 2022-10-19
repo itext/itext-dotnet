@@ -29,7 +29,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class AreaBreakRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void AddChildTestUnsupported() {

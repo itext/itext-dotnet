@@ -50,7 +50,7 @@ using iText.Svg.Renderers.Path;
 using iText.Svg.Renderers.Path.Impl;
 
 namespace iText.Svg.Renderers.Impl {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PathSvgNodeRendererLowLevelIntegrationTest : SvgIntegrationTest {
         [NUnit.Framework.Test]
         public virtual void TestRelativeArcOperatorShapes() {

@@ -25,7 +25,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Tagging {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class StructureTreeCopierUnitTest : ExtendedITextTest {
         private static readonly IDictionary<PdfName, PdfObject> td = new Dictionary<PdfName, PdfObject>();
 

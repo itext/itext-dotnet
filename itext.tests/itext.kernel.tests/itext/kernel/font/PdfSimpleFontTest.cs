@@ -29,7 +29,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Font {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfSimpleFontTest : ExtendedITextTest {
         private const byte T_CODE = 116;
 

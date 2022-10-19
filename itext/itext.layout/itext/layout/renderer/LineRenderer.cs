@@ -319,17 +319,22 @@ namespace iText.Layout.Renderer {
                 }
                 MinMaxWidth childBlockMinMaxWidth = null;
                 bool isInlineBlockChild = IsInlineBlockChild(childRenderer);
-                if (!childWidthWasReplaced) {
-                    if (isInlineBlockChild && childRenderer is AbstractRenderer) {
-                        childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth();
-                        float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth();
-                        float lineFullAvailableWidth = layoutContext.GetArea().GetBBox().GetWidth() - lineLayoutContext.GetTextIndent
-                            ();
-                        if (!noSoftWrap && childMaxWidth > bbox.GetWidth() + MIN_MAX_WIDTH_CORRECTION_EPS && bbox.GetWidth() != lineFullAvailableWidth
-                            ) {
-                            childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
-                        }
-                        else {
+                if (isInlineBlockChild && childRenderer is AbstractRenderer) {
+                    MinMaxWidth childBlockMinMaxWidthLocal = ((AbstractRenderer)childRenderer).GetMinMaxWidth();
+                    // Don't calculate childBlockMinMaxWidth in case of relative width here
+                    // and further (childBlockMinMaxWidth != null)
+                    if (!childWidthWasReplaced) {
+                        childBlockMinMaxWidth = childBlockMinMaxWidthLocal;
+                    }
+                    float childMaxWidth = childBlockMinMaxWidthLocal.GetMaxWidth();
+                    float lineFullAvailableWidth = layoutContext.GetArea().GetBBox().GetWidth() - lineLayoutContext.GetTextIndent
+                        ();
+                    if (!noSoftWrap && childMaxWidth > bbox.GetWidth() + MIN_MAX_WIDTH_CORRECTION_EPS && bbox.GetWidth() != lineFullAvailableWidth
+                        ) {
+                        childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
+                    }
+                    else {
+                        if (childBlockMinMaxWidth != null) {
                             childMaxWidth += MIN_MAX_WIDTH_CORRECTION_EPS;
                             float inlineBlockWidth = Math.Min(childMaxWidth, lineFullAvailableWidth);
                             if (!IsOverflowFit(this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X))) {
@@ -344,6 +349,8 @@ namespace iText.Layout.Renderer {
                                 childRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
                             }
                         }
+                    }
+                    if (childBlockMinMaxWidth != null) {
                         childBlockMinMaxWidth.SetChildrenMaxWidth(childBlockMinMaxWidth.GetChildrenMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
                             );
                         childBlockMinMaxWidth.SetChildrenMinWidth(childBlockMinMaxWidth.GetChildrenMinWidth() + MIN_MAX_WIDTH_CORRECTION_EPS

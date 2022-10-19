@@ -25,7 +25,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfExceptionTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void WhenCreatedPdfExceptionWrapsCauseWithUnknownExceptionMessageTest() {

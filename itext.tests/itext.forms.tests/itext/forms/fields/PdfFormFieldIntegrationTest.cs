@@ -28,7 +28,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Forms.Fields {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfFormFieldIntegrationTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/fields/PdfFormFieldIntegrationTest/";

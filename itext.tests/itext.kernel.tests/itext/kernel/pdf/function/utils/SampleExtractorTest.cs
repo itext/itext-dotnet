@@ -27,7 +27,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Function.Utils {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     [NUnit.Framework.TestFixtureSource("SamplesInfoTestFixtureData")]
     public class SampleExtractorTest : ExtendedITextTest {
         private const String PARAMETERS_NAME_PATTERN = "{0}bitsPerSample";

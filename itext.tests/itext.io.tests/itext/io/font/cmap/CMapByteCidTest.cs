@@ -24,7 +24,7 @@ using System;
 using iText.Test;
 
 namespace iText.IO.Font.Cmap {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CMapByteCidTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void AddCharAndDecodeByteCodeTest() {

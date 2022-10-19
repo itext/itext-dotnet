@@ -28,7 +28,7 @@ using iText.Kernel.Pdf.Navigation;
 using iText.Test;
 
 namespace iText.Forms {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfFormCopyWithGotoTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfFormCopyWithGotoTest/";

@@ -59,7 +59,7 @@ using iText.Test.Pdfa;
 using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfASigningTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfASigningTest/";

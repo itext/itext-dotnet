@@ -27,7 +27,7 @@ using iText.StyledXmlParser.Css.Resolve.Shorthand.Impl;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class TextDecorationUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ResolveShorthandLineEmptyTest() {

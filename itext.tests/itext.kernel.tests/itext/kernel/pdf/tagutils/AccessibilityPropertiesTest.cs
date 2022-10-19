@@ -26,7 +26,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Tagutils {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class AccessibilityPropertiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SetAccessibilityPropertiesTest() {

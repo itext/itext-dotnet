@@ -26,7 +26,7 @@ using iText.Forms.Xfdf;
 using iText.Test;
 
 namespace iText.Forms {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class XfdfUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FitObjectWithEmptyPageTest() {

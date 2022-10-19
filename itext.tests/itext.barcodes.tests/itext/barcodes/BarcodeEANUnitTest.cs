@@ -48,7 +48,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Barcodes {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class BarcodeEANUnitTest : ExtendedITextTest {
         public const float EPS = 0.0001f;
 

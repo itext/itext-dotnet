@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Test;
 
 namespace iText.Layout.Properties {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class BackgroundSizeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ConstructorTest() {

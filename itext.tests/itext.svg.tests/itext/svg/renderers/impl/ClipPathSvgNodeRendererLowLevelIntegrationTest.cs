@@ -51,7 +51,7 @@ using iText.Svg;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class ClipPathSvgNodeRendererLowLevelIntegrationTest : SvgIntegrationTest {
         private PdfCanvas cv;
 

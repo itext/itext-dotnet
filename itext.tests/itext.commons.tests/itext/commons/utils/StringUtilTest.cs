@@ -46,7 +46,7 @@ using iText.Test;
 
 namespace iText.Commons.Utils {
     /// <summary>At the moment there is no StringUtil class in Java, but there is one in C# and we are testing</summary>
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class StringUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void PatternSplitTest01() {

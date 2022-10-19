@@ -26,7 +26,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Function {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfType3FunctionTest : ExtendedITextTest {
         private const double EPSILON = 10e-6;
 

@@ -56,7 +56,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class FontSelectorTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/FontSelectorTest/";

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class LongRectTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void DefaultConstructorTest() {

@@ -59,7 +59,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfCanvasTest : ExtendedITextTest {
         /// <summary>Paths to images.</summary>
         private static readonly String[] RESOURCES = new String[] { "Desert.jpg", "bulb.gif", "0047478.jpg", "itext.png"

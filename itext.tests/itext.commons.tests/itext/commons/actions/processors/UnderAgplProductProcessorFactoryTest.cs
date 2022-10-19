@@ -24,7 +24,7 @@ using iText.Commons.Actions;
 using iText.Test;
 
 namespace iText.Commons.Actions.Processors {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class UnderAgplProductProcessorFactoryTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CreateUnderAgplProductProcessor() {

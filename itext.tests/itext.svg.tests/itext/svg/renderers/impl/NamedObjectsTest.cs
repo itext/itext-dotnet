@@ -49,7 +49,7 @@ using iText.Svg.Renderers;
 using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class NamedObjectsTest : SvgIntegrationTest {
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RULE_IS_NOT_SUPPORTED)]

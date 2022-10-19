@@ -25,7 +25,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Filters {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class LZWDecodeFilterTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void DecodingTestStatic() {

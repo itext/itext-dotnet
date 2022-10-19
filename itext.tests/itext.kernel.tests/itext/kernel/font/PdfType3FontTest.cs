@@ -29,7 +29,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Font {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfType3FontTest : ExtendedITextTest {
         private const float EPS = 1e-4f;
 

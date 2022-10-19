@@ -26,7 +26,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfPageUnitTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfPageUnitTest/";

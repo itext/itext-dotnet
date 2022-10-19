@@ -46,7 +46,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.IO.Source {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class RAFRandomAccessSourceTest : ExtendedITextTest {
         private static readonly String SOURCE_FILE = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/source/RAF.txt";

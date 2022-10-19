@@ -45,7 +45,7 @@ using System.Collections.Generic;
 using iText.Test;
 
 namespace iText.Svg.Utils {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class SvgCssUtilsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CommaSplitValueTest() {

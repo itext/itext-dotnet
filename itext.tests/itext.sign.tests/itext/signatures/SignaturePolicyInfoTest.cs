@@ -49,7 +49,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class SignaturePolicyInfoTest : ExtendedITextTest {
         private const String POLICY_IDENTIFIER = "2.16.724.1.3.1.1.2.1.9";
 

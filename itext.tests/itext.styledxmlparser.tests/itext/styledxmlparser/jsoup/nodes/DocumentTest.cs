@@ -33,7 +33,7 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for Document.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class DocumentTest : ExtendedITextTest {
         private const String charsetUtf8 = "UTF-8";
 

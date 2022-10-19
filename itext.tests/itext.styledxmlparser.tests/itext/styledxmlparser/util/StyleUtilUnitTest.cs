@@ -26,7 +26,7 @@ using iText.StyledXmlParser.Css.Resolve;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Util {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class StyleUtilUnitTest : ExtendedITextTest {
         private static ICollection<IStyleInheritance> inheritanceRules;
 

@@ -26,7 +26,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css.Util {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssBackgroundUtilsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ParseBackgroundRepeatTest() {

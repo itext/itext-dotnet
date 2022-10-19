@@ -31,7 +31,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class LineHeightHelperUnitTest : ExtendedITextTest {
         private const double EPS = 1e-5;
 

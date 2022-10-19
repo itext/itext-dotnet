@@ -26,7 +26,7 @@ using System.Text;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class ElementItTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestFastReparent() {

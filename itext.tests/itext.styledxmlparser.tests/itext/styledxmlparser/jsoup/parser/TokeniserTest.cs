@@ -28,7 +28,7 @@ using iText.StyledXmlParser.Jsoup.Select;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class TokeniserTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void BufferUpInAttributeVal() {

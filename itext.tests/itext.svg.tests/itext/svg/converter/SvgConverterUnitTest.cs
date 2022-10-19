@@ -61,7 +61,7 @@ using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Converter {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class SvgConverterUnitTest : ExtendedITextTest {
         // we cannot easily mock the PdfDocument, so we make do with as close to unit testing as we can
         private PdfDocument doc;

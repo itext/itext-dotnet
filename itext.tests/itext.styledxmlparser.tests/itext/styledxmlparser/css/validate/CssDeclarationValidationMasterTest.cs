@@ -26,7 +26,7 @@ using iText.StyledXmlParser.Css.Validate.Impl;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Validate {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CssDeclarationValidationMasterTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FontSizeEnumValidationTest() {

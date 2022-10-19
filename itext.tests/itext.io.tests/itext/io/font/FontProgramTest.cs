@@ -46,7 +46,7 @@ using iText.IO.Font.Constants;
 using iText.Test;
 
 namespace iText.IO.Font {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class FontProgramTest : ExtendedITextTest {
         private const String notExistingFont = "some-font.ttf";
 

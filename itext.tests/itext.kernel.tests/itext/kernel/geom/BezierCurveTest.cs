@@ -45,7 +45,7 @@ using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Geom {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class BezierCurveTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ApproximationTest() {

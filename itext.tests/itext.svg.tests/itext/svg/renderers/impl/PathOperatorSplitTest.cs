@@ -44,7 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PathOperatorSplitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestNumbersContainingExponent01() {

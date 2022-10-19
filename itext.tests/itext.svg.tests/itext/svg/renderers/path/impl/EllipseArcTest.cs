@@ -44,7 +44,7 @@ using iText.Kernel.Geom;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Path.Impl {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class EllipseArcTest : ExtendedITextTest {
         private const double DELTA = 0.00001;
 

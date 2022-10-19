@@ -44,7 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.IO.Font {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class FontEncodingTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NotSetDifferenceToMinus1IndexTest() {

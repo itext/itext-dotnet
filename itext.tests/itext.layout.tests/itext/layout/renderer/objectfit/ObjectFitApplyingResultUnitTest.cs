@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using iText.Test;
 
 namespace iText.Layout.Renderer.Objectfit {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class ObjectFitApplyingResultUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ConstructorTest() {

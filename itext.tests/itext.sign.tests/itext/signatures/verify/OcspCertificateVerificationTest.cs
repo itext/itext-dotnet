@@ -33,7 +33,7 @@ using iText.Test.Attributes;
 using iText.Test.Signutils;
 
 namespace iText.Signatures.Verify {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class OcspCertificateVerificationTest : ExtendedITextTest {
         // Such messageTemplate is equal to any log message. This is required for porting reasons.
         private const String ANY_LOG_MESSAGE = "{0}";

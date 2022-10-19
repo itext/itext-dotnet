@@ -46,7 +46,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class SimpleImageCacheTest : ExtendedITextTest {
         [NUnit.Framework.SetUp]
         public virtual void Before() {

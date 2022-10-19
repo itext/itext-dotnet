@@ -47,7 +47,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.IO.Source {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class WriteNumbersTest : ExtendedITextTest {
         public static double Round(double value, int places) {
             return MathematicUtil.Round(value * Math.Pow(10, places)) / Math.Pow(10, places);

@@ -46,7 +46,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class SignaturePermissionsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void DefaultValuesTest() {
