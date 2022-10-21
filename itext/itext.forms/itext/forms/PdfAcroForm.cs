@@ -1034,6 +1034,9 @@ namespace iText.Forms {
                 String name;
                 if (fieldName == null) {
                     PdfFormField parentField = PdfFormField.MakeFormField(formField.GetParent(), document);
+                    if (parentField == null){
+                        continue;
+                    }
                     while (fieldName == null) {
                         fieldName = parentField.GetFieldName();
                         if (fieldName == null) {

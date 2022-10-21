@@ -1646,7 +1646,7 @@ namespace iText.Forms.Fields {
         /// <c>pdfObject</c> does not contain a <c>FT</c> entry
         /// </returns>
         public static iText.Forms.Fields.PdfFormField MakeFormField(PdfObject pdfObject, PdfDocument document) {
-            if (pdfObject.IsDictionary()) {
+            if (pdfObject != null && pdfObject.IsDictionary()) {
                 iText.Forms.Fields.PdfFormField field;
                 PdfDictionary dictionary = (PdfDictionary)pdfObject;
                 PdfName formType = dictionary.GetAsName(PdfName.FT);
