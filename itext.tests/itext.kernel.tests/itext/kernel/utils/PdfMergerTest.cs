@@ -257,7 +257,7 @@ namespace iText.Kernel.Utils {
             IList<FileInfo> sources = new List<FileInfo>();
             sources.Add(new FileInfo(pdfAcro1));
             sources.Add(new FileInfo(pdfAcro2));
-            MergePdfs(sources, outFileName);
+            MergePdfs(sources, outFileName, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));
         }
@@ -274,7 +274,7 @@ namespace iText.Kernel.Utils {
             sources.Add(new FileInfo(pdfWithOCG2));
             sources.Add(new FileInfo(pdfWithOCG2));
             sources.Add(new FileInfo(pdfWithOCG2));
-            MergePdfs(sources, outPdf);
+            MergePdfs(sources, outPdf, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
         }
 
@@ -288,7 +288,7 @@ namespace iText.Kernel.Utils {
             IList<FileInfo> sources = new List<FileInfo>();
             sources.Add(new FileInfo(pdfWithOCG1));
             sources.Add(new FileInfo(pdfWithOCG2));
-            MergePdfs(sources, outPdf);
+            MergePdfs(sources, outPdf, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
         }
 
@@ -440,22 +440,15 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        public virtual void MergeWithSameNamedOCGTest() {
+        public virtual void MergeWithSameNamedOcgTest() {
             String firstPdfDocument = sourceFolder + "sameNamdOCGSource.pdf";
             String secondPdfDocument = sourceFolder + "doc2.pdf";
             String cmpDocument = sourceFolder + "cmp_MergeWithSameNamedOCG.pdf";
             String mergedDocument = destinationFolder + "mergeWithSameNamedOCG.pdf";
-            using (PdfDocument documentA = new PdfDocument(new PdfReader(firstPdfDocument))) {
-                using (PdfDocument documentB = new PdfDocument(new PdfReader(secondPdfDocument))) {
-                    using (PdfDocument mergedPdf = new PdfDocument(new PdfWriter(mergedDocument))) {
-                        mergedPdf.GetWriter().SetSmartMode(true);
-                        PdfMerger merger = new PdfMerger(mergedPdf, false, true);
-                        merger.Merge(documentA, 1, documentA.GetNumberOfPages());
-                        merger.Merge(documentB, 1, documentB.GetNumberOfPages());
-                        merger.Close();
-                    }
-                }
-            }
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
                 ));
             // We have to compare visually also because compareByContent doesn't catch the differences in OCGs with the same names
@@ -463,8 +456,25 @@ namespace iText.Kernel.Utils {
                 , "diff_"));
         }
 
-        private void MergePdfs(IList<FileInfo> sources, String destination) {
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES)]
+        public virtual void MergeWithSameNamedOcgOcmdDTest() {
+            String firstPdfDocument = sourceFolder + "Layer doc1.pdf";
+            String secondPdfDocument = sourceFolder + "Layer doc2.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeWithSameNamedOCMD.pdf";
+            String mergedDocument = destinationFolder + "mergeWithSameNamedOCMD.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        private void MergePdfs(IList<FileInfo> sources, String destination, bool smartMode) {
             PdfDocument mergedDoc = new PdfDocument(new PdfWriter(destination));
+            mergedDoc.GetWriter().SetSmartMode(smartMode);
             PdfMerger merger = new PdfMerger(mergedDoc);
             foreach (FileInfo source in sources) {
                 PdfDocument sourcePdf = new PdfDocument(new PdfReader(source));

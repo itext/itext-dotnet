@@ -274,7 +274,7 @@ namespace iText.Kernel.Pdf {
             }
             SerializedObjectContent serializedContent = null;
             if (properties.smartMode && tryToFindDuplicate && !CheckTypeOfPdfDictionary(obj, PdfName.Page) && !CheckTypeOfPdfDictionary
-                (obj, PdfName.OCG)) {
+                (obj, PdfName.OCG) && !CheckTypeOfPdfDictionary(obj, PdfName.OCMD)) {
                 serializedContent = smartModeSerializer.SerializeObject(obj);
                 PdfIndirectReference objectRef = smartModeSerializer.GetSavedSerializedObject(serializedContent);
                 if (objectRef != null) {
