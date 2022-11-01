@@ -92,6 +92,9 @@ namespace iText.Bouncycastlefips.Cert {
         
         /// <summary><inheritDoc/></summary>
         public ISet<string> GetCriticalExtensionOids() {
+            if (certificate.GetCriticalExtensionOids() == null) {
+                return null;
+            }
             ISet<string> set = new HashSet<string>();
             foreach (DerObjectIdentifier oid in certificate.GetCriticalExtensionOids()) {
                 set.Add(oid.Id);

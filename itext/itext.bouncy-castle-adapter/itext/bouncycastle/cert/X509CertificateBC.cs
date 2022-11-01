@@ -85,6 +85,9 @@ namespace iText.Bouncycastle.Cert {
 
         /// <summary><inheritDoc/></summary>
         public ISet<string> GetCriticalExtensionOids() {
+            if (certificate.GetCriticalExtensionOids() == null) {
+                return null;
+            }
             ISet<string> set = new HashSet<string>();
             foreach (string oid in certificate.GetCriticalExtensionOids()) {
                 set.Add(oid);
