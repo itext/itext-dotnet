@@ -47,6 +47,7 @@ using System.Text;
 using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Geom;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
@@ -187,6 +188,34 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CheckImageRenderInfoProcessorTest() {
+            PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "tableWithImageAndText.pdf"), new PdfWriter
+                (new ByteArrayOutputStream()));
+            PdfPage page = document.GetPage(1);
+            PdfCanvasProcessorIntegrationTest.RecordFirstImageEventListener eventListener = new PdfCanvasProcessorIntegrationTest.RecordFirstImageEventListener
+                ();
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(eventListener);
+            processor.ProcessPageContent(page);
+            // Check caught image's ImageRenderInfo
+            ImageRenderInfo imageRenderInfo = eventListener.GetImageRenderInfo();
+            float EPS = 0.001f;
+            NUnit.Framework.Assert.IsFalse(imageRenderInfo.IsInline());
+            NUnit.Framework.Assert.AreEqual(1024, imageRenderInfo.GetImage().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(768, imageRenderInfo.GetImage().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual("/Im1", imageRenderInfo.GetImageResourceName().ToString());
+            NUnit.Framework.Assert.AreEqual(new Vector(212.67f, 676.25f, 1), imageRenderInfo.GetStartPoint());
+            NUnit.Framework.Assert.AreEqual(new Matrix(169.67f, 0, 0, 0, 127.25f, 0, 212.67f, 676.25f, 1), imageRenderInfo
+                .GetImageCtm());
+            NUnit.Framework.Assert.AreEqual(21590.508, imageRenderInfo.GetArea(), EPS);
+            NUnit.Framework.Assert.IsNull(imageRenderInfo.GetColorSpaceDictionary());
+            NUnit.Framework.Assert.AreEqual(1, imageRenderInfo.GetCanvasTagHierarchy().Count);
+            NUnit.Framework.Assert.IsTrue(imageRenderInfo.HasMcid(5, true));
+            NUnit.Framework.Assert.IsTrue(imageRenderInfo.HasMcid(5));
+            NUnit.Framework.Assert.IsFalse(imageRenderInfo.HasMcid(1));
+            NUnit.Framework.Assert.AreEqual(5, imageRenderInfo.GetMcid());
+        }
+
         private class ColorParsingEventListener : IEventListener {
             private IList<IEventData> content = new List<IEventData>();
 
@@ -225,6 +254,32 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
             public virtual ICollection<EventType> GetSupportedEvents() {
                 return null;
+            }
+        }
+
+        private class RecordFirstImageEventListener : IEventListener {
+            private ImageRenderInfo imageRenderInfo = null;
+
+            internal RecordFirstImageEventListener() {
+            }
+
+            public virtual void EventOccurred(IEventData data, EventType type) {
+                switch (type) {
+                    case EventType.RENDER_IMAGE: {
+                        if (imageRenderInfo == null) {
+                            imageRenderInfo = (ImageRenderInfo)data;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            public virtual ICollection<EventType> GetSupportedEvents() {
+                return null;
+            }
+
+            public virtual ImageRenderInfo GetImageRenderInfo() {
+                return imageRenderInfo;
             }
         }
 
