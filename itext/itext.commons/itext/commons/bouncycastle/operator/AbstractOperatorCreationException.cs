@@ -27,6 +27,6 @@ namespace iText.Commons.Bouncycastle.Operator {
     /// This class represents the wrapper for OperatorCreationException that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public class AbstractOperatorCreationException : Exception {
+    public abstract class AbstractOperatorCreationException : Exception {
     }
 }

@@ -120,8 +120,8 @@ namespace iText.Signatures {
             }
             IList<Uri> urlList = new List<Uri>(urls);
             if (urlList.Count == 0) {
-                LOGGER.LogInformation("Looking for CRL for certificate " + BOUNCY_CASTLE_FACTORY.CreateX500Name(checkCert)
-                    );
+                LOGGER.LogInformation(MessageFormatUtil.Format("Looking for CRL for certificate {0}", BOUNCY_CASTLE_FACTORY
+                    .CreateX500Name(checkCert)));
                 try {
                     if (url == null) {
                         url = CertificateUtil.GetCRLURL(checkCert);

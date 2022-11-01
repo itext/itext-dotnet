@@ -273,11 +273,11 @@ namespace iText.Signatures {
                 while (end != oid.Length) {
                     char c = oid[end];
                     if (c == '"') {
-                        if (!escaped) {
-                            quoted = !quoted;
+                        if (escaped) {
+                            buf.Append(c);
                         }
                         else {
-                            buf.Append(c);
+                            quoted = !quoted;
                         }
                         escaped = false;
                     }
@@ -326,10 +326,12 @@ namespace iText.Signatures {
         /// <returns>an IASN1Primitive</returns>
         public static IASN1Primitive GetIssuer(byte[] enc) {
             try {
-                IASN1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(enc));
-                IASN1Sequence seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(@in.ReadObject());
+                IASN1Sequence seq;
+                using (IASN1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(enc))) {
+                    seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(@in.ReadObject());
+                }
                 return BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(seq.GetObjectAt(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject
-                    (seq.GetObjectAt(0)) != null ? 3 : 2));
+                    (seq.GetObjectAt(0)) == null ? 2 : 3));
             }
             catch (System.IO.IOException e) {
                 throw new PdfException(e);
@@ -358,10 +360,12 @@ namespace iText.Signatures {
         /// <returns>a IASN1Primitive</returns>
         public static IASN1Primitive GetSubject(byte[] enc) {
             try {
-                IASN1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(enc));
-                IASN1Sequence seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(@in.ReadObject());
+                IASN1Sequence seq;
+                using (IASN1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(enc))) {
+                    seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(@in.ReadObject());
+                }
                 return BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(seq.GetObjectAt(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject
-                    (seq.GetObjectAt(0)) != null ? 5 : 4));
+                    (seq.GetObjectAt(0)) == null ? 4 : 5));
             }
             catch (System.IO.IOException e) {
                 throw new PdfException(e);

@@ -124,18 +124,11 @@ namespace iText.Signatures {
                 }
                 IASN1Sequence accessDescriptions = FACTORY.CreateASN1Sequence(obj);
                 for (int i = 0; i < accessDescriptions.Size(); i++) {
-                    IASN1Sequence AccessDescription = FACTORY.CreateASN1Sequence(accessDescriptions.GetObjectAt(i));
-                    IASN1ObjectIdentifier id = FACTORY.CreateASN1ObjectIdentifier(AccessDescription.GetObjectAt(0));
-                    if (AccessDescription.Size() != 2) {
-                    }
-                    else {
-                        // do nothing and continue
-                        if (id != null) {
-                            if (SecurityIDs.ID_OCSP.Equals(id.GetId())) {
-                                IASN1Primitive description = FACTORY.CreateASN1Primitive(AccessDescription.GetObjectAt(1));
-                                return GetStringFromGeneralName(description);
-                            }
-                        }
+                    IASN1Sequence accessDescription = FACTORY.CreateASN1Sequence(accessDescriptions.GetObjectAt(i));
+                    IASN1ObjectIdentifier id = FACTORY.CreateASN1ObjectIdentifier(accessDescription.GetObjectAt(0));
+                    if (accessDescription.Size() == 2 && id != null && SecurityIDs.ID_OCSP.Equals(id.GetId())) {
+                        IASN1Primitive description = FACTORY.CreateASN1Primitive(accessDescription.GetObjectAt(1));
+                        return GetStringFromGeneralName(description);
                     }
                 }
             }
@@ -180,10 +173,13 @@ namespace iText.Signatures {
             if (bytes == null) {
                 return null;
             }
-            IASN1InputStream aIn = FACTORY.CreateASN1InputStream(new MemoryStream(bytes));
-            IASN1OctetString octs = FACTORY.CreateASN1OctetString(aIn.ReadObject());
-            aIn = FACTORY.CreateASN1InputStream(new MemoryStream(octs.GetOctets()));
-            return aIn.ReadObject();
+            IASN1OctetString octs;
+            using (IASN1InputStream aIn = FACTORY.CreateASN1InputStream(new MemoryStream(bytes))) {
+                octs = FACTORY.CreateASN1OctetString(aIn.ReadObject());
+            }
+            using (IASN1InputStream aIn_1 = FACTORY.CreateASN1InputStream(new MemoryStream(octs.GetOctets()))) {
+                return aIn_1.ReadObject();
+            }
         }
 
         /// <summary>Gets a String from an ASN1Primitive</summary>

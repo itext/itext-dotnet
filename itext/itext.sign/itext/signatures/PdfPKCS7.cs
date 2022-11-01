@@ -152,8 +152,9 @@ namespace iText.Signatures {
                 signCerts = certs;
                 signCert = (IX509Certificate)SignUtils.GetFirstElement(certs);
                 crls = new List<IX509Crl>();
-                IASN1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(contentsKey));
-                digest = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(@in.ReadObject()).GetOctets();
+                using (IASN1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(contentsKey))) {
+                    digest = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(@in.ReadObject()).GetOctets();
+                }
                 sig = SignUtils.GetSignatureHelper("SHA1withRSA");
                 sig.InitVerify(signCert.GetPublicKey());
                 // setting the oid to SHA1withRSA
@@ -174,13 +175,14 @@ namespace iText.Signatures {
             isTsp = PdfName.ETSI_RFC3161.Equals(filterSubtype);
             isCades = PdfName.ETSI_CAdES_DETACHED.Equals(filterSubtype);
             try {
-                IASN1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(contentsKey));
                 //
                 // Basic checks to make sure it's a PKCS#7 SignedData Object
                 //
                 IASN1Primitive pkcs;
                 try {
-                    pkcs = din.ReadObject();
+                    using (IASN1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(contentsKey))) {
+                        pkcs = din.ReadObject();
+                    }
                 }
                 catch (System.IO.IOException) {
                     throw new ArgumentException(SignExceptionMessageConstant.CANNOT_DECODE_PKCS7_SIGNED_DATA_OBJECT);
@@ -708,9 +710,10 @@ namespace iText.Signatures {
                 //
                 v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                 foreach (Object element in certs) {
-                    IASN1InputStream tempstream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(BOUNCY_CASTLE_FACTORY
-                        .CreateX509Certificate(element).GetEncoded()));
-                    v.Add(tempstream.ReadObject());
+                    using (IASN1InputStream tempstream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(BOUNCY_CASTLE_FACTORY
+                        .CreateX509Certificate(element).GetEncoded()))) {
+                        v.Add(tempstream.ReadObject());
+                    }
                 }
                 IDERSet dercertificates = BOUNCY_CASTLE_FACTORY.CreateDERSet(v);
                 // Create signerinfo structure.
@@ -799,14 +802,15 @@ namespace iText.Signatures {
             // @todo: move this together with the rest of the defintions
             String ID_TIME_STAMP_TOKEN = "1.2.840.113549.1.9.16.2.14";
             // RFC 3161 id-aa-timeStampToken
-            IASN1InputStream tempstream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(timeStampToken)
-                );
             IASN1EncodableVector unauthAttributes = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
             IASN1EncodableVector v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
             v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(ID_TIME_STAMP_TOKEN));
             // id-aa-timeStampToken
-            IASN1Sequence seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tempstream.ReadObject());
-            v.Add(BOUNCY_CASTLE_FACTORY.CreateDERSet(seq));
+            using (IASN1InputStream tempstream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(timeStampToken
+                ))) {
+                IASN1Sequence seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tempstream.ReadObject());
+                v.Add(BOUNCY_CASTLE_FACTORY.CreateDERSet(seq));
+            }
             unauthAttributes.Add(BOUNCY_CASTLE_FACTORY.CreateDERSequence(v));
             return unauthAttributes;
         }
@@ -906,8 +910,9 @@ namespace iText.Signatures {
                             if (bCrl == null) {
                                 continue;
                             }
-                            IASN1InputStream t = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bCrl));
-                            v2.Add(t.ReadObject());
+                            using (IASN1InputStream t = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bCrl))) {
+                                v2.Add(t.ReadObject());
+                            }
                         }
                         revocationV.Add(BOUNCY_CASTLE_FACTORY.CreateDERTaggedObject(true, 0, BOUNCY_CASTLE_FACTORY.CreateDERSequence
                             (v2)));
@@ -1223,8 +1228,9 @@ namespace iText.Signatures {
                 }
             }
             IASN1OctetString os = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(seq.GetObjectAt(1));
-            IASN1InputStream inp = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(os.GetOctets());
-            basicResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(inp.ReadObject());
+            using (IASN1InputStream inp = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(os.GetOctets())) {
+                basicResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(inp.ReadObject());
+            }
         }
 
         // Time Stamps

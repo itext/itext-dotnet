@@ -26,6 +26,7 @@ using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Pdf;
+using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
@@ -117,6 +118,32 @@ namespace iText.Signatures {
             IList<byte[]> certs = new List<byte[]>();
             certs.Add(new byte[0]);
             NUnit.Framework.Assert.IsTrue(TEST_VERIFICATION.AddVerification(SIG_FIELD_NAME, ocsps, crls, certs));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TryAddVerificationAfterMerge() {
+            IList<byte[]> crls = new List<byte[]>();
+            crls.Add(new byte[0]);
+            IList<byte[]> ocsps = new List<byte[]>();
+            ocsps.Add(new byte[0]);
+            IList<byte[]> certs = new List<byte[]>();
+            certs.Add(new byte[0]);
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SRC_PDF), new PdfWriter(new MemoryStream()))) {
+                LtvVerification verificationWithWriter = new LtvVerification(pdfDoc);
+                verificationWithWriter.Merge();
+                verificationWithWriter.AddVerification(SIG_FIELD_NAME, ocsps, crls, certs);
+                verificationWithWriter.Merge();
+                Exception exception1 = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => verificationWithWriter
+                    .AddVerification(SIG_FIELD_NAME, ocsps, crls, certs));
+                NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.VERIFICATION_ALREADY_OUTPUT, exception1.Message
+                    );
+                verificationWithWriter.Merge();
+                Exception exception2 = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => verificationWithWriter
+                    .AddVerification(null, null, null, LtvVerification.CertificateOption.SIGNING_CERTIFICATE, LtvVerification.Level
+                    .CRL, LtvVerification.CertificateInclusion.YES));
+                NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.VERIFICATION_ALREADY_OUTPUT, exception2.Message
+                    );
+            }
         }
 
         [NUnit.Framework.Test]
@@ -433,6 +460,14 @@ namespace iText.Signatures {
         public virtual void ValidateSigNameWholeChainCrlNoTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.WHOLE_CHAIN, LtvVerification.Level
                 .CRL, LtvVerification.CertificateInclusion.NO, true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetParentWithoutCertsTest() {
+            using (PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                LtvVerification verification = new LtvVerification(document);
+                NUnit.Framework.Assert.IsNull(verification.GetParent(null, new IX509Certificate[0]));
+            }
         }
 
         private static void ValidateOptionLevelInclusion(String crlUrl, LtvVerification.CertificateOption certificateOption

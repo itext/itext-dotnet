@@ -215,10 +215,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
             pkcs7input[22] = two;
             pkcs7input[23] = one;
             MemoryStream baos = new MemoryStream();
-            IASN1OutputStream k = CryptoUtil.CreateAsn1OutputStream(baos, BOUNCY_CASTLE_FACTORY.CreateASN1Encoding().GetDer
-                ());
-            IASN1Primitive obj = CreateDERForRecipient(pkcs7input, (IX509Certificate)certificate);
-            k.WriteObject(obj);
+            using (IASN1OutputStream k = CryptoUtil.CreateAsn1OutputStream(baos, BOUNCY_CASTLE_FACTORY.CreateASN1Encoding
+                ().GetDer())) {
+                IASN1Primitive obj = CreateDERForRecipient(pkcs7input, (IX509Certificate)certificate);
+                k.WriteObject(obj);
+            }
             cms = baos.ToArray();
             recipient.SetCms(cms);
             return cms;
@@ -261,10 +262,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         private IKeyTransRecipientInfo ComputeRecipientInfo(IX509Certificate x509Certificate, byte[] abyte0) {
-            IASN1InputStream asn1InputStream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(x509Certificate
-                .GetTbsCertificate()));
-            ITBSCertificate tbsCertificate = BOUNCY_CASTLE_FACTORY.CreateTBSCertificate(asn1InputStream.ReadObject());
-            System.Diagnostics.Debug.Assert(tbsCertificate != null);
+            ITBSCertificate tbsCertificate;
+            using (IASN1InputStream asn1InputStream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(x509Certificate
+                .GetTbsCertificate()))) {
+                tbsCertificate = BOUNCY_CASTLE_FACTORY.CreateTBSCertificate(asn1InputStream.ReadObject());
+            }
             IAlgorithmIdentifier algorithmIdentifier = tbsCertificate.GetSubjectPublicKeyInfo().GetAlgorithm();
             IIssuerAndSerialNumber issuerAndSerialNumber = BOUNCY_CASTLE_FACTORY.CreateIssuerAndSerialNumber(tbsCertificate
                 .GetIssuer(), tbsCertificate.GetSerialNumber().GetValue());

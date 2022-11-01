@@ -82,6 +82,16 @@ namespace iText.Signatures.Verify {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ValidOcspWithoutOcspResponseBuilderTest() {
+            IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(certsSrc + "signCertRsa01.pem")[0
+                ];
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
+            DateTime checkDate = DateTimeUtil.GetCurrentUtcTime();
+            OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
+            NUnit.Framework.Assert.IsTrue(ocspVerifier.Verify(caCert, rootCert, checkDate).IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void InvalidRevokedOcspTest01() {
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
             IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertFileName, password);
@@ -153,6 +163,12 @@ namespace iText.Signatures.Verify {
 
         // Not getting here because of exception
         //Assert.assertFalse(verifyRes);
+        [NUnit.Framework.Test]
+        public virtual void GetOcspResponseNullTest() {
+            OCSPVerifier verifier = new OCSPVerifier(null, null);
+            NUnit.Framework.Assert.IsNull(verifier.GetOcspResponse(null, null));
+        }
+
         private bool VerifyTest(TestOcspResponseBuilder rootRsaOcspBuilder) {
             return VerifyTest(rootRsaOcspBuilder, certsSrc + "signCertRsa01.pem", DateTimeUtil.GetCurrentUtcTime());
         }

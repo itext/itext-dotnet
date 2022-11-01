@@ -148,7 +148,8 @@ namespace iText.Signatures {
             LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
             foreach (IX509Certificate certificate in xc) {
                 cert = (IX509Certificate)certificate;
-                LOGGER.LogInformation("Certificate: " + BOUNCY_CASTLE_FACTORY.CreateX500Name(cert));
+                LOGGER.LogInformation(MessageFormatUtil.Format("Certificate: {0}", BOUNCY_CASTLE_FACTORY.CreateX500Name(cert
+                    )));
                 if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert)) {
                     continue;
                 }
@@ -190,28 +191,6 @@ namespace iText.Signatures {
             return true;
         }
 
-        /// <summary>Get the issuing certificate for a child certificate.</summary>
-        /// <param name="cert">the certificate for which we search the parent</param>
-        /// <param name="certs">an array with certificates that contains the parent</param>
-        /// <returns>the parent certificate</returns>
-        private IX509Certificate GetParent(IX509Certificate cert, IX509Certificate[] certs) {
-            IX509Certificate parent;
-            foreach (IX509Certificate certificate in certs) {
-                parent = (IX509Certificate)certificate;
-                if (!cert.GetIssuerDN().Equals(parent.GetSubjectDN())) {
-                    continue;
-                }
-                try {
-                    cert.Verify(parent.GetPublicKey());
-                    return parent;
-                }
-                catch (Exception) {
-                }
-            }
-            // do nothing
-            return null;
-        }
-
         /// <summary>Adds verification to the signature.</summary>
         /// <param name="signatureName">name of the signature</param>
         /// <param name="ocsps">collection of DER-encoded BasicOCSPResponses</param>
@@ -239,6 +218,28 @@ namespace iText.Signatures {
             return true;
         }
 
+        /// <summary>Get the issuing certificate for a child certificate.</summary>
+        /// <param name="cert">the certificate for which we search the parent</param>
+        /// <param name="certs">an array with certificates that contains the parent</param>
+        /// <returns>the parent certificate</returns>
+        internal virtual IX509Certificate GetParent(IX509Certificate cert, IX509Certificate[] certs) {
+            IX509Certificate parent;
+            foreach (IX509Certificate certificate in certs) {
+                parent = (IX509Certificate)certificate;
+                if (!cert.GetIssuerDN().Equals(parent.GetSubjectDN())) {
+                    continue;
+                }
+                try {
+                    cert.Verify(parent.GetPublicKey());
+                    return parent;
+                }
+                catch (Exception) {
+                }
+            }
+            // do nothing
+            return null;
+        }
+
         private static byte[] BuildOCSPResponse(byte[] basicOcspResponse) {
             IDEROctetString doctet = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(basicOcspResponse);
             IOCSPResponseStatus respStatus = BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus(BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus
@@ -255,9 +256,10 @@ namespace iText.Signatures {
             byte[] bc = PdfEncodings.ConvertToBytes(contents.GetValue(), null);
             byte[] bt = null;
             if (PdfName.ETSI_RFC3161.Equals(sig.GetSubFilter())) {
-                IASN1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bc));
-                IASN1Primitive pkcs = din.ReadObject();
-                bc = pkcs.GetEncoded();
+                using (IASN1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bc))) {
+                    IASN1Primitive pkcs = din.ReadObject();
+                    bc = pkcs.GetEncoded();
+                }
             }
             bt = HashBytesSha1(bc);
             return new PdfName(ConvertToHex(bt));

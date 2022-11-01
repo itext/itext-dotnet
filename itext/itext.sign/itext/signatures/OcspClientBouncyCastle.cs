@@ -127,11 +127,11 @@ namespace iText.Signatures {
                             return basicResponse.GetEncoded();
                         }
                         else {
-                            if (BOUNCY_CASTLE_FACTORY.CreateRevokedStatus(status) != null) {
-                                throw new System.IO.IOException(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_REVOKED);
+                            if (BOUNCY_CASTLE_FACTORY.CreateRevokedStatus(status) == null) {
+                                throw new System.IO.IOException(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
                             }
                             else {
-                                throw new System.IO.IOException(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
+                                throw new System.IO.IOException(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_REVOKED);
                             }
                         }
                     }

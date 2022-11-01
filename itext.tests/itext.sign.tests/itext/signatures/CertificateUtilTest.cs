@@ -52,5 +52,17 @@ namespace iText.Signatures {
                 )[0];
             NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => CertificateUtil.GetTSAURL(tsaCert));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCRLFromStringNullTest() {
+            NUnit.Framework.Assert.IsNull(CertificateUtil.GetCRL((String)null));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCRLFromCertificateWithoutCRLTest() {
+            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "rootRsa.pem")[0];
+            IX509Crl crl = CertificateUtil.GetCRL(tsaCert);
+            NUnit.Framework.Assert.IsNull(crl);
+        }
     }
 }
