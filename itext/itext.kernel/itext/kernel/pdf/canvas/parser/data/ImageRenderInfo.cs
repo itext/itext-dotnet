@@ -52,21 +52,21 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
     /// <summary>Represents image data from a PDF.</summary>
     public class ImageRenderInfo : AbstractRenderInfo {
         /// <summary>The coordinate transformation matrix that was in effect when the image was rendered.</summary>
-        private Matrix ctm;
+        private readonly Matrix ctm;
 
-        private PdfImageXObject image;
+        private readonly PdfImageXObject image;
 
         /// <summary>The color space dictionary from resources which are associated with the image.</summary>
-        private PdfDictionary colorSpaceDictionary;
+        private readonly PdfDictionary colorSpaceDictionary;
 
         /// <summary>Defines if the encountered image was inline.</summary>
-        private bool isInline;
+        private readonly bool isInline;
 
-        private PdfName resourceName;
+        private readonly PdfName resourceName;
 
         /// <summary>Hierarchy of nested canvas tags for the text from the most inner (nearest to text) tag to the most outer.
         ///     </summary>
-        private IList<CanvasTag> canvasTagHierarchy;
+        private readonly IList<CanvasTag> canvasTagHierarchy;
 
         /// <summary>Creates an ImageRenderInfo.</summary>
         /// <param name="canvasTagHierarchy">
@@ -230,10 +230,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             }
             else {
                 foreach (CanvasTag tag in canvasTagHierarchy) {
-                    if (tag.HasMcid()) {
-                        if (tag.GetMcid() == mcid) {
-                            return true;
-                        }
+                    if (tag.HasMcid() && (tag.GetMcid() == mcid)) {
+                        return true;
                     }
                 }
             }
