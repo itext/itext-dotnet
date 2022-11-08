@@ -71,7 +71,7 @@ namespace iText.Signatures.Sign {
         public static readonly String KEYSTORE_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfSignatureAppearanceTest/test.pem";
 
-        public static readonly char[] PASSWORD = "testpass".ToCharArray();
+        public static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
         private IX509Certificate[] chain;
 

@@ -166,7 +166,7 @@ namespace iText.Signatures {
         }
 
         private sealed class CustomTsaClientBouncyCastle : TSAClientBouncyCastle {
-            private static readonly char[] PASSWORD = "testpass".ToCharArray();
+            private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
             private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
                 .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";

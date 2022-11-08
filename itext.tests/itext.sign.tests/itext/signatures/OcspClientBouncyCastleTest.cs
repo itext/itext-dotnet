@@ -64,7 +64,7 @@ namespace iText.Signatures {
 
         private static readonly String signOcspCert = ocspCertsSrc + "ocspSignRsa.pem";
 
-        private static readonly char[] password = "testpass".ToCharArray();
+        private static readonly char[] password = "testpassphrase".ToCharArray();
 
         private const String ocspServiceUrl = "http://localhost:9000/demo/ocsp/ocsp-service";
 

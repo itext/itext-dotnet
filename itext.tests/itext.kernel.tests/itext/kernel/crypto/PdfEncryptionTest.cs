@@ -83,7 +83,7 @@ namespace iText.Kernel.Crypto {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/crypto/PdfEncryptionTest/";
 
-        public static readonly char[] PRIVATE_KEY_PASS = "testpass".ToCharArray();
+        public static readonly char[] PRIVATE_KEY_PASS = "testpassphrase".ToCharArray();
 
         public static readonly String CERT = sourceFolder + "test.cer";
 

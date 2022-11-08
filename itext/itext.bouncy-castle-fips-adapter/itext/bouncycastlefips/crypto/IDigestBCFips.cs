@@ -1,9 +1,11 @@
 using System;
 using System.IO;
+using iText.Bouncycastlefips.Security;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Fips;
+using Org.BouncyCastle.Security;
 
 namespace iText.Bouncycastlefips.Crypto {
     /// <summary>
@@ -167,7 +169,8 @@ namespace iText.Bouncycastlefips.Crypto {
                     return FipsShs.Sha384;
                 }
                 default: {
-                    throw new ArgumentException("Hash algorithm " + hashAlgorithm + " is not supported in fips");
+                    throw new GeneralSecurityExceptionBCFips(new GeneralSecurityException(
+                        "no such algorithm: " + hashAlgorithm + " for provider BCFIPS"));
                 }
             }
         }

@@ -64,6 +64,7 @@ using Org.BouncyCastle.Crypto.Fips;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Operators;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.IO;
 using ContentInfo = Org.BouncyCastle.Asn1.Cms.ContentInfo;
 using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
@@ -882,6 +883,20 @@ namespace iText.Bouncycastlefips {
                     .CreateKeyWrapper(FipsRsa.WrapOaep.WithDigest(FipsShs.Sha1));
 
             return keyWrapper.Wrap(abyte0).Collect();
+        }
+
+        public bool IsInApprovedOnlyMode() {
+            return CryptoServicesRegistrar.IsInApprovedOnlyMode();
+        }
+
+        public SecureRandom GetSecureRandom() {
+            byte[] personalizationString = Strings.ToUtf8ByteArray("some personalization string");
+            SecureRandom entropySource = new SecureRandom();
+            return CryptoServicesRegistrar.CreateService(FipsDrbg.Sha512)
+                .FromEntropySource(entropySource,true)
+                .SetPersonalizationString(personalizationString).Build(
+                    entropySource.GenerateSeed(256 / (2 * 8)), true, 
+                    Strings.ToByteArray("number only used once"));
         }
         
         private IX509Certificate ReadPemCertificate(PushbackStream pushbackStream) {

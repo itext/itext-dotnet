@@ -62,7 +62,7 @@ namespace iText.Signatures.Verify {
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-        private static readonly char[] password = "testpass".ToCharArray();
+        private static readonly char[] password = "testpassphrase".ToCharArray();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {

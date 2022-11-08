@@ -47,7 +47,7 @@ namespace iText.Signatures {
         private static readonly String CERT_FOLDER_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-        private static readonly char[] PASSWORD = "testpass".ToCharArray();
+        private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
         private static LtvVerification TEST_VERIFICATION;
 

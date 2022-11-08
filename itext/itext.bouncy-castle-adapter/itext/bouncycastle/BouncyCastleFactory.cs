@@ -833,6 +833,10 @@ namespace iText.Bouncycastle {
             return abyte1;
         }
 
+        public bool IsInApprovedOnlyMode() {
+            return false;
+        }
+
         public IPEMParser CreatePEMParser(TextReader reader, char[] password) {
             return new PEMParserBC(new PemReader(reader, new BouncyCastlePasswordFinder(password)));
         }

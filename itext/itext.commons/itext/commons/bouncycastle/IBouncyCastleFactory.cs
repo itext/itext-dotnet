@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Cms;
@@ -330,5 +329,7 @@ namespace iText.Commons.Bouncycastle {
         IExtension CreateExtension(bool b, IDEROctetString octetString);
 
         byte[] CreateCipherBytes(IX509Certificate x509Certificate, byte[] abyte0, IAlgorithmIdentifier algorithmidentifier);
+
+        bool IsInApprovedOnlyMode();
     }
 }

@@ -5,7 +5,6 @@ using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Fips;
 using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Security;
 
 namespace iText.Bouncycastlefips.Crypto.Generators {
     /// <summary>
@@ -21,7 +20,7 @@ namespace iText.Bouncycastlefips.Crypto.Generators {
         public RsaKeyPairGeneratorBCFips() {
             this.generator = CryptoServicesRegistrar.CreateGenerator(
                 new FipsRsa.KeyGenerationParameters(BigInteger.ValueOf(0x10001), 2048), 
-                new SecureRandom());
+                new BouncyCastleFipsFactory().GetSecureRandom());
         }
         
         /// <summary>

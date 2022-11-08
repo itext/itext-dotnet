@@ -50,7 +50,7 @@ namespace iText.Signatures.Verify {
 
         private static readonly String notOcspAndOcspCert = ocspCertsSrc + "notOcspAndOcspCertificates.pem";
 
-        private static readonly char[] password = "testpass".ToCharArray();
+        private static readonly char[] password = "testpassphrase".ToCharArray();
 
         private const String ocspServiceUrl = "http://localhost:9000/demo/ocsp/ocsp-service";
 

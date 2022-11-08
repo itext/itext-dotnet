@@ -63,7 +63,7 @@ namespace iText.Signatures.Sign {
         private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/signatures/sign/TimestampSigTest/";
 
-        private static readonly char[] password = "testpass".ToCharArray();
+        private static readonly char[] password = "testpassphrase".ToCharArray();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {

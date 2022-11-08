@@ -69,7 +69,7 @@ namespace iText.Signatures.Sign {
         public static readonly String keystorePath = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/signCertRsa01.pem";
 
-        public static readonly char[] password = "testpass".ToCharArray();
+        public static readonly char[] password = "testpassphrase".ToCharArray();
 
         public static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/font/FreeSans.ttf";
