@@ -79,14 +79,16 @@ namespace iText.Layout.Renderer {
              flexContainerRenderer) {
             Rectangle layoutBox = flexContainerBBox.Clone();
             flexContainerRenderer.ApplyMarginsBordersPaddings(layoutBox, false);
+            // Currently only width is used in this method
+            float layoutBoxWidth = layoutBox.GetWidth();
             // 9.2. Line Length Determination
             // 2. Determine the available main and cross space for the flex items.
             // TODO DEVSIX-5001 min-content and max-content as width are not supported
             // if that dimension of the flex container is being sized under a min or max-content constraint,
             // the available space in that dimension is that constraint;
-            float? mainSize = flexContainerRenderer.RetrieveWidth(layoutBox.GetWidth());
+            float? mainSize = flexContainerRenderer.RetrieveWidth(layoutBoxWidth);
             if (mainSize == null) {
-                mainSize = layoutBox.GetWidth();
+                mainSize = layoutBoxWidth;
             }
             // We need to have crossSize only if its value is definite.
             float? crossSize = flexContainerRenderer.RetrieveHeight();
@@ -353,21 +355,37 @@ namespace iText.Layout.Renderer {
             >> lines) {
             foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
                 foreach (FlexUtil.FlexItemCalculationInfo info in line) {
-                    UnitValue prevWidth = info.renderer.ReplaceOwnProperty<UnitValue>(Property.WIDTH, UnitValue.CreatePointValue
-                        (info.mainSize));
-                    UnitValue prevMinWidth = info.renderer.ReplaceOwnProperty<UnitValue>(Property.MIN_WIDTH, null);
-                    LayoutResult result = info.renderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(AbstractRenderer
-                        .INF, AbstractRenderer.INF))));
-                    info.renderer.ReturnBackOwnProperty(Property.MIN_WIDTH, prevMinWidth);
-                    info.renderer.ReturnBackOwnProperty(Property.WIDTH, prevWidth);
-                    // Since main size is clamped with min-width, we do expect the result to be full
-                    if (result.GetStatus() == LayoutResult.FULL) {
-                        info.hypotheticalCrossSize = info.GetInnerCrossSize(result.GetOccupiedArea().GetBBox().GetHeight());
+                    DetermineHypotheticalCrossSizeForFlexItem(info);
+                }
+            }
+        }
+
+        private static void DetermineHypotheticalCrossSizeForFlexItem(FlexUtil.FlexItemCalculationInfo info) {
+            if (info.renderer is FlexContainerRenderer && ((FlexContainerRenderer)info.renderer).GetHypotheticalCrossSize
+                (info.mainSize) != null) {
+                // Take from cache
+                info.hypotheticalCrossSize = ((FlexContainerRenderer)info.renderer).GetHypotheticalCrossSize(info.mainSize
+                    ).Value;
+            }
+            else {
+                UnitValue prevWidth = info.renderer.ReplaceOwnProperty<UnitValue>(Property.WIDTH, UnitValue.CreatePointValue
+                    (info.mainSize));
+                UnitValue prevMinWidth = info.renderer.ReplaceOwnProperty<UnitValue>(Property.MIN_WIDTH, null);
+                LayoutResult result = info.renderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(AbstractRenderer
+                    .INF, AbstractRenderer.INF))));
+                info.renderer.ReturnBackOwnProperty(Property.MIN_WIDTH, prevMinWidth);
+                info.renderer.ReturnBackOwnProperty(Property.WIDTH, prevWidth);
+                // Since main size is clamped with min-width, we do expect the result to be full
+                if (result.GetStatus() == LayoutResult.FULL) {
+                    info.hypotheticalCrossSize = info.GetInnerCrossSize(result.GetOccupiedArea().GetBBox().GetHeight());
+                    // Cache hypotheticalCrossSize for FlexContainerRenderer
+                    if (info.renderer is FlexContainerRenderer) {
+                        ((FlexContainerRenderer)info.renderer).SetHypotheticalCrossSize(info.mainSize, info.hypotheticalCrossSize);
                     }
-                    else {
-                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL);
-                        info.hypotheticalCrossSize = 0;
-                    }
+                }
+                else {
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL);
+                    info.hypotheticalCrossSize = 0;
                 }
             }
         }

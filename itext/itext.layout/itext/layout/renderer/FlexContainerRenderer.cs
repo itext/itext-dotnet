@@ -53,6 +53,13 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class FlexContainerRenderer : DivRenderer {
+        /* Used for caching purposes in FlexUtil
+        * We couldn't find the real use case when this map contains more than 1 entry
+        * but let it still be a map to be on a safe(r) side
+        * Map mainSize (always width in our case) - hypotheticalCrossSize
+        */
+        private readonly IDictionary<float, float?> hypotheticalCrossSizes = new Dictionary<float, float?>();
+
         private IList<IList<FlexItemInfo>> lines;
 
         /// <summary>Creates a FlexContainerRenderer from its corresponding layout object.</summary>
@@ -286,6 +293,14 @@ namespace iText.Layout.Renderer {
                 }
             }
             return layoutBoxCopy;
+        }
+
+        internal virtual void SetHypotheticalCrossSize(float? mainSize, float? hypotheticalCrossSize) {
+            hypotheticalCrossSizes.Put(mainSize.Value, hypotheticalCrossSize);
+        }
+
+        internal virtual float? GetHypotheticalCrossSize(float? mainSize) {
+            return hypotheticalCrossSizes.Get(mainSize.Value);
         }
 
         private FlexItemInfo FindFlexItemInfo(AbstractRenderer renderer) {
