@@ -26,21 +26,40 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     internal class LineHeightHelper {
-        private static float DEFAULT_LINE_HEIGHT_COEFF = 1.15f;
+        public const int ASCENDER_INDEX = 0;
+
+        public const int DESCENDER_INDEX = 1;
+
+        public const int XHEIGHT_INDEX = 2;
+
+        public const int LEADING_INDEX = 3;
+
+        private const float DEFAULT_LINE_HEIGHT_COEFF = 1.15f;
 
         private LineHeightHelper() {
         }
 
+        /// <summary>Get actual ascender, descender.</summary>
+        /// <param name="renderer">the renderer to retrieve the ascender and descender from</param>
+        /// <returns>an array containing in this order actual ascender</returns>
         internal static float[] GetActualAscenderDescender(AbstractRenderer renderer) {
+            float[] result = GetActualFontInfo(renderer);
+            return new float[] { result[0], result[1] };
+        }
+
+        /// <summary>Get actual ascender, descender, xHeight and leading.</summary>
+        /// <param name="renderer">the renderer to retrieve the font info from</param>
+        /// <returns>an array containing in this order actual ascender, descender, xHeight and leading</returns>
+        internal static float[] GetActualFontInfo(AbstractRenderer renderer) {
             float ascender;
             float descender;
             float lineHeight = iText.Layout.Renderer.LineHeightHelper.CalculateLineHeight(renderer);
             float[] fontAscenderDescender = iText.Layout.Renderer.LineHeightHelper.GetFontAscenderDescenderNormalized(
                 renderer);
             float leading = lineHeight - (fontAscenderDescender[0] - fontAscenderDescender[1]);
-            ascender = fontAscenderDescender[0] + leading / 2f;
-            descender = fontAscenderDescender[1] - leading / 2f;
-            return new float[] { ascender, descender };
+            ascender = fontAscenderDescender[0] + leading / 2F;
+            descender = fontAscenderDescender[1] - leading / 2F;
+            return new float[] { ascender, descender, fontAscenderDescender[2], leading };
         }
 
         internal static float[] GetFontAscenderDescenderNormalized(AbstractRenderer renderer) {
@@ -50,7 +69,9 @@ namespace iText.Layout.Renderer {
                 );
             float fontAscender = fontAscenderDescenderFromMetrics[0] / FontProgram.UNITS_NORMALIZATION * fontSize;
             float fontDescender = fontAscenderDescenderFromMetrics[1] / FontProgram.UNITS_NORMALIZATION * fontSize;
-            return new float[] { fontAscender, fontDescender };
+            float xHeight = ((float)font.GetFontProgram().GetFontMetrics().GetXHeight()) / FontProgram.UNITS_NORMALIZATION
+                 * fontSize;
+            return new float[] { fontAscender, fontDescender, xHeight };
         }
 
         internal static float CalculateLineHeight(AbstractRenderer renderer) {

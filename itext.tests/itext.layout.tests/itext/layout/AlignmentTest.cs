@@ -346,6 +346,152 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentTopTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentTop.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentTop.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.TOP);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentBottomTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentBottom.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentBottom.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.BOTTOM);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentMiddleTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentMiddle.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentMiddle.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.MIDDLE);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentBaseLineTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentBaseLine.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentBaseLine.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.BASELINE);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentTextTopTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentTextTop.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentTextTop.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.TEXT_TOP);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentTextBottomTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentTextBottom.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentTextBottom.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.TEXT_BOTTOM);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentFixedTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentFixed.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentFixed.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.FIXED);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentFractionTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentFraction.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentFraction.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.FRACTION);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentSubTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentSub.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentSub.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.SUB, (d, p, t) => t.SetFontSize
+                (20));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentSuperTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentSuper.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentSuper.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.SUPER, (d, p, t) => t.SetFontSize
+                (20));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentmixedTest() {
+            // sub and super are resolved in html2Pdf to relative
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentMixed.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentMixed.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
+            Paragraph p = new Paragraph();
+            p.SetBackgroundColor(new DeviceRgb(189, 239, 73));
+            p.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            p.SetFontSize(20);
+            Text heightdefiner = new Text(" Xj ");
+            p.Add(heightdefiner);
+            AddAlignedElement(p, InlineVerticalAlignmentType.BASELINE);
+            AddAlignedElement(p, InlineVerticalAlignmentType.TEXT_TOP);
+            AddAlignedElement(p, InlineVerticalAlignmentType.TEXT_BOTTOM);
+            AddAlignedElement(p, InlineVerticalAlignmentType.SUB);
+            AddAlignedElement(p, InlineVerticalAlignmentType.SUPER);
+            AddAlignedElement(p, InlineVerticalAlignmentType.FIXED);
+            AddAlignedElement(p, InlineVerticalAlignmentType.FRACTION);
+            AddAlignedElement(p, InlineVerticalAlignmentType.MIDDLE);
+            AddAlignedElement(p, InlineVerticalAlignmentType.TOP);
+            AddAlignedElement(p, InlineVerticalAlignmentType.BOTTOM);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(SOURCE_FOLDER + "itis.jpg"
+                )));
+            iText.Layout.Element.Image image1 = new iText.Layout.Element.Image(xObject, 50);
+            p.Add(image1);
+            p.Add(heightdefiner);
+            doc.Add(p);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        private void AddAlignedElement(Paragraph p, InlineVerticalAlignmentType? verticalAlignment) {
+            Text text1 = new Text(" " + verticalAlignment + " ");
+            text1.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            text1.SetFontSize(12);
+            if (verticalAlignment == InlineVerticalAlignmentType.FIXED) {
+                text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(verticalAlignment, 20F));
+            }
+            else {
+                if (verticalAlignment == InlineVerticalAlignmentType.FRACTION) {
+                    text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(verticalAlignment, 0.20F
+                        ));
+                }
+                else {
+                    text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(verticalAlignment));
+                }
+            }
+            p.Add(text1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentWithLineHeightSettingTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentLineHeight.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentLineHeight.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.BOTTOM, (d, p, t) => p.SetProperty
+                (Property.LINE_HEIGHT, LineHeight.CreateFixedValue(100)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentWithFloatsTest() {
+            String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentWithFloat.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentWithFloat.pdf";
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, InlineVerticalAlignmentType.BOTTOM, (d, p, t) => {
+                PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(SOURCE_FOLDER + "itis.jpg"
+                    )));
+                iText.Layout.Element.Image image1 = new iText.Layout.Element.Image(xObject, 200);
+                image1.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+                d.Add(image1);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
         public virtual void FloatAlignmentTest03() {
             String outFileName = DESTINATION_FOLDER + "floatAlignmentTest03.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_floatAlignmentTest03.pdf";
@@ -366,6 +512,47 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
+        }
+
+        private static void CreateDocumentWithInlineAlignment(String outPdf, String cmpPdf, InlineVerticalAlignmentType?
+             verticalAlignment1) {
+            CreateDocumentWithInlineAlignment(outPdf, cmpPdf, verticalAlignment1, null);
+        }
+
+        private static void CreateDocumentWithInlineAlignment(String outPdf, String cmpPdf, InlineVerticalAlignmentType?
+             verticalAlignment1, AlignmentTest.IInlineTestObjectModifier adjustTestObjects) {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            Document doc = new Document(pdfDoc);
+            Paragraph p = new Paragraph();
+            p.SetBackgroundColor(new DeviceRgb(189, 239, 73));
+            p.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            p.SetFontSize(20);
+            Text heightdefiner = new Text(" Xj ");
+            p.Add(heightdefiner);
+            Text text1 = new Text(" vAlign " + verticalAlignment1 + " ");
+            if (verticalAlignment1 == InlineVerticalAlignmentType.FIXED) {
+                text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(verticalAlignment1, 20F)
+                    );
+            }
+            else {
+                if (verticalAlignment1 == InlineVerticalAlignmentType.FRACTION) {
+                    text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(verticalAlignment1, 0.20F
+                        ));
+                }
+                else {
+                    text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(verticalAlignment1));
+                }
+            }
+            text1.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            text1.SetFontSize(12);
+            if (adjustTestObjects != null) {
+                adjustTestObjects(doc, p, text1);
+            }
+            p.Add(text1);
+            p.Add(heightdefiner);
+            doc.Add(p);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
 
         private static void CreateDocumentWithAlignment(String outPdf, String cmpPdf, VerticalAlignment? verticalAlignment
@@ -402,5 +589,7 @@ namespace iText.Layout {
             doc.Add(new Paragraph().Add(text).Add("Justified. " + "The text is laid out using the correct width, but  the alignment value uses the full width."
                 ).SetTextAlignment(TextAlignment.JUSTIFIED));
         }
+
+        private delegate void IInlineTestObjectModifier(Document d, Paragraph p, Text t);
     }
 }

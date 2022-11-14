@@ -1796,28 +1796,29 @@ namespace iText.Layout.Renderer {
         /// of the renderer
         /// </returns>
         protected internal virtual Rectangle ApplyPaddings(Rectangle rect, UnitValue[] paddings, bool reverse) {
-            if (!paddings[0].IsPointValue()) {
+            if (paddings[0] != null && !paddings[0].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                 logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_TOP));
             }
-            if (!paddings[1].IsPointValue()) {
+            if (paddings[1] != null && !paddings[1].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                 logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_RIGHT));
             }
-            if (!paddings[2].IsPointValue()) {
+            if (paddings[2] != null && !paddings[2].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                 logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_BOTTOM));
             }
-            if (!paddings[3].IsPointValue()) {
+            if (paddings[3] != null && !paddings[3].IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                 logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_LEFT));
             }
-            return rect.ApplyMargins(paddings[0].GetValue(), paddings[1].GetValue(), paddings[2].GetValue(), paddings[
-                3].GetValue(), reverse);
+            return rect.ApplyMargins(paddings[0] != null ? paddings[0].GetValue() : 0, paddings[1] != null ? paddings[
+                1].GetValue() : 0, paddings[2] != null ? paddings[2].GetValue() : 0, paddings[3] != null ? paddings[3]
+                .GetValue() : 3, reverse);
         }
 
         /// <summary>Applies the given border box (borders) on the given rectangle</summary>
