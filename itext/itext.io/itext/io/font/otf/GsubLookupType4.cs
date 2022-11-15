@@ -61,7 +61,6 @@ namespace iText.IO.Font.Otf {
         }
 
         public override bool TransformOne(GlyphLine line) {
-            //TODO >
             if (line.idx >= line.end) {
                 return false;
             }
