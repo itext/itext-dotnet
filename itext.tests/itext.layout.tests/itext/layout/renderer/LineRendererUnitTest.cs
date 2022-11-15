@@ -129,12 +129,14 @@ namespace iText.Layout.Renderer {
             Document document = CreateDummyDocument();
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
             lineRenderer.occupiedArea = new LayoutArea(1, new Rectangle(100, 100, 200, 200));
-            lineRenderer.maxAscent = 100;
+            lineRenderer.maxAscent = 150;
+            lineRenderer.maxDescent = -50;
             TextRenderer childTextRenderer = new TextRenderer(new Text("Hello"));
             childTextRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
             childTextRenderer.occupiedArea = new LayoutArea(1, new Rectangle(100, 50, 200, 200));
-            childTextRenderer.yLineOffset = 100;
+            childTextRenderer.yLineOffset = 150;
             childTextRenderer.SetProperty(Property.TEXT_RISE, 0f);
             lineRenderer.AddChild(childTextRenderer);
             lineRenderer.AdjustChildrenYLine();
@@ -148,7 +150,8 @@ namespace iText.Layout.Renderer {
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.occupiedArea = new LayoutArea(1, new Rectangle(50, 50, 200, 200));
-            lineRenderer.maxAscent = 100;
+            lineRenderer.maxAscent = 150;
+            lineRenderer.maxDescent = -50;
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(200, 200));
             Image img = new Image(xObject);
             ImageRenderer childImageRenderer = new ImageRenderer(img);
@@ -157,7 +160,8 @@ namespace iText.Layout.Renderer {
             lineRenderer.AddChild(childImageRenderer);
             lineRenderer.AdjustChildrenYLine();
             NUnit.Framework.Assert.AreEqual(50f, lineRenderer.GetOccupiedAreaBBox().GetBottom(), EPS);
-            NUnit.Framework.Assert.AreEqual(150.0, childImageRenderer.GetOccupiedAreaBBox().GetBottom(), EPS);
+            //image should be on the baseline top 250 - maxAscent 150 = 100
+            NUnit.Framework.Assert.AreEqual(100.0, childImageRenderer.GetOccupiedAreaBBox().GetBottom(), EPS);
         }
 
         [NUnit.Framework.Test]

@@ -348,6 +348,8 @@ namespace iText.Layout.Properties {
 
         public const int VERTICAL_BORDER_SPACING = 116;
 
+        public const int INLINE_VERTICAL_ALIGNMENT = 136;
+
         /// <summary>Value of 1 is equivalent to no scaling</summary>
         public const int VERTICAL_SCALING = 76;
 
