@@ -54,6 +54,7 @@ using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle.X509;
+using iText.Commons.Utils;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Asn1.X500;
@@ -79,6 +80,15 @@ namespace iText.Bouncycastlefips {
     public class BouncyCastleFipsFactory : IBouncyCastleFactory {
         private static readonly String PROVIDER_NAME = "BCFIPS";
         private static readonly BouncyCastleFipsTestConstantsFactory BOUNCY_CASTLE_FIPS_TEST_CONSTANTS = new BouncyCastleFipsTestConstantsFactory();
+        private static readonly String FIPS_MODE_ENVIRONMENT_VARIABLE_NAME = "ITEXT_DOTNET_BOUNCY_CASTLE_FIPS_MODE";
+        private static readonly String APPROVED_MODE_VALUE = "approved_mode";
+
+        public BouncyCastleFipsFactory() {
+            string fipsMode = SystemUtil.GetEnvironmentVariable(FIPS_MODE_ENVIRONMENT_VARIABLE_NAME);
+            if (fipsMode != null && APPROVED_MODE_VALUE.Equals(fipsMode.ToLowerInvariant())) {
+                CryptoServicesRegistrar.SetApprovedOnlyMode(true);
+            }
+        }
 
         public virtual IASN1ObjectIdentifier CreateASN1ObjectIdentifier(IASN1Encodable encodable) {
             ASN1EncodableBCFips encodableBCFips = (ASN1EncodableBCFips)encodable;
