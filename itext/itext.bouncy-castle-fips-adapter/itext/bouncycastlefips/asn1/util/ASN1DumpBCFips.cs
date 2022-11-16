@@ -73,7 +73,7 @@ namespace iText.Bouncycastlefips.Asn1.Util {
         /// <summary><inheritDoc/></summary>
         public virtual String DumpAsString(Object obj, bool b) {
             if (obj is ASN1EncodableBCFips) {
-                obj = ((ASN1EncodableBCFips)obj).GetEncodable();
+                return Asn1Dump.DumpAsString(((ASN1EncodableBCFips)obj).GetEncodable(), b);
             }
             return Asn1Dump.DumpAsString((Asn1Encodable)obj, b);
         }
@@ -81,7 +81,7 @@ namespace iText.Bouncycastlefips.Asn1.Util {
         /// <summary><inheritDoc/></summary>
         public virtual String DumpAsString(Object obj) {
             if (obj is ASN1EncodableBCFips) {
-                obj = ((ASN1EncodableBCFips)obj).GetEncodable();
+                return Asn1Dump.DumpAsString(((ASN1EncodableBCFips)obj).GetEncodable());
             }
             return Asn1Dump.DumpAsString((Asn1Encodable)obj);
         }

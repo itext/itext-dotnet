@@ -55,7 +55,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
         /// <summary><inheritDoc/></summary>
         public virtual IDistributionPoint[] GetDistributionPoints() {
             DistributionPoint[] distributionPoints = GetCrlDistPoint().GetDistributionPoints();
-            IDistributionPoint[] distributionPointsBC = new DistributionPointBC[distributionPoints.Length];
+            IDistributionPoint[] distributionPointsBC = new IDistributionPoint[distributionPoints.Length];
             for (int i = 0; i < distributionPoints.Length; ++i) {
                 distributionPointsBC[i] = new DistributionPointBC(distributionPoints[i]);
             }

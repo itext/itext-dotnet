@@ -55,7 +55,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
         /// <summary><inheritDoc/></summary>
         public virtual IGeneralName[] GetNames() {
             GeneralName[] generalNames = GetGeneralNames().GetNames();
-            IGeneralName[] generalNamesBC = new GeneralNameBC[generalNames.Length];
+            IGeneralName[] generalNamesBC = new IGeneralName[generalNames.Length];
             for (int i = 0; i < generalNames.Length; ++i) {
                 generalNamesBC[i] = new GeneralNameBC(generalNames[i]);
             }

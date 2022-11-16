@@ -59,12 +59,12 @@ namespace iText.Bouncycastle.Cms {
 
         /// <summary><inheritDoc/></summary>
         public virtual ICollection<IRecipientInformation> GetRecipients() {
-            List<IRecipientInformation> iRecipientInformations = new List<IRecipientInformation>();
+            List<IRecipientInformation> recipientInformation = new List<IRecipientInformation>();
             ICollection recipients = recipientInformationStore.GetRecipients();
             foreach (RecipientInformation recipient in recipients) {
-                iRecipientInformations.Add(new RecipientInformationBC(recipient));
+                recipientInformation.Add(new RecipientInformationBC(recipient));
             }
-            return iRecipientInformations;
+            return recipientInformation;
         }
 
         /// <summary><inheritDoc/></summary>

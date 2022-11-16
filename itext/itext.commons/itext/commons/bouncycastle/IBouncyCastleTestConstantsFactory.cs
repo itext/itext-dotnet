@@ -23,7 +23,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.Commons.Bouncycastle {
+    /// <summary>
+    /// <see cref="IBouncyCastleTestConstantsFactory"/>
+    /// contains methods for constants creation required in tests.
+    /// </summary>
     public interface IBouncyCastleTestConstantsFactory {
+        /// <summary>Get constant for certificate info.</summary>
+        /// <returns>constant for certificate info</returns>
         String GetCertificateInfoTestConst();
     }
 }

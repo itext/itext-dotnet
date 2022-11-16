@@ -42,7 +42,8 @@ namespace iText.Bouncycastle.Tsp {
         /// <see cref="Org.BouncyCastle.Tsp.TspException"/>
         /// to be wrapped
         /// </param>
-        public TSPExceptionBC(TspException tspException) {
+        public TSPExceptionBC(TspException tspException)
+            : base() {
             this.tspException = tspException;
         }
 

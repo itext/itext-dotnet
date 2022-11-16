@@ -58,12 +58,12 @@ namespace iText.Bouncycastlefips.Cms {
 
         /// <summary><inheritDoc/></summary>
         public virtual ICollection<IRecipientInformation> GetRecipients() {
-            List<IRecipientInformation> iRecipientInformations = new List<IRecipientInformation>();
+            List<IRecipientInformation> recipientInformation = new List<IRecipientInformation>();
             ICollection<RecipientInformation> recipients = recipientInformationStore.GetAll();
             foreach (RecipientInformation recipient in recipients) {
-                iRecipientInformations.Add(new RecipientInformationBCFips(recipient));
+                recipientInformation.Add(new RecipientInformationBCFips(recipient));
             }
-            return iRecipientInformations;
+            return recipientInformation;
         }
 
         /// <summary><inheritDoc/></summary>

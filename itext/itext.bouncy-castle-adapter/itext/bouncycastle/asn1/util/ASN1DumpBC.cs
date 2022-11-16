@@ -73,7 +73,7 @@ namespace iText.Bouncycastle.Asn1.Util {
         /// <summary><inheritDoc/></summary>
         public virtual String DumpAsString(Object obj, bool b) {
             if (obj is ASN1EncodableBC) {
-                obj = ((ASN1EncodableBC)obj).GetEncodable();
+                return Asn1Dump.DumpAsString(((ASN1EncodableBC)obj).GetEncodable(), b);
             }
             return Asn1Dump.DumpAsString((Asn1Encodable)obj, b);
         }
@@ -81,7 +81,7 @@ namespace iText.Bouncycastle.Asn1.Util {
         /// <summary><inheritDoc/></summary>
         public virtual String DumpAsString(Object obj) {
             if (obj is ASN1EncodableBC) {
-                obj = ((ASN1EncodableBC)obj).GetEncodable();
+                return Asn1Dump.DumpAsString(((ASN1EncodableBC)obj).GetEncodable());
             }
             return Asn1Dump.DumpAsString((Asn1Encodable)obj);
         }

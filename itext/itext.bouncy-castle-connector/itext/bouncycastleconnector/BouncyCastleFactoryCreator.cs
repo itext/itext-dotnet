@@ -113,6 +113,7 @@ namespace iText.Bouncycastleconnector {
             }
         }
 
+        // Do nothing if factory cannot be created.
         private static void CreateFactory(Func<IBouncyCastleFactory> factoryCreator) {
             factory = factoryCreator();
         }
