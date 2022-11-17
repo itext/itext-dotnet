@@ -146,7 +146,6 @@ namespace iText.IO.Font.Otf {
         }
 
         public virtual IList<OpenTableLookup> GetLookups(FeatureRecord feature) {
-            //TODO see getLookups(FeatureRecord[]) method. Is it realy make sense to order features?
             IList<OpenTableLookup> ret = new List<OpenTableLookup>(feature.lookups.Length);
             foreach (int idx in feature.lookups) {
                 ret.Add(lookupList[idx]);

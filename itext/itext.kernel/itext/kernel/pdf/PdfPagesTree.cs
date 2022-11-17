@@ -142,6 +142,10 @@ namespace iText.Kernel.Pdf {
                 }
                 pages[pageNum] = pdfPage;
             }
+            if (pdfPage == null) {
+                throw new PdfException(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                    , pageNum + 1));
+            }
             return pdfPage;
         }
 
@@ -425,11 +429,15 @@ namespace iText.Kernel.Pdf {
                 PdfPages lastPdfPages = null;
                 for (int i = 0; i < kids.Size() && kidsCount > 0; i++) {
                     /*
-                    * We don't release pdfPagesObject in the end of each loop because we enter this for-cycle only when parent has PdfPages kids.
-                    * If all of the kids are PdfPages, then there's nothing to release, because we don't release PdfPages at this point.
+                    * We don't release pdfPagesObject in the end of each loop because we enter this for-cycle only when
+                    * parent has PdfPages kids.
+                    * If all of the kids are PdfPages, then there's nothing to release, because we don't release
+                    * PdfPages at this point.
                     * If there are kids that are instances of PdfPage, then there's no sense in releasing them:
-                    * in this case ParentTreeStructure is being rebuilt by inserting an intermediate PdfPages between the parent and a PdfPage,
-                    * thus modifying the page object by resetting its parent, thus making it impossible to release the object.
+                    * in this case ParentTreeStructure is being rebuilt by inserting an intermediate PdfPages between
+                    * the parent and a PdfPage,
+                    * thus modifying the page object by resetting its parent, thus making it impossible to release the
+                    * object.
                     */
                     PdfDictionary pdfPagesObject = kids.GetAsDictionary(i);
                     if (pdfPagesObject.GetAsArray(PdfName.Kids) == null) {

@@ -333,11 +333,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Gets the page by page number.</summary>
         /// <param name="pageNum">page number.</param>
-        /// <returns>
-        /// page by page number. may return
-        /// <see langword="null"/>
-        /// in case the page tree is broken
-        /// </returns>
+        /// <returns>page by page number.</returns>
         public virtual PdfPage GetPage(int pageNum) {
             CheckClosingStatus();
             return catalog.GetPageTree().GetPage(pageNum);
