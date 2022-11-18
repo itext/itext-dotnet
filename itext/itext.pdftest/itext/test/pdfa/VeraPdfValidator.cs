@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -53,17 +54,17 @@ using NUnit.Framework;
 
 namespace iText.Test.Pdfa {
     public class VeraPdfValidator {
-        private String cliCommand = "java -classpath \"<libPath>\\*\" -Dfile.encoding=UTF8 " +
+        private const String CLI_COMMAND = "java -classpath \"<libPath>\\*\" -Dfile.encoding=UTF8 " +
                                     "-XX:+IgnoreUnrecognizedVMOptions -Dapp.name=\"VeraPDF validation GUI\" " +
                                     "-Dapp.repo=\"<libPath>\" -Dapp.home=\"../\" " +
-                                    "-Dbasedir=\"\" org.verapdf.apps.GreenfieldCliWrapper ";
+                                    "-Dbasedir=\"\" org.verapdf.apps.GreenfieldCliWrapper --addlogs ";
 
         public String Validate(String dest) {
             Process p = new Process();
-            String currentCommand = cliCommand.Replace("<libPath>",
+            String currentCommand = CLI_COMMAND.Replace("<libPath>",
                 TestContext.CurrentContext.TestDirectory + "\\lib\\VeraPdf");
 
-            p.StartInfo = new ProcessStartInfo("cmd", "/c" + currentCommand + dest);
+            p.StartInfo = new ProcessStartInfo("cmd", "/c" + currentCommand + dest );
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
@@ -96,24 +97,35 @@ namespace iText.Test.Pdfa {
                 stdErrOutput
                     .Split('\n').Where(s => !s.StartsWith(javaToolOptionsWarn))
             );
-                
-            if (!String.IsNullOrEmpty(stdErrOutput)) {
-                return "VeraPDF execution failed: " + standardError;
-            } else if (String.IsNullOrEmpty(standardOutput.ToString())) {
-                return "VeraPDF execution failed: Standart output is empty" + standardOutput;
+            
+            if (String.IsNullOrEmpty(standardOutput.ToString())) {
+                return "VeraPDF execution failed: Standard output is empty";
             }
+            
+            VeraPdfReportResult reportResult = GenerateReport(standardOutput.ToString(), dest, true);
 
-            return GenerateReport(standardOutput.ToString(), dest, true);
+            if (reportResult.NonCompliantPdfaCount != 0) {
+                return reportResult.MessageResult;
+            } else if (!String.IsNullOrEmpty(stdErrOutput) && reportResult.VeraPdfLogs == null) {
+                return "The following warnings and errors were logged during validation:" + stdErrOutput;
+            } else if (!String.IsNullOrEmpty(reportResult.VeraPdfLogs)) {
+                Console.WriteLine("The following warnings and errors were logged during validation:\n" + stdErrOutput);
+                return "The following warnings and errors were logged during validation:" + reportResult.VeraPdfLogs;
+            }
+            
+            return reportResult.MessageResult;
         }
 
-        private String GenerateReport(String output, String dest, bool toReportSuccess) {
+        private VeraPdfReportResult GenerateReport(String output, String dest, bool toReportSuccess) {
+            VeraPdfReportResult veraPdfReportResult = new VeraPdfReportResult();
             XmlDocument document = new XmlDocument();
 
             try {
                 document.LoadXml(output.Trim());
             }
             catch (XmlException exc) {
-                return "VeraPDF verification results parsing failed: " + exc.Message;
+                veraPdfReportResult.MessageResult = "VeraPDF verification results parsing failed: " + exc.Message;
+                return veraPdfReportResult;
             }
 
             String reportDest = dest.Substring(0, dest.Length - ".pdf".Length) + ".xml";
@@ -123,19 +135,39 @@ namespace iText.Test.Pdfa {
             if (!detailsAttributes["failedRules"].Value.Equals("0")
                 || !detailsAttributes["failedChecks"].Value.Equals("0")) {
                 WriteToFile(output, reportDest);
-                return "VeraPDF verification failed. See verification results: " 
-                       + UrlUtil.GetNormalizedFileUriString(reportDest);
+                veraPdfReportResult.MessageResult = "VeraPDF verification failed. See verification results: "
+                                                    + UrlUtil.GetNormalizedFileUriString(reportDest);
+                return veraPdfReportResult;
+            }
+            
+            detailsAttributes = document.GetElementsByTagName("validationReports")[0].Attributes;
+            veraPdfReportResult.NonCompliantPdfaCount = int.Parse(detailsAttributes["nonCompliant"].InnerText);
+            if (veraPdfReportResult.NonCompliantPdfaCount != 0) {
+                veraPdfReportResult.MessageResult = "VeraPDF verification failed. See verification results: "
+                                                    + UrlUtil.GetNormalizedFileUriString(reportDest);
+                return veraPdfReportResult;
             }
 
             if (toReportSuccess) {
                 WriteToFile(output, reportDest);
                 Console.WriteLine("VeraPDF verification finished. See verification report: "
                                   + UrlUtil.GetNormalizedFileUriString(reportDest));
+                
+                var logs = new List<string>();
+                XmlNodeList elements = document.GetElementsByTagName("logMessage");
+                foreach (XmlElement element in elements) {
+                    logs.Add(element.Attributes["level"].Value + ": " + element.InnerText);
+                }
+                logs.Sort();
+
+                foreach (String log in logs) {
+                    veraPdfReportResult.VeraPdfLogs += "\n" + log;
+                }
             }
 
-            return null;
+            return veraPdfReportResult;
         }
-
+        
         private void WriteToFile(String output, String reportDest) {
             using (FileStream stream = File.Create(reportDest)) {
                 stream.Write(new UTF8Encoding(true).GetBytes(output),

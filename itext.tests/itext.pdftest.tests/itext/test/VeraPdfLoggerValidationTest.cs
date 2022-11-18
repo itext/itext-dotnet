@@ -64,8 +64,11 @@ namespace iText.Test {
             String fileNameWithoutWarnings = "cmp_pdfA2b_checkValidatorLogsTest.pdf";
             FileUtil.Copy(SOURCE_FOLDER + fileNameWithWarnings, DESTINATION_FOLDER + fileNameWithWarnings);
             FileUtil.Copy(SOURCE_FOLDER + fileNameWithoutWarnings, DESTINATION_FOLDER + fileNameWithoutWarnings);
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + fileNameWithWarnings
-                ));
+            String expectedWarningsForFileWithWarnings = "The following warnings and errors were logged during validation:\n"
+                 + "WARNING: Invalid embedded cff font. Charset range exceeds number of glyphs\n" + "WARNING: Missing OutputConditionIdentifier in an output intent dictionary\n"
+                 + "WARNING: The Top DICT does not begin with ROS operator";
+            NUnit.Framework.Assert.AreEqual(expectedWarningsForFileWithWarnings, new VeraPdfValidator().Validate(DESTINATION_FOLDER
+                 + fileNameWithWarnings));
             //We check that the logs are empty after the first check
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + fileNameWithoutWarnings
                 ));
