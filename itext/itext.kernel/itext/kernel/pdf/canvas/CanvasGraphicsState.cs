@@ -196,214 +196,497 @@ namespace iText.Kernel.Pdf.Canvas {
             ctm = newCtm.Multiply(ctm);
         }
 
+        /// <summary>Gets the current fill color.</summary>
+        /// <returns>
+        /// The canvas graphics state fill
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// </returns>
         public virtual Color GetFillColor() {
             return fillColor;
         }
 
+        /// <summary>
+        /// Sets the current fill
+        /// <see cref="iText.Kernel.Colors.Color">color</see>.
+        /// </summary>
+        /// <param name="fillColor">The new fill color.</param>
         public virtual void SetFillColor(Color fillColor) {
             this.fillColor = fillColor;
         }
 
+        /// <summary>Gets the current stroke color.</summary>
+        /// <returns>
+        /// The canvas graphics state stroke
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// </returns>
         public virtual Color GetStrokeColor() {
             return strokeColor;
         }
 
+        /// <summary>
+        /// Sets the current stroke
+        /// <see cref="iText.Kernel.Colors.Color">color</see>.
+        /// </summary>
+        /// <param name="strokeColor">The new stroke color.</param>
         public virtual void SetStrokeColor(Color strokeColor) {
             this.strokeColor = strokeColor;
         }
 
+        /// <summary>Gets the current line width.</summary>
+        /// <returns>The canvas graphics state line width.</returns>
         public virtual float GetLineWidth() {
             return lineWidth;
         }
 
+        /// <summary>Sets the current line width.</summary>
+        /// <param name="lineWidth">The new line width.</param>
         public virtual void SetLineWidth(float lineWidth) {
             this.lineWidth = lineWidth;
         }
 
+        /// <summary>Gets the current line cap style, see ISO-320001, 8.4.3.3 Line Cap Style.</summary>
+        /// <returns>The current cap style.</returns>
+        /// <seealso cref="PdfCanvas.SetLineCapStyle(int)">for more info.</seealso>
         public virtual int GetLineCapStyle() {
             return lineCapStyle;
         }
 
+        /// <summary>Sets the current line cap style, see ISO-320001, 8.4.3.3 Line Cap Style.</summary>
+        /// <param name="lineCapStyle">The new cap style value.</param>
+        /// <seealso cref="PdfCanvas.SetLineCapStyle(int)">for more info.</seealso>
         public virtual void SetLineCapStyle(int lineCapStyle) {
             this.lineCapStyle = lineCapStyle;
         }
 
+        /// <summary>Gets the current line join style, see ISO-320001, 8.4.3.4 Line Join Style.</summary>
+        /// <returns>The current line join style.</returns>
+        /// <seealso cref="PdfCanvas.SetLineJoinStyle(int)">for more info.</seealso>
         public virtual int GetLineJoinStyle() {
             return lineJoinStyle;
         }
 
+        /// <summary>Sets the current line join style, see ISO-320001, 8.4.3.4 Line Join Style.</summary>
+        /// <param name="lineJoinStyle">The new line join style value.</param>
+        /// <seealso cref="PdfCanvas.SetLineJoinStyle(int)">for more info.</seealso>
         public virtual void SetLineJoinStyle(int lineJoinStyle) {
             this.lineJoinStyle = lineJoinStyle;
         }
 
+        /// <summary>Gets the current miter limit, see ISO-320001, 8.4.3.5 Miter Limit.</summary>
+        /// <returns>The current miter limit.</returns>
+        /// <seealso cref="PdfCanvas.SetMiterLimit(float)">for more info.</seealso>
         public virtual float GetMiterLimit() {
             return miterLimit;
         }
 
+        /// <summary>Sets the current miter limit, see ISO-320001, 8.4.3.5 Miter Limit.</summary>
+        /// <param name="miterLimit">The new miter limit value.</param>
+        /// <seealso cref="PdfCanvas.SetMiterLimit(float)">for more info.</seealso>
         public virtual void SetMiterLimit(float miterLimit) {
             this.miterLimit = miterLimit;
         }
 
+        /// <summary>
+        /// Gets line dash pattern value,
+        /// <c>D</c>
+        /// key, see ISO-320001, 8.4.3.6 Line Dash Pattern,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.SetDashPattern(iText.Kernel.Pdf.PdfArray)"></see>.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>PdfArray</c>
+        /// , that represents line dash pattern.
+        /// </returns>
         public virtual PdfArray GetDashPattern() {
             return dashPattern;
         }
 
+        /// <summary>
+        /// Sets line dash pattern value,
+        /// <c>D</c>
+        /// key, see ISO-320001, 8.4.3.6 Line Dash Pattern,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.SetDashPattern(iText.Kernel.Pdf.PdfArray)"></see>.
+        /// </summary>
+        /// <param name="dashPattern">
+        /// a
+        /// <c>PdfArray</c>
+        /// , that represents line dash pattern.
+        /// </param>
         public virtual void SetDashPattern(PdfArray dashPattern) {
             this.dashPattern = dashPattern;
         }
 
+        /// <summary>
+        /// Gets the rendering intent, see
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetRenderingIntent()"/>.
+        /// </summary>
+        /// <returns>the rendering intent name.</returns>
         public virtual PdfName GetRenderingIntent() {
             return renderingIntent;
         }
 
+        /// <summary>
+        /// Sets the rendering intent, see
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetRenderingIntent()"/>.
+        /// </summary>
+        /// <param name="renderingIntent">the rendering intent name.</param>
         public virtual void SetRenderingIntent(PdfName renderingIntent) {
             this.renderingIntent = renderingIntent;
         }
 
+        /// <summary>Gets the font size.</summary>
+        /// <returns>The current font size.</returns>
         public virtual float GetFontSize() {
             return fontSize;
         }
 
+        /// <summary>Sets the font size.</summary>
+        /// <param name="fontSize">The new font size.</param>
         public virtual void SetFontSize(float fontSize) {
             this.fontSize = fontSize;
         }
 
+        /// <summary>
+        /// Gets the current
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
+        /// </summary>
+        /// <returns>
+        /// The current
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
+        /// </returns>
         public virtual PdfFont GetFont() {
             return font;
         }
 
+        /// <summary>
+        /// Sets the current
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
+        /// </summary>
+        /// <param name="font">
+        /// The new
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
+        /// </param>
         public virtual void SetFont(PdfFont font) {
             this.font = font;
         }
 
+        /// <summary>
+        /// Gets the current Text Rendering Mode, see ISO-320001, 9.3.6 Text Rendering Mode,
+        /// <see cref="PdfCanvas.SetTextRenderingMode(int)"/>.
+        /// </summary>
+        /// <returns>The current text rendering mode.</returns>
         public virtual int GetTextRenderingMode() {
             return textRenderingMode;
         }
 
+        /// <summary>
+        /// Sets the current Text Rendering Mode, see ISO-320001, 9.3.6 Text Rendering Mode,
+        /// <see cref="PdfCanvas.SetTextRenderingMode(int)"/>.
+        /// </summary>
+        /// <param name="textRenderingMode">The new text rendering mode.</param>
         public virtual void SetTextRenderingMode(int textRenderingMode) {
             this.textRenderingMode = textRenderingMode;
         }
 
+        /// <summary>
+        /// Get the current Text Rise, see ISO-320001, 9.3.7 Text Rise,
+        /// <see cref="PdfCanvas.SetTextRise(float)"/>.
+        /// </summary>
+        /// <returns>The current text rise.</returns>
         public virtual float GetTextRise() {
             return textRise;
         }
 
+        /// <summary>
+        /// Set the current Text Rise, see ISO-320001, 9.3.7 Text Rise
+        /// <see cref="PdfCanvas.SetTextRise(float)"/>.
+        /// </summary>
+        /// <param name="textRise">The new text rise value.</param>
         public virtual void SetTextRise(float textRise) {
             this.textRise = textRise;
         }
 
+        /// <summary>
+        /// Gets the current Flatness Tolerance, see ISO-320001, 10.6.2 Flatness Tolerance,
+        /// <see cref="PdfCanvas.SetFlatnessTolerance(float)"/>.
+        /// </summary>
+        /// <returns>The current flatness tolerance.</returns>
         public virtual float GetFlatnessTolerance() {
             return flatnessTolerance;
         }
 
+        /// <summary>
+        /// Sets the current Flatness Tolerance, see ISO-320001, 10.6.2 Flatness Tolerance,
+        /// <see cref="PdfCanvas.SetFlatnessTolerance(float)"/>.
+        /// </summary>
+        /// <param name="flatnessTolerance">The new flatness tolerance value.</param>
         public virtual void SetFlatnessTolerance(float flatnessTolerance) {
             this.flatnessTolerance = flatnessTolerance;
         }
 
+        /// <summary>
+        /// Sets the Word Spacing, see ISO-320001, 9.3.3 Word Spacing,
+        /// <see cref="PdfCanvas.SetWordSpacing(float)"/>.
+        /// </summary>
+        /// <param name="wordSpacing">The new word spacing value.</param>
         public virtual void SetWordSpacing(float wordSpacing) {
             this.wordSpacing = wordSpacing;
         }
 
+        /// <summary>
+        /// Gets the current Word Spacing, see ISO-320001, 9.3.3 Word Spacing,
+        /// <see cref="PdfCanvas.SetWordSpacing(float)"/>
+        /// </summary>
+        /// <returns>The current word spacing</returns>
         public virtual float GetWordSpacing() {
             return wordSpacing;
         }
 
+        /// <summary>
+        /// Sets the Character Spacing, see ISO-320001, 9.3.2 Character Spacing,
+        /// <see cref="PdfCanvas.SetCharacterSpacing(float)"/>
+        /// </summary>
+        /// <param name="characterSpacing">The new character spacing value.</param>
         public virtual void SetCharSpacing(float characterSpacing) {
             this.charSpacing = characterSpacing;
         }
 
+        /// <summary>
+        /// Gets the current Character Spacing, see ISO-320001, 9.3.2 Character Spacing,
+        /// <see cref="PdfCanvas.SetCharacterSpacing(float)"/>.
+        /// </summary>
+        /// <returns>The current character spacing value.</returns>
         public virtual float GetCharSpacing() {
             return charSpacing;
         }
 
+        /// <summary>
+        /// Gets the current Leading, see ISO-320001, 9.3.5 Leading,
+        /// <see cref="PdfCanvas.SetLeading(float)"/>.
+        /// </summary>
+        /// <returns>The current leading value.</returns>
         public virtual float GetLeading() {
             return leading;
         }
 
+        /// <summary>
+        /// Sets the  Leading, see ISO-320001, 9.3.5 Leading,
+        /// <see cref="PdfCanvas.SetLeading(float)"/>.
+        /// </summary>
+        /// <param name="leading">The new leading value.</param>
         public virtual void SetLeading(float leading) {
             this.leading = leading;
         }
 
+        /// <summary>Gets the current Horizontal Scaling percentage, see ISO-320001, 9.3.4 Horizontal Scaling.</summary>
+        /// <remarks>
+        /// Gets the current Horizontal Scaling percentage, see ISO-320001, 9.3.4 Horizontal Scaling.
+        /// <see cref="PdfCanvas.SetHorizontalScaling(float)"/>.
+        /// </remarks>
+        /// <returns>The current horizontal scaling factor.</returns>
         public virtual float GetHorizontalScaling() {
             return scale;
         }
 
+        /// <summary>
+        /// Sets the Horizontal Scaling percentage for text, see ISO-320001, 9.3.4 Horizontal Scaling,
+        /// <see cref="PdfCanvas.SetHorizontalScaling(float)"/>.
+        /// </summary>
+        /// <param name="scale">The new horizontal scaling factor.</param>
         public virtual void SetHorizontalScaling(float scale) {
             this.scale = scale;
         }
 
+        /// <summary>
+        /// Get the Stroke Overprint flag, see ISO 32000-1, 8.6.7 Overprint Control
+        /// and 11.7.4.5 Summary of Overprinting Behaviour,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetStrokeOverprintFlag()"/>.
+        /// </summary>
+        /// <returns>The current stroke overprint flag.</returns>
         public virtual bool GetStrokeOverprint() {
             return strokeOverprint;
         }
 
+        /// <summary>
+        /// Get the Fill Overprint flag, see ISO 32000-1, 8.6.7 Overprint Control
+        /// and 11.7.4.5 Summary of Overprinting Behaviour,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetFillOverprintFlag()"/>.
+        /// </summary>
+        /// <returns>The current stroke overprint flag.</returns>
         public virtual bool GetFillOverprint() {
             return fillOverprint;
         }
 
+        /// <summary>
+        /// Get the Overprint Mode, see ISO 32000-1, 8.6.7 Overprint Control
+        /// and 11.7.4.5 Summary of Overprinting Behaviour,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetOverprintMode()"/>.
+        /// </summary>
+        /// <returns>The current overprint mode.</returns>
         public virtual int GetOverprintMode() {
             return overprintMode;
         }
 
+        /// <summary>
+        /// Gets the current Black-generation function, see ISO32000-1, 11.7.5.3 Rendering Intent and Colour Conversions and
+        /// Table 58 – Entries in a Graphics State Parameter Dictionary,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetBlackGenerationFunction()"/>.
+        /// </summary>
+        /// <returns>the current black-generation function.</returns>
         public virtual PdfObject GetBlackGenerationFunction() {
             return blackGenerationFunction;
         }
 
+        /// <summary>
+        /// Gets the current overruling Black-generation function,
+        /// see ISO32000-1, 11.7.5.3 Rendering Intent and Colour Conversions and
+        /// Table 58 – Entries in a Graphics State Parameter Dictionary,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetBlackGenerationFunction2()"/>.
+        /// </summary>
+        /// <returns>the current overruling black-generation function.</returns>
         public virtual PdfObject GetBlackGenerationFunction2() {
             return blackGenerationFunction2;
         }
 
+        /// <summary>
+        /// Gets the current Undercolor-removal function,
+        /// see ISO32000-1, 11.7.5.3 Rendering Intent and Colour Conversions and
+        /// Table 58 – Entries in a Graphics State Parameter Dictionary
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetUndercolorRemovalFunction()"/>.
+        /// </summary>
+        /// <returns>the current black-generation function.</returns>
         public virtual PdfObject GetUnderColorRemovalFunction() {
             return underColorRemovalFunction;
         }
 
+        /// <summary>
+        /// Gets the current overruling Undercolor-removal function,
+        /// see ISO32000-1, 11.7.5.3 Rendering Intent and Colour Conversions and
+        /// Table 58 – Entries in a Graphics State Parameter Dictionary,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetUndercolorRemovalFunction2()"/>.
+        /// </summary>
+        /// <returns>the current undercolor-removal function.</returns>
         public virtual PdfObject GetUnderColorRemovalFunction2() {
             return underColorRemovalFunction2;
         }
 
+        /// <summary>
+        /// Gets the current Transfer function,
+        /// see ISO32000-1, 11.7.5.3 Rendering Intent and Colour Conversions and
+        /// Table 58 – Entries in a Graphics State Parameter Dictionary,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetTransferFunction()"/>.
+        /// </summary>
+        /// <returns>the current transfer function.</returns>
         public virtual PdfObject GetTransferFunction() {
             return transferFunction;
         }
 
+        /// <summary>
+        /// Gets the current overruling transer function,
+        /// see ISO32000-1, 11.7.5.3 Rendering Intent and Colour Conversions and
+        /// Table 58 – Entries in a Graphics State Parameter Dictionary,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetTransferFunction2()"/>.
+        /// </summary>
+        /// <returns>the current overruling transer function.</returns>
         public virtual PdfObject GetTransferFunction2() {
             return transferFunction2;
         }
 
+        /// <summary>
+        /// Gets the current halftone ,
+        /// see ISO32000-1, 10.5 Halftones and Table 58 – Entries in a Graphics State Parameter Dictionary,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetHalftone()"/>.
+        /// </summary>
+        /// <returns>the current halftone.</returns>
         public virtual PdfObject GetHalftone() {
             return halftone;
         }
 
+        /// <summary>
+        /// Gets the current Smoothness Tolerance,
+        /// see ISO32000-1, 10.6.3 Smoothness Tolerance and Table 58 – Entries in a Graphics State Parameter Dictionary,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetSmothnessTolerance()"/>.
+        /// </summary>
+        /// <returns>the current smoothness tolerance function.</returns>
         public virtual float? GetSmoothnessTolerance() {
             return smoothnessTolerance;
         }
 
+        /// <summary>
+        /// Gets the current Apply Automatic Stroke Adjustment flag, see ISO 32000-1, 10.6.5 Automatic Stroke Adjustment,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetAutomaticStrokeAdjustmentFlag()"/>.
+        /// </summary>
+        /// <returns>The current automatic stroke adjustment flag.</returns>
         public virtual bool GetAutomaticStrokeAdjustment() {
             return automaticStrokeAdjustment;
         }
 
+        /// <summary>
+        /// Gets the current Blend Mode, see ISO 32000-1, 11.3.5 Blend Mode and
+        /// 11.6.3 Specifying Blending Colour Space and Blend Mode,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetBlendMode()"/>.
+        /// </summary>
+        /// <returns>The current blend mode.</returns>
         public virtual PdfObject GetBlendMode() {
             return blendMode;
         }
 
+        /// <summary>
+        /// Gets the current Soft Mask, see ISO 32000-1, 11.3.7.2 Source Shape and Opacity,
+        /// 11.6.4.3 Mask Shape and Opacity and 11.6.5.2 Soft-Mask Dictionaries,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetSoftMask()"/>.
+        /// </summary>
+        /// <returns>The current soft mask.</returns>
         public virtual PdfObject GetSoftMask() {
             return softMask;
         }
 
+        /// <summary>
+        /// Gets the current Stroke Opacity value, see ISO 32000-1, 11.3.7.2 Source Shape and Opacity
+        /// and 11.6.4.4 Constant Shape and Opacity,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetStrokeOpacity()"/>.
+        /// </summary>
+        /// <returns>the current stroke opacity value.</returns>
         public virtual float GetStrokeOpacity() {
             return strokeAlpha;
         }
 
+        /// <summary>
+        /// Gets the current Fill Opacity value, see ISO 32000-1, 11.3.7.2 Source Shape and Opacity
+        /// and 11.6.4.4 Constant Shape and Opacity,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetFillOpacity()"/>.
+        /// </summary>
+        /// <returns>the current fill opacity value.</returns>
         public virtual float GetFillOpacity() {
             return fillAlpha;
         }
 
+        /// <summary>
+        /// Gets the current Alpha is shape flag, see ISO 32000-1, 11.3.7.2 Source Shape and Opacity and
+        /// 11.6.4.3 Mask Shape and Opacity,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetAlphaSourceFlag()"/>
+        /// .
+        /// </summary>
+        /// <returns>The current alpha is shape flag.</returns>
         public virtual bool GetAlphaIsShape() {
             return alphaIsShape;
         }
 
+        /// <summary>
+        /// Gets the current Text Knockout flag, see ISO 32000-1, 9.3.8 Text Knockout,
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState.GetTextKnockoutFlag()"/>.
+        /// </summary>
+        /// <returns>The current text knockout flag.</returns>
         public virtual bool GetTextKnockout() {
             return textKnockout;
         }
 
+        /// <summary>
+        /// Gets the current Halftone Phase, see Portable Document Format Reference Manual Version 1.2,
+        /// 7.12 Extended graphics states and PostScript Language Reference Manual, Second Edition,
+        /// 7.3.3, Halftone Phase.
+        /// </summary>
+        /// <returns>the current halftone phase.</returns>
         public virtual PdfObject GetHTP() {
             return htp;
         }
