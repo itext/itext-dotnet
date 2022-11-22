@@ -26,10 +26,12 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -63,6 +65,7 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void SignEncryptedPdfTest() {
             String srcFile = SOURCE_FOLDER + "encrypted.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_signedEncrypted.pdf";

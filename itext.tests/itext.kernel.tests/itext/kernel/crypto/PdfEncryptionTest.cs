@@ -42,11 +42,15 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using NUnit.Framework;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.IO.Font.Constants;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Utils;
@@ -75,8 +79,10 @@ namespace iText.Kernel.Crypto {
     /// Extension (JCE) Unlimited Strength Jurisdiction Policy Files. These JARs
     /// are available for download from http://java.oracle.com/ in eligible countries.
     /// </remarks>
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfEncryptionTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/crypto/PdfEncryptionTest/";
 
@@ -110,6 +116,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordStandard128() {
             String filename = "encryptWithPasswordStandard128.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_128;
@@ -117,6 +124,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordStandard40() {
             String filename = "encryptWithPasswordStandard40.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_40;
@@ -124,6 +132,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordStandard128NoCompression() {
             String filename = "encryptWithPasswordStandard128NoCompression.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_128;
@@ -131,6 +140,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordStandard40NoCompression() {
             String filename = "encryptWithPasswordStandard40NoCompression.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_40;
@@ -138,6 +148,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordAes128() {
             String filename = "encryptWithPasswordAes128.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128;
@@ -145,6 +156,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordAes256() {
             String filename = "encryptWithPasswordAes256.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
@@ -152,6 +164,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordAes128NoCompression() {
             String filename = "encryptWithPasswordAes128NoCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128;
@@ -159,6 +172,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordAes256NoCompression() {
             String filename = "encryptWithPasswordAes256NoCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
@@ -166,6 +180,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithCertificateStandard128() {
             String filename = "encryptWithCertificateStandard128.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_128;
@@ -173,6 +188,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithCertificateStandard40() {
             String filename = "encryptWithCertificateStandard40.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_40;
@@ -180,6 +196,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithCertificateStandard128NoCompression() {
             String filename = "encryptWithCertificateStandard128NoCompression.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_128;
@@ -187,6 +204,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithCertificateStandard40NoCompression() {
             String filename = "encryptWithCertificateStandard40NoCompression.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_40;
@@ -194,6 +212,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithCertificateAes128() {
             String filename = "encryptWithCertificateAes128.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128;
@@ -201,6 +220,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithCertificateAes256() {
             String filename = "encryptWithCertificateAes256.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
@@ -208,6 +228,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithCertificateAes128NoCompression() {
             String filename = "encryptWithCertificateAes128NoCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128;
@@ -215,6 +236,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithCertificateAes256NoCompression() {
             String filename = "encryptWithCertificateAes256NoCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
@@ -222,6 +244,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void OpenEncryptedDocWithoutPassword() {
             using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf")) {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(BadPasswordException), () => new PdfDocument(reader));
@@ -230,6 +253,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void OpenEncryptedDocWithWrongPassword() {
             using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf", new ReaderProperties
                 ().SetPassword("wrong_password".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1)))) {
@@ -248,6 +272,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void OpenEncryptedDocWithoutPrivateKey() {
             using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
                 ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), null))) {
@@ -257,6 +282,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void OpenEncryptedDocWithWrongCertificate() {
             using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
                 ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), GetPrivateKey()))) {
@@ -266,6 +292,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void OpenEncryptedDocWithWrongPrivateKey() {
             using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
                 ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), PemFileHelper.ReadPrivateKeyFromPemFile(new 
@@ -276,6 +303,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void OpenEncryptedDocWithWrongCertificateAndPrivateKey() {
             using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
                 ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), PemFileHelper.ReadPrivateKeyFromPemFile
@@ -286,6 +314,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void MetadataReadingInEncryptedDoc() {
             PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPlainMetadata.pdf", new ReaderProperties().SetPassword
                 (OWNER));
@@ -298,6 +327,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void CopyEncryptedDocument() {
             PdfDocument srcDoc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new 
                 ReaderProperties().SetPublicKeySecurityParams(GetPublicCertificate(CERT), GetPrivateKey())));
@@ -316,6 +346,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void OpenDocNoUserPassword() {
             String fileName = "noUserPassword.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + fileName));
@@ -324,6 +355,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StampDocNoUserPassword() {
             String fileName = "stampedNoPassword.pdf";
             using (PdfReader reader = new PdfReader(sourceFolder + "noUserPassword.pdf")) {
@@ -336,6 +368,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordAes128EmbeddedFilesOnly() {
             String filename = "encryptWithPasswordAes128EmbeddedFilesOnly.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128 | EncryptionConstants.EMBEDDED_FILES_ONLY;
@@ -362,6 +395,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256Pdf2NotEncryptMetadata() {
             String filename = "encryptAes256Pdf2NotEncryptMetadata.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256 | EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
@@ -369,6 +403,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256Pdf2NotEncryptMetadata02() {
             String filename = "encryptAes256Pdf2NotEncryptMetadata02.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256 | EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
@@ -376,6 +411,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256EncryptedStampingPreserve() {
             String filename = "encryptAes256EncryptedStampingPreserve.pdf";
             String src = sourceFolder + "encryptedWithPlainMetadata.pdf";
@@ -392,6 +428,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256EncryptedStampingUpdate() {
             String filename = "encryptAes256EncryptedStampingUpdate.pdf";
             String src = sourceFolder + "encryptedWithPlainMetadata.pdf";
@@ -409,6 +446,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256FullCompression() {
             String filename = "encryptAes256FullCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
@@ -416,6 +454,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordAes256Pdf2() {
             String filename = "encryptWithPasswordAes256Pdf2.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
@@ -423,6 +462,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [LogMessage(VersionConforming.DEPRECATED_ENCRYPTION_ALGORITHMS)]
         public virtual void EncryptWithPasswordAes128Pdf2() {
             String filename = "encryptWithPasswordAes128Pdf2.pdf";
@@ -431,6 +471,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [LogMessage(VersionConforming.DEPRECATED_ENCRYPTION_ALGORITHMS)]
         public virtual void StampAndUpdateVersionPreserveStandard40() {
             String filename = "stampAndUpdateVersionPreserveStandard40.pdf";
@@ -442,6 +483,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [LogMessage(VersionConforming.DEPRECATED_AES256_REVISION)]
         public virtual void StampAndUpdateVersionPreserveAes256() {
             String filename = "stampAndUpdateVersionPreserveAes256.pdf";
@@ -453,6 +495,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StampAndUpdateVersionNewAes256() {
             String filename = "stampAndUpdateVersionNewAes256.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordAes256.pdf", new ReaderProperties
@@ -463,6 +506,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256Pdf2Permissions() {
             String filename = "encryptAes256Pdf2Permissions.pdf";
             int permissions = EncryptionConstants.ALLOW_FILL_IN | EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants
@@ -477,6 +521,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordAes128NoMetadataCompression() {
             String srcFilename = "srcEncryptWithPasswordAes128NoMetadataCompression.pdf";
             PdfReader reader = new PdfReader(sourceFolder + srcFilename, new ReaderProperties());
@@ -496,6 +541,15 @@ namespace iText.Kernel.Crypto {
             NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CheckMD5LogAbsenceInUnapprovedMode() {
+            NUnit.Framework.Assume.That(!FACTORY.IsInApprovedOnlyMode());
+            String fileName = "noUserPassword.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + fileName))) {
+            }
+        }
+
+        // this test checks log message absence
         public virtual void EncryptWithPassword2(String filename, int encryptionType, int compression) {
             EncryptWithPassword2(filename, encryptionType, compression, false);
         }

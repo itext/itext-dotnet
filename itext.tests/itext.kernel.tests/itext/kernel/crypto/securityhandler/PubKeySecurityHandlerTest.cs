@@ -23,13 +23,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.Kernel.Crypto;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Crypto.Securityhandler {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class PubKeySecurityHandlerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void ComputeGlobalKeyDecryptTest() {
             PubKeySecurityHandler securityHandler = new PubKeySecurityHandlerTest.TestSecurityHandler();
             NUnit.Framework.Assert.AreEqual(20, securityHandler.ComputeGlobalKey("SHA1", false).Length);

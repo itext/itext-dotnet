@@ -43,9 +43,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Crypto {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -155,6 +157,7 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void Aes256EncryptedPdfWithUnicodeBasedPassword() {
             String fileNameTemplate = "unicodePassword_";
             foreach (KeyValuePair<String, UnicodeBasedPasswordEncryptionTest.SaslPreparedString> entry in nameToSaslPrepared

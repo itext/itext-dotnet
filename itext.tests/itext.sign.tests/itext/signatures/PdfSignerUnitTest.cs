@@ -30,12 +30,14 @@ using iText.Forms.Fields;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Pdfa;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Signatures {
     [NUnit.Framework.Category("BouncyCastleUnitTest")]
@@ -71,6 +73,7 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void CreateNewSignatureFormFieldInvisibleAnnotationTest() {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateEncryptedDocumentWithoutWidgetAnnotation
                 ()), new ReaderProperties().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties()
@@ -86,6 +89,7 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void CreateNewSignatureFormFieldNotInvisibleAnnotationTest() {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateEncryptedDocumentWithoutWidgetAnnotation
                 ()), new ReaderProperties().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties()
@@ -140,6 +144,7 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void PopulateExistingSignatureFormFieldInvisibleAnnotationTest() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument document = new PdfDocument(new PdfWriter(outputStream, new WriterProperties().SetStandardEncryption
@@ -166,6 +171,7 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void PopulateExistingSignatureFormFieldNotInvisibleAnnotationTest() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument document = new PdfDocument(new PdfWriter(outputStream, new WriterProperties().SetStandardEncryption

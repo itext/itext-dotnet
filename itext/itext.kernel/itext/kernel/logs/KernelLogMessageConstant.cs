@@ -64,6 +64,9 @@ namespace iText.Kernel.Logs {
         public const String JPXDECODE_FILTER_DECODING = "JPXDecode filter decoding into the bit map is not supported. The stream data would be left in JPEG2000 "
              + "format";
 
+        public const String MD5_IS_NOT_FIPS_COMPLIANT = "MD5 hash algorithm is not FIPS compliant. However we still use this algorithm "
+             + "since it is required according to the PDF specification.";
+
         public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} color space";
 
         /// <summary>
