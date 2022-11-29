@@ -1422,48 +1422,73 @@ namespace iText.Kernel.Pdf {
             tokens.Seek(0);
             trailer = null;
             ByteBuffer buffer = new ByteBuffer(24);
-            PdfTokenizer lineTokenizer = new PdfTokenizer(new RandomAccessFileOrArray(new PdfReader.ReusableRandomAccessSource
-                (buffer)));
-            for (; ; ) {
-                long pos = tokens.GetPosition();
-                buffer.Reset();
-                // added boolean because of mailing list issue (17 Feb. 2014)
-                if (!tokens.ReadLineSegment(buffer, true)) {
-                    break;
-                }
-                if (buffer.Get(0) == 't') {
-                    if (!PdfTokenizer.CheckTrailer(buffer)) {
-                        continue;
+            using (PdfTokenizer lineTokenizer = new PdfTokenizer(new RandomAccessFileOrArray(new PdfReader.ReusableRandomAccessSource
+                (buffer)))) {
+                long? trailerIndex = null;
+                for (; ; ) {
+                    long pos = tokens.GetPosition();
+                    buffer.Reset();
+                    // added boolean because of mailing list issue (17 Feb. 2014)
+                    if (!tokens.ReadLineSegment(buffer, true)) {
+                        break;
                     }
-                    tokens.Seek(pos);
-                    tokens.NextToken();
-                    pos = tokens.GetPosition();
-                    try {
-                        PdfDictionary dic = (PdfDictionary)ReadObject(false);
-                        if (dic.Get(PdfName.Root, false) != null) {
-                            trailer = dic;
+                    if (buffer.Get(0) == 't') {
+                        if (!PdfTokenizer.CheckTrailer(buffer)) {
+                            continue;
+                        }
+                        tokens.Seek(pos);
+                        tokens.NextToken();
+                        pos = tokens.GetPosition();
+                        if (IsCurrentObjectATrailer()) {
+                            // if the pdf is linearized it is possible that the trailer has been read
+                            // before the actual objects it refers to this causes the trailer to have
+                            // objects in READING state that's why we keep track of the position  of the
+                            // trailer and then asign it when the whole pdf has been loaded
+                            trailerIndex = pos;
                         }
                         else {
                             tokens.Seek(pos);
                         }
                     }
-                    catch (Exception) {
-                        tokens.Seek(pos);
-                    }
-                }
-                else {
-                    if (buffer.Get(0) >= '0' && buffer.Get(0) <= '9') {
-                        int[] obj = PdfTokenizer.CheckObjectStart(lineTokenizer);
-                        if (obj == null) {
-                            continue;
-                        }
-                        int num = obj[0];
-                        int gen = obj[1];
-                        if (xref.Get(num) == null || xref.Get(num).GetGenNumber() <= gen) {
-                            xref.Add(new PdfIndirectReference(pdfDocument, num, gen, pos));
+                    else {
+                        if (buffer.Get(0) >= '0' && buffer.Get(0) <= '9') {
+                            int[] obj = PdfTokenizer.CheckObjectStart(lineTokenizer);
+                            if (obj == null) {
+                                continue;
+                            }
+                            int num = obj[0];
+                            int gen = obj[1];
+                            if (xref.Get(num) == null || xref.Get(num).GetGenNumber() <= gen) {
+                                xref.Add(new PdfIndirectReference(pdfDocument, num, gen, pos));
+                            }
                         }
                     }
                 }
+                // now that the document has been read fully the underlying trailer references won't be
+                // in READING state when the pdf has been linearised now we can assign the trailer
+                // and it will have the right references
+                SetTrailerFromTrailerIndex(trailerIndex);
+            }
+        }
+
+        private bool IsCurrentObjectATrailer() {
+            try {
+                PdfDictionary dic = (PdfDictionary)ReadObject(false);
+                return dic.Get(PdfName.Root, false) != null;
+            }
+            catch (Exception) {
+                return false;
+            }
+        }
+
+        private void SetTrailerFromTrailerIndex(long? trailerIndex) {
+            if (trailerIndex == null) {
+                throw new PdfException(KernelExceptionMessageConstant.TRAILER_NOT_FOUND);
+            }
+            tokens.Seek((long)trailerIndex);
+            PdfDictionary dic = (PdfDictionary)ReadObject(false);
+            if (dic.Get(PdfName.Root, false) != null) {
+                trailer = dic;
             }
             if (trailer == null) {
                 throw new PdfException(KernelExceptionMessageConstant.TRAILER_NOT_FOUND);
