@@ -742,8 +742,10 @@ namespace iText.Signatures {
             if (certificationLevel > 0) {
                 AddDocMDP(cryptoDictionary);
             }
-            if (fieldLock != null) {
+            if (fieldLock != null)
+            {
                 AddFieldMDP(cryptoDictionary, fieldLock);
+                LockWholeDocument(fieldLock);
             }
             if (signatureEvent != null) {
                 signatureEvent.GetSignatureDictionary(cryptoDictionary);
@@ -811,6 +813,40 @@ namespace iText.Signatures {
                     }
                     throw;
                 }
+            }
+        }
+
+        /// <summary>Adds keys to the signature dictionary that define the document permissions.</summary>
+        /// <remarks>
+        /// Adds keys to the signature dictionary that define the field permissions.
+        /// This method is only used for signatures that lock the entire document.
+        /// </remarks> 
+        /// <param name="fieldLock"></param>
+        /// the
+        /// <see cref="iText.Forms.PdfSigFieldLock"/>
+        /// instance specified the field lock to be set
+        /// </param>
+        protected internal virtual void LockWholeDocument(PdfSigFieldLock fieldLock)
+        {
+            PdfDictionary pdfObject = fieldLock.GetPdfObject();
+
+            if (pdfObject.ContainsKey(PdfName.P))
+            {
+                if (pdfObject.ContainsKey(PdfName.Fields))
+                {
+                    pdfObject.Remove(PdfName.Fields);
+                }
+                if (pdfObject.ContainsKey(PdfName.Action))
+                {
+                    pdfObject.Remove(PdfName.Action);
+                }
+                if (pdfObject.ContainsKey(PdfName.All))
+                {
+                    pdfObject.Remove(PdfName.All);
+                }
+
+                document.GetCatalog().Put(PdfName.Action, pdfObject);
+                document.GetCatalog().SetModified();
             }
         }
 
