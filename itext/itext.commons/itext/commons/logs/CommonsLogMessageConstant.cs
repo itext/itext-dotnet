@@ -66,6 +66,36 @@ namespace iText.Commons.Logs {
         /// </remarks>
         public const String LOCAL_FILE_COMPRESSION_FAILED = "Cannot archive files into zip. " + "Exception message: {0}.";
 
+        /// <summary>
+        /// Message notifies that archive is suspicious to be a zip bomb due to large ratio between the compressed and
+        /// uncompressed archive entry.
+        /// </summary>
+        /// <remarks>
+        /// Message notifies that archive is suspicious to be a zip bomb due to large ratio between the compressed and
+        /// uncompressed archive entry.
+        /// <list type="bullet">
+        /// <item><description>0th is a threshold ratio;
+        /// </description></item>
+        /// </list>
+        /// </remarks>
+        public const String RATIO_IS_HIGHLY_SUSPICIOUS = "Ratio between compressed and uncompressed data is highly"
+             + " suspicious, looks like a Zip Bomb Attack. Threshold ratio is {0}.";
+
+        /// <summary>
+        /// Message notifies that archive is suspicious to be a zip bomb because the number of file entries extracted from
+        /// the archive is greater than a predefined threshold.
+        /// </summary>
+        /// <remarks>
+        /// Message notifies that archive is suspicious to be a zip bomb because the number of file entries extracted from
+        /// the archive is greater than a predefined threshold.
+        /// <list type="bullet">
+        /// <item><description>0th is a threshold number of file entries in the archive;
+        /// </description></item>
+        /// </list>
+        /// </remarks>
+        public const String TOO_MUCH_ENTRIES_IN_ARCHIVE = "Too much entries in this archive, can lead to inodes " 
+            + "exhaustion of the system, looks like a Zip Bomb Attack. Threshold number of file entries is {0}.";
+
         /// <summary>Message notifies that some exception has been thrown during json deserialization from object.</summary>
         /// <remarks>
         /// Message notifies that some exception has been thrown during json deserialization from object.
@@ -91,6 +121,18 @@ namespace iText.Commons.Logs {
         /// </list>
         /// </remarks>
         public const String UNABLE_TO_SERIALIZE_OBJECT = "Unable to serialize object. Exception {0} was thrown with the message: {1}.";
+
+        /// <summary>Message notifies that archive is suspicious to be a zip bomb due to large total size of the uncompressed data.
+        ///     </summary>
+        /// <remarks>
+        /// Message notifies that archive is suspicious to be a zip bomb due to large total size of the uncompressed data.
+        /// <list type="bullet">
+        /// <item><description>0th is a threshold size;
+        /// </description></item>
+        /// </list>
+        /// </remarks>
+        public const String UNCOMPRESSED_DATA_SIZE_IS_TOO_MUCH = "The uncompressed data size is too much for the" 
+            + " application resource capacity, looks like a Zip Bomb Attack. Threshold size is {0}.";
 
         /// <summary>
         /// Message notifies that unknown placeholder was ignored during parsing of the producer line
