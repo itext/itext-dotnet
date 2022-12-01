@@ -51,9 +51,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.commons", "itext\itex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.commons.tests", "itext.tests\itext.commons.tests\itext.commons.tests.csproj", "{726AEDB2-0B0D-45B8-A744-BFFEE36A187E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{78CD9B72-FC51-4278-B6D1-4B2C6A95E478}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuSpecs", "NuSpecs", "{C9E42CFC-72EE-46F6-8552-4C166394C0A6}"
 	ProjectSection(SolutionItems) = preProject
-		itext7.nuspec = itext7.nuspec
+		NuSpecs\itext7-commons.nuspec = NuSpecs\itext7-commons.nuspec
+		NuSpecs\itext7.nuspec = NuSpecs\itext7.nuspec
+		NuSpecs\unofficialitext7-commons.nuspec = NuSpecs\unofficialitext7-commons.nuspec
+		NuSpecs\unofficialitext7.nuspec = NuSpecs\unofficialitext7.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AD676B5E-B2B6-43CA-AB11-239CC626257A}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		Build.bat = Build.bat
+		Build.Debug.bat = Build.Debug.bat
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuSpecs.Debug", "NuSpecs.Debug", "{5DE207F8-675E-49BD-9BEB-E4FAE648016F}"
+	ProjectSection(SolutionItems) = preProject
+		NuSpecs.Debug\itext7-commons.nuspec = NuSpecs.Debug\itext7-commons.nuspec
+		NuSpecs.Debug\itext7.nuspec = NuSpecs.Debug\itext7.nuspec
+		NuSpecs.Debug\unofficialitext7-commons.nuspec = NuSpecs.Debug\unofficialitext7-commons.nuspec
+		NuSpecs.Debug\unofficialitext7.nuspec = NuSpecs.Debug\unofficialitext7.nuspec
 	EndProjectSection
 EndProject
 Global
