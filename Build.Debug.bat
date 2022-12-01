@@ -5,10 +5,8 @@ rmdir /s /q %userprofile%\.nuget\Packages\unofficialitext7.commons
 nuget.exe restore iTextCore.sln
 MSBuild.exe iTextCore.sln /property:Configuration=Debug
 cd NuSpecs.Debug
-nuget pack -OutputDirectory ..\Packages BaseUnitTest.PieroViano.nuspec
-nuget pack -OutputDirectory ..\Packages ConfigurationLibrary.Crypt.PieroViano.nuspec
-nuget pack -OutputDirectory ..\Packages ConfigurationLibrary.PieroViano.nuspec
-nuget pack -OutputDirectory ..\Packages RemoteLoggerLib.PieroViano.nuspec
+nuget pack -OutputDirectory ..\Packages unofficialitext7-commons.nuspec
+nuget pack -OutputDirectory ..\Packages unofficialitext7.nuspec
 cd ..
 git add -A
 git commit -a --allow-empty-message -m ''
