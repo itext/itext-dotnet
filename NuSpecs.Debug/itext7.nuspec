@@ -106,8 +106,8 @@
     <file src="..\itext\itext.svg\bin\Debug\netstandard2.0\itext.svg.dll" target="lib\netstandard2.0" />
     <file src="..\itext\itext.svg\bin\Debug\netstandard2.0\itext.svg.xml" target="lib\netstandard2.0" />
 
-    <file src="gnu-agpl-v3.0.md" target="" />
-    <file src="LICENSE.md" target="" />
-    <file src="ITSC-avatar.png" target="" />
+    <file src="..\gnu-agpl-v3.0.md" target="" />
+    <file src="..\LICENSE.md" target="" />
+    <file src="..\ITSC-avatar.png" target="" />
   </files>
 </package>
