@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7</id>
-    <version>7.2.5-SNAPSHOT</version>
+    <version>8.0.0-SNAPSHOT</version>
     <title>iText 7 Community</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -19,12 +19,12 @@
 	<repository type="git" url="https://github.com/itext/itext7-dotnet.git" />
     <dependencies>
       <group targetFramework="net461">
-        <dependency id="itext7.commons" version="7.2.5-SNAPSHOT" />
+        <dependency id="itext7.commons" version="8.0.0-SNAPSHOT" />
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
         <dependency id="Portable.BouncyCastle" version="1.8.9" />
       </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="itext7.commons" version="7.2.5-SNAPSHOT" />
+        <dependency id="itext7.commons" version="8.0.0-SNAPSHOT" />
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
         <dependency id="Portable.BouncyCastle" version="1.8.9" />
         <dependency id="System.Diagnostics.Process" version="4.3.0" />
