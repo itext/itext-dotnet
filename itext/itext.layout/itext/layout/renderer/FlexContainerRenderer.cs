@@ -295,6 +295,11 @@ namespace iText.Layout.Renderer {
             return layoutBoxCopy;
         }
 
+        internal override void HandleForcedPlacement(bool anythingPlaced) {
+        }
+
+        // In (horizontal) FlexContainerRenderer Property.FORCED_PLACEMENT is still valid for other children
+        // so do nothing
         internal virtual void SetHypotheticalCrossSize(float? mainSize, float? hypotheticalCrossSize) {
             hypotheticalCrossSizes.Put(mainSize.Value, hypotheticalCrossSize);
         }
