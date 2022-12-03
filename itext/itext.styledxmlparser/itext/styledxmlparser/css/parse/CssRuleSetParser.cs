@@ -143,8 +143,13 @@ namespace iText.StyledXmlParser.Css.Parse {
                     ruleSets.Add(new CssRuleSet(new CssSelector(currentSelectorStr), declarations));
                 }
                 catch (Exception exc) {
+#if NET45
+                    logger.LogError(0, exc, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
+                        .ERROR_PARSING_CSS_SELECTOR, currentSelectorStr));
+#else
                     logger.LogError(exc, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
                         .ERROR_PARSING_CSS_SELECTOR, currentSelectorStr));
+#endif                    
                     //if any separated selector has errors, all others become invalid.
                     //in this case we just clear map, it is the easies way to support this.
                     declarations.Clear();
