@@ -20,7 +20,7 @@
     <dependencies>
       <group targetFramework="net45">
         <dependency id="itext7.commons" version="7.2.4" />
-        <dependency id="NetFx.Extensions.Logging" version="2.2.0" />
+        <dependency id="Microsoft.Extensions.Logging" version="1.0.2" />
         <dependency id="Portable.BouncyCastle" version="1.8.9" />
       </group>
       <group targetFramework="net461">
