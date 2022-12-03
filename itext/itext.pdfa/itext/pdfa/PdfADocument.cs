@@ -286,7 +286,11 @@ namespace iText.Pdfa {
                 }
                 catch (XMPException exc) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
+#if NET45
+                    logger.LogError(0, exc, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
+#else
                     logger.LogError(exc, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
+#endif                    
                 }
             }
         }
@@ -306,7 +310,11 @@ namespace iText.Pdfa {
             }
             catch (XMPException e) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Pdfa.PdfADocument));
+#if NET45
+                logger.LogError(0, e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
+#else
                 logger.LogError(e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
+#endif  
             }
         }
 
