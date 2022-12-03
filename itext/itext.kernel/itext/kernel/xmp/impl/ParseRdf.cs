@@ -1108,7 +1108,7 @@ namespace iText.Kernel.XMP.Impl
 		}
 
 		/// <summary>
-		/// 7.2.4 oldTerms<br />
+		/// 7.2.5 oldTerms<br />
 		/// rdf:aboutEach | rdf:aboutEachPrefix | rdf:bagID
 		/// </summary>
 		/// <param name="term">the term id</param>

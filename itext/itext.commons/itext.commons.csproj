@@ -21,6 +21,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
