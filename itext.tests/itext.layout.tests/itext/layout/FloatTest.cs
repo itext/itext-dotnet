@@ -1062,7 +1062,6 @@ namespace iText.Layout {
             // Adding float that will not fit on the first page and will have FORCED_PLACEMENT on the second.
             div.Add(img);
             div.Add(new Paragraph("some small text"));
-            // TODO DEVSIX-1655: blocks don't extend their height to MIN_HEIGHT if forced placement is applied, why?
             document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -1116,7 +1115,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void FloatsOnPageSplit08_02() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08_02.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit08_02.pdf";
@@ -1135,9 +1134,6 @@ namespace iText.Layout {
             containerDiv.Add(img);
             document.Add(containerDiv);
             document.Close();
-            // TODO DEVSIX-1655: currently forced placement is applied on containerDiv, which results in all it's content
-            // being forced placed at once, rather than content being split more gracefully (it makes sense to put the second
-            // image on the next empty area, not on current area).
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff28_02_"));
         }
@@ -1160,7 +1156,6 @@ namespace iText.Layout {
             containerDiv.Add(new Paragraph(text));
             document.Add(containerDiv);
             document.Close();
-            // TODO DEVSIX-1655: text in the container div gets lost. And floating property doesn't actually affect this.
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff28_03_"));
         }
@@ -1232,7 +1227,6 @@ namespace iText.Layout {
             containerDiv.Add(div2);
             document.Add(containerDiv);
             document.Close();
-            // TODO DEVSIX-1655: Forced placement is applied to the parent element, forcing it to return FULL even though part of the child element overflowed.
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff31_"));
         }

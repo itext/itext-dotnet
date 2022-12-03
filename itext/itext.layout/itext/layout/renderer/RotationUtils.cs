@@ -142,6 +142,7 @@ namespace iText.Layout.Renderer {
                 backup.StoreProperty<UnitValue>(Property.HEIGHT);
                 backup.StoreProperty<UnitValue>(Property.MIN_HEIGHT);
                 backup.StoreProperty<UnitValue>(Property.MAX_HEIGHT);
+                backup.StoreBoolProperty(Property.FORCED_PLACEMENT);
                 MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth();
                 //Using this width for initial layout helps in case of small elements. They may have more free spaces but it's more likely they fit.
                 float length = (minMaxWidth.GetMaxWidth() + minMaxWidth.GetMinWidth()) / 2 + MinMaxWidthUtils.GetEps();
@@ -150,6 +151,7 @@ namespace iText.Layout.Renderer {
                 backup.RestoreProperty(Property.HEIGHT);
                 backup.RestoreProperty(Property.MIN_HEIGHT);
                 backup.RestoreProperty(Property.MAX_HEIGHT);
+                backup.RestoreProperty(Property.FORCED_PLACEMENT);
                 Rectangle additions = new Rectangle(0, 0);
                 renderer.ApplyPaddings(additions, true);
                 renderer.ApplyBorderBox(additions, true);
@@ -200,6 +202,16 @@ namespace iText.Layout.Renderer {
             //workaround for autoport
             public virtual float? StoreFloatProperty(int property) {
                 float? value = renderer.GetPropertyAsFloat(property);
+                if (value != null) {
+                    propertiesBackup.Put(property, new RotationUtils.PropertiesBackup.PropertyBackup(value, renderer.HasOwnProperty
+                        (property)));
+                    renderer.SetProperty(property, null);
+                }
+                return value;
+            }
+
+            public virtual bool? StoreBoolProperty(int property) {
+                bool? value = renderer.GetPropertyAsBoolean(property);
                 if (value != null) {
                     propertiesBackup.Put(property, new RotationUtils.PropertiesBackup.PropertyBackup(value, renderer.HasOwnProperty
                         (property)));

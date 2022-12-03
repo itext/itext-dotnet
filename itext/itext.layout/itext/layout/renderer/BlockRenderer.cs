@@ -146,6 +146,10 @@ namespace iText.Layout.Renderer {
             // the first renderer (one of childRenderers or their children) to produce LayoutResult.NOTHING
             IRenderer causeOfNothing = null;
             bool anythingPlaced = false;
+            // We have to remember initial FORCED_PLACEMENT property of this renderer to use it later
+            // to define if rotated content should be placed or not
+            bool initialForcePlacementForRotationAdjustments = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT
+                ));
             for (int childPos = 0; childPos < childRenderers.Count; childPos++) {
                 IRenderer childRenderer = childRenderers[childPos];
                 LayoutResult result;
@@ -289,6 +293,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 anythingPlaced = anythingPlaced || result.GetStatus() != LayoutResult.NOTHING;
+                HandleForcedPlacement(anythingPlaced);
                 // The second condition check (after &&) is needed only if margins collapsing is enabled
                 if (result.GetOccupiedArea() != null && (!FloatingHelper.IsRendererFloating(childRenderer) || includeFloatsInOccupiedArea
                     )) {
@@ -396,7 +401,7 @@ namespace iText.Layout.Renderer {
                             , "It fits by height so it will be forced placed"));
                     }
                     else {
-                        if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                        if (!initialForcePlacementForRotationAdjustments) {
                             floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                             return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, null, null, this, this);
                         }
@@ -1011,6 +1016,14 @@ namespace iText.Layout.Renderer {
                 return RotationUtils.CountRotationMinMaxWidth(minMaxWidth, this);
             }
             return minMaxWidth;
+        }
+
+        internal virtual void HandleForcedPlacement(bool anythingPlaced) {
+            // We placed something meaning that we don't need this property anymore while processing other children
+            // to do not force place them
+            if (anythingPlaced && HasOwnProperty(Property.FORCED_PLACEMENT)) {
+                DeleteOwnProperty(Property.FORCED_PLACEMENT);
+            }
         }
 
         private void ReplaceSplitRendererKidFloats(IDictionary<int, IRenderer> waitingFloatsSplitRenderers, IRenderer
