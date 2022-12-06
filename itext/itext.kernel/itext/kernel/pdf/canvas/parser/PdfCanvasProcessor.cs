@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.IO.Font;
 using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
@@ -559,8 +560,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         ///     </summary>
         /// <param name="tj">the text adjustment</param>
         private void ApplyTextAdjust(float tj) {
-            float adjustBy = -tj / 1000f * GetGraphicsState().GetFontSize() * (GetGraphicsState().GetHorizontalScaling
-                () / 100f);
+            float adjustBy = FontProgram.ConvertTextSpaceToGlyphSpace(-tj) * GetGraphicsState().GetFontSize() * (GetGraphicsState
+                ().GetHorizontalScaling() / 100F);
             textMatrix = new Matrix(adjustBy, 0).Multiply(textMatrix);
         }
 

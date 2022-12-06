@@ -31,6 +31,9 @@ namespace iText.IO.Font.Otf {
         private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/OtfReadCommonTest/";
 
+        private static readonly String RESOURCE_FOLDER_2 = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf" + "/GposLookupType7Test/";
+
         [NUnit.Framework.Test]
         public virtual void TestReadCoverageFormat1() {
             // Based on Example 5 from the specification
@@ -60,6 +63,56 @@ namespace iText.IO.Font.Otf {
             NUnit.Framework.Assert.AreEqual(10, glyphIds.Count);
             NUnit.Framework.Assert.AreEqual(0xA04E, (int)glyphIds[0]);
             NUnit.Framework.Assert.AreEqual(0xA057, (int)glyphIds[9]);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestConversionGlyphToTextSpace() {
+            OtfReadCommonTest.OpenTypeFontTableReaderTest gposTableReader = new OtfReadCommonTest.OpenTypeFontTableReaderTest
+                (this, new OtfReadCommonTest.RandomAccesArrayTest(this, null), 0, null, null, 1);
+            // at 15 we fill up all values
+            GposValueRecord valueRecord = OtfReadCommon.ReadGposValueRecord(gposTableReader, 15);
+            NUnit.Framework.Assert.AreEqual(2000, valueRecord.XAdvance);
+            NUnit.Framework.Assert.AreEqual(2000, valueRecord.XPlacement);
+            NUnit.Framework.Assert.AreEqual(2000, valueRecord.YAdvance);
+            NUnit.Framework.Assert.AreEqual(2000, valueRecord.YPlacement);
+        }
+
+        internal class OpenTypeFontTableReaderTest : OpenTypeFontTableReader {
+            protected internal OpenTypeFontTableReaderTest(OtfReadCommonTest _enclosing, RandomAccessFileOrArray rf, int
+                 tableLocation, OpenTypeGdefTableReader gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm)
+                : base(rf, tableLocation, gdef, indexGlyphMap, unitsPerEm) {
+                this._enclosing = _enclosing;
+            }
+
+            protected internal override OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag, int[] subTableLocations
+                ) {
+                return null;
+            }
+
+            private readonly OtfReadCommonTest _enclosing;
+        }
+
+        internal class RandomAccesArrayTest : RandomAccessFileOrArray {
+            /// <summary>Creates a RandomAccessFileOrArray that wraps the specified byte source.</summary>
+            /// <remarks>
+            /// Creates a RandomAccessFileOrArray that wraps the specified byte source.  The byte source will be closed when
+            /// this RandomAccessFileOrArray is closed.
+            /// </remarks>
+            /// <param name="byteSource">the byte source to wrap</param>
+            public RandomAccesArrayTest(OtfReadCommonTest _enclosing, IRandomAccessSource byteSource)
+                : base(byteSource) {
+                this._enclosing = _enclosing;
+            }
+
+            public override short ReadShort() {
+                return 2;
+            }
+
+            public override long Skip(long n) {
+                return 2;
+            }
+
+            private readonly OtfReadCommonTest _enclosing;
         }
     }
 }

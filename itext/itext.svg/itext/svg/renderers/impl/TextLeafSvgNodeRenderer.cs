@@ -101,8 +101,8 @@ namespace iText.Svg.Renderers.Impl {
                 float textLength = GetTextContentLength(parentFontSize, parentFont);
                 float[] fontAscenderDescenderFromMetrics = TextRenderer.CalculateAscenderDescender(parentFont, RenderingMode
                     .HTML_MODE);
-                float fontAscender = fontAscenderDescenderFromMetrics[0] / FontProgram.UNITS_NORMALIZATION * parentFontSize;
-                float fontDescender = fontAscenderDescenderFromMetrics[1] / FontProgram.UNITS_NORMALIZATION * parentFontSize;
+                float fontAscender = FontProgram.ConvertTextSpaceToGlyphSpace(fontAscenderDescenderFromMetrics[0]) * parentFontSize;
+                float fontDescender = FontProgram.ConvertTextSpaceToGlyphSpace(fontAscenderDescenderFromMetrics[1]) * parentFontSize;
                 // TextRenderer#calculateAscenderDescender returns fontDescender as a negative value so we should subtract this value
                 float textHeight = fontAscender - fontDescender;
                 return new TextRectangle((float)basePoint.GetX(), (float)basePoint.GetY() - fontAscender, textLength, textHeight

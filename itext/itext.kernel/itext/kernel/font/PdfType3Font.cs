@@ -148,7 +148,7 @@ namespace iText.Kernel.Font {
             double[] fontMatrixArray = ReadFontMatrix();
             double[] fontBBoxRect = ReadFontBBox();
             double[] widthsArray = ReadWidths(fontDictionary);
-            SetGlyphSpaceNormalizationFactor(fontMatrixArray[0] * FontProgram.UNITS_NORMALIZATION);
+            SetGlyphSpaceNormalizationFactor(FontProgram.ConvertGlyphSpaceToTextSpace(fontMatrixArray[0]));
             PdfDictionary charProcsDic = fontDictionary.GetAsDictionary(PdfName.CharProcs);
             PdfDictionary encoding = fontDictionary.GetAsDictionary(PdfName.Encoding);
             PdfArray differences = encoding != null ? encoding.GetAsArray(PdfName.Differences) : null;

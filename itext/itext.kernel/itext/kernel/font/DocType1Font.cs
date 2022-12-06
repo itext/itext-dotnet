@@ -65,24 +65,9 @@ namespace iText.Kernel.Font {
 
         internal static Type1Font CreateFontProgram(PdfDictionary fontDictionary, FontEncoding fontEncoding, CMapToUnicode
              toUnicode) {
-            PdfName baseFontName = fontDictionary.GetAsName(PdfName.BaseFont);
-            String baseFont;
-            if (baseFontName != null) {
-                baseFont = baseFontName.GetValue();
-            }
-            else {
-                baseFont = FontUtil.CreateRandomFontName();
-            }
+            String baseFont = GetBaseFont(fontDictionary);
             if (!fontDictionary.ContainsKey(PdfName.FontDescriptor)) {
-                Type1Font type1StdFont;
-                try {
-                    //if there are no font modifiers, cached font could be used,
-                    //otherwise a new instance should be created.
-                    type1StdFont = (Type1Font)FontProgramFactory.CreateFont(baseFont, true);
-                }
-                catch (Exception) {
-                    type1StdFont = null;
-                }
+                Type1Font type1StdFont = GetType1Font(baseFont);
                 if (type1StdFont != null) {
                     return type1StdFont;
                 }
@@ -91,6 +76,12 @@ namespace iText.Kernel.Font {
             PdfDictionary fontDesc = fontDictionary.GetAsDictionary(PdfName.FontDescriptor);
             fontProgram.subtype = fontDesc != null ? fontDesc.GetAsName(PdfName.Subtype) : null;
             FillFontDescriptor(fontProgram, fontDesc);
+            ProcessWidth(fontDictionary, fontEncoding, toUnicode, fontProgram);
+            return fontProgram;
+        }
+
+        internal static void ProcessWidth(PdfDictionary fontDictionary, FontEncoding fontEncoding, CMapToUnicode toUnicode
+            , iText.Kernel.Font.DocType1Font fontProgram) {
             PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
             int firstChar = firstCharNumber != null ? Math.Max(firstCharNumber.IntValue(), 0) : 0;
             int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar, fontProgram
@@ -119,7 +110,25 @@ namespace iText.Kernel.Font {
             if (glyphsWithWidths != 0) {
                 fontProgram.avgWidth /= glyphsWithWidths;
             }
-            return fontProgram;
+        }
+
+        internal static String GetBaseFont(PdfDictionary fontDictionary) {
+            PdfName baseFontName = fontDictionary.GetAsName(PdfName.BaseFont);
+            if (baseFontName == null) {
+                return FontUtil.CreateRandomFontName();
+            }
+            return baseFontName.GetValue();
+        }
+
+        internal static Type1Font GetType1Font(String baseFont) {
+            try {
+                //if there are no font modifiers, cached font could be used,
+                //otherwise a new instance should be created.
+                return (Type1Font)FontProgramFactory.CreateFont(baseFont, true);
+            }
+            catch (Exception) {
+                return null;
+            }
         }
 
         public virtual PdfStream GetFontFile() {
@@ -213,13 +222,16 @@ namespace iText.Kernel.Font {
                     bbox[3] = t;
                 }
                 font.SetBbox(bbox);
-                // If ascender or descender in font descriptor are zero, we still want to get more or less correct valuee for
+                // If ascender or descender in font descriptor are zero, we still want to get more or less correct valuee
+                // for
                 // text extraction, stamping etc. Thus we rely on font bbox in this case
                 if (font.GetFontMetrics().GetTypoAscender() == 0 && font.GetFontMetrics().GetTypoDescender() == 0) {
                     float maxAscent = Math.Max(bbox[3], font.GetFontMetrics().GetTypoAscender());
                     float minDescent = Math.Min(bbox[1], font.GetFontMetrics().GetTypoDescender());
-                    font.SetTypoAscender((int)(maxAscent * 1000 / (maxAscent - minDescent)));
-                    font.SetTypoDescender((int)(minDescent * 1000 / (maxAscent - minDescent)));
+                    font.SetTypoAscender((int)(FontProgram.ConvertGlyphSpaceToTextSpace(maxAscent) / (maxAscent - minDescent))
+                        );
+                    font.SetTypoDescender((int)(FontProgram.ConvertGlyphSpaceToTextSpace(minDescent) / (maxAscent - minDescent
+                        )));
                 }
             }
             PdfString fontFamily = fontDesc.GetAsString(PdfName.FontFamily);

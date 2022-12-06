@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
+using iText.IO.Font;
 using iText.IO.Source;
 
 namespace iText.IO.Font.Otf {
@@ -107,16 +108,20 @@ namespace iText.IO.Font.Otf {
         public static GposValueRecord ReadGposValueRecord(OpenTypeFontTableReader tableReader, int mask) {
             GposValueRecord vr = new GposValueRecord();
             if ((mask & 0x0001) != 0) {
-                vr.XPlacement = tableReader.rf.ReadShort() * 1000 / tableReader.GetUnitsPerEm();
+                vr.XPlacement = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                    ();
             }
             if ((mask & 0x0002) != 0) {
-                vr.YPlacement = tableReader.rf.ReadShort() * 1000 / tableReader.GetUnitsPerEm();
+                vr.YPlacement = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                    ();
             }
             if ((mask & 0x0004) != 0) {
-                vr.XAdvance = tableReader.rf.ReadShort() * 1000 / tableReader.GetUnitsPerEm();
+                vr.XAdvance = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                    ();
             }
             if ((mask & 0x0008) != 0) {
-                vr.YAdvance = tableReader.rf.ReadShort() * 1000 / tableReader.GetUnitsPerEm();
+                vr.YAdvance = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                    ();
             }
             if ((mask & 0x0010) != 0) {
                 tableReader.rf.Skip(2);
@@ -143,8 +148,10 @@ namespace iText.IO.Font.Otf {
             switch (format) {
                 default: {
                     t = new GposAnchor();
-                    t.XCoordinate = tableReader.rf.ReadShort() * 1000 / tableReader.GetUnitsPerEm();
-                    t.YCoordinate = tableReader.rf.ReadShort() * 1000 / tableReader.GetUnitsPerEm();
+                    t.XCoordinate = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                        ();
+                    t.YCoordinate = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                        ();
                     break;
                 }
             }

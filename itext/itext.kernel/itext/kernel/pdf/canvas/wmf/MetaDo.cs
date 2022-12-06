@@ -716,7 +716,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             foreach (byte b in bytes) {
                 normalizedWidth += fp.GetWidth(0xff & b);
             }
-            float textWidth = fontSize / FontProgram.UNITS_NORMALIZATION * normalizedWidth;
+            float textWidth = FontProgram.ConvertTextSpaceToGlyphSpace(fontSize) * normalizedWidth;
             float tx = 0;
             float ty = 0;
             float descender = fp.GetFontMetrics().GetTypoDescender();

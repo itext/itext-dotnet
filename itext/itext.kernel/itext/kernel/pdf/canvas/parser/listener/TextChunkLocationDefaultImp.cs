@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font;
 using iText.Kernel.Geom;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
@@ -87,8 +88,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 oVector = new Vector(1, 0, 0);
             }
             orientationVector = oVector.Normalize();
-            orientationMagnitude = (int)(Math.Atan2(orientationVector.Get(Vector.I2), orientationVector.Get(Vector.I1)
-                ) * 1000);
+            orientationMagnitude = (int)FontProgram.ConvertGlyphSpaceToTextSpace(Math.Atan2(orientationVector.Get(Vector
+                .I2), orientationVector.Get(Vector.I1)));
             // see http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
             // the two vectors we are crossing are in the same plane, so the result will be purely
             // in the z-axis (out of plane) direction, so we just take the I3 component of the result

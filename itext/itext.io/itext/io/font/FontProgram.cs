@@ -48,9 +48,27 @@ using iText.IO.Font.Otf;
 
 namespace iText.IO.Font {
     public abstract class FontProgram {
+        public const int HORIZONTAL_SCALING_FACTOR = 100;
+
         public const int DEFAULT_WIDTH = 1000;
 
         public const int UNITS_NORMALIZATION = 1000;
+
+        public static float ConvertTextSpaceToGlyphSpace(float value) {
+            return value / UNITS_NORMALIZATION;
+        }
+
+        public static float ConvertGlyphSpaceToTextSpace(float value) {
+            return value * UNITS_NORMALIZATION;
+        }
+
+        public static double ConvertGlyphSpaceToTextSpace(double value) {
+            return value * UNITS_NORMALIZATION;
+        }
+
+        public static int ConvertGlyphSpaceToTextSpace(int value) {
+            return value * UNITS_NORMALIZATION;
+        }
 
         // In case Type1: char code to glyph.
         // In case TrueType: glyph index to glyph.
@@ -71,7 +89,8 @@ namespace iText.IO.Font {
         /// <summary>The font's encoding name.</summary>
         /// <remarks>
         /// The font's encoding name. This encoding is 'StandardEncoding' or 'AdobeStandardEncoding' for a font
-        /// that can be totally encoded according to the characters names. For all other names the font is treated as symbolic.
+        /// that can be totally encoded according to the characters names. For all other names the font is treated as
+        /// symbolic.
         /// </remarks>
         protected internal String encodingScheme = FontEncoding.FONT_SPECIFIC;
 
@@ -234,7 +253,8 @@ namespace iText.IO.Font {
         /// <remarks>
         /// Sets the PostScript italic angle.
         /// <para />
-        /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
+        /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans
+        /// to the right (forward).
         /// </remarks>
         /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>
         protected internal virtual void SetItalicAngle(int italicAngle) {
