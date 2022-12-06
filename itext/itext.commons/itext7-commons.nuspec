@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7.commons</id>
-    <version>7.2.5-SNAPSHOT</version>
+    <version>8.0.0-SNAPSHOT</version>
     <title>iText 7 commons module</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
