@@ -3589,7 +3589,7 @@ namespace iText.Forms.Fields {
             float fs;
             float height = bBox.GetHeight() - borderWidth * 2;
             int[] fontBbox = localFont.GetFontProgram().GetFontMetrics().GetBbox();
-            fs = height / (fontBbox[2] - fontBbox[1]) * FontProgram.UNITS_NORMALIZATION;
+            fs = FontProgram.ConvertGlyphSpaceToTextSpace(height / (fontBbox[2] - fontBbox[1]));
             float baseWidth = localFont.GetWidth(value, 1);
             if (baseWidth != 0) {
                 float availableWidth = Math.Max(bBox.GetWidth() - borderWidth * 2, 0);

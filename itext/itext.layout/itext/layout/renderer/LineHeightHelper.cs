@@ -67,10 +67,10 @@ namespace iText.Layout.Renderer {
             float fontSize = renderer.GetPropertyAsUnitValue(Property.FONT_SIZE).GetValue();
             float[] fontAscenderDescenderFromMetrics = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE
                 );
-            float fontAscender = fontAscenderDescenderFromMetrics[0] / FontProgram.UNITS_NORMALIZATION * fontSize;
-            float fontDescender = fontAscenderDescenderFromMetrics[1] / FontProgram.UNITS_NORMALIZATION * fontSize;
-            float xHeight = ((float)font.GetFontProgram().GetFontMetrics().GetXHeight()) / FontProgram.UNITS_NORMALIZATION
-                 * fontSize;
+            float fontAscender = FontProgram.ConvertTextSpaceToGlyphSpace(fontAscenderDescenderFromMetrics[0]) * fontSize;
+            float fontDescender = FontProgram.ConvertTextSpaceToGlyphSpace(fontAscenderDescenderFromMetrics[1]) * fontSize;
+            float xHeight = FontProgram.ConvertTextSpaceToGlyphSpace(font.GetFontProgram().GetFontMetrics().GetXHeight
+                ()) * fontSize;
             return new float[] { fontAscender, fontDescender, xHeight };
         }
 

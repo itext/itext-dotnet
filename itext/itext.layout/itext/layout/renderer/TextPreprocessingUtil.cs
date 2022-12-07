@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.Kernel.Font;
 
@@ -41,51 +42,61 @@ namespace iText.Layout.Renderer {
                 bool isMonospaceFont = font.GetFontProgram().GetFontMetrics().IsFixedPitch();
                 Glyph space = font.GetGlyph('\u0020');
                 int spaceWidth = space.GetWidth();
-                Glyph glyph;
                 int lineSize = line.Size();
                 for (int i = 0; i < lineSize; i++) {
-                    glyph = line.Get(i);
-                    int xAdvance = 0;
-                    bool isSpecialWhitespaceGlyph = false;
-                    if (glyph.GetCode() <= 0) {
-                        switch (glyph.GetUnicode()) {
-                            // ensp
-                            case '\u2002': {
-                                xAdvance = isMonospaceFont ? 0 : 500 - spaceWidth;
-                                isSpecialWhitespaceGlyph = true;
-                                break;
-                            }
-
-                            // emsp
-                            case '\u2003': {
-                                xAdvance = isMonospaceFont ? 0 : 1000 - spaceWidth;
-                                isSpecialWhitespaceGlyph = true;
-                                break;
-                            }
-
-                            // thinsp
-                            case '\u2009': {
-                                xAdvance = isMonospaceFont ? 0 : 200 - spaceWidth;
-                                isSpecialWhitespaceGlyph = true;
-                                break;
-                            }
-
-                            case '\t': {
-                                xAdvance = 3 * spaceWidth;
-                                isSpecialWhitespaceGlyph = true;
-                                break;
-                            }
-                        }
-                    }
+                    Glyph glyph = line.Get(i);
+                    int? xAdvance = CalculateXAdvancement(spaceWidth, isMonospaceFont, glyph);
+                    bool isSpecialWhitespaceGlyph = xAdvance != null;
                     if (isSpecialWhitespaceGlyph) {
                         Glyph newGlyph = new Glyph(space, glyph.GetUnicode());
                         System.Diagnostics.Debug.Assert(xAdvance <= short.MaxValue && xAdvance >= short.MinValue);
-                        newGlyph.SetXAdvance((short)xAdvance);
+                        newGlyph.SetXAdvance((short)(int)xAdvance);
                         line.Set(i, newGlyph);
                     }
                 }
             }
             return line;
+        }
+
+        internal const int NON_MONO_SPACE_ENSP_WIDTH = 500;
+
+        internal const int NON_MONO_SPACE_THINSP_WIDTH = 200;
+
+        internal const int AMOUNT_OF_SPACE_IN_TAB = 3;
+
+        private static int? CalculateXAdvancement(int spaceWidth, bool isMonospaceFont, Glyph glyph) {
+            int? xAdvance = null;
+            if (glyph.GetCode() <= 0) {
+                switch (glyph.GetUnicode()) {
+                    // ensp
+                    case '\u2002': {
+                        xAdvance = isMonospaceFont ? 0 : (NON_MONO_SPACE_ENSP_WIDTH - spaceWidth);
+                        break;
+                    }
+
+                    // emsp
+                    case '\u2003': {
+                        xAdvance = isMonospaceFont ? 0 : (FontProgram.UNITS_NORMALIZATION - spaceWidth);
+                        break;
+                    }
+
+                    // thinsp
+                    case '\u2009': {
+                        xAdvance = isMonospaceFont ? 0 : (NON_MONO_SPACE_THINSP_WIDTH - spaceWidth);
+                        break;
+                    }
+
+                    case '\t': {
+                        xAdvance = AMOUNT_OF_SPACE_IN_TAB * spaceWidth;
+                        break;
+                    }
+
+                    default: {
+                        return xAdvance;
+                    }
+                }
+            }
+            return xAdvance;
         }
     }
 }

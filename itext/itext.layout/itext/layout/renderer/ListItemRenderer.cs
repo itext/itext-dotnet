@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.IO.Font;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Tagging;
@@ -353,8 +354,8 @@ namespace iText.Layout.Renderer {
                         , Property.FONT_SIZE));
                 }
                 float[] ascenderDescender = TextRenderer.CalculateAscenderDescender(listItemFont);
-                return new float[] { fontSize.GetValue() * ascenderDescender[0] / TextRenderer.TEXT_SPACE_COEFF, fontSize.
-                    GetValue() * ascenderDescender[1] / TextRenderer.TEXT_SPACE_COEFF };
+                return new float[] { fontSize.GetValue() * FontProgram.ConvertTextSpaceToGlyphSpace(ascenderDescender[0]), 
+                    fontSize.GetValue() * FontProgram.ConvertTextSpaceToGlyphSpace(ascenderDescender[1]) };
             }
             return new float[] { 0, 0 };
         }

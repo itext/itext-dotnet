@@ -210,7 +210,7 @@ namespace iText.Kernel.Font {
         /// <param name="fontSize">the font size.</param>
         /// <returns>a width in points.</returns>
         public virtual float GetWidth(int unicode, float fontSize) {
-            return GetWidth(unicode) * fontSize / FontProgram.UNITS_NORMALIZATION;
+            return FontProgram.ConvertTextSpaceToGlyphSpace(GetWidth(unicode) * fontSize);
         }
 
         /// <summary>Returns the width of a string of this font in 1000 normalized units.</summary>
@@ -248,7 +248,7 @@ namespace iText.Kernel.Font {
         /// <param name="fontSize">the font size</param>
         /// <returns>the width in points</returns>
         public virtual float GetWidth(String text, float fontSize) {
-            return GetWidth(text) * fontSize / FontProgram.UNITS_NORMALIZATION;
+            return FontProgram.ConvertTextSpaceToGlyphSpace(GetWidth(text) * fontSize);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace iText.Kernel.Font {
                     }
                 }
             }
-            return (int)(min * fontSize / FontProgram.UNITS_NORMALIZATION);
+            return (int)FontProgram.ConvertTextSpaceToGlyphSpace(min * fontSize);
         }
 
         /// <summary>Gets the descent of a char code in points.</summary>
@@ -319,7 +319,7 @@ namespace iText.Kernel.Font {
                     min = GetFontProgram().GetFontMetrics().GetTypoDescender();
                 }
             }
-            return (int)(min * fontSize / FontProgram.UNITS_NORMALIZATION);
+            return (int)FontProgram.ConvertTextSpaceToGlyphSpace(min * fontSize);
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace iText.Kernel.Font {
                     }
                 }
             }
-            return (int)(max * fontSize / FontProgram.UNITS_NORMALIZATION);
+            return (int)FontProgram.ConvertTextSpaceToGlyphSpace(max * fontSize);
         }
 
         /// <summary>Gets the ascent of a char code in normalized 1000 units.</summary>
@@ -390,7 +390,7 @@ namespace iText.Kernel.Font {
                     max = GetFontProgram().GetFontMetrics().GetTypoAscender();
                 }
             }
-            return (int)(max * fontSize / FontProgram.UNITS_NORMALIZATION);
+            return (int)FontProgram.ConvertTextSpaceToGlyphSpace(max * fontSize);
         }
 
         public virtual FontProgram GetFontProgram() {

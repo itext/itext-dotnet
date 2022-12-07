@@ -655,7 +655,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
                     );
             }
-            float fontSize = currentGs.GetFontSize() / 1000f;
+            float fontSize = FontProgram.ConvertTextSpaceToGlyphSpace(currentGs.GetFontSize());
             float charSpacing = currentGs.GetCharSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
             IList<GlyphLine.GlyphLinePart> glyphLineParts = EnumeratorToList(iterator);
@@ -764,7 +764,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// XAdvance is not taken into account neither before `from` nor after `to` glyphs.
         /// </remarks>
         private float GetSubrangeWidth(GlyphLine text, int from, int to) {
-            float fontSize = currentGs.GetFontSize() / 1000f;
+            float fontSize = FontProgram.ConvertTextSpaceToGlyphSpace(currentGs.GetFontSize());
             float charSpacing = currentGs.GetCharSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
             float width = 0;
@@ -781,7 +781,7 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         private float GetSubrangeYDelta(GlyphLine text, int from, int to) {
-            float fontSize = currentGs.GetFontSize() / 1000f;
+            float fontSize = FontProgram.ConvertTextSpaceToGlyphSpace(currentGs.GetFontSize());
             float yDelta = 0;
             for (int iter = from; iter < to; iter++) {
                 yDelta += text.Get(iter).GetYAdvance() * fontSize;

@@ -105,28 +105,33 @@ namespace iText.Kernel.Font {
             return fontProgram;
         }
 
+        internal static int GetDefaultWithOfFont(PdfDictionary fontDictionary, PdfDictionary fontDescriptor) {
+            int defaultWidth;
+            if (fontDescriptor != null && fontDescriptor.ContainsKey(PdfName.DW)) {
+                defaultWidth = (int)fontDescriptor.GetAsInt(PdfName.DW);
+            }
+            else {
+                if (fontDictionary.ContainsKey(PdfName.DW)) {
+                    defaultWidth = (int)fontDictionary.GetAsInt(PdfName.DW);
+                }
+                else {
+                    defaultWidth = DEFAULT_WIDTH;
+                }
+            }
+            return defaultWidth;
+        }
+
         internal static TrueTypeFont CreateFontProgram(PdfDictionary fontDictionary, CMapToUnicode toUnicode) {
             iText.Kernel.Font.DocTrueTypeFont fontProgram = new iText.Kernel.Font.DocTrueTypeFont(fontDictionary);
             PdfDictionary fontDescriptor = fontDictionary.GetAsDictionary(PdfName.FontDescriptor);
             FillFontDescriptor(fontProgram, fontDescriptor);
-            int dw;
-            if (fontDescriptor != null && fontDescriptor.ContainsKey(PdfName.DW)) {
-                dw = (int)fontDescriptor.GetAsInt(PdfName.DW);
-            }
-            else {
-                if (fontDictionary.ContainsKey(PdfName.DW)) {
-                    dw = (int)fontDictionary.GetAsInt(PdfName.DW);
-                }
-                else {
-                    dw = 1000;
-                }
-            }
+            int defaultWidth = GetDefaultWithOfFont(fontDictionary, fontDescriptor);
             IntHashtable widths = null;
             if (toUnicode != null) {
                 widths = FontUtil.ConvertCompositeWidthsArray(fontDictionary.GetAsArray(PdfName.W));
                 fontProgram.avgWidth = 0;
                 foreach (int cid in toUnicode.GetCodes()) {
-                    int width = widths.ContainsKey(cid) ? widths.Get(cid) : dw;
+                    int width = widths.ContainsKey(cid) ? widths.Get(cid) : defaultWidth;
                     Glyph glyph = new Glyph(cid, width, toUnicode.Lookup(cid));
                     if (glyph.HasValidUnicode()) {
                         fontProgram.unicodeToGlyph.Put(glyph.GetUnicode(), glyph);
@@ -139,8 +144,8 @@ namespace iText.Kernel.Font {
                 }
             }
             if (fontProgram.codeToGlyph.Get(0) == null) {
-                fontProgram.codeToGlyph.Put(0, new Glyph(0, widths != null && widths.ContainsKey(0) ? widths.Get(0) : dw, 
-                    -1));
+                fontProgram.codeToGlyph.Put(0, new Glyph(0, widths != null && widths.ContainsKey(0) ? widths.Get(0) : defaultWidth
+                    , -1));
             }
             return fontProgram;
         }
@@ -241,8 +246,10 @@ namespace iText.Kernel.Font {
                 if (font.GetFontMetrics().GetTypoAscender() == 0 && font.GetFontMetrics().GetTypoDescender() == 0) {
                     float maxAscent = Math.Max(bbox[3], font.GetFontMetrics().GetTypoAscender());
                     float minDescent = Math.Min(bbox[1], font.GetFontMetrics().GetTypoDescender());
-                    font.SetTypoAscender((int)(maxAscent * 1000 / (maxAscent - minDescent)));
-                    font.SetTypoDescender((int)(minDescent * 1000 / (maxAscent - minDescent)));
+                    font.SetTypoAscender((int)(FontProgram.ConvertGlyphSpaceToTextSpace(maxAscent) / (maxAscent - minDescent))
+                        );
+                    font.SetTypoDescender((int)(FontProgram.ConvertGlyphSpaceToTextSpace(minDescent) / (maxAscent - minDescent
+                        )));
                 }
             }
             PdfString fontFamily = fontDesc.GetAsString(PdfName.FontFamily);

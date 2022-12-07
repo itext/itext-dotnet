@@ -120,13 +120,13 @@ namespace iText.Barcodes {
         /// <param name="textColor">the color of the text. It can be <c>null</c></param>
         /// <returns>the dimensions the barcode occupies</returns>
         public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor) {
-            if (supp.GetFont() != null) {
-                float sizeCoef = supp.GetSize() / FontProgram.UNITS_NORMALIZATION;
-                supp.SetBarHeight(ean.GetBarHeight() + supp.GetBaseline() - supp.GetFont().GetFontProgram().GetFontMetrics
-                    ().GetCapHeight() * sizeCoef);
+            if (supp.GetFont() == null) {
+                supp.SetBarHeight(ean.GetBarHeight());
             }
             else {
-                supp.SetBarHeight(ean.GetBarHeight());
+                float sizeCoefficient = FontProgram.ConvertTextSpaceToGlyphSpace(supp.GetSize());
+                supp.SetBarHeight(ean.GetBarHeight() + supp.GetBaseline() - supp.GetFont().GetFontProgram().GetFontMetrics
+                    ().GetCapHeight() * sizeCoefficient);
             }
             Rectangle eanR = ean.GetBarcodeSize();
             canvas.SaveState();

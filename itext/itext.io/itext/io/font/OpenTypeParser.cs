@@ -566,8 +566,8 @@ namespace iText.IO.Font {
             glyphWidthsByIndex = new int[ReadNumGlyphs()];
             raf.Seek(table_location[0]);
             for (int k = 0; k < numberOfHMetrics; ++k) {
-                glyphWidthsByIndex[k] = raf.ReadUnsignedShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
-                int leftSideBearing = raf.ReadShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
+                glyphWidthsByIndex[k] = FontProgram.ConvertGlyphSpaceToTextSpace(raf.ReadUnsignedShort()) / unitsPerEm;
+                int leftSideBearing = FontProgram.ConvertGlyphSpaceToTextSpace(raf.ReadShort()) / unitsPerEm;
             }
             // If the font is monospaced, only one entry need be in the array, but that entry is required.
             // The last entry applies to all subsequent glyphs.
@@ -605,7 +605,7 @@ namespace iText.IO.Font {
                     raf.SkipBytes(6);
                     for (int j = 0; j < nPairs; ++j) {
                         int pair = raf.ReadInt();
-                        int value = raf.ReadShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
+                        int value = FontProgram.ConvertGlyphSpaceToTextSpace(raf.ReadShort()) / unitsPerEm;
                         kerning.Put(pair, value);
                     }
                 }
@@ -670,9 +670,9 @@ namespace iText.IO.Font {
                 int start = locaTable[glyph];
                 if (start != locaTable[glyph + 1]) {
                     raf.Seek(tableGlyphOffset + start + 2);
-                    bboxes[glyph] = new int[] { raf.ReadShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm, raf.ReadShort
-                        () * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm, raf.ReadShort() * TrueTypeFont.UNITS_NORMALIZATION
-                         / unitsPerEm, raf.ReadShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm };
+                    bboxes[glyph] = new int[] { FontProgram.ConvertGlyphSpaceToTextSpace(raf.ReadShort()) / unitsPerEm, FontProgram
+                        .ConvertGlyphSpaceToTextSpace(raf.ReadShort()) / unitsPerEm, FontProgram.ConvertGlyphSpaceToTextSpace(
+                        raf.ReadShort()) / unitsPerEm, FontProgram.ConvertGlyphSpaceToTextSpace(raf.ReadShort()) / unitsPerEm };
                 }
             }
             return bboxes;

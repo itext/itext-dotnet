@@ -241,8 +241,8 @@ namespace iText.Layout.Renderer {
             if (RenderingMode.HTML_MODE.Equals(mode)) {
                 currentLineAscender = ascenderDescender[0];
                 currentLineDescender = ascenderDescender[1];
-                currentLineHeight = (currentLineAscender - currentLineDescender) * fontSize.GetValue() / TEXT_SPACE_COEFF 
-                    + textRise;
+                currentLineHeight = (currentLineAscender - currentLineDescender) * FontProgram.ConvertTextSpaceToGlyphSpace
+                    (fontSize.GetValue()) + textRise;
             }
             savedWordBreakAtLineEnding = null;
             Glyph wordBreakGlyphAtLineEnding = null;
@@ -332,11 +332,11 @@ namespace iText.Layout.Renderer {
                         tabAnchorCharacterPosition = currentLineWidth + nonBreakablePartFullWidth;
                         tabAnchorCharacter = null;
                     }
-                    float glyphWidth = GetCharWidth(currentGlyph, fontSize.GetValue(), hScale, characterSpacing, wordSpacing) 
-                        / TEXT_SPACE_COEFF;
+                    float glyphWidth = FontProgram.ConvertTextSpaceToGlyphSpace(GetCharWidth(currentGlyph, fontSize.GetValue()
+                        , hScale, characterSpacing, wordSpacing));
                     float xAdvance = previousCharPos != -1 ? text.Get(previousCharPos).GetXAdvance() : 0;
                     if (xAdvance != 0) {
-                        xAdvance = ScaleXAdvance(xAdvance, fontSize.GetValue(), hScale) / TEXT_SPACE_COEFF;
+                        xAdvance = FontProgram.ConvertTextSpaceToGlyphSpace(ScaleXAdvance(xAdvance, fontSize.GetValue(), hScale));
                     }
                     float potentialWidth = nonBreakablePartFullWidth + glyphWidth + xAdvance + italicSkewAddition + boldSimulationAddition;
                     bool symbolNotFitOnLine = potentialWidth > layoutBox.GetWidth() - currentLineWidth + EPS;
@@ -377,8 +377,8 @@ namespace iText.Layout.Renderer {
                     nonBreakablePartFullWidth += glyphWidth + xAdvance;
                     nonBreakablePartMaxAscender = Math.Max(nonBreakablePartMaxAscender, ascender);
                     nonBreakablePartMaxDescender = Math.Min(nonBreakablePartMaxDescender, descender);
-                    nonBreakablePartMaxHeight = (nonBreakablePartMaxAscender - nonBreakablePartMaxDescender) * fontSize.GetValue
-                        () / TEXT_SPACE_COEFF + textRise;
+                    nonBreakablePartMaxHeight = FontProgram.ConvertTextSpaceToGlyphSpace((nonBreakablePartMaxAscender - nonBreakablePartMaxDescender
+                        ) * fontSize.GetValue()) + textRise;
                     previousCharPos = ind;
                     if (!noSoftWrap && symbolNotFitOnLine && (0 == nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.end ||
                          !GlyphBelongsToNonBreakingHyphenRelatedChunk(text, ind + 1))) {
@@ -570,10 +570,10 @@ namespace iText.Layout.Renderer {
                                 // process empty line (e.g. '\n')
                                 currentLineAscender = ascender;
                                 currentLineDescender = descender;
-                                currentLineHeight = (currentLineAscender - currentLineDescender) * fontSize.GetValue() / TEXT_SPACE_COEFF 
-                                    + textRise;
-                                currentLineWidth += GetCharWidth(line.Get(line.start), fontSize.GetValue(), hScale, characterSpacing, wordSpacing
-                                    ) / TEXT_SPACE_COEFF;
+                                currentLineHeight = FontProgram.ConvertTextSpaceToGlyphSpace((currentLineAscender - currentLineDescender) 
+                                    * fontSize.GetValue()) + textRise;
+                                currentLineWidth += FontProgram.ConvertTextSpaceToGlyphSpace(GetCharWidth(line.Get(line.start), fontSize.GetValue
+                                    (), hScale, characterSpacing, wordSpacing));
                             }
                         }
                         if (line.end <= line.start) {
@@ -606,7 +606,7 @@ namespace iText.Layout.Renderer {
                     isPlacingForcedWhileNothing = true;
                 }
             }
-            yLineOffset = currentLineAscender * fontSize.GetValue() / TEXT_SPACE_COEFF;
+            yLineOffset = FontProgram.ConvertTextSpaceToGlyphSpace(currentLineAscender * fontSize.GetValue());
             occupiedArea.GetBBox().MoveDown(currentLineHeight);
             occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + currentLineHeight);
             occupiedArea.GetBBox().SetWidth(Math.Max(occupiedArea.GetBBox().GetWidth(), currentLineWidth));
@@ -885,8 +885,8 @@ namespace iText.Layout.Renderer {
                         // For PdfType0Font we must add word manually with glyph offsets
                         for (int gInd = line.start; gInd < line.end; gInd++) {
                             if (iText.IO.Util.TextUtil.IsUni0020(line.Get(gInd))) {
-                                short advance = (short)(iText.Layout.Renderer.TextRenderer.TEXT_SPACE_COEFF * (float)wordSpacing / fontSize
-                                    .GetValue());
+                                short advance = (short)(FontProgram.ConvertGlyphSpaceToTextSpace((float)wordSpacing) / fontSize.GetValue()
+                                    );
                                 Glyph copy = new Glyph(line.Get(gInd));
                                 copy.SetXAdvance(advance);
                                 line.Set(gInd, copy);
@@ -1015,10 +1015,10 @@ namespace iText.Layout.Renderer {
                     break;
                 }
                 SaveWordBreakIfNotYetSaved(currentGlyph);
-                float currentCharWidth = GetCharWidth(currentGlyph, fontSize.GetValue(), hScale, characterSpacing, wordSpacing
-                    ) / TEXT_SPACE_COEFF;
-                float xAdvance = firstNonSpaceCharIndex > line.start ? ScaleXAdvance(line.Get(firstNonSpaceCharIndex - 1).
-                    GetXAdvance(), fontSize.GetValue(), hScale) / TEXT_SPACE_COEFF : 0;
+                float currentCharWidth = FontProgram.ConvertTextSpaceToGlyphSpace(GetCharWidth(currentGlyph, fontSize.GetValue
+                    (), hScale, characterSpacing, wordSpacing));
+                float xAdvance = firstNonSpaceCharIndex > line.start ? FontProgram.ConvertTextSpaceToGlyphSpace(ScaleXAdvance
+                    (line.Get(firstNonSpaceCharIndex - 1).GetXAdvance(), fontSize.GetValue(), hScale)) : 0;
                 trimmedSpace += currentCharWidth - xAdvance;
                 occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() - currentCharWidth);
                 firstNonSpaceCharIndex--;
@@ -1706,10 +1706,10 @@ namespace iText.Layout.Renderer {
             }
             float resultWidth = g.GetWidth() * fontSize * (float)hScale;
             if (characterSpacing != null) {
-                resultWidth += (float)characterSpacing * (float)hScale * TEXT_SPACE_COEFF;
+                resultWidth += FontProgram.ConvertGlyphSpaceToTextSpace((float)characterSpacing * (float)hScale);
             }
             if (wordSpacing != null && g.GetUnicode() == ' ') {
-                resultWidth += (float)wordSpacing * (float)hScale * TEXT_SPACE_COEFF;
+                resultWidth += FontProgram.ConvertGlyphSpaceToTextSpace((float)wordSpacing * (float)hScale);
             }
             return resultWidth;
         }
@@ -1730,7 +1730,7 @@ namespace iText.Layout.Renderer {
                     width += xAdvance;
                 }
             }
-            return width / TEXT_SPACE_COEFF;
+            return FontProgram.ConvertTextSpaceToGlyphSpace(width);
         }
 
         private int[] GetWordBoundsForHyphenation(GlyphLine text, int leftTextPos, int rightTextPos, int wordMiddleCharPos

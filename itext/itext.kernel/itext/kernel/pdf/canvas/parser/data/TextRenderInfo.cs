@@ -461,8 +461,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             if (charWidth == 0) {
                 charWidth = gs.GetFont().GetFontProgram().GetAvgWidth();
             }
-            float w = (float)((double)charWidth / FontProgram.UNITS_NORMALIZATION);
-            return (w * gs.GetFontSize() + gs.GetCharSpacing() + gs.GetWordSpacing()) * gs.GetHorizontalScaling() / 100f;
+            float charWidthInGlyphSpace = FontProgram.ConvertTextSpaceToGlyphSpace(charWidth);
+            return (charWidthInGlyphSpace * gs.GetFontSize() + gs.GetCharSpacing() + gs.GetWordSpacing()) * gs.GetHorizontalScaling
+                () / 100F;
         }
 
         /// <summary>Gets the width of a PDF string in text space units</summary>
@@ -493,10 +494,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <returns>array of 2 items: first item is a character width, second item is a calculated word spacing.</returns>
         private float[] GetWidthAndWordSpacing(PdfString @string) {
             CheckGraphicsState();
-            float[] result = new float[2];
-            result[0] = (float)((double)gs.GetFont().GetContentWidth(@string) / FontProgram.UNITS_NORMALIZATION);
-            result[1] = " ".Equals(@string.GetValue()) ? gs.GetWordSpacing() : 0;
-            return result;
+            return new float[] { FontProgram.ConvertTextSpaceToGlyphSpace(gs.GetFont().GetContentWidth(@string)), " ".
+                Equals(@string.GetValue()) ? gs.GetWordSpacing() : 0 };
         }
 
         /// <summary>Converts a single character string to char code.</summary>
@@ -553,7 +552,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             if (descent > 0) {
                 descent = -descent;
             }
-            float scale = ascent - descent < 700 ? ascent - descent : 1000;
+            float scale = (ascent - descent < 700) ? (ascent - descent) : FontProgram.UNITS_NORMALIZATION;
             descent = descent / scale * gs.GetFontSize();
             ascent = ascent / scale * gs.GetFontSize();
             return new float[] { ascent, descent };

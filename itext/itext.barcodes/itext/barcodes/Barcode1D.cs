@@ -429,8 +429,8 @@ namespace iText.Barcodes {
         }
 
         protected internal virtual float GetDescender() {
-            float sizeCoef = size / FontProgram.UNITS_NORMALIZATION;
-            return font.GetFontProgram().GetFontMetrics().GetTypoDescender() * sizeCoef;
+            float sizeCoefficient = FontProgram.ConvertTextSpaceToGlyphSpace(size);
+            return font.GetFontProgram().GetFontMetrics().GetTypoDescender() * sizeCoefficient;
         }
     }
 }

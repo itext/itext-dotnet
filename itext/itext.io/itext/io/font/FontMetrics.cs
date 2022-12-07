@@ -46,7 +46,7 @@ namespace iText.IO.Font {
         protected internal float normalizationCoef = 1f;
 
         // head.unitsPerEm
-        private int unitsPerEm = 1000;
+        private int unitsPerEm = FontProgram.UNITS_NORMALIZATION;
 
         // maxp.numGlyphs
         private int numOfGlyphs;
