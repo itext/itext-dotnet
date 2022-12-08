@@ -184,13 +184,21 @@ namespace iText.Layout.Renderer {
             bool forcedPlacement = true.Equals(this.GetProperty<bool?>(Property.FORCED_PLACEMENT));
             bool metChildRenderer = false;
             foreach (IList<FlexItemInfo> line in lines) {
-                metChildRenderer = metChildRenderer || line.Any((flexItem) => flexItem.GetRenderer() == childRenderer);
-                foreach (FlexItemInfo itemInfo in line) {
-                    if (metChildRenderer && !forcedPlacement) {
-                        overflowRenderer.AddChildRenderer(itemInfo.GetRenderer());
-                    }
-                    else {
-                        splitRenderer.AddChildRenderer(itemInfo.GetRenderer());
+                bool isSplitLine = line.Any((flexItem) => flexItem.GetRenderer() == childRenderer);
+                metChildRenderer = metChildRenderer || isSplitLine;
+                // If the renderer to split is in the current line
+                if (isSplitLine && !forcedPlacement && layoutStatus == LayoutResult.PARTIAL) {
+                    FillSplitOverflowRenderersForPartialResult(splitRenderer, overflowRenderer, line, childRenderer, childResult
+                        );
+                }
+                else {
+                    foreach (FlexItemInfo itemInfo in line) {
+                        if (metChildRenderer && !forcedPlacement) {
+                            overflowRenderer.AddChildRenderer(itemInfo.GetRenderer());
+                        }
+                        else {
+                            splitRenderer.AddChildRenderer(itemInfo.GetRenderer());
+                        }
                     }
                 }
             }
@@ -205,40 +213,40 @@ namespace iText.Layout.Renderer {
             <Rectangle> nonChildFloatingRendererAreas, IRenderer causeOfNothing, bool anythingPlaced, int childPos
             , LayoutResult result) {
             bool keepTogether = IsKeepTogether(causeOfNothing);
-            AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, result.GetStatus(
-                ), result, waitingFloatsSplitRenderers, waitingOverflowFloatRenderers);
-            AbstractRenderer splitRenderer = splitAndOverflowRenderers[0];
-            AbstractRenderer overflowRenderer = splitAndOverflowRenderers[1];
-            overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
-            if (IsRelativePosition() && !positionedRenderers.IsEmpty()) {
-                overflowRenderer.positionedRenderers = new List<IRenderer>(positionedRenderers);
-            }
-            // TODO DEVSIX-5086 When flex-wrap will be fully supported we'll need to update height on split
-            if (keepTogether) {
-                splitRenderer = null;
-                overflowRenderer.SetChildRenderers(GetChildRenderers());
-            }
-            CorrectFixedLayout(layoutBox);
-            ApplyAbsolutePositionIfNeeded(layoutContext);
             if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || wasHeightClipped) {
+                AbstractRenderer splitRenderer = keepTogether ? null : CreateSplitRenderer(result.GetStatus());
                 if (splitRenderer != null) {
                     splitRenderer.SetChildRenderers(GetChildRenderers());
                 }
                 return new LayoutResult(LayoutResult.FULL, GetOccupiedAreaInCaseNothingWasWrappedWithFull(result, splitRenderer
                     ), splitRenderer, null, null);
             }
+            AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, result.GetStatus(
+                ), result, waitingFloatsSplitRenderers, waitingOverflowFloatRenderers);
+            AbstractRenderer splitRenderer_1 = splitAndOverflowRenderers[0];
+            AbstractRenderer overflowRenderer = splitAndOverflowRenderers[1];
+            overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
+            UpdateHeightsOnSplit(wasHeightClipped, splitRenderer_1, overflowRenderer);
+            if (IsRelativePosition() && !positionedRenderers.IsEmpty()) {
+                overflowRenderer.positionedRenderers = new List<IRenderer>(positionedRenderers);
+            }
+            // TODO DEVSIX-5086 When flex-wrap will be fully supported we'll need to update height on split
+            if (keepTogether) {
+                splitRenderer_1 = null;
+                overflowRenderer.SetChildRenderers(GetChildRenderers());
+            }
+            CorrectFixedLayout(layoutBox);
+            ApplyAbsolutePositionIfNeeded(layoutContext);
+            ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
+            ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+            ApplyMargins(occupiedArea.GetBBox(), true);
+            if (splitRenderer_1 == null || splitRenderer_1.GetChildRenderers().IsEmpty()) {
+                return new LayoutResult(LayoutResult.NOTHING, null, null, overflowRenderer, result.GetCauseOfNothing()).SetAreaBreak
+                    (result.GetAreaBreak());
+            }
             else {
-                ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
-                ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
-                ApplyMargins(occupiedArea.GetBBox(), true);
-                if (splitRenderer == null || splitRenderer.GetChildRenderers().IsEmpty()) {
-                    return new LayoutResult(LayoutResult.NOTHING, null, null, overflowRenderer, result.GetCauseOfNothing()).SetAreaBreak
-                        (result.GetAreaBreak());
-                }
-                else {
-                    return new LayoutResult(LayoutResult.PARTIAL, layoutContext.GetArea(), splitRenderer, overflowRenderer, null
-                        ).SetAreaBreak(result.GetAreaBreak());
-                }
+                return new LayoutResult(LayoutResult.PARTIAL, layoutContext.GetArea(), splitRenderer_1, overflowRenderer, 
+                    null).SetAreaBreak(result.GetAreaBreak());
             }
         }
 
@@ -333,6 +341,70 @@ namespace iText.Layout.Renderer {
             base.AddChild(renderer);
         }
 
+        private void FillSplitOverflowRenderersForPartialResult(AbstractRenderer splitRenderer, AbstractRenderer overflowRenderer
+            , IList<FlexItemInfo> line, IRenderer childRenderer, LayoutResult childResult) {
+            // If we split, we remove (override) Property.ALIGN_ITEMS for the overflow renderer.
+            // because we have to layout the remaining part at the top of the layout context.
+            // TODO DEVSIX-5086 When flex-wrap will be fully supported we'll need to reconsider this.
+            // The question is what should be set/calculated for the next line
+            overflowRenderer.SetProperty(Property.ALIGN_ITEMS, null);
+            float occupiedSpace = 0;
+            bool metChildRendererInLine = false;
+            foreach (FlexItemInfo itemInfo in line) {
+                // Split the line
+                if (itemInfo.GetRenderer() == childRenderer) {
+                    metChildRendererInLine = true;
+                    if (childResult.GetSplitRenderer() != null) {
+                        splitRenderer.AddChildRenderer(childResult.GetSplitRenderer());
+                    }
+                    if (childResult.GetOverflowRenderer() != null) {
+                        overflowRenderer.AddChildRenderer(childResult.GetOverflowRenderer());
+                    }
+                }
+                else {
+                    if (metChildRendererInLine) {
+                        // Process all following renderers in the current line
+                        // We have to layout them to understand what goes where
+                        Rectangle neighbourBbox = GetOccupiedAreaBBox().Clone();
+                        // Move bbox by occupied space
+                        neighbourBbox.SetX(neighbourBbox.GetX() + occupiedSpace);
+                        neighbourBbox.SetWidth(itemInfo.GetRectangle().GetWidth());
+                        // Y of the renderer has been already calculated, move bbox accordingly
+                        neighbourBbox.SetY(neighbourBbox.GetY() - itemInfo.GetRectangle().GetY());
+                        LayoutResult neighbourLayoutResult = itemInfo.GetRenderer().Layout(new LayoutContext(new LayoutArea(childResult
+                            .GetOccupiedArea().GetPageNumber(), neighbourBbox)));
+                        // Handle result
+                        if (neighbourLayoutResult.GetStatus() == LayoutResult.PARTIAL && neighbourLayoutResult.GetSplitRenderer() 
+                            != null) {
+                            splitRenderer.AddChildRenderer(neighbourLayoutResult.GetSplitRenderer());
+                        }
+                        else {
+                            if (neighbourLayoutResult.GetStatus() == LayoutResult.FULL) {
+                                splitRenderer.AddChildRenderer(itemInfo.GetRenderer());
+                            }
+                        }
+                        // LayoutResult.NOTHING
+                        if (neighbourLayoutResult.GetOverflowRenderer() != null) {
+                            overflowRenderer.AddChildRenderer(neighbourLayoutResult.GetOverflowRenderer());
+                        }
+                        else {
+                            // Here we might need to still occupy the space on overflow renderer
+                            AddSimulateDiv(overflowRenderer, itemInfo.GetRectangle().GetWidth());
+                        }
+                    }
+                    else {
+                        // Process all preceeding renderers in the current line
+                        // They all were layouted as FULL so add them into split renderer
+                        splitRenderer.AddChildRenderer(itemInfo.GetRenderer());
+                        // But we also need to occupy the space on overflow renderer
+                        AddSimulateDiv(overflowRenderer, itemInfo.GetRectangle().GetWidth());
+                    }
+                }
+                // X is nonzero only for the 1st renderer in line serving for alignment adjustments
+                occupiedSpace += itemInfo.GetRectangle().GetX() + itemInfo.GetRectangle().GetWidth();
+            }
+        }
+
         private void FindMinMaxWidthIfCorrespondingPropertiesAreNotSet(MinMaxWidth minMaxWidth, AbstractWidthHandler
              minMaxWidthHandler) {
             // TODO DEVSIX-5086 When flex-wrap will be fully supported we'll find min/max width with respect to the lines
@@ -349,6 +421,11 @@ namespace iText.Layout.Renderer {
                 minMaxWidthHandler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth() + minMaxWidth.GetMaxWidth());
                 minMaxWidthHandler.UpdateMinChildWidth(childMinMaxWidth.GetMinWidth() + minMaxWidth.GetMinWidth());
             }
+        }
+
+        private static void AddSimulateDiv(AbstractRenderer overflowRenderer, float width) {
+            IRenderer fakeOverflowRenderer = new DivRenderer(new Div().SetMinWidth(width).SetMaxWidth(width));
+            overflowRenderer.AddChildRenderer(fakeOverflowRenderer);
         }
     }
 }

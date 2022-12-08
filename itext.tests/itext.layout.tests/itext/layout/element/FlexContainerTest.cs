@@ -245,6 +245,7 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Ignore = true)]
         public virtual void FlexContainerDifferentChildrenDontFitVerticallyTest() {
             String outFileName = destinationFolder + "flexContainerDifferentChildrenDontFitVerticallyTest" + comparisonPdfId
                  + ".pdf";
@@ -279,6 +280,7 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Ignore = true)]
         public virtual void FlexContainerDifferentChildrenFitContainerDoesNotFitVerticallyTest() {
             String outFileName = destinationFolder + "flexContainerDifferentChildrenFitContainerDoesNotFitVerticallyTest"
                  + comparisonPdfId + ".pdf";
