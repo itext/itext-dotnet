@@ -43,9 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Crypto;
@@ -243,7 +242,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfVersion"/>
         /// of the target document for encryption
         /// </param>
-        public PdfEncryption(X509Certificate[] certs, int[] permissions, int encryptionType, PdfVersion version)
+        public PdfEncryption(IX509Certificate[] certs, int[] permissions, int encryptionType, PdfVersion version)
             : base(new PdfDictionary()) {
             if (version != null && version.CompareTo(PdfVersion.PDF_2_0) >= 0) {
                 for (int i = 0; i < permissions.Length; i++) {
@@ -318,7 +317,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        public PdfEncryption(PdfDictionary pdfDict, ICipherParameters certificateKey, X509Certificate certificate)
+        public PdfEncryption(PdfDictionary pdfDict, IPrivateKey certificateKey, IX509Certificate certificate)
             : base(pdfDict) {
             SetForbidRelease();
             int revision = ReadAndSetCryptoModeForPubSecHandler(pdfDict);
@@ -350,9 +349,9 @@ namespace iText.Kernel.Pdf {
         }
 
         public static byte[] GenerateNewDocumentId() {
-            IDigest md5;
+            IIDigest md5;
             try {
-                md5 = DigestUtilities.GetDigest("MD5");
+                md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }
             catch (Exception e) {
                 throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);

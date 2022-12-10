@@ -45,11 +45,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Actions.Contexts;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Kernel.Pdf;
@@ -57,6 +60,9 @@ using iText.Kernel.Pdf;
 namespace iText.Signatures {
     /// <summary>Verifies the signatures in an LTV document.</summary>
     public class LtvVerifier : RootStoreVerifier {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         /// <summary>The Logger instance</summary>
         protected internal static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.LtvVerifier
             ));
@@ -162,7 +168,7 @@ namespace iText.Signatures {
             LOGGER.LogInformation("Verifying signature.");
             IList<VerificationOK> result = new List<VerificationOK>();
             // Get the certificate chain
-            X509Certificate[] chain = pkcs7.GetSignCertificateChain();
+            IX509Certificate[] chain = pkcs7.GetSignCertificateChain();
             VerifyChain(chain);
             // how many certificates in the chain do we need to check?
             int total = 1;
@@ -170,18 +176,18 @@ namespace iText.Signatures {
                 total = chain.Length;
             }
             // loop over the certificates
-            X509Certificate signCert;
-            X509Certificate issuerCert;
+            IX509Certificate signCert;
+            IX509Certificate issuerCert;
             for (int i = 0; i < total; ) {
                 // the certificate to check
-                signCert = (X509Certificate)chain[i++];
+                signCert = (IX509Certificate)chain[i++];
                 // its issuer
-                issuerCert = (X509Certificate)null;
+                issuerCert = (IX509Certificate)null;
                 if (i < chain.Length) {
-                    issuerCert = (X509Certificate)chain[i];
+                    issuerCert = (IX509Certificate)chain[i];
                 }
                 // now lets verify the certificate
-                LOGGER.LogInformation(signCert.SubjectDN.ToString());
+                LOGGER.LogInformation(BOUNCY_CASTLE_FACTORY.CreateX500Name(signCert).ToString());
                 IList<VerificationOK> list = Verify(signCert, issuerCert, signDate);
                 if (list.Count == 0) {
                     try {
@@ -190,7 +196,7 @@ namespace iText.Signatures {
                             list.Add(new VerificationOK(signCert, this.GetType(), "Root certificate in final revision"));
                         }
                         if (list.Count == 0 && verifyRootCertificate) {
-                            throw new GeneralSecurityException();
+                            throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException();
                         }
                         else {
                             if (chain.Length > 1) {
@@ -198,7 +204,7 @@ namespace iText.Signatures {
                             }
                         }
                     }
-                    catch (GeneralSecurityException) {
+                    catch (AbstractGeneralSecurityException) {
                         throw new VerificationException(signCert, "Couldn't verify with CRL or OCSP or trusted anchor");
                     }
                 }
@@ -215,10 +221,10 @@ namespace iText.Signatures {
         /// do they chain up correctly?
         /// </summary>
         /// <param name="chain">the certificate chain</param>
-        public virtual void VerifyChain(X509Certificate[] chain) {
+        public virtual void VerifyChain(IX509Certificate[] chain) {
             // Loop over the certificates in the chain
             for (int i = 0; i < chain.Length; i++) {
-                X509Certificate cert = (X509Certificate)chain[i];
+                IX509Certificate cert = (IX509Certificate)chain[i];
                 // check if the certificate was/is valid
                 cert.CheckValidity(signDate);
                 // check if the previous certificate was issued by this certificate
@@ -236,9 +242,9 @@ namespace iText.Signatures {
         /// a list of <c>VerificationOK</c> objects.
         /// The list will be empty if the certificate couldn't be verified.
         /// </returns>
-        /// <seealso cref="RootStoreVerifier.Verify(Org.BouncyCastle.X509.X509Certificate, Org.BouncyCastle.X509.X509Certificate, System.DateTime)
+        /// <seealso cref="RootStoreVerifier.Verify(iText.Commons.Bouncycastle.Cert.IX509Certificate, iText.Commons.Bouncycastle.Cert.IX509Certificate, System.DateTime)
         ///     "/>
-        public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
+        public override IList<VerificationOK> Verify(IX509Certificate signCert, IX509Certificate issuerCert, DateTime
              signDate) {
             // we'll verify against the rootstore (if present)
             RootStoreVerifier rootStoreVerifier = new RootStoreVerifier(verifier);
@@ -288,8 +294,8 @@ namespace iText.Signatures {
 
         /// <summary>Gets a list of X509CRL objects from a Document Security Store.</summary>
         /// <returns>a list of CRLs</returns>
-        public virtual IList<X509Crl> GetCRLsFromDSS() {
-            IList<X509Crl> crls = new List<X509Crl>();
+        public virtual IList<IX509Crl> GetCRLsFromDSS() {
+            IList<IX509Crl> crls = new List<IX509Crl>();
             if (dss == null) {
                 return crls;
             }
@@ -299,15 +305,15 @@ namespace iText.Signatures {
             }
             for (int i = 0; i < crlarray.Size(); i++) {
                 PdfStream stream = crlarray.GetAsStream(i);
-                crls.Add((X509Crl)SignUtils.ParseCrlFromStream(new MemoryStream(stream.GetBytes())));
+                crls.Add((IX509Crl)SignUtils.ParseCrlFromStream(new MemoryStream(stream.GetBytes())));
             }
             return crls;
         }
 
         /// <summary>Gets OCSP responses from the Document Security Store.</summary>
-        /// <returns>a list of BasicOCSPResp objects</returns>
-        public virtual IList<BasicOcspResp> GetOCSPResponsesFromDSS() {
-            IList<BasicOcspResp> ocsps = new List<BasicOcspResp>();
+        /// <returns>a list of IBasicOCSPResp objects</returns>
+        public virtual IList<IBasicOCSPResponse> GetOCSPResponsesFromDSS() {
+            IList<IBasicOCSPResponse> ocsps = new List<IBasicOCSPResponse>();
             if (dss == null) {
                 return ocsps;
             }
@@ -317,19 +323,21 @@ namespace iText.Signatures {
             }
             for (int i = 0; i < ocsparray.Size(); i++) {
                 PdfStream stream = ocsparray.GetAsStream(i);
-                OcspResp ocspResponse;
+                IOCSPResponse ocspResponse;
                 try {
-                    ocspResponse = new OcspResp(stream.GetBytes());
+                    ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(stream.GetBytes());
                 }
                 catch (System.IO.IOException e) {
-                    throw new GeneralSecurityException(e.Message);
+                    throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
+                        .Message);
                 }
-                if (ocspResponse.Status == 0) {
+                if (ocspResponse.GetStatus() == 0) {
                     try {
-                        ocsps.Add((BasicOcspResp)ocspResponse.GetResponseObject());
+                        ocsps.Add(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(ocspResponse.GetResponseObject()));
                     }
-                    catch (OcspException e) {
-                        throw new GeneralSecurityException(e.ToString());
+                    catch (AbstractOCSPException e) {
+                        throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
+                            .ToString());
                     }
                 }
             }
@@ -359,14 +367,14 @@ namespace iText.Signatures {
                 LOGGER.LogInformation("The timestamp covers whole document.");
             }
             else {
-                throw new VerificationException((X509Certificate)null, "Signature doesn't cover whole document.");
+                throw new VerificationException((IX509Certificate)null, "Signature doesn't cover whole document.");
             }
             if (pkcs7.VerifySignatureIntegrityAndAuthenticity()) {
                 LOGGER.LogInformation("The signed document has not been modified.");
                 return pkcs7;
             }
             else {
-                throw new VerificationException((X509Certificate)null, "The document was altered after the final signature was applied."
+                throw new VerificationException((IX509Certificate)null, "The document was altered after the final signature was applied."
                     );
             }
         }

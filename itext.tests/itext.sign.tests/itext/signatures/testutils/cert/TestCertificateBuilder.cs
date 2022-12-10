@@ -41,27 +41,28 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Cert.Jcajce;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
+using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Utils;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.X509;
-using iText.IO.Util;
-using Org.BouncyCastle.Crypto.Operators;
-using Org.BouncyCastle.Security.Certificates;
 
 namespace iText.Signatures.Testutils.Cert {
     public class TestCertificateBuilder {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
         private const String signatureAlgorithm = "SHA256WithRSA";
 
-        private AsymmetricKeyParameter publicKey;
+        private IPublicKey publicKey;
 
-        private X509Certificate signingCert;
+        private IX509Certificate signingCert;
 
-        private ICipherParameters signingKey;
+        private IPrivateKey signingKey;
 
         private String subjectDN;
 
@@ -69,7 +70,7 @@ namespace iText.Signatures.Testutils.Cert {
 
         private DateTime endDate;
 
-        public TestCertificateBuilder(AsymmetricKeyParameter publicKey, X509Certificate signingCert, ICipherParameters
+        public TestCertificateBuilder(IPublicKey publicKey, IX509Certificate signingCert, IPrivateKey
              signingKey, String subjectDN) {
             // requires corresponding key pairs to be used in this class
             this.publicKey = publicKey;
@@ -89,46 +90,43 @@ namespace iText.Signatures.Testutils.Cert {
         }
 
         // TODO generalize
-        public virtual X509Certificate BuildAuthorizedOCSPResponderCert() {        
-            X509Name subjectDnName = new X509Name(subjectDN);
-            BigInteger certSerialNumber = new BigInteger(Convert.ToString(SystemUtil.GetTimeBasedSeed())); // Using the current timestamp as the certificate serial number
-            ISignatureFactory contentSigner = new Asn1SignatureFactory(signatureAlgorithm, (AsymmetricKeyParameter) signingKey);
-            X509V3CertificateGenerator certBuilder = new X509V3CertificateGenerator();
-            certBuilder.SetIssuerDN(signingCert.SubjectDN);
-            certBuilder.SetSerialNumber(certSerialNumber);
-            certBuilder.SetNotBefore(startDate);
-            certBuilder.SetNotAfter(endDate);
-            certBuilder.SetSubjectDN(subjectDnName);
-            certBuilder.SetPublicKey(publicKey);
-            
+        public virtual IX509Certificate BuildAuthorizedOCSPResponderCert() {        
+            IX500Name subjectDnName = FACTORY.CreateX500Name(subjectDN);
+            IBigInteger certSerialNumber = FACTORY.CreateBigInteger(Convert.ToString(SystemUtil.GetTimeBasedSeed())); // Using the current timestamp as the certificate serial number
+            IContentSigner contentSigner = FACTORY.CreateContentSigner(signatureAlgorithm, signingKey);
+            IJcaX509v3CertificateBuilder certBuilder = FACTORY.CreateJcaX509v3CertificateBuilder(signingCert,
+                certSerialNumber, startDate, endDate, subjectDnName, publicKey);
+
             // TODO generalize extensions setting
             // Extensions --------------------------
             bool ca = true;
-            AddExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(ca), 
+            AddExtension(FACTORY.CreateExtensions().GetBasicConstraints(), true, FACTORY.CreateBasicConstraints(ca), 
                 certBuilder);
             
-            AddExtension(OcspObjectIdentifiers.PkixOcspNocheck, false, Org.BouncyCastle.Asn1.DerNull.Instance, 
+            AddExtension(FACTORY.CreateOCSPObjectIdentifiers().GetIdPkixOcspNoCheck(), false, FACTORY.CreateDERNull(), 
                 certBuilder);
             
-            AddExtension(X509Extensions.KeyUsage, false, new KeyUsage(KeyUsage.DigitalSignature | KeyUsage.NonRepudiation),
+            AddExtension(FACTORY.CreateExtensions().GetKeyUsage(), false, FACTORY.CreateKeyUsage(
+                    FACTORY.CreateKeyUsage().GetDigitalSignature() | FACTORY.CreateKeyUsage().GetNonRepudiation()),
                 certBuilder);
             
-            AddExtension(X509Extensions.ExtendedKeyUsage, false, new ExtendedKeyUsage(KeyPurposeID.IdKPOcspSigning), 
+            AddExtension(FACTORY.CreateExtensions().GetExtendedKeyUsage(), false, FACTORY.CreateExtendedKeyUsage
+                    (FACTORY.CreateKeyPurposeId().GetIdKpOCSPSigning()), 
                 certBuilder);
             
-            SubjectPublicKeyInfo issuerPublicKeyInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(signingCert.GetPublicKey());
-            AuthorityKeyIdentifier authKeyIdentifier = new AuthorityKeyIdentifier(issuerPublicKeyInfo);
-            AddExtension(X509Extensions.AuthorityKeyIdentifier, false, authKeyIdentifier, certBuilder);
+            ISubjectPublicKeyInfo issuerPublicKeyInfo = FACTORY.CreateSubjectPublicKeyInfo(signingCert.GetPublicKey());
+            IAuthorityKeyIdentifier authKeyIdentifier = FACTORY.CreateAuthorityKeyIdentifier(issuerPublicKeyInfo);
+            AddExtension(FACTORY.CreateExtensions().GetAuthorityKeyIdentifier(), false, authKeyIdentifier, certBuilder);
 
-            SubjectPublicKeyInfo subjectPublicKeyInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicKey);
-            SubjectKeyIdentifier subjectKeyIdentifier = new SubjectKeyIdentifier(subjectPublicKeyInfo);
-            AddExtension(X509Extensions.SubjectKeyIdentifier, false, subjectKeyIdentifier, certBuilder);
+            ISubjectPublicKeyInfo subjectPublicKeyInfo = FACTORY.CreateSubjectPublicKeyInfo(publicKey);
+            ISubjectKeyIdentifier subjectKeyIdentifier = FACTORY.CreateSubjectKeyIdentifier(subjectPublicKeyInfo);
+            AddExtension(FACTORY.CreateExtensions().GetSubjectKeyIdentifier(), false, subjectKeyIdentifier, certBuilder);
             // -------------------------------------
-            return certBuilder.Generate(contentSigner);
+            return certBuilder.Build(contentSigner);
         }
 
-        private static void AddExtension(DerObjectIdentifier extensionOID, bool critical, Asn1Encodable extensionValue, 
-            X509V3CertificateGenerator certBuilder) {
+        private static void AddExtension(IASN1ObjectIdentifier extensionOID, bool critical, IASN1Encodable extensionValue, 
+            IJcaX509v3CertificateBuilder certBuilder) {
             certBuilder.AddExtension(extensionOID, critical, extensionValue);
         }
     }

@@ -44,8 +44,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.IO.Image;
@@ -56,11 +56,11 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfSignatureAppearanceTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfSignatureAppearanceTest/";
@@ -69,13 +69,13 @@ namespace iText.Signatures.Sign {
              + "/test/itext/signatures/sign/PdfSignatureAppearanceTest/";
 
         public static readonly String KEYSTORE_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfSignatureAppearanceTest/test.p12";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfSignatureAppearanceTest/test.pem";
 
-        public static readonly char[] PASSWORD = "kspass".ToCharArray();
+        public static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
-        private X509Certificate[] chain;
+        private IX509Certificate[] chain;
 
-        private ICipherParameters pk;
+        private IPrivateKey pk;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -84,8 +84,8 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.SetUp]
         public virtual void Init() {
-            pk = Pkcs12FileHelper.ReadFirstKey(KEYSTORE_PATH, PASSWORD, PASSWORD);
-            chain = Pkcs12FileHelper.ReadFirstChain(KEYSTORE_PATH, PASSWORD);
+            pk = PemFileHelper.ReadFirstKey(KEYSTORE_PATH, PASSWORD);
+            chain = PemFileHelper.ReadFirstChain(KEYSTORE_PATH);
         }
 
         [NUnit.Framework.Test]

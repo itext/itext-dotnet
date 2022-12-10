@@ -49,7 +49,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Signatures.Verify.Pdfinsecurity {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class IncrementalSavingAttackTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/verify/pdfinsecurity/IncrementalSavingAttackTest/";

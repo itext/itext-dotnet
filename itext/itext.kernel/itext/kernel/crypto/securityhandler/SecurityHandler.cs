@@ -43,13 +43,22 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
+using Microsoft.Extensions.Logging;
+using iText.Bouncycastleconnector;
+using iText.Commons;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     public abstract class SecurityHandler {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Crypto.Securityhandler.SecurityHandler
+            ));
+
         /// <summary>The global encryption key</summary>
         protected internal byte[] mkey = new byte[0];
 
@@ -58,7 +67,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// The encryption key for a particular object/generation.
         /// It is recalculated with
         /// <see cref="SetHashKeyForNextObject(int, int)"/>
-        /// for every object individually based in its object/generation.
+        /// for every object individually based in its
+        /// object/generation.
         /// </remarks>
         protected internal byte[] nextObjectKey;
 
@@ -66,11 +76,12 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// The encryption key length for a particular object/generation
         /// It is recalculated with
         /// <see cref="SetHashKeyForNextObject(int, int)"/>
-        /// for every object individually based in its object/generation.
+        /// for every object individually based in its
+        /// object/generation.
         /// </summary>
         protected internal int nextObjectKeySize;
 
-        protected internal IDigest md5;
+        protected internal IIDigest md5;
 
         /// <summary>Work area to prepare the object/generation bytes</summary>
         protected internal byte[] extra = new byte[5];
@@ -108,7 +119,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         private void SafeInitMessageDigest() {
             try {
-                md5 = DigestUtilities.GetDigest("MD5");
+                md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
+                if (FACTORY.IsInApprovedOnlyMode()) {
+                    LOGGER.LogWarning(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT);
+                }
             }
             catch (Exception e) {
                 throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);

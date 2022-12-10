@@ -46,8 +46,8 @@
     <ProjectReference Include="..\..\itext\itext.layout\itext.layout.csproj" />
     <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj" />
     <ProjectReference Include="..\..\itext\itext.font-asian\itext.font-asian.csproj" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\itext\itext.bouncy-castle-adapter\itext.bouncy-castle-adapter.csproj" />
+    <ProjectReference Include="..\..\itext\itext.bouncy-castle-fips-adapter\itext.bouncy-castle-fips-adapter.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
     <PackageReference Include="Microsoft.NET.Test.Sdk">

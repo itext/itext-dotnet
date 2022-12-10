@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures;
@@ -64,14 +64,14 @@ namespace iText.Signatures.Testutils.Client {
             return this;
         }
 
-        public virtual iText.Signatures.Testutils.Client.TestCrlClient AddBuilderForCertIssuer(X509Certificate issuerCert
-            , ICipherParameters issuerPrivateKey) {
+        public virtual iText.Signatures.Testutils.Client.TestCrlClient AddBuilderForCertIssuer(IX509Certificate issuerCert
+            , IPrivateKey issuerPrivateKey) {
             DateTime yesterday = DateTimeUtil.GetCurrentUtcTime().AddDays(-1);
             crlBuilders.Add(new TestCrlBuilder(issuerCert, issuerPrivateKey, yesterday));
             return this;
         }
 
-        public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url) {
+        public virtual ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
             return crlBuilders.Select((testCrlBuilder) => {
                 try {
                     return testCrlBuilder.MakeCrl();

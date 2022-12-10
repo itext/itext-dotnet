@@ -42,54 +42,55 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.X509;
-using iText.IO.Util;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Crypto.Operators;
-using Org.BouncyCastle.Security.Certificates;
 
 namespace iText.Signatures.Testutils.Builder {
     public class TestOcspResponseBuilder {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
         private const String SIGN_ALG = "SHA256withRSA";
 
-        private BasicOcspRespGenerator responseBuilder;
+        private IBasicOCSPRespBuilder responseBuilder;
 
-        private X509Certificate issuerCert;
-        private ICipherParameters issuerPrivateKey;
+        private IX509Certificate issuerCert;
+        private IPrivateKey issuerPrivateKey;
 
-        private CertificateStatus certificateStatus;
+        private ICertificateStatus certificateStatus;
 
         private DateTime thisUpdate = DateTimeUtil.GetCurrentTime();
 
         private DateTime nextUpdate = DateTimeUtil.GetCurrentTime();
 
-        public TestOcspResponseBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey,
-            CertificateStatus certificateStatus)
+        public TestOcspResponseBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey,
+            ICertificateStatus certificateStatus)
         {
             this.issuerCert = issuerCert;
             this.issuerPrivateKey = issuerPrivateKey;
             this.certificateStatus = certificateStatus;
-            X509Name subjectDN = issuerCert.SubjectDN;
+            IX500Name subjectDN = issuerCert.GetSubjectDN();
             thisUpdate = thisUpdate.AddDays(-1);
             nextUpdate = nextUpdate.AddDays(30);
-            responseBuilder = new BasicOcspRespGenerator(new RespID(subjectDN));
+            responseBuilder = FACTORY.CreateBasicOCSPRespBuilder(FACTORY.CreateRespID(subjectDN));
         }
 
-        public TestOcspResponseBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey)
-            : this(issuerCert, issuerPrivateKey, CertificateStatus.Good)
+        public TestOcspResponseBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey)
+            : this(issuerCert, issuerPrivateKey, FACTORY.CreateCertificateStatus().GetGood())
         {
         }
 
-        public X509Certificate GetIssuerCert() {
+        public IX509Certificate GetIssuerCert() {
             return issuerCert;
         }
 
-        public virtual void SetCertificateStatus(CertificateStatus certificateStatus) {
+        public virtual void SetCertificateStatus(ICertificateStatus certificateStatus) {
             this.certificateStatus = certificateStatus;
         }
 
@@ -102,26 +103,31 @@ namespace iText.Signatures.Testutils.Builder {
         }
 
         public virtual byte[] MakeOcspResponse(byte[] requestBytes) {
-            BasicOcspResp ocspResponse = MakeOcspResponseObject(requestBytes);
+            IBasicOCSPResponse ocspResponse = MakeOcspResponseObject(requestBytes);
             return ocspResponse.GetEncoded();
         }
         
-        public virtual BasicOcspResp MakeOcspResponseObject(byte[] requestBytes) {
-            OcspReq ocspRequest = new OcspReq(requestBytes);
-            Req[] requestList = ocspRequest.GetRequestList();
+        public virtual IBasicOCSPResponse MakeOcspResponseObject(byte[] requestBytes) {
+            IOCSPReq ocspRequest = FACTORY.CreateOCSPReq(requestBytes);
+            IReq[] requestList = ocspRequest.GetRequestList();
 
-            X509Extension extNonce = ocspRequest.RequestExtensions.GetExtension(OcspObjectIdentifiers.PkixOcspNonce);
-            if (extNonce != null) {
+            IExtension extNonce = ocspRequest.GetExtension(FACTORY.CreateOCSPObjectIdentifiers()
+                .GetIdPkixOcspNonce());
+            if (!FACTORY.IsNullExtension(extNonce)) {
                 // TODO ensure
-                X509Extensions responseExtensions = new X509Extensions(new Dictionary<DerObjectIdentifier, X509Extension>() { { OcspObjectIdentifiers.PkixOcspNonce, extNonce }});
+                IExtensions responseExtensions = FACTORY.CreateExtensions(new Dictionary<IASN1ObjectIdentifier, IExtension>() {
+                {
+                    FACTORY.CreateOCSPObjectIdentifiers().GetIdPkixOcspNonce(), extNonce
+                }});
                 responseBuilder.SetResponseExtensions(responseExtensions);
             }
 
-            foreach (Req req in requestList) {
-                responseBuilder.AddResponse(req.GetCertID(), certificateStatus, thisUpdate.ToUniversalTime(), nextUpdate.ToUniversalTime(), null);
+            foreach (IReq req in requestList) {
+                responseBuilder.AddResponse(req.GetCertID(), certificateStatus, thisUpdate.ToUniversalTime(), nextUpdate.ToUniversalTime(), 
+                    FACTORY.CreateExtensions());
             }
             DateTime time = DateTimeUtil.GetCurrentUtcTime();
-            return responseBuilder.Generate(new Asn1SignatureFactory(SIGN_ALG, (AsymmetricKeyParameter)issuerPrivateKey), new X509Certificate[] { issuerCert }, time);
+            return responseBuilder.Build(FACTORY.CreateContentSigner(SIGN_ALG, issuerPrivateKey), new IX509Certificate[] { issuerCert }, time);
         }
     }
 }

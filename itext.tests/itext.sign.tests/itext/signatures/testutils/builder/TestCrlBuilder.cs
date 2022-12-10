@@ -41,27 +41,27 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
-using Org.BouncyCastle.Crypto.Operators;
 
 namespace iText.Signatures.Testutils.Builder {
     public class TestCrlBuilder {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
         private const String SIGN_ALG = "SHA256withRSA";
 
-        private readonly AsymmetricKeyParameter issuerPrivateKey;
-        private readonly X509V2CrlGenerator crlBuilder;
+        private readonly IPrivateKey issuerPrivateKey;
+        private readonly IX509v2CRLBuilder crlBuilder;
 
         private DateTime nextUpdate = DateTimeUtil.GetCurrentUtcTime().AddDays(30);
 
-        public TestCrlBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey, DateTime thisUpdate) {
-            X509Name issuerCertSubjectDn = issuerCert.SubjectDN;
-            this.crlBuilder = new X509V2CrlGenerator();
-            this.crlBuilder.SetIssuerDN(issuerCertSubjectDn);
-            this.crlBuilder.SetThisUpdate(thisUpdate);
-            this.issuerPrivateKey = (AsymmetricKeyParameter) issuerPrivateKey;
+        public TestCrlBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey, DateTime thisUpdate) {
+            IX500Name issuerCertSubjectDn = issuerCert.GetSubjectDN();
+            this.crlBuilder = FACTORY.CreateX509v2CRLBuilder(issuerCertSubjectDn, thisUpdate);
+            this.issuerPrivateKey = issuerPrivateKey;
         }
 
         public virtual void SetNextUpdate(DateTime nextUpdate) {
@@ -69,13 +69,13 @@ namespace iText.Signatures.Testutils.Builder {
         }
 
         /// <summary>See CRLReason</summary>
-        public virtual void AddCrlEntry(X509Certificate certificate, DateTime revocationDate, int reason) {
-            crlBuilder.AddCrlEntry(certificate.SerialNumber, revocationDate, reason);
+        public virtual void AddCrlEntry(IX509Certificate certificate, DateTime revocationDate, int reason) {
+            crlBuilder.AddCRLEntry(certificate.GetSerialNumber(), revocationDate, reason);
         }
 
         public virtual byte[] MakeCrl() {
             crlBuilder.SetNextUpdate(nextUpdate);
-            X509Crl crl = crlBuilder.Generate(new Asn1SignatureFactory(SIGN_ALG, issuerPrivateKey));
+            IX509Crl crl = crlBuilder.Build(FACTORY.CreateContentSigner(SIGN_ALG, issuerPrivateKey));
             return crl.GetEncoded();
         }
     }

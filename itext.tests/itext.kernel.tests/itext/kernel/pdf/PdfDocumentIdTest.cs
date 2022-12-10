@@ -42,8 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Canvas;
@@ -89,9 +88,9 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ChangeIdTest02() {
             MemoryStream baos = new MemoryStream();
-            IDigest md5;
+            IIDigest md5;
             try {
-                md5 = DigestUtilities.GetDigest("MD5");
+                md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }
             catch (Exception e) {
                 throw new PdfException(e);
@@ -116,9 +115,9 @@ namespace iText.Kernel.Pdf {
         public virtual void ChangeIdTest03() {
             MemoryStream baosInitial = new MemoryStream();
             MemoryStream baosModified = new MemoryStream();
-            IDigest md5;
+            IIDigest md5;
             try {
-                md5 = DigestUtilities.GetDigest("MD5");
+                md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }
             catch (Exception e) {
                 throw new PdfException(e);
@@ -160,9 +159,9 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void FetchReaderIdTest() {
             MemoryStream baos = new MemoryStream();
-            IDigest md5;
+            IIDigest md5;
             try {
-                md5 = DigestUtilities.GetDigest("MD5");
+                md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }
             catch (Exception e) {
                 throw new PdfException(e);
@@ -187,9 +186,9 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void WriterPropertiesPriorityTest() {
             MemoryStream baos = new MemoryStream();
-            IDigest md5;
+            IIDigest md5;
             try {
-                md5 = DigestUtilities.GetDigest("MD5");
+                md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }
             catch (Exception e) {
                 throw new PdfException(e);

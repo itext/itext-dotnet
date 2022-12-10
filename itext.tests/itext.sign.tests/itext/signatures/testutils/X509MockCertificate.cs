@@ -42,51 +42,90 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.X509;
-using Org.BouncyCastle.Utilities.Collections;
 using System.Collections;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
 
 namespace iText.Signatures.Testutils
 {
-    class X509MockCertificate : X509Certificate
+    class X509MockCertificate : IX509Certificate
     {
         public X509MockCertificate() 
         {
-            this.criticalExtensions = new HashSet();
+            this.criticalExtensions = new HashSet<string>();
         }
 
-        internal ISet criticalExtensions;
+        internal ISet<string> criticalExtensions;
 
         internal IList extendedKeyUsage;
 
         public bool[] KeyUsage { get; set; }
 
-        protected override X509Extensions GetX509Extensions()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetCriticalExtensions(ISet criticalExtensions)
+        public void SetCriticalExtensions(ISet<string> criticalExtensions)
         {
             this.criticalExtensions = criticalExtensions;
         }
 
-        public override ISet GetCriticalExtensionOids()
+        public IX500Name GetIssuerDN()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IBigInteger GetSerialNumber()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IPublicKey GetPublicKey()
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] GetEncoded()
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] GetTbsCertificate() {
+            return Array.Empty<byte>();
+        }
+
+        public IASN1OctetString GetExtensionValue(string oid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Verify(IPublicKey issuerPublicKey)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ISet<string> GetCriticalExtensionOids()
         {
             return this.criticalExtensions;
         }
 
-        public override bool[] GetKeyUsage()
+        public void CheckValidity(DateTime time)
         {
-            return this.KeyUsage;
+            throw new NotImplementedException();
+        }
+
+        public string GetEndDateTime()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DateTime GetNotBefore()
+        {
+            throw new NotImplementedException();
         }
         
-        public override X509Name SubjectDN
+        public IX500Name GetSubjectDN()
         {
-            get { return null; }
+            return null;
         }
 
         public void SetExtendedKeyUsage(IList extendedKeyUsage)
@@ -94,7 +133,7 @@ namespace iText.Signatures.Testutils
             this.extendedKeyUsage = extendedKeyUsage;
         }
 
-        public override IList GetExtendedKeyUsage()
+        public IList GetExtendedKeyUsage()
         {
             return this.extendedKeyUsage;
         }

@@ -41,17 +41,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.Crypto.Modes;
-using Org.BouncyCastle.Crypto.Parameters;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle.Crypto;
 
 namespace iText.Kernel.Crypto {
     /// <summary>Creates an AES Cipher with CBC and no padding.</summary>
     /// <author>Paulo Soares</author>
     public class AESCipherCBCnoPad {
-        private IBlockCipher cbc;
+        private static ICipherCBCnoPad cipher;
 
         /// <summary>Creates a new instance of AESCipher with CBC and no padding</summary>
         /// <param name="forEncryption">
@@ -60,10 +57,7 @@ namespace iText.Kernel.Crypto {
         /// </param>
         /// <param name="key">the key to be used in the cipher</param>
         public AESCipherCBCnoPad(bool forEncryption, byte[] key) {
-            IBlockCipher aes = new AesFastEngine();
-            cbc = new CbcBlockCipher(aes);
-            KeyParameter kp = new KeyParameter(key);
-            cbc.Init(forEncryption, kp);
+            cipher = BouncyCastleFactoryCreator.GetFactory().CreateCipherCbCnoPad(forEncryption, key);
         }
 
         /// <summary>Creates a new instance of AESCipher with CBC and no padding</summary>
@@ -74,26 +68,18 @@ namespace iText.Kernel.Crypto {
         /// <param name="key">the key to be used in the cipher</param>
         /// <param name="initVector">initialization vector to be used in cipher</param>
         public AESCipherCBCnoPad(bool forEncryption, byte[] key, byte[] initVector) {
-            IBlockCipher aes = new AesFastEngine();
-            cbc = new CbcBlockCipher(aes);
-            KeyParameter kp = new KeyParameter(key);
-            ParametersWithIV piv = new ParametersWithIV(kp, initVector);
-            cbc.Init(forEncryption, piv);
+            cipher = BouncyCastleFactoryCreator.GetFactory().CreateCipherCbCnoPad(forEncryption, key, initVector);
         }
 
+        /// <summary>
+        /// Processes data block using created cipher.
+        /// </summary>
+        /// <param name="inp">Input data bytes</param>
+        /// <param name="inpOff">Input data offset</param>
+        /// <param name="inpLen">Input data length</param>
+        /// <returns>Processed bytes</returns>
         public virtual byte[] ProcessBlock(byte[] inp, int inpOff, int inpLen) {
-            if ((inpLen % cbc.GetBlockSize()) != 0) {
-                throw new ArgumentException("Not multiple of block: " + inpLen);
-            }
-            byte[] outp = new byte[inpLen];
-            int baseOffset = 0;
-            while (inpLen > 0) {
-                cbc.ProcessBlock(inp, inpOff, outp, baseOffset);
-                inpLen -= cbc.GetBlockSize();
-                baseOffset += cbc.GetBlockSize();
-                inpOff += cbc.GetBlockSize();
-            }
-            return outp;
+            return cipher.ProcessBlock(inp, inpOff, inpLen);
         }
     }
 }

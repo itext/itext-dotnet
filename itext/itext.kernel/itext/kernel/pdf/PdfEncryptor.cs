@@ -45,7 +45,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.Bouncycastleconnector;
 using iText.Commons.Actions.Contexts;
+using iText.Commons.Bouncycastle;
 
 namespace iText.Kernel.Pdf {
     /// <summary>
@@ -58,6 +60,9 @@ namespace iText.Kernel.Pdf {
     /// It is also possible to change the info dictionary.
     /// </remarks>
     public sealed class PdfEncryptor {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         private IMetaInfo metaInfo;
 
         private EncryptionProperties properties;

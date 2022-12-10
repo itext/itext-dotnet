@@ -22,13 +22,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class CertificateInfoTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        private static readonly String EXPECTED_EXCEPTION_MESSAGE = FACTORY.GetBouncyCastleFactoryTestUtil().GetCertificateInfoTestConst
+            ();
+
         [NUnit.Framework.Test]
         public virtual void X500InvalidDirectoryConstructorTest() {
             NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new CertificateInfo.X500Name("some_dir"));
@@ -70,16 +77,14 @@ namespace iText.Signatures {
         public virtual void GetIssuerFieldsExceptionTest() {
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => CertificateInfo.GetIssuer(new 
                 byte[] { 4, 8, 15, 16, 23, 42 }));
-            NUnit.Framework.Assert.AreEqual("corrupted stream - out of bounds length found: 8 >= 6", exception.InnerException
-                .Message);
+            NUnit.Framework.Assert.AreEqual(EXPECTED_EXCEPTION_MESSAGE, exception.InnerException.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetSubjectExceptionTest() {
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => CertificateInfo.GetSubject(
                 new byte[] { 4, 8, 15, 16, 23, 42 }));
-            NUnit.Framework.Assert.AreEqual("corrupted stream - out of bounds length found: 8 >= 6", exception.InnerException
-                .Message);
+            NUnit.Framework.Assert.AreEqual(EXPECTED_EXCEPTION_MESSAGE, exception.InnerException.Message);
         }
     }
 }

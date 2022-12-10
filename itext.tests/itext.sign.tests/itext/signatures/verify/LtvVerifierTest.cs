@@ -44,11 +44,11 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Verify {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class LtvVerifierTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/verify/LtvVerifierTest/";
@@ -71,7 +71,7 @@ namespace iText.Signatures.Verify {
             String ltvTsFileName = sourceFolder + "ltvDoc.pdf";
             LtvVerifier verifier = new LtvVerifier(new PdfDocument(new PdfReader(ltvTsFileName)));
             verifier.SetCertificateOption(LtvVerification.CertificateOption.WHOLE_CHAIN);
-            verifier.SetRootStore(Pkcs12FileHelper.InitStore(certsSrc + "rootStore.p12", password));
+            verifier.SetRootStore(PemFileHelper.InitStore(certsSrc + "rootStore.pem"));
             IList<VerificationOK> verificationMessages = verifier.Verify(null);
             NUnit.Framework.Assert.AreEqual(7, verificationMessages.Count);
         }
@@ -81,7 +81,7 @@ namespace iText.Signatures.Verify {
             String ltvTsFileName = sourceFolder + "ltvDoc.pdf";
             LtvVerifier verifier = new LtvVerifier(new PdfDocument(new PdfReader(ltvTsFileName)));
             verifier.SetCertificateOption(LtvVerification.CertificateOption.WHOLE_CHAIN);
-            verifier.SetRootStore(Pkcs12FileHelper.InitStore(certsSrc + "rootStore.p12", password));
+            verifier.SetRootStore(PemFileHelper.InitStore(certsSrc + "rootStore.pem"));
             IList<VerificationOK> verificationMessages = verifier.Verify(null);
             NUnit.Framework.Assert.AreEqual(7, verificationMessages.Count);
         }

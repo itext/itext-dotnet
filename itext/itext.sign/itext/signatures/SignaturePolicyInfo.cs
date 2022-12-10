@@ -43,20 +43,25 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Org.BouncyCastle;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Esf;
-using Org.BouncyCastle.Asn1.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Utils;
 
 namespace iText.Signatures {
-    /// <summary>
+    /// <summary>Class that encapsulates the signature policy information</summary>
+    /// <remarks>
     /// Class that encapsulates the signature policy information
+    /// <para />
     /// Sample:
+    /// <para />
     /// SignaturePolicyInfo spi = new SignaturePolicyInfo("2.16.724.1.3.1.1.2.1.9",
     /// "G7roucf600+f03r/o0bAOQ6WAs0=", "SHA-1", "https://sede.060.gob.es/politica_de_firma_anexo_1.pdf");
-    /// </summary>
+    /// </remarks>
     public class SignaturePolicyInfo {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private String policyIdentifier;
 
         private byte[] policyHash;
@@ -122,24 +127,24 @@ namespace iText.Signatures {
             return policyUri;
         }
 
-        internal virtual SignaturePolicyIdentifier ToSignaturePolicyIdentifier() {
+        internal virtual ISignaturePolicyIdentifier ToSignaturePolicyIdentifier() {
             String algId = DigestAlgorithms.GetAllowedDigest(this.policyDigestAlgorithm);
             if (algId == null || algId.Length == 0) {
                 throw new ArgumentException("Invalid policy hash algorithm");
             }
-            SignaturePolicyIdentifier signaturePolicyIdentifier = null;
-            SigPolicyQualifierInfo spqi = null;
+            ISignaturePolicyIdentifier signaturePolicyIdentifier = null;
+            ISigPolicyQualifierInfo spqi = null;
             if (this.policyUri != null && this.policyUri.Length > 0) {
-                spqi = new SigPolicyQualifierInfo(Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.IdSpqEtsUri, new DerIA5String
-                    (this.policyUri));
+                spqi = FACTORY.CreateSigPolicyQualifierInfo(FACTORY.CreatePKCSObjectIdentifiers().GetIdSpqEtsUri(), FACTORY
+                    .CreateDERIA5String(this.policyUri));
             }
-            DerObjectIdentifier identifier = DerObjectIdentifier.GetInstance(new DerObjectIdentifier(this.policyIdentifier
-                .Replace("urn:oid:", "")));
-            OtherHashAlgAndValue otherHashAlgAndValue = new OtherHashAlgAndValue(new AlgorithmIdentifier(new DerObjectIdentifier
-                (algId)), new DerOctetString(this.policyHash));
-            SignaturePolicyId signaturePolicyId = new SignaturePolicyId(identifier, otherHashAlgAndValue, SignUtils.CreateSigPolicyQualifiers
-                (spqi));
-            signaturePolicyIdentifier = new SignaturePolicyIdentifier(signaturePolicyId);
+            IASN1ObjectIdentifier identifier = FACTORY.CreateASN1ObjectIdentifierInstance(FACTORY.CreateASN1ObjectIdentifier
+                (this.policyIdentifier.Replace("urn:oid:", "")));
+            IOtherHashAlgAndValue otherHashAlgAndValue = FACTORY.CreateOtherHashAlgAndValue(FACTORY.CreateAlgorithmIdentifier
+                (FACTORY.CreateASN1ObjectIdentifier(algId)), FACTORY.CreateDEROctetString(this.policyHash));
+            ISignaturePolicyId signaturePolicyId = FACTORY.CreateSignaturePolicyId(identifier, otherHashAlgAndValue, spqi
+                );
+            signaturePolicyIdentifier = FACTORY.CreateSignaturePolicyIdentifier(signaturePolicyId);
             return signaturePolicyIdentifier;
         }
     }

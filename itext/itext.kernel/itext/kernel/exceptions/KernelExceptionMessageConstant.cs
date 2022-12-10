@@ -205,6 +205,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String END_OF_CONTENT_STREAM_REACHED_BEFORE_END_OF_IMAGE_DATA = "End of content stream " + "reached before end of image data.";
 
+        public const String ERROR_WHILE_INITIALIZING_AES_CIPHER = "Exception initializing AES cipher.";
+
         public const String ERROR_WHILE_READING_OBJECT_STREAM = "Error while reading Object Stream.";
 
         public const String ENCRYPTED_PAYLOAD_FILE_SPEC_DOES_NOT_HAVE_ENCRYPTED_PAYLOAD_DICTIONARY = "Encrypted " 
@@ -255,6 +257,8 @@ namespace iText.Kernel.Exceptions {
         public const String FORM_XOBJECT_MUST_HAVE_BBOX = "Form XObject must have BBox.";
 
         public const String FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE = "Function is not compatible with " + "ColorSpace.";
+
+        public const String NO_SUCH_ALGORITHM_FOR_PROVIDER_BCFIPS = "no such algorithm: {0} for provider BCFIPS";
 
         public const String ILLEGAL_CHARACTER_IN_ASCIIHEXDECODE = "illegal character in ASCIIHexDecode.";
 

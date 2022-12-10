@@ -24,12 +24,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.Tsp;
-using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.Tsp;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -37,10 +37,9 @@ using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class PdfPKCS7Test : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/PdfPKCS7Test/";
@@ -48,18 +47,21 @@ namespace iText.Signatures {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-        private static readonly char[] PASSWORD = "testpass".ToCharArray();
+        private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
         private const double EPS = 0.001;
 
-        private static X509Certificate[] chain;
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
 
-        private static ICipherParameters pk;
+        private static IX509Certificate[] chain;
+
+        private static IPrivateKey pk;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Init() {
-            pk = Pkcs12FileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.p12", PASSWORD, PASSWORD);
-            chain = Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "signCertRsa01.p12", PASSWORD);
+            pk = PemFileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.pem", PASSWORD);
+            chain = PemFileHelper.ReadFirstChain(CERTS_SRC + "signCertRsa01.pem");
         }
 
         [NUnit.Framework.Test]
@@ -143,15 +145,15 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsNull(pkcs7.GetCRLs());
             // it's tested here that ocsp and time stamp token were found while
             // constructing PdfPKCS7 instance
-            TimeStampToken timeStampToken = pkcs7.GetTimeStampToken();
-            NUnit.Framework.Assert.IsNotNull(timeStampToken);
+            ITSTInfo timeStampTokenInfo = pkcs7.GetTimeStampTokenInfo();
+            NUnit.Framework.Assert.IsNotNull(timeStampTokenInfo);
             // The number corresponds to 3 September, 2021 13:32:33.
             double expectedMillis = (double)1630675953000L;
             NUnit.Framework.Assert.AreEqual(TimeTestUtil.GetFullDaysMillis(expectedMillis), TimeTestUtil.GetFullDaysMillis
-                (DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar(timeStampToken.TimeStampInfo.GenTime))), 
-                EPS);
+                (DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar(timeStampTokenInfo.GetGenTime()))), EPS);
             NUnit.Framework.Assert.AreEqual(TimeTestUtil.GetFullDaysMillis(expectedMillis), TimeTestUtil.GetFullDaysMillis
-                (DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar(pkcs7.GetOcsp().ProducedAt))), EPS);
+                (DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar(pkcs7.GetOcsp().GetProducedAtDate()))), EPS
+                );
         }
 
         [NUnit.Framework.Test]
@@ -188,7 +190,7 @@ namespace iText.Signatures {
             PdfDocument outDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "singleSignatureNotEmptyCRL.pdf"));
             SignatureUtil sigUtil = new SignatureUtil(outDocument);
             PdfPKCS7 pkcs7 = sigUtil.ReadSignatureData("Signature1");
-            IList<X509Crl> crls = pkcs7.GetCRLs().Select((crl) => (X509Crl)crl).ToList();
+            IList<IX509Crl> crls = pkcs7.GetCRLs().Select((crl) => (IX509Crl)crl).ToList();
             NUnit.Framework.Assert.AreEqual(2, crls.Count);
             NUnit.Framework.Assert.AreEqual(crls[0].GetEncoded(), File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER
                 , "firstCrl.bin")));
@@ -230,8 +232,8 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void IsRevocationValidLackOfSignCertsTest() {
             PdfPKCS7 pkcs7 = CreateSimplePdfPKCS7();
-            pkcs7.basicResp = new BasicOcspResp(BasicOcspResponse.GetInstance(new Asn1InputStream(File.ReadAllBytes(System.IO.Path.Combine
-                (SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject()));
+            pkcs7.basicResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1InputStream
+                (File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject());
             pkcs7.signCerts = JavaCollectionsUtil.Singleton(chain[0]);
             NUnit.Framework.Assert.IsFalse(pkcs7.IsRevocationValid());
         }
@@ -239,9 +241,9 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void IsRevocationValidExceptionDuringValidationTest() {
             PdfPKCS7 pkcs7 = CreateSimplePdfPKCS7();
-            pkcs7.basicResp = new BasicOcspResp(BasicOcspResponse.GetInstance(new Asn1InputStream(File.ReadAllBytes(System.IO.Path.Combine
-                (SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject()));
-            pkcs7.signCerts = JavaUtil.ArraysAsList(new X509Certificate[] { null, null });
+            pkcs7.basicResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1InputStream
+                (File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject());
+            pkcs7.signCerts = JavaUtil.ArraysAsList(new IX509Certificate[] { null, null });
             NUnit.Framework.Assert.IsFalse(pkcs7.IsRevocationValid());
         }
 
@@ -251,8 +253,8 @@ namespace iText.Signatures {
             PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
             byte[] bytes = pkcs7.GetEncodedPKCS1();
             byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "cmpBytesPkcs1.txt"));
-            Asn1OctetString outOctetString = Asn1OctetString.GetInstance(bytes);
-            Asn1OctetString cmpOctetString = Asn1OctetString.GetInstance(cmpBytes);
+            IASN1OctetString outOctetString = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(bytes);
+            IASN1OctetString cmpOctetString = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(cmpBytes);
             NUnit.Framework.Assert.AreEqual(outOctetString, cmpOctetString);
         }
 
@@ -280,8 +282,8 @@ namespace iText.Signatures {
             PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
             byte[] bytes = pkcs7.GetEncodedPKCS7();
             byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "cmpBytesPkcs7.txt"));
-            Asn1Object outStream = Asn1Object.FromByteArray(bytes);
-            Asn1Object cmpStream = Asn1Object.FromByteArray(cmpBytes);
+            IASN1Primitive outStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(bytes);
+            IASN1Primitive cmpStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(cmpBytes);
             NUnit.Framework.Assert.AreEqual("SHA256withRSA", pkcs7.GetDigestAlgorithm());
             NUnit.Framework.Assert.AreEqual(outStream, cmpStream);
         }

@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Security.Cryptography;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Allows configuration of output PDF encryption.</summary>
@@ -57,7 +57,7 @@ namespace iText.Kernel.Pdf {
         protected internal int standardEncryptPermissions;
 
         // PublicKeyEncryption properties
-        protected internal X509Certificate[] publicCertificates;
+        protected internal IX509Certificate[] publicCertificates;
 
         protected internal int[] publicKeyEncryptPermissions;
 
@@ -194,7 +194,7 @@ namespace iText.Kernel.Pdf {
         /// this
         /// <see cref="EncryptionProperties"/>
         /// </returns>
-        public virtual EncryptionProperties SetPublicKeyEncryption(X509Certificate[] certs, int[] permissions, int
+        public virtual EncryptionProperties SetPublicKeyEncryption(IX509Certificate[] certs, int[] permissions, int
              encryptionAlgorithm) {
             ClearEncryption();
             this.publicCertificates = certs;

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>itext7.bouncy-castle-adapter</id>
+    <version>8.0.0-SNAPSHOT</version>
+    <title>iText 7 bouncy-castle adapter module</title>
+    <authors>iText Software</authors>
+    <owners>iText Software</owners>
+    <licenseUrl>https://www.gnu.org/licenses/agpl.html</licenseUrl>
+    <projectUrl>https://itextpdf.com/</projectUrl>
+    <icon>ITSC-avatar.png</icon>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Bouncy-castle adapter module</description>
+    <summary />
+    <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
+    <copyright>Copyright (c) 1998-2022 iText Group NV</copyright>
+    <language>en-US</language>
+    <tags>itext itext7 itextsharp c# .net csharp</tags>
+    <dependencies>
+      <group targetFramework="net461">
+		<dependency id="itext7.commons" version="8.0.0-SNAPSHOT" />
+		<dependency id="Portable.BouncyCastle" version="1.8.9" />
+      </group>
+      <group targetFramework="netstandard2.0">
+		<dependency id="itext7.commons" version="8.0.0-SNAPSHOT" />
+		<dependency id="Portable.BouncyCastle" version="1.8.9" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\net461\itext.bouncy-castle-adapter.dll" target="lib\net461" />
+    <file src="bin\Release\net461\itext.bouncy-castle-adapter.xml" target="lib\net461" />
+    <file src="bin\Release\netstandard2.0\itext.bouncy-castle-adapter.dll" target="lib\netstandard2.0" />
+    <file src="bin\Release\netstandard2.0\itext.bouncy-castle-adapter.xml" target="lib\netstandard2.0" />
+    <file src="..\..\ITSC-avatar.png" target="" />
+  </files>
+</package>

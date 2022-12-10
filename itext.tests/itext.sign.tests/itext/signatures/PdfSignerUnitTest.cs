@@ -22,23 +22,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Pdfa;
 using iText.Signatures.Exceptions;
+using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
+using iText.Test.Attributes;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class PdfSignerUnitTest : ExtendedITextTest {
         private static readonly byte[] OWNER = "owner".GetBytes();
 
@@ -53,11 +55,11 @@ namespace iText.Signatures {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-        private static readonly char[] PASSWORD = "testpass".ToCharArray();
+        private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
-        private X509Certificate[] chain;
+        private IX509Certificate[] chain;
 
-        private ICipherParameters pk;
+        private IPrivateKey pk;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -66,11 +68,12 @@ namespace iText.Signatures {
 
         [NUnit.Framework.SetUp]
         public virtual void Init() {
-            pk = Pkcs12FileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.p12", PASSWORD, PASSWORD);
-            chain = Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "signCertRsa01.p12", PASSWORD);
+            pk = PemFileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.pem", PASSWORD);
+            chain = PemFileHelper.ReadFirstChain(CERTS_SRC + "signCertRsa01.pem");
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void CreateNewSignatureFormFieldInvisibleAnnotationTest() {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateEncryptedDocumentWithoutWidgetAnnotation
                 ()), new ReaderProperties().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties()
@@ -86,6 +89,7 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void CreateNewSignatureFormFieldNotInvisibleAnnotationTest() {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateEncryptedDocumentWithoutWidgetAnnotation
                 ()), new ReaderProperties().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties()
@@ -140,6 +144,7 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void PopulateExistingSignatureFormFieldInvisibleAnnotationTest() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument document = new PdfDocument(new PdfWriter(outputStream, new WriterProperties().SetStandardEncryption
@@ -166,6 +171,7 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void PopulateExistingSignatureFormFieldNotInvisibleAnnotationTest() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument document = new PdfDocument(new PdfWriter(outputStream, new WriterProperties().SetStandardEncryption

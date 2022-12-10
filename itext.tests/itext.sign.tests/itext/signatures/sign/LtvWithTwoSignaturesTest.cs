@@ -41,16 +41,16 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class LtvWithTwoSignaturesTest : ExtendedITextTest {
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
@@ -61,7 +61,7 @@ namespace iText.Signatures.Sign {
         private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/signatures/sign/LtvWithTwoSignaturesTest/";
 
-        private static readonly char[] password = "testpass".ToCharArray();
+        private static readonly char[] password = "testpassphrase".ToCharArray();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -70,16 +70,15 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void AddLtvInfo() {
-            String caCertFileName = certsSrc + "rootRsa.p12";
-            String interCertFileName = certsSrc + "intermediateRsa.p12";
+            String caCertFileName = certsSrc + "rootRsa.pem";
+            String interCertFileName = certsSrc + "intermediateRsa.pem";
             String srcFileName = sourceFolder + "signedTwice.pdf";
             String ltvFileName = destinationFolder + "ltvEnabledTest01.pdf";
             String ltvFileName2 = destinationFolder + "ltvEnabledTest02.pdf";
-            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];
-            ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(caCertFileName, password, password);
-            X509Certificate interCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(interCertFileName, password)[
-                0];
-            ICipherParameters interPrivateKey = Pkcs12FileHelper.ReadFirstKey(interCertFileName, password, password);
+            IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
+            IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertFileName, password);
+            IX509Certificate interCert = (IX509Certificate)PemFileHelper.ReadFirstChain(interCertFileName)[0];
+            IPrivateKey interPrivateKey = PemFileHelper.ReadFirstKey(interCertFileName, password);
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(interCert, interPrivateKey).AddBuilderForCertIssuer
                 (caCert, caPrivateKey);
             TestCrlClient testCrlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);

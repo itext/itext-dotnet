@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup Label="Configuration">
+    <SignAssembly>True</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.bouncy-castle-fips-adapter.xml</DocumentationFile>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>library</OutputType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>itext.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>itext.bouncy-castle-fips-adapter</AssemblyName>
+    <RootNamespace />
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Reference Include="bc-fips-1.0.1.1, Version=1.0.1.1, Culture=neutral, PublicKeyToken=null">
+      <HintPath>lib\bc-fips\bc-fips-1.0.1.1.dll</HintPath>
+    </Reference>
+    <Reference Include="bcpkix-fips-1.0.1.1, Version=1.0.1.1, Culture=neutral, PublicKeyToken=null">
+      <HintPath>lib\bc-fips\bcpkix-fips-1.0.1.1.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\itext.commons\itext.commons.csproj" />
+  </ItemGroup>
+</Project>

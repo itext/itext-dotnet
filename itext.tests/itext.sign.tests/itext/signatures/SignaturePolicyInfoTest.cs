@@ -41,16 +41,20 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Org.BouncyCastle;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Esf;
-using Org.BouncyCastle.Asn1.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.Esf;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class SignaturePolicyInfoTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         private const String POLICY_IDENTIFIER = "2.16.724.1.3.1.1.2.1.9";
 
         private const String POLICY_HASH_BASE64 = "G7roucf600+f03r/o0bAOQ6WAs0=";
@@ -125,22 +129,27 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void ToSignaturePolicyIdentifierTest() {
-            SignaturePolicyIdentifier actual = new SignaturePolicyInfo(POLICY_IDENTIFIER, POLICY_HASH, POLICY_DIGEST_ALGORITHM
+            ISignaturePolicyIdentifier actual = new SignaturePolicyInfo(POLICY_IDENTIFIER, POLICY_HASH, POLICY_DIGEST_ALGORITHM
                 , POLICY_URI).ToSignaturePolicyIdentifier();
-            DerIA5String deria5String = new DerIA5String(POLICY_URI);
-            SigPolicyQualifierInfo sigPolicyQualifierInfo = new SigPolicyQualifierInfo(Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.IdSpqEtsUri
-                , deria5String);
-            DerOctetString derOctetString = new DerOctetString(POLICY_HASH);
+            IDERIA5String deria5String = BOUNCY_CASTLE_FACTORY.CreateDERIA5String(POLICY_URI);
+            ISigPolicyQualifierInfo sigPolicyQualifierInfo = BOUNCY_CASTLE_FACTORY.CreateSigPolicyQualifierInfo(BOUNCY_CASTLE_FACTORY
+                .CreatePKCSObjectIdentifiers().GetIdSpqEtsUri(), deria5String);
+            IDEROctetString derOctetString = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(POLICY_HASH);
             String algId = DigestAlgorithms.GetAllowedDigest(POLICY_DIGEST_ALGORITHM);
-            DerObjectIdentifier asn1ObjectIdentifier = new DerObjectIdentifier(algId);
-            AlgorithmIdentifier algorithmIdentifier = new AlgorithmIdentifier(asn1ObjectIdentifier);
-            OtherHashAlgAndValue otherHashAlgAndValue = new OtherHashAlgAndValue(algorithmIdentifier, derOctetString);
-            DerObjectIdentifier objectIdentifier = new DerObjectIdentifier(POLICY_IDENTIFIER);
-            DerObjectIdentifier objectIdentifierInstance = DerObjectIdentifier.GetInstance(objectIdentifier);
-            SignaturePolicyId signaturePolicyId = new SignaturePolicyId(objectIdentifierInstance, otherHashAlgAndValue
-                , SignUtils.CreateSigPolicyQualifiers(sigPolicyQualifierInfo));
-            SignaturePolicyIdentifier expected = new SignaturePolicyIdentifier(signaturePolicyId);
-            NUnit.Framework.Assert.AreEqual(expected.ToAsn1Object(), actual.ToAsn1Object());
+            IASN1ObjectIdentifier asn1ObjectIdentifier = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(algId);
+            IAlgorithmIdentifier algorithmIdentifier = BOUNCY_CASTLE_FACTORY.CreateAlgorithmIdentifier(asn1ObjectIdentifier
+                );
+            IOtherHashAlgAndValue otherHashAlgAndValue = BOUNCY_CASTLE_FACTORY.CreateOtherHashAlgAndValue(algorithmIdentifier
+                , derOctetString);
+            IASN1ObjectIdentifier objectIdentifier = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(POLICY_IDENTIFIER
+                );
+            IASN1ObjectIdentifier objectIdentifierInstance = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(objectIdentifier
+                );
+            ISignaturePolicyId signaturePolicyId = BOUNCY_CASTLE_FACTORY.CreateSignaturePolicyId(objectIdentifierInstance
+                , otherHashAlgAndValue, sigPolicyQualifierInfo);
+            ISignaturePolicyIdentifier expected = BOUNCY_CASTLE_FACTORY.CreateSignaturePolicyIdentifier(signaturePolicyId
+                );
+            NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
         [NUnit.Framework.Test]

@@ -22,17 +22,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
+using iText.Test.Attributes;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class EncryptedSigningTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/EncryptedSigningTest/";
 
@@ -42,11 +47,11 @@ namespace iText.Signatures.Sign {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-        private static readonly char[] PASSWORD = "testpass".ToCharArray();
+        private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
-        private X509Certificate[] chain;
+        private IX509Certificate[] chain;
 
-        private ICipherParameters pk;
+        private IPrivateKey pk;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -55,11 +60,12 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.SetUp]
         public virtual void Init() {
-            pk = Pkcs12FileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.p12", PASSWORD, PASSWORD);
-            chain = Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "signCertRsa01.p12", PASSWORD);
+            pk = PemFileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.pem", PASSWORD);
+            chain = PemFileHelper.ReadFirstChain(CERTS_SRC + "signCertRsa01.pem");
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void SignEncryptedPdfTest() {
             String srcFile = SOURCE_FOLDER + "encrypted.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_signedEncrypted.pdf";
@@ -81,19 +87,22 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void SignCertificateSecurityPdfTest() {
-            String srcFile = SOURCE_FOLDER + "signCertificateSecurityPdf.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp_signCertificateSecurityPdf.pdf";
-            String outPdf = DESTINATION_FOLDER + "signCertificateSecurityPdf.pdf";
-            PdfReader reader = new PdfReader(srcFile, new ReaderProperties().SetPublicKeySecurityParams(chain[0], pk));
-            PdfSigner signer = new PdfSigner(reader, new FileStream(outPdf, FileMode.Create), new StampingProperties()
-                .UseAppendMode());
-            // Creating the signature
-            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
-            ReaderProperties properties = new ReaderProperties().SetPublicKeySecurityParams(chain[0], pk);
-            //Public key to open out and cmp files are the same
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf, properties, properties
-                ));
+            //RSA keys in FIPS are supported for signature verification only
+            if (!FACTORY.GetProviderName().Contains("FIPS")) {
+                String srcFile = SOURCE_FOLDER + "signCertificateSecurityPdf.pdf";
+                String cmpPdf = SOURCE_FOLDER + "cmp_signCertificateSecurityPdf.pdf";
+                String outPdf = DESTINATION_FOLDER + "signCertificateSecurityPdf.pdf";
+                PdfReader reader = new PdfReader(srcFile, new ReaderProperties().SetPublicKeySecurityParams(chain[0], pk));
+                PdfSigner signer = new PdfSigner(reader, new FileStream(outPdf, FileMode.Create), new StampingProperties()
+                    .UseAppendMode());
+                // Creating the signature
+                IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+                signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+                ReaderProperties properties = new ReaderProperties().SetPublicKeySecurityParams(chain[0], pk);
+                //Public key to open out and cmp files are the same
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf, properties, properties
+                    ));
+            }
         }
     }
 }

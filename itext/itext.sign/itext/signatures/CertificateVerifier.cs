@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Signatures {
     /// <summary>
@@ -85,7 +85,7 @@ namespace iText.Signatures {
         /// <param name="signDate">the date the certificate needs to be valid</param>
         /// <returns>a list of <c>VerificationOK</c> objects. The list will be empty if the certificate couldn't be verified.
         ///     </returns>
-        public virtual IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
+        public virtual IList<VerificationOK> Verify(IX509Certificate signCert, IX509Certificate issuerCert, DateTime
              signDate) {
             // Check if the certificate is valid on the signDate
             if (signDate != null) {

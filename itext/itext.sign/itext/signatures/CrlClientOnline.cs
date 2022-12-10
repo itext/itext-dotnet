@@ -45,8 +45,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
 using iText.Commons;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 
 namespace iText.Signatures {
@@ -56,6 +58,9 @@ namespace iText.Signatures {
     /// </summary>
     /// <author>Paulo Soares</author>
     public class CrlClientOnline : ICrlClient {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         /// <summary>The Logger instance.</summary>
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.CrlClientOnline
             ));
@@ -88,10 +93,10 @@ namespace iText.Signatures {
 
         /// <summary>Creates a CrlClientOnline instance using a certificate chain.</summary>
         /// <param name="chain">a certificate chain</param>
-        public CrlClientOnline(X509Certificate[] chain) {
+        public CrlClientOnline(IX509Certificate[] chain) {
             for (int i = 0; i < chain.Length; i++) {
-                X509Certificate cert = (X509Certificate)chain[i];
-                LOGGER.LogInformation("Checking certificate: " + cert.SubjectDN);
+                IX509Certificate cert = (IX509Certificate)chain[i];
+                LOGGER.LogInformation("Checking certificate: " + cert.GetSubjectDN());
                 String url = null;
                 url = CertificateUtil.GetCRLURL(cert);
                 if (url != null) {
@@ -108,14 +113,15 @@ namespace iText.Signatures {
         /// URL with the path to the local file to this method. An other option is to use
         /// the CrlClientOffline class.
         /// </remarks>
-        /// <seealso cref="ICrlClient.GetEncoded(Org.BouncyCastle.X509.X509Certificate, System.String)"/>
-        public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url) {
+        /// <seealso cref="ICrlClient.GetEncoded(iText.Commons.Bouncycastle.Cert.IX509Certificate, System.String)"/>
+        public virtual ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
             if (checkCert == null) {
                 return null;
             }
             IList<Uri> urlList = new List<Uri>(urls);
             if (urlList.Count == 0) {
-                LOGGER.LogInformation("Looking for CRL for certificate " + checkCert.SubjectDN);
+                LOGGER.LogInformation(MessageFormatUtil.Format("Looking for CRL for certificate {0}", BOUNCY_CASTLE_FACTORY
+                    .CreateX500Name(checkCert)));
                 try {
                     if (url == null) {
                         url = CertificateUtil.GetCRLURL(checkCert);

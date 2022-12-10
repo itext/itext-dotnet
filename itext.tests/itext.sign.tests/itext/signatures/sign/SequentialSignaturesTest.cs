@@ -42,17 +42,16 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class SequentialSignaturesTest : ExtendedITextTest {
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
@@ -63,7 +62,7 @@ namespace iText.Signatures.Sign {
         private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/signatures/sign/SequentialSignaturesTest/";
 
-        private static readonly char[] password = "testpass".ToCharArray();
+        private static readonly char[] password = "testpassphrase".ToCharArray();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -72,12 +71,12 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void SequentialSignOfFileWithAnnots() {
-            String signCertFileName = certsSrc + "signCertRsa01.p12";
+            String signCertFileName = certsSrc + "signCertRsa01.pem";
             String outFileName = destinationFolder + "sequentialSignOfFileWithAnnots.pdf";
             String srcFileName = sourceFolder + "signedWithAnnots.pdf";
             String cmpFileName = sourceFolder + "cmp_sequentialSignOfFileWithAnnots.pdf";
-            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
-            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            IX509Certificate[] signChain = PemFileHelper.ReadFirstChain(signCertFileName);
+            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
             String signatureName = "Signature2";
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
@@ -92,12 +91,12 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void SecondSignOfTaggedDocTest() {
-            String signCertFileName = certsSrc + "signCertRsa01.p12";
+            String signCertFileName = certsSrc + "signCertRsa01.pem";
             String outFileName = destinationFolder + "secondSignOfTagged.pdf";
             String srcFileName = sourceFolder + "taggedAndSignedDoc.pdf";
             String cmpFileName = sourceFolder + "cmp_secondSignOfTagged.pdf";
-            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
-            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            IX509Certificate[] signChain = PemFileHelper.ReadFirstChain(signCertFileName);
+            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
             String signatureName = "Signature2";
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 

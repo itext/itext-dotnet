@@ -43,13 +43,14 @@ address: sales@itextpdf.com
 using System;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfStreamTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfStreamTest/";
@@ -117,6 +118,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void CryptFilterFlushedBeforeReadStreamTest() {
             String file = sourceFolder + "cryptFilterTest.pdf";
             String destFile = destinationFolder + "cryptFilterReadStreamTest.pdf";
@@ -137,6 +139,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void CryptFilterFlushedBeforeStreamTest() {
             String file = sourceFolder + "cryptFilterTest.pdf";
             String destFile = destinationFolder + "cryptFilterStreamNotReadTest.pdf";
@@ -156,6 +159,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void CryptFilterFlushedAfterStreamTest() {
             String file = sourceFolder + "cryptFilterTest.pdf";
             String cmpFile = sourceFolder + "cmp_cryptFilterTest.pdf";

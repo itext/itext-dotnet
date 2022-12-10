@@ -44,10 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Security;
 using iText.Commons;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Crypto;
@@ -263,7 +262,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         private byte[] ComputeHash(byte[] password, byte[] salt, int saltOffset, int saltLen, byte[] userKey) {
-            IDigest mdSha256 = DigestUtilities.GetDigest("SHA-256");
+            IIDigest mdSha256 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-256"
+                );
             mdSha256.Update(password);
             mdSha256.Update(salt, saltOffset, saltLen);
             if (userKey != null) {
@@ -272,8 +272,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte[] k = mdSha256.Digest();
             if (isPdf2) {
                 // See 7.6.4.3.3 "Algorithm 2.B"
-                IDigest mdSha384 = DigestUtilities.GetDigest("SHA-384");
-                IDigest mdSha512 = DigestUtilities.GetDigest("SHA-512");
+                IIDigest mdSha384 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-384"
+                    );
+                IIDigest mdSha512 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-512"
+                    );
                 int userKeyLen = userKey != null ? userKey.Length : 0;
                 int passAndUserKeyLen = password.Length + userKeyLen;
                 // k1 repetition length
@@ -296,9 +298,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
                         (k, 16, 32));
                     byte[] e = cipher.ProcessBlock(k1, 0, k1.Length);
                     // c)
-                    IDigest md = null;
-                    BigInteger i_1 = new BigInteger(1, JavaUtil.ArraysCopyOf(e, 16));
-                    int remainder = i_1.Remainder(BigInteger.ValueOf(3)).IntValue;
+                    IIDigest md = null;
+                    IBigInteger i_1 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger(1, 
+                        JavaUtil.ArraysCopyOf(e, 16));
+                    int remainder = i_1.Remainder(iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger().ValueOf
+                        (3)).GetIntValue();
                     switch (remainder) {
                         case 0: {
                             md = mdSha256;

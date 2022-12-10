@@ -42,10 +42,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Kernel.Logs;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfEncryptorTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfEncryptorTest/";
@@ -59,6 +61,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptFileTest() {
             String outFileName = DESTINATION_FOLDER + "encryptFileTest.pdf";
             String initialFileName = SOURCE_FOLDER + "initial.pdf";

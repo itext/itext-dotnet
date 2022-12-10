@@ -43,20 +43,20 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Crypto;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     public class PubSecHandlerUsingStandard40 : PubKeySecurityHandler {
-        public PubSecHandlerUsingStandard40(PdfDictionary encryptionDictionary, X509Certificate[] certs, int[] permissions
+        public PubSecHandlerUsingStandard40(PdfDictionary encryptionDictionary, IX509Certificate[] certs, int[] permissions
             , bool encryptMetadata, bool embeddedFilesOnly) {
             InitKeyAndFillDictionary(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly);
         }
 
-        public PubSecHandlerUsingStandard40(PdfDictionary encryptionDictionary, ICipherParameters certificateKey, 
-            X509Certificate certificate, bool encryptMetadata) {
+        public PubSecHandlerUsingStandard40(PdfDictionary encryptionDictionary, IPrivateKey certificateKey, IX509Certificate
+             certificate, bool encryptMetadata) {
             InitKeyAndReadDictionary(encryptionDictionary, certificateKey, certificate, encryptMetadata);
         }
 

@@ -41,18 +41,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.Crypto.Modes;
-using Org.BouncyCastle.Crypto.Paddings;
-using Org.BouncyCastle.Crypto.Parameters;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle.Crypto;
 
 namespace iText.Kernel.Crypto {
     /// <summary>Creates an AES Cipher with CBC and padding PKCS5/7.</summary>
     /// <author>Paulo Soares</author>
     public class AESCipher {
-        private PaddedBufferedBlockCipher bp;
+        private ICipher cipher;
 
         /// <summary>Creates a new instance of AESCipher</summary>
         /// <param name="forEncryption">
@@ -62,45 +58,15 @@ namespace iText.Kernel.Crypto {
         /// <param name="key">the key to be used in the cipher</param>
         /// <param name="iv">initialization vector to be used in cipher</param>
         public AESCipher(bool forEncryption, byte[] key, byte[] iv) {
-            IBlockCipher aes = new AesFastEngine();
-            IBlockCipher cbc = new CbcBlockCipher(aes);
-            bp = new PaddedBufferedBlockCipher(cbc);
-            KeyParameter kp = new KeyParameter(key);
-            ParametersWithIV piv = new ParametersWithIV(kp, iv);
-            bp.Init(forEncryption, piv);
+            cipher = BouncyCastleFactoryCreator.GetFactory().CreateCipher(forEncryption, key, iv);
         }
 
         public virtual byte[] Update(byte[] inp, int inpOff, int inpLen) {
-            int neededLen = bp.GetUpdateOutputSize(inpLen);
-            byte[] outp;
-            if (neededLen > 0) {
-                outp = new byte[neededLen];
-            }
-            else {
-                outp = new byte[0];
-            }
-            bp.ProcessBytes(inp, inpOff, inpLen, outp, 0);
-            return outp;
+            return cipher.Update(inp, inpOff, inpLen);
         }
 
         public virtual byte[] DoFinal() {
-            int neededLen = bp.GetOutputSize(0);
-            byte[] outp = new byte[neededLen];
-            int n;
-            try {
-                n = bp.DoFinal(outp, 0);
-            }
-            catch (Exception) {
-                return outp;
-            }
-            if (n != outp.Length) {
-                byte[] outp2 = new byte[n];
-                Array.Copy(outp, 0, outp2, 0, n);
-                return outp2;
-            }
-            else {
-                return outp;
-            }
+            return cipher.DoFinal();
         }
     }
 }

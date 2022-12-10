@@ -22,19 +22,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Tsp;
-using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
+using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class TSAClientBouncyCastleTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         [NUnit.Framework.Test]
         public virtual void SetTSAInfoTest() {
             TSAClientBouncyCastle clientBouncyCastle = new TSAClientBouncyCastle("url");
@@ -117,9 +122,9 @@ namespace iText.Signatures {
             int tokenSizeEstimate = 4096;
             TSAClientBouncyCastle tsaClientBouncyCastle = new TSAClientBouncyCastle(url, userName, password, tokenSizeEstimate
                 , digestAlgorithm);
-            IDigest digest = tsaClientBouncyCastle.GetMessageDigest();
+            IIDigest digest = tsaClientBouncyCastle.GetMessageDigest();
             NUnit.Framework.Assert.IsNotNull(digest);
-            NUnit.Framework.Assert.AreEqual(digestAlgorithm, digest.AlgorithmName);
+            NUnit.Framework.Assert.AreEqual(digestAlgorithm, digest.GetAlgorithmName());
         }
 
         [NUnit.Framework.Test]
@@ -135,10 +140,10 @@ namespace iText.Signatures {
             tsaClientBouncyCastle.SetTSAInfo(itsaInfoBouncyCastle);
             byte[] timestampTokenArray = tsaClientBouncyCastle.GetTimeStampToken(tsaClientBouncyCastle.GetMessageDigest
                 ().Digest());
-            TimeStampToken expectedToken = new TimeStampResponse(tsaClientBouncyCastle.GetExpectedTsaResponseBytes()).
-                TimeStampToken;
-            TimeStampTokenInfo expectedTsTokenInfo = expectedToken.TimeStampInfo;
-            TimeStampTokenInfo resultTsTokenInfo = itsaInfoBouncyCastle.GetTimeStampTokenInfo();
+            ITimeStampToken expectedToken = BOUNCY_CASTLE_FACTORY.CreateTimeStampResponse(tsaClientBouncyCastle.GetExpectedTsaResponseBytes
+                ()).GetTimeStampToken();
+            ITimeStampTokenInfo expectedTsTokenInfo = expectedToken.GetTimeStampInfo();
+            ITimeStampTokenInfo resultTsTokenInfo = itsaInfoBouncyCastle.GetTimeStampTokenInfo();
             NUnit.Framework.Assert.IsNotNull(timestampTokenArray);
             NUnit.Framework.Assert.IsNotNull(resultTsTokenInfo);
             NUnit.Framework.Assert.AreEqual(expectedTsTokenInfo.GetEncoded(), resultTsTokenInfo.GetEncoded());
@@ -147,7 +152,7 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void GetTimeStampTokenFailureExceptionTest() {
-            String allowedDigest = "MD5";
+            String allowedDigest = "SHA1";
             String signatureAlgorithm = "SHA256withRSA";
             String url = "url";
             TSAClientBouncyCastleTest.CustomTsaClientBouncyCastle tsaClientBouncyCastle = new TSAClientBouncyCastleTest.CustomTsaClientBouncyCastle
@@ -161,14 +166,14 @@ namespace iText.Signatures {
         }
 
         private sealed class CustomTsaClientBouncyCastle : TSAClientBouncyCastle {
-            private static readonly char[] PASSWORD = "testpass".ToCharArray();
+            private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
             private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
                 .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-            private readonly ICipherParameters tsaPrivateKey;
+            private readonly IPrivateKey tsaPrivateKey;
 
-            private readonly IList<X509Certificate> tsaCertificateChain;
+            private readonly IList<IX509Certificate> tsaCertificateChain;
 
             private readonly String signatureAlgorithm;
 
@@ -180,9 +185,9 @@ namespace iText.Signatures {
                 : base(url) {
                 this.signatureAlgorithm = signatureAlgorithm;
                 this.allowedDigest = allowedDigest;
-                tsaPrivateKey = Pkcs12FileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.p12", PASSWORD, PASSWORD);
-                String tsaCertFileName = CERTS_SRC + "tsCertRsa.p12";
-                tsaCertificateChain = JavaUtil.ArraysAsList(Pkcs12FileHelper.ReadFirstChain(tsaCertFileName, PASSWORD));
+                tsaPrivateKey = PemFileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.pem", PASSWORD);
+                String tsaCertFileName = CERTS_SRC + "tsCertRsa.pem";
+                tsaCertificateChain = JavaUtil.ArraysAsList(PemFileHelper.ReadFirstChain(tsaCertFileName));
             }
 
             public byte[] GetExpectedTsaResponseBytes() {
@@ -197,13 +202,13 @@ namespace iText.Signatures {
         }
 
         private sealed class CustomItsaInfoBouncyCastle : ITSAInfoBouncyCastle {
-            private TimeStampTokenInfo timeStampTokenInfo;
+            private ITimeStampTokenInfo timeStampTokenInfo;
 
-            public void InspectTimeStampTokenInfo(TimeStampTokenInfo info) {
+            public void InspectTimeStampTokenInfo(ITimeStampTokenInfo info) {
                 this.timeStampTokenInfo = info;
             }
 
-            public TimeStampTokenInfo GetTimeStampTokenInfo() {
+            public ITimeStampTokenInfo GetTimeStampTokenInfo() {
                 return timeStampTokenInfo;
             }
         }

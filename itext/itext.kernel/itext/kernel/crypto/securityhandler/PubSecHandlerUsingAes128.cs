@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Crypto;
 using iText.Kernel.Pdf;
 
@@ -52,12 +52,12 @@ namespace iText.Kernel.Crypto.Securityhandler {
     public class PubSecHandlerUsingAes128 : PubKeySecurityHandler {
         private static readonly byte[] salt = new byte[] { (byte)0x73, (byte)0x41, (byte)0x6c, (byte)0x54 };
 
-        public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, X509Certificate[] certs, int[] permissions
+        public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, IX509Certificate[] certs, int[] permissions
             , bool encryptMetadata, bool embeddedFilesOnly) {
             InitKeyAndFillDictionary(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly);
         }
 
-        public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, ICipherParameters certificateKey, X509Certificate
+        public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, IPrivateKey certificateKey, IX509Certificate
              certificate, bool encryptMetadata) {
             InitKeyAndReadDictionary(encryptionDictionary, certificateKey, certificate, encryptMetadata);
         }

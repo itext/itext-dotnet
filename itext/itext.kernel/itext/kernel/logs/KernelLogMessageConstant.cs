@@ -51,6 +51,8 @@ namespace iText.Kernel.Logs {
         public const String DCTDECODE_FILTER_DECODING = "DCTDecode filter decoding into the bit map is not supported. The stream data would be left in JPEG "
              + "baseline format";
 
+        public const String ERROR_WHILE_FINALIZING_AES_CIPHER = "Exception finalizing AES cipher.";
+
         public const String FEATURE_IS_NOT_SUPPORTED = "Exception was thrown: {0}. The feature {1} is probably not supported by your XML processor.";
 
         public const String FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY = "Full compression mode requested in append mode but the original document has cross-reference table, "
@@ -61,6 +63,9 @@ namespace iText.Kernel.Logs {
 
         public const String JPXDECODE_FILTER_DECODING = "JPXDecode filter decoding into the bit map is not supported. The stream data would be left in JPEG2000 "
              + "format";
+
+        public const String MD5_IS_NOT_FIPS_COMPLIANT = "MD5 hash algorithm is not FIPS compliant. However we still use this algorithm "
+             + "since it is required according to the PDF specification.";
 
         public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} color space";
 

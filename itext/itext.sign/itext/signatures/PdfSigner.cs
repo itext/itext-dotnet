@@ -44,10 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Asn1.Esf;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Asn1.Esf;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -394,10 +393,10 @@ namespace iText.Signatures {
         /// <param name="tsaClient">the Timestamp client</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
-        public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate[] chain, ICollection
+        public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
              sigtype) {
-            SignDetached(externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype, (SignaturePolicyIdentifier
+            SignDetached(externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype, (ISignaturePolicyIdentifier
                 )null);
         }
 
@@ -416,7 +415,7 @@ namespace iText.Signatures {
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <param name="signaturePolicy">the signature policy (for EPES signatures)</param>
-        public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate[] chain, ICollection
+        public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
              sigtype, SignaturePolicyInfo signaturePolicy) {
             SignDetached(externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype, signaturePolicy
@@ -438,9 +437,9 @@ namespace iText.Signatures {
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <param name="signaturePolicy">the signature policy (for EPES signatures)</param>
-        public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate[] chain, ICollection
+        public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
-             sigtype, SignaturePolicyIdentifier signaturePolicy) {
+             sigtype, ISignaturePolicyIdentifier signaturePolicy) {
             if (closed) {
                 throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
@@ -487,7 +486,7 @@ namespace iText.Signatures {
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
             exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
             PreClose(exc);
-            PdfPKCS7 sgn = new PdfPKCS7((ICipherParameters)null, chain, hashAlgorithm, false);
+            PdfPKCS7 sgn = new PdfPKCS7((IPrivateKey)null, chain, hashAlgorithm, false);
             if (signaturePolicy != null) {
                 sgn.SetSignaturePolicy(signaturePolicy);
             }
@@ -496,7 +495,7 @@ namespace iText.Signatures {
             IList<byte[]> ocspList = new List<byte[]>();
             if (chain.Length > 1 && ocspClient != null) {
                 for (int j = 0; j < chain.Length - 1; ++j) {
-                    byte[] ocsp = ocspClient.GetEncoded((X509Certificate)chain[j], (X509Certificate)chain[j + 1], null);
+                    byte[] ocsp = ocspClient.GetEncoded((IX509Certificate)chain[j], (IX509Certificate)chain[j + 1], null);
                     if (ocsp != null) {
                         ocspList.Add(ocsp);
                     }
@@ -586,7 +585,7 @@ namespace iText.Signatures {
             exc.Put(PdfName.Contents, contentEstimated * 2 + 2);
             PreClose(exc);
             Stream data = GetRangeStream();
-            IDigest messageDigest = tsa.GetMessageDigest();
+            IIDigest messageDigest = tsa.GetMessageDigest();
             byte[] buf = new byte[4096];
             int n;
             while ((n = data.Read(buf)) > 0) {
@@ -598,7 +597,8 @@ namespace iText.Signatures {
                 tsToken = tsa.GetTimeStampToken(tsImprint);
             }
             catch (Exception e) {
-                throw new GeneralSecurityException(e.Message, e);
+                throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
+                    .Message, e);
             }
             if (contentEstimated + 2 < tsToken.Length) {
                 throw new System.IO.IOException("Not enough space");
@@ -666,7 +666,7 @@ namespace iText.Signatures {
         ///     </param>
         /// <param name="crlList">a list of CrlClient implementations</param>
         /// <returns>a collection of CRL bytes that can be embedded in a PDF</returns>
-        protected internal virtual ICollection<byte[]> ProcessCrl(X509Certificate cert, ICollection<ICrlClient> crlList
+        protected internal virtual ICollection<byte[]> ProcessCrl(IX509Certificate cert, ICollection<ICrlClient> crlList
             ) {
             if (crlList == null) {
                 return null;
@@ -676,7 +676,7 @@ namespace iText.Signatures {
                 if (cc == null) {
                     continue;
                 }
-                ICollection<byte[]> b = cc.GetEncoded((X509Certificate)cert, null);
+                ICollection<byte[]> b = cc.GetEncoded((IX509Certificate)cert, null);
                 if (b == null) {
                     continue;
                 }

@@ -23,8 +23,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
@@ -34,11 +36,12 @@ using iText.Signatures;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class Pdf20SigningTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/Pdf20SigningTest/";
 
@@ -46,13 +49,13 @@ namespace iText.Signatures.Sign {
              + "/test/itext/signatures/sign/Pdf20SigningTest/";
 
         private static readonly String KEYSTORE_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/signCertRsa01.p12";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/signCertRsa01.pem";
 
-        private static readonly char[] PASSWORD = "testpass".ToCharArray();
+        private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
-        private X509Certificate[] chain;
+        private IX509Certificate[] chain;
 
-        private ICipherParameters pk;
+        private IPrivateKey pk;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -61,8 +64,8 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.SetUp]
         public virtual void Init() {
-            pk = Pkcs12FileHelper.ReadFirstKey(KEYSTORE_PATH, PASSWORD, PASSWORD);
-            chain = Pkcs12FileHelper.ReadFirstChain(KEYSTORE_PATH, PASSWORD);
+            pk = PemFileHelper.ReadFirstKey(KEYSTORE_PATH, PASSWORD);
+            chain = PemFileHelper.ReadFirstChain(KEYSTORE_PATH);
         }
 
         [NUnit.Framework.Test]
@@ -140,14 +143,14 @@ namespace iText.Signatures.Sign {
             String outPdf = DESTINATION_FOLDER + "signPdf2Cades.pdf";
             Rectangle rect = new Rectangle(30, 200, 200, 100);
             String fieldName = "Signature1";
-            Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.RIPEMD160, PdfSigner.CryptoStandard.CADES, "Test 1"
+            Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1"
                 , "TestCity", rect, false, true, PdfSigner.NOT_CERTIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 , GetTestMap(rect)));
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
         }
 
-        protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
+        protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, int certificationLevel) {
             PdfReader reader = new PdfReader(src);
             StampingProperties properties = new StampingProperties();
@@ -160,7 +163,7 @@ namespace iText.Signatures.Sign {
             signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
         }
 
-        protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
+        protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode, int certificationLevel, float? fontSize
             ) {
@@ -186,7 +189,7 @@ namespace iText.Signatures.Sign {
             signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
         }
 
-        protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
+        protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode) {
             Sign(src, name, dest, chain, pk, digestAlgorithm, subfilter, reason, location, rectangleForNewField, setReuseAppearance

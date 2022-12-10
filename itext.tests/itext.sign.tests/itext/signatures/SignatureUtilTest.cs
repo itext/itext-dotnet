@@ -49,7 +49,7 @@ using iText.Signatures.Testutils;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class SignatureUtilTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/SignatureUtilTest/";

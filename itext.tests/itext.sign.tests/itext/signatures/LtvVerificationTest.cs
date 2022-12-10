@@ -23,16 +23,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Pdf;
+using iText.Signatures.Exceptions;
+using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
 using iText.Test.Attributes;
-using iText.Test.Signutils;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class LtvVerificationTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/LtvVerificationTest/";
@@ -46,7 +47,7 @@ namespace iText.Signatures {
         private static readonly String CERT_FOLDER_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-        private static readonly char[] PASSWORD = "testpass".ToCharArray();
+        private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
         private static LtvVerification TEST_VERIFICATION;
 
@@ -84,9 +85,9 @@ namespace iText.Signatures {
             using (PdfDocument pdfDocument_1 = new PdfDocument(new PdfReader(input), new PdfWriter(baos), new StampingProperties
                 ().UseAppendMode())) {
                 LtvVerification verification = new LtvVerification(pdfDocument_1);
-                String rootCertPath = CERT_FOLDER_PATH + "rootRsa.p12";
-                X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(rootCertPath, PASSWORD)[0];
-                ICipherParameters caPrivateKey = Pkcs12FileHelper.ReadFirstKey(rootCertPath, PASSWORD, PASSWORD);
+                String rootCertPath = CERT_FOLDER_PATH + "rootRsa.pem";
+                IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertPath)[0];
+                IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(rootCertPath, PASSWORD);
                 verification.AddVerification("TestSignature", null, new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey
                     ), LtvVerification.CertificateOption.SIGNING_CERTIFICATE, LtvVerification.Level.CRL, LtvVerification.CertificateInclusion
                     .NO);
@@ -117,6 +118,32 @@ namespace iText.Signatures {
             IList<byte[]> certs = new List<byte[]>();
             certs.Add(new byte[0]);
             NUnit.Framework.Assert.IsTrue(TEST_VERIFICATION.AddVerification(SIG_FIELD_NAME, ocsps, crls, certs));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TryAddVerificationAfterMerge() {
+            IList<byte[]> crls = new List<byte[]>();
+            crls.Add(new byte[0]);
+            IList<byte[]> ocsps = new List<byte[]>();
+            ocsps.Add(new byte[0]);
+            IList<byte[]> certs = new List<byte[]>();
+            certs.Add(new byte[0]);
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SRC_PDF), new PdfWriter(new MemoryStream()))) {
+                LtvVerification verificationWithWriter = new LtvVerification(pdfDoc);
+                verificationWithWriter.Merge();
+                verificationWithWriter.AddVerification(SIG_FIELD_NAME, ocsps, crls, certs);
+                verificationWithWriter.Merge();
+                Exception exception1 = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => verificationWithWriter
+                    .AddVerification(SIG_FIELD_NAME, ocsps, crls, certs));
+                NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.VERIFICATION_ALREADY_OUTPUT, exception1.Message
+                    );
+                verificationWithWriter.Merge();
+                Exception exception2 = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => verificationWithWriter
+                    .AddVerification(null, null, null, LtvVerification.CertificateOption.SIGNING_CERTIFICATE, LtvVerification.Level
+                    .CRL, LtvVerification.CertificateInclusion.YES));
+                NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.VERIFICATION_ALREADY_OUTPUT, exception2.Message
+                    );
+            }
         }
 
         [NUnit.Framework.Test]
@@ -433,6 +460,14 @@ namespace iText.Signatures {
         public virtual void ValidateSigNameWholeChainCrlNoTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.WHOLE_CHAIN, LtvVerification.Level
                 .CRL, LtvVerification.CertificateInclusion.NO, true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetParentWithoutCertsTest() {
+            using (PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                LtvVerification verification = new LtvVerification(document);
+                NUnit.Framework.Assert.IsNull(verification.GetParent(null, new IX509Certificate[0]));
+            }
         }
 
         private static void ValidateOptionLevelInclusion(String crlUrl, LtvVerification.CertificateOption certificateOption

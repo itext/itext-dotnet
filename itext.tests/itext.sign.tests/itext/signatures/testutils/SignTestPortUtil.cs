@@ -43,50 +43,47 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.IO;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Crypto.Generators;
+using iText.Commons.Bouncycastle.Math;
 using iText.Kernel.Pdf;
-using Org.BouncyCastle.Crypto.Generators;
-using Org.BouncyCastle.Crypto.Prng;
-using Org.BouncyCastle.Security.Certificates;
 
 namespace iText.Signatures.Testutils {
     public class SignTestPortUtil {
-        public static CertificateID GenerateCertificateId(X509Certificate issuerCert, BigInteger serialNumber, String hashAlgorithm) {
-            return new CertificateID(hashAlgorithm, issuerCert, serialNumber);
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        public static ICertificateID GenerateCertificateId(IX509Certificate issuerCert, IBigInteger serialNumber, String hashAlgorithm) {
+            return FACTORY.CreateCertificateID(hashAlgorithm, issuerCert, serialNumber);
         }
 
-        public static OcspReq GenerateOcspRequestWithNonce(CertificateID id) {
-            OcspReqGenerator gen = new OcspReqGenerator();
+        public static IOCSPReq GenerateOcspRequestWithNonce(ICertificateID id) {
+            IOCSPReqBuilder gen = FACTORY.CreateOCSPReqBuilder();
             gen.AddRequest(id);
 
             // create details for nonce extension
             IDictionary extensions = new Hashtable();
 
-            extensions[OcspObjectIdentifiers.PkixOcspNonce] = new X509Extension(false, new DerOctetString(new DerOctetString(PdfEncryption.GenerateNewDocumentId()).GetEncoded()));
+            extensions[FACTORY.CreateOCSPObjectIdentifiers().GetIdPkixOcspNonce()] = FACTORY.CreateExtension(false, 
+                FACTORY.CreateDEROctetString(FACTORY.CreateDEROctetString(PdfEncryption.GenerateNewDocumentId()).GetEncoded()));
 
-            gen.SetRequestExtensions(new X509Extensions(extensions));
-            return gen.Generate();
+            gen.SetRequestExtensions(FACTORY.CreateExtensions(extensions));
+            return gen.Build();
         }
 
-        public static IDigest GetMessageDigest(String hashAlgorithm) {
-            return DigestUtilities.GetDigest(hashAlgorithm);
+        public static IIDigest GetMessageDigest(String hashAlgorithm) {
+            return FACTORY.CreateIDigest(hashAlgorithm);
         }
 
-        public static X509Crl ParseCrlFromStream(Stream input) {
-            return new X509CrlParser().ReadCrl(input);
+        public static IX509Crl ParseCrlFromStream(Stream input) {
+            return FACTORY.CreateX509Crl(input);
         }
         
-        public static RsaKeyPairGenerator BuildRSA2048KeyPairGenerator() {
-            RsaKeyPairGenerator keyGen = new RsaKeyPairGenerator();
-            keyGen.Init(new KeyGenerationParameters(new SecureRandom(new VmpcRandomGenerator()), 2048));
-            return keyGen;
+        public static IRsaKeyPairGenerator BuildRSA2048KeyPairGenerator() {
+            return FACTORY.CreateRsa2048KeyPairGenerator();
         }
     }
 }

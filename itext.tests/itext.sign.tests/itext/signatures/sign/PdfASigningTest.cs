@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Kernel.Font;
@@ -56,10 +56,9 @@ using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
 using iText.Test.Pdfa;
-using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfASigningTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfASigningTest/";
@@ -68,16 +67,16 @@ namespace iText.Signatures.Sign {
              + "/test/itext/signatures/sign/PdfASigningTest/";
 
         public static readonly String keystorePath = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/signCertRsa01.p12";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/signCertRsa01.pem";
 
-        public static readonly char[] password = "testpass".ToCharArray();
+        public static readonly char[] password = "testpassphrase".ToCharArray();
 
         public static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/font/FreeSans.ttf";
 
-        private X509Certificate[] chain;
+        private IX509Certificate[] chain;
 
-        private ICipherParameters pk;
+        private IPrivateKey pk;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -86,8 +85,8 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.SetUp]
         public virtual void Init() {
-            pk = Pkcs12FileHelper.ReadFirstKey(keystorePath, password, password);
-            chain = Pkcs12FileHelper.ReadFirstChain(keystorePath, password);
+            pk = PemFileHelper.ReadFirstKey(keystorePath, password);
+            chain = PemFileHelper.ReadFirstChain(keystorePath);
         }
 
         [NUnit.Framework.Test]
@@ -147,14 +146,14 @@ namespace iText.Signatures.Sign {
                 , "Helvetica"), e.Message);
         }
 
-        protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
+        protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode) {
             Sign(src, name, dest, chain, pk, digestAlgorithm, subfilter, reason, location, rectangleForNewField, setReuseAppearance
                 , isAppendMode, PdfSigner.NOT_CERTIFIED, null);
         }
 
-        protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
+        protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode, int certificationLevel, float? fontSize
             ) {

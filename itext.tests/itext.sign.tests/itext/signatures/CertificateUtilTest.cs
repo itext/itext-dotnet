@@ -21,39 +21,48 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Signutils;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class CertificateUtilTest : ExtendedITextTest {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-        private static readonly char[] PASSWORD = "testpass".ToCharArray();
-
         [NUnit.Framework.Test]
         public virtual void GetTSAURLAdobeExtensionTest() {
-            X509Certificate tsaCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCert.p12"
-                , PASSWORD)[0];
+            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCert.pem"
+                )[0];
             String url = CertificateUtil.GetTSAURL(tsaCert);
             NUnit.Framework.Assert.AreEqual("https://itextpdf.com/en", url);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetTSAURLUsualTimestampCertificateTest() {
-            X509Certificate tsaCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "tsCertRsa.p12", PASSWORD
-                )[0];
+            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "tsCertRsa.pem")[0];
             String url = CertificateUtil.GetTSAURL(tsaCert);
             NUnit.Framework.Assert.IsNull(url);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetTSAURLAdobeExtensionNotTaggedTest() {
-            X509Certificate tsaCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCertWithoutTag.p12"
-                , PASSWORD)[0];
-            NUnit.Framework.Assert.Catch(typeof(InvalidCastException), () => CertificateUtil.GetTSAURL(tsaCert));
+            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "adobeExtensionCertWithoutTag.pem"
+                )[0];
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => CertificateUtil.GetTSAURL(tsaCert));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCRLFromStringNullTest() {
+            NUnit.Framework.Assert.IsNull(CertificateUtil.GetCRL((String)null));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCRLFromCertificateWithoutCRLTest() {
+            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "rootRsa.pem")[0];
+            IX509Crl crl = CertificateUtil.GetCRL(tsaCert);
+            NUnit.Framework.Assert.IsNull(crl);
         }
     }
 }
