@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Nodes;
@@ -97,6 +98,8 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     /// XSS attack examples (that jsoup will safegaurd against the default Cleaner and Safelist configuration).
     /// </remarks>
     public class Safelist {
+        private static readonly Regex SPACE_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile("\\s");
+
         private ICollection<Safelist.TagName> tagNames;
 
         // tags allowed, lower case. e.g. [p, br, span]
@@ -585,7 +588,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         }
 
         private bool IsValidAnchor(String value) {
-            return value.StartsWith("#") && !value.Matches(".*\\s.*");
+            return value.StartsWith("#") && !iText.Commons.Utils.Matcher.Match(SPACE_PATTERN, value).Find();
         }
 
         internal virtual Attributes GetEnforcedAttributes(String tagName) {

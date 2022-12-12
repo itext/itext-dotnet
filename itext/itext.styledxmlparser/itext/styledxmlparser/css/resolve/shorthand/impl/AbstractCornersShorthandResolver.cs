@@ -77,10 +77,10 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         * @see com.itextpdf.styledxmlparser.css.resolve.shorthand.IShorthandResolver#resolveShorthand(java.lang.String)
         */
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
-            String[] props = iText.Commons.Utils.StringUtil.Split(shorthandExpression, "\\s*\\/\\s*");
+            String[] props = iText.Commons.Utils.StringUtil.Split(shorthandExpression, "\\/");
             String[][] properties = new String[props.Length][];
             for (int i = 0; i < props.Length; i++) {
-                properties[i] = iText.Commons.Utils.StringUtil.Split(props[i], "\\s+");
+                properties[i] = iText.Commons.Utils.StringUtil.Split(props[i].Trim(), "\\s+");
             }
             String[] resultExpressions = new String[4];
             for (int i = 0; i < resultExpressions.Length; i++) {

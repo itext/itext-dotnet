@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
@@ -96,8 +97,10 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             String fontSizeValue = null;
             String lineHeightValue = null;
             String fontFamilyValue = null;
-            IList<String> properties = GetFontProperties(iText.Commons.Utils.StringUtil.ReplaceAll(shorthandExpression
-                , "\\s*,\\s*", ","));
+            String[] props = iText.Commons.Utils.StringUtil.Split(shorthandExpression, ",");
+            String shExprFixed = String.Join(",", JavaUtil.ArraysToEnumerable(props).Select((str) => str.Trim()).ToList
+                ());
+            IList<String> properties = GetFontProperties(shExprFixed);
             foreach (String value in properties) {
                 int slashSymbolIndex = value.IndexOf('/');
                 if (CommonCssConstants.ITALIC.Equals(value) || CommonCssConstants.OBLIQUE.Equals(value)) {
