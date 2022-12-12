@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -303,6 +303,55 @@ namespace iText.IO.Util {
             finally {
                 StandardOutUtil.RestoreStandardOut(storedPrintStream);
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareEqualImagesAndGetResult() {
+            String image = SOURCE_FOLDER + "image.png";
+            String diff = DESTINATION_FOLDER + "diff_equalImages_result.png";
+            ImageMagickCompareResult result = new ImageMagickHelper().RunImageMagickImageCompareAndGetResult(image, image
+                , diff, "1");
+            NUnit.Framework.Assert.IsTrue(result.IsComparingResultSuccessful());
+            NUnit.Framework.Assert.AreEqual(0, result.GetDiffPixels());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareDifferentImagesAndGetResult() {
+            String image = SOURCE_FOLDER + "image.png";
+            String image2 = SOURCE_FOLDER + "Im1_1.jpg";
+            String diff = DESTINATION_FOLDER + "diff_equalImages.png";
+            ImageMagickCompareResult result = new ImageMagickHelper().RunImageMagickImageCompareAndGetResult(image, image2
+                , diff, "1");
+            NUnit.Framework.Assert.IsFalse(result.IsComparingResultSuccessful());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RunImageMagickImageCompareEqualWithThreshold() {
+            String image = SOURCE_FOLDER + "image.png";
+            String image2 = SOURCE_FOLDER + "image.png";
+            String diff = DESTINATION_FOLDER + "diff_equalImages.png";
+            bool result = new ImageMagickHelper().RunImageMagickImageCompareWithThreshold(image, image2, diff, "0", 0);
+            NUnit.Framework.Assert.IsTrue(result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RunImageMagickImageCompareWithEnoughThreshold() {
+            String image = SOURCE_FOLDER + "image.png";
+            String image2 = SOURCE_FOLDER + "Im1_1.jpg";
+            String diff = DESTINATION_FOLDER + "diff_equalImages.png";
+            bool result = new ImageMagickHelper().RunImageMagickImageCompareWithThreshold(image, image2, diff, "20", 2000000
+                );
+            NUnit.Framework.Assert.IsTrue(result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RunImageMagickImageCompareWithNotEnoughThreshold() {
+            String image = SOURCE_FOLDER + "image.png";
+            String image2 = SOURCE_FOLDER + "Im1_1.jpg";
+            String diff = DESTINATION_FOLDER + "diff_equalImages.png";
+            bool result = new ImageMagickHelper().RunImageMagickImageCompareWithThreshold(image, image2, diff, "20", 2000
+                );
+            NUnit.Framework.Assert.IsFalse(result);
         }
     }
 }

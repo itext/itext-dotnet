@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Util {
@@ -159,7 +161,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 }
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndDic && obj.GetObjectType() != PdfObject.DICTIONARY
                     ) {
-                    tokeniser.ThrowError(PdfException.UnexpectedGtGt);
+                    tokeniser.ThrowError(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, ">>"));
                 }
                 array.Add(obj);
             }

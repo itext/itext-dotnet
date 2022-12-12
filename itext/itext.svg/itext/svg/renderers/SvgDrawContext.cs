@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -80,6 +80,8 @@ namespace iText.Svg.Renderers {
         private AffineTransform lastTextTransform = new AffineTransform();
 
         private float[] textMove = new float[] { 0.0f, 0.0f };
+
+        private float[] previousElementTextMove;
 
         /// <summary>Create an instance of the context that is used to store information when converting SVG.</summary>
         /// <param name="resourceResolver">
@@ -359,6 +361,14 @@ namespace iText.Svg.Renderers {
         /// <summary>Pops the last template id from the stack.</summary>
         public virtual void PopPatternId() {
             this.patternIds.Pop();
+        }
+
+        public virtual void SetPreviousElementTextMove(float[] previousElementTextMove) {
+            this.previousElementTextMove = previousElementTextMove;
+        }
+
+        public virtual float[] GetPreviousElementTextMove() {
+            return previousElementTextMove;
         }
     }
 }

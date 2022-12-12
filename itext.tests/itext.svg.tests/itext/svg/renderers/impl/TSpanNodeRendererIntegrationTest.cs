@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -211,6 +211,21 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void TspanInheritAncestorsTspanFontSizeTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanInheritAncestorsTspanFontSize");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanNestedWithOffsets() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanNestedWithOffsets");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanNestedRelativeOffsets() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanNestedRelativeOffsets");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SimpleNestedTspanTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "simpleNestedTspan");
         }
     }
 }

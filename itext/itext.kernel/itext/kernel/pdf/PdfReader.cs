@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -49,6 +49,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto.Securityhandler;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Filters;
 using iText.Kernel.XMP;
 
@@ -387,7 +388,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>byte[] array.</returns>
         public virtual byte[] ReadStreamBytesRaw(PdfStream stream) {
             PdfName type = stream.GetAsName(PdfName.Type);
-            if (!PdfName.XRefStm.Equals(type) && !PdfName.ObjStm.Equals(type)) {
+            if (!PdfName.XRef.Equals(type) && !PdfName.ObjStm.Equals(type)) {
                 CheckPdfStreamLength(stream);
             }
             long offset = stream.GetOffset();
@@ -401,7 +402,7 @@ namespace iText.Kernel.Pdf {
             RandomAccessFileOrArray file = tokens.GetSafeFile();
             byte[] bytes = null;
             try {
-                file.Seek(stream.GetOffset());
+                file.Seek(offset);
                 bytes = new byte[length];
                 file.ReadFully(bytes);
                 bool embeddedStream = pdfDocument.DoesStreamBelongToEmbeddedFile(stream);
@@ -1024,10 +1025,10 @@ namespace iText.Kernel.Pdf {
                 PdfObject obj = ReadObject(true, objStm);
                 if (obj == null) {
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
-                        tokens.ThrowError(PdfException.UnexpectedGtGt);
+                        tokens.ThrowError(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, ">>"));
                     }
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
-                        tokens.ThrowError(PdfException.UnexpectedCloseBracket);
+                        tokens.ThrowError(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, "]"));
                     }
                 }
                 dic.Put(name, obj);
@@ -1040,12 +1041,10 @@ namespace iText.Kernel.Pdf {
             while (true) {
                 PdfObject obj = ReadObject(true, objStm);
                 if (obj == null) {
-                    if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
-                        break;
+                    if (tokens.GetTokenType() != PdfTokenizer.TokenType.EndArray) {
+                        ProcessArrayReadError();
                     }
-                    if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
-                        tokens.ThrowError(PdfException.UnexpectedGtGt);
-                    }
+                    break;
                 }
                 array.Add(obj);
             }
@@ -1412,6 +1411,18 @@ namespace iText.Kernel.Pdf {
             return memorySavingMode;
         }
 
+        private void ProcessArrayReadError() {
+            String error = MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, iText.IO.Util.JavaUtil.GetStringForBytes
+                (tokens.GetByteContent(), System.Text.Encoding.UTF8));
+            if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.GetStrictnessLevel())) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+                logger.Error(error);
+            }
+            else {
+                tokens.ThrowError(error);
+            }
+        }
+
         private void ReadDecryptObj() {
             if (encrypted) {
                 return;
@@ -1559,10 +1570,12 @@ namespace iText.Kernel.Pdf {
                     line.Reset();
                     // added boolean because of mailing list issue (17 Feb. 2014)
                     if (!tokens.ReadLineSegment(line, false)) {
+                        if (!PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.strictnessLevel)) {
+                            throw new PdfException(KernelExceptionMessageConstant.STREAM_SHALL_END_WITH_ENDSTREAM);
+                        }
                         break;
                     }
                     if (line.StartsWith(endstream)) {
-                        streamLength = (int)(pos - start);
                         break;
                     }
                     else {
@@ -1573,11 +1586,11 @@ namespace iText.Kernel.Pdf {
                             if (index >= 0) {
                                 pos = pos - 16 + index;
                             }
-                            streamLength = (int)(pos - start);
                             break;
                         }
                     }
                 }
+                streamLength = (int)(pos - start);
                 tokens.Seek(pos - 2);
                 if (tokens.Read() == 13) {
                     streamLength--;

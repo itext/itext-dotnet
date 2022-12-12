@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2022 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -154,6 +154,19 @@ namespace iText.IO.Util {
 
             NUnit.Framework.Assert.False(result);
             NUnit.Framework.Assert.True(FileUtil.FileExists(diff));
+        }
+        
+        [NUnit.Framework.Test]
+        public void RunProcessAndGetProcessInfoTest() {
+            String imageMagickPath = SystemUtil.GetEnvironmentVariable(ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE);
+            if (imageMagickPath == null) {
+                imageMagickPath = SystemUtil.GetEnvironmentVariable(ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY);
+            }
+
+            ProcessInfo processInfo = SystemUtil.RunProcessAndGetProcessInfo(imageMagickPath,"--version");
+
+            NUnit.Framework.Assert.NotNull(processInfo);
+            NUnit.Framework.Assert.AreEqual(0, processInfo.GetExitCode());
         }
     }
 }
