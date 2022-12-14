@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Utils;
 
 namespace iText.Svg.Utils {
     /// <summary>Utility class that facilitates parsing values from CSS.</summary>
@@ -62,8 +61,12 @@ namespace iText.Svg.Utils {
             IList<String> result = new List<String>();
             if (value != null && value.Length > 0) {
                 value = value.Trim();
-                String[] list = iText.Commons.Utils.StringUtil.Split(value, "\\s*(,|\\s)\\s*");
-                result.AddAll(JavaUtil.ArraysAsList(list));
+                String[] list = iText.Commons.Utils.StringUtil.Split(value, "[,|\\s]");
+                foreach (String element in list) {
+                    if (!String.IsNullOrEmpty(element)) {
+                        result.Add(element);
+                    }
+                }
             }
             return result;
         }

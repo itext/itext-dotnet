@@ -122,6 +122,18 @@ namespace iText.Svg.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void EmptyStringsSplitValueTest() {
+            String input = " \n1,,\n 2   a  ,\tb  ,";
+            IList<String> expected = new List<String>();
+            expected.Add("1");
+            expected.Add("2");
+            expected.Add("a");
+            expected.Add("b");
+            IList<String> actual = SvgCssUtils.SplitValueList(input);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void NullSplitValueTest() {
             IList<String> actual = SvgCssUtils.SplitValueList(null);
             NUnit.Framework.Assert.IsTrue(actual.IsEmpty());

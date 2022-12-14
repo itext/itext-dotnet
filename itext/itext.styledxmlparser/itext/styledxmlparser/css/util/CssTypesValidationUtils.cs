@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Text.RegularExpressions;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Validate;
 
@@ -36,6 +37,9 @@ namespace iText.StyledXmlParser.Css.Util {
         //  Add new relative units to array and move this array to the CommonCssConstants
         private static readonly String[] RELATIVE_MEASUREMENTS_VALUES = new String[] { CommonCssConstants.PERCENTAGE
             , CommonCssConstants.EM, CommonCssConstants.EX, CommonCssConstants.REM };
+
+        private static readonly Regex BASE64_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile("^data:[^\\s]+;base64,"
+            );
 
         /// <summary>
         /// Creates a new
@@ -69,7 +73,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="data">the data</param>
         /// <returns>true, if the data is base 64 encoded</returns>
         public static bool IsBase64Data(String data) {
-            return data.Matches("^data:([^\\s]*);base64,([^\\s]*)");
+            return iText.Commons.Utils.Matcher.Match(BASE64_PATTERN, data).Find();
         }
 
         /// <summary>Checks if a value is a color property.</summary>

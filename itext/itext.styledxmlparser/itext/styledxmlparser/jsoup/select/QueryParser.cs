@@ -446,7 +446,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         }
 
         //pseudo selectors :first-child, :last-child, :nth-child, ...
-        private static readonly Regex NTH_AB = iText.Commons.Utils.StringUtil.RegexCompile("(([+-])?(\\d+)?)n(\\s*([+-])?\\s*\\d+)?"
+        private static readonly Regex NTH_AB = iText.Commons.Utils.StringUtil.RegexCompile("(([+-])?(\\d+)?)n(([+-])?\\d+)?"
             , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
         private static readonly Regex NTH_B = iText.Commons.Utils.StringUtil.RegexCompile("([+-])?(\\d+)");
