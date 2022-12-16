@@ -221,7 +221,7 @@ namespace iText.Forms.Fields {
                     else {
                         ILogger logger = ITextLogManager.GetLogger(typeof(PdfAcroForm));
                         logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, pdfObject
-                            .GetIndirectReference() == null ? pdfObject : (PdfObject)pdfObject.GetIndirectReference()));
+                            .GetIndirectReference() == null ? pdfObject : pdfObject.GetIndirectReference()));
                     }
                 }
             }
