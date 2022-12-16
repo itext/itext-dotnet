@@ -458,6 +458,8 @@ namespace iText.Kernel.Pdf {
         protected internal virtual void UpdateCompressionFilter(PdfStream pdfStream) {
             PdfObject filter = pdfStream.Get(PdfName.Filter);
             if (filter == null) {
+                // Remove if any
+                pdfStream.Remove(PdfName.DecodeParms);
                 pdfStream.Put(PdfName.Filter, PdfName.FlateDecode);
                 return;
             }

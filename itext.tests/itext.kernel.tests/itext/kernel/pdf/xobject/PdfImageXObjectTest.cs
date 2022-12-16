@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.IO.Util;
@@ -173,6 +174,18 @@ namespace iText.Kernel.Pdf.Xobject {
                 .CreateTiff(UrlUtil.ToURL(image), false, 1, false));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage
                 ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RedundantDecodeParmsTest() {
+            String srcFilename = SOURCE_FOLDER + "redundantDecodeParms.pdf";
+            String destFilename = DESTINATION_FOLDER + "redundantDecodeParms.pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_redundantDecodeParms.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(new FileStream(destFilename
+                , FileMode.Create)), new StampingProperties())) {
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFilename, DESTINATION_FOLDER
+                ));
         }
 
         private void ConvertAndCompare(String outFilename, String cmpFilename, String imageFilename) {
