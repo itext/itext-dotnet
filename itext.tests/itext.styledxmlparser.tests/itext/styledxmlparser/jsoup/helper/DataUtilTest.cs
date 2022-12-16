@@ -107,15 +107,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         }
 
         [NUnit.Framework.Test]
-        public virtual void GeneratesMimeBoundaries() {
-            String m1 = DataUtil.MimeBoundary();
-            String m2 = DataUtil.MimeBoundary();
-            NUnit.Framework.Assert.AreEqual(DataUtil.boundaryLength, m1.Length);
-            NUnit.Framework.Assert.AreEqual(DataUtil.boundaryLength, m2.Length);
-            NUnit.Framework.Assert.AreNotSame(m1, m2);
-        }
-
-        [NUnit.Framework.Test]
         public virtual void WrongMetaCharsetFallback() {
             String html = "<html><head><meta charset=iso-8></head><body></body></html>";
             Document doc = DataUtil.ParseInputStream(Stream(html), null, "http://example.com", iText.StyledXmlParser.Jsoup.Parser.Parser

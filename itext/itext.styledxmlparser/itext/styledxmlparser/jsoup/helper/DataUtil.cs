@@ -67,9 +67,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
 
         internal const int bufferSize = 1024 * 32;
 
-        private static readonly char[] mimeBoundaryChars = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            .ToCharArray();
-
         internal const int boundaryLength = 32;
 
         private DataUtil() {
@@ -305,16 +302,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
                 return cs;
             }
             return null;
-        }
-
-        /// <summary>Creates a random string, suitable for use as a mime boundary</summary>
-        internal static String MimeBoundary() {
-            StringBuilder mime = StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
-            Random rand = new Random();
-            for (int i = 0; i < boundaryLength; i++) {
-                mime.Append(mimeBoundaryChars[rand.Next(mimeBoundaryChars.Length)]);
-            }
-            return StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(mime);
         }
 
         private static DataUtil.BomCharset DetectCharsetFromBom(ByteBuffer byteData) {

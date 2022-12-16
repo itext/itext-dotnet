@@ -30,6 +30,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Forms.Fields {
+    [NUnit.Framework.Category("UnitTest")]
     public class SignatureFormFieldBuilderTest : ExtendedITextTest {
         private static readonly PdfDocument DUMMY_DOCUMENT = new PdfDocument(new PdfWriter(new MemoryStream()));
 

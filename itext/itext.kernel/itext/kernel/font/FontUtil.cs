@@ -43,13 +43,16 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Security;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Util;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
@@ -60,7 +63,13 @@ namespace iText.Kernel.Font {
         public static String AddRandomSubsetPrefixForFontName(String fontName) {
             StringBuilder newFontName = new StringBuilder(fontName.Length + 7);
             for (int k = 0; k < 6; ++k) {
-                newFontName.Append((char)(JavaUtil.Random() * 26 + 'A'));
+                try {
+                    Random instanceStrong = RNGCryptoServiceProvider.GetInstanceStrong();
+                    newFontName.Append((char)(instanceStrong.Next() * 26 + 'A'));
+                }
+                catch (SecurityUtilityException e) {
+                    throw new PdfException(e);
+                }
             }
             newFontName.Append('+').Append(fontName);
             return newFontName.ToString();
