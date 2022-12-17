@@ -24,7 +24,7 @@
       </group>
       <group targetFramework="net45">
         <dependency id="Newtonsoft.Json" version="13.0.1" />
-        <dependency id="Microsoft.Extensions.Logging" version="1.0.2" />
+        <dependency id="Net4x.Extensions.Logging" version="2.2.0" />
       </group>
       <group targetFramework="net461">
         <dependency id="Newtonsoft.Json" version="13.0.1" />

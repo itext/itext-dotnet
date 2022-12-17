@@ -20,12 +20,12 @@
     <dependencies>
       <group targetFramework="net40">
         <dependency id="Net4x.itext7.commons" version="7.2.5" />
-        <dependency id="Microsoft.Extensions.Logging" version="1.0.2" />
+        <dependency id="Net4x.Extensions.Logging" version="2.2.0" />
         <dependency id="Portable.BouncyCastle" version="1.8.9" />
       </group>
       <group targetFramework="net45">
         <dependency id="Net4x.itext7.commons" version="7.2.5" />
-        <dependency id="Microsoft.Extensions.Logging" version="1.0.2" />
+        <dependency id="Net4x.Extensions.Logging" version="2.2.0" />
         <dependency id="Portable.BouncyCastle" version="1.8.9" />
       </group>
       <group targetFramework="net461">
