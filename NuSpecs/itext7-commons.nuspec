@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7.commons</id>
-    <version>7.2.5</version>
+    <version>7.2.6</version>
     <title>iText 7 commons module</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -17,9 +17,14 @@
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp</tags>
     <dependencies>
+      <group targetFramework="net40">
+        <dependency id="Newtonsoft.Json" version="13.0.1" />
+        <dependency id="Net4x.Extensions.Logging" version="2.2.0" />
+        <dependency id="DotNetZip" version="1.16.0" />
+      </group>
       <group targetFramework="net45">
         <dependency id="Newtonsoft.Json" version="13.0.1" />
-        <dependency id="Microsoft.Extensions.Logging" version="1.0.2" />
+        <dependency id="Net4x.Extensions.Logging" version="2.2.0" />
       </group>
       <group targetFramework="net461">
         <dependency id="Newtonsoft.Json" version="13.0.1" />
@@ -32,6 +37,8 @@
     </dependencies>
   </metadata>
   <files>
+    <file src="..\itext\itext.commons\bin\Release\net40\itext.commons.dll" target="lib\net40" />
+    <file src="..\itext\itext.commons\bin\Release\net40\itext.commons.xml" target="lib\net40" />
     <file src="..\itext\itext.commons\bin\Release\net45\itext.commons.dll" target="lib\net45" />
     <file src="..\itext\itext.commons\bin\Release\net45\itext.commons.xml" target="lib\net45" />
     <file src="..\itext\itext.commons\bin\Release\net461\itext.commons.dll" target="lib\net461" />

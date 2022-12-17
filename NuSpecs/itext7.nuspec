@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7</id>
-    <version>7.2.5</version>
+    <version>7.2.6</version>
     <title>iText 7 Community</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -49,6 +49,25 @@
     </dependencies>
   </metadata>
   <files>
+    <file src="..\itext\itext.io\bin\Release\net40\itext.io.dll" target="lib\net40" />
+    <file src="..\itext\itext.io\bin\Release\net40\itext.io.xml" target="lib\net40" />
+    <file src="..\itext\itext.kernel\bin\Release\net40\itext.kernel.dll" target="lib\net40" />
+    <file src="..\itext\itext.kernel\bin\Release\net40\itext.kernel.xml" target="lib\net40" />
+    <file src="..\itext\itext.layout\bin\Release\net40\itext.layout.dll" target="lib\net40" />
+    <file src="..\itext\itext.layout\bin\Release\net40\itext.layout.xml" target="lib\net40" />
+    <file src="..\itext\itext.pdfa\bin\Release\net40\itext.pdfa.dll" target="lib\net40" />
+    <file src="..\itext\itext.pdfa\bin\Release\net40\itext.pdfa.xml" target="lib\net40" />
+    <file src="..\itext\itext.forms\bin\Release\net40\itext.forms.dll" target="lib\net40" />
+    <file src="..\itext\itext.forms\bin\Release\net40\itext.forms.xml" target="lib\net40" />
+    <file src="..\itext\itext.barcodes\bin\Release\net40\itext.barcodes.dll" target="lib\net40" />
+    <file src="..\itext\itext.barcodes\bin\Release\net40\itext.barcodes.xml" target="lib\net40" />
+    <file src="..\itext\itext.sign\bin\Release\net40\itext.sign.dll" target="lib\net40" />
+    <file src="..\itext\itext.sign\bin\Release\net40\itext.sign.xml" target="lib\net40" />
+    <file src="..\itext\itext.styledxmlparser\bin\Release\net40\itext.styledxmlparser.dll" target="lib\net40" />
+    <file src="..\itext\itext.styledxmlparser\bin\Release\net40\itext.styledxmlparser.xml" target="lib\net40" />
+    <file src="..\itext\itext.svg\bin\Release\net40\itext.svg.dll" target="lib\net40" />
+    <file src="..\itext\itext.svg\bin\Release\net40\itext.svg.xml" target="lib\net40" />
+
     <file src="..\itext\itext.io\bin\Release\net45\itext.io.dll" target="lib\net45" />
     <file src="..\itext\itext.io\bin\Release\net45\itext.io.xml" target="lib\net45" />
     <file src="..\itext\itext.kernel\bin\Release\net45\itext.kernel.dll" target="lib\net45" />
