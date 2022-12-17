@@ -143,20 +143,25 @@ namespace iText.Commons.Utils {
             if (imageMagickPath == null) {
                 imageMagickPath = SystemUtil.GetEnvironmentVariable(MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY);
             }
-            String inputImage = "image.jpg";
-            String cmpImage = "cmp_image.jpg";
-            String diff = DESTINATION_FOLDER + "diff_differentImages.png";
 
-            StringBuilder currCompareParams = new StringBuilder();
-            currCompareParams
-                .Append("'")
-                .Append(inputImage).Append("' '")
-                .Append(cmpImage).Append("' '")
-                .Append(diff).Append("'");
-            bool result = SystemUtil.RunProcessAndWait(imageMagickPath, currCompareParams.ToString(), SOURCE_FOLDER);
+            if (imageMagickPath != null)
+            {
+                String inputImage = "image.jpg";
+                String cmpImage = "cmp_image.jpg";
+                String diff = DESTINATION_FOLDER + "diff_differentImages.png";
 
-            NUnit.Framework.Assert.False(result);
-            NUnit.Framework.Assert.True(FileUtil.FileExists(diff));
+                StringBuilder currCompareParams = new StringBuilder();
+                currCompareParams
+                    .Append("'")
+                    .Append(inputImage).Append("' '")
+                    .Append(cmpImage).Append("' '")
+                    .Append(diff).Append("'");
+                bool result =
+                    SystemUtil.RunProcessAndWait(imageMagickPath, currCompareParams.ToString(), SOURCE_FOLDER);
+
+                NUnit.Framework.Assert.False(result);
+                NUnit.Framework.Assert.True(FileUtil.FileExists(diff));
+            }
         }
         
         [NUnit.Framework.Test]
@@ -166,10 +171,13 @@ namespace iText.Commons.Utils {
                 imageMagickPath = SystemUtil.GetEnvironmentVariable(MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY);
             }
 
-            ProcessInfo processInfo = SystemUtil.RunProcessAndGetProcessInfo(imageMagickPath,"--version");
+            if (imageMagickPath != null)
+            {
+                ProcessInfo processInfo = SystemUtil.RunProcessAndGetProcessInfo(imageMagickPath, "--version");
 
-            NUnit.Framework.Assert.NotNull(processInfo);
-            NUnit.Framework.Assert.AreEqual(0, processInfo.GetExitCode());
+                NUnit.Framework.Assert.NotNull(processInfo);
+                NUnit.Framework.Assert.AreEqual(0, processInfo.GetExitCode());
+            }
         }
     }
 }

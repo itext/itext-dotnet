@@ -165,6 +165,7 @@ namespace iText.Commons.Utils {
 
         internal static String[] PrepareProcessArguments(String exec, String @params) {
             bool isExcitingFile;
+            exec ??= string.Empty;
             try
             {
                 isExcitingFile = new FileInfo(exec).Exists;

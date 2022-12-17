@@ -55,8 +55,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuSpecs", "NuSpecs", "{C9E4
 	ProjectSection(SolutionItems) = preProject
 		NuSpecs\itext7-commons.nuspec = NuSpecs\itext7-commons.nuspec
 		NuSpecs\itext7.nuspec = NuSpecs\itext7.nuspec
-		NuSpecs\unofficialitext7-commons.nuspec = NuSpecs\unofficialitext7-commons.nuspec
-		NuSpecs\unofficialitext7.nuspec = NuSpecs\unofficialitext7.nuspec
+		NuSpecs\Net4x.itext7-commons.nuspec = NuSpecs\Net4x.itext7-commons.nuspec
+		NuSpecs\Net4x.itext7.nuspec = NuSpecs\Net4x.itext7.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AD676B5E-B2B6-43CA-AB11-239CC626257A}"

@@ -46,7 +46,7 @@ namespace iText.StyledXmlParser.Css {
             IList<CssDeclaration> declarations = new List<CssDeclaration>();
             declarations.Add(new CssDeclaration("unicode-range", "U+75"));
             fontFaceRule.AddBodyCssDeclarations(declarations);
-            Range range = fontFaceRule.ResolveUnicodeRange();
+            var range = fontFaceRule.ResolveUnicodeRange();
             NUnit.Framework.Assert.IsNotNull(range);
             NUnit.Framework.Assert.IsTrue(range.Contains(117));
         }

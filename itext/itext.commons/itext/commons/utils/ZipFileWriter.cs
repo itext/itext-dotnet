@@ -27,13 +27,20 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using iText.Commons.Exceptions;
+#if NET40
+using System.Reflection;
+using ZipArchive=Ionic.Zip.ZipFile;
+#endif
 
 namespace iText.Commons.Utils {
     /// <summary>Allows writing entries into a zip file.</summary>
     public class ZipFileWriter : IDisposable {
 
-        private readonly ZipArchive outputStream;
+        private ZipArchive outputStream;
         private ICollection<String> fileNamesInZip = new HashSet<string>();
+#if NET40
+        private string _archivePath;
+#endif
 
         /// <summary>
         /// Creates an instance for zip file writing.
@@ -50,8 +57,17 @@ namespace iText.Commons.Utils {
                     archivePath));
             }
 
+#if NET40
+            if (!Directory.Exists(Path.GetDirectoryName(Path.GetFullPath(archivePath))))
+            {
+                throw new IOException();
+            }
+            outputStream = new ZipArchive(archivePath);
+            _archivePath = archivePath;
+#else
             outputStream = new ZipArchive(new FileStream(archivePath, FileMode.Create),
                 ZipArchiveMode.Create, false, Encoding.UTF8);
+#endif
         }
 
         /// <summary>
@@ -103,20 +119,44 @@ namespace iText.Commons.Utils {
         }
 
         public void Dispose() {
+#if NET40
+            outputStream.Save(_archivePath);
+#endif
             outputStream.Dispose();
+#if NET40
+            outputStream = null;
+#endif
         }
 
         private void AddEntryToZip(String fileName, Action<Stream> write) {
             if (fileName == null || fileNamesInZip.Contains(fileName)) {
                 throw new IOException(CommonsExceptionMessageConstant.FILE_NAME_SHOULD_BE_UNIQUE);
             }
-            
+#if NET40
+            if(outputStream==null)
+            {
+                throw new Exception(nameof(outputStream));
+            }
+            var memoryStream = new MemoryStream();
+            write.Invoke(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            try
+            {
+                outputStream.AddEntry(fileName, memoryStream);
+            }
+            catch (ArgumentException e)
+            {
+                throw new IOException(e.Message, e);
+            }
+            outputStream.Save(_archivePath);
+#else
             ZipArchiveEntry zipEntry = outputStream.CreateEntry(fileName, CompressionLevel.Optimal);
             // Adding file name right after entry is added.
             fileNamesInZip.Add(fileName);
             using (Stream zos = zipEntry.Open()) {
                 write(zos);
             }
+#endif
         }
     }
 }

@@ -24,14 +24,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using iText.Commons.Exceptions;
 
-namespace iText.Commons.Utils  {
+#if NET40
+using ZipArchive = Ionic.Zip.ZipFile;
+#endif
+
+namespace iText.Commons.Utils
+{
     /// <summary>Allows reading entries from a zip file.</summary>
-    public class ZipFileReader : IDisposable {
-        
-        private readonly  ZipArchive zipArchive;
+    public class ZipFileReader : IDisposable
+    {
+
+        private ZipArchive zipArchive;
 
         /// <summary>
         /// Creates an instance for zip file reading.
@@ -40,23 +47,38 @@ namespace iText.Commons.Utils  {
         /// <exception cref="IOException">if some I/O exception occurs</exception>
         public ZipFileReader(String archivePath)
         {
-            if (archivePath == null) {
+            if (archivePath == null)
+            {
                 throw new IOException(CommonsExceptionMessageConstant.FILE_NAME_CAN_NOT_BE_NULL);
             }
-
+#if NET40
+            if (!File.Exists(archivePath))
+            {
+                throw new Exception();
+            }
+            zipArchive = new ZipArchive(archivePath);
+#else
             zipArchive = new ZipArchive(new FileStream(archivePath, FileMode.Open),
                 ZipArchiveMode.Read, false, Encoding.UTF8);
+#endif
         }
 
         /// <summary>
         /// Get all file entries paths inside the reading zip file.
         /// </summary>
         /// <returns>the {@link Set} of all file entries paths</returns>
-        public ISet<String> GetFileNames() {
+        public ISet<String> GetFileNames()
+        {
             ISet<String> fileNames = new HashSet<String>();
-            foreach (ZipArchiveEntry entry in zipArchive.Entries) {
+            foreach (var entry in zipArchive.Entries)
+            {
+#if NET40
+                String entryName = entry.FileName;
+#else
                 String entryName = entry.FullName;
-                if (!IsDirectory(entryName)) {
+#endif
+                if (!IsDirectory(entryName))
+                {
                     fileNames.Add(entryName);
                 }
             }
@@ -69,23 +91,46 @@ namespace iText.Commons.Utils  {
         /// <param name="fileName">the file path inside zip to read</param>
         /// <returns>the {@link InputStream} represents read file content</returns>
         /// <exception cref="IOException">if some I/O exception occurs</exception>
-        public Stream ReadFromZip(String fileName) {
-            if (fileName == null) {
+        public Stream ReadFromZip(String fileName)
+        {
+            if (fileName == null)
+            {
                 throw new IOException(CommonsExceptionMessageConstant.FILE_NAME_CAN_NOT_BE_NULL);
             }
-            ZipArchiveEntry entry = zipArchive.GetEntry(fileName);
-                if (entry == null || IsDirectory(fileName)) {
-                    throw new IOException(MessageFormatUtil.Format(
-                        CommonsExceptionMessageConstant.ZIP_ENTRY_NOT_FOUND, fileName));
-                }
-                return entry.Open();
-        }
-        
-        public void Dispose() {
-            zipArchive.Dispose();
+            if (zipArchive == null)
+            {
+                throw new InvalidOperationException();
+            }
+#if NET40
+            var entry = zipArchive.Entries.FirstOrDefault(i => i.FileName == fileName);
+#else
+            var entry = zipArchive.GetEntry(fileName);
+#endif
+            if (entry == null || IsDirectory(fileName))
+            {
+                throw new IOException(MessageFormatUtil.Format(
+                    CommonsExceptionMessageConstant.ZIP_ENTRY_NOT_FOUND, fileName));
+            }
+#if NET40
+            MemoryStream fromZip = new MemoryStream();
+            entry.Extract(fromZip);
+            fromZip.Seek(0, SeekOrigin.Begin);
+            return fromZip;
+#else
+            return entry.Open();
+#endif
         }
 
-        private static bool IsDirectory(String name) {
+        public void Dispose()
+        {
+            zipArchive.Dispose();
+#if NET40
+            zipArchive = null;
+#endif
+        }
+
+        private static bool IsDirectory(String name)
+        {
             return name.EndsWith("/");
         }
     }
