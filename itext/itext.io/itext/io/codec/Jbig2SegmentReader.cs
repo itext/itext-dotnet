@@ -325,7 +325,7 @@ namespace iText.IO.Codec {
             bool page_association_size = (segment_header_flags & 0x40) == 0x40;
             int segment_type = segment_header_flags & 0x3f;
             s.type = segment_type;
-            //7.2.4
+            //7.2.5
             int referred_to_byte0 = ra.Read();
             int count_of_referred_to_segments = (referred_to_byte0 & 0xE0) >> 5;
             int[] referred_to_segment_numbers = null;

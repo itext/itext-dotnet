@@ -92,8 +92,13 @@ namespace iText.Svg.Renderers.Impl {
                                         inverseMatrix = translation.CreateInverse();
                                     }
                                     catch (NoninvertibleTransformException ex) {
-                                        ITextLogManager.GetLogger(typeof(UseSvgNodeRenderer)).LogWarning(ex, SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH
+#if NET45
+                                        ITextLogManager.GetLogger(typeof(UseSvgNodeRenderer)).LogWarning(0, ex, SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH
                                             );
+#else
+                                        ITextLogManager.GetLogger(typeof(UseSvgNodeRenderer)).LogWarning(ex, SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH
+                                        );
+#endif                    
                                     }
                                 }
                             }

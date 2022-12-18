@@ -210,8 +210,13 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 return retriever.GetByteArrayByUrl(url);
             }
             catch (Exception e) {
+#if NET45
+                logger.LogError(0, e, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                    , uriResolver.GetBaseUri(), src));
+#else
                 logger.LogError(e, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
                     , uriResolver.GetBaseUri(), src));
+#endif                    
                 return null;
             }
         }
@@ -229,8 +234,13 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 return retriever.GetInputStreamByUrl(url);
             }
             catch (Exception e) {
+#if NET45
+                logger.LogError(0, e, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                    , uriResolver.GetBaseUri(), src));
+#else
                 logger.LogError(e, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
                     , uriResolver.GetBaseUri(), src));
+#endif                    
                 return null;
             }
         }

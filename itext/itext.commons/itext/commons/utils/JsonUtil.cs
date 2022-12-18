@@ -35,6 +35,49 @@ namespace iText.Commons.Utils
     /// <summary>Utility class for JSON serialization and deserialization operations. Not for public use.</summary>
     public sealed class JsonUtil
     {
+#if NET40
+        private class Net40StreamWriter : StreamWriter
+        {
+            public Net40StreamWriter(Stream stream) : base(stream)
+            {
+            }
+
+            public Net40StreamWriter(Stream stream, Encoding encoding) : base(stream, encoding)
+            {
+            }
+
+            public Net40StreamWriter(Stream stream, Encoding encoding, int bufferSize) : base(stream, encoding, bufferSize)
+            {
+            }
+
+            public Net40StreamWriter(string path) : base(path)
+            {
+            }
+
+            public Net40StreamWriter(string path, bool append) : base(path, append)
+            {
+            }
+
+            public Net40StreamWriter(string path, bool append, Encoding encoding) : base(path, append, encoding)
+            {
+            }
+
+            public Net40StreamWriter(string path, bool append, Encoding encoding, int bufferSize) : base(path, append, encoding, bufferSize)
+            {
+            }
+
+            public override void Close()
+            {
+                Flush();
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                Flush();
+            }
+        }
+#endif
+
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(JsonUtil));
         
         private JsonUtil()
@@ -118,10 +161,13 @@ namespace iText.Commons.Utils
             try {
                 JsonSerializer jsonSerializer = CreateAndConfigureJsonSerializer();
                 jsonSerializer.Formatting = Formatting.Indented;
-                
+#if NET40
+                StreamWriter streamWriter = new Net40StreamWriter(outputStream, new System.Text.UTF8Encoding(), 1024);
+                streamWriter.NewLine = "\n";
+#else
                 StreamWriter streamWriter = new StreamWriter(outputStream,new System.Text.UTF8Encoding(),1024, true);
                 streamWriter.NewLine = "\n";
-                
+#endif
                 using (JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter))
                 {
                     jsonTextWriter.Formatting = jsonSerializer.Formatting;
@@ -134,15 +180,19 @@ namespace iText.Commons.Utils
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
             }
         }
-        
+
         public static void SerializeToMinimalStream(Stream outputStream, Object value) {
             try {
                 JsonSerializer jsonSerializer = CreateAndConfigureJsonSerializer();
                 jsonSerializer.Formatting = Formatting.None;
-                
+
+#if NET40
+                StreamWriter streamWriter = new Net40StreamWriter(outputStream, new System.Text.UTF8Encoding(), 1024);
+#else
                 StreamWriter streamWriter = new StreamWriter(outputStream,new System.Text.UTF8Encoding(),1024, true);
+#endif
                 streamWriter.NewLine = "";
-                using (JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter)) {
+                using (JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter)){
                     jsonTextWriter.Formatting = jsonSerializer.Formatting;
                     jsonSerializer.Serialize(jsonTextWriter, value, null);
                 }

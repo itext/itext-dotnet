@@ -906,7 +906,11 @@ namespace iText.Kernel.Pdf {
                     }
                     catch (Exception e) {
                         ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+#if NET45
+                        logger.LogError(0, e, iText.IO.Logs.IoLogMessageConstant.PDF_WRITER_CLOSING_FAILED);
+#else
                         logger.LogError(e, iText.IO.Logs.IoLogMessageConstant.PDF_WRITER_CLOSING_FAILED);
+#endif
                     }
                 }
                 if (reader != null && IsCloseReader()) {
@@ -915,7 +919,11 @@ namespace iText.Kernel.Pdf {
                     }
                     catch (Exception e) {
                         ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+#if NET45
+                        logger.LogError(0, e, iText.IO.Logs.IoLogMessageConstant.PDF_READER_CLOSING_FAILED);
+#else
                         logger.LogError(e, iText.IO.Logs.IoLogMessageConstant.PDF_READER_CLOSING_FAILED);
+#endif
                     }
                 }
             }
@@ -1856,7 +1864,11 @@ namespace iText.Kernel.Pdf {
                 }
                 catch (System.IO.IOException e) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+#if NET45
+                    logger.LogError(0, e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_CREATING_DEFAULT_FONT);
+#else
                     logger.LogError(e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_CREATING_DEFAULT_FONT);
+#endif
                     defaultFont = null;
                 }
             }
@@ -2228,7 +2240,11 @@ namespace iText.Kernel.Pdf {
             }
             catch (XMPException e) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+#if NET45
+                logger.LogError(0, e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
+#else
                 logger.LogError(e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
+#endif
             }
         }
 
@@ -2345,7 +2361,11 @@ namespace iText.Kernel.Pdf {
                 structTreeRoot = null;
                 structParentIndex = -1;
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+#if NET45
+                logger.LogError(0, ex, iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED);
+#else
                 logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED);
+#endif
             }
         }
 

@@ -260,7 +260,11 @@ namespace iText.Signatures {
 
         private static void LogExceptionMessages(IList<Exception> exceptionsThrown) {
             foreach (Exception ex in exceptionsThrown) {
+#if NET45
+                LOGGER.LogError(0, ex, ex.Message == null ? SignLogMessageConstant.EXCEPTION_WITHOUT_MESSAGE : ex.Message);
+#else
                 LOGGER.LogError(ex, ex.Message == null ? SignLogMessageConstant.EXCEPTION_WITHOUT_MESSAGE : ex.Message);
+#endif                    
             }
         }
     }

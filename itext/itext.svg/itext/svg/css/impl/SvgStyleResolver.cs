@@ -119,7 +119,11 @@ namespace iText.Svg.Css.Impl {
                 }
             }
             catch (System.IO.IOException e) {
+#if NET45
+                LOGGER.LogWarning(0, e, SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS);
+#else
                 LOGGER.LogWarning(e, SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS);
+#endif                    
                 this.css = new CssStyleSheet();
             }
             this.resourceResolver = context.GetResourceResolver();
@@ -287,8 +291,13 @@ namespace iText.Svg.Css.Impl {
                     xlinkValue = this.resourceResolver.ResolveAgainstBaseUri(attr.GetValue()).ToExternalForm();
                 }
                 catch (UriFormatException mue) {
-                    LOGGER.LogError(mue, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL
+#if NET45
+                    LOGGER.LogError(0, mue, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL
                         );
+#else
+                    LOGGER.LogError(mue, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL
+                    );
+#endif                    
                 }
             }
             attributesMap.Put(attr.GetKey(), xlinkValue);
@@ -341,8 +350,13 @@ namespace iText.Svg.Css.Impl {
                                 }
                             }
                             catch (Exception exc) {
+#if NET45
+                                LOGGER.LogError(0, exc, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE
+                                    );
+#else
                                 LOGGER.LogError(exc, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE
                                     );
+#endif                    
                             }
                         }
                     }

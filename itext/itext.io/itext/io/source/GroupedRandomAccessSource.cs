@@ -208,12 +208,20 @@ namespace iText.IO.Source {
                     }
                     else {
                         ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
+#if NET45
+                        logger.LogError(0, ex, iText.IO.Logs.IoLogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED);
+#else
                         logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED);
+#endif
                     }
                 }
                 catch (Exception ex) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
+#if NET45
+                    logger.LogError(0, ex, iText.IO.Logs.IoLogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED);
+#else
                     logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED);
+#endif
                 }
             }
             if (firstThrownIOExc != null) {
