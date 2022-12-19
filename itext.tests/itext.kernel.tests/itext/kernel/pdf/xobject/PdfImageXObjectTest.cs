@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Geom;
@@ -142,12 +141,9 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void Group3CompressionTiffImageTest() {
-            // TODO: DEVSIX-5565 (update test when support for adobeDeflate compression tiff image will be realized)
             String image = SOURCE_FOLDER + "group3CompressionImage.tif";
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
-                .Create(UrlUtil.ToURL(image)));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage
-                ), e.Message);
+            ConvertAndCompare(DESTINATION_FOLDER + "group3CompressionTiffImage.pdf", SOURCE_FOLDER + "cmp_group3CompressionTiffImage.pdf"
+                , new PdfImageXObject(ImageDataFactory.Create(UrlUtil.ToURL(image))));
         }
 
         [NUnit.Framework.Test]
@@ -168,12 +164,10 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void Group3CompTiffImgNoRecoverErrorAndNotDirectTest() {
-            // TODO: DEVSIX-5565 (update test when support for adobeDeflate compression tiff image will be realized)
             String image = SOURCE_FOLDER + "group3CompressionImage.tif";
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
-                .CreateTiff(UrlUtil.ToURL(image), false, 1, false));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage
-                ), e.Message);
+            ConvertAndCompare(DESTINATION_FOLDER + "group3CompTiffImgNoRecoverErrorAndNotDirect.pdf", SOURCE_FOLDER + 
+                "cmp_group3CompTiffImgNoRecoverErrorAndNotDirect.pdf", new PdfImageXObject(ImageDataFactory.CreateTiff
+                (UrlUtil.ToURL(image), false, 1, false)));
         }
 
         [NUnit.Framework.Test]
@@ -189,8 +183,9 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         private void ConvertAndCompare(String outFilename, String cmpFilename, String imageFilename) {
+            System.Console.Out.WriteLine("Out pdf: " + UrlUtil.GetNormalizedFileUriString(outFilename));
+            System.Console.Out.WriteLine("Cmp pdf: " + UrlUtil.GetNormalizedFileUriString(cmpFilename) + "\n");
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFilename));
-            PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpFilename));
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(imageFilename));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
             canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(50, 500, 346, imageXObject.GetHeight()));
@@ -198,6 +193,25 @@ namespace iText.Kernel.Pdf.Xobject {
             PdfDocument outDoc = new PdfDocument(new PdfReader(outFilename));
             PdfStream outStream = outDoc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName
                 ("Im1"));
+            PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpFilename));
+            PdfStream cmpStream = cmpDoc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName
+                ("Im1"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsStructure(outStream, cmpStream));
+            cmpDoc.Close();
+            outDoc.Close();
+        }
+
+        private void ConvertAndCompare(String outFilename, String cmpFilename, PdfImageXObject imageXObject) {
+            System.Console.Out.WriteLine("Out pdf: " + UrlUtil.GetNormalizedFileUriString(outFilename));
+            System.Console.Out.WriteLine("Cmp pdf: " + UrlUtil.GetNormalizedFileUriString(cmpFilename) + "\n");
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFilename));
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(10, 20, 575, 802));
+            pdfDoc.Close();
+            PdfDocument outDoc = new PdfDocument(new PdfReader(outFilename));
+            PdfStream outStream = outDoc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName
+                ("Im1"));
+            PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpFilename));
             PdfStream cmpStream = cmpDoc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName
                 ("Im1"));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsStructure(outStream, cmpStream));
