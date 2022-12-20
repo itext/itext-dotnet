@@ -58,6 +58,10 @@ namespace iText.Kernel.Pdf {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/TrailerTest/";
 
+        private static readonly byte[] USERPASS = "user".GetBytes();
+
+        private static readonly byte[] OWNERPASS = "owner".GetBytes();
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
@@ -80,6 +84,48 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(DoesTrailerContainFingerprint(new FileInfo(destinationFolder + "output.pdf")
                 , MessageFormatUtil.Format("%iText-{0}-{1}\n", productData.GetProductName(), productData.GetVersion())
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExistingTrailerValuesTest() {
+            MemoryStream baos = new MemoryStream();
+            PdfName expectedKey = new PdfName("Custom");
+            PdfName expectedValue = new PdfName("Value");
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                pdfDocument.GetTrailer().Put(expectedKey, expectedValue);
+            }
+            using (PdfDocument stampingDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new 
+                PdfWriter(new MemoryStream()))) {
+                PdfDictionary trailer = stampingDocument.GetTrailer();
+                bool keyPresent = trailer.ContainsKey(expectedKey);
+                PdfName actualValue = trailer.GetAsName(expectedKey);
+                stampingDocument.Close();
+                NUnit.Framework.Assert.IsTrue(keyPresent);
+                NUnit.Framework.Assert.AreEqual(expectedValue, actualValue);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExistingTrailerValuesTestWithEncryption() {
+            MemoryStream baos = new MemoryStream();
+            WriterProperties writerProperties = new WriterProperties();
+            writerProperties.SetStandardEncryption(USERPASS, OWNERPASS, EncryptionConstants.ALLOW_PRINTING, EncryptionConstants
+                .ENCRYPTION_AES_128);
+            PdfName expectedKey = new PdfName("Custom");
+            PdfName expectedValue = new PdfName("Value");
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos, writerProperties))) {
+                pdfDocument.GetTrailer().Put(expectedKey, expectedValue);
+            }
+            ReaderProperties readerProperties = new ReaderProperties().SetPassword(OWNERPASS);
+            using (PdfDocument stampingDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray()), readerProperties
+                ), new PdfWriter(new MemoryStream()))) {
+                PdfDictionary trailer = stampingDocument.GetTrailer();
+                bool keyPresent = trailer.ContainsKey(expectedKey);
+                PdfName actualValue = trailer.GetAsName(expectedKey);
+                stampingDocument.Close();
+                NUnit.Framework.Assert.IsTrue(keyPresent);
+                NUnit.Framework.Assert.AreEqual(expectedValue, actualValue);
+            }
         }
 
         private bool DoesTrailerContainFingerprint(FileInfo file, String fingerPrint) {
