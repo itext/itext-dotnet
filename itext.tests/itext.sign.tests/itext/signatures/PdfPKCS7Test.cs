@@ -291,6 +291,8 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void VerifyEd25519SignatureTest() {
+            Assume.AssumeFalse("ED25519 is not available in FIPS approved mode", BOUNCY_CASTLE_FACTORY.IsInApprovedOnlyMode
+                ());
             VerifyIsoExtensionExample("Ed25519", "sample-ed25519-sha512.pdf");
         }
 
