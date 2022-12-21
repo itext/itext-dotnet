@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NUnit.Framework;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
@@ -286,6 +287,30 @@ namespace iText.Signatures {
             IASN1Primitive cmpStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(cmpBytes);
             NUnit.Framework.Assert.AreEqual("SHA256withRSA", pkcs7.GetDigestAlgorithm());
             NUnit.Framework.Assert.AreEqual(outStream, cmpStream);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyEd25519SignatureTest() {
+            VerifyIsoExtensionExample("Ed25519", "sample-ed25519-sha512.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyEd448SignatureTest() {
+            Assume.AssumeFalse("SHAKE256 is not available in BCFIPS", "BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName
+                ()));
+            VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf");
+        }
+
+        public virtual void VerifyIsoExtensionExample(String expectedSigAlgo, String fileName) {
+            FileInfo infile = System.IO.Path.Combine(SOURCE_FOLDER, "extensions", fileName).ToFile();
+            using (PdfReader r = new PdfReader(infile)) {
+                using (PdfDocument pdfDoc = new PdfDocument(r)) {
+                    SignatureUtil u = new SignatureUtil(pdfDoc);
+                    PdfPKCS7 data = u.ReadSignatureData("Signature");
+                    NUnit.Framework.Assert.AreEqual(expectedSigAlgo, data.GetDigestAlgorithm());
+                    NUnit.Framework.Assert.IsTrue(data.VerifySignatureIntegrityAndAuthenticity());
+                }
+            }
         }
 
         // PdfPKCS7 is created here the same way it's done in PdfSigner#signDetached

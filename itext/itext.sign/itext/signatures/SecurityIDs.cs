@@ -56,6 +56,10 @@ namespace iText.Signatures {
 
         public const String ID_ECDSA = "1.2.840.10045.2.1";
 
+        public const String ID_ED25519 = "1.3.101.112";
+
+        public const String ID_ED448 = "1.3.101.113";
+
         public const String ID_CONTENT_TYPE = "1.2.840.113549.1.9.3";
 
         public const String ID_MESSAGE_DIGEST = "1.2.840.113549.1.9.4";

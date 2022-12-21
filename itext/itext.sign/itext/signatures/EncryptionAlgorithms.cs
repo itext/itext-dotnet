@@ -87,6 +87,8 @@ namespace iText.Signatures {
             algorithmNames.Put("1.2.840.10045.4.3.3", "ECDSA");
             // Elliptic curve Digital Signature Algorithm (DSA) coupled with the Secure Hashing Algorithm (SHA512) algorithm
             algorithmNames.Put("1.2.840.10045.4.3.4", "ECDSA");
+            algorithmNames.Put(SecurityIDs.ID_ED25519, "Ed25519");
+            algorithmNames.Put(SecurityIDs.ID_ED448, "Ed448");
         }
 
         /// <summary>Gets the algorithm name for a certain id.</summary>
