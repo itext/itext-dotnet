@@ -70,7 +70,7 @@ namespace iText.Signatures {
         internal static String GetPrivateKeyAlgorithm(IPrivateKey privateKey) {
             String algorithm = privateKey.GetAlgorithm();
             if (algorithm == null) {
-                throw new PdfException(SignExceptionMessageConstant.UNKNOWN_KEY_ALGORITHM).SetMessageParams(privateKey.ToString());
+                throw new PdfException(SignExceptionMessageConstant.COULD_NOT_DETERMINE_SIGNATURE_MECHANISM_OID).SetMessageParams(algorithm, privateKey.GetHashCode());
             }
 
             return algorithm;
