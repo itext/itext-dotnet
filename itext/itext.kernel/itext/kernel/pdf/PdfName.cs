@@ -1808,6 +1808,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Zoom = CreateDirectName("Zoom");
 
+        public static readonly iText.Kernel.Pdf.PdfName ISO_ = new iText.Kernel.Pdf.PdfName("ISO_");
+
         protected internal String value = null;
 
         /// <summary>map strings to all known static names</summary>

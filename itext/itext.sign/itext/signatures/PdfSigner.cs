@@ -473,7 +473,16 @@ namespace iText.Signatures {
             if (sigtype == PdfSigner.CryptoStandard.CADES && !IsDocumentPdf2()) {
                 AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
             }
+            if (externalSignature.GetEncryptionAlgorithm().StartsWith("Ed")) {
+                AddDeveloperExtension(PdfDeveloperExtension.ISO_32002);
+            }
+            // Note: at this level of abstraction, we have no easy way of determining whether we are signing using a
+            // specific ECDSA curve, so we can't auto-declare the extension safely, since we don't know whether
+            // the curve is on the ISO/TS 32002 allowed curves list. That responsibility is delegated to the user.
             String hashAlgorithm = externalSignature.GetHashAlgorithm();
+            if (hashAlgorithm.StartsWith("SHA3-") || hashAlgorithm.Equals(DigestAlgorithms.SHAKE256)) {
+                AddDeveloperExtension(PdfDeveloperExtension.ISO_32001);
+            }
             PdfSignature dic = new PdfSignature(PdfName.Adobe_PPKLite, sigtype == PdfSigner.CryptoStandard.CADES ? PdfName
                 .ETSI_CAdES_DETACHED : PdfName.Adbe_pkcs7_detached);
             dic.SetReason(appearance.GetReason());

@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Java.Nio.File;
 using Java.Security;
@@ -33,6 +34,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -136,6 +138,57 @@ namespace iText.Signatures.Sign {
                 , e.InnerException.InnerException.Message);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void TestRsaWithSha3ExtensionDeclarations() {
+            MemoryStream baos = new MemoryStream();
+            DoSign("rsa", DigestAlgorithms.SHA3_256, baos);
+            CheckIsoExtensions(baos.ToArray(), JavaCollectionsUtil.Singleton(32001));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestEd25519ExtensionDeclarations() {
+            MemoryStream baos = new MemoryStream();
+            DoSign("ed25519", DigestAlgorithms.SHA512, baos);
+            CheckIsoExtensions(baos.ToArray(), JavaCollectionsUtil.Singleton(32002));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestEd448ExtensionDeclarations() {
+            SkipShake256IfBcFips();
+            MemoryStream baos = new MemoryStream();
+            DoSign("ed448", DigestAlgorithms.SHAKE256, baos);
+            CheckIsoExtensions(baos.ToArray(), JavaUtil.ArraysAsList(32001, 32002));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestIsoExtensionsWithMultipleSignatures() {
+            String keySample1 = "rsa";
+            String keySample2 = "ed25519";
+            Path sourceFolder = System.IO.Path.Combine(SOURCE_FOLDER);
+            MemoryStream baos1 = new MemoryStream();
+            MemoryStream baos2 = new MemoryStream();
+            IX509Certificate root = ReadCertificate(sourceFolder.Resolve("ca.crt"));
+            IX509Certificate signerCert1 = ReadCertificate(sourceFolder.Resolve(keySample1 + ".crt"));
+            IX509Certificate signerCert2 = ReadCertificate(sourceFolder.Resolve(keySample2 + ".crt"));
+            IX509Certificate[] signChain1 = new IX509Certificate[] { signerCert1, root };
+            IX509Certificate[] signChain2 = new IX509Certificate[] { signerCert2, root };
+            using (Stream in1 = new FileStream(SOURCE_FILE, FileMode.Open, FileAccess.Read)) {
+                IPrivateKey signPrivateKey = ReadUnencryptedPrivateKey(sourceFolder.Resolve(keySample1 + ".key.pem"));
+                IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA3_256);
+                PdfSigner signer = new PdfSigner(new PdfReader(in1), baos1, new StampingProperties());
+                signer.SetFieldName("Signature1");
+                signer.SignDetached(pks, signChain1, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
+            }
+            using (Stream in2 = new MemoryStream(baos1.ToArray())) {
+                IPrivateKey signPrivateKey = ReadUnencryptedPrivateKey(sourceFolder.Resolve(keySample2 + ".key.pem"));
+                IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA512);
+                PdfSigner signer = new PdfSigner(new PdfReader(in2), baos2, new StampingProperties());
+                signer.SetFieldName("Signature2");
+                signer.SignDetached(pks, signChain2, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
+            }
+            CheckIsoExtensions(baos2.ToArray(), JavaUtil.ArraysAsList(32001, 32002));
+        }
+
         private void DoRoundTrip(String keySampleName, String digestAlgo, DerObjectIdentifier expectedSigAlgoIdentifier
             ) {
             String outFile = System.IO.Path.Combine(DESTINATION_FOLDER, keySampleName + "-" + digestAlgo + ".pdf").ToString
@@ -178,6 +231,23 @@ namespace iText.Signatures.Sign {
                         DerObjectIdentifier oid = new DerObjectIdentifier(data.GetDigestEncryptionAlgorithmOid());
                         NUnit.Framework.Assert.AreEqual(expectedSigAlgoIdentifier, oid);
                     }
+                }
+            }
+        }
+
+        private void CheckIsoExtensions(byte[] fileData, ICollection<int> expectedLevels) {
+            using (PdfReader r = new PdfReader(new MemoryStream(fileData))) {
+                using (PdfDocument pdfDoc = new PdfDocument(r)) {
+                    PdfArray isoExtensions = pdfDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Extensions).GetAsArray
+                        (PdfName.ISO_);
+                    NUnit.Framework.Assert.AreEqual(expectedLevels.Count, isoExtensions.Size());
+                    ICollection<int> actualLevels = new HashSet<int>();
+                    for (int i = 0; i < isoExtensions.Size(); i++) {
+                        PdfDictionary extDict = isoExtensions.GetAsDictionary(i);
+                        actualLevels.Add(extDict.GetAsNumber(PdfName.ExtensionLevel).IntValue());
+                    }
+                    ICollection<int> expectedLevelSet = new HashSet<int>(expectedLevels);
+                    NUnit.Framework.Assert.AreEqual(expectedLevelSet, actualLevels);
                 }
             }
         }

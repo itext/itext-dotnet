@@ -73,6 +73,16 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfDeveloperExtension ESIC_1_7_EXTENSIONLEVEL5 = new iText.Kernel.Pdf.PdfDeveloperExtension
             (PdfName.ESIC, PdfName.Pdf_Version_1_7, 5);
 
+        /// <summary>An instance of this class for ISO/TS 32001</summary>
+        public static readonly iText.Kernel.Pdf.PdfDeveloperExtension ISO_32001 = new iText.Kernel.Pdf.PdfDeveloperExtension
+            (PdfName.ISO_, PdfName.Pdf_Version_2_0, 32001, "https://www.iso.org/standard/45874.html", ":2022", true
+            );
+
+        /// <summary>An instance of this class for ISO/TS 32002</summary>
+        public static readonly iText.Kernel.Pdf.PdfDeveloperExtension ISO_32002 = new iText.Kernel.Pdf.PdfDeveloperExtension
+            (PdfName.ISO_, PdfName.Pdf_Version_2_0, 32002, "https://www.iso.org/standard/45875.html", ":2022", true
+            );
+
         /// <summary>The prefix used in the Extensions dictionary added to the Catalog.</summary>
         protected internal PdfName prefix;
 
