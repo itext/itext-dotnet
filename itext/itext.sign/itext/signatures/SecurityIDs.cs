@@ -60,6 +60,10 @@ namespace iText.Signatures {
 
         public const String ID_ED448 = "1.3.101.113";
 
+        public const String ID_SHA512 = "2.16.840.1.101.3.4.2.3";
+
+        public const String ID_SHAKE256 = "2.16.840.1.101.3.4.2.12";
+
         public const String ID_CONTENT_TYPE = "1.2.840.113549.1.9.3";
 
         public const String ID_MESSAGE_DIGEST = "1.2.840.113549.1.9.4";

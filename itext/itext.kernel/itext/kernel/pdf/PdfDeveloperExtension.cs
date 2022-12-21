@@ -41,6 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+
 namespace iText.Kernel.Pdf {
     /// <summary>
     /// Beginning with BaseVersion 1.7, the extensions dictionary lets developers
@@ -80,14 +82,38 @@ namespace iText.Kernel.Pdf {
         /// <summary>The extension level within the base version.</summary>
         protected internal int extensionLevel;
 
+        /// <summary>The extension URL (ISO 32000-2:2020)</summary>
+        private readonly String url;
+
+        /// <summary>The extension revision (ISO 32000-2:2020)</summary>
+        private readonly String extensionRevision;
+
+        /// <summary>Whether the extension prefix is multivalued (ISO 32000-2:2020)</summary>
+        private readonly bool isMultiValued;
+
         /// <summary>Creates a PdfDeveloperExtension object.</summary>
         /// <param name="prefix">the prefix referring to the developer</param>
         /// <param name="baseVersion">the number of the base version</param>
-        /// <param name="extensionLevel">the extension level within the baseverion.</param>
-        public PdfDeveloperExtension(PdfName prefix, PdfName baseVersion, int extensionLevel) {
+        /// <param name="extensionLevel">the extension level within the base version</param>
+        public PdfDeveloperExtension(PdfName prefix, PdfName baseVersion, int extensionLevel)
+            : this(prefix, baseVersion, extensionLevel, null, null, false) {
+        }
+
+        /// <summary>Creates a PdfDeveloperExtension object.</summary>
+        /// <param name="prefix">the prefix referring to the developer</param>
+        /// <param name="baseVersion">the number of the base version</param>
+        /// <param name="extensionLevel">the extension level within the base version</param>
+        /// <param name="extensionRevision">the extension revision identifier</param>
+        /// <param name="url">the URL specifying where to find more information about the extension</param>
+        /// <param name="isMultiValued">flag indicating whether the extension prefix can have multiple values</param>
+        public PdfDeveloperExtension(PdfName prefix, PdfName baseVersion, int extensionLevel, String url, String extensionRevision
+            , bool isMultiValued) {
             this.prefix = prefix;
             this.baseVersion = baseVersion;
             this.extensionLevel = extensionLevel;
+            this.url = url;
+            this.extensionRevision = extensionRevision;
+            this.isMultiValued = isMultiValued;
         }
 
         /// <summary>Gets the prefix name.</summary>
@@ -108,6 +134,11 @@ namespace iText.Kernel.Pdf {
             return extensionLevel;
         }
 
+        /// <summary>Indicates whether the extension prefix is multivalued (ISO 32000-2:2020).</summary>
+        public virtual bool IsMultiValued() {
+            return isMultiValued;
+        }
+
         /// <summary>
         /// Generations the developer extension dictionary corresponding
         /// with the prefix.
@@ -117,6 +148,12 @@ namespace iText.Kernel.Pdf {
             PdfDictionary developerextensions = new PdfDictionary();
             developerextensions.Put(PdfName.BaseVersion, baseVersion);
             developerextensions.Put(PdfName.ExtensionLevel, new PdfNumber(extensionLevel));
+            if (url != null) {
+                developerextensions.Put(PdfName.URL, new PdfString(url));
+            }
+            if (extensionRevision != null) {
+                developerextensions.Put(PdfName.ExtensionRevision, new PdfString(extensionRevision));
+            }
             return developerextensions;
         }
     }

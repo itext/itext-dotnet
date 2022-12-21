@@ -57,16 +57,22 @@ namespace iText.Signatures {
         /// <summary>Maps IDs of signature algorithms with its human-readable name.</summary>
         internal static readonly IDictionary<String, String> algorithmNames = new Dictionary<String, String>();
 
+        internal static readonly IDictionary<String, String> rsaOidsByDigest = new Dictionary<String, String>();
+
+        internal static readonly IDictionary<String, String> dsaOidsByDigest = new Dictionary<String, String>();
+
+        internal static readonly IDictionary<String, String> ecdsaOidsByDigest = new Dictionary<String, String>();
+
         static EncryptionAlgorithms() {
             algorithmNames.Put("1.2.840.113549.1.1.1", "RSA");
             algorithmNames.Put("1.2.840.10040.4.1", "DSA");
             algorithmNames.Put("1.2.840.113549.1.1.2", "RSA");
             algorithmNames.Put("1.2.840.113549.1.1.4", "RSA");
             algorithmNames.Put("1.2.840.113549.1.1.5", "RSA");
-            algorithmNames.Put("1.2.840.113549.1.1.14", "RSA");
             algorithmNames.Put("1.2.840.113549.1.1.11", "RSA");
             algorithmNames.Put("1.2.840.113549.1.1.12", "RSA");
             algorithmNames.Put("1.2.840.113549.1.1.13", "RSA");
+            algorithmNames.Put("1.2.840.113549.1.1.14", "RSA");
             algorithmNames.Put("1.2.840.10040.4.3", "DSA");
             algorithmNames.Put("2.16.840.1.101.3.4.3.1", "DSA");
             algorithmNames.Put("2.16.840.1.101.3.4.3.2", "DSA");
@@ -87,8 +93,86 @@ namespace iText.Signatures {
             algorithmNames.Put("1.2.840.10045.4.3.3", "ECDSA");
             // Elliptic curve Digital Signature Algorithm (DSA) coupled with the Secure Hashing Algorithm (SHA512) algorithm
             algorithmNames.Put("1.2.840.10045.4.3.4", "ECDSA");
+            // Signing algorithms with SHA-3 digest functions (from NIST CSOR)
+            algorithmNames.Put("2.16.840.1.101.3.4.3.5", "DSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.6", "DSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.7", "DSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.8", "DSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.9", "ECDSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.10", "ECDSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.11", "ECDSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.12", "ECDSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.13", "RSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.14", "RSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.15", "RSA");
+            algorithmNames.Put("2.16.840.1.101.3.4.3.16", "RSA");
+            // EdDSA
             algorithmNames.Put(SecurityIDs.ID_ED25519, "Ed25519");
             algorithmNames.Put(SecurityIDs.ID_ED448, "Ed448");
+            rsaOidsByDigest.Put("SHA224", "1.2.840.113549.1.1.14");
+            rsaOidsByDigest.Put("SHA256", "1.2.840.113549.1.1.11");
+            rsaOidsByDigest.Put("SHA384", "1.2.840.113549.1.1.12");
+            rsaOidsByDigest.Put("SHA512", "1.2.840.113549.1.1.13");
+            rsaOidsByDigest.Put("SHA3-224", "2.16.840.1.101.3.4.3.13");
+            rsaOidsByDigest.Put("SHA3-256", "2.16.840.1.101.3.4.3.14");
+            rsaOidsByDigest.Put("SHA3-384", "2.16.840.1.101.3.4.3.15");
+            rsaOidsByDigest.Put("SHA3-512", "2.16.840.1.101.3.4.3.16");
+            dsaOidsByDigest.Put("SHA224", "2.16.840.1.101.3.4.3.1");
+            dsaOidsByDigest.Put("SHA256", "2.16.840.1.101.3.4.3.2");
+            dsaOidsByDigest.Put("SHA384", "2.16.840.1.101.3.4.3.3");
+            dsaOidsByDigest.Put("SHA512", "2.16.840.1.101.3.4.3.4");
+            dsaOidsByDigest.Put("SHA3-224", "2.16.840.1.101.3.4.3.5");
+            dsaOidsByDigest.Put("SHA3-256", "2.16.840.1.101.3.4.3.6");
+            dsaOidsByDigest.Put("SHA3-384", "2.16.840.1.101.3.4.3.7");
+            dsaOidsByDigest.Put("SHA3-512", "2.16.840.1.101.3.4.3.8");
+            ecdsaOidsByDigest.Put("SHA1", "1.2.840.10045.4.1");
+            ecdsaOidsByDigest.Put("SHA224", "1.2.840.10045.4.3.1");
+            ecdsaOidsByDigest.Put("SHA256", "1.2.840.10045.4.3.2");
+            ecdsaOidsByDigest.Put("SHA384", "1.2.840.10045.4.3.3");
+            ecdsaOidsByDigest.Put("SHA512", "1.2.840.10045.4.3.4");
+            ecdsaOidsByDigest.Put("SHA3-224", "2.16.840.1.101.3.4.3.9");
+            ecdsaOidsByDigest.Put("SHA3-256", "2.16.840.1.101.3.4.3.10");
+            ecdsaOidsByDigest.Put("SHA3-384", "2.16.840.1.101.3.4.3.11");
+            ecdsaOidsByDigest.Put("SHA3-512", "2.16.840.1.101.3.4.3.12");
+        }
+
+        /// <summary>Attempt to look up the most specific OID for a given signature-digest combination.</summary>
+        /// <param name="signatureAlgorithmName">the name of the signature algorithm</param>
+        /// <param name="digestAlgorithmName">the name of the digest algorithm, if any</param>
+        /// <returns>
+        /// an OID string, or
+        /// <see langword="null"/>
+        /// if none was found.
+        /// </returns>
+        public static String GetSignatureMechanismOid(String signatureAlgorithmName, String digestAlgorithmName) {
+            switch (signatureAlgorithmName) {
+                case "RSA": {
+                    // always return the generic RSASSA-with-PKCS #1 v1.5 padding OID
+                    // since there are comparison tests that depend on the generic OID being present
+                    // TODO fix those tests, and replace with rsaOidsByDigest.get(digestAlgorithmName, SecurityIDs.ID_RSA)
+                    return SecurityIDs.ID_RSA;
+                }
+
+                case "DSA": {
+                    return dsaOidsByDigest.Get(digestAlgorithmName);
+                }
+
+                case "ECDSA": {
+                    return ecdsaOidsByDigest.Get(digestAlgorithmName);
+                }
+
+                case "Ed25519": {
+                    return SecurityIDs.ID_ED25519;
+                }
+
+                case "Ed448": {
+                    return SecurityIDs.ID_ED448;
+                }
+
+                default: {
+                    return null;
+                }
+            }
         }
 
         /// <summary>Gets the algorithm name for a certain id.</summary>

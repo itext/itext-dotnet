@@ -619,6 +619,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName ExtensionLevel = CreateDirectName("ExtensionLevel");
 
+        public static readonly iText.Kernel.Pdf.PdfName ExtensionRevision = CreateDirectName("ExtensionRevision");
+
         public static readonly iText.Kernel.Pdf.PdfName ExtGState = CreateDirectName("ExtGState");
 
         public static readonly iText.Kernel.Pdf.PdfName F = CreateDirectName("F");
@@ -1231,6 +1233,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName Pdf_Version_1_6 = CreateDirectName("1.6");
 
         public static readonly iText.Kernel.Pdf.PdfName Pdf_Version_1_7 = CreateDirectName("1.7");
+
+        public static readonly iText.Kernel.Pdf.PdfName Pdf_Version_2_0 = CreateDirectName("2.0");
 
         public static readonly iText.Kernel.Pdf.PdfName Pg = CreateDirectName("Pg");
 

@@ -115,21 +115,15 @@ namespace iText.Signatures {
             // initialize and add the digest algorithms.
             digestalgos = new HashSet<String>();
             digestalgos.Add(digestAlgorithmOid);
-            // find the signing algorithm (RSA or DSA)
+            // find the signing algorithm
             if (privKey != null) {
-                signatureAlgorithmOid = SignUtils.GetPrivateKeyAlgorithm(privKey);
-                if (signatureAlgorithmOid.Equals("RSA")) {
-                    signatureAlgorithmOid = SecurityIDs.ID_RSA;
+                String signatureAlgo = SignUtils.GetPrivateKeyAlgorithm(privKey);
+                String mechanismOid = EncryptionAlgorithms.GetSignatureMechanismOid(signatureAlgo, hashAlgorithm);
+                if (mechanismOid == null) {
+                    throw new PdfException(SignExceptionMessageConstant.COULD_NOT_DETERMINE_SIGNATURE_MECHANISM_OID).SetMessageParams
+                        (signatureAlgo, hashAlgorithm);
                 }
-                else {
-                    if (signatureAlgorithmOid.Equals("DSA")) {
-                        signatureAlgorithmOid = SecurityIDs.ID_DSA;
-                    }
-                    else {
-                        throw new PdfException(SignExceptionMessageConstant.UNKNOWN_KEY_ALGORITHM).SetMessageParams(signatureAlgorithmOid
-                            );
-                    }
-                }
+                this.signatureAlgorithmOid = mechanismOid;
             }
             // initialize the encapsulated content
             if (hasEncapContent) {
@@ -477,6 +471,9 @@ namespace iText.Signatures {
 
         private PdfName filterSubtype;
 
+        /// <summary>The signature algorithm.</summary>
+        private String signatureAlgorithmOid;
+
         /// <summary>Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".</summary>
         /// <remarks>
         /// Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".
@@ -490,12 +487,25 @@ namespace iText.Signatures {
         /// <summary>Returns the name of the digest algorithm, e.g. "SHA256".</summary>
         /// <returns>the digest algorithm name, e.g. "SHA256"</returns>
         public virtual String GetHashAlgorithm() {
-            return DigestAlgorithms.GetDigest(digestAlgorithmOid);
+            String hashAlgoName = DigestAlgorithms.GetDigest(digestAlgorithmOid);
+            // Ed25519 and Ed448 do not allow a choice of hashing algorithm,
+            // and ISO 32002 requires using a fixed hashing algorithm to
+            // digest the document content
+            if (SecurityIDs.ID_ED25519.Equals(this.signatureAlgorithmOid) && !SecurityIDs.ID_SHA512.Equals(digestAlgorithmOid
+                )) {
+                // We compare based on OID to ensure that there are no name normalisation issues.
+                throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed25519"
+                    , "SHA-512", hashAlgoName);
+            }
+            else {
+                if (SecurityIDs.ID_ED448.Equals(this.signatureAlgorithmOid) && !SecurityIDs.ID_SHAKE256.Equals(digestAlgorithmOid
+                    )) {
+                    throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed448", 
+                        "512-bit SHAKE256", hashAlgoName);
+                }
+            }
+            return hashAlgoName;
         }
-
-        // Encryption algorithm
-        /// <summary>The signature algorithm.</summary>
-        private String signatureAlgorithmOid;
 
         /// <summary>Getter for the signature algorithm OID.</summary>
         /// <remarks>
@@ -550,36 +560,34 @@ namespace iText.Signatures {
         /// <summary>Externally specified encapsulated message content.</summary>
         private byte[] externalEncapMessageContent;
 
-        /// <summary>Sets the digest/signature to an external calculated value.</summary>
-        /// <param name="digest">the digest. This is the actual signature</param>
+        /// <summary>Sets the signature to an externally calculated value.</summary>
+        /// <remarks>
+        /// Sets the signature to an externally calculated value.
+        /// <para />
+        /// This method is named
+        /// <c>setExternalDigest</c>
+        /// for historical reasons.
+        /// </remarks>
+        /// <param name="signatureValue">the signature value</param>
         /// <param name="signedMessageContent">the extra data that goes into the data tag in PKCS#7</param>
-        /// <param name="digestEncryptionAlgorithm">
-        /// the encryption algorithm. It may must be <c>null</c> if the
-        /// <c>digest</c> is also <c>null</c>. If the <c>digest</c>
-        /// is not <c>null</c> then it may be "RSA" or "DSA"
+        /// <param name="signatureAlgorithm">
+        /// the signature algorithm. It must be <c>null</c> if the
+        /// <c>signatureValue</c> is also <c>null</c>.
+        /// If the <c>signatureValue</c> is not <c>null</c>,
+        /// possible values include "RSA", "DSA", "ECDSA", "Ed25519" and "Ed448".
         /// </param>
-        public virtual void SetExternalDigest(byte[] digest, byte[] signedMessageContent, String digestEncryptionAlgorithm
+        public virtual void SetExternalDigest(byte[] signatureValue, byte[] signedMessageContent, String signatureAlgorithm
             ) {
-            externalSignatureValue = digest;
+            externalSignatureValue = signatureValue;
             externalEncapMessageContent = signedMessageContent;
-            if (digestEncryptionAlgorithm != null) {
-                if (digestEncryptionAlgorithm.Equals("RSA")) {
-                    this.signatureAlgorithmOid = SecurityIDs.ID_RSA;
+            if (signatureAlgorithm != null) {
+                String digestAlgo = this.GetHashAlgorithm();
+                String oid = EncryptionAlgorithms.GetSignatureMechanismOid(signatureAlgorithm, digestAlgo);
+                if (oid == null) {
+                    throw new PdfException(SignExceptionMessageConstant.COULD_NOT_DETERMINE_SIGNATURE_MECHANISM_OID).SetMessageParams
+                        (signatureAlgorithm, digestAlgo);
                 }
-                else {
-                    if (digestEncryptionAlgorithm.Equals("DSA")) {
-                        this.signatureAlgorithmOid = SecurityIDs.ID_DSA;
-                    }
-                    else {
-                        if (digestEncryptionAlgorithm.Equals("ECDSA")) {
-                            this.signatureAlgorithmOid = SecurityIDs.ID_ECDSA;
-                        }
-                        else {
-                            throw new PdfException(SignExceptionMessageConstant.UNKNOWN_KEY_ALGORITHM).SetMessageParams(digestEncryptionAlgorithm
-                                );
-                        }
-                    }
-                }
+                this.signatureAlgorithmOid = oid;
             }
         }
 

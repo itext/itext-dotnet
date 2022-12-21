@@ -100,9 +100,11 @@ namespace iText.Signatures.Exceptions {
 
         public const String UNKNOWN_HASH_ALGORITHM = "Unknown hash algorithm: {0}.";
 
-        public const String UNKNOWN_KEY_ALGORITHM = "Unknown key algorithm: {0}.";
+        public const String COULD_NOT_DETERMINE_SIGNATURE_MECHANISM_OID = "Could not determine OID for signature algorithm {0} with digest {1}.";
 
         public const String VERIFICATION_ALREADY_OUTPUT = "Verification already output.";
+
+        public const String ALGO_REQUIRES_SPECIFIC_HASH = "{0} requires the document to be digested using {1}, not {2}";
 
         private SignExceptionMessageConstant() {
         }

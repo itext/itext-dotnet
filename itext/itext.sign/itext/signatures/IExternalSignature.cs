@@ -56,8 +56,15 @@ namespace iText.Signatures {
         /// <returns>The hash algorithm (e.g. "SHA-1", "SHA-256,...").</returns>
         String GetHashAlgorithm();
 
-        /// <summary>Returns the encryption algorithm used for signing.</summary>
-        /// <returns>The encryption algorithm ("RSA" or "DSA").</returns>
+        /// <summary>Returns the signature algorithm used for signing.</summary>
+        /// <remarks>
+        /// Returns the signature algorithm used for signing.
+        /// <para />
+        /// This method is named
+        /// <c>getEncryptionAlgorithm</c>
+        /// for historical reasons.
+        /// </remarks>
+        /// <returns>The encryption algorithm ("RSA", "DSA", "ECDSA", "Ed25519" or "Ed448").</returns>
         String GetEncryptionAlgorithm();
 
         /// <summary>

@@ -301,11 +301,43 @@ namespace iText.Signatures {
             VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf");
         }
 
+        [NUnit.Framework.Test]
+        public virtual void VerifyNistECDSASha2SignatureTest() {
+            VerifyIsoExtensionExample("SHA256withECDSA", "sample-nistp256-sha256.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyNistECDSASha3SignatureTest() {
+            VerifyIsoExtensionExample("SHA3-256withECDSA", "sample-nistp256-sha3_256.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyBrainpoolSha2SignatureTest() {
+            VerifyIsoExtensionExample("SHA384withECDSA", "sample-brainpoolP384r1-sha384.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyBrainpoolSha3SignatureTest() {
+            VerifyIsoExtensionExample("SHA3-384withECDSA", "sample-brainpoolP384r1-sha3_384.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyRsaSha3SignatureTest() {
+            VerifyIsoExtensionExample("SHA3-256withRSA", "sample-rsa-sha3_256.pdf");
+        }
+
         public virtual void VerifyIsoExtensionExample(String expectedSigAlgo, String fileName) {
             FileInfo infile = System.IO.Path.Combine(SOURCE_FOLDER, "extensions", fileName).ToFile();
             using (PdfReader r = new PdfReader(infile)) {
                 using (PdfDocument pdfDoc = new PdfDocument(r)) {
                     SignatureUtil u = new SignatureUtil(pdfDoc);
+                    /*
+                    We specify the security provider explicitly; we're not testing security provider fallback here.
+                    
+                    Also, default providers (in 2022) don't always have the parameters for Brainpool curves,
+                    but a curve param mismatch doesn't factor into the algorithm support fallback logic, so
+                    it causes a runtime error.
+                    */
                     PdfPKCS7 data = u.ReadSignatureData("Signature");
                     NUnit.Framework.Assert.AreEqual(expectedSigAlgo, data.GetDigestAlgorithm());
                     NUnit.Framework.Assert.IsTrue(data.VerifySignatureIntegrityAndAuthenticity());
