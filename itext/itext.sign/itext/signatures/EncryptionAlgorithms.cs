@@ -45,9 +45,16 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.Signatures {
-    /// <summary>Class that contains a map with the different encryption algorithms.</summary>
+    /// <summary>Class that contains a map with the different signature algorithms.</summary>
+    /// <remarks>
+    /// Class that contains a map with the different signature algorithms.
+    /// <para />
+    /// This class is named
+    /// <c>EncryptionAlgorithms</c>
+    /// for historical reasons
+    /// </remarks>
     public class EncryptionAlgorithms {
-        /// <summary>Maps IDs of encryption algorithms with its human-readable name.</summary>
+        /// <summary>Maps IDs of signature algorithms with its human-readable name.</summary>
         internal static readonly IDictionary<String, String> algorithmNames = new Dictionary<String, String>();
 
         static EncryptionAlgorithms() {
