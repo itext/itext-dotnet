@@ -253,8 +253,8 @@ namespace iText.Signatures.Sign {
         }
 
         private void SkipShake256IfBcFips() {
-            String message = "SHAKE256 is currently not supported in BCFIPS provider";
-            Assume.AssumeFalse(message, "BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()));
+            // SHAKE256 is currently not supported in BCFIPS
+            NUnit.Framework.Assume.That(!"BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()));
         }
 
         private IX509Certificate ReadCertificate(Path path) {

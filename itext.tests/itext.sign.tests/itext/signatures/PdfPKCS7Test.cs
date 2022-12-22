@@ -24,46 +24,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
-using iText.Bouncycastleconnector;
-using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
-using iText.Test;
 
 namespace iText.Signatures {
     [NUnit.Framework.Category("BouncyCastleUnitTest")]
-    public class PdfPKCS7Test : ExtendedITextTest {
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/PdfPKCS7Test/";
-
-        private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
-
-        private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
-
+    public class PdfPKCS7Test : PdfPKCS7BasicTest {
         private const double EPS = 0.001;
-
-        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
-            ();
-
-        private static IX509Certificate[] chain;
-
-        private static IPrivateKey pk;
-
-        [NUnit.Framework.OneTimeSetUp]
-        public static void Init() {
-            pk = PemFileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.pem", PASSWORD);
-            chain = PemFileHelper.ReadFirstChain(CERTS_SRC + "signCertRsa01.pem");
-        }
 
         [NUnit.Framework.Test]
         public virtual void UnknownHashAlgorithmTest() {
@@ -290,17 +264,15 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
-        public virtual void VerifyEd25519SignatureTest() {
-            Assume.AssumeFalse("ED25519 is not available in FIPS approved mode", BOUNCY_CASTLE_FACTORY.IsInApprovedOnlyMode
-                ());
-            VerifyIsoExtensionExample("Ed25519", "sample-ed25519-sha512.pdf");
-        }
-
-        [NUnit.Framework.Test]
         public virtual void VerifyEd448SignatureTest() {
-            Assume.AssumeFalse("SHAKE256 is not available in BCFIPS", "BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName
-                ()));
-            VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf");
+            // SHAKE256 is not available in BCFIPS
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf"
+                    ));
+            }
+            else {
+                VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf");
+            }
         }
 
         [NUnit.Framework.Test]
@@ -309,42 +281,8 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
-        public virtual void VerifyNistECDSASha3SignatureTest() {
-            VerifyIsoExtensionExample("SHA3-256withECDSA", "sample-nistp256-sha3_256.pdf");
-        }
-
-        [NUnit.Framework.Test]
         public virtual void VerifyBrainpoolSha2SignatureTest() {
             VerifyIsoExtensionExample("SHA384withECDSA", "sample-brainpoolP384r1-sha384.pdf");
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void VerifyBrainpoolSha3SignatureTest() {
-            VerifyIsoExtensionExample("SHA3-384withECDSA", "sample-brainpoolP384r1-sha3_384.pdf");
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void VerifyRsaSha3SignatureTest() {
-            VerifyIsoExtensionExample("SHA3-256withRSA", "sample-rsa-sha3_256.pdf");
-        }
-
-        public virtual void VerifyIsoExtensionExample(String expectedSigAlgo, String fileName) {
-            FileInfo infile = System.IO.Path.Combine(SOURCE_FOLDER, "extensions", fileName).ToFile();
-            using (PdfReader r = new PdfReader(infile)) {
-                using (PdfDocument pdfDoc = new PdfDocument(r)) {
-                    SignatureUtil u = new SignatureUtil(pdfDoc);
-                    /*
-                    We specify the security provider explicitly; we're not testing security provider fallback here.
-                    
-                    Also, default providers (in 2022) don't always have the parameters for Brainpool curves,
-                    but a curve param mismatch doesn't factor into the algorithm support fallback logic, so
-                    it causes a runtime error.
-                    */
-                    PdfPKCS7 data = u.ReadSignatureData("Signature");
-                    NUnit.Framework.Assert.AreEqual(expectedSigAlgo, data.GetDigestAlgorithm());
-                    NUnit.Framework.Assert.IsTrue(data.VerifySignatureIntegrityAndAuthenticity());
-                }
-            }
         }
 
         // PdfPKCS7 is created here the same way it's done in PdfSigner#signDetached
