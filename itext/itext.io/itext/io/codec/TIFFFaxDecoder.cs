@@ -802,7 +802,7 @@ namespace iText.IO.Codec {
             uncompressedMode = (int)((tiffT4Options & 0x02) >> 1);
             fillBits = (int)((tiffT4Options & 0x04) >> 2);
             // The data must start with an EOL code
-            if (ReadEOL(true) != 1) {
+            if (ReadEOL() != 1) {
                 throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.FirstScanlineMustBe1dEncoded);
             }
             int lineOffset = 0;
@@ -814,7 +814,7 @@ namespace iText.IO.Codec {
             for (int lines = 1; lines < height; lines++) {
                 // Every line must begin with an EOL followed by a bit which
                 // indicates whether the following scanline is 1D or 2D encoded.
-                if (ReadEOL(false) == 0) {
+                if (ReadEOL() == 0) {
                     // 2D encoded scanline follows
                     // Initialize previous scanlines changing elements, and
                     // initialize current scanline's changing elements array
@@ -1285,57 +1285,16 @@ escape_break: ;
             return runLength;
         }
 
-        private int ReadEOL(bool isFirstEOL) {
-            if (fillBits == 0) {
-                int next12Bits = NextNBits(12);
-                if (isFirstEOL && next12Bits == 0) {
-                    // Might have the case of EOL padding being used even
-                    // though it was not flagged in the T4Options field.
-                    // This was observed to be the case in TIFFs produced
-                    // by a well known vendor who shall remain nameless.
-                    if (NextNBits(4) == 1) {
-                        // EOL must be padded: reset the fillBits flag.
-                        fillBits = 1;
-                        return 1;
-                    }
-                }
-                if (next12Bits != 1) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ScanlineMustBeginWithEolCodeWord
-                        );
-                }
+        private int ReadEOL() {
+            // scan to first none 0  bit and return 12 bits
+            while (NextLesserThan8Bits(1) == 0) {
             }
-            else {
-                if (fillBits == 1) {
-                    // First EOL code word xxxx 0000 0000 0001 will occur
-                    // As many fill bits will be present as required to make
-                    // the EOL code of 12 bits end on a byte boundary.
-                    int bitsLeft = 8 - bitPointer;
-                    if (NextNBits(bitsLeft) != 0) {
-                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.AllFillBitsPrecedingEolCodeMustBe0
-                            );
-                    }
-                    // If the number of bitsLeft is less than 8, then to have a 12
-                    // bit EOL sequence, two more bytes are certainly going to be
-                    // required. The first of them has to be all zeros, so ensure
-                    // that.
-                    if (bitsLeft < 4) {
-                        if (NextNBits(8) != 0) {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.AllFillBitsPrecedingEolCodeMustBe0
-                                );
-                        }
-                    }
-                    // There might be a random number of fill bytes with 0s, so
-                    // loop till the EOL of 0000 0001 is found, as long as all
-                    // the bytes preceding it are 0's.
-                    int n;
-                    while ((n = NextNBits(8)) != 1) {
-                        // If not all zeros
-                        if (n != 0) {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.AllFillBitsPrecedingEolCodeMustBe0
-                                );
-                        }
-                    }
-                }
+            // nothing to do here
+            UpdatePointer(12);
+            int next12Bits = NextNBits(12);
+            if (next12Bits != 1) {
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.AllFillBitsPrecedingEolCodeMustBe0
+                    );
             }
             // If one dimensional encoding mode, then always return 1
             if (oneD == 0) {
@@ -1513,14 +1472,9 @@ escape_break: ;
 
         // Move pointer backwards by given amount of bits
         private void UpdatePointer(int bitsToMoveBack) {
-            int i = bitPointer - bitsToMoveBack;
-            if (i < 0) {
-                bytePointer--;
-                bitPointer = 8 + i;
-            }
-            else {
-                bitPointer = i;
-            }
+            int totalBits = bytePointer * 8 + bitPointer - bitsToMoveBack;
+            bitPointer = totalBits % 8;
+            bytePointer = totalBits / 8;
         }
 
         // Move to the next byte boundary
