@@ -123,6 +123,15 @@ namespace iText.IO.Image {
         }
 
         [NUnit.Framework.Test]
+        public virtual void Group3CompressionEolErrorCreateTiffImageTest() {
+            String sourceFile = SOURCE_FOLDER + "group3CompressionImageWithEolError.tif";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => CreateTiff(sourceFile
+                , 1, 1024D, 768D));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Group3CompressionCreateImageDataTest() {
             String sourceFile = SOURCE_FOLDER + "group3CompressionImage.tif";
             ImageData img = ImageDataFactory.Create(UrlUtil.ToURL(SOURCE_FOLDER + "group3CompressionImage.tif"));
