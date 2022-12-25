@@ -422,7 +422,6 @@ namespace iText.Signatures {
             public IList<byte[]> certs = new List<byte[]>();
         }
 
-        // TODO: Refactor. Copied from itext5 Utilities
         /// <summary>Converts an array of bytes to a String of hexadecimal values</summary>
         /// <param name="bytes">a byte array</param>
         /// <returns>the same bytes expressed as hexadecimal values</returns>
