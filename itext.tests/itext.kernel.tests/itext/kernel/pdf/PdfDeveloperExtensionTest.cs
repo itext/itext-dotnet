@@ -138,7 +138,7 @@ namespace iText.Kernel.Pdf {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(docData)))) {
                 PdfArray exts = pdfDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Extensions).GetAsArray(prefix);
                 for (int i = 0; i < exts.Size(); i++) {
-                    int level = exts.GetAsDictionary(i).GetAsInt(PdfName.ExtensionLevel);
+                    int level = exts.GetAsDictionary(i).GetAsInt(PdfName.ExtensionLevel).Value;
                     NUnit.Framework.Assert.IsTrue(expectedLevels.Contains(level), "Level " + level + " is not in expected level list"
                         );
                     NUnit.Framework.Assert.IsFalse(seen.Contains(level), "Level " + level + " appears multiple times");
