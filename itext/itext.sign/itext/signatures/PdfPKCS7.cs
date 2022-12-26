@@ -332,8 +332,10 @@ namespace iText.Signatures {
                     throw new ArgumentException("CAdES ESS information missing.");
                 }
                 signatureAlgorithmOid = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(BOUNCY_CASTLE_FACTORY.CreateASN1Sequence
-                    (signerInfo.GetObjectAt(next++)).GetObjectAt(0)).GetId();
-                signatureValue = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(signerInfo.GetObjectAt(next++)).GetOctets();
+                    (signerInfo.GetObjectAt(next)).GetObjectAt(0)).GetId();
+                ++next;
+                signatureValue = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(signerInfo.GetObjectAt(next)).GetOctets();
+                ++next;
                 if (next < signerInfo.Size()) {
                     IASN1TaggedObject taggedObject = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(signerInfo.GetObjectAt(next)
                         );

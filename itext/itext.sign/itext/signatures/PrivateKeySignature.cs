@@ -120,11 +120,11 @@ namespace iText.Signatures {
             return sig.GenerateSignature();
         }
 
-        public virtual String GetSignatureMechanism() {
-            String signatureAlgorithm = this.GetEncryptionAlgorithm();
+        private String GetSignatureMechanism() {
+            String signatureAlgo = this.GetEncryptionAlgorithm();
             // Ed25519 and Ed448 do not involve a choice of hashing algorithm
-            if ("Ed25519".Equals(signatureAlgorithm) || "Ed448".Equals(signatureAlgorithm)) {
-                return signatureAlgorithm;
+            if ("Ed25519".Equals(signatureAlgo) || "Ed448".Equals(signatureAlgo)) {
+                return signatureAlgo;
             }
             else {
                 return GetHashAlgorithm() + "with" + GetEncryptionAlgorithm();

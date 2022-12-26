@@ -90,6 +90,7 @@ namespace iText.Signatures {
         /// <remarks>
         /// Algorithm available for signatures since PDF 2.0
         /// extended by ISO/TS 32001.
+        /// <para />
         /// The output length is fixed at 512 bits (64 bytes).
         /// </remarks>
         public const String SHAKE256 = "SHAKE256";
