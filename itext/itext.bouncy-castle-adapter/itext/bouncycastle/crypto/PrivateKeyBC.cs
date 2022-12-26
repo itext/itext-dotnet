@@ -42,6 +42,12 @@ namespace iText.Bouncycastle.Crypto {
             if (privateKey is ECKeyParameters && ((ECKeyParameters)privateKey).AlgorithmName == "EC") {
                 return "ECDSA";
             }
+            if (privateKey is Ed448PrivateKeyParameters) {
+                return "Ed448";
+            }
+            if (privateKey is Ed25519PrivateKeyParameters) {
+                return "Ed25519";
+            }
             return null;
         }
         

@@ -28,29 +28,49 @@ namespace iText.Signatures {
     public class PdfPKCS7ManuallyPortedTest : PdfPKCS7BasicTest {
         [NUnit.Framework.Test]
         public virtual void VerifyEd25519SignatureTest() {
-            // ED25519 is not available in FIPS approved mode
-            if (BOUNCY_CASTLE_FACTORY.IsInApprovedOnlyMode()) {
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("Ed25519", "sample-ed25519-sha512.pdf"
-                    ));
-            }
-            else {
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                // ED25519 is not available in FIPS approved mode
+                if (BOUNCY_CASTLE_FACTORY.IsInApprovedOnlyMode()) {
+                    NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("Ed25519", "sample-ed25519-sha512.pdf"
+                        ));
+                } else {
+                    // algorithm identifier in key not recognised
+                    NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("Ed25519", "sample-ed25519-sha512.pdf"
+                        ));
+                }
+            } else {
                 VerifyIsoExtensionExample("Ed25519", "sample-ed25519-sha512.pdf");
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void VerifyNistECDSASha3SignatureTest() {
-            VerifyIsoExtensionExample("SHA3-256withECDSA", "sample-nistp256-sha3_256.pdf");
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                VerifyIsoExtensionExample("SHA3-256withECDSA", "sample-nistp256-sha3_256.pdf");
+            } else {
+                // Signer SHA3-256WITHECDSA not recognised in BC mode
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("SHA3-256withECDSA", "sample-nistp256-sha3_256.pdf"
+                    ));
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void VerifyBrainpoolSha3SignatureTest() {
-            VerifyIsoExtensionExample("SHA3-384withECDSA", "sample-brainpoolP384r1-sha3_384.pdf");
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                VerifyIsoExtensionExample("SHA3-384withECDSA", "sample-brainpoolP384r1-sha3_384.pdf");
+            } else {
+                // Signer SHA3-384WITHECDSA not recognised in BC mode
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("SHA3-384withECDSA", "sample-brainpoolP384r1-sha3_384.pdf"
+                    ));
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void VerifyRsaSha3SignatureTest() {
-            VerifyIsoExtensionExample("SHA3-256withRSA", "sample-rsa-sha3_256.pdf");
+            // VerifySignatureIntegrityAndAuthenticity fails in BCFIPS mode
+            if ("BC".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                VerifyIsoExtensionExample("SHA3-256withRSA", "sample-rsa-sha3_256.pdf");
+            }
         }
     }
 }

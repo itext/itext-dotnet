@@ -23,12 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.Nio.File;
-using Java.Security;
-using NUnit.Framework;
 using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Edec;
-using Org.BouncyCastle.Asn1.Nist;
 using Org.BouncyCastle.Asn1.X9;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
@@ -38,9 +33,11 @@ using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
+using Org.BouncyCastle.Asn1.EdEC;
+using Org.BouncyCastle.Asn1.Nist;
+using Org.BouncyCastle.Security;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -59,7 +56,7 @@ namespace iText.Signatures.Sign {
         private static readonly String SOURCE_FILE = SOURCE_FOLDER + "helloWorldDoc.pdf";
 
         private const String SIGNATURE_FIELD = "Signature";
-
+        
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
@@ -67,7 +64,12 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void TestEd25519() {
-            DoRoundTrip("ed25519", DigestAlgorithms.SHA512, EdECObjectIdentifiers.id_Ed25519);
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                // algorithm identifier in key not recognised
+                NUnit.Framework.Assert.Catch(typeof(KeyException), () => DoRoundTrip("ed25519", DigestAlgorithms.SHA512, EdECObjectIdentifiers.id_Ed25519));
+            } else {
+                DoRoundTrip("ed25519", DigestAlgorithms.SHA512, EdECObjectIdentifiers.id_Ed25519);
+            }
         }
 
         [NUnit.Framework.Test]
@@ -78,17 +80,27 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void TestBrainpoolP384r1WithSha384() {
-            DoRoundTrip("brainpoolP384r1", DigestAlgorithms.SHA384, X9ObjectIdentifiers.ecdsa_with_SHA384);
+            DoRoundTrip("brainpoolP384r1", DigestAlgorithms.SHA384, X9ObjectIdentifiers.ECDsaWithSha384);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestBrainpoolP384r1WithSha3_384() {
-            DoRoundTrip("brainpoolP384r1", DigestAlgorithms.SHA3_384, NISTObjectIdentifiers.id_ecdsa_with_sha3_384);
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                DoRoundTrip("brainpoolP384r1", DigestAlgorithms.SHA3_384, NistObjectIdentifiers.IdEcdsaWithSha3_384);
+            } else {
+                // Signer SHA3-384WITHECDSA not recognised in BC mode
+                NUnit.Framework.Assert.Catch(typeof(SecurityUtilityException), () => DoRoundTrip("brainpoolP384r1", DigestAlgorithms.SHA3_384, NistObjectIdentifiers.IdEcdsaWithSha3_384));
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void TestNistP256WithSha3_256() {
-            DoRoundTrip("nistp256", DigestAlgorithms.SHA3_256, NISTObjectIdentifiers.id_ecdsa_with_sha3_256);
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                DoRoundTrip("nistp256", DigestAlgorithms.SHA3_256, NistObjectIdentifiers.IdEcdsaWithSha3_256);
+            } else {
+                // Signer SHA3-256WITHECDSA not recognised in BC mode
+                NUnit.Framework.Assert.Catch(typeof(SecurityUtilityException), () => DoRoundTrip("nistp256", DigestAlgorithms.SHA3_256, NistObjectIdentifiers.IdEcdsaWithSha3_256));
+            }
         }
 
         [NUnit.Framework.Test]
@@ -100,15 +112,25 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void TestRsaWithSha3_256() {
-            DoRoundTrip("dsa", DigestAlgorithms.SHA3_256, NISTObjectIdentifiers.id_dsa_with_sha3_256);
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                DoRoundTrip("dsa", DigestAlgorithms.SHA3_256, NistObjectIdentifiers.IdDsaWithSha3_256);
+            } else {
+                // Signer SHA3-256WITHDSA not recognised in BC mode
+                NUnit.Framework.Assert.Catch(typeof(SecurityUtilityException), () => DoRoundTrip("dsa", DigestAlgorithms.SHA3_256, NistObjectIdentifiers.IdDsaWithSha3_256));
+            }
         }
-
+        
         [NUnit.Framework.Test]
         public virtual void TestEd25519ForceSha512WhenSigning() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => DoSign("ed25519", DigestAlgorithms.
-                SHA1, new MemoryStream()));
-            NUnit.Framework.Assert.AreEqual("Ed25519 requires the document to be digested using SHA-512, not SHA1", e.
-                Message);
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                // algorithm identifier in key not recognised
+                NUnit.Framework.Assert.Catch(typeof(KeyException), () => DoSign("ed25519", DigestAlgorithms.SHA1, new MemoryStream()));
+            } else {
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => DoSign("ed25519", DigestAlgorithms.
+                    SHA1, new MemoryStream()));
+                NUnit.Framework.Assert.AreEqual("Ed25519 requires the document to be digested using SHA-512, not SHA1", e.
+                    Message);
+            }
         }
 
         [NUnit.Framework.Test]
@@ -119,7 +141,7 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.AreEqual("Ed448 requires the document to be digested using 512-bit SHAKE256, not SHA1"
                 , e.Message);
         }
-
+        
         [NUnit.Framework.Test]
         public virtual void TestEd25519ForceSha512WhenValidating() {
             // file contains an Ed25519 signature where the document digest is computed using SHA-1
@@ -137,7 +159,7 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.AreEqual("Ed448 requires the document to be digested using 512-bit SHAKE256, not SHA1"
                 , e.InnerException.InnerException.Message);
         }
-
+        
         [NUnit.Framework.Test]
         public virtual void TestRsaWithSha3ExtensionDeclarations() {
             MemoryStream baos = new MemoryStream();
@@ -148,8 +170,13 @@ namespace iText.Signatures.Sign {
         [NUnit.Framework.Test]
         public virtual void TestEd25519ExtensionDeclarations() {
             MemoryStream baos = new MemoryStream();
-            DoSign("ed25519", DigestAlgorithms.SHA512, baos);
-            CheckIsoExtensions(baos.ToArray(), JavaCollectionsUtil.Singleton(32002));
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                // algorithm identifier in key not recognised
+                NUnit.Framework.Assert.Catch(typeof(KeyException), () => DoSign("ed25519", DigestAlgorithms.SHA512, baos));
+            } else {
+                DoSign("ed25519", DigestAlgorithms.SHA512, baos);
+                CheckIsoExtensions(baos.ToArray(), JavaCollectionsUtil.Singleton(32002));
+            }
         }
 
         [NUnit.Framework.Test]
@@ -157,30 +184,33 @@ namespace iText.Signatures.Sign {
             SkipShake256IfBcFips();
             MemoryStream baos = new MemoryStream();
             DoSign("ed448", DigestAlgorithms.SHAKE256, baos);
-            CheckIsoExtensions(baos.ToArray(), JavaUtil.ArraysAsList(32001, 32002));
+            CheckIsoExtensions(baos.ToArray(), JavaUtil.ArraysAsList(32002, 32001));
         }
-
+        
+        
         [NUnit.Framework.Test]
         public virtual void TestIsoExtensionsWithMultipleSignatures() {
+            // algorithm identifier in key not recognised in BCFIPS mode for ed25519
+            NUnit.Framework.Assume.That(!"BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()));
+
             String keySample1 = "rsa";
             String keySample2 = "ed25519";
-            Path sourceFolder = System.IO.Path.Combine(SOURCE_FOLDER);
             MemoryStream baos1 = new MemoryStream();
             MemoryStream baos2 = new MemoryStream();
-            IX509Certificate root = ReadCertificate(sourceFolder.Resolve("ca.crt"));
-            IX509Certificate signerCert1 = ReadCertificate(sourceFolder.Resolve(keySample1 + ".crt"));
-            IX509Certificate signerCert2 = ReadCertificate(sourceFolder.Resolve(keySample2 + ".crt"));
+            IX509Certificate root = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, "ca.crt"));
+            IX509Certificate signerCert1 = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, keySample1 + ".crt"));
+            IX509Certificate signerCert2 = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, keySample2 + ".crt"));
             IX509Certificate[] signChain1 = new IX509Certificate[] { signerCert1, root };
             IX509Certificate[] signChain2 = new IX509Certificate[] { signerCert2, root };
             using (Stream in1 = new FileStream(SOURCE_FILE, FileMode.Open, FileAccess.Read)) {
-                IPrivateKey signPrivateKey = ReadUnencryptedPrivateKey(sourceFolder.Resolve(keySample1 + ".key.pem"));
+                IPrivateKey signPrivateKey = ReadUnencryptedPrivateKey(System.IO.Path.Combine(SOURCE_FOLDER, keySample1 + ".key.pem"));
                 IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA3_256);
                 PdfSigner signer = new PdfSigner(new PdfReader(in1), baos1, new StampingProperties());
                 signer.SetFieldName("Signature1");
                 signer.SignDetached(pks, signChain1, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
             }
             using (Stream in2 = new MemoryStream(baos1.ToArray())) {
-                IPrivateKey signPrivateKey = ReadUnencryptedPrivateKey(sourceFolder.Resolve(keySample2 + ".key.pem"));
+                IPrivateKey signPrivateKey = ReadUnencryptedPrivateKey(System.IO.Path.Combine(SOURCE_FOLDER, keySample2 + ".key.pem"));
                 IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA512);
                 PdfSigner signer = new PdfSigner(new PdfReader(in2), baos2, new StampingProperties());
                 signer.SetFieldName("Signature2");
@@ -188,7 +218,7 @@ namespace iText.Signatures.Sign {
             }
             CheckIsoExtensions(baos2.ToArray(), JavaUtil.ArraysAsList(32001, 32002));
         }
-
+        
         private void DoRoundTrip(String keySampleName, String digestAlgo, DerObjectIdentifier expectedSigAlgoIdentifier
             ) {
             String outFile = System.IO.Path.Combine(DESTINATION_FOLDER, keySampleName + "-" + digestAlgo + ".pdf").ToString
@@ -196,14 +226,15 @@ namespace iText.Signatures.Sign {
             DoSign(keySampleName, digestAlgo, outFile);
             DoVerify(outFile, expectedSigAlgoIdentifier);
         }
-
+        
         private void DoSign(String keySampleName, String digestAlgo, String outFile) {
             // write to a file for easier inspection when debugging
             using (FileStream fos = new FileStream(outFile, FileMode.Create)) {
                 DoSign(keySampleName, digestAlgo, fos);
             }
         }
-
+        
+        
         private void DoSign(String keySampleName, String digestAlgo, Stream os) {
             IX509Certificate root = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, "ca.crt"));
             IX509Certificate signerCert = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, keySampleName + ".crt"
@@ -220,7 +251,7 @@ namespace iText.Signatures.Sign {
                 ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText7.");
             signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
         }
-
+        
         private void DoVerify(String fileName, DerObjectIdentifier expectedSigAlgoIdentifier) {
             using (PdfReader r = new PdfReader(fileName)) {
                 using (PdfDocument pdfDoc = new PdfDocument(r)) {
@@ -256,20 +287,20 @@ namespace iText.Signatures.Sign {
             // SHAKE256 is currently not supported in BCFIPS
             NUnit.Framework.Assume.That(!"BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()));
         }
-
-        private IX509Certificate ReadCertificate(Path path) {
+        
+        private IX509Certificate ReadCertificate(String path) {
             byte[] content = System.IO.File.ReadAllBytes(path);
-            IX509Certificate certHolder = BOUNCY_CASTLE_FACTORY.CreateX509CertificateHolder(content);
-            return BOUNCY_CASTLE_FACTORY.CreateJcaX509CertificateConverter().GetCertificate(certHolder);
+            return BOUNCY_CASTLE_FACTORY.CreateX509Certificate(content);
         }
-
-        private IPrivateKey ReadUnencryptedPrivateKey(Path path) {
+        
+        private IPrivateKey ReadUnencryptedPrivateKey(String path) {
             try {
                 return PemFileHelper.ReadFirstKey(path.ToString(), SAMPLE_KEY_PASSPHRASE);
             }
             catch (Exception e) {
-                throw new KeyException(e);
+                throw new KeyException(e.Message);
             }
         }
+        
     }
 }
