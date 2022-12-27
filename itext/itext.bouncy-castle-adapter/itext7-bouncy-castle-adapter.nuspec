@@ -19,11 +19,11 @@
     <dependencies>
       <group targetFramework="net461">
 		<dependency id="itext7.commons" version="8.0.0-SNAPSHOT" />
-		<dependency id="Portable.BouncyCastle" version="1.9.0" />
+		<dependency id="Portable.BouncyCastle" version="1.8.10" />
       </group>
       <group targetFramework="netstandard2.0">
 		<dependency id="itext7.commons" version="8.0.0-SNAPSHOT" />
-		<dependency id="Portable.BouncyCastle" version="1.9.0" />
+		<dependency id="Portable.BouncyCastle" version="1.8.10" />
       </group>
     </dependencies>
   </metadata>
