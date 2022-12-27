@@ -270,7 +270,6 @@ namespace iText.Signatures {
             if (cal == TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
                 cal = pkcs7.GetSignDate();
             }
-            // TODO: get date from signature
             signDate = cal.ToUniversalTime();
             IList<String> names = sgnUtil.GetSignatureNames();
             if (names.Count > 1) {
