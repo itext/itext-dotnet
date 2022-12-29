@@ -145,6 +145,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Indicates whether the extension prefix is multivalued (ISO 32000-2:2020).</summary>
+        /// <returns>true if multivalued</returns>
         public virtual bool IsMultiValued() {
             return isMultiValued;
         }

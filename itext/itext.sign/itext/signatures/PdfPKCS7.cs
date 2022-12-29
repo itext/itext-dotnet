@@ -539,14 +539,16 @@ namespace iText.Signatures {
         /// <returns>the algorithm used to calculate the signature</returns>
         public virtual String GetDigestAlgorithm() {
             // Ed25519 and Ed448 do not involve a choice of hashing algorithm
-            if (SecurityIDs.ID_ED25519.Equals(this.signatureAlgorithmOid)) {
-                return "Ed25519";
-            }
-            else {
-                if (SecurityIDs.ID_ED448.Equals(this.signatureAlgorithmOid)) {
+            switch (signatureAlgorithmOid) {
+                case SecurityIDs.ID_ED25519: {
+                    return "Ed25519";
+                }
+
+                case SecurityIDs.ID_ED448: {
                     return "Ed448";
                 }
-                else {
+
+                default: {
                     return GetHashAlgorithm() + "with" + GetEncryptionAlgorithm();
                 }
             }
