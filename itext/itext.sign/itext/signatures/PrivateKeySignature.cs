@@ -83,20 +83,26 @@ namespace iText.Signatures {
             String digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
             this.hashAlgorithm = DigestAlgorithms.GetDigest(digestAlgorithmOid);
             this.signatureAlgorithm = SignUtils.GetPrivateKeyAlgorithm(pk);
-            if ("Ed25519".Equals(this.signatureAlgorithm) && !SecurityIDs.ID_SHA512.Equals(digestAlgorithmOid)) {
-                throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed25519"
-                    , "SHA-512", this.hashAlgorithm);
-            }
-            else {
-                if ("Ed448".Equals(this.signatureAlgorithm) && !SecurityIDs.ID_SHAKE256.Equals(digestAlgorithmOid)) {
-                    throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed448", 
-                        "512-bit SHAKE256", this.hashAlgorithm);
-                }
-                else {
-                    if ("EdDSA".Equals(this.signatureAlgorithm)) {
-                        throw new ArgumentException("Key algorithm of EdDSA PrivateKey instance provied by " + pk.GetType() + " is not clear. Expected Ed25519 or Ed448, but got EdDSA. "
-                             + "Try a different security provider.");
+            switch (this.signatureAlgorithm) {
+                case "Ed25519": {
+                    if (!SecurityIDs.ID_SHA512.Equals(digestAlgorithmOid)) {
+                        throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed25519"
+                            , "SHA-512", this.hashAlgorithm);
                     }
+                    break;
+                }
+
+                case "Ed448": {
+                    if (!SecurityIDs.ID_SHAKE256.Equals(digestAlgorithmOid)) {
+                        throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed448", 
+                            "512-bit SHAKE256", this.hashAlgorithm);
+                    }
+                    break;
+                }
+
+                case "EdDSA": {
+                    throw new ArgumentException("Key algorithm of EdDSA PrivateKey instance provided by " + pk.GetType() + " is not clear. Expected Ed25519 or Ed448, but got EdDSA. "
+                         + "Try a different security provider.");
                 }
             }
         }
