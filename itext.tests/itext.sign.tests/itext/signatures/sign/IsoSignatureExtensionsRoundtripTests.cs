@@ -74,8 +74,12 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void TestEd448() {
-            SkipShake256IfBcFips();
-            DoRoundTrip("ed448", DigestAlgorithms.SHAKE256, EdECObjectIdentifiers.id_Ed448);
+            if ("BC".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                DoRoundTrip("ed448", DigestAlgorithms.SHAKE256, EdECObjectIdentifiers.id_Ed448);
+            } else {
+                // SHAKE256 is currently not supported in BCFIPS
+                NUnit.Framework.Assert.Catch(typeof(KeyException), () => DoRoundTrip("ed448", DigestAlgorithms.SHAKE256, EdECObjectIdentifiers.id_Ed448));
+            }
         }
 
         [NUnit.Framework.Test]
@@ -135,11 +139,13 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void TestEd448ForceShake256WhenSigning() {
-            SkipShake256IfBcFips();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => DoSign("ed448", DigestAlgorithms.SHA1
-                , new MemoryStream()));
-            NUnit.Framework.Assert.AreEqual("Ed448 requires the document to be digested using 512-bit SHAKE256, not SHA1"
-                , e.Message);
+            if ("BC".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => DoSign("ed448", DigestAlgorithms.SHA1, new MemoryStream()));
+                NUnit.Framework.Assert.AreEqual("Ed448 requires the document to be digested using 512-bit SHAKE256, not SHA1", e.Message);
+            } else {
+                // SHAKE256 is currently not supported in BCFIPS
+                NUnit.Framework.Assert.Catch(typeof(KeyException), () => DoSign("ed448", DigestAlgorithms.SHA1, new MemoryStream()));
+            }
         }
         
         [NUnit.Framework.Test]
@@ -181,10 +187,14 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void TestEd448ExtensionDeclarations() {
-            SkipShake256IfBcFips();
             MemoryStream baos = new MemoryStream();
-            DoSign("ed448", DigestAlgorithms.SHAKE256, baos);
-            CheckIsoExtensions(baos.ToArray(), JavaUtil.ArraysAsList(32002, 32001));
+            if ("BC".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                DoSign("ed448", DigestAlgorithms.SHAKE256, baos);
+                CheckIsoExtensions(baos.ToArray(), JavaUtil.ArraysAsList(32002, 32001));
+            } else {
+                // SHAKE256 is currently not supported in BCFIPS
+                NUnit.Framework.Assert.Catch(typeof(KeyException), () => DoSign("ed448", DigestAlgorithms.SHAKE256, baos));
+            }
         }
         
         
@@ -283,11 +293,6 @@ namespace iText.Signatures.Sign {
             }
         }
 
-        private void SkipShake256IfBcFips() {
-            // SHAKE256 is currently not supported in BCFIPS
-            NUnit.Framework.Assume.That(!"BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()));
-        }
-        
         private IX509Certificate ReadCertificate(String path) {
             byte[] content = System.IO.File.ReadAllBytes(path);
             return BOUNCY_CASTLE_FACTORY.CreateX509Certificate(content);
