@@ -111,7 +111,7 @@ namespace iText.Signatures.Sign {
         public virtual void TestRsaWithSha3_512() {
             // For now we use a generic OID, but NISTObjectIdentifiers.id_rsassa_pkcs1_v1_5_with_sha3_512 would
             // be more appropriate
-            DoRoundTrip("rsa", DigestAlgorithms.SHA3_512, new DerObjectIdentifier(SecurityIDs.ID_RSA));
+            DoRoundTrip("rsa", DigestAlgorithms.SHA3_512, new DerObjectIdentifier(SecurityIDs.ID_RSA_WITH_SHA3_512));
         }
 
         [NUnit.Framework.Test]

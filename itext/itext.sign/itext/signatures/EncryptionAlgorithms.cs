@@ -113,6 +113,10 @@ namespace iText.Signatures {
             rsaOidsByDigest.Put("SHA256", "1.2.840.113549.1.1.11");
             rsaOidsByDigest.Put("SHA384", "1.2.840.113549.1.1.12");
             rsaOidsByDigest.Put("SHA512", "1.2.840.113549.1.1.13");
+            rsaOidsByDigest.Put("SHA-224", "1.2.840.113549.1.1.14");
+            rsaOidsByDigest.Put("SHA-256", "1.2.840.113549.1.1.11");
+            rsaOidsByDigest.Put("SHA-384", "1.2.840.113549.1.1.12");
+            rsaOidsByDigest.Put("SHA-512", "1.2.840.113549.1.1.13");
             rsaOidsByDigest.Put("SHA3-224", "2.16.840.1.101.3.4.3.13");
             rsaOidsByDigest.Put("SHA3-256", "2.16.840.1.101.3.4.3.14");
             rsaOidsByDigest.Put("SHA3-384", "2.16.840.1.101.3.4.3.15");
@@ -147,10 +151,8 @@ namespace iText.Signatures {
         public static String GetSignatureMechanismOid(String signatureAlgorithmName, String digestAlgorithmName) {
             switch (signatureAlgorithmName) {
                 case "RSA": {
-                    // always return the generic RSASSA-with-PKCS #1 v1.5 padding OID
-                    // since there are comparison tests that depend on the generic OID being present
-                    // TODO fix those tests, and replace with rsaOidsByDigest.get(digestAlgorithmName, SecurityIDs.ID_RSA)
-                    return SecurityIDs.ID_RSA;
+                    String oId = rsaOidsByDigest.Get(digestAlgorithmName);
+                    return oId == null ? SecurityIDs.ID_RSA : oId;
                 }
 
                 case "DSA": {

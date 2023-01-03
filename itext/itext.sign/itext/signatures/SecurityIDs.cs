@@ -52,6 +52,10 @@ namespace iText.Signatures {
 
         public const String ID_RSA = "1.2.840.113549.1.1.1";
 
+        public const String ID_RSA_WITH_SHA256 = "1.2.840.113549.1.1.11";
+
+        public const String ID_RSA_WITH_SHA3_512 = "2.16.840.1.101.3.4.3.16";
+
         public const String ID_DSA = "1.2.840.10040.4.1";
 
         public const String ID_ECDSA = "1.2.840.10045.2.1";

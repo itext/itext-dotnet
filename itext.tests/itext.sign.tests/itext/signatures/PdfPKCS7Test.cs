@@ -72,7 +72,7 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual(expectedOid, pkcs7.GetDigestAlgorithmOid());
             NUnit.Framework.Assert.AreEqual(chain[0], pkcs7.GetSigningCertificate());
             NUnit.Framework.Assert.AreEqual(chain, pkcs7.GetCertificates());
-            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_RSA, pkcs7.GetDigestEncryptionAlgorithmOid());
+            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_RSA_WITH_SHA256, pkcs7.GetDigestEncryptionAlgorithmOid());
         }
 
         [NUnit.Framework.Test]
