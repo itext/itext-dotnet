@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,10 +24,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Exceptions;
+using iText.Commons.Logs;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Commons.Utils {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class ZipFileReaderTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/commons/utils/ZipFileReaderTest/";
@@ -68,6 +70,40 @@ namespace iText.Commons.Utils {
                 NUnit.Framework.Assert.IsTrue(nameSet.Contains("subfolder/fourthFile.txt"));
                 NUnit.Framework.Assert.IsTrue(nameSet.Contains("subfolder/subsubfolder/fifthFile.txt"));
                 NUnit.Framework.Assert.IsTrue(nameSet.Contains("subfolder/subsubfolder/sixthFile.txt"));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(CommonsLogMessageConstant.UNCOMPRESSED_DATA_SIZE_IS_TOO_MUCH)]
+        public virtual void GetFileNamesFromZipBombBySettingThresholdSizeTest() {
+            using (ZipFileReader fileReader = new ZipFileReader(SOURCE_FOLDER + "zipBombTest.zip")) {
+                fileReader.SetThresholdRatio(1000);
+                fileReader.SetThresholdSize(10000);
+                ICollection<String> nameSet = fileReader.GetFileNames();
+                NUnit.Framework.Assert.IsNotNull(nameSet);
+                NUnit.Framework.Assert.AreEqual(0, nameSet.Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(CommonsLogMessageConstant.RATIO_IS_HIGHLY_SUSPICIOUS)]
+        public virtual void GetFileNamesFromZipBombBySettingThresholdRatioTest() {
+            using (ZipFileReader fileReader = new ZipFileReader(SOURCE_FOLDER + "zipBombTest.zip")) {
+                fileReader.SetThresholdRatio(5);
+                ICollection<String> nameSet = fileReader.GetFileNames();
+                NUnit.Framework.Assert.IsNotNull(nameSet);
+                NUnit.Framework.Assert.AreEqual(0, nameSet.Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(CommonsLogMessageConstant.TOO_MUCH_ENTRIES_IN_ARCHIVE)]
+        public virtual void GetFileNamesFromZipBombBySettingThresholdEntriesTest() {
+            using (ZipFileReader fileReader = new ZipFileReader(SOURCE_FOLDER + "archive.zip")) {
+                fileReader.SetThresholdEntries(5);
+                ICollection<String> nameSet = fileReader.GetFileNames();
+                NUnit.Framework.Assert.IsNotNull(nameSet);
+                NUnit.Framework.Assert.IsTrue(nameSet.Count <= 5);
             }
         }
 

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -339,8 +339,9 @@ namespace iText.Layout.Renderer {
                         xAdvance = ScaleXAdvance(xAdvance, fontSize.GetValue(), hScale) / TEXT_SPACE_COEFF;
                     }
                     float potentialWidth = nonBreakablePartFullWidth + glyphWidth + xAdvance + italicSkewAddition + boldSimulationAddition;
-                    if (!noSoftWrap && (potentialWidth > layoutBox.GetWidth() - currentLineWidth + EPS) && firstCharacterWhichExceedsAllowedWidth
-                         == -1 || ind == specialScriptFirstNotFittingIndex) {
+                    bool symbolNotFitOnLine = potentialWidth > layoutBox.GetWidth() - currentLineWidth + EPS;
+                    if ((!noSoftWrap && symbolNotFitOnLine && firstCharacterWhichExceedsAllowedWidth == -1) || ind == specialScriptFirstNotFittingIndex
+                        ) {
                         firstCharacterWhichExceedsAllowedWidth = ind;
                         bool spaceOrWhitespace = iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind));
                         OverflowPropertyValue? parentOverflowX = parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
@@ -379,9 +380,8 @@ namespace iText.Layout.Renderer {
                     nonBreakablePartMaxHeight = (nonBreakablePartMaxAscender - nonBreakablePartMaxDescender) * fontSize.GetValue
                         () / TEXT_SPACE_COEFF + textRise;
                     previousCharPos = ind;
-                    if (!noSoftWrap && nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth
-                        () && (0 == nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.end || !GlyphBelongsToNonBreakingHyphenRelatedChunk
-                        (text, ind + 1))) {
+                    if (!noSoftWrap && symbolNotFitOnLine && (0 == nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.end ||
+                         !GlyphBelongsToNonBreakingHyphenRelatedChunk(text, ind + 1))) {
                         if (IsOverflowFit(overflowX)) {
                             // we have extracted all the information we wanted and we do not want to continue.
                             // we will have to split the word anyway.

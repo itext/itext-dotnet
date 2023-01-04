@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -28,7 +28,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class PdfStreamDecodeTest : ExtendedITextTest {
         private static readonly byte[] BYTES = new byte[] { (byte)0x78, (byte)0xda, (byte)0x01, (byte)0x28, (byte)
             0x00, (byte)0xd7, (byte)0xff, (byte)0x78, (byte)0xda, (byte)0xab, (byte)0xb8, (byte)0xf5, (byte)0xf6, 

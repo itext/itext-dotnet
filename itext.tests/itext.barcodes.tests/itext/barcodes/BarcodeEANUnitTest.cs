@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -48,7 +48,7 @@ using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Barcodes {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class BarcodeEANUnitTest : ExtendedITextTest {
         public const float EPS = 0.0001f;
 

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -50,7 +50,7 @@ using iText.Svg.Renderers.Impl;
 using iText.Test;
 
 namespace iText.Svg.Renderers {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class TransparencyTest : ExtendedITextTest {
         private static readonly PdfName DEFAULT_RESOURCE_NAME = new PdfName("Gs1");
 

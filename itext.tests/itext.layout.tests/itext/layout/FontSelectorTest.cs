@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -56,7 +56,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class FontSelectorTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/FontSelectorTest/";
@@ -421,6 +421,53 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotSignificantCharacterOfTheFontWithUnicodeRange() {
+            // TODO update cmp after fix DEVSIX-2052
+            String outFileName = destinationFolder + "notSignificantCharacterOfTheFontWithUnicodeRange.pdf";
+            String cmpFileName = sourceFolder + "cmp_notSignificantCharacterOfTheFontWithUnicodeRange.pdf";
+            FontProvider sel = new FontProvider();
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "NotoSansCJKjp-Bold.otf", null, "FontAlias"
+                , new RangeBuilder(117, 117).Create()));
+            // just 'u' letter
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "FreeSans.ttf", null, "FontAlias", new 
+                RangeBuilder(106, 113).Create()));
+            // 'j', 'm' and 'p' are in that interval
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            doc.SetProperty(Property.FONT, new String[] { "FontAlias" });
+            doc.Add(new Paragraph("jump"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckThreeFontsInOneLineWithUnicodeRange() {
+            // TODO update cmp after fix DEVSIX-2052
+            String outFileName = destinationFolder + "checkThreeFontsInOneLineWithUnicodeRange.pdf";
+            String cmpFileName = sourceFolder + "cmp_checkThreeFontsInOneLineWithUnicodeRange.pdf";
+            FontProvider sel = new FontProvider();
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "NotoSansCJKjp-Bold.otf", null, "FontAlias"
+                , new RangeBuilder(97, 99).Create()));
+            // 'a', 'b' and 'c' are in that interval
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "FreeSans.ttf", null, "FontAlias", new 
+                RangeBuilder(100, 102).Create()));
+            // 'd', 'e' and 'f' are in that interval
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", null, "FontAlias", new 
+                RangeBuilder(120, 122).Create()));
+            // 'x', 'y' and 'z' are in that interval
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            doc.SetProperty(Property.FONT, new String[] { "FontAlias" });
+            doc.Add(new Paragraph("abc def xyz"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         [NUnit.Framework.Test]

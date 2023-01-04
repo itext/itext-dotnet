@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,6 +44,7 @@ using System;
 using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
@@ -53,7 +54,7 @@ using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class TextWritingTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/TextWritingTest/";
@@ -328,6 +329,37 @@ namespace iText.Layout {
             p.Add(text);
             document.Add(p);
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWrappingEpsilonTest() {
+            String outFileName = destinationFolder + "textWrappingEpsilon.pdf";
+            String cmpFileName = sourceFolder + "cmp_textWrappingEpsilon.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document document = new Document(pdfDoc);
+            // Play with margins to make AbstractRenderer.EPS important for wrapping behavior
+            document.SetLeftMargin(250.0F);
+            document.SetRightMargin(238.727F);
+            pdfDoc.SetDefaultPageSize(PageSize.LETTER);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "../fonts/Open_Sans/OpenSans-Regular.ttf");
+            String text1 = "First line of some text ";
+            String text2 = "Second line of some text";
+            Text text = new Text(text1);
+            text.SetFont(font);
+            text.SetFontSize(9);
+            Paragraph paragraph = new Paragraph();
+            paragraph.Add(text);
+            text = new Text(text2);
+            text.SetFont(font);
+            text.SetFontSize(9);
+            paragraph.Add(text);
+            paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            document.Add(paragraph);
+            document.Close();
+            writer.Dispose();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));
         }

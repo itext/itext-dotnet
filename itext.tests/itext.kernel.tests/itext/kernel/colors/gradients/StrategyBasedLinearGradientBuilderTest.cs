@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -36,7 +36,7 @@ namespace iText.Kernel.Colors.Gradients {
     /// Tests related to stop colors work omitted here as they would be equivalent to tests in
     /// <see cref="LinearGradientBuilderTest"/>
     /// </remarks>
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class StrategyBasedLinearGradientBuilderTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/colors/gradients/StrategyBasedLinearGradientBuilderTest/";

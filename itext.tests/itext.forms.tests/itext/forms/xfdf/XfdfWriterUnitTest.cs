@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,7 +25,7 @@ using System.Xml;
 using iText.Test;
 
 namespace iText.Forms.Xfdf {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class XfdfWriterUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FieldEmptyValueUnitTest() {

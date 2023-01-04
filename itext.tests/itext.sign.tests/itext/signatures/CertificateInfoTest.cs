@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -27,7 +27,7 @@ using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Signatures {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CertificateInfoTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void X500InvalidDirectoryConstructorTest() {

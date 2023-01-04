@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -49,7 +49,7 @@ using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO.Font.Otf {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class GlyphLineTest : ExtendedITextTest {
         private static IList<Glyph> ConstructGlyphListFromString(String text, TrueTypeFont font) {
             IList<Glyph> glyphList = new List<Glyph>();

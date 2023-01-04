@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.Barcodes.Exceptions;
+using iText.IO.Codec;
+using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -52,7 +54,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Barcodes {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class BarcodePDF417Test : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/barcodes/";
@@ -355,6 +357,27 @@ namespace iText.Barcodes {
             barcodePDF417.SetLenCodewords(927);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => barcodePDF417.PaintCode());
             NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE, exception.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CcittImageFromBarcodeTest() {
+            String filename = "ccittImage01.pdf";
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            String text = "Call me Ishmael. Some years ago--never mind how long " + "precisely --having little or no money in my purse, and nothing "
+                 + "particular to interest me on shore, I thought I would sail about " + "a little and see the watery part of the world.";
+            BarcodePDF417 barcode = new BarcodePDF417();
+            barcode.SetCode(text);
+            barcode.PaintCode();
+            byte[] g4 = CCITTG4Encoder.Compress(barcode.GetOutBits(), barcode.GetBitColumns(), barcode.GetCodeRows());
+            ImageData img = ImageDataFactory.Create(barcode.GetBitColumns(), barcode.GetCodeRows(), false, RawImageData
+                .CCITTG4, 0, g4, null);
+            canvas.AddImageAt(img, 100, 100, false);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         private PdfFormXObject CreateMacroBarcodePart(PdfDocument document, String text, float mh, float mw, int segmentId

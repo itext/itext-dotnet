@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -319,17 +319,22 @@ namespace iText.Layout.Renderer {
                 }
                 MinMaxWidth childBlockMinMaxWidth = null;
                 bool isInlineBlockChild = IsInlineBlockChild(childRenderer);
-                if (!childWidthWasReplaced) {
-                    if (isInlineBlockChild && childRenderer is AbstractRenderer) {
-                        childBlockMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth();
-                        float childMaxWidth = childBlockMinMaxWidth.GetMaxWidth();
-                        float lineFullAvailableWidth = layoutContext.GetArea().GetBBox().GetWidth() - lineLayoutContext.GetTextIndent
-                            ();
-                        if (!noSoftWrap && childMaxWidth > bbox.GetWidth() + MIN_MAX_WIDTH_CORRECTION_EPS && bbox.GetWidth() != lineFullAvailableWidth
-                            ) {
-                            childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
-                        }
-                        else {
+                if (isInlineBlockChild && childRenderer is AbstractRenderer) {
+                    MinMaxWidth childBlockMinMaxWidthLocal = ((AbstractRenderer)childRenderer).GetMinMaxWidth();
+                    // Don't calculate childBlockMinMaxWidth in case of relative width here
+                    // and further (childBlockMinMaxWidth != null)
+                    if (!childWidthWasReplaced) {
+                        childBlockMinMaxWidth = childBlockMinMaxWidthLocal;
+                    }
+                    float childMaxWidth = childBlockMinMaxWidthLocal.GetMaxWidth();
+                    float lineFullAvailableWidth = layoutContext.GetArea().GetBBox().GetWidth() - lineLayoutContext.GetTextIndent
+                        ();
+                    if (!noSoftWrap && childMaxWidth > bbox.GetWidth() + MIN_MAX_WIDTH_CORRECTION_EPS && bbox.GetWidth() != lineFullAvailableWidth
+                        ) {
+                        childResult = new LineLayoutResult(LayoutResult.NOTHING, null, null, childRenderer, childRenderer);
+                    }
+                    else {
+                        if (childBlockMinMaxWidth != null) {
                             childMaxWidth += MIN_MAX_WIDTH_CORRECTION_EPS;
                             float inlineBlockWidth = Math.Min(childMaxWidth, lineFullAvailableWidth);
                             if (!IsOverflowFit(this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X))) {
@@ -344,6 +349,8 @@ namespace iText.Layout.Renderer {
                                 childRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
                             }
                         }
+                    }
+                    if (childBlockMinMaxWidth != null) {
                         childBlockMinMaxWidth.SetChildrenMaxWidth(childBlockMinMaxWidth.GetChildrenMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
                             );
                         childBlockMinMaxWidth.SetChildrenMinWidth(childBlockMinMaxWidth.GetChildrenMinWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
@@ -843,21 +850,12 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual LineRenderer AdjustChildrenYLine() {
-            float actualYLine = occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - maxAscent;
-            foreach (IRenderer renderer in GetChildRenderers()) {
-                if (FloatingHelper.IsRendererFloating(renderer)) {
-                    continue;
-                }
-                if (renderer is ILeafElementRenderer) {
-                    float descent = ((ILeafElementRenderer)renderer).GetDescent();
-                    renderer.Move(0, actualYLine - renderer.GetOccupiedArea().GetBBox().GetBottom() + descent);
-                }
-                else {
-                    float? yLine = IsInlineBlockChild(renderer) && renderer is AbstractRenderer ? ((AbstractRenderer)renderer)
-                        .GetLastYLineRecursively() : null;
-                    renderer.Move(0, actualYLine - (yLine == null ? renderer.GetOccupiedArea().GetBBox().GetBottom() : (float)
-                        yLine));
-                }
+            if (RenderingMode.HTML_MODE == this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) && HasInlineBlocksWithVerticalAlignment
+                ()) {
+                InlineVerticalAlignmentHelper.AdjustChildrenYLineHtmlMode(this);
+            }
+            else {
+                AdjustChildrenYLineDefaultMode();
             }
             return this;
         }
@@ -925,10 +923,11 @@ namespace iText.Layout.Renderer {
                         logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                             , Property.FONT_SIZE));
                     }
-                    // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending on the version,
-                    // the behavior id different. In one case, bottom leading indent is added for images, in the other it is not added.
-                    // This is why !containsImage() is present below. Depending on the presence of this !containsImage() condition, the behavior changes
-                    // between the two possible scenarios in HTML.
+                    // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending
+                    // on the version, the behavior is different. In one case, bottom leading indent is added for images,
+                    // in the other it is not added.
+                    // This is why !containsImage() is present below. Depending on the presence of
+                    // this !containsImage() condition, the behavior changes between the two possible scenarios in HTML.
                     float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && Math.Abs(maxAscent) + Math.Abs(maxDescent)
                          != 0 && !ContainsImage() ? fontSize.GetValue() * 0.8f : maxTextAscent;
                     float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && Math.Abs(maxAscent) + Math.Abs(maxDescent
@@ -956,10 +955,11 @@ namespace iText.Layout.Renderer {
                         logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                             , Property.FONT_SIZE));
                     }
-                    // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending on the version,
-                    // the behavior id different. In one case, bottom leading indent is added for images, in the other it is not added.
-                    // This is why !containsImage() is present below. Depending on the presence of this !containsImage() condition, the behavior changes
-                    // between the two possible scenarios in HTML.
+                    // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending
+                    // on the version, the behavior is different. In one case, bottom leading indent is added for images,
+                    // in the other it is not added.
+                    // This is why !containsImage() is present below. Depending on the presence of
+                    // this !containsImage() condition, the behavior changes between the two possible scenarios in HTML.
                     float textAscent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? fontSize.GetValue() * 0.8f
                          : maxTextAscent;
                     float textDescent = maxTextAscent == 0 && maxTextDescent == 0 && !ContainsImage() ? -fontSize.GetValue() *
@@ -1149,7 +1149,8 @@ namespace iText.Layout.Renderer {
         /// <remarks>
         /// Calculates and sets encountered tab size.
         /// Returns null, if processing is finished and layout can be performed for the tab renderer;
-        /// otherwise, in case when the tab should be processed after the next element in the line, this method returns corresponding tab stop.
+        /// otherwise, in case when the tab should be processed after the next element in the line,
+        /// this method returns corresponding tab stop.
         /// </remarks>
         private TabStop CalculateTab(IRenderer childRenderer, float curWidth, float lineWidth) {
             TabStop nextTabStop = GetNextTabStop(curWidth);
@@ -1574,7 +1575,8 @@ namespace iText.Layout.Renderer {
 
         private float DecreaseRelativeWidthByChildAdditionalWidth(IRenderer childRenderer, float normalizedChildWidth
             ) {
-            // Decrease the calculated width by margins, paddings and borders so that even for 100% width the content definitely fits.
+            // Decrease the calculated width by margins, paddings and borders so that
+            // even for 100% width the content definitely fits.
             if (childRenderer is AbstractRenderer) {
                 Rectangle dummyRect = new Rectangle(normalizedChildWidth, 0);
                 ((AbstractRenderer)childRenderer).ApplyMargins(dummyRect, false);
@@ -1585,6 +1587,35 @@ namespace iText.Layout.Renderer {
                 normalizedChildWidth = dummyRect.GetWidth();
             }
             return normalizedChildWidth;
+        }
+
+        private void AdjustChildrenYLineDefaultMode() {
+            float actualYLine = occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - maxAscent;
+            foreach (IRenderer renderer in GetChildRenderers()) {
+                if (FloatingHelper.IsRendererFloating(renderer)) {
+                    continue;
+                }
+                if (renderer is ILeafElementRenderer) {
+                    float descent = ((ILeafElementRenderer)renderer).GetDescent();
+                    renderer.Move(0, actualYLine - renderer.GetOccupiedArea().GetBBox().GetBottom() + descent);
+                }
+                else {
+                    float? yLine = IsInlineBlockChild(renderer) && renderer is AbstractRenderer ? ((AbstractRenderer)renderer)
+                        .GetLastYLineRecursively() : null;
+                    renderer.Move(0, actualYLine - (yLine == null ? renderer.GetOccupiedArea().GetBBox().GetBottom() : (float)
+                        yLine));
+                }
+            }
+        }
+
+        private bool HasInlineBlocksWithVerticalAlignment() {
+            foreach (IRenderer child in GetChildRenderers()) {
+                if (child.HasProperty(Property.INLINE_VERTICAL_ALIGNMENT) && InlineVerticalAlignmentType.BASELINE != ((InlineVerticalAlignment
+                    )child.GetProperty<InlineVerticalAlignment>(Property.INLINE_VERTICAL_ALIGNMENT)).GetType()) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public class RendererGlyph {

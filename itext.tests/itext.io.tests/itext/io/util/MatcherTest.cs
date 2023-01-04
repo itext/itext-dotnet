@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -30,7 +30,7 @@ namespace iText.IO.Util {
     /// At the moment there is no com.itextpdf.io.util.Matcher class in Java (as we use
     /// java.util.regex.Matcher), but there is one in C# that we are testing
     /// </summary>
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class MatcherTest : ExtendedITextTest {
         private const String PATTERN_STRING = "(a+)(b+)?";
 

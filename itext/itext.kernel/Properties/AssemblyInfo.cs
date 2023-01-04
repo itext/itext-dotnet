@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("iText Group NV")]
 [assembly: AssemblyProduct("iText")]
-[assembly: AssemblyCopyright("Copyright (c) 1998-2022 iText Group NV")]
+[assembly: AssemblyCopyright("Copyright (c) 1998-2023 iText Group NV")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("itext.kernel.tests,PublicKey=0024000004800000940000000602000000240000525" +
@@ -21,6 +21,6 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("be4c62cc-6495-47e1-ab00-05b1bfe331f6")]
 
-[assembly: AssemblyVersion("7.2.4.0")]
-[assembly: AssemblyFileVersion("7.2.4.0")]
-[assembly: AssemblyInformationalVersion("7.2.4")]
+[assembly: AssemblyVersion("7.2.5.0")]
+[assembly: AssemblyFileVersion("7.2.5.0")]
+[assembly: AssemblyInformationalVersion("7.2.5")]

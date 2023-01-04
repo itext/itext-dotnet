@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -274,7 +274,7 @@ namespace iText.Kernel.Pdf {
             }
             SerializedObjectContent serializedContent = null;
             if (properties.smartMode && tryToFindDuplicate && !CheckTypeOfPdfDictionary(obj, PdfName.Page) && !CheckTypeOfPdfDictionary
-                (obj, PdfName.OCG)) {
+                (obj, PdfName.OCG) && !CheckTypeOfPdfDictionary(obj, PdfName.OCMD)) {
                 serializedContent = smartModeSerializer.SerializeObject(obj);
                 PdfIndirectReference objectRef = smartModeSerializer.GetSavedSerializedObject(serializedContent);
                 if (objectRef != null) {

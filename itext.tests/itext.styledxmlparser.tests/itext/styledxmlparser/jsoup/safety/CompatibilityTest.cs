@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -36,7 +36,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     /// class source compatibility. Will be removed in
     /// <c>v.1.15.1</c>. No net new tests here so safe to blow up.
     /// </remarks>
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class CompatibilityTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ResolvesRelativeLinks() {

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -333,11 +333,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Gets the page by page number.</summary>
         /// <param name="pageNum">page number.</param>
-        /// <returns>
-        /// page by page number. may return
-        /// <see langword="null"/>
-        /// in case the page tree is broken
-        /// </returns>
+        /// <returns>page by page number.</returns>
         public virtual PdfPage GetPage(int pageNum) {
             CheckClosingStatus();
             return catalog.GetPageTree().GetPage(pageNum);

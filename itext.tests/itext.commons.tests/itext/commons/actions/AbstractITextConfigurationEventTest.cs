@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -29,7 +29,7 @@ using iText.Commons.Actions.Sequence;
 using iText.Test;
 
 namespace iText.Commons.Actions {
-    [NUnit.Framework.Category("Unit test")]
+    [NUnit.Framework.Category("UnitTest")]
     public class AbstractITextConfigurationEventTest : ExtendedITextTest {
         [NUnit.Framework.TearDown]
         public virtual void After() {

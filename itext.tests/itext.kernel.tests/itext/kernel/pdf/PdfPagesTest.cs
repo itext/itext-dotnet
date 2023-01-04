@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfPagesTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfPagesTest/";
@@ -660,8 +660,12 @@ namespace iText.Kernel.Pdf {
         }
 
         private static void FindAndAssertNullPages(PdfDocument pdfDocument, ICollection<int> nullPages) {
-            foreach (int? e in nullPages) {
-                NUnit.Framework.Assert.IsNull(pdfDocument.GetPage((int)e));
+            foreach (int? nullPage in nullPages) {
+                int pageNum = (int)nullPage;
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetPage(pageNum
+                    ));
+                NUnit.Framework.Assert.AreEqual(exception.Message, MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant
+                    .PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE, pageNum));
             }
         }
 

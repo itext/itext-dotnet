@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -347,6 +347,8 @@ namespace iText.Layout.Properties {
         public const int VERTICAL_ALIGNMENT = 75;
 
         public const int VERTICAL_BORDER_SPACING = 116;
+
+        public const int INLINE_VERTICAL_ALIGNMENT = 136;
 
         /// <summary>Value of 1 is equivalent to no scaling</summary>
         public const int VERTICAL_SCALING = 76;

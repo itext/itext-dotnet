@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -51,7 +51,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class PdfCanvasXObjectTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/PdfCanvasXObjectTest/";
@@ -126,7 +126,7 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Category("Unit test")]
+        [NUnit.Framework.Category("UnitTest")]
         public virtual void AddCustomXObjectAtTest() {
             PdfXObject pdfXObject = new PdfCanvasXObjectTest.CustomPdfXObject(new PdfStream());
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
@@ -394,7 +394,7 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Category("Unit test")]
+        [NUnit.Framework.Category("UnitTest")]
         public virtual void AddCustomXObjectFittedIntoRectangleTest() {
             PdfXObject pdfXObject = new PdfCanvasXObjectTest.CustomPdfXObject(new PdfStream());
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
@@ -506,7 +506,7 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Category("Unit test")]
+        [NUnit.Framework.Category("UnitTest")]
         public virtual void AddCustomXObjectTest() {
             PdfXObject pdfXObject = new PdfCanvasXObjectTest.CustomPdfXObject(new PdfStream());
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));

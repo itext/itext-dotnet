@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -180,11 +180,19 @@ namespace iText.Layout.Renderer {
             // indicates whether the placement is forced
             bool isPlacingForced = false;
             if (width > layoutBox.GetWidth() + EPS || height > layoutBox.GetHeight() + EPS) {
-                if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || (width > layoutBox.GetWidth() && processOverflowX
-                    ) || (height > layoutBox.GetHeight() && processOverflowY)) {
+                if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                     isPlacingForced = true;
                 }
                 else {
+                    isPlacingForced = true;
+                    if (width > layoutBox.GetWidth() + EPS) {
+                        isPlacingForced &= processOverflowX;
+                    }
+                    if (height > layoutBox.GetHeight() + EPS) {
+                        isPlacingForced &= processOverflowY;
+                    }
+                }
+                if (!isPlacingForced) {
                     ApplyMargins(initialOccupiedAreaBBox, true);
                     ApplyBorderBox(initialOccupiedAreaBBox, true);
                     occupiedArea.GetBBox().SetHeight(initialOccupiedAreaBBox.GetHeight());
