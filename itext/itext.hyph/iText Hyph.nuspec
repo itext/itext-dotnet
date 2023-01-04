@@ -13,7 +13,7 @@
     <description>XML files that can be used for hyphenation with iText 7, an open source PDF library</description>
     <summary />
     <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
-    <copyright>Copyright (c) 1998-2022 iText Group NV</copyright>
+    <copyright>Copyright (c) 1998-2023 iText Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf hyphenation hyph</tags>
   </metadata>
