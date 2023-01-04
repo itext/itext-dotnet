@@ -76,6 +76,13 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        public virtual void NotAvailableSignatureTest() {
+            String hashAlgorithm = "GOST3411";
+            // Throws different exceptions on .net and java, bc/bcfips
+            NUnit.Framework.Assert.Catch(typeof(Exception), () => new PdfPKCS7(pk, chain, hashAlgorithm, false));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ReasonSetGetTest() {
             PdfPKCS7 pkcs7 = CreateSimplePdfPKCS7();
             NUnit.Framework.Assert.IsNull(pkcs7.GetReason());
