@@ -58,7 +58,7 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual(expectedOid, pkcs7.GetDigestAlgorithmOid());
             NUnit.Framework.Assert.AreEqual(chain[0], pkcs7.GetSigningCertificate());
             NUnit.Framework.Assert.AreEqual(chain, pkcs7.GetCertificates());
-            NUnit.Framework.Assert.IsNull(pkcs7.GetDigestEncryptionAlgorithmOid());
+            NUnit.Framework.Assert.IsNull(pkcs7.GetSignatureMechanismOid());
             // test default fields
             NUnit.Framework.Assert.AreEqual(1, pkcs7.GetVersion());
             NUnit.Framework.Assert.AreEqual(1, pkcs7.GetSigningInfoVersion());
@@ -72,7 +72,7 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual(expectedOid, pkcs7.GetDigestAlgorithmOid());
             NUnit.Framework.Assert.AreEqual(chain[0], pkcs7.GetSigningCertificate());
             NUnit.Framework.Assert.AreEqual(chain, pkcs7.GetCertificates());
-            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_RSA_WITH_SHA256, pkcs7.GetDigestEncryptionAlgorithmOid());
+            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_RSA_WITH_SHA256, pkcs7.GetSignatureMechanismOid());
         }
 
         [NUnit.Framework.Test]
@@ -266,7 +266,7 @@ namespace iText.Signatures {
             byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "cmpBytesPkcs7.txt"));
             IASN1Primitive outStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(bytes);
             IASN1Primitive cmpStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(cmpBytes);
-            NUnit.Framework.Assert.AreEqual("SHA256withRSA", pkcs7.GetDigestAlgorithm());
+            NUnit.Framework.Assert.AreEqual("SHA256withRSA", pkcs7.GetSignatureMechanismName());
             NUnit.Framework.Assert.AreEqual(outStream, cmpStream);
         }
 

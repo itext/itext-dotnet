@@ -53,7 +53,7 @@ namespace iText.Signatures {
             chain = PemFileHelper.ReadFirstChain(CERTS_SRC + "signCertRsa01.pem");
         }
 
-        internal static void VerifyIsoExtensionExample(String expectedSigAlgo, String fileName) {
+        internal static void VerifyIsoExtensionExample(String expectedSigMechanismName, String fileName) {
             String infile = SOURCE_FOLDER + "extensions/" + fileName;
             using (PdfReader r = new PdfReader(infile)) {
                 using (PdfDocument pdfDoc = new PdfDocument(r)) {
@@ -66,7 +66,7 @@ namespace iText.Signatures {
                     it causes a runtime error.
                     */
                     PdfPKCS7 data = u.ReadSignatureData("Signature");
-                    NUnit.Framework.Assert.AreEqual(expectedSigAlgo, data.GetDigestAlgorithm());
+                    NUnit.Framework.Assert.AreEqual(expectedSigMechanismName, data.GetSignatureMechanismName());
                     NUnit.Framework.Assert.IsTrue(data.VerifySignatureIntegrityAndAuthenticity());
                 }
             }

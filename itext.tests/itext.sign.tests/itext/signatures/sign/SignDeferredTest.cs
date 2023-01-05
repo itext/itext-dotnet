@@ -241,7 +241,7 @@ namespace iText.Signatures.Sign {
                     null);
                 PrivateKeySignature signature = new PrivateKeySignature(pk, HASH_ALGORITHM);
                 byte[] attrSign = signature.Sign(attributes);
-                pkcs7.SetExternalDigest(attrSign, null, signature.GetEncryptionAlgorithm());
+                pkcs7.SetExternalSignatureValue(attrSign, null, signature.GetSignatureAlgorithmName());
                 signatureContent = pkcs7.GetEncodedPKCS7(docBytesHash);
             }
             catch (AbstractGeneralSecurityException) {

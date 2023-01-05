@@ -26,13 +26,13 @@ using iText.Test;
 
 namespace iText.Signatures
 {
-    public class EncryptionAlgorithmsManualTest : ExtendedITextTest
+    public class SignatureMechanismsManualTest : ExtendedITextTest
     {
         [NUnit.Framework.Test]
         public virtual void GetAlgorithmNullTest()
         {
             NUnit.Framework.Assert.Catch(typeof(ArgumentNullException),
-                () => EncryptionAlgorithms.GetAlgorithm(null));
+                () => SignatureMechanisms.GetAlgorithm(null));
         }
     }
 }

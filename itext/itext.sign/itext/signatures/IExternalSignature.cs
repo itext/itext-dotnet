@@ -52,20 +52,13 @@ namespace iText.Signatures {
     /// </remarks>
     /// <author>Paulo Soares</author>
     public interface IExternalSignature {
-        /// <summary>Returns the hash algorithm.</summary>
-        /// <returns>The hash algorithm (e.g. "SHA-1", "SHA-256,...").</returns>
-        String GetHashAlgorithm();
+        /// <summary>Returns the digest algorithm.</summary>
+        /// <returns>The digest algorithm (e.g. "SHA-1", "SHA-256,...").</returns>
+        String GetDigestAlgorithmName();
 
-        /// <summary>Returns the signature algorithm used for signing.</summary>
-        /// <remarks>
-        /// Returns the signature algorithm used for signing.
-        /// <para />
-        /// This method is named
-        /// <c>getEncryptionAlgorithm</c>
-        /// for historical reasons.
-        /// </remarks>
-        /// <returns>The encryption algorithm ("RSA", "DSA", "ECDSA", "Ed25519" or "Ed448").</returns>
-        String GetEncryptionAlgorithm();
+        /// <summary>Returns the signature algorithm used for signing, disregarding the digest function.</summary>
+        /// <returns>The signature algorithm ("RSA", "DSA", "ECDSA", "Ed25519" or "Ed448").</returns>
+        String GetSignatureAlgorithmName();
 
         /// <summary>
         /// Signs the given message using the encryption algorithm in combination

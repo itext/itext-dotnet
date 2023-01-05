@@ -118,17 +118,17 @@ namespace iText.Signatures {
             // find the signing algorithm
             if (privKey != null) {
                 String signatureAlgo = SignUtils.GetPrivateKeyAlgorithm(privKey);
-                String mechanismOid = EncryptionAlgorithms.GetSignatureMechanismOid(signatureAlgo, hashAlgorithm);
+                String mechanismOid = SignatureMechanisms.GetSignatureMechanismOid(signatureAlgo, hashAlgorithm);
                 if (mechanismOid == null) {
                     throw new PdfException(SignExceptionMessageConstant.COULD_NOT_DETERMINE_SIGNATURE_MECHANISM_OID).SetMessageParams
                         (signatureAlgo, hashAlgorithm);
                 }
-                this.signatureAlgorithmOid = mechanismOid;
+                this.signatureMechanismOid = mechanismOid;
             }
             // initialize the encapsulated content
             if (hasEncapContent) {
                 encapMessageContent = new byte[0];
-                messageDigest = DigestAlgorithms.GetMessageDigest(GetHashAlgorithm());
+                messageDigest = DigestAlgorithms.GetMessageDigest(GetDigestAlgorithmName());
             }
             // initialize the Signature object
             if (privKey != null) {
@@ -154,7 +154,7 @@ namespace iText.Signatures {
                 sig.InitVerify(signCert.GetPublicKey());
                 // setting the oid to SHA1withRSA
                 digestAlgorithmOid = "1.2.840.10040.4.3";
-                signatureAlgorithmOid = "1.3.36.3.3.1.2";
+                signatureMechanismOid = "1.3.36.3.3.1.2";
             }
             catch (Exception e) {
                 throw new PdfException(e);
@@ -331,7 +331,7 @@ namespace iText.Signatures {
                 if (isCades && !foundCades) {
                     throw new ArgumentException("CAdES ESS information missing.");
                 }
-                signatureAlgorithmOid = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(BOUNCY_CASTLE_FACTORY.CreateASN1Sequence
+                signatureMechanismOid = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(BOUNCY_CASTLE_FACTORY.CreateASN1Sequence
                     (signerInfo.GetObjectAt(next)).GetObjectAt(0)).GetId();
                 ++next;
                 signatureValue = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(signerInfo.GetObjectAt(next)).GetOctets();
@@ -365,9 +365,9 @@ namespace iText.Signatures {
                             messageDigest = DigestAlgorithms.GetMessageDigest("SHA1");
                         }
                         else {
-                            messageDigest = DigestAlgorithms.GetMessageDigest(GetHashAlgorithm());
+                            messageDigest = DigestAlgorithms.GetMessageDigest(GetDigestAlgorithmName());
                         }
-                        encContDigest = DigestAlgorithms.GetMessageDigest(GetHashAlgorithm());
+                        encContDigest = DigestAlgorithms.GetMessageDigest(GetDigestAlgorithmName());
                     }
                     sig = InitSignature(signCert.GetPublicKey());
                 }
@@ -474,7 +474,7 @@ namespace iText.Signatures {
         private PdfName filterSubtype;
 
         /// <summary>The signature algorithm.</summary>
-        private String signatureAlgorithmOid;
+        private String signatureMechanismOid;
 
         /// <summary>Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".</summary>
         /// <remarks>
@@ -488,19 +488,19 @@ namespace iText.Signatures {
 
         /// <summary>Returns the name of the digest algorithm, e.g. "SHA256".</summary>
         /// <returns>the digest algorithm name, e.g. "SHA256"</returns>
-        public virtual String GetHashAlgorithm() {
+        public virtual String GetDigestAlgorithmName() {
             String hashAlgoName = DigestAlgorithms.GetDigest(digestAlgorithmOid);
             // Ed25519 and Ed448 do not allow a choice of hashing algorithm,
             // and ISO 32002 requires using a fixed hashing algorithm to
             // digest the document content
-            if (SecurityIDs.ID_ED25519.Equals(this.signatureAlgorithmOid) && !SecurityIDs.ID_SHA512.Equals(digestAlgorithmOid
+            if (SecurityIDs.ID_ED25519.Equals(this.signatureMechanismOid) && !SecurityIDs.ID_SHA512.Equals(digestAlgorithmOid
                 )) {
                 // We compare based on OID to ensure that there are no name normalisation issues.
                 throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed25519"
                     , "SHA-512", hashAlgoName);
             }
             else {
-                if (SecurityIDs.ID_ED448.Equals(this.signatureAlgorithmOid) && !SecurityIDs.ID_SHAKE256.Equals(digestAlgorithmOid
+                if (SecurityIDs.ID_ED448.Equals(this.signatureMechanismOid) && !SecurityIDs.ID_SHAKE256.Equals(digestAlgorithmOid
                     )) {
                     throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed448", 
                         "512-bit SHAKE256", hashAlgoName);
@@ -513,14 +513,10 @@ namespace iText.Signatures {
         /// <remarks>
         /// Getter for the signature algorithm OID.
         /// See ISO-32000-1, section 12.8.3.3 PKCS#7 Signatures as used in ISO 32000
-        /// <para />
-        /// This method is named
-        /// <c>getDigestEncryptionAlgorithmOid</c>
-        /// for historical reasons.
         /// </remarks>
         /// <returns>the signature algorithm OID</returns>
-        public virtual String GetDigestEncryptionAlgorithmOid() {
-            return signatureAlgorithmOid;
+        public virtual String GetSignatureMechanismOid() {
+            return signatureMechanismOid;
         }
 
         /// <summary>
@@ -531,15 +527,11 @@ namespace iText.Signatures {
         /// Get the signature mechanism identifier, including both the digest function
         /// and the signature algorithm, e.g. "SHA1withRSA".
         /// See ISO-32000-1, section 12.8.3.3 PKCS#7 Signatures as used in ISO 32000
-        /// <para />
-        /// This method is named
-        /// <c>getDigestAlgorithm</c>
-        /// for historical reasons.
         /// </remarks>
         /// <returns>the algorithm used to calculate the signature</returns>
-        public virtual String GetDigestAlgorithm() {
+        public virtual String GetSignatureMechanismName() {
             // Ed25519 and Ed448 do not involve a choice of hashing algorithm
-            switch (signatureAlgorithmOid) {
+            switch (signatureMechanismOid) {
                 case SecurityIDs.ID_ED25519: {
                     return "Ed25519";
                 }
@@ -549,9 +541,19 @@ namespace iText.Signatures {
                 }
 
                 default: {
-                    return GetHashAlgorithm() + "with" + GetEncryptionAlgorithm();
+                    return GetDigestAlgorithmName() + "with" + GetSignatureAlgorithmName();
                 }
             }
+        }
+
+        /// <summary>Returns the name of the signature algorithm only (disregarding the digest function, if any).</summary>
+        /// <returns>the name of an encryption algorithm</returns>
+        public virtual String GetSignatureAlgorithmName() {
+            String signAlgo = SignatureMechanisms.GetAlgorithm(signatureMechanismOid);
+            if (signAlgo == null) {
+                signAlgo = signatureMechanismOid;
+            }
+            return signAlgo;
         }
 
         /*
@@ -565,13 +567,6 @@ namespace iText.Signatures {
         private byte[] externalEncapMessageContent;
 
         /// <summary>Sets the signature to an externally calculated value.</summary>
-        /// <remarks>
-        /// Sets the signature to an externally calculated value.
-        /// <para />
-        /// This method is named
-        /// <c>setExternalDigest</c>
-        /// for historical reasons.
-        /// </remarks>
         /// <param name="signatureValue">the signature value</param>
         /// <param name="signedMessageContent">the extra data that goes into the data tag in PKCS#7</param>
         /// <param name="signatureAlgorithm">
@@ -580,18 +575,18 @@ namespace iText.Signatures {
         /// If the <c>signatureValue</c> is not <c>null</c>,
         /// possible values include "RSA", "DSA", "ECDSA", "Ed25519" and "Ed448".
         /// </param>
-        public virtual void SetExternalDigest(byte[] signatureValue, byte[] signedMessageContent, String signatureAlgorithm
+        public virtual void SetExternalSignatureValue(byte[] signatureValue, byte[] signedMessageContent, String signatureAlgorithm
             ) {
             externalSignatureValue = signatureValue;
             externalEncapMessageContent = signedMessageContent;
             if (signatureAlgorithm != null) {
-                String digestAlgo = this.GetHashAlgorithm();
-                String oid = EncryptionAlgorithms.GetSignatureMechanismOid(signatureAlgorithm, digestAlgo);
+                String digestAlgo = this.GetDigestAlgorithmName();
+                String oid = SignatureMechanisms.GetSignatureMechanismOid(signatureAlgorithm, digestAlgo);
                 if (oid == null) {
                     throw new PdfException(SignExceptionMessageConstant.COULD_NOT_DETERMINE_SIGNATURE_MECHANISM_OID).SetMessageParams
                         (signatureAlgorithm, digestAlgo);
                 }
-                this.signatureAlgorithmOid = oid;
+                this.signatureMechanismOid = oid;
             }
         }
 
@@ -607,7 +602,7 @@ namespace iText.Signatures {
 
         // Signing functionality.
         private IISigner InitSignature(IPrivateKey key) {
-            IISigner signature = SignUtils.GetSignatureHelper(GetDigestAlgorithm());
+            IISigner signature = SignUtils.GetSignatureHelper(GetSignatureMechanismName());
             signature.InitSign(key);
             return signature;
         }
@@ -618,7 +613,7 @@ namespace iText.Signatures {
                 signatureMechanism = "SHA1withRSA";
             }
             else {
-                signatureMechanism = GetDigestAlgorithm();
+                signatureMechanism = GetSignatureMechanismName();
             }
             IISigner signature = SignUtils.GetSignatureHelper(signatureMechanism);
             signature.InitVerify(key);
@@ -774,7 +769,7 @@ namespace iText.Signatures {
                 }
                 // Add the digestEncryptionAlgorithm
                 v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
-                v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(signatureAlgorithmOid));
+                v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(signatureMechanismOid));
                 v.Add(BOUNCY_CASTLE_FACTORY.CreateDERNull());
                 signerinfo.Add(BOUNCY_CASTLE_FACTORY.CreateDERSequence(v));
                 // Add the digest
@@ -982,7 +977,7 @@ namespace iText.Signatures {
                     IAlgorithmIdentifier algoId = BOUNCY_CASTLE_FACTORY.CreateAlgorithmIdentifier(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
                         (digestAlgorithmOid));
                     aaV2.Add(algoId);
-                    IIDigest md = SignUtils.GetMessageDigest(GetHashAlgorithm());
+                    IIDigest md = SignUtils.GetMessageDigest(GetDigestAlgorithmName());
                     byte[] dig = md.Digest(signCert.GetEncoded());
                     aaV2.Add(BOUNCY_CASTLE_FACTORY.CreateDEROctetString(dig));
                     v.Add(BOUNCY_CASTLE_FACTORY.CreateDERSet(BOUNCY_CASTLE_FACTORY.CreateDERSequence(BOUNCY_CASTLE_FACTORY.CreateDERSequence
@@ -1313,16 +1308,6 @@ namespace iText.Signatures {
         /// <returns>the filter subtype</returns>
         public virtual PdfName GetFilterSubtype() {
             return filterSubtype;
-        }
-
-        /// <summary>Returns the encryption algorithm</summary>
-        /// <returns>the name of an encryption algorithm</returns>
-        public virtual String GetEncryptionAlgorithm() {
-            String encryptAlgo = EncryptionAlgorithms.GetAlgorithm(signatureAlgorithmOid);
-            if (encryptAlgo == null) {
-                encryptAlgo = signatureAlgorithmOid;
-            }
-            return encryptAlgo;
         }
     }
 }

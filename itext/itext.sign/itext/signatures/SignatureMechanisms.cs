@@ -45,15 +45,12 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.Signatures {
-    /// <summary>Class that contains a map with the different signature algorithms.</summary>
-    /// <remarks>
-    /// Class that contains a map with the different signature algorithms.
-    /// <para />
-    /// This class is named
-    /// <c>EncryptionAlgorithms</c>
-    /// for historical reasons
-    /// </remarks>
-    public class EncryptionAlgorithms {
+    /// <summary>
+    /// Class that contains OID mappings to extract a signature algorithm name
+    /// from a signature mechanism OID, and conversely, to retrieve the appropriate
+    /// signature mechanism OID given a signature algorithm and a digest function.
+    /// </summary>
+    public class SignatureMechanisms {
         /// <summary>Maps IDs of signature algorithms with its human-readable name.</summary>
         internal static readonly IDictionary<String, String> algorithmNames = new Dictionary<String, String>();
 
@@ -63,7 +60,7 @@ namespace iText.Signatures {
 
         internal static readonly IDictionary<String, String> ecdsaOidsByDigest = new Dictionary<String, String>();
 
-        static EncryptionAlgorithms() {
+        static SignatureMechanisms() {
             algorithmNames.Put("1.2.840.113549.1.1.1", "RSA");
             algorithmNames.Put("1.2.840.10040.4.1", "DSA");
             algorithmNames.Put("1.2.840.113549.1.1.2", "RSA");

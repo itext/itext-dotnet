@@ -108,32 +108,32 @@ namespace iText.Signatures {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual String GetHashAlgorithm() {
+        public virtual String GetDigestAlgorithmName() {
             return hashAlgorithm;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual String GetEncryptionAlgorithm() {
+        public virtual String GetSignatureAlgorithmName() {
             return signatureAlgorithm;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual byte[] Sign(byte[] message) {
-            String algorithm = GetSignatureMechanism();
+            String algorithm = GetSignatureMechanismName();
             IISigner sig = SignUtils.GetSignatureHelper(algorithm);
             sig.InitSign(pk);
             sig.Update(message);
             return sig.GenerateSignature();
         }
 
-        private String GetSignatureMechanism() {
-            String signatureAlgo = this.GetEncryptionAlgorithm();
+        private String GetSignatureMechanismName() {
+            String signatureAlgo = this.GetSignatureAlgorithmName();
             // Ed25519 and Ed448 do not involve a choice of hashing algorithm
             if ("Ed25519".Equals(signatureAlgo) || "Ed448".Equals(signatureAlgo)) {
                 return signatureAlgo;
             }
             else {
-                return GetHashAlgorithm() + "with" + GetEncryptionAlgorithm();
+                return GetDigestAlgorithmName() + "with" + GetSignatureAlgorithmName();
             }
         }
     }

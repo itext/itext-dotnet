@@ -269,7 +269,7 @@ namespace iText.Signatures.Sign {
                     PdfPKCS7 data = u.ReadSignatureData(SIGNATURE_FIELD);
                     NUnit.Framework.Assert.IsTrue(data.VerifySignatureIntegrityAndAuthenticity());
                     if (expectedSigAlgoIdentifier != null) {
-                        DerObjectIdentifier oid = new DerObjectIdentifier(data.GetDigestEncryptionAlgorithmOid());
+                        DerObjectIdentifier oid = new DerObjectIdentifier(data.GetSignatureMechanismOid());
                         NUnit.Framework.Assert.AreEqual(expectedSigAlgoIdentifier, oid);
                     }
                 }
