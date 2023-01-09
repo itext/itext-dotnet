@@ -74,6 +74,10 @@ using iText.Kernel.XMP.Options;
 namespace iText.Kernel.Pdf {
     /// <summary>Main enter point to work with PDF document.</summary>
     public class PdfDocument : IEventDispatcher, IDisposable {
+        //
+        private static readonly PdfName[] PDF_NAMES_TO_REMOVE_FROM_ORIGINAL_TRAILER = new PdfName[] { PdfName.Encrypt
+            , PdfName.Size, PdfName.Prev, PdfName.Root, PdfName.Info, PdfName.ID, PdfName.XRefStm };
+
         private static readonly IPdfPageFactory pdfPageFactory = new PdfPageFactory();
 
         protected internal readonly StampingProperties properties;
@@ -2097,8 +2101,12 @@ namespace iText.Kernel.Pdf {
                         trailer = new PdfDictionary();
                     }
                     // We keep the original trailer of the document to preserve the original document keys,
-                    // but we have to remove the Encrypt key because it will be recalculated later if needed
-                    trailer.Remove(PdfName.Encrypt);
+                    // but we have to remove all standard keys that can occur in the trailer to avoid invalid pdfs
+                    if (trailer.Size() > 0) {
+                        foreach (PdfName key in iText.Kernel.Pdf.PdfDocument.PDF_NAMES_TO_REMOVE_FROM_ORIGINAL_TRAILER) {
+                            trailer.Remove(key);
+                        }
+                    }
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
                     trailer.Put(PdfName.Info, GetDocumentInfo().GetPdfObject().GetIndirectReference());
                     if (reader != null) {

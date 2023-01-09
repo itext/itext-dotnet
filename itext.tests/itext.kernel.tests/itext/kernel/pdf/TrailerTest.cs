@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Actions.Data;
 using iText.Commons.Utils;
@@ -125,6 +126,36 @@ namespace iText.Kernel.Pdf {
                 stampingDocument.Close();
                 NUnit.Framework.Assert.IsTrue(keyPresent);
                 NUnit.Framework.Assert.AreEqual(expectedValue, actualValue);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExistingTrailerValuesWithStandardizedNameTest() {
+            MemoryStream baos = new MemoryStream();
+            Dictionary<PdfName, PdfName> standardizedNames = new Dictionary<PdfName, PdfName>();
+            //some standardized names to put in the trailer, but they may not be removed
+            standardizedNames.Put(PdfName.Color, new PdfName("brown"));
+            standardizedNames.Put(PdfName.BaseFont, new PdfName("CustomFont"));
+            standardizedNames.Put(PdfName.Pdf_Version_1_6, new PdfName("1.6"));
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                foreach (KeyValuePair<PdfName, PdfName> entry in standardizedNames) {
+                    PdfName pdfName = entry.Key;
+                    PdfName s = entry.Value;
+                    pdfDocument.GetTrailer().Put(pdfName, s);
+                }
+            }
+            using (PdfDocument stampingDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new 
+                PdfWriter(new MemoryStream()))) {
+                PdfDictionary trailer = stampingDocument.GetTrailer();
+                foreach (KeyValuePair<PdfName, PdfName> entry in standardizedNames) {
+                    PdfName pdfName = entry.Key;
+                    PdfName pdfName2 = entry.Value;
+                    bool keyPresent = trailer.ContainsKey(pdfName);
+                    PdfName actualValue = trailer.GetAsName(pdfName);
+                    NUnit.Framework.Assert.IsTrue(keyPresent);
+                    NUnit.Framework.Assert.AreEqual(pdfName2, actualValue);
+                }
+                stampingDocument.Close();
             }
         }
 

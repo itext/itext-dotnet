@@ -404,9 +404,6 @@ namespace iText.Kernel.Pdf {
                     PdfNumber lastXref = new PdfNumber(document.reader.GetLastXref());
                     trailer.Put(PdfName.Prev, lastXref);
                 }
-                else {
-                    trailer.Remove(PdfName.Prev);
-                }
                 writer.Write(document.GetTrailer());
                 writer.Write('\n');
             }
