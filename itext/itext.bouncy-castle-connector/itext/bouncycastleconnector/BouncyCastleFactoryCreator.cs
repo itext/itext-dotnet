@@ -70,6 +70,7 @@ namespace iText.Bouncycastleconnector {
             }
             if (factory == null) {
                 LOGGER.LogError(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+                factory = new BouncyCastleDefaultFactory();
             }
         }
 
