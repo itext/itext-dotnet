@@ -66,18 +66,6 @@ namespace iText.StyledXmlParser.Util {
                     styles.Put(styleProperty, parentPropValue);
                 }
             }
-            else {
-                if (CommonCssConstants.TEXT_DECORATION_LINE.Equals(styleProperty) && !CommonCssConstants.INLINE_BLOCK.Equals
-                    (styles.Get(CommonCssConstants.DISPLAY))) {
-                    // Note! This property is formally not inherited, but the browsers behave very similar to inheritance here.
-                    // Text decorations on inline boxes are drawn across the entire element,
-                    // going across any descendant elements without paying any attention to their presence.
-                    // Also, when, for example, parent element has text-decoration:underline, and the child text-decoration:overline,
-                    // then the text in the child will be both overline and underline. This is why the declarations are merged
-                    // See TextDecorationTest#textDecoration01Test
-                    styles.Put(styleProperty, CssPropertyMerger.MergeTextDecoration(childPropValue, parentPropValue));
-                }
-            }
             return styles;
         }
 
