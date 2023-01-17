@@ -1,7 +1,7 @@
 /*
 *
 * This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 * Authors: Bruno Lowagie, Paulo Soares, et al.
 *
 * This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,8 @@ Copyright (c) 1998-2022 iText Group NV
 */
 using System;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Kernel.Exceptions;
+using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>
@@ -56,13 +58,13 @@ namespace iText.Signatures {
     /// <author>Paulo Soares</author>
     public class PrivateKeySignature : IExternalSignature {
         /// <summary>The private key object.</summary>
-        private IPrivateKey pk;
+        private readonly IPrivateKey pk;
 
         /// <summary>The hash algorithm.</summary>
-        private String hashAlgorithm;
+        private readonly String hashAlgorithm;
 
         /// <summary>The encryption algorithm (obtained from the private key)</summary>
-        private String encryptionAlgorithm;
+        private readonly String signatureAlgorithm;
 
         /// <summary>
         /// Creates a
@@ -78,27 +80,61 @@ namespace iText.Signatures {
         /// <param name="provider">A security provider (e.g. "BC").</param>
         public PrivateKeySignature(IPrivateKey pk, String hashAlgorithm) {
             this.pk = pk;
-            this.hashAlgorithm = DigestAlgorithms.GetDigest(DigestAlgorithms.GetAllowedDigest(hashAlgorithm));
-            this.encryptionAlgorithm = SignUtils.GetPrivateKeyAlgorithm(pk);
+            String digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
+            this.hashAlgorithm = DigestAlgorithms.GetDigest(digestAlgorithmOid);
+            this.signatureAlgorithm = SignUtils.GetPrivateKeyAlgorithm(pk);
+            switch (this.signatureAlgorithm) {
+                case "Ed25519": {
+                    if (!SecurityIDs.ID_SHA512.Equals(digestAlgorithmOid)) {
+                        throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed25519"
+                            , "SHA-512", this.hashAlgorithm);
+                    }
+                    break;
+                }
+
+                case "Ed448": {
+                    if (!SecurityIDs.ID_SHAKE256.Equals(digestAlgorithmOid)) {
+                        throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed448", 
+                            "512-bit SHAKE256", this.hashAlgorithm);
+                    }
+                    break;
+                }
+
+                case "EdDSA": {
+                    throw new ArgumentException("Key algorithm of EdDSA PrivateKey instance provided by " + pk.GetType() + " is not clear. Expected Ed25519 or Ed448, but got EdDSA. "
+                         + "Try a different security provider.");
+                }
+            }
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual String GetHashAlgorithm() {
+        public virtual String GetDigestAlgorithmName() {
             return hashAlgorithm;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual String GetEncryptionAlgorithm() {
-            return encryptionAlgorithm;
+        public virtual String GetSignatureAlgorithmName() {
+            return signatureAlgorithm;
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual byte[] Sign(byte[] message) {
-            String algorithm = hashAlgorithm + "with" + encryptionAlgorithm;
+            String algorithm = GetSignatureMechanismName();
             IISigner sig = SignUtils.GetSignatureHelper(algorithm);
             sig.InitSign(pk);
             sig.Update(message);
             return sig.GenerateSignature();
+        }
+
+        private String GetSignatureMechanismName() {
+            String signatureAlgo = this.GetSignatureAlgorithmName();
+            // Ed25519 and Ed448 do not involve a choice of hashing algorithm
+            if ("Ed25519".Equals(signatureAlgo) || "Ed448".Equals(signatureAlgo)) {
+                return signatureAlgo;
+            }
+            else {
+                return GetDigestAlgorithmName() + "with" + GetSignatureAlgorithmName();
+            }
         }
     }
 }

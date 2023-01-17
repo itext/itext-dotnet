@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -241,7 +241,7 @@ namespace iText.Signatures.Sign {
                     null);
                 PrivateKeySignature signature = new PrivateKeySignature(pk, HASH_ALGORITHM);
                 byte[] attrSign = signature.Sign(attributes);
-                pkcs7.SetExternalDigest(attrSign, null, signature.GetEncryptionAlgorithm());
+                pkcs7.SetExternalSignatureValue(attrSign, null, signature.GetSignatureAlgorithmName());
                 signatureContent = pkcs7.GetEncodedPKCS7(docBytesHash);
             }
             catch (AbstractGeneralSecurityException) {

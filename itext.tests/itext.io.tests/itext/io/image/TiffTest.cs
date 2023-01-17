@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -118,20 +118,38 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void Group3CompressionCreateTiffImageTest() {
-            // TODO: DEVSIX-5565 (update test when support for T4 compression tiff image will be realized)
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
-                .CreateTiff(UrlUtil.ToURL(SOURCE_FOLDER + "group3CompressionImage.tif"), false, 1, false));
+            String sourceFile = SOURCE_FOLDER + "group3CompressionImage.tif";
+            CreateTiff(sourceFile, 1, 1024D, 768D);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Group3CompressionBECreateTiffImageTest() {
+            String sourceFile = SOURCE_FOLDER + "group3CompressionImageBE.tif";
+            CreateTiff(sourceFile, 1, 1024D, 768D);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Group3Compression2DCreateTiffImageTest() {
+            String sourceFile = SOURCE_FOLDER + "group3CompressionImage2d.tif";
+            CreateTiff(sourceFile, 1, 1024D, 768D);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Group3CompressionEolErrorCreateTiffImageTest() {
+            String sourceFile = SOURCE_FOLDER + "group3CompressionImageWithEolError.tif";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => CreateTiff(sourceFile
+                , 1, 1024D, 768D));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage
                 ), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void Group3CompressionCreateImageDataTest() {
-            // TODO: DEVSIX-5565 (update test when support for T4 compression tiff image will be realized)
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
-                .Create(UrlUtil.ToURL(SOURCE_FOLDER + "group3CompressionImage.tif")));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage
-                ), e.Message);
+            String sourceFile = SOURCE_FOLDER + "group3CompressionImage.tif";
+            ImageData img = ImageDataFactory.Create(UrlUtil.ToURL(SOURCE_FOLDER + "group3CompressionImage.tif"));
+            NUnit.Framework.Assert.AreEqual(1024, img.GetWidth(), 0);
+            NUnit.Framework.Assert.AreEqual(768, img.GetHeight(), 0);
+            NUnit.Framework.Assert.AreEqual(1, img.GetBpc());
         }
 
         [NUnit.Framework.Test]
@@ -172,7 +190,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void AdobeDeflateComp16BitMinIsBlackCreateTiffTest() {
-            // TODO: DEVSIX-5565 (update test when support for adobeDeflate compression tiff image will be realized)
+            // TODO: DEVSIX-5791 (update test when support for adobeDeflate compression tiff image will be realized)
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
                 .CreateTiff(UrlUtil.ToURL(SOURCE_FOLDER + "adobeDeflateCompression16BitMinIsBlack.tif"), false, 1, false
                 ));
@@ -182,7 +200,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void AdobeDeflateComp16BitMinIsBlackCreateImageTest() {
-            // TODO: DEVSIX-5565 (update test when support for adobeDeflate compression tiff image will be realized)
+            // TODO: DEVSIX-5791 (update test when support for adobeDeflate compression tiff image will be realized)
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
                 .Create(UrlUtil.ToURL(SOURCE_FOLDER + "adobeDeflateCompression16BitMinIsBlack.tif")));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage
@@ -191,7 +209,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void AdobeDeflateComp16BitMinIsWhiteCreateTiffTest() {
-            // TODO: DEVSIX-5565 (update test when support for adobeDeflate compression tiff image will be realized)
+            // TODO: DEVSIX-5791 (update test when support for adobeDeflate compression tiff image will be realized)
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
                 .CreateTiff(UrlUtil.ToURL(SOURCE_FOLDER + "adobeDeflateCompression16BitMinIsWhite.tif"), false, 1, false
                 ));
@@ -201,7 +219,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void AdobeDeflateComp16BitMinIsWhiteCreateImageTest() {
-            // TODO: DEVSIX-5565 (update test when support for adobeDeflate compression tiff image will be realized)
+            // TODO: DEVSIX-5791 (update test when support for adobeDeflate compression tiff image will be realized)
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
                 .Create(UrlUtil.ToURL(SOURCE_FOLDER + "adobeDeflateCompression16BitMinIsWhite.tif")));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage
@@ -210,7 +228,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void AdobeDeflateCompression16BitRgbCreateTiffTest() {
-            // TODO: DEVSIX-5565 (update test when support for adobeDeflate compression tiff image will be realized)
+            // TODO: DEVSIX-5791 (update test when support for adobeDeflate compression tiff image will be realized)
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
                 .CreateTiff(UrlUtil.ToURL(SOURCE_FOLDER + "adobeDeflateCompression16BitRgb.tif"), false, 1, false));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage
@@ -219,7 +237,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void AdobeDeflateCompression16BitRgbCreateImageTest() {
-            // TODO: DEVSIX-5565 (update test when support for adobeDeflate compression tiff image will be realized)
+            // TODO: DEVSIX-5791 (update test when support for adobeDeflate compression tiff image will be realized)
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
                 .Create(UrlUtil.ToURL(SOURCE_FOLDER + "adobeDeflateCompression16BitRgb.tif")));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotReadTiffImage

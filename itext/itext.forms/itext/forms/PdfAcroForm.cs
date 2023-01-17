@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -139,7 +139,7 @@ namespace iText.Forms {
         private PdfAcroForm(PdfDictionary pdfObject, PdfDocument pdfDocument)
             : base(pdfObject) {
             document = pdfDocument;
-            GetFormFields();
+            fields = PopulateFormFieldsMap(GetFields());
             xfaForm = new XfaForm(pdfObject);
         }
 
@@ -163,6 +163,7 @@ namespace iText.Forms {
         /// </param>
         private PdfAcroForm(PdfArray fields)
             : this(CreateAcroFormDictionaryByFields(fields), null) {
+            this.fields = PopulateFormFieldsMap(GetFields());
             SetForbidRelease();
         }
 
@@ -253,9 +254,6 @@ namespace iText.Forms {
             fieldsArray.Add(fieldDic);
             fieldsArray.SetModified();
             fields.Put(field.GetFieldName().ToUnicodeString(), field);
-            if (field.GetKids() != null) {
-                IterateFields(field.GetKids(), fields);
-            }
             if (fieldDic.ContainsKey(PdfName.Subtype) && page != null) {
                 PdfAnnotation annot = PdfAnnotation.MakeAnnotation(fieldDic);
                 AddWidgetAnnotationToPage(page, annot);
@@ -300,7 +298,7 @@ namespace iText.Forms {
         }
 
         /// <summary>
-        /// Gets the
+        /// Gets the high-level
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
         /// s as a
         /// <see cref="System.Collections.IDictionary{K, V}"/>.
@@ -310,11 +308,67 @@ namespace iText.Forms {
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
         /// objects
         /// </returns>
-        public virtual IDictionary<String, PdfFormField> GetFormFields() {
+        public virtual IDictionary<String, PdfFormField> GetDirectFormFields() {
             if (fields.Count == 0) {
-                fields = IterateFields(GetFields());
+                fields = PopulateFormFieldsMap(GetFields());
             }
+            //TODO DEVSIX-6504 Fix copyField logic.
             return fields;
+        }
+
+        /// <summary>
+        /// Gets all
+        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
+        /// s as a
+        /// <see cref="System.Collections.IDictionary{K, V}"/>
+        /// including fields kids.
+        /// </summary>
+        /// <returns>
+        /// a map of field names and their associated
+        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
+        /// objects
+        /// </returns>
+        public virtual IDictionary<String, PdfFormField> GetAllFormFields() {
+            if (fields.Count == 0) {
+                fields = PopulateFormFieldsMap(GetFields());
+            }
+            IDictionary<String, PdfFormField> allFields = new Dictionary<String, PdfFormField>();
+            allFields.AddAll(fields);
+            foreach (KeyValuePair<String, PdfFormField> field in fields) {
+                IList<PdfFormField> kids = field.Value.GetAllChildFields();
+                foreach (PdfFormField kid in kids) {
+                    //TODO DEVSIX-6346 Handle form fields without names more carefully
+                    if (kid.GetFieldName() != null) {
+                        allFields.Put(kid.GetFieldName().ToUnicodeString(), kid);
+                    }
+                }
+            }
+            return allFields;
+        }
+
+        /// <summary>
+        /// Gets all
+        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
+        /// s as a
+        /// <see cref="Java.Util.Set{E}"/>
+        /// including fields kids and nameless fields.
+        /// </summary>
+        /// <returns>
+        /// a set of
+        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
+        /// objects
+        /// </returns>
+        public virtual ICollection<PdfFormField> GetAllFormFieldsWithoutNames() {
+            if (fields.Count == 0) {
+                fields = PopulateFormFieldsMap(GetFields());
+            }
+            ICollection<PdfFormField> allFields = new LinkedHashSet<PdfFormField>();
+            foreach (KeyValuePair<String, PdfFormField> field in fields) {
+                allFields.Add(field.Value);
+                IList<PdfFormField> kids = field.Value.GetAllChildFields();
+                allFields.AddAll(kids);
+            }
+            return allFields;
         }
 
         /// <summary>
@@ -666,7 +720,17 @@ namespace iText.Forms {
         /// isn't present
         /// </returns>
         public virtual PdfFormField GetField(String fieldName) {
-            return fields.Get(fieldName);
+            if (fields.Get(fieldName) != null) {
+                return fields.Get(fieldName);
+            }
+            String[] splitFields = iText.Commons.Utils.StringUtil.Split(fieldName, "\\.");
+            PdfFormField parentFormField = fields.Get(splitFields[0]);
+            PdfFormField kidField = parentFormField;
+            for (int i = 1; i < splitFields.Length; i++) {
+                kidField = parentFormField.GetChildField(splitFields[i]);
+                parentFormField = kidField;
+            }
+            return kidField;
         }
 
         /// <summary>
@@ -739,9 +803,11 @@ namespace iText.Forms {
                 throw new PdfException(FormsExceptionMessageConstant.FIELD_FLATTENING_IS_NOT_SUPPORTED_IN_APPEND_MODE);
             }
             ICollection<PdfFormField> fields;
-            if (fieldsForFlattening.Count == 0) {
+            if (fieldsForFlattening.IsEmpty()) {
                 this.fields.Clear();
-                fields = new LinkedHashSet<PdfFormField>(GetFormFields().Values);
+                //This alternate addition of fields is used due to incorrect handling of fields without names.
+                //Must be replaced with getAllFormFields() after DEVSIX-6346
+                fields = GetAllFormFieldsWithoutNames();
             }
             else {
                 fields = new LinkedHashSet<PdfFormField>();
@@ -888,10 +954,13 @@ namespace iText.Forms {
                 page.RemoveAnnotation(annotation);
             }
             PdfDictionary parent = field.GetParent();
+            PdfFormField parentField = field.GetParentField();
             if (parent != null) {
                 PdfArray kids = parent.GetAsArray(PdfName.Kids);
+                if (parentField != null) {
+                    parentField.RemoveChild(field);
+                }
                 kids.Remove(fieldObject);
-                fields.JRemove(fieldName);
                 kids.SetModified();
                 parent.SetModified();
                 return true;
@@ -924,7 +993,7 @@ namespace iText.Forms {
         /// to be flattened
         /// </param>
         public virtual void PartialFormFlattening(String fieldName) {
-            PdfFormField field = GetFormFields().Get(fieldName);
+            PdfFormField field = GetAllFormFields().Get(fieldName);
             if (field != null) {
                 fieldsForFlattening.Add(field);
             }
@@ -937,13 +1006,9 @@ namespace iText.Forms {
         /// <param name="oldName">the current name of the field</param>
         /// <param name="newName">the new name of the field. Must not be used currently.</param>
         public virtual void RenameField(String oldName, String newName) {
-            IDictionary<String, PdfFormField> fields = GetFormFields();
-            if (fields.ContainsKey(newName)) {
-                return;
-            }
+            GetField(oldName).SetFieldName(newName);
             PdfFormField field = fields.Get(oldName);
             if (field != null) {
-                field.SetFieldName(newName);
                 fields.JRemove(oldName);
                 fields.Put(newName, field);
             }
@@ -1016,8 +1081,8 @@ namespace iText.Forms {
             return false;
         }
 
-        private IDictionary<String, PdfFormField> IterateFields(PdfArray array, IDictionary<String, PdfFormField> 
-            fields) {
+        private IDictionary<String, PdfFormField> PopulateFormFieldsMap(PdfArray array) {
+            IDictionary<String, PdfFormField> fields = new LinkedDictionary<String, PdfFormField>();
             int index = 1;
             foreach (PdfObject field in array) {
                 if (field.IsFlushed()) {
@@ -1033,11 +1098,17 @@ namespace iText.Forms {
                 PdfString fieldName = formField.GetFieldName();
                 String name;
                 if (fieldName == null) {
-                    PdfFormField parentField = PdfFormField.MakeFormField(formField.GetParent(), document);
+                    PdfFormField parentField = formField.GetParentField();
+                    if (parentField == null) {
+                        parentField = PdfFormField.MakeFormField(formField.GetParent(), document);
+                    }
                     while (fieldName == null) {
                         fieldName = parentField.GetFieldName();
                         if (fieldName == null) {
-                            parentField = PdfFormField.MakeFormField(parentField.GetParent(), document);
+                            parentField = formField.GetParentField();
+                            if (parentField == null) {
+                                parentField = PdfFormField.MakeFormField(formField.GetParent(), document);
+                            }
                         }
                     }
                     name = fieldName.ToUnicodeString() + "." + index;
@@ -1047,15 +1118,8 @@ namespace iText.Forms {
                     name = fieldName.ToUnicodeString();
                 }
                 fields.Put(name, formField);
-                if (formField.GetKids() != null) {
-                    IterateFields(formField.GetKids(), fields);
-                }
             }
             return fields;
-        }
-
-        private IDictionary<String, PdfFormField> IterateFields(PdfArray array) {
-            return IterateFields(array, new LinkedDictionary<String, PdfFormField>());
         }
 
         private PdfDictionary ProcessKids(PdfArray kids, PdfDictionary parent, PdfPage page) {
@@ -1174,10 +1238,13 @@ namespace iText.Forms {
         public virtual void Release() {
             UnsetForbidRelease();
             GetPdfObject().Release();
-            foreach (PdfFormField field in fields.Values) {
-                field.Release();
+            if (fields != null) {
+                foreach (PdfFormField field in fields.Values) {
+                    field.Release();
+                }
+                fields.Clear();
+                fields = null;
             }
-            fields = null;
         }
 
         public override PdfObjectWrapper<PdfDictionary> SetModified() {

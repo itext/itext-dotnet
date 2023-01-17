@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -52,7 +52,7 @@ namespace iText.Forms {
             String cmpPdf = sourceFolder + "cmp_fillFormWithAutosizeTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(inPdf), new PdfWriter(outPdf));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             fields.Get("First field").SetValue("name name name ");
             fields.Get("Second field").SetValue("surname surname surname surname surname surname");
             pdfDoc.Close();

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -367,7 +367,8 @@ namespace iText.Signatures {
         private static byte[] CreateDocumentWithEmptyField() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputStream));
-            PdfFormField formField = PdfFormField.CreateEmptyField(pdfDocument).SetFieldName("test_field");
+            PdfFormField formField = new NonTerminalFormFieldBuilder(pdfDocument, "test_field").CreateNonTerminalFormField
+                ();
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
             acroForm.AddField(formField);
             pdfDocument.Close();
@@ -377,8 +378,8 @@ namespace iText.Signatures {
         private static byte[] CreateDocumentWithSignatureWithTestValueField(String fieldName, String fieldValue) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputStream));
-            PdfFormField formField = PdfFormField.CreateSignature(pdfDocument).SetFieldName(fieldName).SetValue(fieldValue
-                );
+            PdfFormField formField = new SignatureFormFieldBuilder(pdfDocument, fieldName).CreateSignature().SetValue(
+                fieldValue);
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
             acroForm.AddField(formField);
             pdfDocument.Close();
@@ -388,7 +389,7 @@ namespace iText.Signatures {
         private static byte[] CreateDocumentWithSignatureField(String fieldName) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputStream));
-            PdfFormField formField = PdfFormField.CreateSignature(pdfDocument).SetFieldName(fieldName);
+            PdfFormField formField = new SignatureFormFieldBuilder(pdfDocument, fieldName).CreateSignature();
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
             acroForm.AddField(formField);
             pdfDocument.Close();

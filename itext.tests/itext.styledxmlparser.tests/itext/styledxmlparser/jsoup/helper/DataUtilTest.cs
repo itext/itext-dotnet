@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -104,15 +104,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         [NUnit.Framework.Test]
         public virtual void ShouldReturnNullForIllegalCharsetNames() {
             NUnit.Framework.Assert.IsNull(DataUtil.GetCharsetFromContentType("text/html; charset=$HJKDF§$/("));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GeneratesMimeBoundaries() {
-            String m1 = DataUtil.MimeBoundary();
-            String m2 = DataUtil.MimeBoundary();
-            NUnit.Framework.Assert.AreEqual(DataUtil.boundaryLength, m1.Length);
-            NUnit.Framework.Assert.AreEqual(DataUtil.boundaryLength, m2.Length);
-            NUnit.Framework.Assert.AreNotSame(m1, m2);
         }
 
         [NUnit.Framework.Test]

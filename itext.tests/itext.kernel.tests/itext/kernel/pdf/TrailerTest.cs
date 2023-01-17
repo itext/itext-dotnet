@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Actions.Data;
 using iText.Commons.Utils;
@@ -57,6 +58,10 @@ namespace iText.Kernel.Pdf {
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/TrailerTest/";
+
+        private static readonly byte[] USERPASS = "user".GetBytes();
+
+        private static readonly byte[] OWNERPASS = "owner".GetBytes();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -80,6 +85,78 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(DoesTrailerContainFingerprint(new FileInfo(destinationFolder + "output.pdf")
                 , MessageFormatUtil.Format("%iText-{0}-{1}\n", productData.GetProductName(), productData.GetVersion())
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExistingTrailerValuesTest() {
+            MemoryStream baos = new MemoryStream();
+            PdfName expectedKey = new PdfName("Custom");
+            PdfName expectedValue = new PdfName("Value");
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                pdfDocument.GetTrailer().Put(expectedKey, expectedValue);
+            }
+            using (PdfDocument stampingDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new 
+                PdfWriter(new MemoryStream()))) {
+                PdfDictionary trailer = stampingDocument.GetTrailer();
+                bool keyPresent = trailer.ContainsKey(expectedKey);
+                PdfName actualValue = trailer.GetAsName(expectedKey);
+                stampingDocument.Close();
+                NUnit.Framework.Assert.IsTrue(keyPresent);
+                NUnit.Framework.Assert.AreEqual(expectedValue, actualValue);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExistingTrailerValuesTestWithEncryption() {
+            MemoryStream baos = new MemoryStream();
+            WriterProperties writerProperties = new WriterProperties();
+            writerProperties.SetStandardEncryption(USERPASS, OWNERPASS, EncryptionConstants.ALLOW_PRINTING, EncryptionConstants
+                .ENCRYPTION_AES_128);
+            PdfName expectedKey = new PdfName("Custom");
+            PdfName expectedValue = new PdfName("Value");
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos, writerProperties))) {
+                pdfDocument.GetTrailer().Put(expectedKey, expectedValue);
+            }
+            ReaderProperties readerProperties = new ReaderProperties().SetPassword(OWNERPASS);
+            using (PdfDocument stampingDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray()), readerProperties
+                ), new PdfWriter(new MemoryStream()))) {
+                PdfDictionary trailer = stampingDocument.GetTrailer();
+                bool keyPresent = trailer.ContainsKey(expectedKey);
+                PdfName actualValue = trailer.GetAsName(expectedKey);
+                stampingDocument.Close();
+                NUnit.Framework.Assert.IsTrue(keyPresent);
+                NUnit.Framework.Assert.AreEqual(expectedValue, actualValue);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExistingTrailerValuesWithStandardizedNameTest() {
+            MemoryStream baos = new MemoryStream();
+            Dictionary<PdfName, PdfName> standardizedNames = new Dictionary<PdfName, PdfName>();
+            //some standardized names to put in the trailer, but they may not be removed
+            standardizedNames.Put(PdfName.Color, new PdfName("brown"));
+            standardizedNames.Put(PdfName.BaseFont, new PdfName("CustomFont"));
+            standardizedNames.Put(PdfName.Pdf_Version_1_6, new PdfName("1.6"));
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                foreach (KeyValuePair<PdfName, PdfName> entry in standardizedNames) {
+                    PdfName pdfName = entry.Key;
+                    PdfName s = entry.Value;
+                    pdfDocument.GetTrailer().Put(pdfName, s);
+                }
+            }
+            using (PdfDocument stampingDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new 
+                PdfWriter(new MemoryStream()))) {
+                PdfDictionary trailer = stampingDocument.GetTrailer();
+                foreach (KeyValuePair<PdfName, PdfName> entry in standardizedNames) {
+                    PdfName pdfName = entry.Key;
+                    PdfName pdfName2 = entry.Value;
+                    bool keyPresent = trailer.ContainsKey(pdfName);
+                    PdfName actualValue = trailer.GetAsName(pdfName);
+                    NUnit.Framework.Assert.IsTrue(keyPresent);
+                    NUnit.Framework.Assert.AreEqual(pdfName2, actualValue);
+                }
+                stampingDocument.Close();
+            }
         }
 
         private bool DoesTrailerContainFingerprint(FileInfo file, String fingerPrint) {

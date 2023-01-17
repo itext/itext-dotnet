@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -220,7 +220,7 @@ namespace iText.Signatures {
             GetSignatureNames();
             IList<String> sigs = new List<String>();
             if (acroForm != null) {
-                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
+                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
                     PdfFormField field = entry.Value;
                     PdfDictionary merged = field.GetPdfObject();
                     if (!PdfName.Sig.Equals(merged.GetAsName(PdfName.FT))) {
@@ -317,7 +317,7 @@ namespace iText.Signatures {
                 return;
             }
             IList<Object[]> sorter = new List<Object[]>();
-            foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
+            foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
                 PdfFormField field = entry.Value;
                 PdfDictionary merged = field.GetPdfObject();
                 if (!PdfName.Sig.Equals(merged.Get(PdfName.FT))) {

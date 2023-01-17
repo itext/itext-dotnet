@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -81,7 +81,7 @@ namespace iText.Forms {
             pdfDoc.Close();
             PdfDocument outPdfDoc = new PdfDocument(new PdfReader(outPdfName));
             PdfAcroForm outPdfForm = PdfAcroForm.GetAcroForm(outPdfDoc, false);
-            NUnit.Framework.Assert.AreEqual(2, outPdfForm.GetFormFields().Count);
+            NUnit.Framework.Assert.AreEqual(2, outPdfForm.GetAllFormFields().Count);
             outPdfDoc.Close();
         }
 
@@ -177,7 +177,7 @@ namespace iText.Forms {
             String cmp = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            foreach (PdfFormField field in form.GetFormFields().Values) {
+            foreach (PdfFormField field in form.GetAllFormFields().Values) {
                 if (field is PdfTextFormField) {
                     String newValue;
                     if (field.IsMultiline()) {
@@ -230,7 +230,7 @@ namespace iText.Forms {
             pdfInnerDoc.Close();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
             bool isReadOnly = true;
-            foreach (PdfFormField field in form.GetFormFields().Values) {
+            foreach (PdfFormField field in form.GetAllFormFields().Values) {
                 isReadOnly = (isReadOnly && field.IsReadOnly());
             }
             pdfDoc.Close();

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -422,7 +422,6 @@ namespace iText.Signatures {
             public IList<byte[]> certs = new List<byte[]>();
         }
 
-        // TODO: Refactor. Copied from itext5 Utilities
         /// <summary>Converts an array of bytes to a String of hexadecimal values</summary>
         /// <param name="bytes">a byte array</param>
         /// <returns>the same bytes expressed as hexadecimal values</returns>

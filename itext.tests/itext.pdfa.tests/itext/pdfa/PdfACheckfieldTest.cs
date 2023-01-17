@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -81,8 +81,9 @@ namespace iText.Pdfa {
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1A);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateCheckBox
+                ().SetValue("Off");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -105,8 +106,9 @@ namespace iText.Pdfa {
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1A);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateCheckBox
+                ().SetValue("On");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -127,8 +129,9 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateCheckBox
+                ().SetValue("Off");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -149,8 +152,9 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_1B);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateCheckBox
+                ().SetValue("On");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -173,8 +177,9 @@ namespace iText.Pdfa {
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2A);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2A).CreateCheckBox
+                ().SetValue("Off");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -197,8 +202,9 @@ namespace iText.Pdfa {
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2A);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2A).CreateCheckBox
+                ().SetValue("On");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -219,8 +225,9 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2B);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2B).CreateCheckBox
+                ().SetValue("Off");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -241,8 +248,9 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2B);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2B).CreateCheckBox
+                ().SetValue("On");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -263,8 +271,9 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2U);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2U).CreateCheckBox
+                ().SetValue("Off");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -285,8 +294,9 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_2U);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2U).CreateCheckBox
+                ().SetValue("On");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -309,8 +319,9 @@ namespace iText.Pdfa {
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3A);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3A).CreateCheckBox
+                ().SetValue("Off");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -333,8 +344,9 @@ namespace iText.Pdfa {
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3A);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3A).CreateCheckBox
+                ().SetValue("On");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -355,8 +367,9 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3B);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3B).CreateCheckBox
+                ().SetValue("Off");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -377,8 +390,9 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3B);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3B).CreateCheckBox
+                ().SetValue("On");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -399,8 +413,9 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "Off", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3U);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3U).CreateCheckBox
+                ().SetValue("Off");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);
@@ -421,8 +436,9 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfFormField chk = PdfFormField.CreateCheckBox(doc, new Rectangle(100, 500, 50, 50), "name", "On", PdfFormField
-                .TYPE_CHECK, PdfAConformanceLevel.PDF_A_3U);
+            PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
+                , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3U).CreateCheckBox
+                ().SetValue("On");
             chk.SetBorderColor(ColorConstants.BLACK);
             chk.SetBorderWidth(1);
             form.AddField(chk);

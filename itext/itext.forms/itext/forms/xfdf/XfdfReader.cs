@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -89,7 +89,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="form">acroform to be filled with xfdf data.</param>
         private void MergeFields(FieldsObject fieldsObject, PdfAcroForm form) {
             if (fieldsObject != null && fieldsObject.GetFieldList() != null && !fieldsObject.GetFieldList().IsEmpty()) {
-                IDictionary<String, PdfFormField> formFields = form.GetFormFields();
+                IDictionary<String, PdfFormField> formFields = form.GetAllFormFields();
                 foreach (FieldObject xfdfField in fieldsObject.GetFieldList()) {
                     String name = xfdfField.GetName();
                     if (formFields.Get(name) != null && xfdfField.GetValue() != null) {

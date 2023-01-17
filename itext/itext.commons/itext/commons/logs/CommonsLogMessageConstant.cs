@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -45,6 +45,9 @@ using System;
 namespace iText.Commons.Logs {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class CommonsLogMessageConstant {
+        /// <summary>Message notifies that base64 encoding or decoding failed.</summary>
+        public const String BASE_64_EXCEPTION = "Exception during base64 encoding or decoding.";
+
         /// <summary>Message notifies that an invalid statistics name was received, because there is no aggregator for it.
         ///     </summary>
         /// <remarks>

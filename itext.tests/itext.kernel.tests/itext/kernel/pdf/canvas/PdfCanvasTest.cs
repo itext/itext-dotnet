@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -77,6 +77,20 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const String TITLE = "Empty iText 7 Document";
 
+        private sealed class _ContentProvider_104 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_104() {
+            }
+
+            public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
+                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
+                    ), 72).ShowText(JavaUtil.IntegerToString(pageNumber + 1)).EndText().RestoreState();
+                canvas.Rectangle(100, 500, 100, 100).Fill();
+            }
+        }
+
+        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_104(
+            );
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
@@ -84,24 +98,15 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvas() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "simpleCanvas.pdf"));
+            String filename = DESTINATION_FOLDER + "simpleCanvas.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.Rectangle(100, 100, 100, 100).Fill();
             canvas.Release();
             pdfDoc.Close();
-            PdfReader reader = new PdfReader(DESTINATION_FOLDER + "simpleCanvas.pdf");
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
-            PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
-            NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            reader.Close();
+            AssertStandardDocument(filename, 1);
         }
 
         [NUnit.Framework.Test]
@@ -133,8 +138,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithDrawing() {
-            String fileName = "simpleCanvasWithDrawing.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + fileName));
+            String fileName = DESTINATION_FOLDER + "simpleCanvasWithDrawing.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -148,23 +153,13 @@ namespace iText.Kernel.Pdf.Canvas {
                 ();
             canvas.Release();
             pdfDoc.Close();
-            PdfReader reader = new PdfReader(DESTINATION_FOLDER + fileName);
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
-            PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
-            NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            pdfDocument.Close();
+            AssertStandardDocument(fileName, 1);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithText() {
-            String fileName = "simpleCanvasWithText.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + fileName));
+            String fileName = DESTINATION_FOLDER + "simpleCanvasWithText.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -183,22 +178,13 @@ namespace iText.Kernel.Pdf.Canvas {
                 ), 16).ShowText("Hello ZapfDingbats!").EndText().RestoreState();
             canvas.Release();
             pdfDoc.Close();
-            PdfReader reader = new PdfReader(DESTINATION_FOLDER + fileName);
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
-            PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
-            NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            pdfDocument.Close();
+            AssertStandardDocument(fileName, 1);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithPageFlush() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "simpleCanvasWithPageFlush.pdf"));
+            String filename = DESTINATION_FOLDER + "simpleCanvasWithPageFlush.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -206,23 +192,13 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.Release();
             page1.Flush();
             pdfDoc.Close();
-            PdfReader reader = new PdfReader(DESTINATION_FOLDER + "simpleCanvasWithPageFlush.pdf");
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
-            PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
-            NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            pdfDocument.Close();
+            AssertStandardDocument(filename, 1);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithFullCompression() {
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "simpleCanvasWithFullCompression.pdf", new WriterProperties
-                ().SetFullCompressionMode(true));
+            String filename = DESTINATION_FOLDER + "simpleCanvasWithFullCompression.pdf";
+            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -230,23 +206,13 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.Rectangle(100, 100, 100, 100).Fill();
             canvas.Release();
             pdfDoc.Close();
-            PdfReader reader = new PdfReader(DESTINATION_FOLDER + "simpleCanvasWithFullCompression.pdf");
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
-            PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
-            NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            pdfDocument.Close();
+            AssertStandardDocument(filename, 1);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithPageFlushAndFullCompression() {
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "simpleCanvasWithPageFlushAndFullCompression.pdf", new 
-                WriterProperties().SetFullCompressionMode(true));
+            String filename = DESTINATION_FOLDER + "simpleCanvasWithPageFlushAndFullCompression.pdf";
+            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -255,141 +221,50 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.Release();
             page1.Flush();
             pdfDoc.Close();
-            PdfReader reader = new PdfReader(DESTINATION_FOLDER + "simpleCanvasWithPageFlushAndFullCompression.pdf");
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
-            PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
-            NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            pdfDocument.Close();
+            AssertStandardDocument(filename, 1);
         }
 
         [NUnit.Framework.Test]
         public virtual void Create1000PagesDocument() {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocument.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-            pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
-            for (int i = 0; i < pageCount; i++) {
-                PdfPage page = pdfDoc.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
-                canvas.Rectangle(100, 500, 100, 100).Fill();
-                canvas.Release();
-                page.Flush();
-            }
-            pdfDoc.Close();
-            PdfReader reader = new PdfReader(DESTINATION_FOLDER + "1000PagesDocument.pdf");
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i = 1; i <= pageCount; i++) {
-                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
-                NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            }
-            pdfDocument.Close();
+            CreateStandardDocument(new PdfWriter(filename), pageCount, DEFAULT_CONTENT_PROVIDER);
+            AssertStandardDocument(filename, pageCount);
         }
 
         [NUnit.Framework.Test]
         public virtual void Create100PagesDocument() {
             int pageCount = 100;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocument.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-            pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
-            for (int i = 0; i < pageCount; i++) {
-                PdfPage page = pdfDoc.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
-                canvas.Rectangle(100, 500, 100, 100).Fill();
-                canvas.Release();
-                page.Flush();
-            }
-            pdfDoc.Close();
-            PdfReader reader = new PdfReader(filename);
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i = 1; i <= pageCount; i++) {
-                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
-                NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            }
-            pdfDocument.Close();
+            CreateStandardDocument(new PdfWriter(filename), pageCount, DEFAULT_CONTENT_PROVIDER);
+            AssertStandardDocument(filename, pageCount);
         }
 
         [NUnit.Framework.Test]
         public virtual void Create10PagesDocument() {
             int pageCount = 10;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocument.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-            pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
-            for (int i = 0; i < pageCount; i++) {
-                PdfPage page = pdfDoc.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
-                canvas.Rectangle(100, 500, 100, 100).Fill();
-                canvas.Release();
-                page.Flush();
-            }
-            pdfDoc.Close();
-            PdfReader reader = new PdfReader(filename);
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i = 1; i <= pageCount; i++) {
-                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
-                NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            }
-            pdfDocument.Close();
+            CreateStandardDocument(new PdfWriter(filename), pageCount, DEFAULT_CONTENT_PROVIDER);
+            AssertStandardDocument(filename, pageCount);
         }
 
         [NUnit.Framework.Test]
         public virtual void Create1000PagesDocumentWithText() {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithText.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-            pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
-            for (int i = 0; i < pageCount; i++) {
-                PdfPage page = pdfDoc.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page);
+            CreateStandardDocument(new PdfWriter(filename), pageCount, new _ContentProvider_396());
+            AssertStandardDocument(filename, pageCount);
+        }
+
+        private sealed class _ContentProvider_396 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_396() {
+            }
+
+            public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
                 canvas.SaveState().BeginText().MoveText(36, 650).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER
-                    ), 16).ShowText("Page " + (i + 1)).EndText();
+                    ), 16).ShowText("Page " + (pageNumber + 1)).EndText();
                 canvas.Rectangle(100, 100, 100, 100).Fill();
-                canvas.Release();
-                page.Flush();
             }
-            pdfDoc.Close();
-            PdfReader reader = new PdfReader(filename);
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i = 1; i <= pageCount; i++) {
-                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
-                NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            }
-            pdfDocument.Close();
         }
 
         [NUnit.Framework.Test]
@@ -397,31 +272,8 @@ namespace iText.Kernel.Pdf.Canvas {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithFullCompression.pdf";
             PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
-            for (int i = 0; i < pageCount; i++) {
-                PdfPage page = pdfDoc.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
-                canvas.Rectangle(100, 500, 100, 100).Fill();
-                canvas.Release();
-                page.Flush();
-            }
-            pdfDoc.Close();
-            PdfReader reader = new PdfReader(filename);
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i = 1; i <= pageCount; i++) {
-                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
-                NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            }
-            pdfDocument.Close();
+            CreateStandardDocument(writer, pageCount, DEFAULT_CONTENT_PROVIDER);
+            AssertStandardDocument(filename, pageCount);
         }
 
         [NUnit.Framework.Test]
@@ -436,17 +288,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 ), 72).ShowText("Hi!").EndText().RestoreState();
             page.Flush();
             pdfDoc.Close();
-            PdfReader reader = new PdfReader(filename);
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
-            page = pdfDocument.GetPage(1);
-            NUnit.Framework.Assert.AreEqual(PdfName.Page, page.GetPdfObject().Get(PdfName.Type));
-            pdfDocument.Close();
+            AssertStandardDocument(filename, 1);
         }
 
         [NUnit.Framework.Test]
@@ -454,31 +296,8 @@ namespace iText.Kernel.Pdf.Canvas {
             int pageCount = 100;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocumentWithFullCompression.pdf";
             PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
-            for (int i = 0; i < pageCount; i++) {
-                PdfPage page = pdfDoc.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
-                canvas.Rectangle(100, 500, 100, 100).Fill();
-                canvas.Release();
-                page.Flush();
-            }
-            pdfDoc.Close();
-            PdfReader reader = new PdfReader(filename);
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i = 1; i <= pageCount; i++) {
-                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
-                NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            }
-            pdfDocument.Close();
+            CreateStandardDocument(writer, pageCount, DEFAULT_CONTENT_PROVIDER);
+            AssertStandardDocument(filename, pageCount);
         }
 
         [NUnit.Framework.Test]
@@ -486,31 +305,8 @@ namespace iText.Kernel.Pdf.Canvas {
             int pageCount = 197;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocumentWithFullCompression.pdf";
             PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
-            for (int i = 0; i < pageCount; i++) {
-                PdfPage page = pdfDoc.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
-                canvas.Rectangle(100, 500, 100, 100).Fill();
-                canvas.Release();
-                page.Flush();
-            }
-            pdfDoc.Close();
-            PdfReader reader = new PdfReader(filename);
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i = 1; i <= pageCount; i++) {
-                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
-                NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            }
-            pdfDocument.Close();
+            CreateStandardDocument(writer, pageCount, DEFAULT_CONTENT_PROVIDER);
+            AssertStandardDocument(filename, pageCount);
         }
 
         [NUnit.Framework.Test]
@@ -518,31 +314,8 @@ namespace iText.Kernel.Pdf.Canvas {
             int pageCount = 10;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocumentWithFullCompression.pdf";
             PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
-            for (int i = 0; i < pageCount; i++) {
-                PdfPage page = pdfDoc.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
-                canvas.Rectangle(100, 500, 100, 100).Fill();
-                canvas.Release();
-                page.Flush();
-            }
-            pdfDoc.Close();
-            PdfReader reader = new PdfReader(filename);
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i = 1; i <= pageCount; i++) {
-                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
-                NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            }
-            pdfDocument.Close();
+            CreateStandardDocument(writer, pageCount, DEFAULT_CONTENT_PROVIDER);
+            AssertStandardDocument(filename, pageCount);
         }
 
         [NUnit.Framework.Test]
@@ -1348,6 +1121,41 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.Release();
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        private void CreateStandardDocument(PdfWriter writer, int pageCount, PdfCanvasTest.ContentProvider contentProvider
+            ) {
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
+            for (int i = 0; i < pageCount; i++) {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                contentProvider.DrawOnCanvas(canvas, i);
+                canvas.Release();
+                page.Flush();
+            }
+            pdfDoc.Close();
+        }
+
+        private void AssertStandardDocument(String filename, int pageCount) {
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument pdfDocument = new PdfDocument(reader);
+            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
+            NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
+            NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");
+            NUnit.Framework.Assert.AreEqual(TITLE, info.Get(PdfName.Title).ToString(), "Title");
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
+            for (int i = 1; i <= pageCount; i++) {
+                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
+                NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
+            }
+            pdfDocument.Close();
+        }
+
+        [FunctionalInterfaceAttribute]
+        private interface ContentProvider {
+            void DrawOnCanvas(PdfCanvas canvas, int pageNumber);
         }
     }
 }

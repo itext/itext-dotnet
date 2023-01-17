@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,12 +42,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Kernel.Utils;
+using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa {
@@ -69,6 +70,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void PdfA1bButtonAppearanceTest() {
+            // TODO: DEVSIX-3913 update this test after the ticket will be resolved
             String name = "pdfA1b_ButtonAppearanceTest";
             String outPath = destinationFolder + name + ".pdf";
             String cmpPath = cmpFolder + "cmp_" + name + ".pdf";
@@ -85,16 +87,18 @@ namespace iText.Pdfa {
             Rectangle rect = new Rectangle(36, 626, 100, 40);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
-            PdfFormField button = PdfFormField.CreatePushButton(doc, rect, "push button", "push", font, 12, PdfAConformanceLevel
-                .PDF_A_1B);
+            PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
+                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton().SetFont(font).SetFontSize
+                (12);
             form.AddField(button);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
-                ));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Helvetica"), exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfA1bButtonAppearanceRegenerateTest() {
+            // TODO: DEVSIX-3913 update this test after the ticket will be resolved
             String name = "pdfA1b_ButtonAppearanceRegenerateTest";
             String outPath = destinationFolder + name + ".pdf";
             String cmpPath = cmpFolder + "cmp_" + name + ".pdf";
@@ -111,17 +115,19 @@ namespace iText.Pdfa {
             Rectangle rect = new Rectangle(36, 626, 100, 40);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
-            PdfFormField button = PdfFormField.CreatePushButton(doc, rect, "push button", "push", font, 12, PdfAConformanceLevel
-                .PDF_A_1B);
+            PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
+                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton().SetFont(font).SetFontSize
+                (12);
             button.RegenerateField();
             form.AddField(button);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
-                ));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Helvetica"), exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfA1bButtonAppearanceSetValueTest() {
+            // TODO: DEVSIX-3913 update this test after the ticket will be resolved
             String name = "pdfA1b_ButtonAppearanceSetValueTest";
             String outPath = destinationFolder + name + ".pdf";
             String cmpPath = cmpFolder + "cmp_" + name + ".pdf";
@@ -138,13 +144,14 @@ namespace iText.Pdfa {
             Rectangle rect = new Rectangle(36, 626, 100, 40);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
-            PdfFormField button = PdfFormField.CreatePushButton(doc, rect, "push button", "push", font, 12, PdfAConformanceLevel
-                .PDF_A_1B);
+            PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
+                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton().SetFont(font).SetFontSize
+                (12);
             button.SetValue("button");
             form.AddField(button);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
-                ));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Helvetica"), exception.Message);
         }
     }
 }

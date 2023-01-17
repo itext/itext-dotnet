@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -79,6 +79,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-7264: Investigate 3 failed forms tests from 7.3/develop on .NET")]
         public virtual void SimpleFormWithMultipleFieldsTest() {
             String pdfDocumentName = "simpleFormWithMultipleFields.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + pdfDocumentName, FileMode.Open

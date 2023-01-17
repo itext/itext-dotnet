@@ -168,6 +168,24 @@ namespace iText.Bouncycastlefips.Crypto {
                 case "SHA-384": {
                     return FipsShs.Sha384;
                 }
+                case "2.16.840.1.101.3.4.2.7":
+                case "SHA3-224":
+                {
+                    return FipsShs.Sha3_224;
+                }
+                case "2.16.840.1.101.3.4.2.8":
+                case "SHA3-256": {
+                    return FipsShs.Sha3_256;
+                }
+                case "2.16.840.1.101.3.4.2.9":
+                case "SHA3-384": {
+                    return FipsShs.Sha3_384;
+                }
+                case "2.16.840.1.101.3.4.2.10":
+                case "SHA3-512":
+                {
+                    return FipsShs.Sha3_512;
+                }
                 default: {
                     throw new GeneralSecurityExceptionBCFips(new GeneralSecurityException(
                         "no such algorithm: " + hashAlgorithm + " for provider BCFIPS"));

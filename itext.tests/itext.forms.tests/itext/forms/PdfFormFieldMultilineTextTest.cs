@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -50,8 +50,9 @@ namespace iText.Forms {
             String filename = destinationFolder + "multilineFormFieldTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfTextFormField name = PdfFormField.CreateMultilineText(pdfDoc, new Rectangle(150, 600, 277, 44), "fieldName"
-                , "", null, 0);
+            PdfTextFormField name = new TextFormFieldBuilder(pdfDoc, "fieldName").SetWidgetRectangle(new Rectangle(150
+                , 600, 277, 44)).CreateMultilineText();
+            name.SetFont(null).SetFontSize(0).SetValue("");
             name.SetScroll(false);
             name.SetBorderColor(ColorConstants.GRAY);
             String itextLicence = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
@@ -74,8 +75,9 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             Rectangle rect = new Rectangle(210, 600, 150, 100);
-            PdfTextFormField field = PdfFormField.CreateMultilineText(pdfDoc, rect, "fieldName", "some value\nsecond line\nthird"
-                );
+            PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "fieldName").SetWidgetRectangle(rect).CreateMultilineText
+                ();
+            field.SetValue("some value\nsecond line\nthird");
             field.SetJustification(PdfTextFormField.ALIGN_RIGHT);
             form.AddField(field);
             pdfDoc.Close();
@@ -96,7 +98,7 @@ namespace iText.Forms {
             PdfReader reader = new PdfReader(srcPdf);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             fields.Get("BEMERKUNGEN").SetValue("First line\n\n\nFourth line");
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
@@ -132,9 +134,10 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             for (int i = 15; i <= 50; i += 15) {
-                PdfFormField[] fields = new PdfFormField[] { PdfFormField.CreateMultilineText(pdfDoc, new Rectangle(100, 800
-                     - i * 4, 150, i), "multi " + i, "MULTI"), PdfFormField.CreateText(pdfDoc, new Rectangle(300, 800 - i 
-                    * 4, 150, i), "single " + i, "SINGLE") };
+                PdfFormField[] fields = new PdfFormField[] { new TextFormFieldBuilder(pdfDoc, "multi " + i).SetWidgetRectangle
+                    (new Rectangle(100, 800 - i * 4, 150, i)).CreateMultilineText().SetValue("MULTI"), new TextFormFieldBuilder
+                    (pdfDoc, "single " + i).SetWidgetRectangle(new Rectangle(300, 800 - i * 4, 150, i)).CreateText().SetValue
+                    ("SINGLE") };
                 foreach (PdfFormField field in fields) {
                     field.SetFontSize(40);
                     field.SetBorderColor(ColorConstants.BLACK);
@@ -155,14 +158,17 @@ namespace iText.Forms {
             String filename = destinationFolder + "borderWidthIndentMultilineTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfTextFormField field = PdfFormField.CreateMultilineText(pdfDoc, new Rectangle(100, 500, 400, 300), "multi"
-                , "Does this text overlap the border? Well it shouldn't!");
+            PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "multi").SetWidgetRectangle(new Rectangle(100, 500
+                , 400, 300)).CreateMultilineText();
+            field.SetValue("Does this text overlap the border? Well it shouldn't!");
             field.SetFontSize(30);
             field.SetBorderColor(ColorConstants.RED);
             field.SetBorderWidth(50);
             form.AddField(field);
-            PdfTextFormField field2 = PdfFormField.CreateMultilineText(pdfDoc, new Rectangle(100, 400, 400, 50), "multiAuto"
-                , "Does this autosize text overlap the border? Well it shouldn't! Does it fit accurately though?");
+            PdfTextFormField field2 = new TextFormFieldBuilder(pdfDoc, "multiAuto").SetWidgetRectangle(new Rectangle(100
+                , 400, 400, 50)).CreateMultilineText();
+            field2.SetValue("Does this autosize text overlap the border? Well it shouldn't! Does it fit accurately though?"
+                );
             field2.SetFontSize(0);
             field2.SetBorderColor(ColorConstants.RED);
             field2.SetBorderWidth(20);
@@ -183,8 +189,8 @@ namespace iText.Forms {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", PdfEncodings.IDENTITY_H
                 );
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfFormField form = PdfTextFormField.CreateMultilineText(pdfDoc, new Rectangle(59, 715, 127, 69), "field", 
-                "", font, 10f);
+            PdfFormField form = new TextFormFieldBuilder(pdfDoc, "field").SetWidgetRectangle(new Rectangle(59, 715, 127
+                , 69)).CreateMultilineText().SetFont(font).SetFontSize(10f).SetValue("");
             form.SetBorderWidth(2).SetBorderColor(ColorConstants.BLACK).SetValue(value);
             acroForm.AddField(form);
             pdfDoc.Close();
@@ -200,8 +206,9 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             PdfPage page = pdfDoc.GetFirstPage();
             Rectangle rect = new Rectangle(210, 490, 300, 200);
-            PdfTextFormField field = PdfFormField.CreateMultilineText(pdfDoc, rect, "TestField", "        value\n      with\n    leading\n    space"
-                );
+            PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "TestField").SetWidgetRectangle(rect).CreateMultilineText
+                ();
+            field.SetValue("        value\n      with\n    leading\n    space");
             form.AddField(field, page);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
@@ -220,8 +227,9 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             PdfPage page = pdfDoc.GetFirstPage();
             Rectangle rect = new Rectangle(210, 490, 90, 200);
-            PdfTextFormField field = PdfFormField.CreateMultilineText(pdfDoc, rect, "TestField", "before spaces           after spaces"
-                );
+            PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "TestField").SetWidgetRectangle(rect).CreateMultilineText
+                ();
+            field.SetValue("before spaces           after spaces");
             form.AddField(field, page);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();

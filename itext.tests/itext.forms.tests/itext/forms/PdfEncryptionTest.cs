@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -96,15 +96,20 @@ namespace iText.Forms {
                 )));
             pdfDoc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfTextFormField textField1 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 600, 200, 30), "Name", "Enter your name"
-                );
+            PdfTextFormField textField1 = new TextFormFieldBuilder(pdfDoc, "Name").SetWidgetRectangle(new Rectangle(100
+                , 600, 200, 30)).CreateText();
+            textField1.SetValue("Enter your name");
             form.AddField(textField1);
-            PdfTextFormField textField2 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 550, 200, 30), "Surname", 
-                "Enter your surname");
+            PdfTextFormField textField2 = new TextFormFieldBuilder(pdfDoc, "Surname").SetWidgetRectangle(new Rectangle
+                (100, 550, 200, 30)).CreateText();
+            textField2.SetValue("Enter your surname");
             form.AddField(textField2);
-            PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdfDoc, "Sex", "Male");
-            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(100, 530, 10, 10), group, "Male");
-            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(120, 530, 10, 10), group, "Female");
+            PdfButtonFormField group = new RadioFormFieldBuilder(pdfDoc, "Sex").CreateRadioGroup();
+            group.SetValue("Male");
+            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(100, 530, 10, 10)).CreateRadioButton(group
+                , "Male");
+            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(120, 530, 10, 10)).CreateRadioButton(group
+                , "Female");
             form.AddField(group);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
@@ -127,15 +132,20 @@ namespace iText.Forms {
                 )));
             pdfDoc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfTextFormField textField1 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 600, 200, 30), "Name", "Enter your name"
-                );
+            PdfTextFormField textField1 = new TextFormFieldBuilder(pdfDoc, "Name").SetWidgetRectangle(new Rectangle(100
+                , 600, 200, 30)).CreateText();
+            textField1.SetValue("Enter your name");
             form.AddField(textField1);
-            PdfTextFormField textField2 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 550, 200, 30), "Surname", 
-                "Enter your surname");
+            PdfTextFormField textField2 = new TextFormFieldBuilder(pdfDoc, "Surname").SetWidgetRectangle(new Rectangle
+                (100, 550, 200, 30)).CreateText();
+            textField2.SetValue("Enter your surname");
             form.AddField(textField2);
-            PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdfDoc, "Sex", "Male");
-            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(100, 530, 10, 10), group, "Male");
-            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(120, 530, 10, 10), group, "Female");
+            PdfButtonFormField group = new RadioFormFieldBuilder(pdfDoc, "Sex").CreateRadioGroup();
+            group.SetValue("Male");
+            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(100, 530, 10, 10)).CreateRadioButton(group
+                , "Male");
+            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(120, 530, 10, 10)).CreateRadioButton(group
+                , "Female");
             form.AddField(group);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();

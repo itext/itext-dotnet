@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -86,7 +86,8 @@ namespace iText.Forms {
             pdfDoc.SetTagged();
             pdfDoc.InitializeOutlines();
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            acroForm.AddField(PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(36, 560, 20, 20), "TestCheck", "1"));
+            acroForm.AddField(new CheckBoxFormFieldBuilder(pdfDoc, "TestCheck").SetWidgetRectangle(new Rectangle(36, 560
+                , 20, 20)).CreateCheckBox().SetValue("1", true));
             PdfDocument docToCopyFrom = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms07.pdf"));
             docToCopyFrom.CopyPagesTo(1, docToCopyFrom.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
             pdfDoc.Close();
@@ -160,8 +161,8 @@ namespace iText.Forms {
             // Original document is already tagged, so there is no need to mark it as tagged again
             //        pdfDoc.setTagged();
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfButtonFormField pushButton = PdfFormField.CreatePushButton(pdfDoc, new Rectangle(36, 650, 40, 20), "push"
-                , "Capcha");
+            PdfButtonFormField pushButton = new PushButtonFormFieldBuilder(pdfDoc, "push").SetWidgetRectangle(new Rectangle
+                (36, 650, 40, 20)).SetCaption("Capcha").CreatePushButton();
             TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
             tagPointer.MoveToKid(StandardRoles.DIV);
             acroForm.AddField(pushButton);
@@ -172,14 +173,16 @@ namespace iText.Forms {
         private void AddFormFieldsToDocument(PdfDocument pdfDoc, PdfAcroForm acroForm) {
             Rectangle rect = new Rectangle(36, 700, 20, 20);
             Rectangle rect1 = new Rectangle(36, 680, 20, 20);
-            PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdfDoc, "TestGroup", "1");
-            PdfFormField.CreateRadioButton(pdfDoc, rect, group, "1");
-            PdfFormField.CreateRadioButton(pdfDoc, rect1, group, "2");
+            PdfButtonFormField group = new RadioFormFieldBuilder(pdfDoc, "TestGroup").CreateRadioGroup();
+            group.SetValue("1", true);
+            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect).CreateRadioButton(group, "1");
+            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect1).CreateRadioButton(group, "2");
             acroForm.AddField(group);
-            PdfButtonFormField pushButton = PdfFormField.CreatePushButton(pdfDoc, new Rectangle(36, 650, 40, 20), "push"
-                , "Capcha");
-            PdfButtonFormField checkBox = PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(36, 560, 20, 20), "TestCheck"
-                , "1");
+            PdfButtonFormField pushButton = new PushButtonFormFieldBuilder(pdfDoc, "push").SetWidgetRectangle(new Rectangle
+                (36, 650, 40, 20)).SetCaption("Capcha").CreatePushButton();
+            PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(pdfDoc, "TestCheck").SetWidgetRectangle(new Rectangle
+                (36, 560, 20, 20)).CreateCheckBox();
+            checkBox.SetValue("1", true);
             acroForm.AddField(pushButton);
             acroForm.AddField(checkBox);
         }

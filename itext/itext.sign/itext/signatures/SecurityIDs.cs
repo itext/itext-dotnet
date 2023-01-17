@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -52,9 +52,21 @@ namespace iText.Signatures {
 
         public const String ID_RSA = "1.2.840.113549.1.1.1";
 
+        public const String ID_RSA_WITH_SHA256 = "1.2.840.113549.1.1.11";
+
+        public const String ID_RSA_WITH_SHA3_512 = "2.16.840.1.101.3.4.3.16";
+
         public const String ID_DSA = "1.2.840.10040.4.1";
 
         public const String ID_ECDSA = "1.2.840.10045.2.1";
+
+        public const String ID_ED25519 = "1.3.101.112";
+
+        public const String ID_ED448 = "1.3.101.113";
+
+        public const String ID_SHA512 = "2.16.840.1.101.3.4.2.3";
+
+        public const String ID_SHAKE256 = "2.16.840.1.101.3.4.2.12";
 
         public const String ID_CONTENT_TYPE = "1.2.840.113549.1.9.3";
 

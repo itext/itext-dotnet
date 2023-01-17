@@ -24,7 +24,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.9" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />

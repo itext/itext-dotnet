@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -406,7 +406,28 @@ namespace iText.Kernel.Pdf {
                 extensions = new PdfDictionary();
                 Put(PdfName.Extensions, extensions);
             }
+            if (extension.IsMultiValued()) {
+                // for multivalued extensions, we only check whether one of the same level is present or not
+                // (main use case: ISO extensions)
+                PdfArray existingExtensionArray = extensions.GetAsArray(extension.GetPrefix());
+                if (existingExtensionArray == null) {
+                    existingExtensionArray = new PdfArray();
+                    extensions.Put(extension.GetPrefix(), existingExtensionArray);
+                }
+                else {
+                    for (int i = 0; i < existingExtensionArray.Size(); i++) {
+                        PdfDictionary pdfDict = existingExtensionArray.GetAsDictionary(i);
+                        // for array-based extensions, we check for membership only, since comparison doesn't make sense
+                        if (pdfDict.GetAsNumber(PdfName.ExtensionLevel).IntValue() == extension.GetExtensionLevel()) {
+                            return;
+                        }
+                    }
+                }
+                existingExtensionArray.Add(extension.GetDeveloperExtensions());
+                existingExtensionArray.SetModified();
+            }
             else {
+                // for single-valued extensions, we compare against the existing extension level
                 PdfDictionary existingExtensionDict = extensions.GetAsDictionary(extension.GetPrefix());
                 if (existingExtensionDict != null) {
                     int diff = extension.GetBaseVersion().CompareTo(existingExtensionDict.GetAsName(PdfName.BaseVersion));
@@ -419,8 +440,8 @@ namespace iText.Kernel.Pdf {
                         return;
                     }
                 }
+                extensions.Put(extension.GetPrefix(), extension.GetDeveloperExtensions());
             }
-            extensions.Put(extension.GetPrefix(), extension.GetDeveloperExtensions());
         }
 
         /// <summary>

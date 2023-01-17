@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -270,7 +270,6 @@ namespace iText.Signatures {
             if (cal == TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
                 cal = pkcs7.GetSignDate();
             }
-            // TODO: get date from signature
             signDate = cal.ToUniversalTime();
             IList<String> names = sgnUtil.GetSignatureNames();
             if (names.Count > 1) {

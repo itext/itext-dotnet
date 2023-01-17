@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -619,6 +619,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName ExtensionLevel = CreateDirectName("ExtensionLevel");
 
+        public static readonly iText.Kernel.Pdf.PdfName ExtensionRevision = CreateDirectName("ExtensionRevision");
+
         public static readonly iText.Kernel.Pdf.PdfName ExtGState = CreateDirectName("ExtGState");
 
         public static readonly iText.Kernel.Pdf.PdfName F = CreateDirectName("F");
@@ -1232,6 +1234,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Pdf_Version_1_7 = CreateDirectName("1.7");
 
+        public static readonly iText.Kernel.Pdf.PdfName Pdf_Version_2_0 = CreateDirectName("2.0");
+
         public static readonly iText.Kernel.Pdf.PdfName Pg = CreateDirectName("Pg");
 
         public static readonly iText.Kernel.Pdf.PdfName PI = CreateDirectName("PI");
@@ -1803,6 +1807,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName zh_Latn_wadegile = CreateDirectName("zh-Latn-wadegile");
 
         public static readonly iText.Kernel.Pdf.PdfName Zoom = CreateDirectName("Zoom");
+
+        public static readonly iText.Kernel.Pdf.PdfName ISO_ = new iText.Kernel.Pdf.PdfName("ISO_");
 
         protected internal String value = null;
 

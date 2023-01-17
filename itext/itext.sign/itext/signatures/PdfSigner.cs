@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -473,7 +473,16 @@ namespace iText.Signatures {
             if (sigtype == PdfSigner.CryptoStandard.CADES && !IsDocumentPdf2()) {
                 AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
             }
-            String hashAlgorithm = externalSignature.GetHashAlgorithm();
+            if (externalSignature.GetSignatureAlgorithmName().StartsWith("Ed")) {
+                AddDeveloperExtension(PdfDeveloperExtension.ISO_32002);
+            }
+            // Note: at this level of abstraction, we have no easy way of determining whether we are signing using a
+            // specific ECDSA curve, so we can't auto-declare the extension safely, since we don't know whether
+            // the curve is on the ISO/TS 32002 allowed curves list. That responsibility is delegated to the user.
+            String hashAlgorithm = externalSignature.GetDigestAlgorithmName();
+            if (hashAlgorithm.StartsWith("SHA3-") || hashAlgorithm.Equals(DigestAlgorithms.SHAKE256)) {
+                AddDeveloperExtension(PdfDeveloperExtension.ISO_32001);
+            }
             PdfSignature dic = new PdfSignature(PdfName.Adobe_PPKLite, sigtype == PdfSigner.CryptoStandard.CADES ? PdfName
                 .ETSI_CAdES_DETACHED : PdfName.Adbe_pkcs7_detached);
             dic.SetReason(appearance.GetReason());
@@ -503,7 +512,7 @@ namespace iText.Signatures {
             }
             byte[] sh = sgn.GetAuthenticatedAttributeBytes(hash, sigtype, ocspList, crlBytes);
             byte[] extSignature = externalSignature.Sign(sh);
-            sgn.SetExternalDigest(extSignature, null, externalSignature.GetEncryptionAlgorithm());
+            sgn.SetExternalSignatureValue(extSignature, null, externalSignature.GetSignatureAlgorithmName());
             byte[] encodedSig = sgn.GetEncodedPKCS7(hash, sigtype, tsaClient, ocspList, crlBytes);
             if (estimatedSize < encodedSig.Length) {
                 throw new System.IO.IOException("Not enough space");
@@ -875,8 +884,7 @@ namespace iText.Signatures {
         protected internal virtual PdfSigFieldLock CreateNewSignatureFormField(PdfAcroForm acroForm, String name) {
             PdfWidgetAnnotation widget = new PdfWidgetAnnotation(appearance.GetPageRect());
             widget.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.LOCKED);
-            PdfSignatureFormField sigField = PdfFormField.CreateSignature(document);
-            sigField.SetFieldName(name);
+            PdfSignatureFormField sigField = new SignatureFormFieldBuilder(document, name).CreateSignature();
             sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
             sigField.AddKid(widget);
             PdfSigFieldLock sigFieldLock = sigField.GetSigFieldLockDictionary();
@@ -1077,7 +1085,7 @@ namespace iText.Signatures {
             }
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, false);
             if (acroForm != null) {
-                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
+                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
                     PdfDictionary fieldDict = entry.Value.GetPdfObject();
                     if (!PdfName.Sig.Equals(fieldDict.Get(PdfName.FT))) {
                         continue;

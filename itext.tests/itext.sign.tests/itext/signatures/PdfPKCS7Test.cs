@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,45 +24,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using iText.Bouncycastleconnector;
-using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
-using iText.Test;
 
 namespace iText.Signatures {
     [NUnit.Framework.Category("BouncyCastleUnitTest")]
-    public class PdfPKCS7Test : ExtendedITextTest {
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/PdfPKCS7Test/";
-
-        private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
-
-        private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
-
+    public class PdfPKCS7Test : PdfPKCS7BasicTest {
         private const double EPS = 0.001;
-
-        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
-            ();
-
-        private static IX509Certificate[] chain;
-
-        private static IPrivateKey pk;
-
-        [NUnit.Framework.OneTimeSetUp]
-        public static void Init() {
-            pk = PemFileHelper.ReadFirstKey(CERTS_SRC + "signCertRsa01.pem", PASSWORD);
-            chain = PemFileHelper.ReadFirstChain(CERTS_SRC + "signCertRsa01.pem");
-        }
 
         [NUnit.Framework.Test]
         public virtual void UnknownHashAlgorithmTest() {
@@ -83,7 +58,7 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual(expectedOid, pkcs7.GetDigestAlgorithmOid());
             NUnit.Framework.Assert.AreEqual(chain[0], pkcs7.GetSigningCertificate());
             NUnit.Framework.Assert.AreEqual(chain, pkcs7.GetCertificates());
-            NUnit.Framework.Assert.IsNull(pkcs7.GetDigestEncryptionAlgorithmOid());
+            NUnit.Framework.Assert.IsNull(pkcs7.GetSignatureMechanismOid());
             // test default fields
             NUnit.Framework.Assert.AreEqual(1, pkcs7.GetVersion());
             NUnit.Framework.Assert.AreEqual(1, pkcs7.GetSigningInfoVersion());
@@ -97,7 +72,14 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual(expectedOid, pkcs7.GetDigestAlgorithmOid());
             NUnit.Framework.Assert.AreEqual(chain[0], pkcs7.GetSigningCertificate());
             NUnit.Framework.Assert.AreEqual(chain, pkcs7.GetCertificates());
-            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_RSA, pkcs7.GetDigestEncryptionAlgorithmOid());
+            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_RSA_WITH_SHA256, pkcs7.GetSignatureMechanismOid());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotAvailableSignatureTest() {
+            String hashAlgorithm = "GOST3411";
+            // Throws different exceptions on .net and java, bc/bcfips
+            NUnit.Framework.Assert.Catch(typeof(Exception), () => new PdfPKCS7(pk, chain, hashAlgorithm, false));
         }
 
         [NUnit.Framework.Test]
@@ -284,8 +266,30 @@ namespace iText.Signatures {
             byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "cmpBytesPkcs7.txt"));
             IASN1Primitive outStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(bytes);
             IASN1Primitive cmpStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(cmpBytes);
-            NUnit.Framework.Assert.AreEqual("SHA256withRSA", pkcs7.GetDigestAlgorithm());
+            NUnit.Framework.Assert.AreEqual("SHA256withRSA", pkcs7.GetSignatureMechanismName());
             NUnit.Framework.Assert.AreEqual(outStream, cmpStream);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyEd448SignatureTest() {
+            // SHAKE256 is not available in BCFIPS
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf"
+                    ));
+            }
+            else {
+                VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyNistECDSASha2SignatureTest() {
+            VerifyIsoExtensionExample("SHA256withECDSA", "sample-nistp256-sha256.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyBrainpoolSha2SignatureTest() {
+            VerifyIsoExtensionExample("SHA384withECDSA", "sample-brainpoolP384r1-sha384.pdf");
         }
 
         // PdfPKCS7 is created here the same way it's done in PdfSigner#signDetached

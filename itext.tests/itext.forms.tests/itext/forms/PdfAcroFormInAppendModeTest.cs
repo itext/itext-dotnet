@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -52,8 +52,8 @@ namespace iText.Forms {
             String outputFile = "addFieldTest.pdf";
             PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), new PdfWriter(DESTINATION_DIR
                  + outputFile), new StampingProperties().UseAppendMode());
-            PdfFormField field = PdfFormField.CreateCheckBox(outputDoc, new Rectangle(10, 10, 24, 24), "checkboxname", 
-                "On", PdfFormField.TYPE_CHECK);
+            PdfFormField field = new CheckBoxFormFieldBuilder(outputDoc, "checkboxname").SetWidgetRectangle(new Rectangle
+                (10, 10, 24, 24)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_CHECK).SetValue("On");
             PdfAcroForm.GetAcroForm(outputDoc, true).AddField(field);
             outputDoc.Close();
             CompareWithCmp(outputFile);
@@ -75,10 +75,8 @@ namespace iText.Forms {
             String inputFile = "in_removeKidTest.pdf";
             PdfDocument inDoc = new PdfDocument(new PdfWriter(DESTINATION_DIR + inputFile));
             inDoc.AddNewPage();
-            PdfFormField root = PdfFormField.CreateEmptyField(inDoc);
-            root.SetFieldName("root");
-            PdfFormField child = PdfFormField.CreateEmptyField(inDoc);
-            child.SetFieldName("child");
+            PdfFormField root = new NonTerminalFormFieldBuilder(inDoc, "root").CreateNonTerminalFormField();
+            PdfFormField child = new NonTerminalFormFieldBuilder(inDoc, "child").CreateNonTerminalFormField();
             root.AddKid(child);
             PdfAcroForm.GetAcroForm(inDoc, true).AddField(root);
             inDoc.Close();
@@ -97,8 +95,8 @@ namespace iText.Forms {
             String outputFile = "replaceFieldTest.pdf";
             PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), new PdfWriter(DESTINATION_DIR
                  + outputFile), new StampingProperties().UseAppendMode());
-            PdfFormField newField = PdfFormField.CreateText(outputDoc, new Rectangle(20, 160, 100, 20), "newfield", "new field"
-                );
+            PdfFormField newField = new TextFormFieldBuilder(outputDoc, "newfield").SetWidgetRectangle(new Rectangle(20
+                , 160, 100, 20)).CreateText().SetValue("new field");
             PdfAcroForm.GetAcroForm(outputDoc, true).ReplaceField("textfield1", newField);
             outputDoc.Close();
             CompareWithCmp(outputFile);
@@ -109,8 +107,8 @@ namespace iText.Forms {
             String outputFile = "addFieldToIndirectFieldsArrayTest.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(INPUT_FILE_WITH_INDIRECT_FIELDS_ARRAY), new PdfWriter
                 (DESTINATION_DIR + outputFile), new StampingProperties().UseAppendMode());
-            PdfFormField field = PdfFormField.CreateCheckBox(document, new Rectangle(10, 10, 24, 24), "checkboxname", 
-                "On", PdfFormField.TYPE_CHECK);
+            PdfFormField field = new CheckBoxFormFieldBuilder(document, "checkboxname").SetWidgetRectangle(new Rectangle
+                (10, 10, 24, 24)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_CHECK).SetValue("On");
             // Get an existing acroform and add new field to it
             PdfAcroForm.GetAcroForm(document, false).AddField(field);
             document.Close();
@@ -134,10 +132,8 @@ namespace iText.Forms {
             // Creating input document
             PdfDocument inDoc = new PdfDocument(new PdfWriter(DESTINATION_DIR + inputFile));
             inDoc.AddNewPage();
-            PdfFormField root = PdfFormField.CreateEmptyField(inDoc);
-            root.SetFieldName("root");
-            PdfFormField child = PdfFormField.CreateEmptyField(inDoc);
-            child.SetFieldName("child");
+            PdfFormField root = new NonTerminalFormFieldBuilder(inDoc, "root").CreateNonTerminalFormField();
+            PdfFormField child = new NonTerminalFormFieldBuilder(inDoc, "child").CreateNonTerminalFormField();
             root.AddKid(child);
             PdfAcroForm.GetAcroForm(inDoc, true).AddField(root);
             // make kids array indirect
@@ -158,8 +154,8 @@ namespace iText.Forms {
             String outputFile = "addFieldToDirectAcroFormTest.pdf";
             PdfDocument outputDoc = new PdfDocument(new PdfReader(inputFile), new PdfWriter(DESTINATION_DIR + outputFile
                 ), new StampingProperties().UseAppendMode());
-            PdfFormField field = PdfFormField.CreateCheckBox(outputDoc, new Rectangle(10, 10, 24, 24), "checkboxname", 
-                "On", PdfFormField.TYPE_CHECK);
+            PdfFormField field = new CheckBoxFormFieldBuilder(outputDoc, "checkboxname").SetWidgetRectangle(new Rectangle
+                (10, 10, 24, 24)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_CHECK).SetValue("On");
             PdfAcroForm.GetAcroForm(outputDoc, true).AddField(field);
             outputDoc.Close();
             CompareWithCmp(outputFile);

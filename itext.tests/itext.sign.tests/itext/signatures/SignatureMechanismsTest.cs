@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,30 +24,30 @@ using iText.Test;
 
 namespace iText.Signatures {
     [NUnit.Framework.Category("UnitTest")]
-    public class EncryptionAlgorithmsTest : ExtendedITextTest {
+    public class SignatureMechanismsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetAlgorithmRSATest() {
-            NUnit.Framework.Assert.AreEqual("RSA", EncryptionAlgorithms.GetAlgorithm("1.2.840.113549.1.1.1"));
+            NUnit.Framework.Assert.AreEqual("RSA", SignatureMechanisms.GetAlgorithm("1.2.840.113549.1.1.1"));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetAlgorithmECDSATest() {
-            NUnit.Framework.Assert.AreEqual("ECDSA", EncryptionAlgorithms.GetAlgorithm("1.2.840.10045.2.1"));
+            NUnit.Framework.Assert.AreEqual("ECDSA", SignatureMechanisms.GetAlgorithm("1.2.840.10045.2.1"));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetAlgorithmEmptyTest() {
-            NUnit.Framework.Assert.AreEqual("", EncryptionAlgorithms.GetAlgorithm(""));
+            NUnit.Framework.Assert.AreEqual("", SignatureMechanisms.GetAlgorithm(""));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetAlgorithmEmptySpaceTest() {
-            NUnit.Framework.Assert.AreEqual(" ", EncryptionAlgorithms.GetAlgorithm(" "));
+            NUnit.Framework.Assert.AreEqual(" ", SignatureMechanisms.GetAlgorithm(" "));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetAlgorithmUndefinedTest() {
-            NUnit.Framework.Assert.AreEqual("undefined", EncryptionAlgorithms.GetAlgorithm("undefined"));
+            NUnit.Framework.Assert.AreEqual("undefined", SignatureMechanisms.GetAlgorithm("undefined"));
         }
     }
 }

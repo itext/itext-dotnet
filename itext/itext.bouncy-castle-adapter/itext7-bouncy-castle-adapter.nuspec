@@ -13,17 +13,17 @@
     <description>Bouncy-castle adapter module</description>
     <summary />
     <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
-    <copyright>Copyright (c) 1998-2022 iText Group NV</copyright>
+    <copyright>Copyright (c) 1998-2023 iText Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp</tags>
     <dependencies>
       <group targetFramework="net461">
 		<dependency id="itext7.commons" version="8.0.0-SNAPSHOT" />
-		<dependency id="Portable.BouncyCastle" version="1.8.9" />
+		<dependency id="Portable.BouncyCastle" version="1.8.10" />
       </group>
       <group targetFramework="netstandard2.0">
 		<dependency id="itext7.commons" version="8.0.0-SNAPSHOT" />
-		<dependency id="Portable.BouncyCastle" version="1.8.9" />
+		<dependency id="Portable.BouncyCastle" version="1.8.10" />
       </group>
     </dependencies>
   </metadata>

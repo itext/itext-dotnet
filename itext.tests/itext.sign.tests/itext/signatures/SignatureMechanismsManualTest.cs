@@ -1,6 +1,6 @@
 ﻿/*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -26,13 +26,13 @@ using iText.Test;
 
 namespace iText.Signatures
 {
-    public class EncryptionAlgorithmsManualTest : ExtendedITextTest
+    public class SignatureMechanismsManualTest : ExtendedITextTest
     {
         [NUnit.Framework.Test]
         public virtual void GetAlgorithmNullTest()
         {
             NUnit.Framework.Assert.Catch(typeof(ArgumentNullException),
-                () => EncryptionAlgorithms.GetAlgorithm(null));
+                () => SignatureMechanisms.GetAlgorithm(null));
         }
     }
 }

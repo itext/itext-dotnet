@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -70,7 +70,7 @@ namespace iText.Forms {
             props.UseAppendMode();
             PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(temp), props);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            foreach (PdfFormField field in form.GetFormFields().Values) {
+            foreach (PdfFormField field in form.GetAllFormFields().Values) {
                 field.SetValue("Test");
             }
             doc.Close();
@@ -94,7 +94,7 @@ namespace iText.Forms {
             props.UseAppendMode();
             PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(temp), props);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            foreach (PdfFormField field in form.GetFormFields().Values) {
+            foreach (PdfFormField field in form.GetAllFormFields().Values) {
                 field.SetValue("Different");
             }
             doc.Close();

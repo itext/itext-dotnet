@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -124,16 +124,16 @@ namespace iText.Forms {
             String cmpPdf = sourceFolder + "cmp_checkBoxFontSizeTest04.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
             pdfDoc.AddNewPage();
-            AddCheckBox(pdfDoc, 0, 730, 10, PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(50, 730, 10, 10), "cb_1"
-                , "YES", PdfFormField.TYPE_CIRCLE));
-            AddCheckBox(pdfDoc, 0, 700, 10, PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(50, 700, 10, 10), "cb_2"
-                , "YES", PdfFormField.TYPE_CROSS));
-            AddCheckBox(pdfDoc, 0, 670, 10, PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(50, 670, 10, 10), "cb_3"
-                , "YES", PdfFormField.TYPE_DIAMOND));
-            AddCheckBox(pdfDoc, 0, 640, 10, PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(50, 640, 10, 10), "cb_4"
-                , "YES", PdfFormField.TYPE_SQUARE));
-            AddCheckBox(pdfDoc, 0, 610, 10, PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(50, 610, 10, 10), "cb_5"
-                , "YES", PdfFormField.TYPE_STAR));
+            AddCheckBox(pdfDoc, 0, 730, 10, new CheckBoxFormFieldBuilder(pdfDoc, "cb_1").SetWidgetRectangle(new Rectangle
+                (50, 730, 10, 10)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_CIRCLE).SetValue("YES"));
+            AddCheckBox(pdfDoc, 0, 700, 10, new CheckBoxFormFieldBuilder(pdfDoc, "cb_2").SetWidgetRectangle(new Rectangle
+                (50, 700, 10, 10)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_CROSS).SetValue("YES"));
+            AddCheckBox(pdfDoc, 0, 670, 10, new CheckBoxFormFieldBuilder(pdfDoc, "cb_3").SetWidgetRectangle(new Rectangle
+                (50, 670, 10, 10)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_DIAMOND).SetValue("YES"));
+            AddCheckBox(pdfDoc, 0, 640, 10, new CheckBoxFormFieldBuilder(pdfDoc, "cb_4").SetWidgetRectangle(new Rectangle
+                (50, 640, 10, 10)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_SQUARE).SetValue("YES"));
+            AddCheckBox(pdfDoc, 0, 610, 10, new CheckBoxFormFieldBuilder(pdfDoc, "cb_5").SetWidgetRectangle(new Rectangle
+                (50, 610, 10, 10)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_STAR).SetValue("YES"));
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
@@ -194,8 +194,9 @@ namespace iText.Forms {
 
         private void AddCheckBox(PdfDocument pdfDoc, float fontSize, float yPos, float checkBoxW, float checkBoxH) {
             Rectangle rect = new Rectangle(50, yPos, checkBoxW, checkBoxH);
-            AddCheckBox(pdfDoc, fontSize, yPos, checkBoxW, PdfFormField.CreateCheckBox(pdfDoc, rect, MessageFormatUtil
-                .Format("cb_fs_{0}_{1}_{2}", fontSize, checkBoxW, checkBoxH), "YES", PdfFormField.TYPE_CHECK));
+            AddCheckBox(pdfDoc, fontSize, yPos, checkBoxW, new CheckBoxFormFieldBuilder(pdfDoc, MessageFormatUtil.Format
+                ("cb_fs_{0}_{1}_{2}", fontSize, checkBoxW, checkBoxH)).SetWidgetRectangle(rect).CreateCheckBox().SetCheckType
+                (PdfFormField.TYPE_CHECK).SetValue("YES"));
         }
 
         private void AddCheckBox(PdfDocument pdfDoc, float fontSize, float yPos, float checkBoxW, PdfFormField checkBox

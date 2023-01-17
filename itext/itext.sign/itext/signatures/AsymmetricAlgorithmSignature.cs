@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -97,12 +97,12 @@ namespace iText.Signatures {
     public class AsymmetricAlgorithmSignature : IExternalSignature {
         private AsymmetricAlgorithm algorithm;
         /** The hash algorithm. */
-        private String hashAlgorithm;
+        private String digestAlgorithm;
         /** The encryption algorithm (obtained from the private key) */
-        private String encryptionAlgorithm;
+        private String signatureAlgorithm;
 
-        public AsymmetricAlgorithmSignature(RSACryptoServiceProvider algorithm, String hashAlgorithm)
-            : this((AsymmetricAlgorithm) algorithm, hashAlgorithm) {
+        public AsymmetricAlgorithmSignature(RSACryptoServiceProvider algorithm, String digestAlgorithm)
+            : this((AsymmetricAlgorithm) algorithm, digestAlgorithm) {
         }
 
 #if !NETSTANDARD2_0
@@ -111,15 +111,15 @@ namespace iText.Signatures {
         }
 #endif
 
-        private AsymmetricAlgorithmSignature(AsymmetricAlgorithm algorithm, String hashAlgorithm) {
+        private AsymmetricAlgorithmSignature(AsymmetricAlgorithm algorithm, String digestAlgorithm) {
             this.algorithm = algorithm;
-            this.hashAlgorithm = DigestAlgorithms.GetDigest(DigestAlgorithms.GetAllowedDigest(hashAlgorithm));
+            this.digestAlgorithm = DigestAlgorithms.GetDigest(DigestAlgorithms.GetAllowedDigest(digestAlgorithm));
 
             if (algorithm is RSACryptoServiceProvider)
-                encryptionAlgorithm = "RSA";
+                signatureAlgorithm = "RSA";
 #if !NETSTANDARD2_0
             else if (algorithm is DSACryptoServiceProvider)
-                encryptionAlgorithm = "DSA";
+                signatureAlgorithm = "DSA";
 #endif
             else
                 throw new ArgumentException("Not supported encryption algorithm " + algorithm);
@@ -128,7 +128,7 @@ namespace iText.Signatures {
         public byte[] Sign(byte[] message) {
             if (algorithm is RSACryptoServiceProvider) {
                 RSACryptoServiceProvider rsa = (RSACryptoServiceProvider) algorithm;
-                return rsa.SignData(message, hashAlgorithm);
+                return rsa.SignData(message, digestAlgorithm);
             }
 #if !NETSTANDARD2_0
             else
@@ -143,12 +143,12 @@ namespace iText.Signatures {
 #endif
         }
 
-        public string GetHashAlgorithm() {
-            return hashAlgorithm;
+        public string GetDigestAlgorithmName() {
+            return digestAlgorithm;
         }
 
-        public string GetEncryptionAlgorithm() {
-            return encryptionAlgorithm;
+        public string GetSignatureAlgorithmName() {
+            return signatureAlgorithm;
         }
     }
 }

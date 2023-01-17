@@ -1,7 +1,7 @@
 /*
 *
 * This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 * Authors: Bruno Lowagie, Paulo Soares, et al.
 *
 * This program is free software; you can redistribute it and/or modify
@@ -65,6 +65,36 @@ namespace iText.Signatures {
         /// <summary>Algorithm available for signatures since PDF 1.7.</summary>
         public const String RIPEMD160 = "RIPEMD160";
 
+        /// <summary>
+        /// Algorithm available for signatures since PDF 2.0
+        /// extended by ISO/TS 32001.
+        /// </summary>
+        public const String SHA3_256 = "SHA3-256";
+
+        /// <summary>
+        /// Algorithm available for signatures since PDF 2.0
+        /// extended by ISO/TS 32001.
+        /// </summary>
+        public const String SHA3_512 = "SHA3-512";
+
+        /// <summary>
+        /// Algorithm available for signatures since PDF 2.0
+        /// extended by ISO/TS 32001.
+        /// </summary>
+        public const String SHA3_384 = "SHA3-384";
+
+        /// <summary>
+        /// Algorithm available for signatures since PDF 2.0
+        /// extended by ISO/TS 32001.
+        /// </summary>
+        /// <remarks>
+        /// Algorithm available for signatures since PDF 2.0
+        /// extended by ISO/TS 32001.
+        /// <para />
+        /// The output length is fixed at 512 bits (64 bytes).
+        /// </remarks>
+        public const String SHAKE256 = "SHAKE256";
+
         /// <summary>Maps the digest IDs with the human-readable name of the digest algorithm.</summary>
         private static readonly IDictionary<String, String> digestNames = new Dictionary<String, String>();
 
@@ -103,6 +133,11 @@ namespace iText.Signatures {
             digestNames.Put("1.3.36.3.3.1.2", "RIPEMD160");
             digestNames.Put("1.3.36.3.3.1.4", "RIPEMD256");
             digestNames.Put("1.2.643.2.2.9", "GOST3411");
+            digestNames.Put("2.16.840.1.101.3.4.2.7", "SHA3-224");
+            digestNames.Put("2.16.840.1.101.3.4.2.8", "SHA3-256");
+            digestNames.Put("2.16.840.1.101.3.4.2.9", "SHA3-384");
+            digestNames.Put("2.16.840.1.101.3.4.2.10", "SHA3-512");
+            digestNames.Put("2.16.840.1.101.3.4.2.12", "SHAKE256");
             fixNames.Put("SHA256", SHA256);
             fixNames.Put("SHA384", SHA384);
             fixNames.Put("SHA512", SHA512);
@@ -127,6 +162,11 @@ namespace iText.Signatures {
             allowedDigests.Put("RIPEMD256", "1.3.36.3.2.3");
             allowedDigests.Put("RIPEMD-256", "1.3.36.3.2.3");
             allowedDigests.Put("GOST3411", "1.2.643.2.2.9");
+            allowedDigests.Put("SHA3-224", "2.16.840.1.101.3.4.2.7");
+            allowedDigests.Put("SHA3-256", "2.16.840.1.101.3.4.2.8");
+            allowedDigests.Put("SHA3-384", "2.16.840.1.101.3.4.2.9");
+            allowedDigests.Put("SHA3-512", "2.16.840.1.101.3.4.2.10");
+            allowedDigests.Put("SHAKE256", "2.16.840.1.101.3.4.2.12");
         }
 
         /// <summary>Get a digest algorithm.</summary>

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -66,9 +66,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         private const int firstReadBufferSize = 1024 * 5;
 
         internal const int bufferSize = 1024 * 32;
-
-        private static readonly char[] mimeBoundaryChars = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            .ToCharArray();
 
         internal const int boundaryLength = 32;
 
@@ -305,16 +302,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
                 return cs;
             }
             return null;
-        }
-
-        /// <summary>Creates a random string, suitable for use as a mime boundary</summary>
-        internal static String MimeBoundary() {
-            StringBuilder mime = StyledXmlParser.Jsoup.Internal.StringUtil.BorrowBuilder();
-            Random rand = new Random();
-            for (int i = 0; i < boundaryLength; i++) {
-                mime.Append(mimeBoundaryChars[rand.Next(mimeBoundaryChars.Length)]);
-            }
-            return StyledXmlParser.Jsoup.Internal.StringUtil.ReleaseBuilder(mime);
         }
 
         private static DataUtil.BomCharset DetectCharsetFromBom(ByteBuffer byteData) {

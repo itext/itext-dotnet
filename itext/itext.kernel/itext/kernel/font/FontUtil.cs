@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
@@ -54,13 +55,20 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
     public class FontUtil {
+        private static readonly RNGCryptoServiceProvider NUMBER_GENERATOR = new RNGCryptoServiceProvider();
+
         private static readonly Dictionary<String, CMapToUnicode> uniMaps = new Dictionary<String, CMapToUnicode>(
             );
 
+        private FontUtil() {
+        }
+
         public static String AddRandomSubsetPrefixForFontName(String fontName) {
             StringBuilder newFontName = new StringBuilder(fontName.Length + 7);
+            byte[] randomByte = new byte[1];
             for (int k = 0; k < 6; ++k) {
-                newFontName.Append((char)(JavaUtil.Random() * 26 + 'A'));
+                NUMBER_GENERATOR.GetBytes(randomByte);
+                newFontName.Append((char)(Math.Abs(randomByte[0] % 26) + 'A'));
             }
             newFontName.Append('+').Append(fontName);
             return newFontName.ToString();
@@ -125,7 +133,7 @@ namespace iText.Kernel.Font {
             int[] res = new int[256];
             JavaUtil.Fill(res, missingWidth);
             if (widthsArray == null) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(FontUtil));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.FontUtil));
                 logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.FONT_DICTIONARY_WITH_NO_WIDTHS);
                 return res;
             }

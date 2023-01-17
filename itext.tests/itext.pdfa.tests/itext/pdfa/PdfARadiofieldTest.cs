@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -82,14 +82,18 @@ namespace iText.Pdfa {
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfButtonFormField group = PdfFormField.CreateRadioGroup(doc, "group", "1", PdfAConformanceLevel.PDF_A_1B);
+            PdfButtonFormField group = new RadioFormFieldBuilder(doc, "group").SetConformanceLevel(PdfAConformanceLevel
+                .PDF_A_1B).CreateRadioGroup();
+            group.SetValue("1", true);
             group.SetReadOnly(true);
             Rectangle rect1 = new Rectangle(36, 700, 20, 20);
             Rectangle rect2 = new Rectangle(36, 680, 20, 20);
-            PdfFormField.CreateRadioButton(doc, rect1, group, "1", PdfAConformanceLevel.PDF_A_1B).SetBorderWidth(2).SetBorderColor
-                (ColorConstants.RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
-            PdfFormField.CreateRadioButton(doc, rect2, group, "2", PdfAConformanceLevel.PDF_A_1B).SetBorderWidth(2).SetBorderColor
-                (ColorConstants.RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
+            new RadioFormFieldBuilder(doc).SetWidgetRectangle(rect1).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B
+                ).CreateRadioButton(group, "1").SetBorderWidth(2).SetBorderColor(ColorConstants.RED).SetBackgroundColor
+                (ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
+            new RadioFormFieldBuilder(doc).SetWidgetRectangle(rect2).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B
+                ).CreateRadioButton(group, "2").SetBorderWidth(2).SetBorderColor(ColorConstants.RED).SetBackgroundColor
+                (ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
             form.AddField(group);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff

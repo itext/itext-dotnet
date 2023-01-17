@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -55,17 +55,21 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             pdfDoc.AddNewPage();
             // 规
-            form.AddField(PdfFormField.CreateComboBox(pdfDoc, new Rectangle(36, 666, 40, 80), "combo1", "\u89c4", new 
-                String[] { "\u89c4", "\u89c9" }, font, null).SetBorderColor(ColorConstants.BLACK));
+            form.AddField(new ChoiceFormFieldBuilder(pdfDoc, "combo1").SetWidgetRectangle(new Rectangle(36, 666, 40, 80
+                )).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateComboBox().SetValue
+                ("\u89c4").SetFont(font).SetBorderColor(ColorConstants.BLACK));
             // 觉
-            form.AddField(PdfFormField.CreateComboBox(pdfDoc, new Rectangle(136, 666, 40, 80), "combo2", "\u89c4", new 
-                String[] { "\u89c4", "\u89c9" }, font, null).SetValue("\u89c9").SetBorderColor(ColorConstants.BLACK));
+            form.AddField(new ChoiceFormFieldBuilder(pdfDoc, "combo2").SetWidgetRectangle(new Rectangle(136, 666, 40, 
+                80)).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateComboBox().SetValue
+                ("\u89c4").SetFont(font).SetValue("\u89c9").SetBorderColor(ColorConstants.BLACK));
             // 规
-            form.AddField(PdfFormField.CreateList(pdfDoc, new Rectangle(236, 666, 50, 80), "list1", "\u89c4", new String
-                [] { "\u89c4", "\u89c9" }, font, null).SetBorderColor(ColorConstants.BLACK));
+            form.AddField(new ChoiceFormFieldBuilder(pdfDoc, "list1").SetWidgetRectangle(new Rectangle(236, 666, 50, 80
+                )).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList().SetValue("\u89c4"
+                ).SetFont(font).SetBorderColor(ColorConstants.BLACK));
             // 觉
-            form.AddField(PdfFormField.CreateList(pdfDoc, new Rectangle(336, 666, 50, 80), "list2", "\u89c4", new String
-                [] { "\u89c4", "\u89c9" }, font, null).SetValue("\u89c9").SetBorderColor(ColorConstants.BLACK));
+            form.AddField(new ChoiceFormFieldBuilder(pdfDoc, "list2").SetWidgetRectangle(new Rectangle(336, 666, 50, 80
+                )).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList().SetValue("\u89c4"
+                ).SetFont(font).SetValue("\u89c9").SetBorderColor(ColorConstants.BLACK));
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
@@ -130,9 +134,9 @@ namespace iText.Forms {
             PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
             document.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
-            PdfChoiceFormField choice = (PdfChoiceFormField)PdfFormField.CreateList(document, new Rectangle(336, 666, 
-                50, 80), "choice", "two", new String[] { "one", "two", "three", "four" }, null, null).SetBorderColor(ColorConstants
-                .BLACK);
+            PdfChoiceFormField choice = (PdfChoiceFormField)new ChoiceFormFieldBuilder(document, "choice").SetWidgetRectangle
+                (new Rectangle(336, 666, 50, 80)).SetOptions(new String[] { "one", "two", "three", "four" }).SetConformanceLevel
+                (null).CreateList().SetValue("two").SetFont(null).SetBorderColor(ColorConstants.BLACK);
             choice.SetMultiSelect(true);
             choice.SetListSelected(new String[] { "one", "three", "eins", "drei" });
             NUnit.Framework.Assert.AreEqual(new int[] { 0, 2 }, choice.GetIndices().ToIntArray());
@@ -246,7 +250,9 @@ namespace iText.Forms {
             String longOption = "Long long long long long long long option";
             String[] options = new String[] { shortOption, longOption };
             Rectangle rect = new Rectangle(50, 650, 100, 100);
-            PdfChoiceFormField choice = PdfFormField.CreateList(pdfDocument, rect, "List", "Short option", options);
+            PdfChoiceFormField choice = new ChoiceFormFieldBuilder(pdfDocument, "List").SetWidgetRectangle(rect).SetOptions
+                (options).CreateList();
+            choice.SetValue("Short option", true);
             form.AddField(choice);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

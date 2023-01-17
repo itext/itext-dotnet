@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -27,6 +27,8 @@ namespace iText.Forms.Exceptions {
     public sealed class FormsExceptionMessageConstant {
         public const String FIELD_FLATTENING_IS_NOT_SUPPORTED_IN_APPEND_MODE = "Field flattening is not supported "
              + "in append mode.";
+
+        public const String INNER_ARRAY_SHALL_HAVE_TWO_ELEMENTS = "Inner arrays shall have exactly two elements";
 
         public const String PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING = ""
              + "The page has been already flushed. Use PdfAcroForm#addFieldAppearanceToPage() method before page "

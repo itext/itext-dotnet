@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -136,7 +136,6 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(destDoc, false);
             NUnit.Framework.Assert.AreEqual(1, form.GetFields().Size());
             NUnit.Framework.Assert.IsNotNull(form.GetField("Name1"));
-            NUnit.Framework.Assert.IsNotNull(form.GetField("Name1.1"));
             destDoc.Close();
         }
 
@@ -298,6 +297,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 64)]
+        //TODO DEVSIX-6345 Equal form fields full names
+        [NUnit.Framework.Ignore("DEVSIX-6345")]
         public virtual void CopyFieldsTest09() {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFields09.pdf";

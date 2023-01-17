@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -70,7 +70,7 @@ namespace iText.Signatures {
         internal static String GetPrivateKeyAlgorithm(IPrivateKey privateKey) {
             String algorithm = privateKey.GetAlgorithm();
             if (algorithm == null) {
-                throw new PdfException(SignExceptionMessageConstant.UNKNOWN_KEY_ALGORITHM).SetMessageParams(privateKey.ToString());
+                throw new PdfException(SignExceptionMessageConstant.COULD_NOT_DETERMINE_SIGNATURE_MECHANISM_OID).SetMessageParams(algorithm, privateKey.GetHashCode());
             }
 
             return algorithm;

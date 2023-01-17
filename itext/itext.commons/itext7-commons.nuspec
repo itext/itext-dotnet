@@ -13,7 +13,7 @@
     <description>Commons module</description>
     <summary />
     <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
-    <copyright>Copyright (c) 1998-2022 iText Group NV</copyright>
+    <copyright>Copyright (c) 1998-2023 iText Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp</tags>
     <dependencies>

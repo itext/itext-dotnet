@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -64,7 +64,7 @@ namespace iText.Forms {
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -72,7 +72,7 @@ namespace iText.Forms {
             String filename = sourceFolder + "utf-8-field-name.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             pdfDoc.Close();
             foreach (String fldName in fields.Keys) {
                 //  لا
@@ -86,7 +86,7 @@ namespace iText.Forms {
             String filename = sourceFolder + "utf-8-text-annot.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             pdfDoc.Close();
             foreach (String fldName in fields.Keys) {
                 //  福昕 福昕UTF8
@@ -99,7 +99,9 @@ namespace iText.Forms {
             //TODO DEVSIX-2798
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "writeUtf8FieldNameAndValue.pdf"));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfTextFormField field = PdfTextFormField.CreateText(pdfDoc, new Rectangle(99, 753, 425, 15), "", "");
+            PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "").SetWidgetRectangle(new Rectangle(99, 753, 425
+                , 15)).CreateText();
+            field.SetValue("");
             field.SetFont(PdfFontFactory.CreateFont(FONT, PdfEncodings.IDENTITY_H));
             //  لا
             field.Put(PdfName.T, new PdfString("\u0644\u0627", PdfEncodings.UTF8));
