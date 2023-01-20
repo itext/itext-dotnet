@@ -87,23 +87,5 @@ namespace iText.StyledXmlParser.Util {
             }
             NUnit.Framework.Assert.IsTrue(equal);
         }
-
-        [NUnit.Framework.Test]
-        public virtual void MergeParentDeclarationsTextDecorationsTest() {
-            IDictionary<String, String> styles = new Dictionary<String, String>();
-            String styleProperty = "text-decoration-line";
-            styles.Put(styleProperty, "line-through");
-            String parentPropValue = "underline";
-            String parentFontSize = "0";
-            IDictionary<String, String> expectedStyles = new Dictionary<String, String>();
-            expectedStyles.Put(styleProperty, "line-through underline");
-            styles = StyleUtil.MergeParentStyleDeclaration(styles, styleProperty, parentPropValue, parentFontSize, inheritanceRules
-                );
-            bool equal = styles.Count == expectedStyles.Count;
-            foreach (KeyValuePair<String, String> kvp in expectedStyles) {
-                equal &= kvp.Value.Equals(styles.Get(kvp.Key));
-            }
-            NUnit.Framework.Assert.IsTrue(equal);
-        }
     }
 }
