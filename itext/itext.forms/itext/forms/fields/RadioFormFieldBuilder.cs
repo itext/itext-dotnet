@@ -49,7 +49,6 @@ namespace iText.Forms.Fields {
         /// </returns>
         public virtual PdfButtonFormField CreateRadioGroup() {
             PdfButtonFormField radio = new PdfButtonFormField(GetDocument());
-            radio.UpdateFontAndFontSize(GetDocument().GetDefaultFont(), PdfFormField.DEFAULT_FONT_SIZE);
             radio.pdfAConformanceLevel = GetConformanceLevel();
             radio.SetFieldName(GetFormFieldName());
             radio.SetFieldFlags(PdfButtonFormField.FF_RADIO);
@@ -76,15 +75,14 @@ namespace iText.Forms.Fields {
                     annotation.SetAppearanceState(appearanceState);
                 }
                 else {
-                    annotation.SetAppearanceState(new PdfName(PdfFormField.OFF_STATE_VALUE));
+                    annotation.SetAppearanceState(new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
                 }
                 radio = new PdfButtonFormField(annotation, GetDocument());
             }
             radio.pdfAConformanceLevel = GetConformanceLevel();
-            radio.UpdateFontAndFontSize(GetDocument().GetDefaultFont(), PdfFormField.DEFAULT_FONT_SIZE);
             if (GetWidgetRectangle() != null) {
-                radio.DrawRadioAppearance(GetWidgetRectangle().GetWidth(), GetWidgetRectangle().GetHeight(), appearanceName
-                    );
+                radio.GetFirstFormAnnotation().DrawRadioAppearance(GetWidgetRectangle().GetWidth(), GetWidgetRectangle().GetHeight
+                    (), appearanceName);
                 SetPageToField(radio);
             }
             radioGroup.AddKid(radio);

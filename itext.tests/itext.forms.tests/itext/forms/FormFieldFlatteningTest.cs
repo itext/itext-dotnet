@@ -191,17 +191,23 @@ namespace iText.Forms {
                     int? justification = field.GetJustification();
                     if (null == justification || 0 == (int)justification) {
                         // reddish
-                        field.SetBackgroundColor(new DeviceRgb(255, 200, 200));
+                        foreach (PdfFormAnnotation annot in field.GetChildFormAnnotations()) {
+                            annot.SetBackgroundColor(new DeviceRgb(255, 200, 200));
+                        }
                     }
                     else {
                         if (1 == (int)justification) {
                             // greenish
-                            field.SetBackgroundColor(new DeviceRgb(200, 255, 200));
+                            foreach (PdfFormAnnotation annot in field.GetChildFormAnnotations()) {
+                                annot.SetBackgroundColor(new DeviceRgb(200, 255, 200));
+                            }
                         }
                         else {
                             if (2 == (int)justification) {
                                 // blueish
-                                field.SetBackgroundColor(new DeviceRgb(200, 200, 255));
+                                foreach (PdfFormAnnotation annot in field.GetChildFormAnnotations()) {
+                                    annot.SetBackgroundColor(new DeviceRgb(200, 200, 255));
+                                }
                             }
                         }
                     }

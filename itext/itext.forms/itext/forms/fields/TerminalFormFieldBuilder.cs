@@ -93,7 +93,7 @@ namespace iText.Forms.Fields {
 
         internal virtual void SetPageToField(PdfFormField field) {
             if (page != 0) {
-                field.SetPage(page);
+                field.GetFirstFormAnnotation().SetPage(page);
             }
         }
     }

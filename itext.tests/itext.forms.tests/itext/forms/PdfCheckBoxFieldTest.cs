@@ -206,8 +206,8 @@ namespace iText.Forms {
             if (fontSize >= 0) {
                 checkBox.SetFontSize(fontSize);
             }
-            checkBox.SetBorderWidth(1);
-            checkBox.SetBorderColor(ColorConstants.BLACK);
+            checkBox.GetFirstFormAnnotation().SetBorderWidth(1);
+            checkBox.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             form.AddField(checkBox, page);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(50 + checkBoxW + 10, yPos).SetFontAndSize(PdfFontFactory.CreateFont

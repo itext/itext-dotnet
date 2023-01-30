@@ -73,7 +73,8 @@ namespace iText.Forms.Fields {
         /// <param name="value">the signature to be contained in the signature field, or an indirect reference to it</param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfSignatureFormField SetValue(PdfObject value) {
-            return (iText.Forms.Fields.PdfSignatureFormField)Put(PdfName.V, value);
+            Put(PdfName.V, value);
+            return this;
         }
 
         /// <summary>

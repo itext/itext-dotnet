@@ -127,7 +127,6 @@ namespace iText.Forms.Fields {
                 field = new PdfChoiceFormField(annotation, GetDocument());
             }
             field.pdfAConformanceLevel = GetConformanceLevel();
-            field.UpdateFontAndFontSize(GetDocument().GetDefaultFont(), PdfFormField.DEFAULT_FONT_SIZE);
             field.SetFieldFlags(flags);
             field.SetFieldName(GetFormFieldName());
             if (options == null) {
@@ -144,7 +143,8 @@ namespace iText.Forms.Fields {
                 if (annotation != null) {
                     PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, GetWidgetRectangle().GetWidth(), GetWidgetRectangle
                         ().GetHeight()));
-                    field.DrawChoiceAppearance(GetWidgetRectangle(), field.fontSize, optionsArrayString, xObject, 0);
+                    field.GetFirstFormAnnotation().DrawChoiceAppearance(GetWidgetRectangle(), field.fontSize, optionsArrayString
+                        , xObject, 0);
                     annotation.SetNormalAppearance(xObject.GetPdfObject());
                     SetPageToField(field);
                 }

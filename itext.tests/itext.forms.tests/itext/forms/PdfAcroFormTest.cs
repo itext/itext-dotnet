@@ -86,7 +86,7 @@ namespace iText.Forms {
                 text.AddKid(childText);
                 acroForm.AddField(text);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.fields.Count);
-                IList<PdfFormField> fieldKids = text.GetChildFields();
+                IList<AbstractPdfFormField> fieldKids = text.GetChildFields();
                 NUnit.Framework.Assert.AreEqual(2, fieldKids.Count);
             }
         }

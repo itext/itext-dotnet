@@ -141,10 +141,11 @@ namespace iText.Pdfa {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdf, true);
                 PdfFormField chk = new RadioFormFieldBuilder(pdf).SetWidgetRectangle(bbox).SetConformanceLevel(PdfAConformanceLevel
                     .PDF_A_1B).CreateRadioButton(_group, _value);
-                chk.SetPage(pageNumber);
-                chk.SetVisibility(PdfFormField.VISIBLE);
-                chk.SetBorderColor(ColorConstants.BLACK);
-                chk.SetBackgroundColor(ColorConstants.WHITE);
+                PdfFormAnnotation annotation = chk.GetFirstFormAnnotation();
+                annotation.SetPage(pageNumber);
+                annotation.SetVisibility(PdfFormAnnotation.VISIBLE);
+                annotation.SetBorderColor(ColorConstants.BLACK);
+                annotation.SetBackgroundColor(ColorConstants.WHITE);
                 chk.SetReadOnly(true);
                 PdfFormXObject appearance = new PdfFormXObject(bbox);
                 PdfCanvas canvas = new PdfCanvas(appearance, pdf);
@@ -153,7 +154,7 @@ namespace iText.Pdfa {
                     ()).SetLineWidth(1f).Stroke().RestoreState();
                 form.AddFieldAppearanceToPage(chk, pdf.GetPage(pageNumber));
                 //appearance stream was set, while AS has kept as is, i.e. in Off state.
-                chk.SetAppearance(PdfName.N, "v1".Equals(_value) ? _value : "Off", appearance.GetPdfObject());
+                annotation.SetAppearance(PdfName.N, "v1".Equals(_value) ? _value : "Off", appearance.GetPdfObject());
             }
 
             public override IRenderer GetNextRenderer() {
@@ -316,9 +317,11 @@ namespace iText.Pdfa {
                 ).CreateRadioGroup();
             radioGroup.SetValue("");
             new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(36, 496, 20, 20)).SetConformanceLevel(conformanceLevel
-                ).CreateRadioButton(radioGroup, "1").SetBorderWidth(2).SetBorderColor(ColorConstants.ORANGE);
+                ).CreateRadioButton(radioGroup, "1").GetFirstFormAnnotation().SetBorderWidth(2).SetBorderColor(ColorConstants
+                .ORANGE);
             new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(66, 496, 20, 20)).SetConformanceLevel(conformanceLevel
-                ).CreateRadioButton(radioGroup, "2").SetBorderWidth(2).SetBorderColor(ColorConstants.ORANGE);
+                ).CreateRadioButton(radioGroup, "2").GetFirstFormAnnotation().SetBorderWidth(2).SetBorderColor(ColorConstants
+                .ORANGE);
             form.AddField(radioGroup);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
@@ -382,9 +385,11 @@ namespace iText.Pdfa {
                         PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfEncodings.WINANSI);
                         doc.Add(new Paragraph(new Text("Some text").SetFont(font).SetFontSize(10)));
                         PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                        form.AddField(new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(150, 100, 100, 20)
-                            ).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateText().SetValue("textField").SetFont(font).
-                            SetFontSize(10).SetFieldName("text").SetPage(1), pdfDoc.GetPage(1));
+                        PdfFormField field = new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(150, 100, 100
+                            , 20)).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateText().SetValue("textField").SetFont(font
+                            ).SetFontSize(10).SetFieldName("text");
+                        field.GetFirstFormAnnotation().SetPage(1);
+                        form.AddField(field, pdfDoc.GetPage(1));
                     }
                 }
             }
