@@ -41,8 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using System.Collections.Generic;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Navigation {
@@ -71,7 +69,7 @@ namespace iText.Kernel.Pdf.Navigation {
             : base(pdfObject) {
         }
 
-        public override PdfObject GetDestinationPage(IDictionary<String, PdfObject> names) {
+        public override PdfObject GetDestinationPage(IPdfNameTreeAccess names) {
             return ((PdfArray)GetPdfObject()).Get(0);
         }
 

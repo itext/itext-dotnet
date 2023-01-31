@@ -105,7 +105,7 @@ namespace iText.Kernel.Pdf.Copy {
             NUnit.Framework.Assert.IsNotNull(annot);
             PdfDestination dest = PdfDestination.MakeDestination(((PdfLinkAnnotation)annot).GetDestinationObject());
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
 
         [NUnit.Framework.Test]
@@ -158,7 +158,7 @@ namespace iText.Kernel.Pdf.Copy {
             NUnit.Framework.Assert.IsNotNull(annot);
             PdfDestination dest = PdfDestination.MakeDestination(((PdfLinkAnnotation)annot).GetDestinationObject());
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
 
         [NUnit.Framework.Test]
@@ -210,7 +210,7 @@ namespace iText.Kernel.Pdf.Copy {
             PdfDestination dest = PdfDestination.MakeDestination(((PdfLinkAnnotation)annot).GetAction().Get(PdfName.D)
                 );
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
 
         [NUnit.Framework.Test]
@@ -264,7 +264,7 @@ namespace iText.Kernel.Pdf.Copy {
             PdfDestination dest = PdfDestination.MakeDestination(((PdfLinkAnnotation)annot).GetAction().Get(PdfName.D)
                 );
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
 
         [NUnit.Framework.Test]
@@ -317,7 +317,7 @@ namespace iText.Kernel.Pdf.Copy {
             PdfDestination dest = PdfDestination.MakeDestination(((PdfLinkAnnotation)annot).GetAction().GetAsDictionary
                 (PdfName.Next).Get(PdfName.D));
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
 
         [NUnit.Framework.Test]
@@ -372,7 +372,7 @@ namespace iText.Kernel.Pdf.Copy {
             PdfDestination dest = PdfDestination.MakeDestination(((PdfLinkAnnotation)annot).GetAction().GetAsDictionary
                 (PdfName.Next).Get(PdfName.D));
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
     }
 }

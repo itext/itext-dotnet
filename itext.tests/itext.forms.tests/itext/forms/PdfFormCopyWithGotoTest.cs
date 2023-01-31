@@ -107,7 +107,7 @@ namespace iText.Forms {
             PdfDestination dest = PdfDestination.MakeDestination(((PdfWidgetAnnotation)annot).GetAction().Get(PdfName.
                 D));
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
 
         [NUnit.Framework.Test]
@@ -161,7 +161,7 @@ namespace iText.Forms {
             PdfDestination dest = PdfDestination.MakeDestination(((PdfWidgetAnnotation)annot).GetAction().Get(PdfName.
                 D));
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
 
         [NUnit.Framework.Test]
@@ -215,7 +215,7 @@ namespace iText.Forms {
             PdfDestination dest = PdfDestination.MakeDestination(((PdfWidgetAnnotation)annot).GetAdditionalAction().GetAsDictionary
                 (PdfName.U).Get(PdfName.D));
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
 
         [NUnit.Framework.Test]
@@ -269,7 +269,7 @@ namespace iText.Forms {
             PdfDestination dest = PdfDestination.MakeDestination(((PdfWidgetAnnotation)annot).GetAdditionalAction().GetAsDictionary
                 (PdfName.U).Get(PdfName.D));
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
 
         [NUnit.Framework.Test]
@@ -323,7 +323,7 @@ namespace iText.Forms {
             PdfDestination dest = PdfDestination.MakeDestination(((PdfWidgetAnnotation)annot).GetAdditionalAction().GetAsDictionary
                 (PdfName.D).Get(PdfName.D));
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
 
         [NUnit.Framework.Test]
@@ -377,7 +377,7 @@ namespace iText.Forms {
             PdfDestination dest = PdfDestination.MakeDestination(((PdfWidgetAnnotation)annot).GetAdditionalAction().GetAsDictionary
                 (PdfName.D).Get(PdfName.D));
             NUnit.Framework.Assert.AreEqual(resultDoc.GetPage(5).GetPdfObject(), dest.GetDestinationPage(resultDoc.GetCatalog
-                ().GetNameTree(PdfName.Dests).GetNames()));
+                ().GetNameTree(PdfName.Dests)));
         }
     }
 }

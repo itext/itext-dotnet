@@ -41,27 +41,22 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using iText.Kernel.Pdf;
+using System.Collections.Generic;
 
-namespace iText.Kernel.Pdf.Navigation {
-    public class PdfNamedDestination : PdfDestination {
-        public PdfNamedDestination(String name)
-            : this(new PdfName(name)) {
+namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// Compare
+    /// <see cref="PdfString"/>
+    /// objects by value.
+    /// </summary>
+    internal sealed class PdfStringComparator : IComparer<PdfString> {
+        // Comparator.comparing(...) would be better; we do it like this for
+        // autoporting reasons.
+        internal PdfStringComparator() {
         }
 
-        public PdfNamedDestination(PdfName pdfObject)
-            : base(pdfObject) {
-        }
-
-        public override PdfObject GetDestinationPage(IPdfNameTreeAccess names) {
-            PdfName name = (PdfName)GetPdfObject();
-            PdfArray array = (PdfArray)names.GetEntry(name.GetValue());
-            return array != null ? array.Get(0) : null;
-        }
-
-        protected internal override bool IsWrappedObjectMustBeIndirect() {
-            return false;
+        public int Compare(PdfString o1, PdfString o2) {
+            return string.CompareOrdinal(o1.GetValue(), o2.GetValue());
         }
     }
 }

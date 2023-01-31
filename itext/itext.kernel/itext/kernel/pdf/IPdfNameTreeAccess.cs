@@ -42,26 +42,31 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel.Pdf;
+using System.Collections.Generic;
 
-namespace iText.Kernel.Pdf.Navigation {
-    public class PdfNamedDestination : PdfDestination {
-        public PdfNamedDestination(String name)
-            : this(new PdfName(name)) {
-        }
+namespace iText.Kernel.Pdf {
+    /// <summary>Abstract access interface to a PDF name tree.</summary>
+    public interface IPdfNameTreeAccess {
+        /// <summary>Retrieve an entry from the name tree.</summary>
+        /// <param name="key">key of entry to retrieve</param>
+        /// <returns>
+        /// retrieved entry or
+        /// <see langword="null"/>
+        /// if absent
+        /// </returns>
+        PdfObject GetEntry(PdfString key);
 
-        public PdfNamedDestination(PdfName pdfObject)
-            : base(pdfObject) {
-        }
+        /// <summary>Retrieve an entry from the name tree.</summary>
+        /// <param name="key">key of entry to retrieve</param>
+        /// <returns>
+        /// retrieved entry or
+        /// <see langword="null"/>
+        /// if absent
+        /// </returns>
+        PdfObject GetEntry(String key);
 
-        public override PdfObject GetDestinationPage(IPdfNameTreeAccess names) {
-            PdfName name = (PdfName)GetPdfObject();
-            PdfArray array = (PdfArray)names.GetEntry(name.GetValue());
-            return array != null ? array.Get(0) : null;
-        }
-
-        protected internal override bool IsWrappedObjectMustBeIndirect() {
-            return false;
-        }
+        /// <summary>Retrieve the set of keys in the name tree.</summary>
+        /// <returns>set of all keys in the name tree</returns>
+        ICollection<PdfString> GetKeys();
     }
 }

@@ -1500,7 +1500,8 @@ namespace iText.Kernel.Pdf {
                 logger.LogError(iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             if (null != description) {
-                GetDocument().GetCatalog().AddNameToNameTree(description, fs.GetPdfObject(), PdfName.EmbeddedFiles);
+                PdfString key = new PdfString(description);
+                GetDocument().GetCatalog().AddNameToNameTree(key, fs.GetPdfObject(), PdfName.EmbeddedFiles);
             }
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null) {
