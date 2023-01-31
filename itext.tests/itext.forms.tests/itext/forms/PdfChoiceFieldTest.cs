@@ -57,25 +57,28 @@ namespace iText.Forms {
             // 规
             PdfFormField field = new ChoiceFormFieldBuilder(pdfDoc, "combo1").SetWidgetRectangle(new Rectangle(36, 666
                 , 40, 80)).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateComboBox().
-                SetValue("\u89c4").SetFont(font);
+                SetValue("\u89c4");
+            field.SetFont(font);
             field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             form.AddField(field);
             // 觉
             field = new ChoiceFormFieldBuilder(pdfDoc, "combo2").SetWidgetRectangle(new Rectangle(136, 666, 40, 80)).SetOptions
-                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateComboBox().SetValue("\u89c4").SetFont
-                (font).SetValue("\u89c9");
+                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateComboBox();
+            field.SetValue("\u89c4").SetFont(font);
+            field.SetValue("\u89c9");
             field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             form.AddField(field);
             // 规
             field = new ChoiceFormFieldBuilder(pdfDoc, "list1").SetWidgetRectangle(new Rectangle(236, 666, 50, 80)).SetOptions
-                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList().SetValue("\u89c4").SetFont
-                (font);
+                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList().SetValue("\u89c4");
+            field.SetFont(font);
             field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             form.AddField(field);
             // 觉
             field = new ChoiceFormFieldBuilder(pdfDoc, "list2").SetWidgetRectangle(new Rectangle(336, 666, 50, 80)).SetOptions
-                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList().SetValue("\u89c4").SetFont
-                (font).SetValue("\u89c9");
+                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList();
+            field.SetValue("\u89c4").SetFont(font);
+            field.SetValue("\u89c9");
             field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             form.AddField(field);
             pdfDoc.Close();

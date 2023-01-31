@@ -47,6 +47,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
+using iText.Forms.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
@@ -107,10 +108,10 @@ namespace iText.Forms {
         }
 
         private AbstractPdfFormField MakeFormField(PdfObject fieldDict) {
-            AbstractPdfFormField field = AbstractPdfFormField.MakeFormField(fieldDict, documentTo);
+            AbstractPdfFormField field = PdfFormField.MakeFormFieldOrAnnotation(fieldDict, documentTo);
             if (field == null) {
-                logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, fieldDict
-                    .GetIndirectReference()));
+                logger.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD, fieldDict.GetIndirectReference
+                    ()));
             }
             return field;
         }
@@ -269,7 +270,7 @@ namespace iText.Forms {
             if (parentOfParent != null) {
                 return GetParentField(parentOfParent, pdfDoc);
             }
-            return (PdfFormField)AbstractPdfFormField.MakeFormField(parent, pdfDoc);
+            return PdfFormField.MakeFormField(parent, pdfDoc);
         }
 
         private PdfFormField CreateParentFieldCopy(PdfDictionary fieldDic, PdfDocument pdfDoc) {
@@ -287,7 +288,7 @@ namespace iText.Forms {
                 }
             }
             else {
-                field = (PdfFormField)AbstractPdfFormField.MakeFormField(fieldDic, pdfDoc);
+                field = PdfFormField.MakeFormField(fieldDic, pdfDoc);
             }
             return field;
         }

@@ -48,6 +48,7 @@ using iText.Commons;
 using iText.Commons.Utils;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
+using iText.Forms.Logs;
 using iText.Forms.Xfa;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
@@ -344,24 +345,24 @@ namespace iText.Forms {
 
         /// <summary>
         /// Gets all
-        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
+        /// <see cref="iText.Forms.Fields.AbstractPdfFormField">form field</see>
         /// s as a
         /// <see cref="Java.Util.Set{E}"/>
         /// including fields kids and nameless fields.
         /// </summary>
         /// <returns>
         /// a set of
-        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
-        /// objects
+        /// <see cref="iText.Forms.Fields.AbstractPdfFormField">form field</see>
+        /// objects.
         /// </returns>
-        public virtual ICollection<PdfFormField> GetAllFormFieldsWithoutNames() {
-            if (fields.Count == 0) {
+        public virtual ICollection<AbstractPdfFormField> GetAllFormFieldsAndAnnotations() {
+            if (fields.IsEmpty()) {
                 fields = PopulateFormFieldsMap();
             }
-            ICollection<PdfFormField> allFields = new LinkedHashSet<PdfFormField>();
+            ICollection<AbstractPdfFormField> allFields = new LinkedHashSet<AbstractPdfFormField>();
             foreach (KeyValuePair<String, PdfFormField> field in fields) {
                 allFields.Add(field.Value);
-                IList<PdfFormField> kids = field.Value.GetAllChildFormFields();
+                IList<AbstractPdfFormField> kids = field.Value.GetAllChildFields();
                 allFields.AddAll(kids);
             }
             return allFields;
@@ -824,13 +825,8 @@ namespace iText.Forms {
             ICollection<PdfPage> wrappedPages = new LinkedHashSet<PdfPage>();
             PdfPage page;
             foreach (PdfFormField formField in fields) {
-                foreach (AbstractPdfFormField fieldBasic in formField.GetChildFields()) {
-                    if (!(fieldBasic is PdfFormAnnotation)) {
-                        continue;
-                    }
-                    PdfFormAnnotation field = (PdfFormAnnotation)fieldBasic;
-                    // All the code here suggests that we need annotation fields
-                    PdfDictionary fieldObject = field.GetPdfObject();
+                foreach (PdfFormAnnotation fieldAnnot in formField.GetChildFormAnnotations()) {
+                    PdfDictionary fieldObject = fieldAnnot.GetPdfObject();
                     page = GetFieldPage(fieldObject);
                     if (page == null) {
                         continue;
@@ -850,7 +846,7 @@ namespace iText.Forms {
                     }
                     if (generateAppearance) {
                         if (appDic == null || asNormal == null) {
-                            field.RegenerateField();
+                            fieldAnnot.RegenerateField();
                             appDic = fieldObject.GetAsDictionary(PdfName.AP);
                         }
                     }
@@ -1073,7 +1069,7 @@ namespace iText.Forms {
         protected internal virtual PdfArray GetFields() {
             PdfArray fields = GetPdfObject().GetAsArray(PdfName.Fields);
             if (fields == null) {
-                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.NO_FIELDS_IN_ACROFORM);
+                LOGGER.LogWarning(FormsLogMessageConstants.NO_FIELDS_IN_ACROFORM);
                 fields = new PdfArray();
                 GetPdfObject().Put(PdfName.Fields, fields);
             }
@@ -1090,19 +1086,14 @@ namespace iText.Forms {
             int index = 1;
             foreach (PdfObject field in rawFields) {
                 if (field.IsFlushed()) {
-                    LOGGER.LogInformation(iText.IO.Logs.IoLogMessageConstant.FORM_FIELD_WAS_FLUSHED);
+                    LOGGER.LogInformation(FormsLogMessageConstants.FORM_FIELD_WAS_FLUSHED);
                     continue;
                 }
-                AbstractPdfFormField formFieldBasic = AbstractPdfFormField.MakeFormField(field, document);
-                if (formFieldBasic is PdfFormAnnotation) {
-                    // Pure annotation can be in AcroForm dictionary
-                    // Ok, let's just skip them, they were (will be) processed with their parents
-                    continue;
-                }
-                PdfFormField formField = (PdfFormField)formFieldBasic;
+                PdfFormField formField = PdfFormField.MakeFormField(field, document);
                 if (formField == null) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, field
-                        .GetIndirectReference() == null ? field : field.GetIndirectReference()));
+                    // Pure annotation can't be in AcroForm dictionary
+                    // Ok, let's just skip them, they were (will be) processed with their parents if any
+                    LOGGER.LogWarning(FormsLogMessageConstants.ANNOTATION_IN_ACROFORM_DICTIONARY);
                     continue;
                 }
                 PdfString fieldName = formField.GetFieldName();
@@ -1110,14 +1101,14 @@ namespace iText.Forms {
                 if (fieldName == null) {
                     PdfFormField parentField = formField.GetParentField();
                     if (parentField == null) {
-                        parentField = (PdfFormField)AbstractPdfFormField.MakeFormField(formField.GetParent(), document);
+                        parentField = PdfFormField.MakeFormField(formField.GetParent(), document);
                     }
                     while (fieldName == null) {
                         fieldName = parentField.GetFieldName();
                         if (fieldName == null) {
                             parentField = formField.GetParentField();
                             if (parentField == null) {
-                                parentField = (PdfFormField)AbstractPdfFormField.MakeFormField(formField.GetParent(), document);
+                                parentField = PdfFormField.MakeFormField(formField.GetParent(), document);
                             }
                         }
                     }
@@ -1151,10 +1142,8 @@ namespace iText.Forms {
                     }
                 }
             }
-            foreach (AbstractPdfFormField child in field.GetChildFields()) {
-                if (child is PdfFormField) {
-                    ProcessKids((PdfFormField)child, page);
-                }
+            foreach (PdfFormField child in field.GetChildFormFields()) {
+                ProcessKids(child, page);
             }
         }
 
@@ -1162,7 +1151,7 @@ namespace iText.Forms {
             field.RemoveChildren();
             widgetDict.Remove(PdfName.Parent);
             field.GetPdfObject().MergeDifferent(widgetDict);
-            field.SetChildField(AbstractPdfFormField.MakeFormFieldAnnotation(field.GetPdfObject(), document));
+            field.SetChildField(PdfFormAnnotation.MakeFormAnnotation(field.GetPdfObject(), document));
         }
 
         private void DefineWidgetPageAndAddToIt(PdfPage currentPage, PdfDictionary mergedFieldAndWidget, bool warnIfPageFlushed
@@ -1287,13 +1276,8 @@ namespace iText.Forms {
         private ICollection<PdfFormField> PrepareFieldsForFlattening(PdfFormField field) {
             ICollection<PdfFormField> preparedFields = new LinkedHashSet<PdfFormField>();
             preparedFields.Add(field);
-            foreach (AbstractPdfFormField child in field.GetChildFields()) {
-                if (child is PdfFormField) {
-                    preparedFields.Add((PdfFormField)child);
-                    if (!((PdfFormField)child).GetChildFields().IsEmpty()) {
-                        preparedFields.AddAll(PrepareFieldsForFlattening((PdfFormField)child));
-                    }
-                }
+            foreach (PdfFormField child in field.GetChildFormFields()) {
+                preparedFields.AddAll(PrepareFieldsForFlattening(child));
             }
             return preparedFields;
         }
@@ -1334,6 +1318,19 @@ namespace iText.Forms {
             at.PreConcatenate(AffineTransform.GetScaleInstance(scaleX, scaleY));
             at.PreConcatenate(AffineTransform.GetTranslateInstance(annotBBox.GetX(), annotBBox.GetY()));
             return at;
+        }
+
+        private ICollection<PdfFormField> GetAllFormFieldsWithoutNames() {
+            if (fields.IsEmpty()) {
+                fields = PopulateFormFieldsMap();
+            }
+            ICollection<PdfFormField> allFields = new LinkedHashSet<PdfFormField>();
+            foreach (KeyValuePair<String, PdfFormField> field in fields) {
+                allFields.Add(field.Value);
+                IList<PdfFormField> kids = field.Value.GetAllChildFormFields();
+                allFields.AddAll(kids);
+            }
+            return allFields;
         }
     }
 }

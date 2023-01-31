@@ -48,7 +48,6 @@ using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Annot;
 
 namespace iText.Forms.Fields {
     /// <summary>
@@ -83,31 +82,6 @@ namespace iText.Forms.Fields {
 
         private static readonly ICollection<PdfName> formFieldKeys = new HashSet<PdfName>();
 
-        static AbstractPdfFormField() {
-            formFieldKeys.Add(PdfName.FT);
-            // It exists in form field and widget annotation
-            //formFieldKeys.add(PdfName.Parent);
-            formFieldKeys.Add(PdfName.Kids);
-            formFieldKeys.Add(PdfName.T);
-            formFieldKeys.Add(PdfName.TU);
-            formFieldKeys.Add(PdfName.TM);
-            formFieldKeys.Add(PdfName.Ff);
-            formFieldKeys.Add(PdfName.V);
-            formFieldKeys.Add(PdfName.DV);
-            // It exists in form field and widget annotation
-            //formFieldKeys.add(PdfName.AA);
-            formFieldKeys.Add(PdfName.DA);
-            formFieldKeys.Add(PdfName.Q);
-            formFieldKeys.Add(PdfName.DS);
-            formFieldKeys.Add(PdfName.RV);
-            formFieldKeys.Add(PdfName.Opt);
-            formFieldKeys.Add(PdfName.MaxLen);
-            formFieldKeys.Add(PdfName.TI);
-            formFieldKeys.Add(PdfName.I);
-            formFieldKeys.Add(PdfName.Lock);
-            formFieldKeys.Add(PdfName.SV);
-        }
-
         protected internal PdfFont font;
 
         protected internal float fontSize = -1;
@@ -136,133 +110,6 @@ namespace iText.Forms.Fields {
             EnsureObjectIsAddedToDocument(pdfObject);
             SetForbidRelease();
             RetrieveStyles();
-        }
-
-        /// <summary>
-        /// Creates a (subtype of)
-        /// <see cref="AbstractPdfFormField"/>
-        /// object.
-        /// </summary>
-        /// <remarks>
-        /// Creates a (subtype of)
-        /// <see cref="AbstractPdfFormField"/>
-        /// object. The type of the object
-        /// depends on the <c>FT</c> entry in the <c>pdfObject</c> parameter.
-        /// </remarks>
-        /// <param name="pdfObject">
-        /// assumed to be either a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// , or a
-        /// <see cref="iText.Kernel.Pdf.PdfIndirectReference"/>
-        /// to a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
-        /// </param>
-        /// <param name="document">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// to create the field in.
-        /// </param>
-        /// <returns>
-        /// a new
-        /// <see cref="AbstractPdfFormField"/>
-        /// , or <c>null</c> if
-        /// <c>pdfObject</c> does not contain a <c>FT</c> and it's not a widget annotation.
-        /// </returns>
-        public static iText.Forms.Fields.AbstractPdfFormField MakeFormField(PdfObject pdfObject, PdfDocument document
-            ) {
-            if (!pdfObject.IsDictionary()) {
-                return null;
-            }
-            iText.Forms.Fields.AbstractPdfFormField field;
-            PdfDictionary dictionary = (PdfDictionary)pdfObject;
-            PdfName formType = dictionary.GetAsName(PdfName.FT);
-            if (PdfName.Tx.Equals(formType)) {
-                field = new PdfTextFormField(dictionary);
-            }
-            else {
-                if (PdfName.Btn.Equals(formType)) {
-                    field = new PdfButtonFormField(dictionary);
-                }
-                else {
-                    if (PdfName.Ch.Equals(formType)) {
-                        field = new PdfChoiceFormField(dictionary);
-                    }
-                    else {
-                        if (PdfName.Sig.Equals(formType)) {
-                            field = new PdfSignatureFormField(dictionary);
-                        }
-                        else {
-                            if (iText.Forms.Fields.AbstractPdfFormField.IsFormField(dictionary)) {
-                                // No form type but it still can be a form field
-                                field = new PdfFormField(dictionary);
-                            }
-                            else {
-                                PdfName subType = dictionary.GetAsName(PdfName.Subtype);
-                                // If widget annotation
-                                if (PdfName.Widget.Equals(subType)) {
-                                    field = iText.Forms.Fields.AbstractPdfFormField.MakeFormFieldAnnotation(pdfObject, document);
-                                }
-                                else {
-                                    // Not sure we can be here but still
-                                    field = new PdfFormField(dictionary);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            field.MakeIndirect(document);
-            if (document != null && document.GetReader() != null && document.GetReader().GetPdfAConformanceLevel() != 
-                null) {
-                field.pdfAConformanceLevel = document.GetReader().GetPdfAConformanceLevel();
-            }
-            return field;
-        }
-
-        /// <summary>
-        /// Creates a
-        /// <see cref="PdfFormAnnotation"/>
-        /// object.
-        /// </summary>
-        /// <param name="pdfObject">
-        /// assumed to be either a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// , or a
-        /// <see cref="iText.Kernel.Pdf.PdfIndirectReference"/>
-        /// to a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
-        /// </param>
-        /// <param name="document">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// to create the field in.
-        /// </param>
-        /// <returns>
-        /// a new
-        /// <see cref="PdfFormAnnotation"/>
-        /// , or <c>null</c> if
-        /// <c>pdfObject</c> is not a widget annotation.
-        /// </returns>
-        public static PdfFormAnnotation MakeFormFieldAnnotation(PdfObject pdfObject, PdfDocument document) {
-            if (!pdfObject.IsDictionary()) {
-                return null;
-            }
-            PdfFormAnnotation field;
-            PdfDictionary dictionary = (PdfDictionary)pdfObject;
-            PdfName subType = dictionary.GetAsName(PdfName.Subtype);
-            // If widget annotation
-            if (PdfName.Widget.Equals(subType)) {
-                field = new PdfFormAnnotation((PdfWidgetAnnotation)PdfAnnotation.MakeAnnotation(dictionary), document);
-            }
-            else {
-                return null;
-            }
-            field.MakeIndirect(document);
-            if (document != null && document.GetReader() != null && document.GetReader().GetPdfAConformanceLevel() != 
-                null) {
-                field.pdfAConformanceLevel = document.GetReader().GetPdfAConformanceLevel();
-            }
-            return field;
         }
 
         /// <summary>Gets the wrapped dictionary.</summary>
@@ -309,9 +156,9 @@ namespace iText.Forms.Fields {
             String parentName = "";
             PdfDictionary parentDict = GetParent();
             if (parentDict != null) {
-                iText.Forms.Fields.AbstractPdfFormField parentField = GetParentField();
+                PdfFormField parentField = GetParentField();
                 if (parentField == null) {
-                    parentField = iText.Forms.Fields.AbstractPdfFormField.MakeFormField(GetParent(), GetDocument());
+                    parentField = PdfFormField.MakeFormField(GetParent(), GetDocument());
                 }
                 PdfString pName = parentField.GetFieldName();
                 if (pName != null) {
@@ -324,13 +171,6 @@ namespace iText.Forms.Fields {
             }
             return name;
         }
-
-        /// <summary>Gets the kids of this object.</summary>
-        /// <returns>
-        /// contents of the dictionary's <c>Kids</c> property, as a
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>.
-        /// </returns>
-        public abstract PdfArray GetKids();
 
         /// <summary>
         /// Gets default appearance string containing a sequence of valid page-content graphics or text state operators that
@@ -472,6 +312,98 @@ namespace iText.Forms.Fields {
             return GetPdfObject().GetIndirectReference().GetDocument();
         }
 
+        /// <summary>Sets the text color and regenerates appearance stream.</summary>
+        /// <param name="color">the new value for the Color.</param>
+        /// <returns>
+        /// the edited
+        /// <see cref="AbstractPdfFormField"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.AbstractPdfFormField SetColor(Color color) {
+            this.color = color;
+            RegenerateField();
+            return this;
+        }
+
+        /// <summary>Basic setter for the <c>font</c> property.</summary>
+        /// <remarks>
+        /// Basic setter for the <c>font</c> property. Regenerates the field
+        /// appearance after setting the new value.
+        /// Note that the font will be added to the document so ensure that the font is embedded
+        /// if it's a pdf/a document.
+        /// </remarks>
+        /// <param name="font">The new font to be set.</param>
+        /// <returns>
+        /// The edited
+        /// <see cref="AbstractPdfFormField"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.AbstractPdfFormField SetFont(PdfFont font) {
+            UpdateFontAndFontSize(font, this.fontSize);
+            RegenerateField();
+            return this;
+        }
+
+        /// <summary>Basic setter for the <c>fontSize</c> property.</summary>
+        /// <remarks>
+        /// Basic setter for the <c>fontSize</c> property. Regenerates the
+        /// field appearance after setting the new value.
+        /// </remarks>
+        /// <param name="fontSize">The new font size to be set.</param>
+        /// <returns>
+        /// The edited
+        /// <see cref="AbstractPdfFormField"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.AbstractPdfFormField SetFontSize(float fontSize) {
+            UpdateFontAndFontSize(this.font, fontSize);
+            RegenerateField();
+            return this;
+        }
+
+        /// <summary>Basic setter for the <c>fontSize</c> property.</summary>
+        /// <remarks>
+        /// Basic setter for the <c>fontSize</c> property. Regenerates the
+        /// field appearance after setting the new value.
+        /// </remarks>
+        /// <param name="fontSize">The new font size to be set.</param>
+        /// <returns>
+        /// The edited
+        /// <see cref="AbstractPdfFormField"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.AbstractPdfFormField SetFontSize(int fontSize) {
+            SetFontSize((float)fontSize);
+            return this;
+        }
+
+        /// <summary>Sets zero font size which will be interpreted as auto-size according to ISO 32000-1, 12.7.3.3.</summary>
+        /// <returns>
+        /// the edited
+        /// <see cref="AbstractPdfFormField"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.AbstractPdfFormField SetFontSizeAutoScale() {
+            this.fontSize = 0;
+            RegenerateField();
+            return this;
+        }
+
+        /// <summary>
+        /// Combined setter for the <c>font</c> and <c>fontSize</c>
+        /// properties.
+        /// </summary>
+        /// <remarks>
+        /// Combined setter for the <c>font</c> and <c>fontSize</c>
+        /// properties. Regenerates the field appearance after setting the new value.
+        /// </remarks>
+        /// <param name="font">The new font to be set.</param>
+        /// <param name="fontSize">The new font size to be set.</param>
+        /// <returns>
+        /// The edited
+        /// <see cref="AbstractPdfFormField"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.AbstractPdfFormField SetFontAndSize(PdfFont font, float fontSize) {
+            UpdateFontAndFontSize(font, fontSize);
+            RegenerateField();
+            return this;
+        }
+
         internal virtual void UpdateFontAndFontSize(PdfFont font, float fontSize) {
             this.font = font;
             this.fontSize = fontSize;
@@ -497,15 +429,6 @@ namespace iText.Forms.Fields {
                 acroFormObject = acroFormDictionary.Get(key);
             }
             return (acroFormObject != null && acroFormObject.GetObjectType() == type) ? acroFormObject : null;
-        }
-
-        private static bool IsFormField(PdfDictionary dict) {
-            foreach (PdfName formFieldKey in formFieldKeys) {
-                if (dict.ContainsKey(formFieldKey)) {
-                    return true;
-                }
-            }
-            return false;
         }
 
         private static Object[] SplitDAelements(String da) {

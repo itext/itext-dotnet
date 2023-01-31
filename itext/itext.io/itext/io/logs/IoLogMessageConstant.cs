@@ -76,8 +76,6 @@ namespace iText.IO.Logs {
              + "another parent. Consider using com.itextpdf.layout.tagging.LayoutTaggingHelper#moveHint method " +
              "instead.";
 
-        public const String CANNOT_CREATE_FORMFIELD = "Cannot create form field from a given PDF object: {0}";
-
         public const String CANNOT_MOVE_FINISHED_HINT = "Layout tagging hints modification failed: cannot move kid hint for which both itself and it's parent are"
              + " already marked as finished.";
 
@@ -199,8 +197,6 @@ namespace iText.IO.Logs {
 
         public const String FORBID_RELEASE_IS_SET = "ForbidRelease flag is set and release is called. Releasing will not be performed.";
 
-        public const String FORM_FIELD_WAS_FLUSHED = "A form field was flushed. There's no way to create this field in the AcroForm dictionary.";
-
         public const String GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN = "If a renderer overflows, " + "iText uses this method to create another renderer for the overflow part. So if one wants "
              + "to extend the renderer, one should override this method: otherwise the default method " + "will be used and thus the default rather than the custom renderer will be created.";
 
@@ -236,9 +232,6 @@ namespace iText.IO.Logs {
         public const String IMAGE_HAS_MASK = "Image cannot be inline if it has a Mask";
 
         public const String IMAGE_SIZE_CANNOT_BE_MORE_4KB = "Inline image size cannot be more than 4KB. It will be added as an ImageXObject";
-
-        public const String INCORRECT_PAGEROTATION = "Encounterd a page rotation that was not a multiple of 90°/ (Pi/2) when generating default appearances "
-             + "for form fields";
 
         public const String INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE = "An attempt is made to free an indirect reference which was already used in the flushed object. Indirect "
              + "reference wasn't freed.";
@@ -276,8 +269,6 @@ namespace iText.IO.Logs {
 
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged "
              + "content.";
-
-        public const String NO_FIELDS_IN_ACROFORM = "Required AcroForm entry /Fields does not exist in the document. Empty array /Fields will be created.";
 
         public const String NUM_TREE_SHALL_NOT_END_WITH_KEY = "Number tree ends with a key which is invalid according to the PDF specification.";
 
@@ -414,8 +405,6 @@ namespace iText.IO.Logs {
         public const String UNKNOWN_DIGEST_METHOD = "Unknown digest method. Valid values are MD5, SHA1 SHA256, SHA384, SHA512 and RIPEMD160.";
 
         public const String UNKNOWN_ERROR_WHILE_PROCESSING_CMAP = "Unknown error while processing CMap.";
-
-        public const String UNSUPPORTED_COLOR_IN_DA = "Unsupported color in FormField's DA";
 
         public const String VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY = "\"{0}\" entry in the \"{1}\" dictionary is a {2} and higher version feature. It is meaningless for the "
              + "current {3} version.";

@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Forms.Fields;
+using iText.Forms.Logs;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Source;
@@ -75,7 +76,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         // The first message for the case when the FormField is null,
         // the second message when the FormField is an indirect reference to null.
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, Count = 2)]
+        [LogMessage(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD, Count = 2)]
         public virtual void NullFormFieldTest() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "nullFormField.pdf"));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
@@ -143,8 +144,8 @@ namespace iText.Forms {
             Rectangle rect = new Rectangle(210, 490, 150, 22);
             PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "TestField").SetWidgetRectangle(rect).CreateText
                 ();
-            field.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER)).SetFontSize(10).SetValue("some value in courier font"
-                );
+            field.SetValue("some value in courier font").SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER)).SetFontSize
+                (10);
             form.AddField(field, page);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
@@ -418,7 +419,8 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             PdfFormField field = new TextFormFieldBuilder(pdfDoc, "name").SetWidgetRectangle(new Rectangle(36, 786, 80
                 , 20)).CreateText().SetValue("TestValueAndALittleMore");
-            form.AddField(field.SetFontSizeAutoScale());
+            field.SetFontSizeAutoScale();
+            form.AddField(field);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
@@ -428,7 +430,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.NO_FIELDS_IN_ACROFORM)]
+        [LogMessage(FormsLogMessageConstants.NO_FIELDS_IN_ACROFORM)]
         public virtual void AcroFieldDictionaryNoFields() {
             String outPdf = destinationFolder + "acroFieldDictionaryNoFields.pdf";
             String cmpPdf = sourceFolder + "cmp_acroFieldDictionaryNoFields.pdf";
@@ -923,8 +925,10 @@ namespace iText.Forms {
             form.AddField(new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(66, 496, 20, 20)).CreateRadioButton
                 (radioGroup, "2").SetFieldName("radio 2"));
             // signature
-            form.AddField(new SignatureFormFieldBuilder(pdfDoc, "signature").CreateSignature().SetValue("Signature").SetFontSize
-                (20));
+            PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").CreateSignature().SetValue("Signature"
+                );
+            signField.SetFontSize(20);
+            form.AddField(signField);
             // text
             form.AddField(new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(36, 466, 80, 20)).
                 CreateText().SetValue("text").SetValue("la la land"));
@@ -948,7 +952,8 @@ namespace iText.Forms {
                  + "ñÑṅṄņŅŋŊoOóÓòÒŏŎôÔốỐồỒỗỖǒǑöÖȫȪőŐõÕȯȮȱȰøØǿǾǫǪ" + "ǭǬōŌỏỎơƠớỚờỜọỌộỘœŒpPṗṖqQĸrRŕŔřŘŗŖsSśŚšŠṡṠşŞṣ" + "ṢșȘßẞtTťŤṫṪţŢțȚŧŦuUúÚùÙûÛǔǓůŮüÜűŰũŨųŲūŪủỦưƯứ"
                  + "ỨừỪữỮửỬựỰụỤvVwWẃẂẁẀŵŴẅẄxXẍẌyYýÝỳỲŷŶÿŸỹỸẏẎȳȲỷỶ" + "ỵỴzZźŹẑẐžŽżŻẓẒʒƷǯǮþÞŉ";
             PdfFormField textField = new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(36, 500
-                , 400, 300)).CreateMultilineText().SetFont(noto).SetFontSize(12).SetValue(value);
+                , 400, 300)).CreateMultilineText().SetValue(value);
+            textField.SetFont(noto).SetFontSize(12);
             form.AddField(textField);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
@@ -1021,9 +1026,8 @@ namespace iText.Forms {
         private void CreateAcroForm(PdfDocument pdfDoc, PdfAcroForm form, PdfFont font, String text, int offSet) {
             for (int x = offSet; x < (offSet + 3); x++) {
                 Rectangle rect = new Rectangle(100 + (30 * x), 100 + (100 * x), 55, 30);
-                PdfFormField field = new TextFormFieldBuilder(pdfDoc, "f-" + x).SetWidgetRectangle(rect).CreateText().SetFont
-                    (font).SetFontSize(12.0f).SetValue("");
-                field.SetJustification(PdfFormField.ALIGN_RIGHT);
+                PdfFormField field = new TextFormFieldBuilder(pdfDoc, "f-" + x).SetWidgetRectangle(rect).CreateText();
+                field.SetValue("").SetJustification(PdfFormField.ALIGN_RIGHT).SetFont(font).SetFontSize(12.0f);
                 if (text != null) {
                     field.SetValue(text);
                 }

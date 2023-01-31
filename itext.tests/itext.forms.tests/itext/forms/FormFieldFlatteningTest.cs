@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.Forms.Fields;
+using iText.Forms.Logs;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -167,6 +168,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(FormsLogMessageConstants.ANNOTATION_IN_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void FieldsJustificationTest02() {
             FillTextFieldsThenFlattenThenCompare("fieldsJustificationTest02");
         }

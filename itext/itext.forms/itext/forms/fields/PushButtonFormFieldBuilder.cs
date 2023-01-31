@@ -83,7 +83,7 @@ namespace iText.Forms.Fields {
             if (annotation != null) {
                 field.GetFirstFormAnnotation().backgroundColor = ColorConstants.LIGHT_GRAY;
                 PdfFormXObject xObject = field.GetFirstFormAnnotation().DrawPushButtonAppearance(GetWidgetRectangle().GetWidth
-                    (), GetWidgetRectangle().GetHeight(), caption, GetDocument().GetDefaultFont(), PdfFormField.DEFAULT_FONT_SIZE
+                    (), GetWidgetRectangle().GetHeight(), caption, GetDocument().GetDefaultFont(), AbstractPdfFormField.DEFAULT_FONT_SIZE
                     );
                 annotation.SetNormalAppearance(xObject.GetPdfObject());
                 PdfDictionary mk = new PdfDictionary();

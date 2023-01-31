@@ -222,9 +222,11 @@ namespace iText.Pdfa {
             PdfArray options = new PdfArray();
             options.Add(new PdfString("Name"));
             options.Add(new PdfString("Surname"));
-            form.AddField(new ChoiceFormFieldBuilder(pdfDoc, "choice").SetWidgetRectangle(new Rectangle(36, 696, 100, 
-                70)).SetOptions(options).SetConformanceLevel(conformanceLevel).CreateList().SetValue("1", true).SetFont
-                (fontFreeSans));
+            PdfFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, "choice").SetWidgetRectangle(new Rectangle
+                (36, 696, 100, 70)).SetOptions(options).SetConformanceLevel(conformanceLevel).CreateList().SetValue("1"
+                , true);
+            choiceFormField.SetFont(fontFreeSans);
+            form.AddField(choiceFormField);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), exception.Message);
@@ -244,9 +246,11 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            form.AddField(new ChoiceFormFieldBuilder(pdfDoc, "combo").SetWidgetRectangle(new Rectangle(156, 616, 70, 70
-                )).SetOptions(new String[] { "用", "规", "表" }).SetConformanceLevel(conformanceLevel).CreateComboBox().SetValue
-                ("用").SetFont(fontCJK));
+            PdfFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, "combo").SetWidgetRectangle(new Rectangle
+                (156, 616, 70, 70)).SetOptions(new String[] { "用", "规", "表" }).SetConformanceLevel(conformanceLevel).CreateComboBox
+                ().SetValue("用");
+            choiceFormField.SetFont(fontCJK);
+            form.AddField(choiceFormField);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), exception.Message);
@@ -294,9 +298,11 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            form.AddField(new PushButtonFormFieldBuilder(pdfDoc, "push button").SetWidgetRectangle(new Rectangle(36, 526
-                , 100, 20)).SetCaption("Push").SetConformanceLevel(conformanceLevel).CreatePushButton().SetFont(fontFreeSans
-                ).SetFontSize(12));
+            PdfFormField pushButtonFormField = new PushButtonFormFieldBuilder(pdfDoc, "push button").SetWidgetRectangle
+                (new Rectangle(36, 526, 100, 20)).SetCaption("Push").SetConformanceLevel(conformanceLevel).CreatePushButton
+                ();
+            pushButtonFormField.SetFont(fontFreeSans).SetFontSize(12);
+            form.AddField(pushButtonFormField);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), exception.Message);
@@ -343,9 +349,11 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            form.AddField(new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(36, 466, 90, 20)).
-                SetConformanceLevel(conformanceLevel).CreateText().SetFont(fontFreeSans).SetFontSize(12).SetValue("textField"
-                ).SetValue("iText"));
+            PdfFormField textFormField = new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(36, 
+                466, 90, 20)).SetConformanceLevel(conformanceLevel).CreateText().SetValue("textField").SetValue("iText"
+                );
+            textFormField.SetFont(fontFreeSans).SetFontSize(12);
+            form.AddField(textFormField);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), exception.Message);
@@ -365,8 +373,10 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            form.AddField(new SignatureFormFieldBuilder(pdfDoc, "signature").SetConformanceLevel(conformanceLevel).CreateSignature
-                ().SetFont(fontFreeSans).SetFontSize(20));
+            PdfFormField signFormField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetConformanceLevel(conformanceLevel
+                ).CreateSignature();
+            signFormField.SetFont(fontFreeSans).SetFontSize(20);
+            form.AddField(signFormField);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
@@ -386,8 +396,9 @@ namespace iText.Pdfa {
                         doc.Add(new Paragraph(new Text("Some text").SetFont(font).SetFontSize(10)));
                         PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                         PdfFormField field = new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(150, 100, 100
-                            , 20)).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateText().SetValue("textField").SetFont(font
-                            ).SetFontSize(10).SetFieldName("text");
+                            , 20)).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateText().SetValue("textField").SetFieldName
+                            ("text");
+                        field.SetFont(font).SetFontSize(10);
                         field.GetFirstFormAnnotation().SetPage(1);
                         form.AddField(field, pdfDoc.GetPage(1));
                     }

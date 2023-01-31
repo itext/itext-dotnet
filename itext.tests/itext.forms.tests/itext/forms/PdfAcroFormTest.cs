@@ -215,6 +215,28 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CheckFormFieldsSizeTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                NUnit.Framework.Assert.AreEqual(0, acroForm.GetAllFormFields().Count);
+                NUnit.Framework.Assert.AreEqual(0, acroForm.GetAllFormFieldsAndAnnotations().Count);
+                PdfDictionary fieldDict = new PdfDictionary();
+                fieldDict.Put(PdfName.FT, PdfName.Tx);
+                PdfFormField field = PdfFormField.MakeFormField(fieldDict.MakeIndirect(outputDoc), outputDoc);
+                field.SetFieldName("Field1");
+                acroForm.AddField(field);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetAllFormFields().Count);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetAllFormFieldsAndAnnotations().Count);
+                PdfDictionary annotDict = new PdfDictionary();
+                annotDict.Put(PdfName.Subtype, PdfName.Widget);
+                field.AddKid(PdfFormAnnotation.MakeFormAnnotation(annotDict, outputDoc));
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetAllFormFields().Count);
+                NUnit.Framework.Assert.AreEqual(2, acroForm.GetAllFormFieldsAndAnnotations().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SetCalculationOrderTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);

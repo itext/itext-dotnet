@@ -52,7 +52,7 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             PdfTextFormField name = new TextFormFieldBuilder(pdfDoc, "fieldName").SetWidgetRectangle(new Rectangle(150
                 , 600, 277, 44)).CreateMultilineText();
-            name.SetFont(null).SetFontSize(0).SetValue("");
+            name.SetValue("").SetFont(null).SetFontSize(0);
             name.SetScroll(false);
             name.GetFirstFormAnnotation().SetBorderColor(ColorConstants.GRAY);
             String itextLicence = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
@@ -190,7 +190,8 @@ namespace iText.Forms {
                 );
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
             PdfFormField form = new TextFormFieldBuilder(pdfDoc, "field").SetWidgetRectangle(new Rectangle(59, 715, 127
-                , 69)).CreateMultilineText().SetFont(font).SetFontSize(10f).SetValue("");
+                , 69)).CreateMultilineText().SetValue("");
+            form.SetFont(font).SetFontSize(10f);
             form.GetFirstFormAnnotation().SetBorderWidth(2).SetBorderColor(ColorConstants.BLACK);
             form.SetValue(value);
             acroForm.AddField(form);

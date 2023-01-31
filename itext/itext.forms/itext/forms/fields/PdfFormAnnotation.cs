@@ -47,6 +47,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Forms.Fields.Borders;
+using iText.Forms.Logs;
 using iText.Forms.Util;
 using iText.IO.Font;
 using iText.Kernel.Colors;
@@ -136,18 +137,6 @@ namespace iText.Forms.Fields {
         /// <param name="pdfObject">the dictionary to be wrapped, must have an indirect reference.</param>
         internal PdfFormAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
-        }
-
-        /// <summary>
-        /// <inheritDoc/>
-        /// This method is here for convenience and always returns null.
-        /// </summary>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
-        public override PdfArray GetKids() {
-            return null;
         }
 
         /// <summary>
@@ -302,7 +291,8 @@ namespace iText.Forms.Fields {
         /// <inheritDoc/>
         /// </returns>
         public override bool RegenerateField() {
-            return parent.RegenerateField();
+            parent.UpdateDefaultAppearance();
+            return RegenerateWidget();
         }
 
         /// <summary>Gets the border width for the field.</summary>
@@ -445,90 +435,52 @@ namespace iText.Forms.Fields {
             return this;
         }
 
-        /// <summary>Sets the text color and regenerates appearance stream.</summary>
-        /// <param name="color">the new value for the Color.</param>
-        /// <returns>the edited field.</returns>
-        public virtual iText.Forms.Fields.PdfFormAnnotation SetColor(Color color) {
-            this.color = color;
-            RegenerateField();
-            return this;
-        }
-
-        /// <summary>Basic setter for the <c>font</c> property.</summary>
-        /// <remarks>
-        /// Basic setter for the <c>font</c> property. Regenerates the field
-        /// appearance after setting the new value.
-        /// Note that the font will be added to the document so ensure that the font is embedded
-        /// if it's a pdf/a document.
-        /// </remarks>
-        /// <param name="font">The new font to be set.</param>
-        /// <returns>
-        /// The edited
-        /// <see cref="PdfFormAnnotation"/>.
-        /// </returns>
-        public virtual iText.Forms.Fields.PdfFormAnnotation SetFont(PdfFont font) {
-            UpdateFontAndFontSize(font, this.fontSize);
-            RegenerateField();
-            return this;
-        }
-
-        /// <summary>Basic setter for the <c>fontSize</c> property.</summary>
-        /// <remarks>
-        /// Basic setter for the <c>fontSize</c> property. Regenerates the
-        /// field appearance after setting the new value.
-        /// </remarks>
-        /// <param name="fontSize">The new font size to be set.</param>
-        /// <returns>
-        /// The edited
-        /// <see cref="PdfFormAnnotation"/>.
-        /// </returns>
-        public virtual iText.Forms.Fields.PdfFormAnnotation SetFontSize(float fontSize) {
-            UpdateFontAndFontSize(this.font, fontSize);
-            RegenerateField();
-            return this;
-        }
-
-        /// <summary>Basic setter for the <c>fontSize</c> property.</summary>
-        /// <remarks>
-        /// Basic setter for the <c>fontSize</c> property. Regenerates the
-        /// field appearance after setting the new value.
-        /// </remarks>
-        /// <param name="fontSize">The new font size to be set.</param>
-        /// <returns>
-        /// The edited
-        /// <see cref="PdfFormAnnotation"/>.
-        /// </returns>
-        public virtual iText.Forms.Fields.PdfFormAnnotation SetFontSize(int fontSize) {
-            SetFontSize((float)fontSize);
-            return this;
-        }
-
-        /// <summary>Sets zero font size which will be interpreted as auto-size according to ISO 32000-1, 12.7.3.3.</summary>
-        /// <returns>the edited field.</returns>
-        public virtual iText.Forms.Fields.PdfFormAnnotation SetFontSizeAutoScale() {
-            this.fontSize = 0;
-            RegenerateField();
-            return this;
-        }
-
         /// <summary>
-        /// Combined setter for the <c>font</c> and <c>fontSize</c>
-        /// properties.
+        /// Creates a
+        /// <see cref="PdfFormAnnotation"/>
+        /// object.
         /// </summary>
-        /// <remarks>
-        /// Combined setter for the <c>font</c> and <c>fontSize</c>
-        /// properties. Regenerates the field appearance after setting the new value.
-        /// </remarks>
-        /// <param name="font">The new font to be set.</param>
-        /// <param name="fontSize">The new font size to be set.</param>
+        /// <param name="pdfObject">
+        /// assumed to be either a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// , or a
+        /// <see cref="iText.Kernel.Pdf.PdfIndirectReference"/>
+        /// to a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// </param>
+        /// <param name="document">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to create the field in.
+        /// </param>
         /// <returns>
-        /// The edited
-        /// <see cref="PdfFormAnnotation"/>.
+        /// a new
+        /// <see cref="PdfFormAnnotation"/>
+        /// , or <c>null</c> if
+        /// <c>pdfObject</c> is not a widget annotation.
         /// </returns>
-        public virtual iText.Forms.Fields.PdfFormAnnotation SetFontAndSize(PdfFont font, float fontSize) {
-            UpdateFontAndFontSize(font, fontSize);
-            RegenerateField();
-            return this;
+        public static iText.Forms.Fields.PdfFormAnnotation MakeFormAnnotation(PdfObject pdfObject, PdfDocument document
+            ) {
+            if (!pdfObject.IsDictionary()) {
+                return null;
+            }
+            iText.Forms.Fields.PdfFormAnnotation field;
+            PdfDictionary dictionary = (PdfDictionary)pdfObject;
+            PdfName subType = dictionary.GetAsName(PdfName.Subtype);
+            // If widget annotation
+            if (PdfName.Widget.Equals(subType)) {
+                field = new iText.Forms.Fields.PdfFormAnnotation((PdfWidgetAnnotation)PdfAnnotation.MakeAnnotation(dictionary
+                    ), document);
+            }
+            else {
+                return null;
+            }
+            field.MakeIndirect(document);
+            if (document != null && document.GetReader() != null && document.GetReader().GetPdfAConformanceLevel() != 
+                null) {
+                field.pdfAConformanceLevel = document.GetReader().GetPdfAConformanceLevel();
+            }
+            return field;
         }
 
         /// <summary>
@@ -1176,7 +1128,7 @@ namespace iText.Forms.Fields {
             else {
                 //Avoid NPE when handling corrupt pdfs
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormAnnotation));
-                logger.LogError(iText.IO.Logs.IoLogMessageConstant.INCORRECT_PAGEROTATION);
+                logger.LogError(FormsLogMessageConstants.INCORRECT_PAGEROTATION);
                 matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
             }
             //Apply field rotation
@@ -1253,6 +1205,30 @@ namespace iText.Forms.Fields {
             ap.SetModified();
             Put(PdfName.AP, ap);
             return true;
+        }
+
+        internal virtual bool RegenerateWidget() {
+            PdfName type = parent.GetFormType();
+            if (PdfName.Tx.Equals(type) || PdfName.Ch.Equals(type)) {
+                return RegenerateTextAndChoiceField();
+            }
+            else {
+                if (PdfName.Btn.Equals(type)) {
+                    if (parent.GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
+                        RegeneratePushButtonField();
+                    }
+                    else {
+                        if (parent.GetFieldFlag(PdfButtonFormField.FF_RADIO)) {
+                            RegenerateRadioButtonField();
+                        }
+                        else {
+                            RegenerateCheckboxField(parent.checkType);
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static double DegreeToRadians(double angle) {
