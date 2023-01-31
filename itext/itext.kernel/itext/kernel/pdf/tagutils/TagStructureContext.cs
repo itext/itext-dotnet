@@ -668,6 +668,34 @@ namespace iText.Kernel.Pdf.Tagutils {
             return pointer.GetCurrentStructElem();
         }
 
+        /// <summary>Retrieve a pointer to a structure element by ID.</summary>
+        /// <param name="id">the ID of the element to retrieve</param>
+        /// <returns>
+        /// a
+        /// <see cref="TagTreePointer"/>
+        /// to the element in question, or null if there is none.
+        /// </returns>
+        public virtual TagTreePointer GetTagPointerById(byte[] id) {
+            PdfStructElem elem = document.GetStructTreeRoot().GetIdTree().GetStructElemById(id);
+            return elem == null ? null : new TagTreePointer(document).SetCurrentStructElem(elem);
+        }
+
+        /// <summary>Retrieve a pointer to a structure element by ID.</summary>
+        /// <remarks>
+        /// Retrieve a pointer to a structure element by ID. * The ID will be encoded as a
+        /// UTF-8 string and passed to
+        /// <see cref="GetTagPointerById(byte[])"/>.
+        /// </remarks>
+        /// <param name="id">the ID of the element to retrieve</param>
+        /// <returns>
+        /// a
+        /// <see cref="TagTreePointer"/>
+        /// to the element in question, or null if there is none.
+        /// </returns>
+        public virtual TagTreePointer GetTagPointerByIdString(String id) {
+            return this.GetTagPointerById(id.GetBytes(System.Text.Encoding.UTF8));
+        }
+
         /// <summary>
         /// Creates a new
         /// <see cref="TagTreePointer"/>

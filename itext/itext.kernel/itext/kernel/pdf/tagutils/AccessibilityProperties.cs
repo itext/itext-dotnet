@@ -339,5 +339,57 @@ namespace iText.Kernel.Pdf.Tagutils {
         public virtual IList<PdfStructureAttributes> GetAttributesList() {
             return JavaCollectionsUtil.EmptyList<PdfStructureAttributes>();
         }
+
+        /// <summary>Gets the associated structure element's ID string, if it has one.</summary>
+        /// <remarks>
+        /// Gets the associated structure element's ID string, if it has one.
+        /// <para />
+        /// See also
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem.GetStructureElementId()"/>.
+        /// </remarks>
+        /// <returns>the structure element's ID string, or null if there is none</returns>
+        public virtual byte[] GetStructureElementId() {
+            return null;
+        }
+
+        /// <summary>Sets the associated structure element's ID.</summary>
+        /// <remarks>
+        /// Sets the associated structure element's ID. Passing
+        /// <see langword="null"/>
+        /// removes the ID.
+        /// <para />
+        /// See also
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem.SetStructureElementId(iText.Kernel.Pdf.PdfString)"/>.
+        /// </remarks>
+        /// <param name="id">the element's ID to be set</param>
+        /// <returns>
+        /// this
+        /// <see cref="AccessibilityProperties"/>
+        /// instance
+        /// </returns>
+        public virtual AccessibilityProperties SetStructureElementId(byte[] id) {
+            return this;
+        }
+
+        /// <summary>Sets the associated structure element's ID.</summary>
+        /// <remarks>
+        /// Sets the associated structure element's ID. Passing
+        /// <see langword="null"/>
+        /// removes the ID.
+        /// If non-null, the argument will be encoded in UTF-8 (without BOM), since ID
+        /// strings are considered binary data in PDF.
+        /// <para />
+        /// See also
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem.SetStructureElementId(iText.Kernel.Pdf.PdfString)"/>.
+        /// </remarks>
+        /// <param name="id">the element's ID to be set</param>
+        /// <returns>
+        /// this
+        /// <see cref="AccessibilityProperties"/>
+        /// instance
+        /// </returns>
+        public virtual AccessibilityProperties SetStructureElementIdString(String id) {
+            return this.SetStructureElementId(id == null ? null : id.GetBytes(System.Text.Encoding.UTF8));
+        }
     }
 }

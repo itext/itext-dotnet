@@ -99,6 +99,24 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TextInParagraphTestWithIds() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "textInParagraphTestWithIds.pdf"
+                ));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Paragraph p = CreateParagraph1();
+            p.GetAccessibilityProperties().SetStructureElementId("hello".GetBytes(System.Text.Encoding.UTF8));
+            document.Add(p);
+            for (int i = 0; i < 26; ++i) {
+                Paragraph q = CreateParagraph2();
+                q.GetAccessibilityProperties().SetStructureElementIdString("para" + i);
+                document.Add(q);
+            }
+            document.Close();
+            CompareResult("textInParagraphTestWithIds.pdf", "cmp_textInParagraphTestWithIds.pdf");
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageTest01.pdf"));

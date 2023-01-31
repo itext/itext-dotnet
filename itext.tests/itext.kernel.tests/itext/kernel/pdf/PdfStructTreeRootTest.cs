@@ -93,5 +93,20 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.IsTrue(kidsOfStructTreeRootKid.IsFlushed());
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void IdTreeIsLazyTest() {
+            MemoryStream os = new MemoryStream();
+            PdfWriter writer = new PdfWriter(os).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.SetTagged();
+            pdfDoc.AddNewPage().GetFirstContentStream().SetData("q Q".GetBytes(System.Text.Encoding.UTF8));
+            pdfDoc.GetStructTreeRoot().GetIdTree();
+            pdfDoc.Close();
+            // we've retrieved the ID tree but not used it -> it should be left out in the resulting file
+            PdfReader r = new PdfReader(new MemoryStream(os.ToArray()));
+            PdfDocument readPdfDoc = new PdfDocument(r);
+            NUnit.Framework.Assert.IsFalse(readPdfDoc.GetStructTreeRoot().GetPdfObject().ContainsKey(PdfName.IDTree));
+        }
     }
 }

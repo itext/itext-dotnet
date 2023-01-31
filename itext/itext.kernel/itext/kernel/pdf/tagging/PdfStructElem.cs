@@ -165,6 +165,40 @@ namespace iText.Kernel.Pdf.Tagging {
             Put(PdfName.E, e);
         }
 
+        /// <summary>Gets the structure element's ID string, if it has one.</summary>
+        /// <returns>the structure element's ID string, or null if there is none</returns>
+        public virtual PdfString GetStructureElementId() {
+            return GetPdfObject().GetAsString(PdfName.ID);
+        }
+
+        /// <summary>Sets the structure element's ID string.</summary>
+        /// <remarks>
+        /// Sets the structure element's ID string.
+        /// This value can be used by other structure elements to reference this one.
+        /// </remarks>
+        /// <param name="id">the element's ID string to be set</param>
+        public virtual void SetStructureElementId(PdfString id) {
+            PdfStructIdTree idTree = GetDocument().GetStructTreeRoot().GetIdTree();
+            if (id == null) {
+                PdfObject orig = GetPdfObject().Remove(PdfName.ID);
+                if (orig is PdfString) {
+                    idTree.RemoveEntry((PdfString)orig);
+                }
+            }
+            else {
+                PdfObject orig = GetPdfObject().Get(PdfName.ID);
+                if (id.Equals(orig)) {
+                    // nothing to do, the ID is already set to the appropriate value
+                    return;
+                }
+                if (orig is PdfString) {
+                    idTree.RemoveEntry((PdfString)orig);
+                }
+                idTree.AddEntry(id, this.GetPdfObject());
+                GetPdfObject().Put(PdfName.ID, id);
+            }
+        }
+
         public virtual PdfName GetRole() {
             return GetPdfObject().GetAsName(PdfName.S);
         }

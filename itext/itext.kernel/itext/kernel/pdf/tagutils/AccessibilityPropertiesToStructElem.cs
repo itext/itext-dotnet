@@ -49,33 +49,13 @@ using iText.Kernel.Pdf.Tagging;
 namespace iText.Kernel.Pdf.Tagutils {
     internal sealed class AccessibilityPropertiesToStructElem {
         internal static void Apply(AccessibilityProperties properties, PdfStructElem elem) {
-            if (properties.GetActualText() != null) {
-                elem.SetActualText(new PdfString(properties.GetActualText(), PdfEncodings.UNICODE_BIG));
-            }
-            if (properties.GetAlternateDescription() != null) {
-                elem.SetAlt(new PdfString(properties.GetAlternateDescription(), PdfEncodings.UNICODE_BIG));
-            }
-            if (properties.GetExpansion() != null) {
-                elem.SetE(new PdfString(properties.GetExpansion(), PdfEncodings.UNICODE_BIG));
-            }
-            if (properties.GetLanguage() != null) {
-                elem.SetLang(new PdfString(properties.GetLanguage(), PdfEncodings.UNICODE_BIG));
-            }
-            IList<PdfStructureAttributes> newAttributesList = properties.GetAttributesList();
-            if (newAttributesList.Count > 0) {
-                PdfObject attributesObject = elem.GetAttributes(false);
-                PdfObject combinedAttributes = CombineAttributesList(attributesObject, -1, newAttributesList, elem.GetPdfObject
-                    ().GetAsNumber(PdfName.R));
-                elem.SetAttributes(combinedAttributes);
-            }
-            if (properties.GetPhoneme() != null) {
-                elem.SetPhoneme(new PdfString(properties.GetPhoneme(), PdfEncodings.UNICODE_BIG));
-            }
-            if (properties.GetPhoneticAlphabet() != null) {
-                elem.SetPhoneticAlphabet(new PdfName(properties.GetPhoneticAlphabet()));
-            }
+            SetTextualAids(properties, elem);
+            SetAttributes(properties.GetAttributesList(), elem);
             if (properties.GetNamespace() != null) {
                 elem.SetNamespace(properties.GetNamespace());
+            }
+            if (properties.GetStructureElementId() != null) {
+                elem.SetStructureElementId(new PdfString(properties.GetStructureElementId()));
             }
             foreach (TagTreePointer @ref in properties.GetRefsList()) {
                 elem.AddRef(@ref.GetCurrentStructElem());
@@ -111,6 +91,36 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
             }
             return combinedAttributes;
+        }
+
+        private static void SetAttributes(IList<PdfStructureAttributes> newAttributesList, PdfStructElem elem) {
+            if (newAttributesList.Count > 0) {
+                PdfObject attributesObject = elem.GetAttributes(false);
+                PdfObject combinedAttributes = CombineAttributesList(attributesObject, -1, newAttributesList, elem.GetPdfObject
+                    ().GetAsNumber(PdfName.R));
+                elem.SetAttributes(combinedAttributes);
+            }
+        }
+
+        private static void SetTextualAids(AccessibilityProperties properties, PdfStructElem elem) {
+            if (properties.GetLanguage() != null) {
+                elem.SetLang(new PdfString(properties.GetLanguage(), PdfEncodings.UNICODE_BIG));
+            }
+            if (properties.GetActualText() != null) {
+                elem.SetActualText(new PdfString(properties.GetActualText(), PdfEncodings.UNICODE_BIG));
+            }
+            if (properties.GetAlternateDescription() != null) {
+                elem.SetAlt(new PdfString(properties.GetAlternateDescription(), PdfEncodings.UNICODE_BIG));
+            }
+            if (properties.GetExpansion() != null) {
+                elem.SetE(new PdfString(properties.GetExpansion(), PdfEncodings.UNICODE_BIG));
+            }
+            if (properties.GetPhoneme() != null) {
+                elem.SetPhoneme(new PdfString(properties.GetPhoneme(), PdfEncodings.UNICODE_BIG));
+            }
+            if (properties.GetPhoneticAlphabet() != null) {
+                elem.SetPhoneticAlphabet(new PdfName(properties.GetPhoneticAlphabet()));
+            }
         }
 
         private static void AddNewAttributesToAttributesArray(int insertIndex, IList<PdfStructureAttributes> newAttributesList
