@@ -100,6 +100,22 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MergeDocumentWithCycleRefInAcroFormTest() {
+            String filename1 = sourceFolder + "doc1.pdf";
+            String filename2 = sourceFolder + "pdfWithCycleRefInAnnotationParent.pdf";
+            String resultFile = destinationFolder + "resultFileWithoutStackOverflow.pdf";
+            using (PdfDocument pdfDocument1 = new PdfDocument(new PdfReader(filename2))) {
+                using (PdfDocument pdfDocument2 = new PdfDocument(new PdfReader(filename1), new PdfWriter(resultFile).SetSmartMode
+                    (true))) {
+                    PdfMerger merger = new PdfMerger(pdfDocument2);
+                    merger.Merge(pdfDocument1, 1, pdfDocument1.GetNumberOfPages());
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_resultFileWithoutStackOverflow.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MergeDocumentTest02() {
             String filename = sourceFolder + "doc1.pdf";
             String filename1 = sourceFolder + "doc2.pdf";

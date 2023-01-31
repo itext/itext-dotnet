@@ -1750,6 +1750,9 @@ namespace iText.Kernel.Pdf {
                     newParent = oldParent.CopyTo(toDocument, JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName.Parent), true
                         , NullCopyFilter.GetInstance());
                 }
+                if (oldParent == oldParent.GetAsDictionary(PdfName.Parent)) {
+                    return;
+                }
                 RebuildFormFieldParent(oldParent, newParent, toDocument);
                 PdfArray kids = newParent.GetAsArray(PdfName.Kids);
                 if (kids == null) {
