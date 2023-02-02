@@ -1099,18 +1099,17 @@ namespace iText.Forms {
                 PdfString fieldName = formField.GetFieldName();
                 String name;
                 if (fieldName == null) {
-                    PdfFormField parentField = formField.GetParentField();
-                    if (parentField == null) {
-                        parentField = PdfFormField.MakeFormField(formField.GetParent(), document);
-                    }
                     while (fieldName == null) {
-                        fieldName = parentField.GetFieldName();
-                        if (fieldName == null) {
-                            parentField = formField.GetParentField();
-                            if (parentField == null) {
-                                parentField = PdfFormField.MakeFormField(formField.GetParent(), document);
-                            }
+                        if (formField.GetParent() == null) {
+                            LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD, field.GetIndirectReference
+                                ()));
+                            break;
                         }
+                        PdfFormField parentField = PdfFormField.MakeFormField(formField.GetParent(), document);
+                        fieldName = parentField.GetFieldName();
+                    }
+                    if (fieldName == null) {
+                        continue;
                     }
                     name = fieldName.ToUnicodeString() + "." + index;
                     index++;

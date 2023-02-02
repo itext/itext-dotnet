@@ -32,12 +32,6 @@ using iText.Test.Attributes;
 namespace iText.Forms {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfAcroFormTest : ExtendedITextTest {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms/PdfAcroFormTest/";
-
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfAcroFormTest/";
-
         [NUnit.Framework.Test]
         public virtual void SetSignatureFlagsTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
