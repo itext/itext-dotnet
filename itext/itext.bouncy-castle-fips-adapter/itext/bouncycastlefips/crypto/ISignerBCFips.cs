@@ -84,8 +84,14 @@ namespace iText.Bouncycastlefips.Crypto {
 
         /// <summary><inheritDoc/></summary>
         public void SetDigestAlgorithm(string algorithm) {
-            lastHashAlgorithm = algorithm.Split(new string[] { "with" }, StringSplitOptions.None)[0];
-            lastEncryptionAlgorithm = algorithm.Split(new string[] { "with" }, StringSplitOptions.None)[1];
+            string[] splitAlgorithm = algorithm.Split(new string[] { "with" }, StringSplitOptions.None);
+            if (splitAlgorithm.Length > 1) {
+                lastHashAlgorithm = splitAlgorithm[0];
+                lastEncryptionAlgorithm = splitAlgorithm[1];
+            } else {
+                lastHashAlgorithm = "";
+                lastEncryptionAlgorithm = splitAlgorithm[0];
+            }
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
