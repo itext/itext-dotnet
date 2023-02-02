@@ -22,8 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Forms.Exceptions;
 using iText.Forms.Fields;
 using iText.IO.Source;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -227,6 +229,24 @@ namespace iText.Forms {
                 field.AddKid(PdfFormAnnotation.MakeFormAnnotation(annotDict, outputDoc));
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetAllFormFields().Count);
                 NUnit.Framework.Assert.AreEqual(2, acroForm.GetAllFormFieldsAndAnnotations().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NamelessFieldTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfDictionary fieldDict = new PdfDictionary();
+                fieldDict.Put(PdfName.FT, PdfName.Tx);
+                PdfFormField field = PdfFormField.MakeFormField(fieldDict.MakeIndirect(outputDoc), outputDoc);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => acroForm.AddField(field));
+                NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME, e.Message);
+                outputDoc.AddNewPage();
+                PdfPage page = outputDoc.GetLastPage();
+                e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => acroForm.AddField(field, page));
+                NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME, e.Message);
+                NUnit.Framework.Assert.AreEqual(0, acroForm.GetDirectFormFields().Count);
             }
         }
 

@@ -225,6 +225,9 @@ namespace iText.Forms {
         /// to be added to the form
         /// </param>
         public virtual void AddField(PdfFormField field) {
+            if (field.GetFieldName() == null) {
+                throw new PdfException(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME);
+            }
             PdfPage page;
             if (document.GetNumberOfPages() == 0) {
                 document.AddNewPage();
@@ -245,6 +248,9 @@ namespace iText.Forms {
         /// on which to add the field
         /// </param>
         public virtual void AddField(PdfFormField field, PdfPage page) {
+            if (field.GetFieldName() == null) {
+                throw new PdfException(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME);
+            }
             ProcessKids(field, page);
             PdfDictionary fieldDic = field.GetPdfObject();
             PdfArray fieldsArray = GetFields();
@@ -897,7 +903,7 @@ namespace iText.Forms {
                         }
                     }
                     else {
-                        LOGGER.LogWarning(FormsExceptionMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
+                        LOGGER.LogWarning(FormsLogMessageConstants.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
                     }
                     PdfArray fFields = GetFields();
                     fFields.Remove(fieldObject);
