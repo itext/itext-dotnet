@@ -305,8 +305,8 @@ namespace iText.Pdfa {
         private void GenerateAndValidatePdfA2WithCidFont(String fontFile, String outPdf, String expectedVeraPdfWarning
             ) {
             using (PdfWriter writer = new PdfWriter(outPdf)) {
-                using (Stream @is = File.NewInputStream(System.IO.Path.Combine(sourceFolder + "sRGB Color Space Profile.icm"
-                    ))) {
+                using (Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                    )) {
                     using (PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom"
                         , "", "http://www.color.org", "sRGB IEC61966-2.1", @is))) {
                         PdfPage page = doc.AddNewPage();
