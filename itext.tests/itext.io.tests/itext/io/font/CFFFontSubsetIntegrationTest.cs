@@ -48,6 +48,8 @@ namespace iText.IO.Font {
 
         private const int JP_REGULAR_CFF_LENGTH = 4210891;
 
+        private static readonly String PURITAN_PATH = FONTS_FOLDER + "Puritan2.otf";
+
         [NUnit.Framework.Test]
         public virtual void SubsetNotoSansCjkJpBoldNoUsedGlyphsTest() {
             String cmpCff = SOURCE_FOLDER + "subsetNotoSansCJKjpBoldNoUsedGlyphs.cff";
@@ -90,6 +92,20 @@ namespace iText.IO.Font {
             byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subsetNotoSansJPRegularOneUsedGlyph.cff"
                 ));
             NUnit.Framework.Assert.AreEqual(cmpBytes, cffSubsetBytes);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SubsetNonCidCFFFontRangeCheck() {
+            // 'H' (not that it matters which glyph we use)
+            int glyphGid1 = 41;
+            HashSet<int> glyphsUsed = new HashSet<int>(JavaCollectionsUtil.SingletonList(glyphGid1));
+            byte[] cffData = new TrueTypeFont(PURITAN_PATH).GetFontStreamBytes();
+            byte[] cffSubsetBytes = new CFFFontSubset(cffData, glyphsUsed).Process();
+            CFFFont result = new CFFFont(cffSubsetBytes);
+            int expectedCharsetLength = 255;
+            // skip over the format ID (1 byte) and the first SID (2 bytes)
+            result.Seek(result.fonts[0].charsetOffset + 3);
+            NUnit.Framework.Assert.AreEqual(expectedCharsetLength - 2, result.GetCard16());
         }
 
         private byte[] SubsetNotoSansCjkJpBoldCff(String otfFile, int offsetToCff, int cffLength, ICollection<int>
