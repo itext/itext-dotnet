@@ -200,7 +200,7 @@ namespace iText.Commons.Utils
             // Don't serialize null fields
             settings.NullValueHandling = NullValueHandling.Ignore;
 
-            return JsonSerializer.CreateDefault(settings);
+            return JsonSerializer.Create(settings);
         }
     }
 }
