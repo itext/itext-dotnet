@@ -67,16 +67,18 @@ namespace iText.Forms.Fields {
             TerminalFormFieldBuilderTest.TestBuilder builder = new TerminalFormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT
                 , DUMMY_NAME);
             builder.SetPage(5);
-            PdfFormField formField = new _PdfFormField_78(DUMMY_DOCUMENT);
+            PdfFormAnnotation formFieldAnnot = new _PdfFormAnnotation_79((PdfDictionary)new PdfDictionary().MakeIndirect
+                (DUMMY_DOCUMENT));
+            PdfFormField formField = new PdfFormField(DUMMY_DOCUMENT).AddKid(formFieldAnnot);
             builder.SetPageToField(formField);
         }
 
-        private sealed class _PdfFormField_78 : PdfFormField {
-            public _PdfFormField_78(PdfDocument baseArg1)
+        private sealed class _PdfFormAnnotation_79 : PdfFormAnnotation {
+            public _PdfFormAnnotation_79(PdfDictionary baseArg1)
                 : base(baseArg1) {
             }
 
-            public override PdfFormField SetPage(int pageNum) {
+            public override PdfFormAnnotation SetPage(int pageNum) {
                 NUnit.Framework.Assert.AreEqual(5, pageNum);
                 return this;
             }

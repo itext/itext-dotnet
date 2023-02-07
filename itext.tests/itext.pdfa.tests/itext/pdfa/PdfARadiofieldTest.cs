@@ -89,11 +89,11 @@ namespace iText.Pdfa {
             Rectangle rect1 = new Rectangle(36, 700, 20, 20);
             Rectangle rect2 = new Rectangle(36, 680, 20, 20);
             new RadioFormFieldBuilder(doc).SetWidgetRectangle(rect1).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B
-                ).CreateRadioButton(group, "1").SetBorderWidth(2).SetBorderColor(ColorConstants.RED).SetBackgroundColor
-                (ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
+                ).CreateRadioButton(group, "1").GetFirstFormAnnotation().SetBorderWidth(2).SetBorderColor(ColorConstants
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormAnnotation.VISIBLE);
             new RadioFormFieldBuilder(doc).SetWidgetRectangle(rect2).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B
-                ).CreateRadioButton(group, "2").SetBorderWidth(2).SetBorderColor(ColorConstants.RED).SetBackgroundColor
-                (ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormField.VISIBLE);
+                ).CreateRadioButton(group, "2").GetFirstFormAnnotation().SetBorderWidth(2).SetBorderColor(ColorConstants
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormAnnotation.VISIBLE);
             form.AddField(group);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff

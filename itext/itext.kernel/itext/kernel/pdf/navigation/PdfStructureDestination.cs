@@ -40,7 +40,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using System.Collections.Generic;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -100,7 +99,7 @@ namespace iText.Kernel.Pdf.Navigation {
                 .Add(right).Add(top).Add(zoom);
         }
 
-        public override PdfObject GetDestinationPage(IDictionary<String, PdfObject> names) {
+        public override PdfObject GetDestinationPage(IPdfNameTreeAccess names) {
             PdfObject firstObj = ((PdfArray)GetPdfObject()).Get(0);
             if (firstObj.IsDictionary()) {
                 PdfStructElem structElem = new PdfStructElem((PdfDictionary)firstObj);

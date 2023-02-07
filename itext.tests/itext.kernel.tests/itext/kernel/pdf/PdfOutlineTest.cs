@@ -484,7 +484,7 @@ namespace iText.Kernel.Pdf {
                     outlineDictionary.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
                     first.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
                     NUnit.Framework.Assert.DoesNotThrow(() => pdfDocument.GetCatalog().ConstructOutlines(outlineDictionary, new 
-                        Dictionary<String, PdfObject>()));
+                        PdfOutlineTest.EmptyNameTree()));
                 }
             }
         }
@@ -501,7 +501,7 @@ namespace iText.Kernel.Pdf {
                     outlineDictionary.Put(PdfName.First, first);
                     first.Put(PdfName.Parent, outlineDictionary);
                     Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetCatalog().ConstructOutlines
-                        (outlineDictionary, new Dictionary<String, PdfObject>()));
+                        (outlineDictionary, new PdfOutlineTest.EmptyNameTree()));
                     NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_TITLE_ENTRY
                         , first.indirectReference), exception.Message);
                 }
@@ -608,7 +608,7 @@ namespace iText.Kernel.Pdf {
                     first.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
                     second.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
                     NUnit.Framework.Assert.DoesNotThrow(() => pdfDocument.GetCatalog().ConstructOutlines(outlineDictionary, new 
-                        Dictionary<String, PdfObject>()));
+                        PdfOutlineTest.EmptyNameTree()));
                     PdfOutline resultedOutline = pdfDocument.GetOutlines(false);
                     NUnit.Framework.Assert.AreEqual(2, resultedOutline.GetAllChildren().Count);
                     NUnit.Framework.Assert.AreEqual(resultedOutline.GetAllChildren()[1].GetParent(), resultedOutline.GetAllChildren
@@ -634,7 +634,7 @@ namespace iText.Kernel.Pdf {
                     outlineDictionary.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
                     first.Put(PdfName.Title, new PdfString("title", PdfEncodings.UNICODE_BIG));
                     NUnit.Framework.Assert.DoesNotThrow(() => pdfDocument.GetCatalog().ConstructOutlines(outlineDictionary, new 
-                        Dictionary<String, PdfObject>()));
+                        PdfOutlineTest.EmptyNameTree()));
                     PdfOutline resultedOutline = pdfDocument.GetOutlines(false);
                     NUnit.Framework.Assert.AreEqual(1, resultedOutline.GetAllChildren().Count);
                     NUnit.Framework.Assert.AreEqual(resultedOutline, resultedOutline.GetAllChildren()[0].GetParent());
@@ -710,6 +710,20 @@ namespace iText.Kernel.Pdf {
                     NUnit.Framework.Assert.IsTrue(resultedF.GetAllChildren()[0].GetAllChildren().IsEmpty());
                     NUnit.Framework.Assert.IsTrue(resultedF.GetAllChildren()[1].GetAllChildren().IsEmpty());
                 }
+            }
+        }
+
+        private sealed class EmptyNameTree : IPdfNameTreeAccess {
+            public PdfObject GetEntry(PdfString key) {
+                return null;
+            }
+
+            public PdfObject GetEntry(String key) {
+                return null;
+            }
+
+            public ICollection<PdfString> GetKeys() {
+                return JavaCollectionsUtil.EmptySet<PdfString>();
             }
         }
     }

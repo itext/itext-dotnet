@@ -829,6 +829,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName ID = CreateDirectName("ID");
 
+        public static readonly iText.Kernel.Pdf.PdfName IDTree = CreateDirectName("IDTree");
+
         public static readonly iText.Kernel.Pdf.PdfName IDS = CreateDirectName("IDS");
 
         public static readonly iText.Kernel.Pdf.PdfName Identity = CreateDirectName("Identity");
@@ -1548,6 +1550,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName Subtype2 = CreateDirectName("Subtype2");
 
         public static readonly iText.Kernel.Pdf.PdfName Supplement = CreateDirectName("Supplement");
+
+        public static readonly iText.Kernel.Pdf.PdfName SV = CreateDirectName("SV");
 
         public static readonly iText.Kernel.Pdf.PdfName Sy = CreateDirectName("Sy");
 

@@ -88,8 +88,8 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
-                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton().SetFont(font).SetFontSize
-                (12);
+                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
+            button.SetFont(font).SetFontSize(12);
             form.AddField(button);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
@@ -116,8 +116,8 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
-                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton().SetFont(font).SetFontSize
-                (12);
+                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
+            button.SetFont(font).SetFontSize(12);
             button.RegenerateField();
             form.AddField(button);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
@@ -145,8 +145,8 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
-                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton().SetFont(font).SetFontSize
-                (12);
+                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
+            button.SetFont(font).SetFontSize(12);
             button.SetValue("button");
             form.AddField(button);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());

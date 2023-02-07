@@ -22,8 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Forms.Exceptions;
 using iText.Forms.Fields;
 using iText.IO.Source;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -32,12 +34,6 @@ using iText.Test.Attributes;
 namespace iText.Forms {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfAcroFormTest : ExtendedITextTest {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms/PdfAcroFormTest/";
-
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfAcroFormTest/";
-
         [NUnit.Framework.Test]
         public virtual void SetSignatureFlagsTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
@@ -86,7 +82,7 @@ namespace iText.Forms {
                 text.AddKid(childText);
                 acroForm.AddField(text);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.fields.Count);
-                IList<PdfFormField> fieldKids = text.GetChildFields();
+                IList<AbstractPdfFormField> fieldKids = text.GetChildFields();
                 NUnit.Framework.Assert.AreEqual(2, fieldKids.Count);
             }
         }
@@ -211,6 +207,46 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.AreEqual("root.child.aaaaa.child2", childField.GetFieldName().ToString());
                 NUnit.Framework.Assert.AreEqual(2, acroForm.fields.Count);
                 NUnit.Framework.Assert.AreEqual(2, root.GetKids().Size());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckFormFieldsSizeTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                NUnit.Framework.Assert.AreEqual(0, acroForm.GetAllFormFields().Count);
+                NUnit.Framework.Assert.AreEqual(0, acroForm.GetAllFormFieldsAndAnnotations().Count);
+                PdfDictionary fieldDict = new PdfDictionary();
+                fieldDict.Put(PdfName.FT, PdfName.Tx);
+                PdfFormField field = PdfFormField.MakeFormField(fieldDict.MakeIndirect(outputDoc), outputDoc);
+                field.SetFieldName("Field1");
+                acroForm.AddField(field);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetAllFormFields().Count);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetAllFormFieldsAndAnnotations().Count);
+                PdfDictionary annotDict = new PdfDictionary();
+                annotDict.Put(PdfName.Subtype, PdfName.Widget);
+                field.AddKid(PdfFormAnnotation.MakeFormAnnotation(annotDict, outputDoc));
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetAllFormFields().Count);
+                NUnit.Framework.Assert.AreEqual(2, acroForm.GetAllFormFieldsAndAnnotations().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NamelessFieldTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfDictionary fieldDict = new PdfDictionary();
+                fieldDict.Put(PdfName.FT, PdfName.Tx);
+                PdfFormField field = PdfFormField.MakeFormField(fieldDict.MakeIndirect(outputDoc), outputDoc);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => acroForm.AddField(field));
+                NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME, e.Message);
+                outputDoc.AddNewPage();
+                PdfPage page = outputDoc.GetLastPage();
+                e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => acroForm.AddField(field, page));
+                NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME, e.Message);
+                NUnit.Framework.Assert.AreEqual(0, acroForm.GetDirectFormFields().Count);
             }
         }
 

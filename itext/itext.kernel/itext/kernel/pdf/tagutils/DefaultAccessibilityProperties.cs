@@ -84,6 +84,8 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         protected internal IList<TagTreePointer> refs = new List<TagTreePointer>();
 
+        private byte[] structElemId;
+
         /// <summary>
         /// Instantiates a new
         /// <see cref="DefaultAccessibilityProperties"/>
@@ -202,6 +204,17 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         public override AccessibilityProperties ClearRefs() {
             refs.Clear();
+            return this;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override byte[] GetStructureElementId() {
+            return this.structElemId;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override AccessibilityProperties SetStructureElementId(byte[] id) {
+            this.structElemId = JavaUtil.ArraysCopyOf(id, id.Length);
             return this;
         }
     }

@@ -80,18 +80,18 @@ namespace iText.Forms.Fields {
             field.SetPushButton(true);
             field.SetFieldName(GetFormFieldName());
             field.text = caption;
-            field.UpdateFontAndFontSize(GetDocument().GetDefaultFont(), PdfFormField.DEFAULT_FONT_SIZE);
-            field.backgroundColor = ColorConstants.LIGHT_GRAY;
             if (annotation != null) {
-                PdfFormXObject xObject = field.DrawPushButtonAppearance(GetWidgetRectangle().GetWidth(), GetWidgetRectangle
-                    ().GetHeight(), caption, GetDocument().GetDefaultFont(), PdfFormField.DEFAULT_FONT_SIZE);
+                field.GetFirstFormAnnotation().backgroundColor = ColorConstants.LIGHT_GRAY;
+                PdfFormXObject xObject = field.GetFirstFormAnnotation().DrawPushButtonAppearance(GetWidgetRectangle().GetWidth
+                    (), GetWidgetRectangle().GetHeight(), caption, GetDocument().GetDefaultFont(), AbstractPdfFormField.DEFAULT_FONT_SIZE
+                    );
                 annotation.SetNormalAppearance(xObject.GetPdfObject());
                 PdfDictionary mk = new PdfDictionary();
                 mk.Put(PdfName.CA, new PdfString(caption));
-                mk.Put(PdfName.BG, new PdfArray(field.backgroundColor.GetColorValue()));
+                mk.Put(PdfName.BG, new PdfArray(field.GetFirstFormAnnotation().backgroundColor.GetColorValue()));
                 annotation.SetAppearanceCharacteristics(mk);
                 if (GetConformanceLevel() != null) {
-                    PdfFormField.CreatePushButtonAppearanceState(annotation.GetPdfObject());
+                    PdfFormAnnotation.CreatePushButtonAppearanceState(annotation.GetPdfObject());
                 }
                 SetPageToField(field);
             }

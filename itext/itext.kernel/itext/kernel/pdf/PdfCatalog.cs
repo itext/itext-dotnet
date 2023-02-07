@@ -529,7 +529,7 @@ namespace iText.Kernel.Pdf {
         /// An object destination refers to. Must be an array or a dictionary with key /D and array.
         /// See ISO 32000-1 12.3.2.3 for more info.
         /// </param>
-        internal virtual void AddNamedDestination(String key, PdfObject value) {
+        internal virtual void AddNamedDestination(PdfString key, PdfObject value) {
             AddNameToNameTree(key, value, PdfName.Dests);
         }
 
@@ -539,7 +539,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="key">key in the name tree</param>
         /// <param name="value">value in the name tree</param>
         /// <param name="treeType">type of the tree (Dests, AP, EmbeddedFiles etc).</param>
-        internal virtual void AddNameToNameTree(String key, PdfObject value, PdfName treeType) {
+        internal virtual void AddNameToNameTree(PdfString key, PdfObject value, PdfName treeType) {
             GetNameTree(treeType).AddEntry(key, value);
         }
 
@@ -572,7 +572,7 @@ namespace iText.Kernel.Pdf {
                 outlines = new PdfOutline(GetDocument());
             }
             else {
-                ConstructOutlines(outlineRoot, destsTree.GetNames());
+                ConstructOutlines(outlineRoot, destsTree);
             }
             return outlines;
         }
@@ -649,7 +649,7 @@ namespace iText.Kernel.Pdf {
         /// root.
         /// </param>
         /// <param name="names">map containing the PdfObjects stored in the tree.</param>
-        internal virtual void ConstructOutlines(PdfDictionary outlineRoot, IDictionary<String, PdfObject> names) {
+        internal virtual void ConstructOutlines(PdfDictionary outlineRoot, IPdfNameTreeAccess names) {
             if (outlineRoot == null) {
                 return;
             }
@@ -743,8 +743,8 @@ namespace iText.Kernel.Pdf {
             else {
                 if (dest.IsString() || dest.IsName()) {
                     PdfNameTree destsTree = GetNameTree(PdfName.Dests);
-                    IDictionary<String, PdfObject> dests = destsTree.GetNames();
-                    String srcDestName = dest.IsString() ? ((PdfString)dest).ToUnicodeString() : ((PdfName)dest).GetValue();
+                    IDictionary<PdfString, PdfObject> dests = destsTree.GetNames();
+                    PdfString srcDestName = dest.IsString() ? (PdfString)dest : new PdfString(((PdfName)dest).GetValue());
                     PdfArray srcDestArray = (PdfArray)dests.Get(srcDestName);
                     if (srcDestArray != null) {
                         PdfObject pageObject = srcDestArray.Get(0);
@@ -787,7 +787,7 @@ namespace iText.Kernel.Pdf {
             return GetPdfObject().GetAsDictionary(PdfName.OCProperties);
         }
 
-        private bool IsEqualSameNameDestExist(IDictionary<PdfPage, PdfPage> page2page, PdfDocument toDocument, String
+        private bool IsEqualSameNameDestExist(IDictionary<PdfPage, PdfPage> page2page, PdfDocument toDocument, PdfString
              srcDestName, PdfArray srcDestArray, PdfPage oldPage) {
             PdfArray sameNameDest = (PdfArray)toDocument.GetCatalog().GetNameTree(PdfName.Dests).GetNames().Get(srcDestName
                 );
@@ -805,7 +805,7 @@ namespace iText.Kernel.Pdf {
             return equalSameNameDestExists;
         }
 
-        private void AddOutlineToPage(PdfOutline outline, IDictionary<String, PdfObject> names) {
+        private void AddOutlineToPage(PdfOutline outline, IPdfNameTreeAccess names) {
             PdfObject pageObj = outline.GetDestination().GetDestinationPage(names);
             if (pageObj is PdfNumber) {
                 int pageNumber = ((PdfNumber)pageObj).IntValue() + 1;
@@ -828,8 +828,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private void AddOutlineToPage(PdfOutline outline, PdfDictionary item, IDictionary<String, PdfObject> names
-            ) {
+        private void AddOutlineToPage(PdfOutline outline, PdfDictionary item, IPdfNameTreeAccess names) {
             PdfObject dest = item.Get(PdfName.Dest);
             if (dest != null) {
                 PdfDestination destination = PdfDestination.MakeDestination(dest);

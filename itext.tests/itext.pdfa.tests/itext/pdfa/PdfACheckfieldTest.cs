@@ -84,8 +84,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateCheckBox
                 ().SetValue("Off");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -109,8 +109,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateCheckBox
                 ().SetValue("On");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -132,8 +132,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateCheckBox
                 ().SetValue("Off");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -155,8 +155,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateCheckBox
                 ().SetValue("On");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -180,8 +180,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2A).CreateCheckBox
                 ().SetValue("Off");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -205,8 +205,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2A).CreateCheckBox
                 ().SetValue("On");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -228,8 +228,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2B).CreateCheckBox
                 ().SetValue("Off");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -251,8 +251,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2B).CreateCheckBox
                 ().SetValue("On");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -274,8 +274,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2U).CreateCheckBox
                 ().SetValue("Off");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -297,8 +297,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_2U).CreateCheckBox
                 ().SetValue("On");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -322,8 +322,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3A).CreateCheckBox
                 ().SetValue("Off");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -347,8 +347,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3A).CreateCheckBox
                 ().SetValue("On");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -370,8 +370,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3B).CreateCheckBox
                 ().SetValue("Off");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -393,8 +393,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3B).CreateCheckBox
                 ().SetValue("On");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -416,8 +416,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3U).CreateCheckBox
                 ().SetValue("Off");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
@@ -439,8 +439,8 @@ namespace iText.Pdfa {
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(PdfFormField.TYPE_CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_3U).CreateCheckBox
                 ().SetValue("On");
-            chk.SetBorderColor(ColorConstants.BLACK);
-            chk.SetBorderWidth(1);
+            chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff

@@ -1973,10 +1973,8 @@ namespace iText.Kernel.Utils {
                 else {
                     PdfArray explicitCmpDest = null;
                     PdfArray explicitOutDest = null;
-                    IDictionary<String, PdfObject> cmpNamedDestinations = cmpDocument.GetCatalog().GetNameTree(PdfName.Dests).
-                        GetNames();
-                    IDictionary<String, PdfObject> outNamedDestinations = outDocument.GetCatalog().GetNameTree(PdfName.Dests).
-                        GetNames();
+                    PdfNameTree cmpNamedDestinations = cmpDocument.GetCatalog().GetNameTree(PdfName.Dests);
+                    PdfNameTree outNamedDestinations = outDocument.GetCatalog().GetNameTree(PdfName.Dests);
                     switch (cmpDestObject.GetObjectType()) {
                         case PdfObject.ARRAY: {
                             explicitCmpDest = (PdfArray)cmpDestObject;
@@ -1985,14 +1983,16 @@ namespace iText.Kernel.Utils {
                         }
 
                         case PdfObject.NAME: {
-                            explicitCmpDest = (PdfArray)cmpNamedDestinations.Get(((PdfName)cmpDestObject).GetValue());
-                            explicitOutDest = (PdfArray)outNamedDestinations.Get(((PdfName)outDestObject).GetValue());
+                            String cmpDestName = ((PdfName)cmpDestObject).GetValue();
+                            explicitCmpDest = (PdfArray)cmpNamedDestinations.GetEntry(cmpDestName);
+                            String outDestName = ((PdfName)outDestObject).GetValue();
+                            explicitOutDest = (PdfArray)outNamedDestinations.GetEntry(outDestName);
                             break;
                         }
 
                         case PdfObject.STRING: {
-                            explicitCmpDest = (PdfArray)cmpNamedDestinations.Get(((PdfString)cmpDestObject).ToUnicodeString());
-                            explicitOutDest = (PdfArray)outNamedDestinations.Get(((PdfString)outDestObject).ToUnicodeString());
+                            explicitCmpDest = (PdfArray)cmpNamedDestinations.GetEntry((PdfString)cmpDestObject);
+                            explicitOutDest = (PdfArray)outNamedDestinations.GetEntry((PdfString)outDestObject);
                             break;
                         }
 

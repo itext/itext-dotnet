@@ -1471,6 +1471,18 @@ namespace iText.Kernel.Pdf {
         /// See ISO 32000-1 12.3.2.3 for more info.
         /// </param>
         public virtual void AddNamedDestination(String key, PdfObject value) {
+            AddNamedDestination(new PdfString(key), value);
+        }
+
+        /// <summary>This methods adds new name in the Dests NameTree.</summary>
+        /// <remarks>This methods adds new name in the Dests NameTree. It throws an exception, if the name already exists.
+        ///     </remarks>
+        /// <param name="key">Name of the destination.</param>
+        /// <param name="value">
+        /// An object destination refers to. Must be an array or a dictionary with key /D and array.
+        /// See ISO 32000-1 12.3.2.3 for more info.
+        /// </param>
+        public virtual void AddNamedDestination(PdfString key, PdfObject value) {
             CheckClosingStatus();
             if (value.IsArray() && ((PdfArray)value).Get(0).IsNumber()) {
                 ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument)).LogWarning(iText.IO.Logs.IoLogMessageConstant
@@ -1579,7 +1591,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public virtual void AddFileAttachment(String key, PdfFileSpec fs) {
             CheckClosingStatus();
-            catalog.AddNameToNameTree(key, fs.GetPdfObject(), PdfName.EmbeddedFiles);
+            catalog.AddNameToNameTree(new PdfString(key), fs.GetPdfObject(), PdfName.EmbeddedFiles);
         }
 
         /// <summary>Adds file associated with PDF document as a whole and identifies the relationship between them.</summary>
@@ -1633,8 +1645,7 @@ namespace iText.Kernel.Pdf {
             if (collection != null && collection.IsViewHidden()) {
                 PdfString documentName = collection.GetInitialDocument();
                 PdfNameTree embeddedFiles = GetCatalog().GetNameTree(PdfName.EmbeddedFiles);
-                String documentNameUnicode = documentName.ToUnicodeString();
-                PdfObject fileSpecObject = embeddedFiles.GetNames().Get(documentNameUnicode);
+                PdfObject fileSpecObject = embeddedFiles.GetNames().Get(documentName);
                 if (fileSpecObject != null && fileSpecObject.IsDictionary()) {
                     try {
                         PdfFileSpec fileSpec = PdfEncryptedPayloadFileSpecFactory.Wrap((PdfDictionary)fileSpecObject);
@@ -1645,6 +1656,7 @@ namespace iText.Kernel.Pdf {
                                 stream = embeddedDictionary.GetAsStream(PdfName.F);
                             }
                             if (stream != null) {
+                                String documentNameUnicode = documentName.ToUnicodeString();
                                 return new PdfEncryptedPayloadDocument(stream, fileSpec, documentNameUnicode);
                             }
                         }

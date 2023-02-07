@@ -34,10 +34,7 @@ namespace iText.Forms.Exceptions {
              + "The page has been already flushed. Use PdfAcroForm#addFieldAppearanceToPage() method before page "
              + "flushing.";
 
-        public const String WRONG_FORM_FIELD_ADD_ANNOTATION_TO_THE_FIELD = "Wrong form field. Add annotation to the "
-             + "field.";
-
-        public const String N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY = "\\N entry is required to be present in an appearance dictionary.";
+        public const String FORM_FIELD_MUST_HAVE_A_NAME = "Form field must have a name." + " Set it using PdfFormField#setFieldName call.";
 
         private FormsExceptionMessageConstant() {
         }

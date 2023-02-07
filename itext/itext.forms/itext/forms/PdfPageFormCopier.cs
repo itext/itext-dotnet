@@ -47,6 +47,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
+using iText.Forms.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
@@ -106,11 +107,11 @@ namespace iText.Forms {
             }
         }
 
-        private PdfFormField MakeFormField(PdfObject fieldDict) {
-            PdfFormField field = PdfFormField.MakeFormField(fieldDict, documentTo);
+        private AbstractPdfFormField MakeFormField(PdfObject fieldDict) {
+            AbstractPdfFormField field = PdfFormField.MakeFormFieldOrAnnotation(fieldDict, documentTo);
             if (field == null) {
-                logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CANNOT_CREATE_FORMFIELD, fieldDict
-                    .GetIndirectReference()));
+                logger.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD, fieldDict.GetIndirectReference
+                    ()));
             }
             return field;
         }
@@ -136,7 +137,10 @@ namespace iText.Forms {
                     annotNameString = annotName.ToUnicodeString();
                 }
                 if (annotNameString != null && fieldsFrom.ContainsKey(annotNameString)) {
-                    PdfFormField field = MakeFormField(currentAnnot.GetPdfObject());
+                    // In this piece on code we expect annotation with T field
+                    // It could mean only merged form field and annotation
+                    // This cast must be ok
+                    PdfFormField field = (PdfFormField)MakeFormField(currentAnnot.GetPdfObject());
                     if (field == null) {
                         return;
                     }
@@ -163,7 +167,7 @@ namespace iText.Forms {
             }
             else {
                 // it is either a field (field name will not be null) or a widget (field name is not null)
-                PdfFormField field = MakeFormField(annot.GetPdfObject());
+                AbstractPdfFormField field = MakeFormField(annot.GetPdfObject());
                 if (field == null) {
                     return;
                 }
@@ -202,7 +206,7 @@ namespace iText.Forms {
             }
         }
 
-        private PdfFormField MergeFieldsWithTheSameName(PdfFormField newField) {
+        private PdfFormField MergeFieldsWithTheSameName(AbstractPdfFormField newField) {
             PdfString fieldName = newField.GetPdfObject().GetAsString(PdfName.T);
             if (null == fieldName) {
                 fieldName = newField.GetParent().GetAsString(PdfName.T);
@@ -214,15 +218,15 @@ namespace iText.Forms {
             logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, 
                 fullFieldName));
             PdfFormField existingField = formTo.GetField(fullFieldName);
-            if (existingField.IsFlushed()) {
+            if (existingField.IsFlushed() && newField is PdfFormField) {
                 int index = 0;
                 do {
                     index++;
-                    newField.SetFieldName(fieldName.ToUnicodeString() + "_#" + index);
+                    ((PdfFormField)newField).SetFieldName(fieldName.ToUnicodeString() + "_#" + index);
                     fullFieldName = newField.GetFieldName().ToUnicodeString();
                 }
                 while (formTo.GetField(fullFieldName) != null);
-                return newField;
+                return (PdfFormField)newField;
             }
             newField.GetPdfObject().Remove(PdfName.T);
             newField.GetPdfObject().Remove(PdfName.P);
@@ -271,7 +275,7 @@ namespace iText.Forms {
 
         private PdfFormField CreateParentFieldCopy(PdfDictionary fieldDic, PdfDocument pdfDoc) {
             PdfDictionary parent = fieldDic.GetAsDictionary(PdfName.Parent);
-            PdfFormField field = PdfFormField.MakeFormField(fieldDic, pdfDoc);
+            PdfFormField field;
             if (parent != null) {
                 field = CreateParentFieldCopy(parent, pdfDoc);
                 PdfArray kids = (PdfArray)parent.Get(PdfName.Kids);
@@ -282,6 +286,9 @@ namespace iText.Forms {
                     kids.Add(fieldDic);
                     field.SetChildField(MakeFormField(fieldDic));
                 }
+            }
+            else {
+                field = PdfFormField.MakeFormField(fieldDic, pdfDoc);
             }
             return field;
         }
@@ -319,12 +326,12 @@ namespace iText.Forms {
                     foreach (PdfObject kid in kids) {
                         if (((PdfDictionary)kid).Get(PdfName.T) != null && ((PdfDictionary)kid).Get(PdfName.T).Equals(fieldDic.Get
                             (PdfName.T))) {
-                            PdfFormField kidField = MakeFormField(kid);
-                            PdfFormField field = MakeFormField(fieldDic);
+                            AbstractPdfFormField kidField = MakeFormField(kid);
+                            AbstractPdfFormField field = MakeFormField(fieldDic);
                             if (kidField == null || field == null) {
                                 continue;
                             }
-                            fieldsTo.Put(kidField.GetFieldName().ToUnicodeString(), kidField);
+                            fieldsTo.Put(kidField.GetFieldName().ToUnicodeString(), (PdfFormField)kidField);
                             PdfFormField mergedField = MergeFieldsWithTheSameName(field);
                             formTo.GetDirectFormFields().Put(mergedField.GetFieldName().ToUnicodeString(), mergedField);
                             return;

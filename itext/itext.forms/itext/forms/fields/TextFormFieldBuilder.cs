@@ -64,7 +64,6 @@ namespace iText.Forms.Fields {
                 SetPageToField(field);
             }
             field.pdfAConformanceLevel = GetConformanceLevel();
-            field.UpdateFontAndFontSize(GetDocument().GetDefaultFont(), PdfFormField.DEFAULT_FONT_SIZE);
             field.SetMultiline(multiline);
             field.SetFieldName(GetFormFieldName());
             field.SetValue(TEXT_FORM_FIELD_DEFAULT_VALUE);

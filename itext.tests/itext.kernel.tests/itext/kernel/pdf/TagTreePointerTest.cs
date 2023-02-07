@@ -52,6 +52,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -619,6 +620,306 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void StructureElementWithIdTest() {
+            String outfName = "structureElementWithIdTest.pdf";
+            FileStream fos = new FileStream(destinationFolder + outfName, FileMode.Create);
+            PdfWriter writer = new PdfWriter(fos).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            AddContentWithIds(document);
+            document.Close();
+            CompareResult(outfName, "cmp_" + outfName, "diff01_");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementWithIdFromPropsTest() {
+            MemoryStream baos1 = new MemoryStream();
+            PdfWriter writer = new PdfWriter(baos1);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            PdfPage page1 = document.AddNewPage();
+            TagTreePointer tagPointer = new TagTreePointer(document);
+            tagPointer.SetPageForTagging(page1);
+            PdfCanvas canvas = new PdfCanvas(page1);
+            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
+            canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
+            // create a tag with an ID, some attributes and other properties
+            DefaultAccessibilityProperties spanProps = new DefaultAccessibilityProperties(StandardRoles.SPAN);
+            spanProps.SetStructureElementIdString("hello-element");
+            PdfStructureAttributes attrs = new PdfStructureAttributes("Layout");
+            attrs.AddEnumAttribute("Placement", "Inline");
+            spanProps.AddAttributes(attrs);
+            spanProps.SetActualText("Hello!");
+            spanProps.SetAlternateDescription("This is a piece of sample text");
+            tagPointer.AddTag(StandardRoles.P).AddTag(spanProps);
+            canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello!").CloseTag();
+            tagPointer.MoveToParent();
+            page1.Flush();
+            document.Close();
+            using (PdfReader r = new PdfReader(new MemoryStream(baos1.ToArray()))) {
+                using (PdfDocument documentToModify = new PdfDocument(r)) {
+                    TagStructureContext ctx = documentToModify.GetTagStructureContext();
+                    TagTreePointer ptrHello = ctx.GetTagPointerById("hello-element".GetBytes(System.Text.Encoding.UTF8));
+                    PdfStructureAttributes layoutAttrs = ptrHello.GetProperties().GetAttributesList()[0];
+                    NUnit.Framework.Assert.AreEqual("Inline", layoutAttrs.GetAttributeAsEnum("Placement"));
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RetrieveStructureElementsByIdTest() {
+            String infName = "cmp_structureElementWithIdTest.pdf";
+            // check that we can retrieve the IDs in the output
+            PdfReader r = new PdfReader(sourceFolder + infName);
+            PdfDocument readPdfDoc = new PdfDocument(r);
+            TagStructureContext ctx = readPdfDoc.GetTagStructureContext();
+            byte[] helloId = "hello-element".GetBytes(System.Text.Encoding.UTF8);
+            TagTreePointer ptrHello = ctx.GetTagPointerByIdString("hello-element");
+            NUnit.Framework.Assert.AreEqual(ptrHello.GetProperties().GetStructureElementId(), helloId);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementWithoutIdTest() {
+            String infName = "cmp_structureElementWithIdTest.pdf";
+            PdfReader r = new PdfReader(sourceFolder + infName);
+            PdfDocument readPdfDoc = new PdfDocument(r);
+            TagStructureContext ctx = readPdfDoc.GetTagStructureContext();
+            TagTreePointer ptrHello = ctx.GetTagPointerByIdString("hello-element");
+            // the parent is a P without ID -> we should get null
+            ptrHello.MoveToParent();
+            NUnit.Framework.Assert.IsNull(ptrHello.GetProperties().GetStructureElementId());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisambiguateStructureElementsByIdTest() {
+            String infName = "cmp_structureElementWithIdTest.pdf";
+            PdfReader r = new PdfReader(sourceFolder + infName);
+            PdfDocument readPdfDoc = new PdfDocument(r);
+            TagStructureContext ctx = readPdfDoc.GetTagStructureContext();
+            TagTreePointer ptrHello = ctx.GetTagPointerByIdString("hello-element");
+            TagTreePointer ptrWorld = ctx.GetTagPointerByIdString("world-element");
+            NUnit.Framework.Assert.IsFalse(ptrHello.IsPointingToSameTag(ptrWorld));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementWithNonexistentIdTest() {
+            String infName = "cmp_structureElementWithIdTest.pdf";
+            PdfReader r = new PdfReader(sourceFolder + infName);
+            PdfDocument readPdfDoc = new PdfDocument(r);
+            TagStructureContext ctx = readPdfDoc.GetTagStructureContext();
+            TagTreePointer ptrNone = ctx.GetTagPointerById("nonexistent-element".GetBytes(System.Text.Encoding.UTF8));
+            NUnit.Framework.Assert.IsNull(ptrNone);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementRemoveIdTest() {
+            MemoryStream baos1 = new MemoryStream();
+            PdfWriter writer = new PdfWriter(baos1);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            AddContentWithIds(document);
+            document.Close();
+            byte[] helloId = "hello-element".GetBytes(System.Text.Encoding.UTF8);
+            MemoryStream baos2 = new MemoryStream();
+            using (PdfReader r = new PdfReader(new MemoryStream(baos1.ToArray()))) {
+                using (PdfWriter w = new PdfWriter(baos2)) {
+                    using (PdfDocument documentToModify = new PdfDocument(r, w)) {
+                        TagStructureContext ctx = documentToModify.GetTagStructureContext();
+                        TagTreePointer ptrHello = ctx.GetTagPointerById(helloId);
+                        // remove the ID
+                        ptrHello.GetProperties().SetStructureElementId(null);
+                        NUnit.Framework.Assert.IsNull(ctx.GetTagPointerById(helloId));
+                    }
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementRemoveIdNoopTest() {
+            MemoryStream baos1 = new MemoryStream();
+            PdfWriter writer = new PdfWriter(baos1);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            AddContentWithIds(document);
+            document.Close();
+            MemoryStream baos2 = new MemoryStream();
+            using (PdfReader r = new PdfReader(new MemoryStream(baos1.ToArray()))) {
+                using (PdfWriter w = new PdfWriter(baos2)) {
+                    using (PdfDocument pdfDoc = new PdfDocument(r, w)) {
+                        PdfStructIdTree tree = pdfDoc.GetStructTreeRoot().GetIdTree();
+                        tree.RemoveEntry(new PdfString("i-dont-exist"));
+                        NUnit.Framework.Assert.IsFalse(tree.IsModified());
+                    }
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementRemoveIdStringTest() {
+            MemoryStream baos1 = new MemoryStream();
+            PdfWriter writer = new PdfWriter(baos1);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            AddContentWithIds(document);
+            document.Close();
+            byte[] helloId = "hello-element".GetBytes(System.Text.Encoding.UTF8);
+            MemoryStream baos2 = new MemoryStream();
+            using (PdfReader r = new PdfReader(new MemoryStream(baos1.ToArray()))) {
+                using (PdfWriter w = new PdfWriter(baos2)) {
+                    using (PdfDocument documentToModify = new PdfDocument(r, w)) {
+                        TagStructureContext ctx = documentToModify.GetTagStructureContext();
+                        TagTreePointer ptrHello = ctx.GetTagPointerById(helloId);
+                        // remove the ID
+                        ptrHello.GetProperties().SetStructureElementIdString(null);
+                        NUnit.Framework.Assert.IsNull(ctx.GetTagPointerById(helloId));
+                    }
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementRemoveIdPersist() {
+            MemoryStream baos = new MemoryStream();
+            AddAndRemoveId(baos);
+            // check if the changes were properly persisted
+            using (PdfReader r = new PdfReader(new MemoryStream(baos.ToArray()))) {
+                using (PdfDocument documentRead = new PdfDocument(r)) {
+                    TagStructureContext ctx = documentRead.GetTagStructureContext();
+                    NUnit.Framework.Assert.IsNull(ctx.GetTagPointerByIdString("hello-element"));
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementRemoveIdPersistNoCollateralDamage() {
+            MemoryStream baos = new MemoryStream();
+            AddAndRemoveId(baos);
+            // check if the changes were properly persisted
+            using (PdfReader r = new PdfReader(new MemoryStream(baos.ToArray()))) {
+                using (PdfDocument documentRead = new PdfDocument(r)) {
+                    TagStructureContext ctx = documentRead.GetTagStructureContext();
+                    byte[] id = "world-element".GetBytes(System.Text.Encoding.UTF8);
+                    byte[] retrieved = ctx.GetTagPointerById(id).GetProperties().GetStructureElementId();
+                    NUnit.Framework.Assert.AreEqual(id, retrieved);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementModifyIdTest() {
+            MemoryStream baos1 = new MemoryStream();
+            PdfWriter writer = new PdfWriter(baos1);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            AddContentWithIds(document);
+            document.Close();
+            byte[] helloId = "hello-element".GetBytes(System.Text.Encoding.UTF8);
+            byte[] helloId2 = "hello2-element".GetBytes(System.Text.Encoding.UTF8);
+            MemoryStream baos2 = new MemoryStream();
+            using (PdfReader r = new PdfReader(new MemoryStream(baos1.ToArray()))) {
+                using (PdfWriter w = new PdfWriter(baos2)) {
+                    using (PdfDocument documentToModify = new PdfDocument(r, w)) {
+                        TagStructureContext ctx = documentToModify.GetTagStructureContext();
+                        TagTreePointer ptrHello = ctx.GetTagPointerById(helloId);
+                        // modify the ID to a new value
+                        ptrHello.GetProperties().SetStructureElementId(helloId2);
+                        NUnit.Framework.Assert.IsTrue(ptrHello.IsPointingToSameTag(ctx.GetTagPointerById(helloId2)));
+                    }
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementModifyIdNoopTest() {
+            MemoryStream baos1 = new MemoryStream();
+            PdfWriter writer = new PdfWriter(baos1);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            AddContentWithIds(document);
+            document.Close();
+            byte[] helloId = "hello-element".GetBytes(System.Text.Encoding.UTF8);
+            MemoryStream baos2 = new MemoryStream();
+            using (PdfReader r = new PdfReader(new MemoryStream(baos1.ToArray()))) {
+                using (PdfWriter w = new PdfWriter(baos2)) {
+                    using (PdfDocument documentToModify = new PdfDocument(r, w)) {
+                        TagStructureContext ctx = documentToModify.GetTagStructureContext();
+                        TagTreePointer ptrHello = ctx.GetTagPointerById(helloId);
+                        ptrHello.GetProperties().SetStructureElementId(helloId);
+                        NUnit.Framework.Assert.IsFalse(documentToModify.GetStructTreeRoot().GetIdTree().IsModified());
+                    }
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Count = 1)]
+        public virtual void StructureElementClobberIdWarning() {
+            MemoryStream baos1 = new MemoryStream();
+            PdfWriter writer = new PdfWriter(baos1);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            AddContentWithIds(document);
+            document.Close();
+            byte[] helloId = "hello-element".GetBytes(System.Text.Encoding.UTF8);
+            byte[] worldId = "world-element".GetBytes(System.Text.Encoding.UTF8);
+            MemoryStream baos2 = new MemoryStream();
+            using (PdfReader r = new PdfReader(new MemoryStream(baos1.ToArray()))) {
+                using (PdfWriter w = new PdfWriter(baos2)) {
+                    using (PdfDocument documentToModify = new PdfDocument(r, w)) {
+                        TagStructureContext ctx = documentToModify.GetTagStructureContext();
+                        TagTreePointer ptrWorld = ctx.GetTagPointerById(worldId);
+                        // modify the ID to a new value
+                        ptrWorld.GetProperties().SetStructureElementId(helloId);
+                        // this should clobber the old value and trigger a warning
+                        NUnit.Framework.Assert.IsTrue(ptrWorld.IsPointingToSameTag(ctx.GetTagPointerById(helloId)));
+                    }
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementModifyIdNewRegistered() {
+            MemoryStream baos = new MemoryStream();
+            AddAndModifyStructElemId(baos);
+            using (PdfReader r = new PdfReader(new MemoryStream(baos.ToArray()))) {
+                using (PdfDocument documentRead = new PdfDocument(r)) {
+                    TagStructureContext ctx = documentRead.GetTagStructureContext();
+                    byte[] id = "hello2-element".GetBytes(System.Text.Encoding.UTF8);
+                    byte[] retrieved = ctx.GetTagPointerById(id).GetProperties().GetStructureElementId();
+                    NUnit.Framework.Assert.AreEqual(id, retrieved);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementModifyIdOldRemoved() {
+            MemoryStream baos = new MemoryStream();
+            AddAndModifyStructElemId(baos);
+            // check if the changes were properly persisted
+            using (PdfReader r = new PdfReader(new MemoryStream(baos.ToArray()))) {
+                using (PdfDocument documentRead = new PdfDocument(r)) {
+                    TagStructureContext ctx = documentRead.GetTagStructureContext();
+                    NUnit.Framework.Assert.IsNull(ctx.GetTagPointerByIdString("hello-element"));
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StructureElementModifyIdNoCollateralDamage() {
+            MemoryStream baos = new MemoryStream();
+            AddAndModifyStructElemId(baos);
+            // check if the changes were properly persisted
+            using (PdfReader r = new PdfReader(new MemoryStream(baos.ToArray()))) {
+                using (PdfDocument documentRead = new PdfDocument(r)) {
+                    TagStructureContext ctx = documentRead.GetTagStructureContext();
+                    byte[] id = "world-element".GetBytes(System.Text.Encoding.UTF8);
+                    byte[] retrieved = ctx.GetTagPointerById(id).GetProperties().GetStructureElementId();
+                    NUnit.Framework.Assert.AreEqual(id, retrieved);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void AccessibleAttributesInsertionTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest01.pdf");
@@ -779,6 +1080,66 @@ namespace iText.Kernel.Pdf {
             errorMessage += contentDifferences == null ? "" : contentDifferences;
             if (!String.IsNullOrEmpty(errorMessage)) {
                 NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        private static void AddContentWithIds(PdfDocument document) {
+            PdfPage page1 = document.AddNewPage();
+            TagTreePointer tagPointer = new TagTreePointer(document);
+            tagPointer.SetPageForTagging(page1);
+            PdfCanvas canvas = new PdfCanvas(page1);
+            PdfFont standardFont = PdfFontFactory.CreateFont(StandardFonts.COURIER);
+            canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
+            DefaultAccessibilityProperties paraProps = new DefaultAccessibilityProperties(StandardRoles.P);
+            tagPointer.AddTag(paraProps).AddTag(StandardRoles.SPAN);
+            tagPointer.GetProperties().SetStructureElementIdString("hello-element");
+            canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
+            tagPointer.MoveToParent().AddTag(StandardRoles.SPAN);
+            tagPointer.GetProperties().SetStructureElementIdString("world-element");
+            canvas.SetFontAndSize(standardFont, 30).OpenTag(tagPointer.GetTagReference()).ShowText("World").CloseTag();
+            tagPointer.MoveToParent();
+            canvas.EndText().Release();
+            page1.Flush();
+        }
+
+        private void AddAndRemoveId(Stream baos) {
+            MemoryStream preBaos = new MemoryStream();
+            PdfWriter writer = new PdfWriter(preBaos);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            AddContentWithIds(document);
+            document.Close();
+            byte[] helloId = "hello-element".GetBytes(System.Text.Encoding.UTF8);
+            using (PdfReader r = new PdfReader(new MemoryStream(preBaos.ToArray()))) {
+                using (PdfWriter w = new PdfWriter(baos)) {
+                    using (PdfDocument documentToModify = new PdfDocument(r, w)) {
+                        TagStructureContext ctx = documentToModify.GetTagStructureContext();
+                        TagTreePointer ptrHello = ctx.GetTagPointerById(helloId);
+                        // remove the ID
+                        ptrHello.GetProperties().SetStructureElementId(null);
+                    }
+                }
+            }
+        }
+
+        private void AddAndModifyStructElemId(Stream baos) {
+            MemoryStream preBaos = new MemoryStream();
+            PdfWriter writer = new PdfWriter(preBaos);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            AddContentWithIds(document);
+            document.Close();
+            byte[] helloId = "hello-element".GetBytes(System.Text.Encoding.UTF8);
+            byte[] helloId2 = "hello2-element".GetBytes(System.Text.Encoding.UTF8);
+            using (PdfReader r = new PdfReader(new MemoryStream(preBaos.ToArray()))) {
+                using (PdfWriter w = new PdfWriter(baos)) {
+                    using (PdfDocument documentToModify = new PdfDocument(r, w)) {
+                        TagStructureContext ctx = documentToModify.GetTagStructureContext();
+                        TagTreePointer ptrHello = ctx.GetTagPointerById(helloId);
+                        // modify the ID to a new value
+                        ptrHello.GetProperties().SetStructureElementId(helloId2);
+                    }
+                }
             }
         }
     }

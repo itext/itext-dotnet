@@ -214,8 +214,8 @@ namespace iText.Kernel.Pdf.Action {
             else {
                 if (pValue is PdfString) {
                     PdfNameTree destsTree = pdfDocument.GetCatalog().GetNameTree(PdfName.Dests);
-                    IDictionary<String, PdfObject> dests = destsTree.GetNames();
-                    PdfArray pdfArray = (PdfArray)dests.Get(((PdfString)pValue).GetValue());
+                    IDictionary<PdfString, PdfObject> dests = destsTree.GetNames();
+                    PdfArray pdfArray = (PdfArray)dests.Get((PdfString)pValue);
                     if (null != pdfArray) {
                         if (pdfArray.Get(0) is PdfNumber) {
                             page = pdfDocument.GetPage(((PdfNumber)pdfArray.Get(0)).IntValue());

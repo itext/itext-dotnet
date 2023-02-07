@@ -52,9 +52,9 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             PdfTextFormField name = new TextFormFieldBuilder(pdfDoc, "fieldName").SetWidgetRectangle(new Rectangle(150
                 , 600, 277, 44)).CreateMultilineText();
-            name.SetFont(null).SetFontSize(0).SetValue("");
+            name.SetValue("").SetFont(null).SetFontSize(0);
             name.SetScroll(false);
-            name.SetBorderColor(ColorConstants.GRAY);
+            name.GetFirstFormAnnotation().SetBorderColor(ColorConstants.GRAY);
             String itextLicence = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                  + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
             name.SetValue(itextLicence);
@@ -140,7 +140,7 @@ namespace iText.Forms {
                     ("SINGLE") };
                 foreach (PdfFormField field in fields) {
                     field.SetFontSize(40);
-                    field.SetBorderColor(ColorConstants.BLACK);
+                    field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
                     form.AddField(field);
                 }
             }
@@ -162,16 +162,16 @@ namespace iText.Forms {
                 , 400, 300)).CreateMultilineText();
             field.SetValue("Does this text overlap the border? Well it shouldn't!");
             field.SetFontSize(30);
-            field.SetBorderColor(ColorConstants.RED);
-            field.SetBorderWidth(50);
+            field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.RED);
+            field.GetFirstFormAnnotation().SetBorderWidth(50);
             form.AddField(field);
             PdfTextFormField field2 = new TextFormFieldBuilder(pdfDoc, "multiAuto").SetWidgetRectangle(new Rectangle(100
                 , 400, 400, 50)).CreateMultilineText();
             field2.SetValue("Does this autosize text overlap the border? Well it shouldn't! Does it fit accurately though?"
                 );
             field2.SetFontSize(0);
-            field2.SetBorderColor(ColorConstants.RED);
-            field2.SetBorderWidth(20);
+            field2.GetFirstFormAnnotation().SetBorderColor(ColorConstants.RED);
+            field2.GetFirstFormAnnotation().SetBorderWidth(20);
             form.AddField(field2);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
@@ -190,8 +190,10 @@ namespace iText.Forms {
                 );
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
             PdfFormField form = new TextFormFieldBuilder(pdfDoc, "field").SetWidgetRectangle(new Rectangle(59, 715, 127
-                , 69)).CreateMultilineText().SetFont(font).SetFontSize(10f).SetValue("");
-            form.SetBorderWidth(2).SetBorderColor(ColorConstants.BLACK).SetValue(value);
+                , 69)).CreateMultilineText().SetValue("");
+            form.SetFont(font).SetFontSize(10f);
+            form.GetFirstFormAnnotation().SetBorderWidth(2).SetBorderColor(ColorConstants.BLACK);
+            form.SetValue(value);
             acroForm.AddField(form);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "formFieldWithStringTest.pdf"

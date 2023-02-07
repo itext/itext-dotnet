@@ -77,23 +77,23 @@ namespace iText.Forms.Widget {
                 PdfFormField insetField = new TextFormFieldBuilder(doc, "insetField").SetWidgetRectangle(new Rectangle(50, 
                     600, 200, 100)).CreateText();
                 insetField.GetWidgets()[0].SetBorderStyle(PdfName.I);
-                insetField.SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).RegenerateField();
+                insetField.GetFirstFormAnnotation().SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).RegenerateField();
                 PdfFormField underlineField = new TextFormFieldBuilder(doc, "underlineField").SetWidgetRectangle(new Rectangle
                     (300, 600, 200, 100)).CreateText();
                 underlineField.GetWidgets()[0].SetBorderStyle(PdfName.U);
-                underlineField.SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).RegenerateField();
+                underlineField.GetFirstFormAnnotation().SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).RegenerateField();
                 PdfFormField solidField = new TextFormFieldBuilder(doc, "solidField").SetWidgetRectangle(new Rectangle(50, 
                     450, 200, 100)).CreateText();
                 solidField.GetWidgets()[0].SetBorderStyle(PdfName.S);
-                solidField.SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).RegenerateField();
+                solidField.GetFirstFormAnnotation().SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).RegenerateField();
                 PdfFormField dashField = new TextFormFieldBuilder(doc, "dashField").SetWidgetRectangle(new Rectangle(300, 
                     450, 200, 100)).CreateText();
                 dashField.GetWidgets()[0].SetBorderStyle(PdfName.D);
-                dashField.SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).RegenerateField();
+                dashField.GetFirstFormAnnotation().SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).RegenerateField();
                 PdfFormField beveledField = new TextFormFieldBuilder(doc, "beveledField").SetWidgetRectangle(new Rectangle
                     (50, 300, 200, 100)).CreateText();
                 beveledField.GetWidgets()[0].SetBorderStyle(PdfName.B);
-                beveledField.SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).RegenerateField();
+                beveledField.GetFirstFormAnnotation().SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).RegenerateField();
                 form.AddField(simpleField);
                 form.AddField(insetField);
                 form.AddField(underlineField);
@@ -113,7 +113,8 @@ namespace iText.Forms.Widget {
                 PdfFormField formField = new TextFormFieldBuilder(doc, "formField").SetWidgetRectangle(new Rectangle(100, 
                     600, 200, 100)).CreateText();
                 formField.GetWidgets()[0].SetBorderStyle(PdfName.B);
-                formField.SetBorderWidth(3f).SetBackgroundColor(DeviceRgb.GREEN).SetBorderColor(DeviceRgb.RED);
+                formField.GetFirstFormAnnotation().SetBorderWidth(3f).SetBackgroundColor(DeviceRgb.GREEN).SetBorderColor(DeviceRgb
+                    .RED);
                 formField.RegenerateField();
                 form.AddField(formField);
             }
@@ -129,7 +130,8 @@ namespace iText.Forms.Widget {
                 PdfFormField formField = new TextFormFieldBuilder(doc, "formField").SetWidgetRectangle(new Rectangle(100, 
                     600, 200, 100)).CreateText();
                 formField.GetWidgets()[0].SetBorderStyle(PdfName.D);
-                formField.SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).SetBackgroundColor(DeviceRgb.GREEN);
+                formField.GetFirstFormAnnotation().SetBorderWidth(3f).SetBorderColor(DeviceRgb.RED).SetBackgroundColor(DeviceRgb
+                    .GREEN);
                 formField.RegenerateField();
                 form.AddField(formField);
             }
@@ -146,21 +148,21 @@ namespace iText.Forms.Widget {
                 PdfFormField insetFormField = new TextFormFieldBuilder(doc, "insetFormField").SetWidgetRectangle(new Rectangle
                     (90, 600, 200, 100)).CreateText();
                 insetFormField.GetWidgets()[0].SetBorderStyle(PdfName.I);
-                insetFormField.SetBorderWidth(15f).SetBorderColor(DeviceRgb.RED).SetValue("Text after border").RegenerateField
-                    ();
+                insetFormField.GetFirstFormAnnotation().SetBorderWidth(15f).SetBorderColor(DeviceRgb.RED);
+                insetFormField.SetValue("Text after border").RegenerateField();
                 PdfFormField solidFormField = new TextFormFieldBuilder(doc, "solidFormField").SetWidgetRectangle(new Rectangle
                     (300, 600, 200, 100)).CreateText();
                 solidFormField.GetWidgets()[0].SetBorderStyle(PdfName.S);
-                solidFormField.SetBorderWidth(15f).SetBorderColor(DeviceRgb.RED).SetValue("Text after border").RegenerateField
-                    ();
+                solidFormField.GetFirstFormAnnotation().SetBorderWidth(15f).SetBorderColor(DeviceRgb.RED);
+                solidFormField.SetValue("Text after border").RegenerateField();
                 PdfFormField underlineFormField = new TextFormFieldBuilder(doc, "underlineFormField").SetWidgetRectangle(new 
                     Rectangle(90, 450, 200, 100)).CreateText();
                 underlineFormField.GetWidgets()[0].SetBorderStyle(PdfName.U);
-                underlineFormField.SetBorderWidth(15f).SetBorderColor(DeviceRgb.RED).SetValue("Text after border").RegenerateField
-                    ();
+                underlineFormField.GetFirstFormAnnotation().SetBorderWidth(15f).SetBorderColor(DeviceRgb.RED);
+                underlineFormField.SetValue("Text after border").RegenerateField();
                 PdfFormField simpleFormField = new TextFormFieldBuilder(doc, "formField1").SetWidgetRectangle(new Rectangle
                     (300, 450, 200, 100)).CreateText();
-                simpleFormField.SetBorderWidth(15f);
+                simpleFormField.GetFirstFormAnnotation().SetBorderWidth(15f);
                 simpleFormField.SetValue("Text after border").RegenerateField();
                 form.AddField(insetFormField);
                 form.AddField(solidFormField);
@@ -178,7 +180,8 @@ namespace iText.Forms.Widget {
             using (PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "pdfWithRotatedField.pdf"), new PdfWriter
                 (outPdf))) {
                 PdfAcroForm form1 = PdfAcroForm.GetAcroForm(doc, false);
-                form1.GetField("First field").SetValue("We filled this field").SetBorderColor(ColorConstants.BLACK);
+                form1.GetField("First field").SetValue("We filled this field").GetFirstFormAnnotation().SetBorderColor(ColorConstants
+                    .BLACK);
             }
             String errorMessage = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (errorMessage != null) {
@@ -195,15 +198,15 @@ namespace iText.Forms.Widget {
                 PdfFormField formField1 = new TextFormFieldBuilder(doc, "firstField").SetWidgetRectangle(new Rectangle(100
                     , 600, 100, 50)).CreateText().SetValue("Hello, iText!");
                 formField1.GetWidgets()[0].SetBorderStyle(PdfAnnotation.STYLE_BEVELED);
-                formField1.SetBorderWidth(2).SetBorderColor(ColorConstants.BLUE);
+                formField1.GetFirstFormAnnotation().SetBorderWidth(2).SetBorderColor(ColorConstants.BLUE);
                 PdfFormField formField2 = new TextFormFieldBuilder(doc, "secondField").SetWidgetRectangle(new Rectangle(100
                     , 500, 100, 50)).CreateText().SetValue("Hello, iText!");
                 formField2.GetWidgets()[0].SetBorderStyle(PdfAnnotation.STYLE_UNDERLINE);
-                formField2.SetBorderWidth(2).SetBorderColor(ColorConstants.BLUE);
+                formField2.GetFirstFormAnnotation().SetBorderWidth(2).SetBorderColor(ColorConstants.BLUE);
                 PdfFormField formField3 = new TextFormFieldBuilder(doc, "thirdField").SetWidgetRectangle(new Rectangle(100
                     , 400, 100, 50)).CreateText().SetValue("Hello, iText!");
                 formField3.GetWidgets()[0].SetBorderStyle(PdfAnnotation.STYLE_INSET);
-                formField3.SetBorderWidth(2).SetBorderColor(ColorConstants.BLUE);
+                formField3.GetFirstFormAnnotation().SetBorderWidth(2).SetBorderColor(ColorConstants.BLUE);
                 form.AddField(formField1);
                 form.AddField(formField2);
                 form.AddField(formField3);

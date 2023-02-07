@@ -51,6 +51,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Pdfa.Exceptions;
 using iText.Test;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -196,18 +197,7 @@ namespace iText.Pdfa {
         public virtual void CidFontCheckTest1() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest1.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA2b_cidFontCheckTest1.pdf";
-            PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-            PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfPage page = doc.AddNewPage();
-            // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
-                .FORCE_EMBEDDED);
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
-                ).RestoreState();
-            doc.Close();
+            GenerateAndValidatePdfA2WithCidFont("FreeSans.ttf", outPdf);
             CompareResult(outPdf, cmpPdf);
         }
 
@@ -215,18 +205,8 @@ namespace iText.Pdfa {
         public virtual void CidFontCheckTest2() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest2.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA2b_cidFontCheckTest2.pdf";
-            PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-            PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfPage page = doc.AddNewPage();
-            // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Puritan2.otf", "Identity-H", PdfFontFactory.EmbeddingStrategy
-                .FORCE_EMBEDDED);
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
-                ).RestoreState();
-            doc.Close();
+            String expectedVeraPdfWarning = "The following warnings and errors were logged during validation:\n" + "WARNING: The Top DICT does not begin with ROS operator";
+            GenerateAndValidatePdfA2WithCidFont("Puritan2.otf", outPdf, expectedVeraPdfWarning);
             CompareResult(outPdf, cmpPdf);
         }
 
@@ -234,18 +214,7 @@ namespace iText.Pdfa {
         public virtual void CidFontCheckTest3() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest3.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA2b_cidFontCheckTest3.pdf";
-            PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-            PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfPage page = doc.AddNewPage();
-            // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", "Identity-H", PdfFontFactory.EmbeddingStrategy
-                .FORCE_EMBEDDED);
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
-                ).RestoreState();
-            doc.Close();
+            GenerateAndValidatePdfA2WithCidFont("NotoSansCJKtc-Light.otf", outPdf);
             CompareResult(outPdf, cmpPdf);
         }
 
@@ -327,6 +296,30 @@ namespace iText.Pdfa {
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }
+        }
+
+        private void GenerateAndValidatePdfA2WithCidFont(String fontFile, String outPdf) {
+            GenerateAndValidatePdfA2WithCidFont(fontFile, outPdf, null);
+        }
+
+        private void GenerateAndValidatePdfA2WithCidFont(String fontFile, String outPdf, String expectedVeraPdfWarning
+            ) {
+            using (PdfWriter writer = new PdfWriter(outPdf)) {
+                using (Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                    )) {
+                    using (PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom"
+                        , "", "http://www.color.org", "sRGB IEC61966-2.1", @is))) {
+                        PdfPage page = doc.AddNewPage();
+                        // Identity-H must be embedded
+                        PdfFont font = PdfFontFactory.CreateFont(sourceFolder + fontFile, "Identity-H", PdfFontFactory.EmbeddingStrategy
+                            .FORCE_EMBEDDED);
+                        PdfCanvas canvas = new PdfCanvas(page);
+                        canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
+                            ).RestoreState();
+                    }
+                }
+            }
+            NUnit.Framework.Assert.AreEqual(expectedVeraPdfWarning, new VeraPdfValidator().Validate(outPdf));
         }
     }
 }

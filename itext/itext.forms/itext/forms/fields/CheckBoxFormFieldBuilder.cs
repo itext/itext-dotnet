@@ -72,25 +72,24 @@ namespace iText.Forms.Fields {
             }
             else {
                 PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
-                annotation.SetAppearanceState(new PdfName(PdfFormField.OFF_STATE_VALUE));
+                annotation.SetAppearanceState(new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
                 if (GetConformanceLevel() != null) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
                 check = new PdfButtonFormField(annotation, GetDocument());
             }
             check.pdfAConformanceLevel = GetConformanceLevel();
-            check.UpdateFontAndFontSize(GetDocument().GetDefaultFont(), 0);
             check.SetCheckType(checkType);
             check.SetFieldName(GetFormFieldName());
-            check.Put(PdfName.V, new PdfName(PdfFormField.OFF_STATE_VALUE));
+            check.Put(PdfName.V, new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
             if (GetWidgetRectangle() != null) {
                 if (GetConformanceLevel() == null) {
-                    check.DrawCheckAppearance(GetWidgetRectangle().GetWidth(), GetWidgetRectangle().GetHeight(), PdfFormField.
-                        ON_STATE_VALUE);
+                    check.GetFirstFormAnnotation().DrawCheckAppearance(GetWidgetRectangle().GetWidth(), GetWidgetRectangle().GetHeight
+                        (), PdfFormAnnotation.ON_STATE_VALUE);
                 }
                 else {
-                    check.DrawPdfA2CheckAppearance(GetWidgetRectangle().GetWidth(), GetWidgetRectangle().GetHeight(), PdfFormField
-                        .ON_STATE_VALUE, checkType);
+                    check.GetFirstFormAnnotation().DrawPdfA2CheckAppearance(GetWidgetRectangle().GetWidth(), GetWidgetRectangle
+                        ().GetHeight(), PdfFormAnnotation.ON_STATE_VALUE, checkType);
                 }
                 SetPageToField(check);
             }

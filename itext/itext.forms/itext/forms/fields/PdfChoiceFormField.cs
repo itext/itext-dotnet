@@ -119,7 +119,8 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
         public virtual iText.Forms.Fields.PdfChoiceFormField SetIndices(PdfArray indices) {
-            return (iText.Forms.Fields.PdfChoiceFormField)Put(PdfName.I, indices);
+            Put(PdfName.I, indices);
+            return this;
         }
 
         /// <summary>Highlights the options.</summary>

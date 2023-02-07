@@ -60,6 +60,8 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private ParentTreeHandler parentTreeHandler;
 
+        private PdfStructIdTree idTree = null;
+
         private static IDictionary<String, PdfName> staticRoleNames = new ConcurrentDictionary<String, PdfName>();
 
         /// <summary>Creates a new structure tree root instance, this initializes empty logical structure in the document.
@@ -402,6 +404,9 @@ namespace iText.Kernel.Pdf.Tagging {
             GetPdfObject().Put(PdfName.ParentTree, GetParentTreeHandler().BuildParentTree());
             GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber((int)GetDocument().GetNextStructParentIndex())
                 );
+            if (this.idTree != null && this.idTree.IsModified()) {
+                GetPdfObject().Put(PdfName.IDTree, this.idTree.BuildTree().MakeIndirect(GetDocument()));
+            }
             if (!GetDocument().IsAppendMode()) {
                 FlushAllKids(this);
             }
@@ -536,6 +541,40 @@ namespace iText.Kernel.Pdf.Tagging {
                 GetPdfObject().Put(PdfName.AF, afArray);
             }
             return afArray;
+        }
+
+        /// <summary>
+        /// Returns the document's structure element ID tree wrapped in a
+        /// <see cref="PdfStructIdTree"/>
+        /// object.
+        /// </summary>
+        /// <remarks>
+        /// Returns the document's structure element ID tree wrapped in a
+        /// <see cref="PdfStructIdTree"/>
+        /// object. If no such tree exists, it is initialized. The initialization happens lazily,
+        /// and does not trigger any PDF object changes unless populated.
+        /// </remarks>
+        /// <returns>
+        /// the
+        /// <see cref="PdfStructIdTree"/>
+        /// of the document
+        /// </returns>
+        public virtual PdfStructIdTree GetIdTree() {
+            if (this.idTree == null) {
+                // Attempt to parse the ID tree in the document if there is one
+                PdfDictionary idTreeDict = this.GetPdfObject().GetAsDictionary(PdfName.IDTree);
+                if (idTreeDict == null) {
+                    // No tree found -> initialise one
+                    // Don't call setModified() here, registering the first ID will
+                    // take care of that for us.
+                    // The ID tree will be registered at flush time.
+                    this.idTree = new PdfStructIdTree(document);
+                }
+                else {
+                    this.idTree = PdfStructIdTree.ReadFromDictionary(document, idTreeDict);
+                }
+            }
+            return this.idTree;
         }
 
         internal virtual ParentTreeHandler GetParentTreeHandler() {

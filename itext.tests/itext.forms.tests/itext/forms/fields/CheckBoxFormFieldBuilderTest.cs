@@ -89,7 +89,7 @@ namespace iText.Forms.Fields {
             }
             PutIfAbsent(expectedDictionary, PdfName.FT, PdfName.Btn);
             PutIfAbsent(expectedDictionary, PdfName.T, new PdfString(DUMMY_NAME));
-            PutIfAbsent(expectedDictionary, PdfName.V, new PdfName(PdfFormField.OFF_STATE_VALUE));
+            PutIfAbsent(expectedDictionary, PdfName.V, new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
             expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
             checkBoxFormField.MakeIndirect(DUMMY_DOCUMENT);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, checkBoxFormField

@@ -55,21 +55,32 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             pdfDoc.AddNewPage();
             // 规
-            form.AddField(new ChoiceFormFieldBuilder(pdfDoc, "combo1").SetWidgetRectangle(new Rectangle(36, 666, 40, 80
-                )).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateComboBox().SetValue
-                ("\u89c4").SetFont(font).SetBorderColor(ColorConstants.BLACK));
+            PdfFormField field = new ChoiceFormFieldBuilder(pdfDoc, "combo1").SetWidgetRectangle(new Rectangle(36, 666
+                , 40, 80)).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateComboBox().
+                SetValue("\u89c4");
+            field.SetFont(font);
+            field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            form.AddField(field);
             // 觉
-            form.AddField(new ChoiceFormFieldBuilder(pdfDoc, "combo2").SetWidgetRectangle(new Rectangle(136, 666, 40, 
-                80)).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateComboBox().SetValue
-                ("\u89c4").SetFont(font).SetValue("\u89c9").SetBorderColor(ColorConstants.BLACK));
+            field = new ChoiceFormFieldBuilder(pdfDoc, "combo2").SetWidgetRectangle(new Rectangle(136, 666, 40, 80)).SetOptions
+                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateComboBox();
+            field.SetValue("\u89c4").SetFont(font);
+            field.SetValue("\u89c9");
+            field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            form.AddField(field);
             // 规
-            form.AddField(new ChoiceFormFieldBuilder(pdfDoc, "list1").SetWidgetRectangle(new Rectangle(236, 666, 50, 80
-                )).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList().SetValue("\u89c4"
-                ).SetFont(font).SetBorderColor(ColorConstants.BLACK));
+            field = new ChoiceFormFieldBuilder(pdfDoc, "list1").SetWidgetRectangle(new Rectangle(236, 666, 50, 80)).SetOptions
+                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList().SetValue("\u89c4");
+            field.SetFont(font);
+            field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            form.AddField(field);
             // 觉
-            form.AddField(new ChoiceFormFieldBuilder(pdfDoc, "list2").SetWidgetRectangle(new Rectangle(336, 666, 50, 80
-                )).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList().SetValue("\u89c4"
-                ).SetFont(font).SetValue("\u89c9").SetBorderColor(ColorConstants.BLACK));
+            field = new ChoiceFormFieldBuilder(pdfDoc, "list2").SetWidgetRectangle(new Rectangle(336, 666, 50, 80)).SetOptions
+                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList();
+            field.SetValue("\u89c4").SetFont(font);
+            field.SetValue("\u89c9");
+            field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
+            form.AddField(field);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
@@ -136,7 +147,8 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
             PdfChoiceFormField choice = (PdfChoiceFormField)new ChoiceFormFieldBuilder(document, "choice").SetWidgetRectangle
                 (new Rectangle(336, 666, 50, 80)).SetOptions(new String[] { "one", "two", "three", "four" }).SetConformanceLevel
-                (null).CreateList().SetValue("two").SetFont(null).SetBorderColor(ColorConstants.BLACK);
+                (null).CreateList().SetValue("two").SetFont(null);
+            choice.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             choice.SetMultiSelect(true);
             choice.SetListSelected(new String[] { "one", "three", "eins", "drei" });
             NUnit.Framework.Assert.AreEqual(new int[] { 0, 2 }, choice.GetIndices().ToIntArray());
