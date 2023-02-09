@@ -471,7 +471,23 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="algorithm">ASN1 Object identifier wrapper to create algorithm identifier wrapper from</param>
         /// <param name="encodable">ASN1 Encodable wrapper to create algorithm identifier wrapper from</param>
         /// <returns>created algorithm identifier wrapper</returns>
-        IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm, IASN1Encodable encodable);
+        IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm, IASN1Encodable parameters);
+
+        /// <summary>Create a RSASSA-PSS params wrapper from an ASN1 Encodable wrapper.
+        ///     </summary>
+        /// <param name="encodable"> ASN1 Encodable wrapper to create RSASSA-PSS params wrapper from</param>
+        /// <returns>created RSASSA-PSS params wrapper</returns>
+        IRsassaPssParameters CreateRSASSAPSSParams(IASN1Encodable encodable);
+     
+        /// <summary> Create a RSASSA-PSS params wrapper from a digest algorithm OID, a salt length and a trailer field length.
+        /// The mask generation function will be set to MGF1, and the same digest algorithm will be used to populate the
+        /// MGF parameters.
+        ///     </summary>
+        /// <param name="digestAlgoOid">  identifier of the digest algorithm to be used both in the MGF and in the signature</param>
+        /// <param name="saltLen">        salt length value</param>
+        /// <param name="trailerField">   trailer field value</param>
+        /// <returns><see cref="IRsassaPssParameters"/> object initialised with the parameters supplied
+        IRsassaPssParameters CreateRSASSAPSSParamsWithMGF1(IASN1ObjectIdentifier digestAlgoOid, int saltLen, int trailerField);
 
         /// <summary>
         /// Get

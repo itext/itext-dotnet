@@ -22,34 +22,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Commons.Bouncycastle.Asn1;
 
-namespace iText.Commons.Bouncycastle.Asn1.X509 {
-    /// <summary>
-    /// This interface represents the wrapper for AlgorithmIdentifier that provides the ability
-    /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
-    /// </summary>
-    public interface IAlgorithmIdentifier : IASN1Encodable {
+namespace iText.Signatures {
+    /// <summary>Interface to encode the parameters to a signature algorithm for inclusion in a signature object.</summary>
+    /// <remarks>
+    /// Interface to encode the parameters to a signature algorithm for inclusion in a signature object.
+    /// See
+    /// <see cref="RSASSAPSSMechanismParams"/>
+    /// for an example.
+    /// </remarks>
+    public interface ISignatureMechanismParams {
         /// <summary>
-        /// Calls actual
-        /// <c>getAlgorithm</c>
-        /// method for the wrapped AlgorithmIdentifier object.
-        /// </summary>
-        /// <returns>
-        /// 
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1ObjectIdentifier"/>
-        /// wrapped algorithm ASN1ObjectIdentifier.
-        /// </returns>
-        IASN1ObjectIdentifier GetAlgorithm();
-
-        /// <summary>
-        /// Calls actual
-        /// <c>getParameters</c>
-        /// method for the wrapped AlgorithmIdentifier object.
-        /// </summary>
-        /// <returns>
-        /// 
+        /// Represent the parameters as an
         /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1Encodable"/>
-        /// wrapped algorithm parameters.
+        /// for inclusion in a signature object.
+        /// </summary>
+        /// <returns>
+        /// an
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1Encodable"/>
+        /// object
         /// </returns>
-        IASN1Encodable GetParameters();
+        IASN1Encodable ToEncodable();
     }
 }

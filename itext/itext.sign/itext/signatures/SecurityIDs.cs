@@ -52,6 +52,8 @@ namespace iText.Signatures {
 
         public const String ID_RSA = "1.2.840.113549.1.1.1";
 
+        public const String ID_RSASSA_PSS = "1.2.840.113549.1.1.10";
+
         public const String ID_RSA_WITH_SHA256 = "1.2.840.113549.1.1.11";
 
         public const String ID_RSA_WITH_SHA3_512 = "2.16.840.1.101.3.4.3.16";
@@ -83,5 +85,7 @@ namespace iText.Signatures {
         public const String ID_AA_SIGNING_CERTIFICATE_V1 = "1.2.840.113549.1.9.16.2.12";
 
         public const String ID_AA_SIGNING_CERTIFICATE_V2 = "1.2.840.113549.1.9.16.2.47";
+
+        public const String ID_MGF1 = "1.2.840.113549.1.1.8";
     }
 }

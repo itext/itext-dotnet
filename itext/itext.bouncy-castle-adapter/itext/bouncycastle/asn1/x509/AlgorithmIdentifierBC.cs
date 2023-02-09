@@ -57,5 +57,10 @@ namespace iText.Bouncycastle.Asn1.X509 {
         public virtual IASN1ObjectIdentifier GetAlgorithm() {
             return new ASN1ObjectIdentifierBC(GetAlgorithmIdentifier().Algorithm);
         }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IASN1Encodable GetParameters() {
+            return new ASN1EncodableBC(GetAlgorithmIdentifier().Parameters);
+        }
     }
 }

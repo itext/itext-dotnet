@@ -124,7 +124,12 @@ namespace iText.Signatures {
             else
                 throw new ArgumentException("Not supported encryption algorithm " + algorithm);
         }
-        
+
+        public ISignatureMechanismParams GetSignatureMechanismParameters()
+        {
+            return null;
+        }
+
         public byte[] Sign(byte[] message) {
             if (algorithm is RSACryptoServiceProvider) {
                 RSACryptoServiceProvider rsa = (RSACryptoServiceProvider) algorithm;

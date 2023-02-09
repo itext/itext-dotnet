@@ -62,6 +62,8 @@ using iText.Commons.Bouncycastle.Tsp;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Crypto.Parameters;
 
 namespace iText.Signatures {
     internal sealed class SignUtils {
@@ -256,6 +258,13 @@ namespace iText.Signatures {
             return rootStore;
         }
 
+        internal static void SetRSASSAPSSParamsWithMGF1(IISigner signature, String digestAlgoName, int saltLen, int trailerField)
+        {
+         //     var mgf1Spec = new MgfParameters() MGF1ParameterSpec(digestAlgoName);
+         //    PSSParameterSpec spec = new Pss  PSSParameterSpec(digestAlgoName, "MGF1", mgf1Spec, saltLen, trailerField);
+         // signature.  setParameter(spec);
+         }
+        
         internal static void UpdateVerifier(IISigner sig, byte[] digest) {
             sig.UpdateVerifier(digest);
         }

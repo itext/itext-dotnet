@@ -60,6 +60,17 @@ namespace iText.Signatures {
         /// <returns>The signature algorithm ("RSA", "DSA", "ECDSA", "Ed25519" or "Ed448").</returns>
         String GetSignatureAlgorithmName();
 
+        /// <summary>Return the algorithm parameters that need to be encoded together with the signature mechanism identifier.
+        ///     </summary>
+        /// <remarks>
+        /// Return the algorithm parameters that need to be encoded together with the signature mechanism identifier.
+        /// If there are no parameters, return `null`.
+        /// A non-null value is required for RSASSA-PSS; see
+        /// <see cref="RSASSAPSSMechanismParams"/>.
+        /// </remarks>
+        /// <returns>algorithm parameters</returns>
+        ISignatureMechanismParams GetSignatureMechanismParameters();
+
         /// <summary>
         /// Signs the given message using the encryption algorithm in combination
         /// with the hash algorithm.

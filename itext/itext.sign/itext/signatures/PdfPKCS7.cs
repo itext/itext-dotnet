@@ -331,9 +331,14 @@ namespace iText.Signatures {
                 if (isCades && !foundCades) {
                     throw new ArgumentException("CAdES ESS information missing.");
                 }
-                signatureMechanismOid = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(BOUNCY_CASTLE_FACTORY.CreateASN1Sequence
-                    (signerInfo.GetObjectAt(next)).GetObjectAt(0)).GetId();
+                IASN1Sequence signatureMechanismInfo = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(signerInfo.GetObjectAt(next
+                    ));
                 ++next;
+                signatureMechanismOid = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(signatureMechanismInfo.GetObjectAt
+                    (0)).GetId();
+                if (signatureMechanismInfo.Size() > 1) {
+                    signatureMechanismParameters = signatureMechanismInfo.GetObjectAt(1);
+                }
                 signatureValue = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(signerInfo.GetObjectAt(next)).GetOctets();
                 ++next;
                 if (next < signerInfo.Size()) {
@@ -476,6 +481,8 @@ namespace iText.Signatures {
         /// <summary>The signature algorithm.</summary>
         private String signatureMechanismOid;
 
+        private IASN1Encodable signatureMechanismParameters = null;
+
         /// <summary>Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".</summary>
         /// <remarks>
         /// Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".
@@ -530,14 +537,20 @@ namespace iText.Signatures {
         /// </remarks>
         /// <returns>the algorithm used to calculate the signature</returns>
         public virtual String GetSignatureMechanismName() {
-            // Ed25519 and Ed448 do not involve a choice of hashing algorithm
-            switch (signatureMechanismOid) {
+            switch (this.signatureMechanismOid) {
                 case SecurityIDs.ID_ED25519: {
+                    // Ed25519 and Ed448 do not involve a choice of hashing algorithm
                     return "Ed25519";
                 }
 
                 case SecurityIDs.ID_ED448: {
                     return "Ed448";
+                }
+
+                case SecurityIDs.ID_RSASSA_PSS: {
+                    // For RSASSA-PSS, the algorithm parameters dictate everything, so
+                    // there's no need to duplicate that information in the algorithm name.
+                    return "RSASSA-PSS";
                 }
 
                 default: {
@@ -577,6 +590,22 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SetExternalSignatureValue(byte[] signatureValue, byte[] signedMessageContent, String signatureAlgorithm
             ) {
+            SetExternalSignatureValue(signatureValue, signedMessageContent, signatureAlgorithm, null);
+        }
+
+        /// <summary>Sets the signature to an externally calculated value.</summary>
+        /// <param name="signatureValue">the signature value</param>
+        /// <param name="signedMessageContent">the extra data that goes into the data tag in PKCS#7</param>
+        /// <param name="signatureAlgorithm">
+        /// the signature algorithm. It must be <c>null</c> if the
+        /// <c>signatureValue</c> is also <c>null</c>.
+        /// If the <c>signatureValue</c> is not <c>null</c>,
+        /// possible values include "RSA", "RSASSA-PSS", "DSA",
+        /// "ECDSA", "Ed25519" and "Ed448".
+        /// </param>
+        /// <param name="signatureMechanismParams">parameters for the signature mechanism, if required</param>
+        public virtual void SetExternalSignatureValue(byte[] signatureValue, byte[] signedMessageContent, String signatureAlgorithm
+            , ISignatureMechanismParams signatureMechanismParams) {
             externalSignatureValue = signatureValue;
             externalEncapMessageContent = signedMessageContent;
             if (signatureAlgorithm != null) {
@@ -587,6 +616,9 @@ namespace iText.Signatures {
                         (signatureAlgorithm, digestAlgo);
                 }
                 this.signatureMechanismOid = oid;
+            }
+            if (signatureMechanismParams != null) {
+                this.signatureMechanismParameters = signatureMechanismParams.ToEncodable();
             }
         }
 
@@ -616,8 +648,47 @@ namespace iText.Signatures {
                 signatureMechanism = GetSignatureMechanismName();
             }
             IISigner signature = SignUtils.GetSignatureHelper(signatureMechanism);
+            ConfigureSignatureMechanismParameters(signature);
             signature.InitVerify(key);
             return signature;
+        }
+
+        private void ConfigureSignatureMechanismParameters(IISigner signature) {
+            if (SecurityIDs.ID_RSASSA_PSS.Equals(this.signatureMechanismOid)) {
+                IRsassaPssParameters @params = BOUNCY_CASTLE_FACTORY.CreateRSASSAPSSParams(this.signatureMechanismParameters
+                    );
+                String mgfOid = @params.GetMaskGenAlgorithm().GetAlgorithm().GetId();
+                if (!SecurityIDs.ID_MGF1.Equals(mgfOid)) {
+                    throw new ArgumentException(SignExceptionMessageConstant.ONLY_MGF1_SUPPORTED_IN_RSASSA_PSS);
+                }
+                // Even though having separate digests at all "layers" is mathematically fine,
+                // it's bad practice at best (and a security problem at worst).
+                // We don't support such hybridisation outside RSASSA-PSS either.
+                // => on the authority of RFC 8933 we enforce the restriction here.
+                String mechParamDigestAlgoOid = @params.GetHashAlgorithm().GetAlgorithm().GetId();
+                if (!this.digestAlgorithmOid.Equals(mechParamDigestAlgoOid)) {
+                    throw new ArgumentException(MessageFormatUtil.Format(SignExceptionMessageConstant.RSASSA_PSS_DIGESTMISSMATCH
+                        , mechParamDigestAlgoOid, this.digestAlgorithmOid));
+                }
+                // This is actually morally an IAlgorithmIdentifier too, but since it's pretty much always going to be a
+                // one-element sequence, it's probably not worth putting in a conversion method in the factory interface
+                IASN1Sequence mgfParams = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(@params.GetMaskGenAlgorithm().GetParameters
+                    ());
+                String mgfParamDigestAlgoOid = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(mgfParams.GetObjectAt(0)).
+                    GetId();
+                if (!this.digestAlgorithmOid.Equals(mgfParamDigestAlgoOid)) {
+                    throw new ArgumentException(MessageFormatUtil.Format(SignExceptionMessageConstant.DISGEST_ALGORITM_MGF_MISMATCH
+                        , mgfParamDigestAlgoOid, this.digestAlgorithmOid));
+                }
+                try {
+                    int saltLength = @params.GetSaltLength().GetIntValue();
+                    int trailerField = @params.GetTrailerField().GetIntValue();
+                    SignUtils.SetRSASSAPSSParamsWithMGF1(signature, GetDigestAlgorithmName(), saltLength, trailerField);
+                }
+                catch (Exception e) {
+                    throw new ArgumentException(SignExceptionMessageConstant.INVALID_ARGUMENTS, e);
+                }
+            }
         }
 
         /// <summary>Update the digest with the specified bytes.</summary>
@@ -770,7 +841,12 @@ namespace iText.Signatures {
                 // Add the digestEncryptionAlgorithm
                 v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                 v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(signatureMechanismOid));
-                v.Add(BOUNCY_CASTLE_FACTORY.CreateDERNull());
+                if (this.signatureMechanismParameters == null) {
+                    v.Add(BOUNCY_CASTLE_FACTORY.CreateDERNull());
+                }
+                else {
+                    v.Add(this.signatureMechanismParameters.ToASN1Primitive());
+                }
                 signerinfo.Add(BOUNCY_CASTLE_FACTORY.CreateDERSequence(v));
                 // Add the digest
                 signerinfo.Add(BOUNCY_CASTLE_FACTORY.CreateDEROctetString(signatureValue));

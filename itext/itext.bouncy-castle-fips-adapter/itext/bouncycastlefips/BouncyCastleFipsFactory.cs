@@ -28,6 +28,7 @@ using iText.Bouncycastlefips.Crypto.Generators;
 using iText.Bouncycastlefips.Math;
 using iText.Bouncycastlefips.Openssl;
 using iText.Bouncycastlefips.Operator;
+using iText.Bouncycastlefips.Pkcs;
 using iText.Bouncycastlefips.Security;
 using iText.Bouncycastlefips.Tsp;
 using iText.Bouncycastlefips.X509;
@@ -406,13 +407,36 @@ namespace iText.Bouncycastlefips {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm, IASN1Encodable
-             encodable) {
-            ASN1ObjectIdentifierBCFips algorithmBCFips = (ASN1ObjectIdentifierBCFips)algorithm;
-            ASN1EncodableBCFips encodableBCFips = (ASN1EncodableBCFips)encodable;
-            return new AlgorithmIdentifierBCFips(new AlgorithmIdentifier(algorithmBCFips.GetASN1ObjectIdentifier(), encodableBCFips
-                .GetEncodable()));
+        public virtual IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm,
+            IASN1Encodable parameters) {
+            ASN1ObjectIdentifierBCFips algorithmBCFips = (ASN1ObjectIdentifierBCFips) algorithm;
+            ASN1EncodableBCFips encodableBCFips = (ASN1EncodableBCFips) parameters;
+            return new AlgorithmIdentifierBCFips(
+                new AlgorithmIdentifier(algorithmBCFips.GetASN1ObjectIdentifier(), encodableBCFips.GetEncodable()));
         }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IRsassaPssParameters CreateRSASSAPSSParams(IASN1Encodable encodable) {
+            if (encodable == null) {
+                throw new ArgumentException("Expected non-null RSASSA-PSS parameter data");
+            }
+            ASN1EncodableBCFips encodableBCFips = (ASN1EncodableBCFips) encodable;
+            return new RsassaPssParametersBcFips(RsassaPssParameters.GetInstance(encodableBCFips.GetEncodable()));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IRsassaPssParameters CreateRSASSAPSSParamsWithMGF1(IASN1ObjectIdentifier digestAlgoOid, int saltLen,
+            int trailerField)
+        {
+            DerObjectIdentifier oid = ((ASN1ObjectIdentifierBCFips)digestAlgoOid).GetASN1ObjectIdentifier();
+            AlgorithmIdentifier digestAlgo = new AlgorithmIdentifier(oid);
+            AlgorithmIdentifier mgf = new AlgorithmIdentifier(PkcsObjectIdentifiers.IdMgf1, digestAlgo);
+            RsassaPssParameters @params = new RsassaPssParameters(digestAlgo, mgf, new DerInteger(saltLen),
+                new DerInteger(trailerField));
+            return new RsassaPssParametersBcFips(@params);
+        }
+
+
 
         /// <summary><inheritDoc/></summary>
         public virtual String GetProviderName() {

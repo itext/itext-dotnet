@@ -66,6 +66,9 @@ namespace iText.Signatures {
         /// <summary>The encryption algorithm (obtained from the private key)</summary>
         private readonly String signatureAlgorithm;
 
+        /// <summary>The algorithm parameters.</summary>
+        private readonly IApplicableSignatureParams parameters;
+
         /// <summary>
         /// Creates a
         /// <see cref="PrivateKeySignature"/>
@@ -78,17 +81,46 @@ namespace iText.Signatures {
         /// </param>
         /// <param name="hashAlgorithm">A hash algorithm (e.g. "SHA-1", "SHA-256",...).</param>
         /// <param name="provider">A security provider (e.g. "BC").</param>
-        public PrivateKeySignature(IPrivateKey pk, String hashAlgorithm) {
+        public PrivateKeySignature(IPrivateKey pk, String hashAlgorithm)
+            : this(pk, hashAlgorithm, null, null) {
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="PrivateKeySignature"/>
+        /// instance.
+        /// </summary>
+        /// <param name="pk">
+        /// A
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
+        /// object.
+        /// </param>
+        /// <param name="hashAlgorithm">A hash algorithm (e.g. "SHA-1", "SHA-256",...).</param>
+        /// <param name="signatureAlgorithm">
+        /// A signiture algorithm (e.g. "RSASSA-PSS", "id-signedData",
+        /// "sha256WithRSAEncryption", ...)
+        /// </param>
+        /// <param name="provider">A security provider (e.g. "BC").</param>
+        /// <param name="params">Parameters for using RSASSA-PSS or other algorithms requiring them.</param>
+        public PrivateKeySignature(IPrivateKey pk, String hashAlgorithm, String signatureAlgorithm, IApplicableSignatureParams
+             @params) {
             this.pk = pk;
             String digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
             this.hashAlgorithm = DigestAlgorithms.GetDigest(digestAlgorithmOid);
-            this.signatureAlgorithm = SignUtils.GetPrivateKeyAlgorithm(pk);
+            String adjustedSignatureAlgorithm = signatureAlgorithm == null ? SignUtils.GetPrivateKeyAlgorithm(pk) : signatureAlgorithm;
+            if ("RSA/PSS".Equals(adjustedSignatureAlgorithm)) {
+                this.signatureAlgorithm = "RSASSA-PSS";
+            }
+            else {
+                this.signatureAlgorithm = adjustedSignatureAlgorithm;
+            }
             switch (this.signatureAlgorithm) {
                 case "Ed25519": {
                     if (!SecurityIDs.ID_SHA512.Equals(digestAlgorithmOid)) {
                         throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed25519"
                             , "SHA-512", this.hashAlgorithm);
                     }
+                    this.parameters = null;
                     break;
                 }
 
@@ -97,12 +129,31 @@ namespace iText.Signatures {
                         throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed448", 
                             "512-bit SHAKE256", this.hashAlgorithm);
                     }
+                    this.parameters = null;
                     break;
                 }
 
                 case "EdDSA": {
                     throw new ArgumentException("Key algorithm of EdDSA PrivateKey instance provided by " + pk.GetType() + " is not clear. Expected Ed25519 or Ed448, but got EdDSA. "
                          + "Try a different security provider.");
+                }
+
+                case "RSASSA-PSS": {
+                    if (@params != null && !(@params is RSASSAPSSMechanismParams)) {
+                        throw new ArgumentException("Expected RSASSA-PSS parameters; got " + @params);
+                    }
+                    if (@params == null) {
+                        this.parameters = RSASSAPSSMechanismParams.CreateForDigestAlgorithm(hashAlgorithm);
+                    }
+                    else {
+                        this.parameters = @params;
+                    }
+                    break;
+                }
+
+                default: {
+                    this.parameters = null;
+                    break;
                 }
             }
         }
@@ -118,9 +169,17 @@ namespace iText.Signatures {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual ISignatureMechanismParams GetSignatureMechanismParameters() {
+            return parameters;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual byte[] Sign(byte[] message) {
             String algorithm = GetSignatureMechanismName();
             IISigner sig = SignUtils.GetSignatureHelper(algorithm);
+            if (parameters != null) {
+                parameters.Apply(sig);
+            }
             sig.InitSign(pk);
             sig.Update(message);
             return sig.GenerateSignature();
@@ -129,7 +188,9 @@ namespace iText.Signatures {
         private String GetSignatureMechanismName() {
             String signatureAlgo = this.GetSignatureAlgorithmName();
             // Ed25519 and Ed448 do not involve a choice of hashing algorithm
-            if ("Ed25519".Equals(signatureAlgo) || "Ed448".Equals(signatureAlgo)) {
+            // and RSASSA-PSS is parameterised
+            if ("Ed25519".Equals(signatureAlgo) || "Ed448".Equals(signatureAlgo) || "RSASSA-PSS".Equals(signatureAlgo)
+                ) {
                 return signatureAlgo;
             }
             else {

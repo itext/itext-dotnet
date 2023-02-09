@@ -61,5 +61,10 @@ namespace iText.Bouncycastlefips.Asn1 {
         public virtual IBigInteger GetValue() {
             return new BigIntegerBCFips(GetASN1Integer().Value);
         }
+
+        public int GetIntValue()
+        {
+            return GetASN1Integer().Value.IntValue;
+        }
     }
 }

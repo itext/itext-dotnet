@@ -13,5 +13,7 @@ namespace iText.Commons.Bouncycastle.Asn1 {
         /// </summary>
         /// <returns>BigInteger value.</returns>
         IBigInteger GetValue();
+
+        int GetIntValue();
     }
 }

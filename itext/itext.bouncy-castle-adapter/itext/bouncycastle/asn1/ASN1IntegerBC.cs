@@ -61,5 +61,10 @@ namespace iText.Bouncycastle.Asn1 {
         public virtual IBigInteger GetValue() {
             return new BigIntegerBC(GetASN1Integer().Value);
         }
+
+        public int GetIntValue()
+        {
+            return GetASN1Integer().Value.IntValue;
+        }
     }
 }

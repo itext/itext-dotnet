@@ -104,6 +104,9 @@ namespace iText.Signatures {
         /// <summary>Maps the name of a digest algorithm with its ID.</summary>
         private static readonly IDictionary<String, String> allowedDigests = new Dictionary<String, String>();
 
+        /// <summary>Maps algorithm names to output lengths in bits.</summary>
+        private static readonly IDictionary<String, int?> bitLengths = new Dictionary<String, int?>();
+
         static DigestAlgorithms() {
             digestNames.Put("1.2.840.113549.2.5", "MD5");
             digestNames.Put("1.2.840.113549.2.2", "MD2");
@@ -167,6 +170,31 @@ namespace iText.Signatures {
             allowedDigests.Put("SHA3-384", "2.16.840.1.101.3.4.2.9");
             allowedDigests.Put("SHA3-512", "2.16.840.1.101.3.4.2.10");
             allowedDigests.Put("SHAKE256", "2.16.840.1.101.3.4.2.12");
+            bitLengths.Put("MD2", 128);
+            bitLengths.Put("MD-2", 128);
+            bitLengths.Put("MD5", 128);
+            bitLengths.Put("MD-5", 128);
+            bitLengths.Put("SHA1", 160);
+            bitLengths.Put("SHA-1", 160);
+            bitLengths.Put("SHA224", 224);
+            bitLengths.Put("SHA-224", 224);
+            bitLengths.Put("SHA256", 256);
+            bitLengths.Put("SHA-256", 256);
+            bitLengths.Put("SHA384", 384);
+            bitLengths.Put("SHA-384", 384);
+            bitLengths.Put("SHA512", 512);
+            bitLengths.Put("SHA-512", 512);
+            bitLengths.Put("RIPEMD128", 128);
+            bitLengths.Put("RIPEMD-128", 128);
+            bitLengths.Put("RIPEMD160", 160);
+            bitLengths.Put("RIPEMD-160", 160);
+            bitLengths.Put("RIPEMD256", 256);
+            bitLengths.Put("RIPEMD-256", 256);
+            bitLengths.Put("SHA3-224", 224);
+            bitLengths.Put("SHA3-256", 256);
+            bitLengths.Put("SHA3-384", 384);
+            bitLengths.Put("SHA3-512", 512);
+            bitLengths.Put("SHAKE256", 512);
         }
 
         /// <summary>Get a digest algorithm.</summary>
@@ -229,6 +257,16 @@ namespace iText.Signatures {
                 throw new ArgumentException(SignExceptionMessageConstant.THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL);
             }
             return allowedDigests.Get(name.ToUpperInvariant());
+        }
+
+        /// <summary>Retrieve the output length in bits of the given digest algorithm.</summary>
+        /// <param name="name">the name of the digest algorithm</param>
+        /// <returns>the length of the output of the algorithm in bits</returns>
+        public static int GetOutputBitLength(String name) {
+            if (name == null) {
+                throw new ArgumentException(SignExceptionMessageConstant.THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL);
+            }
+            return bitLengths.Get(name).Value;
         }
     }
 }

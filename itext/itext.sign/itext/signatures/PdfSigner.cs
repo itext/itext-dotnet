@@ -512,7 +512,8 @@ namespace iText.Signatures {
             }
             byte[] sh = sgn.GetAuthenticatedAttributeBytes(hash, sigtype, ocspList, crlBytes);
             byte[] extSignature = externalSignature.Sign(sh);
-            sgn.SetExternalSignatureValue(extSignature, null, externalSignature.GetSignatureAlgorithmName());
+            sgn.SetExternalSignatureValue(extSignature, null, externalSignature.GetSignatureAlgorithmName(), externalSignature
+                .GetSignatureMechanismParameters());
             byte[] encodedSig = sgn.GetEncodedPKCS7(hash, sigtype, tsaClient, ocspList, crlBytes);
             if (estimatedSize < encodedSig.Length) {
                 throw new System.IO.IOException("Not enough space");
