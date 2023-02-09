@@ -1062,8 +1062,24 @@ namespace iText.Forms {
         /// <see cref="iText.Forms.Fields.PdfFormField"/>
         /// </param>
         public virtual void ReplaceField(String name, PdfFormField field) {
+            if (name == null) {
+                LOGGER.LogWarning(FormsLogMessageConstants.PROVIDE_FORMFIELD_NAME);
+                return;
+            }
             RemoveField(name);
-            AddField(field);
+            int lastDotIndex = name.LastIndexOf('.');
+            if (lastDotIndex == -1) {
+                AddField(field);
+                return;
+            }
+            String parentName = name.JSubstring(0, lastDotIndex);
+            PdfFormField parent = GetField(parentName);
+            if (parent == null) {
+                AddField(field);
+            }
+            else {
+                parent.AddKid(field);
+            }
         }
 
         /// <summary>Gets all AcroForm fields in the document.</summary>

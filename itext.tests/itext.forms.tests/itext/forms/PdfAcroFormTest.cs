@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
+using iText.Forms.Logs;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
@@ -391,6 +392,82 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.AreEqual(stream, xfaObject);
                 NUnit.Framework.Assert.IsTrue(isModified);
                 NUnit.Framework.Assert.IsTrue(isReleaseForbidden);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReplaceFormFieldRootLevelReplacesExistingFieldTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfDictionary fieldDict = new PdfDictionary();
+                fieldDict.Put(PdfName.FT, PdfName.Tx);
+                fieldDict.Put(PdfName.T, new PdfString("field1"));
+                PdfFormField field = PdfFormField.MakeFormField(fieldDict.MakeIndirect(outputDoc), outputDoc);
+                System.Diagnostics.Debug.Assert(field != null);
+                acroForm.AddField(field);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetDirectFormFields().Count);
+                PdfDictionary fieldDictReplace = new PdfDictionary();
+                fieldDictReplace.Put(PdfName.FT, PdfName.Tx);
+                fieldDictReplace.Put(PdfName.T, new PdfString("field2"));
+                PdfFormField fieldReplace = PdfFormField.MakeFormField(fieldDictReplace.MakeIndirect(outputDoc), outputDoc
+                    );
+                acroForm.ReplaceField("field1", fieldReplace);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetDirectFormFields().Count);
+                NUnit.Framework.Assert.AreEqual("field2", acroForm.GetField("field2").GetFieldName().ToUnicodeString());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(FormsLogMessageConstants.PROVIDE_FORMFIELD_NAME, Count = 1)]
+        public virtual void ReplaceWithNullNameLogsErrorTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfDictionary fieldDict = new PdfDictionary();
+                fieldDict.Put(PdfName.FT, PdfName.Tx);
+                fieldDict.Put(PdfName.T, new PdfString("field1"));
+                PdfFormField field = PdfFormField.MakeFormField(fieldDict.MakeIndirect(outputDoc), outputDoc);
+                System.Diagnostics.Debug.Assert(field != null);
+                acroForm.AddField(field);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetDirectFormFields().Count);
+                PdfDictionary fieldDictReplace = new PdfDictionary();
+                fieldDictReplace.Put(PdfName.FT, PdfName.Tx);
+                fieldDictReplace.Put(PdfName.T, new PdfString("field2"));
+                PdfFormField fieldReplace = PdfFormField.MakeFormField(fieldDictReplace.MakeIndirect(outputDoc), outputDoc
+                    );
+                acroForm.ReplaceField(null, fieldReplace);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetDirectFormFields().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReplaceFormFieldOneDeepReplacesExistingFieldTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfDictionary fieldDict = new PdfDictionary();
+                fieldDict.Put(PdfName.FT, PdfName.Tx);
+                fieldDict.Put(PdfName.T, new PdfString("field1"));
+                PdfFormField field = PdfFormField.MakeFormField(fieldDict.MakeIndirect(outputDoc), outputDoc);
+                PdfDictionary fieldDictChild = new PdfDictionary();
+                fieldDictChild.Put(PdfName.FT, PdfName.Tx);
+                fieldDictChild.Put(PdfName.T, new PdfString("child1"));
+                PdfFormField fieldChild = PdfFormField.MakeFormField(fieldDictChild.MakeIndirect(outputDoc), outputDoc);
+                System.Diagnostics.Debug.Assert(field != null);
+                System.Diagnostics.Debug.Assert(fieldChild != null);
+                field.AddKid(fieldChild);
+                acroForm.AddField(field);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetDirectFormFields().Count);
+                PdfDictionary fieldDictReplace = new PdfDictionary();
+                fieldDictReplace.Put(PdfName.FT, PdfName.Tx);
+                fieldDictReplace.Put(PdfName.T, new PdfString("field2"));
+                PdfFormField fieldReplace = PdfFormField.MakeFormField(fieldDictReplace.MakeIndirect(outputDoc), outputDoc
+                    );
+                acroForm.ReplaceField("field1.child1", fieldReplace);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetDirectFormFields().Count);
+                NUnit.Framework.Assert.AreEqual("field1.field2", acroForm.GetField("field1.field2").GetFieldName().ToUnicodeString
+                    ());
             }
         }
 
