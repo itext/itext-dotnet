@@ -191,6 +191,7 @@ namespace iText.Barcodes {
             return xObject;
         }
 
+        // AWT related method (remove this if you port to Android / GAE)
         private byte[] GetBitMatrix() {
             int width = bm.GetWidth();
             int height = bm.GetHeight();

@@ -753,6 +753,8 @@ namespace iText.Barcodes {
             return xObject;
         }
 
+        // Android-Excise-Start
+        // Android-Excise-End
         /// <summary>Gets the raw image bits of the barcode.</summary>
         /// <remarks>
         /// Gets the raw image bits of the barcode. The image will have to

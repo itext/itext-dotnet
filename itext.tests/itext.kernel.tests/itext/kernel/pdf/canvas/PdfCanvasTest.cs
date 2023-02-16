@@ -77,8 +77,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const String TITLE = "Empty iText 7 Document";
 
-        private sealed class _ContentProvider_104 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_104() {
+        private sealed class _ContentProvider_103 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_103() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -88,7 +88,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_104(
+        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_103(
             );
 
         [NUnit.Framework.OneTimeSetUp]
@@ -252,12 +252,12 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void Create1000PagesDocumentWithText() {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithText.pdf";
-            CreateStandardDocument(new PdfWriter(filename), pageCount, new _ContentProvider_396());
+            CreateStandardDocument(new PdfWriter(filename), pageCount, new _ContentProvider_395());
             AssertStandardDocument(filename, pageCount);
         }
 
-        private sealed class _ContentProvider_396 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_396() {
+        private sealed class _ContentProvider_395 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_395() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -812,6 +812,8 @@ namespace iText.Kernel.Pdf.Canvas {
                 , SOURCE_FOLDER + "cmp_gifImageTest05.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
+        // Android-Excise-Start
+        // Android-Excise-End
         [NUnit.Framework.Test]
         public virtual void CanvasInitializationPageNoContentsKey() {
             String srcFile = SOURCE_FOLDER + "pageNoContents.pdf";

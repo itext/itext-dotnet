@@ -124,5 +124,6 @@ namespace iText.Barcodes {
             canvas.Fill();
             return GetBarcodeSize();
         }
+        // AWT related methods (remove this if you port to Android / GAE)
     }
 }

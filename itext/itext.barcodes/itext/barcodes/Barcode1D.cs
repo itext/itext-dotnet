@@ -58,6 +58,8 @@ namespace iText.Barcodes {
 
         public const int ALIGN_CENTER = 3;
 
+        // Android-Excise-Start    
+        // Android-Excise-End
         protected internal PdfDocument document;
 
         /// <summary>The minimum bar width.</summary>
@@ -394,6 +396,8 @@ namespace iText.Barcodes {
             this.altText = altText;
         }
 
+        // Android-Excise-Start
+        // Android-Excise-End
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
         /// <remarks>Creates a PdfFormXObject with the barcode. Default bar color and text color will be used.</remarks>
         /// <param name="document">The document</param>

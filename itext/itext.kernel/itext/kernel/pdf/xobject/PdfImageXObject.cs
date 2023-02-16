@@ -175,6 +175,8 @@ namespace iText.Kernel.Pdf.Xobject {
             return image;
         }
 
+        // Android-Excise-Start
+        // Android-Excise-End
         /// <summary>Gets decoded image bytes.</summary>
         /// <returns>byte array.</returns>
         public virtual byte[] GetImageBytes() {
