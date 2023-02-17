@@ -84,6 +84,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void EmptyZipCreationTest() {
+            // Android-Ignore (TODO DEVSIX-6906 fix different behavior of ZipFileWriter\Reader)
             String pathToFile = DESTINATION_FOLDER + "emptyZipCreation.zip";
             ZipFileWriter writer = new ZipFileWriter(pathToFile);
             writer.Dispose();
@@ -96,6 +97,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void AddNullFileEntryTest() {
+            // Android-Ignore (TODO DEVSIX-6906 fix different behavior of ZipFileWriter\Reader)
             String pathToFile = DESTINATION_FOLDER + "addNullFileEntry.zip";
             using (ZipFileWriter writer = new ZipFileWriter(pathToFile)) {
                 Exception ex = NUnit.Framework.Assert.Catch(typeof(System.IO.IOException), () => writer.AddEntry("fileName.txt"
@@ -106,6 +108,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void AddEntryWithNotExistingFileTest() {
+            // Android-Ignore (TODO DEVSIX-6906 fix different behavior of ZipFileWriter\Reader)
             using (ZipFileWriter writer = new ZipFileWriter(DESTINATION_FOLDER + "addEntryWithNotExistingFile.zip")) {
                 NUnit.Framework.Assert.Catch(typeof(System.IO.IOException), () => writer.AddEntry("fileName", new FileInfo
                     (SOURCE_FOLDER + "invalidPath")));
@@ -114,6 +117,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void AddNullStreamEntryTest() {
+            // Android-Ignore (TODO DEVSIX-6906 fix different behavior of ZipFileWriter\Reader)
             String pathToFile = DESTINATION_FOLDER + "addNullStreamEntry.zip";
             using (ZipFileWriter writer = new ZipFileWriter(pathToFile)) {
                 Exception ex = NUnit.Framework.Assert.Catch(typeof(System.IO.IOException), () => writer.AddEntry("fileName.txt"
@@ -124,6 +128,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void AddNullJsonEntryTest() {
+            // Android-Ignore (TODO DEVSIX-6906 fix different behavior of ZipFileWriter\Reader)
             String pathToFile = DESTINATION_FOLDER + "addNullJsonEntry.zip";
             using (ZipFileWriter writer = new ZipFileWriter(pathToFile)) {
                 Exception ex = NUnit.Framework.Assert.Catch(typeof(System.IO.IOException), () => writer.AddJsonEntry("fileName.txt"
@@ -134,6 +139,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void AddEntryWhenWriterIsClosedTest() {
+            // Android-Ignore (TODO DEVSIX-6906 fix different behavior of ZipFileWriter\Reader)
             String pathToFile = DESTINATION_FOLDER + "addEntryWhenWriterIsClosed.zip";
             ZipFileWriter writer = new ZipFileWriter(pathToFile);
             writer.Dispose();
@@ -252,6 +258,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void AddEntryWithNullFileNameTest() {
+            // Android-Ignore (TODO DEVSIX-6906 fix different behavior of ZipFileWriter\Reader)
             String pathToFile = DESTINATION_FOLDER + "addEntryWithNullFileName.zip";
             String firstTextFilePath = SOURCE_FOLDER + "testFile.txt";
             using (ZipFileWriter writer = new ZipFileWriter(pathToFile)) {

@@ -33,6 +33,14 @@ namespace iText.Commons.Utils {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/commons/utils/JsonUtilTest/";
 
+        private static bool isRunOnJava = false;
+
+        static JsonUtilTest() {
+            // Android-Excise-Start
+            isRunOnJava = true;
+        }
+
+        // Android-Excise-End
         [NUnit.Framework.Test]
         public virtual void Utf8CharsetStringTest() {
             NUnit.Framework.Assert.AreEqual("\"©\"", JsonUtil.SerializeToString("©"));
@@ -56,8 +64,15 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeInstanceWithEnumStreamTest() {
-            String path = SOURCE_FOLDER + "classWithEnum.json";
-            using (Stream inputStream = FileUtil.GetInputStreamForFile(path)) {
+            String cmp;
+            if (isRunOnJava) {
+                cmp = SOURCE_FOLDER + "classWithEnum.json";
+            }
+            else {
+                // Test is run on Android, so field order will be different from Java.
+                cmp = SOURCE_FOLDER + "classWithEnumAndroid.json";
+            }
+            using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
                         JsonUtil.SerializeToStream(serializationResult, CreateClassWithEnumObject());
@@ -79,8 +94,15 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeToMinimalInstanceWithEnumStreamTest() {
-            String path = SOURCE_FOLDER + "minimalClassWithEnum.json";
-            using (Stream inputStream = FileUtil.GetInputStreamForFile(path)) {
+            String cmp;
+            if (isRunOnJava) {
+                cmp = SOURCE_FOLDER + "minimalClassWithEnum.json";
+            }
+            else {
+                // Test is run on Android, so field order will be different from Java.
+                cmp = SOURCE_FOLDER + "minimalClassWithEnumAndroid.json";
+            }
+            using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
                         JsonUtil.SerializeToMinimalStream(serializationResult, CreateClassWithEnumObject());
@@ -146,8 +168,15 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeComplexStructureStreamTest() {
-            String path = SOURCE_FOLDER + "complexStructure.json";
-            using (Stream inputStream = FileUtil.GetInputStreamForFile(path)) {
+            String cmp;
+            if (isRunOnJava) {
+                cmp = SOURCE_FOLDER + "complexStructure.json";
+            }
+            else {
+                // Test is run on Android, so field order will be different from Java.
+                cmp = SOURCE_FOLDER + "complexStructureAndroid.json";
+            }
+            using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
                         JsonUtil.SerializeToStream(serializationResult, CreateComplexStructureObject());
@@ -169,8 +198,15 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeToMinimalComplexStructureStreamTest() {
-            String path = SOURCE_FOLDER + "minimalComplexStructure.json";
-            using (Stream inputStream = FileUtil.GetInputStreamForFile(path)) {
+            String cmp;
+            if (isRunOnJava) {
+                cmp = SOURCE_FOLDER + "minimalComplexStructure.json";
+            }
+            else {
+                // Test is run on Android, so field order will be different from Java.
+                cmp = SOURCE_FOLDER + "minimalComplexStructureAndroid.json";
+            }
+            using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
                         JsonUtil.SerializeToMinimalStream(serializationResult, CreateComplexStructureObject());
