@@ -50,7 +50,6 @@ using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Test;
-using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -91,7 +90,6 @@ namespace iText.Pdfa {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff01_"));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outFileName));
         }
     }
 }

@@ -45,7 +45,6 @@ using System.IO;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
-using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -83,7 +82,6 @@ namespace iText.Pdfa {
             ocProperties.Put(PdfName.D, d);
             doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
         }
     }

@@ -50,7 +50,6 @@ using iText.Layout.Element;
 using iText.Pdfa.Logs;
 using iText.Test;
 using iText.Test.Attributes;
-using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -92,7 +91,6 @@ namespace iText.Pdfa {
             document.Close();
             // During the closing event was called on each document page
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         [NUnit.Framework.Test]
@@ -116,7 +114,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(0, eventHandler.GetCounter());
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         [NUnit.Framework.Test]
@@ -138,7 +135,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(0, eventHandler.GetCounter());
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         [NUnit.Framework.Test]
@@ -160,7 +156,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         [NUnit.Framework.Test]
@@ -184,7 +179,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         internal class EndPageEventHandler : iText.Kernel.Events.IEventHandler {

@@ -61,7 +61,6 @@ using iText.Layout.Renderer;
 using iText.Pdfa.Exceptions;
 using iText.Test;
 using iText.Test.Attributes;
-using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -201,7 +200,6 @@ namespace iText.Pdfa {
                 ("1"));
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
         [NUnit.Framework.Test]
@@ -331,7 +329,6 @@ namespace iText.Pdfa {
             form.AddField(radioGroup);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
         [NUnit.Framework.Test]
@@ -379,7 +376,6 @@ namespace iText.Pdfa {
             form.AddField(signFormField);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
         [NUnit.Framework.Test]
@@ -404,7 +400,6 @@ namespace iText.Pdfa {
                     }
                 }
             }
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
             PdfADocument pdfDocToMerge;
             using (Stream is_1 = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 )) {

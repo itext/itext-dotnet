@@ -48,7 +48,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void FloatImageInDivClearNoneTest() {
-            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             String dest = destinationFolder + "floatImageInDivClearNone.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
             Document document = new Document(pdf);
@@ -63,7 +62,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void FloatImageInDivClearBothTest() {
-            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             String dest = destinationFolder + "floatImageInDivClearBoth.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
             Document document = new Document(pdf);
@@ -78,7 +76,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void FloatImageDifferentSizeInDivTest() {
-            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             String cmpFileName = sourceFolder + "cmp_floatImageDifferentSizeInDiv.pdf";
             String outFile = destinationFolder + "floatImageInDiv.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));

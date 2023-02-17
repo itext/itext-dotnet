@@ -150,7 +150,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ParseParametersAndCalculateCoordinatesWithBetterPrecisionEllipseTest() {
-            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             String filename = "calculateCoordinatesWithBetterPrecision.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
