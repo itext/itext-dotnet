@@ -191,7 +191,8 @@ namespace iText.Barcodes {
             return xObject;
         }
 
-        // AWT related method (remove this if you port to Android / GAE)
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
+        // Android-Conversion-Skip-Block-End
         private byte[] GetBitMatrix() {
             int width = bm.GetWidth();
             int height = bm.GetHeight();

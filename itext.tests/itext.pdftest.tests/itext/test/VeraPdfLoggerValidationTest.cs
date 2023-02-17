@@ -45,7 +45,7 @@ using iText.Test.Pdfa;
 using iText.Test.Utils;
 
 namespace iText.Test {
-    // Android-Skip
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("UnitTest")]
     public class VeraPdfLoggerValidationTest : ExtendedITextTest {
         internal static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -70,11 +70,11 @@ namespace iText.Test {
                  + "WARNING: The Top DICT does not begin with ROS operator";
             NUnit.Framework.Assert.AreEqual(expectedWarningsForFileWithWarnings, new VeraPdfValidator().Validate(DESTINATION_FOLDER
                  + fileNameWithWarnings));
-            // Android-Skip
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             //We check that the logs are empty after the first check
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + fileNameWithoutWarnings
                 ));
         }
-        // Android-Skip
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     }
 }

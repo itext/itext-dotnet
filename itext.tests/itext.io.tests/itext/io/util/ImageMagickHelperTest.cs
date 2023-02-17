@@ -49,6 +49,7 @@ using iText.Test;
 namespace iText.IO.Util {
     [NUnit.Framework.Category("IntegrationTest")]
     public class ImageMagickHelperTest : ExtendedITextTest {
+        // Android-Conversion-Skip-File (imagemagick isn't available on Android)
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/util/ImageMagickHelperTest/";
 

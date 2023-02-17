@@ -812,8 +812,8 @@ namespace iText.Kernel.Pdf.Canvas {
                 , SOURCE_FOLDER + "cmp_gifImageTest05.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
-        // Android-Excise-Start
-        // Android-Excise-End
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
+        // Android-Conversion-Skip-Block-End
         [NUnit.Framework.Test]
         public virtual void CanvasInitializationPageNoContentsKey() {
             String srcFile = SOURCE_FOLDER + "pageNoContents.pdf";

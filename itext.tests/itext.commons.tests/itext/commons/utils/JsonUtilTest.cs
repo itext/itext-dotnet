@@ -36,11 +36,11 @@ namespace iText.Commons.Utils {
         private static bool isRunOnJava = false;
 
         static JsonUtilTest() {
-            // Android-Excise-Start
+            // Android-Conversion-Skip-Block-Start (cutting area is used to understand whether code is running on Android or not)
             isRunOnJava = true;
         }
 
-        // Android-Excise-End
+        // Android-Conversion-Skip-Block-End
         [NUnit.Framework.Test]
         public virtual void Utf8CharsetStringTest() {
             NUnit.Framework.Assert.AreEqual("\"©\"", JsonUtil.SerializeToString("©"));
@@ -64,6 +64,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeInstanceWithEnumStreamTest() {
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
             String cmp;
             if (isRunOnJava) {
                 cmp = SOURCE_FOLDER + "classWithEnum.json";
@@ -94,6 +95,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeToMinimalInstanceWithEnumStreamTest() {
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
             String cmp;
             if (isRunOnJava) {
                 cmp = SOURCE_FOLDER + "minimalClassWithEnum.json";
@@ -168,6 +170,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeComplexStructureStreamTest() {
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
             String cmp;
             if (isRunOnJava) {
                 cmp = SOURCE_FOLDER + "complexStructure.json";
@@ -198,6 +201,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeToMinimalComplexStructureStreamTest() {
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
             String cmp;
             if (isRunOnJava) {
                 cmp = SOURCE_FOLDER + "minimalComplexStructure.json";

@@ -753,8 +753,8 @@ namespace iText.Barcodes {
             return xObject;
         }
 
-        // Android-Excise-Start
-        // Android-Excise-End
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
+        // Android-Conversion-Skip-Block-End
         /// <summary>Gets the raw image bits of the barcode.</summary>
         /// <remarks>
         /// Gets the raw image bits of the barcode. The image will have to

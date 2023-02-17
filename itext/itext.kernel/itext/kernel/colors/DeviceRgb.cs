@@ -98,8 +98,8 @@ namespace iText.Kernel.Colors {
             }
         }
 
-        // Android-Excise-Start
-        // Android-Excise-End
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
+        // Android-Conversion-Skip-Block-End
         /// <summary>Creates DeviceRgb color with all colorants intensities initialised as zeroes.</summary>
         public DeviceRgb()
             : this(0f, 0f, 0f) {

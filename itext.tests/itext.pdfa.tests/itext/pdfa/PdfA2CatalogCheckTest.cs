@@ -50,7 +50,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Skip
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA2CatalogCheckTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -90,7 +90,7 @@ namespace iText.Pdfa {
             doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
-            // Android-Skip
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             CompareResult(outPdf, cmpPdf);
         }
 
@@ -151,7 +151,7 @@ namespace iText.Pdfa {
             doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
-            // Android-Skip
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             CompareResult(outPdf, cmpPdf);
         }
 

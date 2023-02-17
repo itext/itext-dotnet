@@ -168,7 +168,7 @@ namespace iText.IO.Image {
         }
 
 #if !NETSTANDARD2_0
-        // Android-Excise-Start
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
         /// <summary>Gets an instance of an Image from a java.awt.Image</summary>
         /// <param name="image">the java.awt.Image to convert</param>
         /// <param name="color">if different from <c>null</c> the transparency pixels are replaced by this color</param>
@@ -189,7 +189,7 @@ namespace iText.IO.Image {
         }
 #endif // !NETSTANDARD2_0
 
-        // Android-Excise-End
+        // Android-Conversion-Skip-Block-End
         /// <summary>Get a bitmap ImageData instance from the specified url.</summary>
         /// <param name="url">location of the image.</param>
         /// <param name="noHeader">Whether the image contains a header.</param>

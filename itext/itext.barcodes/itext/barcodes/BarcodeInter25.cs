@@ -319,6 +319,7 @@ namespace iText.Barcodes {
             }
             return GetBarcodeSize();
         }
-        // AWT related methods (remove this if you port to Android / GAE)
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
+        // Android-Conversion-Skip-Block-End
     }
 }

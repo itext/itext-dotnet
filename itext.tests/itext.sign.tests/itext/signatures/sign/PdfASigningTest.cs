@@ -58,7 +58,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Signatures.Sign {
-    // Android-Skip
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfASigningTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -104,7 +104,7 @@ namespace iText.Signatures.Sign {
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
                 , rect, false, false, PdfSigner.NOT_CERTIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
-            // Android-Skip
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(dest, sourceFolder + "cmp_" + fileName
                 ));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
@@ -124,7 +124,7 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(@out));
         }
 
-        // Android-Skip
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void FailedSigningPdfA2DocumentTest() {
             String src = sourceFolder + "simplePdfADocument.pdf";

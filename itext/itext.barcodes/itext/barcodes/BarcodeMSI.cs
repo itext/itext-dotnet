@@ -284,8 +284,8 @@ namespace iText.Barcodes {
             return this.GetBarcodeSize();
         }
 
-        // Android-Excise-Start
-        // Android-Excise-End
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
+        // Android-Conversion-Skip-Block-End
         /// <summary>Creates the bars.</summary>
         /// <param name="text">the text to create the bars.</param>
         /// <returns>the bars</returns>

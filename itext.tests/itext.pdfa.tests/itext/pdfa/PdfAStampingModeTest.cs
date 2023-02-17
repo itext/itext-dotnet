@@ -48,7 +48,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Skip
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAStampingModeTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -80,7 +80,7 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(destinationFolder + fileName));
         }
 
-        // Android-Skip
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfA2FieldStampingModeTest01() {
             String fileName = "pdfA2FieldStampingModeTest01.pdf";
@@ -96,6 +96,6 @@ namespace iText.Pdfa {
                 , true));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(destinationFolder + fileName));
         }
-        // Android-Skip
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     }
 }

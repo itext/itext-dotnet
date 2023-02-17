@@ -52,7 +52,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void GetFileNamesFromEmptyZipTest() {
-            // Android-Ignore (TODO DEVSIX-6906 fix different behavior of ZipFileWriter\Reader)
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6906 fix different behavior of ZipFileWriter\Reader)
             using (ZipFileReader fileReader = new ZipFileReader(SOURCE_FOLDER + "emptyZip.zip")) {
                 ICollection<String> nameSet = fileReader.GetFileNames();
                 NUnit.Framework.Assert.IsTrue(nameSet.IsEmpty());

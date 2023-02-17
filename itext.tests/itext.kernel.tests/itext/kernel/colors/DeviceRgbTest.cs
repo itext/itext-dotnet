@@ -69,7 +69,7 @@ namespace iText.Kernel.Colors {
             NUnit.Framework.Assert.AreEqual(multiplier * (150f / 255), darkerRgbColor.GetColorValue()[2], 0.0001);
         }
 
-        // Android-Excise-Start
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
         [NUnit.Framework.Test]
         public virtual void ColorByAWTColorConstantTest() {
             // RED
@@ -102,7 +102,7 @@ namespace iText.Kernel.Colors {
             NUnit.Framework.Assert.AreEqual(150f / 255, rgbColorValue[2], 0.0001);
         }
 
-        // Android-Excise-End
+        // Android-Conversion-Skip-Block-End
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.COLORANT_INTENSITIES_INVALID, Count = 14)]
         public virtual void InvalidConstructorArgumentsTest() {

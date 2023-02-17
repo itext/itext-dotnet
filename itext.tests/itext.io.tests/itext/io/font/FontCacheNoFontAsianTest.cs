@@ -47,6 +47,7 @@ using iText.Test;
 namespace iText.IO.Font {
     [NUnit.Framework.Category("UnitTest")]
     public class FontCacheNoFontAsianTest : ExtendedITextTest {
+        // Android-Conversion-Skip-File (TODO DEVSIX-7376 investigate why FontCacheNoFontAsianTest is skipped on Android)
         [NUnit.Framework.SetUp]
         public virtual void Before() {
             FontCache.ClearSavedFonts();

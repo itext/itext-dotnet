@@ -215,8 +215,8 @@ namespace iText.Barcodes {
             return GetBarcodeSize();
         }
 
-        // Android-Excise-Start
-        // Android-Excise-End
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
+        // Android-Conversion-Skip-Block-End
         /// <summary>Gets the barcode size</summary>
         /// <param name="moduleHeight">The height of the module</param>
         /// <param name="moduleWidth">The width of the module</param>

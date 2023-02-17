@@ -58,6 +58,7 @@ using iText.Test.Attributes;
 namespace iText.Kernel.Utils {
     [NUnit.Framework.Category("IntegrationTest")]
     public class CompareToolTest : ExtendedITextTest {
+        // Android-Conversion-Skip-File (during Android conversion the class will be replaced by DeferredCompareTool)
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/utils/CompareToolTest/";
 
@@ -263,7 +264,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _T945289912(this);
+            CompareTool compareTool = new _T862046291(this);
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -276,12 +277,12 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        internal class _T945289912 : CompareTool {
+        internal class _T862046291 : CompareTool {
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
                 return base.ConvertDocInfoToStrings(info);
             }
 
-            internal _T945289912(CompareToolTest _enclosing) {
+            internal _T862046291(CompareToolTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 

@@ -719,8 +719,8 @@ namespace iText.Barcodes {
             }
         }
 
-        // Android-Excise-Start
-        // Android-Excise-End
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
+        // Android-Conversion-Skip-Block-End
         private static char GetStartSymbol(Barcode128.Barcode128CodeSet codeSet) {
             switch (codeSet) {
                 case Barcode128.Barcode128CodeSet.A: {

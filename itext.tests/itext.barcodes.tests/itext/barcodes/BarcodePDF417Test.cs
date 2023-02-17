@@ -151,7 +151,7 @@ namespace iText.Barcodes {
             NUnit.Framework.Assert.AreEqual(0.5, barcode.GetAspectRatio(), 0);
         }
 
-        // Android-Excise-Start
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
         [NUnit.Framework.Test]
         public virtual void Barcode417XObjectTest() {
             String filename = "barcode417XObjectTest.pdf";
@@ -170,7 +170,7 @@ namespace iText.Barcodes {
                  + "cmp_" + filename, DESTINATION_FOLDER));
         }
 
-        // Android-Excise-End
+        // Android-Conversion-Skip-Block-End
         [NUnit.Framework.Test]
         public virtual void Barcode417YHeightTest() {
             MemoryStream baos = new MemoryStream();

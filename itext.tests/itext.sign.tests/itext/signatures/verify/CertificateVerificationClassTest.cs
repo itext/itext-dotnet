@@ -115,7 +115,7 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ExpiredCertificateTest() {
-            // Android-Ignore (TODO DEVSIX-6447 fix different X509Certificate#checkValidity behavior)
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6447 fix different X509Certificate#checkValidity behavior)
             IX509Certificate expiredCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "expiredCert.pem"
                 )[0];
             String verificationResult = CertificateVerification.VerifyCertificate(expiredCert, null);
@@ -228,7 +228,7 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void CertChainWithExpiredCertTest() {
-            // Android-Ignore (TODO DEVSIX-6447 fix different X509Certificate#checkValidity behavior)
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6447 fix different X509Certificate#checkValidity behavior)
             String validCertChainFileName = CERTS_SRC + "signCertRsaWithExpiredChain.pem";
             IX509Certificate[] validCertChain = PemFileHelper.ReadFirstChain(validCertChainFileName);
             IX509Certificate expectedExpiredCert = (IX509Certificate)validCertChain[1];
