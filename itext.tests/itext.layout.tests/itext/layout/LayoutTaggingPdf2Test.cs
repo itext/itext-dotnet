@@ -71,6 +71,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void SimpleDocDefault() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocDefault.pdf", new WriterProperties
                 ().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -87,6 +88,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void SimpleDocNullNsByDefault() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocNullNsByDefault.pdf"
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -103,6 +105,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void SimpleDocExplicitlyOldStdNs() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocExplicitlyOldStdNs.pdf"
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -121,6 +124,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CustomRolesMappingPdf2() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "customRolesMappingPdf2.pdf", 
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -152,6 +156,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CustomRolesMappingPdf17() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "customRolesMappingPdf17.pdf", 
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -184,6 +189,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithExplicitAndImplicitDefaultNsAtTheSameTime() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithExplicitAndImplicitDefaultNsAtTheSameTime.pdf"
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -286,6 +292,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping04() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping04.pdf", 
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -329,6 +336,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping06() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping06.pdf", 
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -396,6 +404,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
         public virtual void DocWithInvalidMapping09() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping09.pdf", 
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -411,6 +420,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
         public virtual void DocWithInvalidMapping10() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping10.pdf", 
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -426,6 +436,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void StampTest01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocOldStdNs.pdf"), new PdfWriter
                 (destinationFolder + "stampTest01.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -438,6 +449,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void StampTest02() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNoNs.pdf"), new PdfWriter
                 (destinationFolder + "stampTest02.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -450,6 +462,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void StampTest03() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNewStdNs.pdf"), new PdfWriter
                 (destinationFolder + "stampTest03.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -462,6 +475,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void StampTest04() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDoc1_7.pdf"), new PdfWriter(
                 destinationFolder + "stampTest04.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -502,6 +516,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithSectInPdf2() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithSectInPdf2.pdf", new WriterProperties
                 ().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();

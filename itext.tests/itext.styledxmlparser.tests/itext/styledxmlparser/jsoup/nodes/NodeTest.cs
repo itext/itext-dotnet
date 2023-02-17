@@ -249,12 +249,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void Traverse() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            doc.Select("div").First().Traverse(new _NodeVisitor_273(accum));
+            doc.Select("div").First().Traverse(new _NodeVisitor_291(accum));
             NUnit.Framework.Assert.AreEqual("<div><p><#text></#text></p></div>", accum.ToString());
         }
 
-        private sealed class _NodeVisitor_273 : NodeVisitor {
-            public _NodeVisitor_273(StringBuilder accum) {
+        private sealed class _NodeVisitor_291 : NodeVisitor {
+            public _NodeVisitor_291(StringBuilder accum) {
                 this.accum = accum;
             }
 

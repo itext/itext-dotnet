@@ -131,6 +131,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TestAppliedClipPathRenderer() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             AbstractBranchSvgNodeRenderer clipPathRenderer = new ClipPathSvgNodeRenderer();
             clipPathRenderer.SetAttribute(SvgConstants.Attributes.ID, "randomString");
             ISvgNodeRenderer clippedRenderer = new RectangleSvgNodeRenderer();
@@ -151,6 +152,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TestAppliedGroupClipPathRenderer() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             AbstractBranchSvgNodeRenderer clipPathRenderer = new ClipPathSvgNodeRenderer();
             clipPathRenderer.SetAttribute(SvgConstants.Attributes.ID, "randomString");
             ISvgNodeRenderer clippedRenderer = new RectangleSvgNodeRenderer();
@@ -174,6 +176,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TestEoAppliedGroupClipPathRenderer() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             AbstractBranchSvgNodeRenderer clipPathRenderer = new ClipPathSvgNodeRenderer();
             clipPathRenderer.SetAttribute(SvgConstants.Attributes.ID, "randomString");
             ISvgNodeRenderer clippedRenderer = new RectangleSvgNodeRenderer();

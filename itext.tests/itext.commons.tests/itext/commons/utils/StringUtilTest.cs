@@ -50,6 +50,7 @@ namespace iText.Commons.Utils {
     public class StringUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void PatternSplitTest01() {
+            // Android-Ignore (TODO DEVSIX-6457 fix different behavior of Pattern.split method)
             // Pattern.split in Java works differently compared to Regex.Split in C#
             // In C#, empty strings are possible at the beginning of the resultant array for non-capturing groups in split regex
             // Thus, in C# we use a separate utility for splitting to align the implementation with Java
@@ -72,6 +73,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void StringSplitTest01() {
+            // Android-Ignore (TODO DEVSIX-6457 fix different behavior of Pattern.split method)
             String source = "a01aa78ab89b";
             String[] expected = new String[] { "a01", "a", "a78", "a", "b89", "b" };
             String[] result = iText.Commons.Utils.StringUtil.Split(source, "(?=[ab])");

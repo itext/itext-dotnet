@@ -86,6 +86,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TextInParagraphTest01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "textInParagraphTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -130,6 +131,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ImageTest02() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageTest02.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -149,6 +151,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DivTest01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "divTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -168,6 +171,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -192,6 +196,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest02() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest02.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -208,6 +213,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest03() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest03.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -237,6 +243,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest04() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest04.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -261,6 +268,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest05() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest05.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -288,6 +296,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest06() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest06.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -315,6 +324,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest07() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest07.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -332,6 +342,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void LinkInsideTable() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + "linkInsideTable.pdf"));
             pdf.SetTagged();
             Document doc = new Document(pdf);
@@ -348,6 +359,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest08() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest08.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -375,6 +387,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ListTest01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest01.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -389,6 +402,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ListTest02() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest02.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -442,6 +456,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ListTest03() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest03.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -461,6 +476,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ListTest04() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest04.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -477,6 +493,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void LinkTest01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "linkTest01.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -491,6 +508,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ArtifactTest01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "artifactTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -509,6 +527,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ArtifactTest02() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "artifactTest02.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -533,6 +552,7 @@ namespace iText.Layout {
         /// </remarks>
         [NUnit.Framework.Test]
         public virtual void FlushingTest01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -559,6 +579,7 @@ namespace iText.Layout {
         /// </remarks>
         [NUnit.Framework.Test]
         public virtual void FlushingTest02() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest02.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -594,6 +615,7 @@ namespace iText.Layout {
         /// </remarks>
         [NUnit.Framework.Test]
         public virtual void FlushingTest03() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest03.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -619,6 +641,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest01.pdf"
                 , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
@@ -637,6 +660,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest02() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest02.pdf"
                 , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
@@ -651,6 +675,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest03() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest03.pdf"
                 , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
@@ -674,6 +699,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest04() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest04.pdf"
                 , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
@@ -691,6 +717,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest05() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest05.pdf"
                 , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
@@ -708,6 +735,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ImageAndTextNoRole01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageAndTextNoRole01.pdf", new 
                 WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
@@ -736,6 +764,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableWithCaption01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfWriter writer = new PdfWriter(destinationFolder + "tableWithCaption01.pdf");
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
@@ -757,6 +786,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void EmptyDivTest() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfWriter writer = new PdfWriter(destinationFolder + "emptyDivTest.pdf");
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
@@ -771,6 +801,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void FloatListItemTest() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfWriter writer = new PdfWriter(destinationFolder + "floatListItemTest.pdf");
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
@@ -786,6 +817,7 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT)]
         public virtual void NotAsciiCharTest() {
             //TODO update cmp-file after DEVSIX-3335 fixed
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfWriter writer = new PdfWriter(destinationFolder + "notAsciiCharTest.pdf");
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
@@ -824,6 +856,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CreateTaggedVersionOneDotFourTest01() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "createTaggedVersionOneDotFourTest01.pdf"
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_1_4)));
             pdfDocument.SetTagged();

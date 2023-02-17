@@ -82,6 +82,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void RunLengthEncodingTest01() {
+            // Android-Ignore (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             String srcFile = sourceFolder + "runLengthEncodedImages.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(srcFile));
             PdfImageXObject im1 = document.GetPage(1).GetResources().GetImage(new PdfName("Im1"));

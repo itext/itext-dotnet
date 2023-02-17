@@ -108,6 +108,7 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void GetOcspResponseWhenUrlCertIsNullTest() {
+            // Android-Ignore (TODO DEVSIX-6440 fix problem with URL resolving)
             OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
             NUnit.Framework.Assert.Catch(typeof(WebException), () => castle.GetOcspResponse(checkCert, rootCert, null)
                 );
@@ -116,6 +117,7 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         [LogMessage("Getting OCSP from http://asd", LogLevel = LogLevelConstants.INFO)]
         public virtual void IncorrectUrlTest() {
+            // Android-Ignore (TODO DEVSIX-6440 fix problem with URL resolving)
             OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
             NUnit.Framework.Assert.Catch(typeof(WebException), () => castle.GetOcspResponse(checkCert, rootCert, "http://asd"
                 ));
@@ -133,6 +135,7 @@ namespace iText.Signatures {
         [LogMessage("Getting OCSP from http://localhost:9000/demo/ocsp/ocsp-service", LogLevel = LogLevelConstants
             .INFO)]
         public virtual void ConnectionRefusedTest() {
+            // Android-Ignore (TODO DEVSIX-6440 fix problem with URL resolving)
             OcspClientBouncyCastle castle = new OcspClientBouncyCastle(null);
             NUnit.Framework.Assert.Catch(typeof(WebException), () => castle.GetOcspResponse(checkCert, rootCert, ocspServiceUrl
                 ));

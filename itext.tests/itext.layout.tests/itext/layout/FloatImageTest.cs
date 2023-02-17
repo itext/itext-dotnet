@@ -47,6 +47,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void FloatAllClearNoneImageTest() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             String dest = destinationFolder + "floatAllClearNoneImage.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
             Document document = new Document(pdf);
@@ -73,6 +74,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void FloatAllClearBothImageTest() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             String dest = destinationFolder + "floatAllClearBothImage.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
             Document document = new Document(pdf);
@@ -100,6 +102,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void FloatNoneRightClearBothImageTest() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             String dest = destinationFolder + "floatNoneRightClearBothImage.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
             Document document = new Document(pdf);
@@ -124,6 +127,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void FloatNoneRightClearNoneImageTest() {
+            // Android-Ignore (TODO DEVSIX-6443 fix features supporting in SAXParserFactory)
             String dest = destinationFolder + "floatNoneRightClearNoneImage.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
             Document document = new Document(pdf);

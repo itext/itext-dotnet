@@ -263,6 +263,7 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void Layer0Test() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             String fileName = "layer0Test.pdf";
             String dest = DESTINATION_FOLDER + fileName;
@@ -293,6 +294,7 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void Layer0WithImageTest() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             String fileName = "layer0WithImageTest.pdf";
             String dest = DESTINATION_FOLDER + fileName;
@@ -315,6 +317,7 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void Layer0WithImageAndPositiveImageScaleTest() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             String fileName = "layer0WithImageAndPositiveImageScaleTest.pdf";
             String dest = DESTINATION_FOLDER + fileName;
@@ -338,6 +341,7 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void Layer0WithImageAndNegativeImageScaleTest() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             String fileName = "layer0WithImageAndNegativeImageScale.pdf";
             String dest = DESTINATION_FOLDER + fileName;
@@ -361,6 +365,7 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void Layer2Test() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             String fileName = "layer2Test.pdf";
             String dest = DESTINATION_FOLDER + fileName;

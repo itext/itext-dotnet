@@ -105,12 +105,14 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void GrayAlphaPngWithoutEmbeddedProfileImageXObjectTest() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             ConvertAndCompare(DESTINATION_FOLDER + "graya8BpcWithoutProfile.pdf", SOURCE_FOLDER + "cmp_graya8BpcWithoutProfile.pdf"
                 , SOURCE_FOLDER + "graya8BpcWithoutProfile.png");
         }
 
         [NUnit.Framework.Test]
         public virtual void GraySimpleTransparencyPngImageXObjectTest() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             ConvertAndCompare(DESTINATION_FOLDER + "grayscaleSimpleTransparencyImage.pdf", SOURCE_FOLDER + "cmp_grayscaleSimpleTransparencyImage.pdf"
                 , SOURCE_FOLDER + "grayscaleSimpleTransparencyImage.png");
         }
@@ -129,12 +131,14 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void RgbSimpleTransparencyPngImageXObjectTest() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             ConvertAndCompare(DESTINATION_FOLDER + "rgbSimpleTransparencyImage.pdf", SOURCE_FOLDER + "cmp_rgbSimpleTransparencyImage.pdf"
                 , SOURCE_FOLDER + "rgbSimpleTransparencyImage.png");
         }
 
         [NUnit.Framework.Test]
         public virtual void SRgbImageTest() {
+            // Android-Ignore (TODO DEVSIX-6444 fix different ByteUtils#getIsoBytes behavior)
             ConvertAndCompare(DESTINATION_FOLDER + "sRGBImage.pdf", SOURCE_FOLDER + "cmp_sRGBImage.pdf", SOURCE_FOLDER
                  + "sRGBImage.png");
         }
