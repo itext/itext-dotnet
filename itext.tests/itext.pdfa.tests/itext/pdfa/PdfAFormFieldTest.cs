@@ -61,8 +61,10 @@ using iText.Layout.Renderer;
 using iText.Pdfa.Exceptions;
 using iText.Test;
 using iText.Test.Attributes;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
+    // Android-Skip
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAFormFieldTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -200,8 +202,10 @@ namespace iText.Pdfa {
                 ("1"));
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
+        // Android-Skip
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY)]
         public virtual void PdfA1DocWithPdfA1ChoiceFieldTest() {
@@ -329,8 +333,10 @@ namespace iText.Pdfa {
             form.AddField(radioGroup);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
+        // Android-Skip
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1TextFieldTest() {
             // TODO: DEVSIX-3913 update this test after the ticket will be resolved
@@ -376,8 +382,10 @@ namespace iText.Pdfa {
             form.AddField(signFormField);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
+        // Android-Skip
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-3913 update this test after the ticket will be resolved")]
         public virtual void MergePdfADocWithFormTest() {
@@ -400,6 +408,8 @@ namespace iText.Pdfa {
                     }
                 }
             }
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+            // Android-Skip
             PdfADocument pdfDocToMerge;
             using (Stream is_1 = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 )) {

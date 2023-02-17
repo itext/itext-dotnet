@@ -50,8 +50,10 @@ using iText.Layout.Element;
 using iText.Pdfa.Logs;
 using iText.Test;
 using iText.Test.Attributes;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
+    // Android-Skip
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAPageTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -91,8 +93,10 @@ namespace iText.Pdfa {
             document.Close();
             // During the closing event was called on each document page
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
+        // Android-Skip
         [NUnit.Framework.Test]
         [LogMessage(PdfALogMessageConstant.PDFA_PAGE_FLUSHING_WAS_NOT_PERFORMED)]
         public virtual void CheckThatFlushingPreventedWithFalseFlushResourcesContentStreams() {
@@ -114,8 +118,10 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(0, eventHandler.GetCounter());
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
+        // Android-Skip
         [NUnit.Framework.Test]
         public virtual void CheckFlushingWhenPdfDocumentIsClosing() {
             String outPdf = destinationFolder + "checkFlushingWhenPdfDocumentIsClosing.pdf";
@@ -135,8 +141,10 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(0, eventHandler.GetCounter());
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
+        // Android-Skip
         [NUnit.Framework.Test]
         public virtual void CheckFlushingWithTrueFlushResourcesContentStreams() {
             String outPdf = destinationFolder + "checkFlushingWithTrueFlushResourcesContentStreams.pdf";
@@ -156,8 +164,10 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
+        // Android-Skip
         [NUnit.Framework.Test]
         public virtual void CheckFlushingOfCheckedPage() {
             String outPdf = destinationFolder + "checkFlushingOfCheckedPage.pdf";
@@ -179,8 +189,10 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(pageCount, eventHandler.GetCounter());
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
+        // Android-Skip
         internal class EndPageEventHandler : iText.Kernel.Events.IEventHandler {
             private int counter = 0;
 

@@ -45,8 +45,10 @@ using System.IO;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
+    // Android-Skip
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA3CatalogCheckTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -82,6 +84,8 @@ namespace iText.Pdfa {
             ocProperties.Put(PdfName.D, d);
             doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+            // Android-Skip
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
         }
     }

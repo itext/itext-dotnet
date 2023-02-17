@@ -50,8 +50,10 @@ using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Test;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
+    // Android-Skip
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA2LayoutOcgTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -90,6 +92,8 @@ namespace iText.Pdfa {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff01_"));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outFileName));
         }
+        // Android-Skip
     }
 }

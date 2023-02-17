@@ -45,8 +45,10 @@ using iText.Forms;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
+    // Android-Skip
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAStampingModeTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -75,8 +77,10 @@ namespace iText.Pdfa {
                  + fileName, destinationFolder, "diff_"));
             NUnit.Framework.Assert.IsNull(compareTool.CompareXmp(destinationFolder + fileName, cmpFolder + "cmp_" + fileName
                 , true));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(destinationFolder + fileName));
         }
 
+        // Android-Skip
         [NUnit.Framework.Test]
         public virtual void PdfA2FieldStampingModeTest01() {
             String fileName = "pdfA2FieldStampingModeTest01.pdf";
@@ -90,6 +94,8 @@ namespace iText.Pdfa {
                  + fileName, destinationFolder, "diff_"));
             NUnit.Framework.Assert.IsNull(compareTool.CompareXmp(destinationFolder + fileName, cmpFolder + "cmp_" + fileName
                 , true));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(destinationFolder + fileName));
         }
+        // Android-Skip
     }
 }

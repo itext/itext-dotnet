@@ -55,8 +55,10 @@ using iText.Pdfa.Exceptions;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
+using iText.Test.Pdfa;
 
 namespace iText.Signatures.Sign {
+    // Android-Skip
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfASigningTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -101,6 +103,8 @@ namespace iText.Signatures.Sign {
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
                 , rect, false, false, PdfSigner.NOT_CERTIFIED, 12f);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
+            // Android-Skip
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(dest, sourceFolder + "cmp_" + fileName
                 ));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
@@ -117,8 +121,10 @@ namespace iText.Signatures.Sign {
             signer.SetCertificationLevel(PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(@out));
         }
 
+        // Android-Skip
         [NUnit.Framework.Test]
         public virtual void FailedSigningPdfA2DocumentTest() {
             String src = sourceFolder + "simplePdfADocument.pdf";
