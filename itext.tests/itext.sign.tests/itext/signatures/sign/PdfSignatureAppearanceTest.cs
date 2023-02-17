@@ -99,7 +99,6 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest02() {
-            // Android-Ignore (This test fails because of an extra newline, which is the result of different datetime display conventions)
             String fileName = "textAutoscaleTest02.pdf";
             String dest = DESTINATION_FOLDER + fileName;
             Rectangle rect = new Rectangle(36, 648, 150, 50);
