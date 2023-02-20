@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
+Copyright (c) 1998-2023 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -56,7 +56,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Utils {
-    [NUnit.Framework.Category("Integration test")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class CompareToolTest : ExtendedITextTest {
         // Android-Conversion-Skip-File (during Android conversion the class will be replaced by DeferredCompareTool)
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
