@@ -48,7 +48,6 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
-using iText.Forms;
 using iText.Forms.Logs;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -118,8 +117,14 @@ namespace iText.Forms.Fields {
 
         public static readonly int FF_NO_EXPORT = MakeFieldFlag(3);
 
+        /// <summary>List of all allowable keys in form fields.</summary>
+        private static readonly ICollection<PdfName> FORM_FIELD_KEYS = new HashSet<PdfName>();
+
         private static readonly String[] CHECKBOX_TYPE_ZAPFDINGBATS_CODE = new String[] { "4", "l", "8", "u", "n", 
             "H" };
+
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField)
+            );
 
         protected internal String text;
 
@@ -129,31 +134,29 @@ namespace iText.Forms.Fields {
 
         protected internal PdfFormXObject form;
 
-        private static readonly ICollection<PdfName> formFieldKeys = new HashSet<PdfName>();
-
         static PdfFormField() {
-            formFieldKeys.Add(PdfName.FT);
+            FORM_FIELD_KEYS.Add(PdfName.FT);
             // It exists in form field and widget annotation
             //formFieldKeys.add(PdfName.Parent);
-            formFieldKeys.Add(PdfName.Kids);
-            formFieldKeys.Add(PdfName.T);
-            formFieldKeys.Add(PdfName.TU);
-            formFieldKeys.Add(PdfName.TM);
-            formFieldKeys.Add(PdfName.Ff);
-            formFieldKeys.Add(PdfName.V);
-            formFieldKeys.Add(PdfName.DV);
+            FORM_FIELD_KEYS.Add(PdfName.Kids);
+            FORM_FIELD_KEYS.Add(PdfName.T);
+            FORM_FIELD_KEYS.Add(PdfName.TU);
+            FORM_FIELD_KEYS.Add(PdfName.TM);
+            FORM_FIELD_KEYS.Add(PdfName.Ff);
+            FORM_FIELD_KEYS.Add(PdfName.V);
+            FORM_FIELD_KEYS.Add(PdfName.DV);
             // It exists in form field and widget annotation
             //formFieldKeys.add(PdfName.AA);
-            formFieldKeys.Add(PdfName.DA);
-            formFieldKeys.Add(PdfName.Q);
-            formFieldKeys.Add(PdfName.DS);
-            formFieldKeys.Add(PdfName.RV);
-            formFieldKeys.Add(PdfName.Opt);
-            formFieldKeys.Add(PdfName.MaxLen);
-            formFieldKeys.Add(PdfName.TI);
-            formFieldKeys.Add(PdfName.I);
-            formFieldKeys.Add(PdfName.Lock);
-            formFieldKeys.Add(PdfName.SV);
+            FORM_FIELD_KEYS.Add(PdfName.DA);
+            FORM_FIELD_KEYS.Add(PdfName.Q);
+            FORM_FIELD_KEYS.Add(PdfName.DS);
+            FORM_FIELD_KEYS.Add(PdfName.RV);
+            FORM_FIELD_KEYS.Add(PdfName.Opt);
+            FORM_FIELD_KEYS.Add(PdfName.MaxLen);
+            FORM_FIELD_KEYS.Add(PdfName.TI);
+            FORM_FIELD_KEYS.Add(PdfName.I);
+            FORM_FIELD_KEYS.Add(PdfName.Lock);
+            FORM_FIELD_KEYS.Add(PdfName.SV);
         }
 
         private IList<AbstractPdfFormField> childFields = new List<AbstractPdfFormField>();
@@ -189,14 +192,17 @@ namespace iText.Forms.Fields {
             }
             else {
                 foreach (PdfObject kid in kidsArray) {
+                    if (kid.IsFlushed()) {
+                        LOGGER.LogInformation(FormsLogMessageConstants.FORM_FIELD_WAS_FLUSHED);
+                        continue;
+                    }
                     AbstractPdfFormField childField = iText.Forms.Fields.PdfFormField.MakeFormFieldOrAnnotation(kid, GetDocument
                         ());
                     if (childField != null) {
                         this.SetChildField(childField);
                     }
                     else {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(PdfAcroForm));
-                        logger.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD, pdfObject.GetIndirectReference
+                        LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD, pdfObject.GetIndirectReference
                             () == null ? pdfObject : (PdfObject)pdfObject.GetIndirectReference()));
                     }
                 }
@@ -356,6 +362,44 @@ namespace iText.Forms.Fields {
             return (1 << (bitPosition - 1));
         }
 
+        /// <summary>Checks if dictionary contains any of the form field keys.</summary>
+        /// <param name="dict">field dictionary to check.</param>
+        /// <returns>true if it is a form field dictionary, false otherwise.</returns>
+        public static bool IsFormField(PdfDictionary dict) {
+            foreach (PdfName formFieldKey in GetFormFieldKeys()) {
+                if (dict.ContainsKey(formFieldKey)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a set of all possible form field keys except
+        /// <c>PdfName.Parent</c>.
+        /// </summary>
+        /// <returns>a set of form field keys.</returns>
+        public static ICollection<PdfName> GetFormFieldKeys() {
+            return JavaCollectionsUtil.UnmodifiableCollection(FORM_FIELD_KEYS);
+        }
+
+        /// <summary>
+        /// Returns the type of the form field dictionary, or of the parent
+        /// &lt;PdfDictionary&gt; object.
+        /// </summary>
+        /// <param name="fieldDict">field dictionary to get its type.</param>
+        /// <returns>
+        /// the form type, as a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>.
+        /// </returns>
+        public static PdfName GetFormType(PdfDictionary fieldDict) {
+            PdfName formType = fieldDict.GetAsName(PdfName.FT);
+            if (formType == null) {
+                return GetTypeFromParent(fieldDict);
+            }
+            return formType;
+        }
+
         /// <summary>
         /// Returns the type of the parent form field, or of the wrapped
         /// &lt;PdfDictionary&gt; object.
@@ -365,11 +409,7 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>.
         /// </returns>
         public virtual PdfName GetFormType() {
-            PdfName formType = GetPdfObject().GetAsName(PdfName.FT);
-            if (formType == null) {
-                return GetTypeFromParent(GetPdfObject());
-            }
-            return formType;
+            return GetFormType(GetPdfObject());
         }
 
         /// <summary>Sets a value to the field and generating field appearance if needed.</summary>
@@ -381,69 +421,25 @@ namespace iText.Forms.Fields {
             return SetValue(value, autoGenerateAppearance);
         }
 
-        /// <summary>Sets a value to the field and generates field appearance if needed.</summary>
+        /// <summary>Sets a value to the field (and fields with the same names) and generates field appearance if needed.
+        ///     </summary>
         /// <param name="value">of the field.</param>
         /// <param name="generateAppearance">if false, appearance won't be regenerated.</param>
         /// <returns>the field.</returns>
         public virtual iText.Forms.Fields.PdfFormField SetValue(String value, bool generateAppearance) {
-            PdfName formType = GetFormType();
-            if (formType == null || !PdfName.Btn.Equals(formType)) {
-                PdfArray kids = GetKids();
-                if (kids != null) {
-                    foreach (PdfObject kid in kids) {
-                        if (kid.IsDictionary() && ((PdfDictionary)kid).GetAsString(PdfName.T) != null) {
-                            iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
-                            field.SetValue(value);
-                            if (field.GetDefaultAppearance() == null) {
-                                field.font = this.font;
-                                field.fontSize = this.fontSize;
-                                field.color = this.color;
-                            }
-                        }
-                    }
-                }
-                if (PdfName.Ch.Equals(formType)) {
-                    if (this is PdfChoiceFormField) {
-                        ((PdfChoiceFormField)this).SetListSelected(new String[] { value }, false);
-                    }
-                    else {
-                        PdfChoiceFormField choice = new PdfChoiceFormField(this.GetPdfObject());
-                        choice.SetListSelected(new String[] { value }, false);
-                    }
-                }
-                else {
-                    Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
-                }
+            if (parent == null) {
+                SetFieldValue(value, generateAppearance);
             }
             else {
-                if (PdfName.Btn.Equals(formType)) {
-                    if (GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
-                        try {
-                            img = ImageDataFactory.Create(Convert.FromBase64String(value));
-                        }
-                        catch (Exception) {
-                            text = value;
-                        }
-                    }
-                    else {
-                        Put(PdfName.V, new PdfName(value));
-                        foreach (PdfWidgetAnnotation widget in GetWidgets()) {
-                            IList<String> states = JavaUtil.ArraysAsList(PdfFormAnnotation.MakeFormAnnotation(widget.GetPdfObject(), GetDocument
-                                ()).GetAppearanceStates());
-                            if (states.Contains(value)) {
-                                widget.SetAppearanceState(new PdfName(value));
-                            }
-                            else {
-                                widget.SetAppearanceState(new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
-                            }
-                        }
+                PdfString partialFieldName = GetPartialFieldName();
+                //TODO Remove this check after DEVSIX-7308 ticket will be closed.
+                String fieldName = partialFieldName == null ? "" : partialFieldName.ToUnicodeString();
+                foreach (iText.Forms.Fields.PdfFormField field in parent.GetChildFormFields()) {
+                    if (fieldName.Equals(field.GetPartialFieldName().ToUnicodeString())) {
+                        field.SetFieldValue(value, generateAppearance);
                     }
                 }
             }
-            if (generateAppearance) {
-                RegenerateField();
-            }
-            this.SetModified();
             return this;
         }
 
@@ -508,7 +504,7 @@ namespace iText.Forms.Fields {
             }
         }
 
-        /// <summary>Removes all chilren from the current field.</summary>
+        /// <summary>Removes all children from the current field.</summary>
         public virtual void RemoveChildren() {
             childFields.Clear();
             GetPdfObject().Remove(PdfName.Kids);
@@ -617,24 +613,45 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfFormField"/>.
         /// </returns>
         public virtual iText.Forms.Fields.PdfFormField AddKid(AbstractPdfFormField kid) {
+            return AddKid(kid, true);
+        }
+
+        /// <summary>
+        /// Adds a new kid to the <c>Kids</c> array property from a
+        /// <see cref="AbstractPdfFormField"/>.
+        /// </summary>
+        /// <remarks>
+        /// Adds a new kid to the <c>Kids</c> array property from a
+        /// <see cref="AbstractPdfFormField"/>
+        /// . Also sets the kid's <c>Parent</c> property to this object.
+        /// </remarks>
+        /// <param name="kid">
+        /// a new
+        /// <see cref="AbstractPdfFormField"/>
+        /// entry for the field's <c>Kids</c> array property.
+        /// </param>
+        /// <param name="throwExceptionOnError">
+        /// define whether exception (true) or log (false) is expected in case kid with
+        /// the same name exists and merge of two kids failed.
+        /// </param>
+        /// <returns>
+        /// the edited
+        /// <see cref="PdfFormField"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfFormField AddKid(AbstractPdfFormField kid, bool throwExceptionOnError
+            ) {
+            PdfFormAnnotationUtil.SeparateWidgetAndField(this);
             kid.SetParent(this);
             PdfArray kids = GetKids();
             if (kids == null) {
                 kids = new PdfArray();
             }
-            kids.Add(kid.GetPdfObject());
-            this.childFields.Add(kid);
+            if (!MergeKidsIfKidWithSuchNameExists(kid, throwExceptionOnError)) {
+                kids.Add(kid.GetPdfObject());
+                this.childFields.Add(kid);
+            }
             Put(PdfName.Kids, kids);
             return this;
-        }
-
-        /// <summary>Adds a field to the children of the current field.</summary>
-        /// <param name="kid">the field, which should become a child.</param>
-        /// <returns>the kid itself.</returns>
-        public virtual AbstractPdfFormField SetChildField(AbstractPdfFormField kid) {
-            kid.SetParent(this);
-            this.childFields.Add(kid);
-            return kid;
         }
 
         /// <summary>
@@ -671,6 +688,10 @@ namespace iText.Forms.Fields {
         /// </returns>
         public virtual iText.Forms.Fields.PdfFormField SetFieldName(String name) {
             Put(PdfName.T, new PdfString(name));
+            iText.Forms.Fields.PdfFormField parent = GetParentField();
+            if (parent != null) {
+                parent.MergeKidsIfKidWithSuchNameExists(this, true);
+            }
             return this;
         }
 
@@ -680,6 +701,7 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Pdf.PdfString"/>.
         /// </returns>
         public virtual PdfString GetPartialFieldName() {
+            //TODO DEVSIX-7308 Handle form fields without names more carefully
             return GetPdfObject().GetAsString(PdfName.T);
         }
 
@@ -841,9 +863,9 @@ namespace iText.Forms.Fields {
                 return f.IntValue();
             }
             else {
-                PdfDictionary parent = GetParent();
+                iText.Forms.Fields.PdfFormField parent = GetParentField();
                 if (parent != null) {
-                    return new iText.Forms.Fields.PdfFormField(parent).GetFieldFlags();
+                    return parent.GetFieldFlags();
                 }
                 else {
                     return 0;
@@ -857,10 +879,11 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>.
         /// </returns>
         public virtual PdfObject GetValue() {
-            if (GetPdfObject().Get(PdfName.T) == null && GetParent() != null) {
-                return GetParent().Get(PdfName.V);
+            PdfObject value = GetPdfObject().Get(PdfName.V);
+            if (value == null && GetParentField() != null) {
+                return GetParentField().GetValue();
             }
-            return GetPdfObject().Get(PdfName.V);
+            return value;
         }
 
         /// <summary>Gets the current value contained in the form field.</summary>
@@ -974,8 +997,8 @@ namespace iText.Forms.Fields {
         public virtual IList<PdfWidgetAnnotation> GetWidgets() {
             IList<PdfWidgetAnnotation> widgets = new List<PdfWidgetAnnotation>();
             foreach (AbstractPdfFormField child in childFields) {
-                PdfObject kid = child.GetPdfObject();
-                PdfName subType = ((PdfDictionary)kid).GetAsName(PdfName.Subtype);
+                PdfDictionary kid = child.GetPdfObject();
+                PdfName subType = kid.GetAsName(PdfName.Subtype);
                 if (subType != null && subType.Equals(PdfName.Widget)) {
                     widgets.Add((PdfWidgetAnnotation)PdfAnnotation.MakeAnnotation(kid));
                 }
@@ -1262,6 +1285,12 @@ namespace iText.Forms.Fields {
             return GetFieldFlag(FF_NO_EXPORT);
         }
 
+        /// <summary>Checks if the document that contains the field is created in reading mode.</summary>
+        /// <returns>true if reading mode is used, false otherwise.</returns>
+        public virtual bool IsInReadingMode() {
+            return GetDocument().GetWriter() == null;
+        }
+
         /// <summary><inheritDoc/></summary>
         /// <returns>
         /// 
@@ -1374,13 +1403,41 @@ namespace iText.Forms.Fields {
             return textAlignment;
         }
 
-        private static bool IsFormField(PdfDictionary dict) {
-            foreach (PdfName formFieldKey in formFieldKeys) {
-                if (dict.ContainsKey(formFieldKey)) {
-                    return true;
+        /// <summary>Adds a field to the children of the current field.</summary>
+        /// <param name="kid">the field, which should become a child.</param>
+        /// <returns>the kid itself.</returns>
+        internal virtual AbstractPdfFormField SetChildField(AbstractPdfFormField kid) {
+            kid.SetParent(this);
+            this.childFields.Add(kid);
+            return kid;
+        }
+
+        /// <summary>Replaces /Kids value with passed kids dictionaries, and keeps old flashed fields there.</summary>
+        /// <remarks>
+        /// Replaces /Kids value with passed kids dictionaries, and keeps old flashed fields there.
+        /// Also updates childFields array for
+        /// <see cref="PdfFormField"/>.
+        /// </remarks>
+        /// <param name="kids">collection of new kids.</param>
+        internal virtual void ReplaceKids(ICollection<AbstractPdfFormField> kids) {
+            PdfArray kidsValues = new PdfArray();
+            // Field may already have flushed widgets in /Kids, so we need to keep them.
+            PdfArray oldKids = GetKids();
+            if (oldKids != null) {
+                foreach (PdfObject kid in oldKids) {
+                    if (kid.IsFlushed()) {
+                        kidsValues.Add(kid);
+                    }
                 }
             }
-            return false;
+            // Update childFields and /Kids.
+            this.childFields.Clear();
+            foreach (AbstractPdfFormField kid in kids) {
+                kid.SetParent(this);
+                kidsValues.Add(kid.GetPdfObject());
+                this.childFields.Add(kid);
+            }
+            Put(PdfName.Kids, kidsValues);
         }
 
         private static PdfString GenerateDefaultAppearance(PdfName font, float fontSize, Color textColor) {
@@ -1405,13 +1462,108 @@ namespace iText.Forms.Fields {
                             pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(k);
                         }
                         else {
-                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                            logger.LogError(FormsLogMessageConstants.UNSUPPORTED_COLOR_IN_DA);
+                            LOGGER.LogError(FormsLogMessageConstants.UNSUPPORTED_COLOR_IN_DA);
                         }
                     }
                 }
             }
             return new PdfString(output.ToArray());
+        }
+
+        private static PdfName GetTypeFromParent(PdfDictionary field) {
+            PdfDictionary parent = field.GetAsDictionary(PdfName.Parent);
+            PdfName formType = field.GetAsName(PdfName.FT);
+            if (parent != null) {
+                formType = parent.GetAsName(PdfName.FT);
+                if (formType == null) {
+                    formType = GetTypeFromParent(parent);
+                }
+            }
+            return formType;
+        }
+
+        private iText.Forms.Fields.PdfFormField SetFieldValue(String value, bool generateAppearance) {
+            PdfName formType = GetFormType();
+            if (!PdfName.Btn.Equals(formType)) {
+                PdfArray kids = GetKids();
+                if (kids != null) {
+                    foreach (PdfObject kid in kids) {
+                        if (kid.IsDictionary() && ((PdfDictionary)kid).GetAsString(PdfName.T) != null) {
+                            iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
+                            field.SetValue(value);
+                            if (field.GetDefaultAppearance() == null) {
+                                field.font = this.font;
+                                field.fontSize = this.fontSize;
+                                field.color = this.color;
+                            }
+                        }
+                    }
+                }
+                if (PdfName.Ch.Equals(formType)) {
+                    if (this is PdfChoiceFormField) {
+                        ((PdfChoiceFormField)this).SetListSelected(new String[] { value }, false);
+                    }
+                    else {
+                        PdfChoiceFormField choice = new PdfChoiceFormField(this.GetPdfObject());
+                        choice.SetListSelected(new String[] { value }, false);
+                    }
+                }
+                else {
+                    Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
+                }
+            }
+            else {
+                if (PdfName.Btn.Equals(formType)) {
+                    if (GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
+                        try {
+                            img = ImageDataFactory.Create(Convert.FromBase64String(value));
+                        }
+                        catch (Exception) {
+                            text = value;
+                        }
+                    }
+                    else {
+                        // We expect that radio buttons should have only widget children,
+                        // so we need to get rid of the form fields kids
+                        PdfFormFieldMergeUtil.ProcessDirtyAnnotations(this, true);
+                        Put(PdfName.V, new PdfName(value));
+                        foreach (PdfWidgetAnnotation widget in GetWidgets()) {
+                            IList<String> states = JavaUtil.ArraysAsList(PdfFormAnnotation.MakeFormAnnotation(widget.GetPdfObject(), GetDocument
+                                ()).GetAppearanceStates());
+                            if (states.Contains(value)) {
+                                widget.SetAppearanceState(new PdfName(value));
+                            }
+                            else {
+                                widget.SetAppearanceState(new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
+                            }
+                        }
+                    }
+                }
+            }
+            if (generateAppearance) {
+                RegenerateField();
+            }
+            this.SetModified();
+            return this;
+        }
+
+        private bool MergeKidsIfKidWithSuchNameExists(AbstractPdfFormField newKid, bool throwExceptionOnError) {
+            if (childFields.Contains(newKid)) {
+                return true;
+            }
+            if (IsInReadingMode() || PdfFormAnnotationUtil.IsPureWidget(newKid.GetPdfObject())) {
+                return false;
+            }
+            String newKidPartialName = PdfFormFieldMergeUtil.GetPartialName(newKid.GetPdfObject());
+            foreach (AbstractPdfFormField kid in childFields) {
+                String kidPartialName = PdfFormFieldMergeUtil.GetPartialName(kid.GetPdfObject());
+                if (kidPartialName != null && kidPartialName.Equals(newKidPartialName)) {
+                    // Merge kid with the first found field with the same name.
+                    return PdfFormFieldMergeUtil.MergeTwoFieldsWithTheSameNames((iText.Forms.Fields.PdfFormField)kid, (iText.Forms.Fields.PdfFormField
+                        )newKid, throwExceptionOnError);
+                }
+            }
+            return false;
         }
 
         private bool HasDefaultAppearance() {
@@ -1479,18 +1631,6 @@ namespace iText.Forms.Fields {
                 }
             }
             return (acroFormKey != null && acroFormKey.GetObjectType() == type) ? acroFormKey : null;
-        }
-
-        private PdfName GetTypeFromParent(PdfDictionary field) {
-            PdfDictionary parent = field.GetAsDictionary(PdfName.Parent);
-            PdfName formType = field.GetAsName(PdfName.FT);
-            if (parent != null) {
-                formType = parent.GetAsName(PdfName.FT);
-                if (formType == null) {
-                    formType = GetTypeFromParent(parent);
-                }
-            }
-            return formType;
         }
     }
 }

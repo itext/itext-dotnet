@@ -296,9 +296,6 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 64)]
-        //TODO DEVSIX-6345 Equal form fields full names
-        [NUnit.Framework.Ignore("DEVSIX-6345")]
         public virtual void CopyFieldsTest09() {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFields09.pdf";
@@ -372,7 +369,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD)]
         public virtual void CopyFieldsTest13() {
             String srcFilename = sourceFolder + "copyFields13.pdf";
             String destFilename = destinationFolder + "copyFields13.pdf";

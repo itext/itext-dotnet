@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
 using iText.Forms.Logs;
@@ -206,7 +207,7 @@ namespace iText.Forms {
                 acroForm.AddField(root);
                 PdfFormField childField = acroForm.GetField("root.child.aaaaa.child2");
                 NUnit.Framework.Assert.AreEqual("root.child.aaaaa.child2", childField.GetFieldName().ToString());
-                NUnit.Framework.Assert.AreEqual(2, acroForm.fields.Count);
+                NUnit.Framework.Assert.AreEqual(2, acroForm.GetFields().Size());
                 NUnit.Framework.Assert.AreEqual(2, root.GetKids().Size());
             }
         }
@@ -234,6 +235,33 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        public virtual void FieldKidsWithTheSameNamesTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfFormField root = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
+                PdfFormField child = new TextFormFieldBuilder(outputDoc, "child").CreateText().SetValue("child");
+                PdfFormField sameChild = new TextFormFieldBuilder(outputDoc, "child").CreateText().SetValue("child");
+                PdfFormField child1 = new TextFormFieldBuilder(outputDoc, "aaaaa").SetWidgetRectangle(new Rectangle(100, 400
+                    , 200, 20)).CreateText().SetValue("aaaaa");
+                PdfFormField child2 = new TextFormFieldBuilder(outputDoc, "bbbbb").SetWidgetRectangle(new Rectangle(100, 500
+                    , 200, 20)).CreateText().SetValue("bbbbb");
+                PdfFormField child3 = new TextFormFieldBuilder(outputDoc, "aaaaa").SetWidgetRectangle(new Rectangle(100, 500
+                    , 200, 20)).CreateText().SetValue("aaaaa");
+                child.AddKid(child1);
+                child.AddKid(child2);
+                sameChild.AddKid(child2);
+                sameChild.AddKid(child3);
+                root.AddKid(child);
+                root.AddKid(sameChild);
+                acroForm.AddField(root);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
+                NUnit.Framework.Assert.AreEqual(1, root.GetKids().Size());
+                NUnit.Framework.Assert.AreEqual(2, child.GetKids().Size());
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void NamelessFieldTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
@@ -248,6 +276,144 @@ namespace iText.Forms {
                 e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => acroForm.AddField(field, page));
                 NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME, e.Message);
                 NUnit.Framework.Assert.AreEqual(0, acroForm.GetDirectFormFields().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddRootFieldsWithTheSameNamesTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfFormField root = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
+                PdfFormField sameRoot = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
+                PdfFormField child1 = new TextFormFieldBuilder(outputDoc, "aaaaa").SetWidgetRectangle(new Rectangle(100, 400
+                    , 200, 20)).CreateText().SetValue("aaaaa");
+                PdfFormField child2 = new TextFormFieldBuilder(outputDoc, "bbbbb").SetWidgetRectangle(new Rectangle(100, 500
+                    , 200, 20)).CreateText().SetValue("bbbbb");
+                root.AddKid(child1);
+                sameRoot.AddKid(child2);
+                acroForm.AddField(root);
+                acroForm.AddField(sameRoot);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
+                NUnit.Framework.Assert.AreEqual(2, root.GetKids().Size());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddMergedRootFieldsWithTheSameNamesTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfFormField firstField = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100
+                    , 400, 200, 20)).CreateText().SetValue("root");
+                PdfFormField secondField = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100
+                    , 500, 200, 30)).CreateText().SetValue("root");
+                acroForm.AddField(firstField);
+                acroForm.AddField(secondField);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
+                NUnit.Framework.Assert.AreEqual(2, acroForm.GetField("root").GetKids().Size());
+                NUnit.Framework.Assert.AreEqual(2, acroForm.GetField("root").GetChildFields().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddFieldsWithTheSameNamesButDifferentValuesTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfFormField firstField = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("first");
+                PdfFormField secondField = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("second");
+                acroForm.AddField(firstField);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => acroForm.AddField(secondField));
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(FormsExceptionMessageConstant.CANNOT_MERGE_FORMFIELDS
+                    , "root"), e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddRootFieldWithMergedFieldKidTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfFormField firstField = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
+                PdfFormField mergedField = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100
+                    , 500, 200, 30)).CreateText();
+                firstField.AddKid(mergedField);
+                acroForm.AddField(firstField);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetField("root").GetKids().Size());
+                NUnit.Framework.Assert.IsTrue(PdfFormAnnotationUtil.IsPureWidgetOrMergedField((PdfDictionary)acroForm.GetField
+                    ("root").GetKids().Get(0)));
+                NUnit.Framework.Assert.IsFalse(PdfFormAnnotationUtil.IsPureWidget((PdfDictionary)acroForm.GetField("root")
+                    .GetKids().Get(0)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddRootFieldWithDirtyAnnotationsTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfFormField rootField = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
+                PdfFormField firstDirtyAnnot = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle
+                    (100, 500, 200, 30)).CreateText();
+                firstDirtyAnnot.GetPdfObject().Remove(PdfName.V);
+                PdfFormField secondDirtyAnnot = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle
+                    (200, 600, 300, 40)).CreateText();
+                secondDirtyAnnot.GetPdfObject().Remove(PdfName.V);
+                rootField.AddKid(firstDirtyAnnot);
+                rootField.AddKid(secondDirtyAnnot);
+                NUnit.Framework.Assert.AreEqual(1, rootField.GetKids().Size());
+                NUnit.Framework.Assert.AreEqual(2, firstDirtyAnnot.GetKids().Size());
+                acroForm.AddField(rootField);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
+                PdfArray fieldKids = acroForm.GetField("root").GetKids();
+                NUnit.Framework.Assert.AreEqual(2, fieldKids.Size());
+                NUnit.Framework.Assert.IsTrue(PdfFormAnnotationUtil.IsPureWidget((PdfDictionary)fieldKids.Get(0)));
+                NUnit.Framework.Assert.IsTrue(PdfFormAnnotationUtil.IsPureWidget((PdfDictionary)fieldKids.Get(1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeFieldsWhenKidsWasFlushedTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfFormField firstField = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100
+                    , 400, 200, 20)).SetPage(1).CreateText().SetValue("root");
+                PdfFormField secondField = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100
+                    , 500, 200, 30)).SetPage(2).CreateText().SetValue("root");
+                PdfFormField thirdField = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100
+                    , 600, 200, 40)).SetPage(2).CreateText().SetValue("root");
+                acroForm.AddField(firstField);
+                acroForm.AddField(secondField);
+                // flush first page, also first widget will be flushed
+                outputDoc.GetPage(1).Flush();
+                // recreate acroform and add field
+                acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                acroForm.AddField(thirdField);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
+                NUnit.Framework.Assert.AreEqual(3, acroForm.GetField("root").GetKids().Size());
+                NUnit.Framework.Assert.AreEqual(2, acroForm.GetField("root").GetChildFields().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddMergedRootFieldTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                PdfPage page = outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfFormField mergedField = new TextFormFieldBuilder(outputDoc, "root").SetPage(page).SetWidgetRectangle(new 
+                    Rectangle(100, 500, 200, 30)).CreateText().SetValue("root");
+                NUnit.Framework.Assert.AreEqual(0, page.GetAnnotsSize());
+                acroForm.AddField(mergedField);
+                NUnit.Framework.Assert.AreEqual(1, page.GetAnnotsSize());
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
+                PdfFormField root = acroForm.GetField("root");
+                NUnit.Framework.Assert.IsNull(root.GetKids());
+                NUnit.Framework.Assert.IsTrue(PdfFormAnnotationUtil.IsPureWidgetOrMergedField(root.GetPdfObject()));
+                NUnit.Framework.Assert.IsFalse(PdfFormAnnotationUtil.IsPureWidget(root.GetPdfObject()));
             }
         }
 
@@ -419,7 +585,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(FormsLogMessageConstants.PROVIDE_FORMFIELD_NAME, Count = 1)]
+        [LogMessage(FormsLogMessageConstants.PROVIDE_FORMFIELD_NAME)]
         public virtual void ReplaceWithNullNameLogsErrorTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();

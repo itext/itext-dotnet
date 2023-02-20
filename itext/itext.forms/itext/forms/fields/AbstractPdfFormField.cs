@@ -285,17 +285,10 @@ namespace iText.Forms.Fields {
         /// if the wrapper is used.
         /// </remarks>
         public virtual void Release() {
-            UnsetForbidRelease();
+            if (!GetPdfObject().IsModified()) {
+                UnsetForbidRelease();
+            }
             GetPdfObject().Release();
-        }
-
-        /// <summary><inheritDoc/></summary>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
-        protected override bool IsWrappedObjectMustBeIndirect() {
-            return true;
         }
 
         /// <summary>
@@ -308,8 +301,17 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// that owns that form field.
         /// </returns>
-        protected internal virtual PdfDocument GetDocument() {
+        public virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        protected override bool IsWrappedObjectMustBeIndirect() {
+            return true;
         }
 
         /// <summary>Sets the text color and regenerates appearance stream.</summary>

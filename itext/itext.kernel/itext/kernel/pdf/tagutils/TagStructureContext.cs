@@ -275,7 +275,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="GetDocumentDefaultNamespace()"/>
         /// for more info.
         /// <para />
-        /// Be careful when changing this property value. It is most recommended to do it right after the
+        /// Be careful when changing this property value. It is most recommended doing it right after the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// was
         /// created, before any content was added. Changing this value after any content was added might result in the mingled
@@ -472,6 +472,32 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// otherwise returns null
         /// </returns>
         public virtual TagTreePointer RemoveAnnotationTag(PdfAnnotation annotation) {
+            return RemoveAnnotationTag(annotation, false);
+        }
+
+        /// <summary>Removes annotation content item from the tag structure and sets autoTaggingPointer if true is passed.
+        ///     </summary>
+        /// <remarks>
+        /// Removes annotation content item from the tag structure and sets autoTaggingPointer if true is passed.
+        /// If annotation is not added to the document or is not tagged, nothing will happen.
+        /// </remarks>
+        /// <param name="annotation">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// that will be removed from the tag structure
+        /// </param>
+        /// <param name="setAutoTaggingPointer">
+        /// true if
+        /// <see cref="TagTreePointer"/>
+        /// should be set to autoTaggingPointer
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="TagTreePointer"/>
+        /// instance which points at annotation tag parent if annotation was removed,
+        /// otherwise returns null
+        /// </returns>
+        public virtual TagTreePointer RemoveAnnotationTag(PdfAnnotation annotation, bool setAutoTaggingPointer) {
             PdfStructElem structElem = null;
             PdfDictionary annotDic = annotation.GetPdfObject();
             PdfNumber structParentIndex = (PdfNumber)annotDic.Get(PdfName.StructParent);
@@ -487,7 +513,11 @@ namespace iText.Kernel.Pdf.Tagutils {
             annotDic.Remove(PdfName.StructParent);
             annotDic.SetModified();
             if (structElem != null) {
-                return new TagTreePointer(document).SetCurrentStructElem(structElem);
+                TagTreePointer pointer = new TagTreePointer(document).SetCurrentStructElem(structElem);
+                if (setAutoTaggingPointer) {
+                    autoTaggingPointer = pointer;
+                }
+                return pointer;
             }
             return null;
         }

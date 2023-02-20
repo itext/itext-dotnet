@@ -32,6 +32,9 @@ namespace iText.Forms.Logs {
 
         public const String PROVIDE_FORMFIELD_NAME = "No form field name provided. Process will not be continued.";
 
+        public const String CANNOT_MERGE_FORMFIELDS = "Cannot merge form fields with the same fully qualified " + 
+            "names. Partial name is {0}. Field type (FT), value (V), and default value (DV) should be the same";
+
         public const String FORM_FIELD_WAS_FLUSHED = "A form field was flushed. There's no way to create this field in the AcroForm dictionary.";
 
         public const String INCORRECT_PAGEROTATION = "Encounterd a page rotation that was not a multiple of 90°/ (Pi/2) when generating default appearances "

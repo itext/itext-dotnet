@@ -25,6 +25,10 @@ using System;
 namespace iText.Forms.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class FormsExceptionMessageConstant {
+        public const String CANNOT_MERGE_FORMFIELDS = "Cannot merge form fields with the same names. Partial name "
+             + "is {0}. Field dictionaries with the same fully qualified field name shall have the same field type (FT), "
+             + "value (V), and default value (DV).";
+
         public const String FIELD_FLATTENING_IS_NOT_SUPPORTED_IN_APPEND_MODE = "Field flattening is not supported "
              + "in append mode.";
 

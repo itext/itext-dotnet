@@ -509,22 +509,46 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>.
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument, IPdfPageExtraCopier copier) {
+            return CopyTo(toDocument, copier, false, -1);
+        }
+
+        /// <summary>Copies page and adds it to the specified document to the end or by index if the corresponding parameter is true.
+        ///     </summary>
+        /// <remarks>
+        /// Copies page and adds it to the specified document to the end or by index if the corresponding parameter is true.
+        /// <br /><br />
+        /// NOTE: Works only for pages from the document opened in reading mode, otherwise an exception is thrown.
+        /// </remarks>
+        /// <param name="toDocument">a document to copy page to.</param>
+        /// <param name="copier">
+        /// a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="IPdfPageExtraCopier"/>
+        /// for the same output document.
+        /// </param>
+        /// <param name="addPageToDocument">true if page should be added to document.</param>
+        /// <param name="pageInsertIndex">
+        /// position to add the page to, if -1 page will be added to the end of the document,
+        /// will be ignored if addPageToDocument is false.
+        /// </param>
+        /// <returns>
+        /// copied
+        /// <see cref="PdfPage"/>.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument, IPdfPageExtraCopier copier, bool addPageToDocument
+            , int pageInsertIndex) {
             ICopyFilter copyFilter = new DestinationResolverCopyFilter(this.GetDocument(), toDocument);
             PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, PAGE_EXCLUDED_KEYS, true, copyFilter);
             iText.Kernel.Pdf.PdfPage page = GetDocument().GetPageFactory().CreatePdfPage(dictionary);
-            CopyInheritedProperties(page, toDocument, NullCopyFilter.GetInstance());
-            CopyAnnotations(toDocument, page, copyFilter);
-            if (copier != null) {
-                copier.Copy(this, page);
-            }
-            else {
-                if (!toDocument.GetWriter().isUserWarnedAboutAcroFormCopying && GetDocument().HasAcroForm()) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
-                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY);
-                    toDocument.GetWriter().isUserWarnedAboutAcroFormCopying = true;
+            if (addPageToDocument) {
+                if (pageInsertIndex == -1) {
+                    toDocument.AddPage(page);
+                }
+                else {
+                    toDocument.AddPage(pageInsertIndex, page);
                 }
             }
-            return page;
+            return CopyTo(page, toDocument, copier);
         }
 
         /// <summary>Copies page as FormXObject to the specified document.</summary>
@@ -1133,6 +1157,32 @@ namespace iText.Kernel.Pdf {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage RemoveAnnotation(PdfAnnotation annotation) {
+            return RemoveAnnotation(annotation, false);
+        }
+
+        /// <summary>Removes an annotation from the page.</summary>
+        /// <remarks>
+        /// Removes an annotation from the page.
+        /// <br /><br />
+        /// NOTE: If document is tagged, PdfDocument's PdfTagStructure instance will point at annotation tag parent after method call.
+        /// </remarks>
+        /// <param name="annotation">an annotation to be removed.</param>
+        /// <param name="rememberTagPointer">
+        /// true if
+        /// <see cref="iText.Kernel.Pdf.Tagutils.TagTreePointer"/>
+        /// for removed annotation parent struct elem should be set
+        /// to autoTaggingPointer of the current document. Used in case annotation will be
+        /// replaced by another one later (e.g. when merged field is separated to field and
+        /// pure widget, so merged field should be replaced by widget in page annotations
+        /// and tag structure).
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfPage RemoveAnnotation(PdfAnnotation annotation, bool rememberTagPointer
+            ) {
             PdfArray annots = GetAnnots(false);
             if (annots != null) {
                 annots.Remove(annotation.GetPdfObject());
@@ -1147,7 +1197,8 @@ namespace iText.Kernel.Pdf {
                 }
             }
             if (GetDocument().IsTagged()) {
-                TagTreePointer tagPointer = GetDocument().GetTagStructureContext().RemoveAnnotationTag(annotation);
+                TagTreePointer tagPointer = GetDocument().GetTagStructureContext().RemoveAnnotationTag(annotation, rememberTagPointer
+                    );
                 if (tagPointer != null) {
                     bool standardAnnotTagRole = StandardRoles.ANNOT.Equals(tagPointer.GetRole()) || StandardRoles.FORM.Equals(
                         tagPointer.GetRole());
@@ -1561,6 +1612,24 @@ namespace iText.Kernel.Pdf {
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
+        }
+
+        private iText.Kernel.Pdf.PdfPage CopyTo(iText.Kernel.Pdf.PdfPage page, PdfDocument toDocument, IPdfPageExtraCopier
+             copier) {
+            ICopyFilter copyFilter = new DestinationResolverCopyFilter(this.GetDocument(), toDocument);
+            CopyInheritedProperties(page, toDocument, NullCopyFilter.GetInstance());
+            CopyAnnotations(toDocument, page, copyFilter);
+            if (copier != null) {
+                copier.Copy(this, page);
+            }
+            else {
+                if (!toDocument.GetWriter().isUserWarnedAboutAcroFormCopying && GetDocument().HasAcroForm()) {
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
+                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY);
+                    toDocument.GetWriter().isUserWarnedAboutAcroFormCopying = true;
+                }
+            }
+            return page;
         }
 
         private PdfArray GetAnnots(bool create) {

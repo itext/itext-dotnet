@@ -1211,7 +1211,7 @@ namespace iText.Kernel.Pdf {
             bool insertInBetween = insertBeforePage < toDocument.GetNumberOfPages() + 1;
             foreach (int? pageNum in pagesToCopy) {
                 PdfPage page = GetPage((int)pageNum);
-                PdfPage newPage = page.CopyTo(toDocument, copier);
+                PdfPage newPage = page.CopyTo(toDocument, copier, true, insertInBetween ? pageInsertIndex : -1);
                 copiedPages.Add(newPage);
                 page2page.Put(page, newPage);
                 if (lastCopiedPageNum >= pageNum) {
@@ -1219,12 +1219,6 @@ namespace iText.Kernel.Pdf {
                 }
                 int lastRangeInd = rangesOfPagesWithIncreasingNumbers.Count - 1;
                 rangesOfPagesWithIncreasingNumbers[lastRangeInd].Put(page, newPage);
-                if (insertInBetween) {
-                    toDocument.AddPage(pageInsertIndex, newPage);
-                }
-                else {
-                    toDocument.AddPage(newPage);
-                }
                 pageInsertIndex++;
                 if (toDocument.HasOutlines()) {
                     IList<PdfOutline> pageOutlines = page.GetOutlines(false);

@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.Forms.Fields;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.Kernel.Colors;
@@ -618,8 +619,8 @@ namespace iText.Pdfa.Checker {
                     throw new PdfAConformanceException(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
                         );
                 }
-                if (PdfName.Widget.Equals(annotDic.GetAsName(PdfName.Subtype)) && PdfName.Btn.Equals(annotDic.GetAsName(PdfName
-                    .FT))) {
+                if (PdfName.Widget.Equals(annotDic.GetAsName(PdfName.Subtype)) && (PdfName.Btn.Equals(PdfFormField.GetFormType
+                    (annotDic)))) {
                     if (ap.GetAsDictionary(PdfName.N) == null) {
                         throw new PdfAConformanceException(PdfAConformanceException.N_KEY_SHALL_BE_APPEARANCE_SUBDICTIONARY);
                     }
