@@ -113,6 +113,11 @@ namespace iText.IO.Util {
         }
 
         /// <summary>Runs imageMagick to visually compare images and generate difference output.</summary>
+        /// <remarks>
+        /// Runs imageMagick to visually compare images and generate difference output.
+        /// <para />
+        /// Note, that this method may create temporary files.
+        /// </remarks>
         /// <param name="outImageFilePath">Path to the output image file</param>
         /// <param name="cmpImageFilePath">Path to the cmp image file</param>
         /// <param name="diffImageName">Path to the difference output image file</param>
@@ -124,6 +129,11 @@ namespace iText.IO.Util {
 
         /// <summary>Runs imageMagick to visually compare images with the specified fuzziness value and generate difference output.
         ///     </summary>
+        /// <remarks>
+        /// Runs imageMagick to visually compare images with the specified fuzziness value and generate difference output.
+        /// <para />
+        /// Note, that this method may create temporary files.
+        /// </remarks>
         /// <param name="outImageFilePath">Path to the output image file</param>
         /// <param name="cmpImageFilePath">Path to the cmp image file</param>
         /// <param name="diffImageName">Path to the difference output image file</param>
@@ -143,6 +153,12 @@ namespace iText.IO.Util {
         /// Runs imageMagick to visually compare images with the specified fuzziness value and given threshold
         /// and generate difference output.
         /// </summary>
+        /// <remarks>
+        /// Runs imageMagick to visually compare images with the specified fuzziness value and given threshold
+        /// and generate difference output.
+        /// <para />
+        /// Note, that this method may create temporary files.
+        /// </remarks>
         /// <param name="outImageFilePath">Path to the output image file</param>
         /// <param name="cmpImageFilePath">Path to the cmp image file</param>
         /// <param name="diffImageName">Path to the difference output image file</param>
@@ -172,6 +188,8 @@ namespace iText.IO.Util {
         /// <see cref="ImageMagickCompareResult"/>
         /// , containing comparing result information,
         /// such as boolean result value and the number of different pixels.
+        /// <para />
+        /// Note, that this method may create temporary files.
         /// </remarks>
         /// <param name="outImageFilePath">Path to the output image file</param>
         /// <param name="cmpImageFilePath">Path to the cmp image file</param>

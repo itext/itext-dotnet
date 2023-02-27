@@ -176,6 +176,11 @@ namespace iText.Commons.Utils {
         /// <summary>
         /// Creates a temporary file at the provided path.
         /// </summary>
+        /// <remarks>
+        /// <para />
+        /// Note, that this method creates temporary file with provided file's prefix and postfix using
+        /// <see cref="File.createTempFile(string, string)"/>
+        /// </remarks>
         /// <param name="path">path to the temporary file to be created. If it is a directory,
         /// then the temporary file will be created at this directory</param>
         /// <returns>the created temporary file</returns>
@@ -260,6 +265,17 @@ namespace iText.Commons.Utils {
                 tempFilePrefix + Guid.NewGuid() + Interlocked.Increment(ref tempFileCounter) + tempFilePostfix));
         }
 
+        /// <summary>Creates a temporary copy of a file.</summary>
+        /// <remarks>
+        /// <para />
+        /// Note, that this method creates temporary file with provided file's prefix and postfix using
+        /// <see cref="File.Copy(string, string, bool)"/>
+        /// </remarks>
+        /// <param name="file">the path to the file to be copied</param>
+        /// <param name="tempFilePrefix">the prefix of the copied file's name</param>
+        /// <param name="tempFilePostfix">the postfix of the copied file's name</param>
+        /// <returns>the path to the copied file</returns>
+        /// <exception cref="IOException">signals that an I/O exception has occurred.</exception>
         public static String CreateTempCopy(String file, String tempFilePrefix, String tempFilePostfix) {
             string copiedFile = null;
             try {
@@ -277,6 +293,15 @@ namespace iText.Commons.Utils {
             File.Copy(fileToCopy, copiedFile, true);
         }
 
+        /// <summary>Creates a temporary directory.</summary>
+        /// <remarks>
+        /// <para />
+        /// Note, that this method creates temporary directory with provided directory prefix using
+        /// <see cref="Directory.CreateDirectory(string)"/>
+        /// </remarks>
+        /// <param name="tempFilePrefix">the prefix of the temporary directory's name</param>
+        /// <returns>the path to the temporary directory</returns>
+        /// <exception cref="IOException">signals that an I/O exception has occurred.</exception>
         public static String CreateTempDirectory(String tempFilePrefix) {
             string temporaryDirectory = null;
             try {

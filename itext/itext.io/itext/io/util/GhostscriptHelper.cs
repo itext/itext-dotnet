@@ -120,6 +120,11 @@ namespace iText.IO.Util {
         }
 
         /// <summary>Runs Ghostscript to render the PDF's pages as PNG images.</summary>
+        /// <remarks>
+        /// Runs Ghostscript to render the PDF's pages as PNG images.
+        /// <para />
+        /// Note, that this method  may create temporary directory and files.
+        /// </remarks>
         /// <param name="pdf">Path to the PDF file to be rendered</param>
         /// <param name="outDir">Path to the output directory, in which the rendered pages will be stored</param>
         /// <param name="image">
@@ -136,6 +141,11 @@ namespace iText.IO.Util {
         }
 
         /// <summary>Runs Ghostscript to render the PDF's pages as PNG images.</summary>
+        /// <remarks>
+        /// Runs Ghostscript to render the PDF's pages as PNG images.
+        /// <para />
+        /// Note, that this method  may create temporary directory and files.
+        /// </remarks>
         /// <param name="pdf">Path to the PDF file to be rendered</param>
         /// <param name="outDir">Path to the output directory, in which the rendered pages will be stored</param>
         /// <param name="image">

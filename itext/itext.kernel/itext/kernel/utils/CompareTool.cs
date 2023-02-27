@@ -373,6 +373,13 @@ namespace iText.Kernel.Utils {
         /// <see cref="CompareTool"/>
         /// class description.
         /// <para />
+        /// Note, that this method uses
+        /// <see cref="iText.IO.Util.ImageMagickHelper"/>
+        /// and
+        /// <see cref="iText.IO.Util.GhostscriptHelper"/>
+        /// classes and therefore may
+        /// create temporary files and directories.
+        /// <para />
         /// During comparison for every page of the two documents an image file will be created in the folder specified by
         /// outPath parameter. Then those page images will be compared and if there are any differences for some pages,
         /// another image file will be created with marked differences on it.
@@ -396,6 +403,13 @@ namespace iText.Kernel.Utils {
         /// For more info about needed configuration for visual comparison process see
         /// <see cref="CompareTool"/>
         /// class description.
+        /// <para />
+        /// Note, that this method uses
+        /// <see cref="iText.IO.Util.ImageMagickHelper"/>
+        /// and
+        /// <see cref="iText.IO.Util.GhostscriptHelper"/>
+        /// classes and therefore may
+        /// create temporary files and directories.
         /// <para />
         /// During comparison for every page of two documents an image file will be created in the folder specified by
         /// outPath parameter. Then those page images will be compared and if there are any differences for some pages,
