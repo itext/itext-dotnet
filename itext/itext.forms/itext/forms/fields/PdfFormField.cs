@@ -880,7 +880,8 @@ namespace iText.Forms.Fields {
         /// </returns>
         public virtual PdfObject GetValue() {
             PdfObject value = GetPdfObject().Get(PdfName.V);
-            if (value == null && GetParentField() != null) {
+            // V is not taken into account if T is missing. This is the way Acrobat behaves.
+            if ((GetPdfObject().Get(PdfName.T) == null || value == null) && GetParentField() != null) {
                 return GetParentField().GetValue();
             }
             return value;
@@ -1484,21 +1485,33 @@ namespace iText.Forms.Fields {
 
         private iText.Forms.Fields.PdfFormField SetFieldValue(String value, bool generateAppearance) {
             PdfName formType = GetFormType();
-            if (!PdfName.Btn.Equals(formType)) {
-                PdfArray kids = GetKids();
-                if (kids != null) {
-                    foreach (PdfObject kid in kids) {
-                        if (kid.IsDictionary() && ((PdfDictionary)kid).GetAsString(PdfName.T) != null) {
-                            iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
-                            field.SetValue(value);
-                            if (field.GetDefaultAppearance() == null) {
-                                field.font = this.font;
-                                field.fontSize = this.fontSize;
-                                field.color = this.color;
-                            }
+            if (PdfName.Btn.Equals(formType)) {
+                if (GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
+                    try {
+                        img = ImageDataFactory.Create(Convert.FromBase64String(value));
+                    }
+                    catch (Exception) {
+                        text = value;
+                    }
+                }
+                else {
+                    // We expect that radio buttons should have only widget children,
+                    // so we need to get rid of the form fields kids
+                    PdfFormFieldMergeUtil.ProcessDirtyAnnotations(this, true);
+                    Put(PdfName.V, new PdfName(value));
+                    foreach (PdfWidgetAnnotation widget in GetWidgets()) {
+                        IList<String> states = JavaUtil.ArraysAsList(PdfFormAnnotation.MakeFormAnnotation(widget.GetPdfObject(), GetDocument
+                            ()).GetAppearanceStates());
+                        if (states.Contains(value)) {
+                            widget.SetAppearanceState(new PdfName(value));
+                        }
+                        else {
+                            widget.SetAppearanceState(new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
                         }
                     }
                 }
+            }
+            else {
                 if (PdfName.Ch.Equals(formType)) {
                     if (this is PdfChoiceFormField) {
                         ((PdfChoiceFormField)this).SetListSelected(new String[] { value }, false);
@@ -1510,34 +1523,6 @@ namespace iText.Forms.Fields {
                 }
                 else {
                     Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
-                }
-            }
-            else {
-                if (PdfName.Btn.Equals(formType)) {
-                    if (GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
-                        try {
-                            img = ImageDataFactory.Create(Convert.FromBase64String(value));
-                        }
-                        catch (Exception) {
-                            text = value;
-                        }
-                    }
-                    else {
-                        // We expect that radio buttons should have only widget children,
-                        // so we need to get rid of the form fields kids
-                        PdfFormFieldMergeUtil.ProcessDirtyAnnotations(this, true);
-                        Put(PdfName.V, new PdfName(value));
-                        foreach (PdfWidgetAnnotation widget in GetWidgets()) {
-                            IList<String> states = JavaUtil.ArraysAsList(PdfFormAnnotation.MakeFormAnnotation(widget.GetPdfObject(), GetDocument
-                                ()).GetAppearanceStates());
-                            if (states.Contains(value)) {
-                                widget.SetAppearanceState(new PdfName(value));
-                            }
-                            else {
-                                widget.SetAppearanceState(new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
-                            }
-                        }
-                    }
                 }
             }
             if (generateAppearance) {

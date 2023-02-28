@@ -449,7 +449,6 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-7264: Investigate 3 failed forms tests from 7.3/develop on .NET")]
         public virtual void RegenerateAppearance() {
-            //TODO DEVSIX-6467 The parent's formField value is set to children
             String input = "regenerateAppearance.pdf";
             String output = "regenerateAppearance.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + input), new PdfWriter(destinationFolder
@@ -1233,6 +1232,25 @@ namespace iText.Forms {
             PdfAcroForm pdfAcroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
             pdfAcroForm.GetField("checkbox").SetValue("Off");
             pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetValueTest() {
+            String outPdf = destinationFolder + "getValueTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_getValueTest.pdf";
+            String srcPdf = sourceFolder + "getValueTest.pdf";
+            using (PdfDocument doc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf))) {
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(doc, false);
+                foreach (AbstractPdfFormField field in acroForm.GetAllFormFieldsAndAnnotations()) {
+                    if (field is PdfFormField && field.GetPdfObject().Get(PdfName.V).ToString() == "child") {
+                        // Child has value "root" still because it doesn't contain T entry
+                        NUnit.Framework.Assert.AreEqual("root", ((PdfFormField)field).GetValue().ToString());
+                    }
+                    field.RegenerateField();
+                }
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
                 ));
         }

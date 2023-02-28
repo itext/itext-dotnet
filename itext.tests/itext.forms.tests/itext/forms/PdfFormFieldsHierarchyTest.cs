@@ -42,9 +42,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-7264: Investigate 3 failed forms tests from 7.3/develop on .NET")]
         public virtual void FillingFormWithKidsTest() {
-            //TODO DEVSIX-6467 The parent's formField value is set to children
             String srcPdf = sourceFolder + "formWithKids.pdf";
             String cmpPdf = sourceFolder + "cmp_fillingFormWithKidsTest.pdf";
             String outPdf = destinationFolder + "fillingFormWithKidsTest.pdf";
