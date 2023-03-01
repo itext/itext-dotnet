@@ -541,10 +541,11 @@ namespace iText.Kernel.Colors.Gradients {
             return adjustedStops;
         }
 
-        private static PdfFunction ConstructFunction(IList<GradientColorStop> toConstruct) {
+        private static IPdfFunction ConstructFunction(IList<GradientColorStop> toConstruct) {
             int functionsAmount = toConstruct.Count - 1;
             double[] bounds = new double[functionsAmount - 1];
-            IList<PdfFunction> type2Functions = new List<PdfFunction>(functionsAmount);
+            IList<AbstractPdfFunction<PdfDictionary>> type2Functions = new List<AbstractPdfFunction<PdfDictionary>>(functionsAmount
+                );
             GradientColorStop currentStop;
             GradientColorStop nextStop = toConstruct[0];
             double domainStart = nextStop.GetOffset();
@@ -563,12 +564,11 @@ namespace iText.Kernel.Colors.Gradients {
                 encode[i] = 0d;
                 encode[i + 1] = 1d;
             }
-            return new PdfFunction.Type3(new PdfArray(new double[] { domainStart, domainEnd }), null, type2Functions, 
-                new PdfArray(bounds), new PdfArray(encode));
+            return new PdfType3Function(new double[] { domainStart, domainEnd }, null, type2Functions, bounds, encode);
         }
 
-        private static PdfFunction ConstructSingleGradientSegmentFunction(GradientColorStop from, GradientColorStop
-             to) {
+        private static AbstractPdfFunction<PdfDictionary> ConstructSingleGradientSegmentFunction(GradientColorStop
+             from, GradientColorStop to) {
             double exponent = 1d;
             float[] fromColor = from.GetRgbArray();
             float[] toColor = to.GetRgbArray();
@@ -587,8 +587,7 @@ namespace iText.Kernel.Colors.Gradients {
                     }
                 }
             }
-            return new PdfFunction.Type2(new PdfArray(new float[] { 0f, 1f }), null, new PdfArray(fromColor), new PdfArray
-                (toColor), new PdfNumber(exponent));
+            return new PdfType2Function(new float[] { 0f, 1f }, null, fromColor, toColor, exponent);
         }
 
         private static PdfArray CreateCoordsPdfArray(Point[] coordsPoints) {

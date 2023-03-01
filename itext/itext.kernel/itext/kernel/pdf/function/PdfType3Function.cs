@@ -104,11 +104,37 @@ namespace iText.Kernel.Pdf.Function {
             functionFactory = DEFAULT_FUNCTION_FACTORY;
             PdfArray funcs = new PdfArray();
             foreach (AbstractPdfFunction<PdfDictionary> func in functions) {
-                funcs.Add(func.GetPdfObject().GetIndirectReference());
+                funcs.Add(func.GetPdfObject());
             }
             base.GetPdfObject().Put(PdfName.Functions, funcs);
             base.GetPdfObject().Put(PdfName.Bounds, new PdfArray(bounds));
             base.GetPdfObject().Put(PdfName.Encode, new PdfArray(encode));
+        }
+
+        /// <summary>(see ISO-320001 Table 41).</summary>
+        /// <param name="domain">
+        /// the valid input domain, input will be clipped to this domain
+        /// contains a min max pair per input component
+        /// </param>
+        /// <param name="range">
+        /// the valid output range, oputput will be clipped to this range
+        /// contains a min max pair per output component
+        /// </param>
+        /// <param name="functions">The list of functions to stitch</param>
+        /// <param name="bounds">
+        /// (Required) An array of k − 1 numbers that, in combination with Domain, shall define
+        /// the intervals to which each function from the Functions array shall apply.
+        /// Bounds elements shall be in order of increasing value, and each value shall be within
+        /// the domain defined by Domain.
+        /// </param>
+        /// <param name="encode">
+        /// (Required) An array of 2 × k numbers that, taken in pairs, shall map each subset of the domain
+        /// defined by Domain and the Bounds array to the domain of the corresponding function.
+        /// </param>
+        public PdfType3Function(float[] domain, float[] range, IList<AbstractPdfFunction<PdfDictionary>> functions
+            , float[] bounds, float[] encode)
+            : this(ConvertFloatArrayToDoubleArray(domain), ConvertFloatArrayToDoubleArray(range), functions, ConvertFloatArrayToDoubleArray
+                (bounds), ConvertFloatArrayToDoubleArray(encode)) {
         }
 
         internal PdfType3Function(PdfDictionary dict, IPdfFunctionFactory functionFactory)
@@ -246,10 +272,6 @@ namespace iText.Kernel.Pdf.Function {
                 encode[(subdomain * 2) + 1]);
             double[] output = functions[subdomain].Calculate(new double[] { x });
             return ClipOutput(output);
-        }
-
-        protected internal override bool IsWrappedObjectMustBeIndirect() {
-            return false;
         }
 
         private int CalculateSubdomain(double inputValue) {

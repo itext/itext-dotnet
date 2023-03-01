@@ -81,6 +81,27 @@ namespace iText.Kernel.Pdf.Colorspace {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SetFunctionsTest() {
+            float[] coordsArray = new float[] { 0f, 0f, 0.5f, 0.5f };
+            float[] domainArray = new float[] { 0f, 0.8f };
+            bool[] extendArray = new bool[] { true, false };
+            PdfDictionary axialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, PdfShading.ShadingType
+                .AXIAL);
+            PdfShading.Axial axial = new PdfShading.Axial(axialShadingDictionary);
+            NUnit.Framework.Assert.IsTrue(axial.GetFunction() is PdfDictionary);
+            byte[] ps = "{2 copy sin abs sin abs 3 index 10 mul sin  1 sub abs}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
+                );
+            float[] domain = new float[] { 0, 1000, 0, 1000 };
+            float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
+            IPdfFunction[] functions = new IPdfFunction[] { new PdfType4Function(domain, range, ps) };
+            axial.SetFunction(functions);
+            PdfObject funcObj = axial.GetFunction();
+            NUnit.Framework.Assert.IsTrue(funcObj is PdfArray);
+            NUnit.Framework.Assert.AreEqual(1, ((PdfArray)funcObj).Size());
+            NUnit.Framework.Assert.AreEqual(functions[0].GetAsPdfObject(), ((PdfArray)funcObj).Get(0));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void AxialShadingViaPdfObjectTest() {
             float[] coordsArray = new float[] { 0f, 0f, 0.5f, 0.5f };
             float[] domainArray = new float[] { 0f, 0.8f };
@@ -170,8 +191,8 @@ namespace iText.Kernel.Pdf.Colorspace {
         public virtual void UsingPatternColorSpaceThrowsException() {
             byte[] ps = "{2 copy sin abs sin abs 3 index 10 mul sin  1 sub abs}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 );
-            PdfFunction function = new PdfFunction.Type4(new PdfArray(new float[] { 0, 1000, 0, 1000 }), new PdfArray(
-                new float[] { 0, 1, 0, 1, 0, 1 }), ps);
+            IPdfFunction function = new PdfType4Function(new float[] { 0, 1000, 0, 1000 }, new float[] { 0, 1, 0, 1, 0
+                , 1 }, ps);
             PdfSpecialCs.Pattern colorSpace = new PdfSpecialCs.Pattern();
             Exception ex = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.FunctionBased(
                 colorSpace, function));
@@ -182,18 +203,18 @@ namespace iText.Kernel.Pdf.Colorspace {
         public virtual void MakeShadingFunctionBased1Test() {
             byte[] ps = "{2 copy sin abs sin abs 3 index 10 mul sin  1 sub abs}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 );
-            PdfArray domain = new PdfArray(new float[] { 0, 1000, 0, 1000 });
-            PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
-            PdfFunction function = new PdfFunction.Type4(domain, range, ps);
+            float[] domain = new float[] { 0, 1000, 0, 1000 };
+            float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
+            IPdfFunction function = new PdfType4Function(domain, range, ps);
             PdfShading.FunctionBased shade = new PdfShading.FunctionBased(new PdfDeviceCs.Rgb(), function);
             PdfDictionary @object = shade.GetPdfObject();
             NUnit.Framework.Assert.AreEqual(1, @object.GetAsInt(PdfName.ShadingType).Value);
             NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, @object.GetAsName(PdfName.ColorSpace));
             PdfStream functionStream = @object.GetAsStream(PdfName.Function);
             PdfArray functionDomain = functionStream.GetAsArray(PdfName.Domain);
-            iText.Test.TestUtil.AreEqual(domain.ToDoubleArray(), functionDomain.ToDoubleArray(), 0.0);
+            iText.Test.TestUtil.AreEqual(domain, functionDomain.ToFloatArray(), 0.0f);
             PdfArray functionRange = functionStream.GetAsArray(PdfName.Range);
-            iText.Test.TestUtil.AreEqual(range.ToDoubleArray(), functionRange.ToDoubleArray(), 0.0);
+            iText.Test.TestUtil.AreEqual(range, functionRange.ToFloatArray(), 0.0f);
             NUnit.Framework.Assert.AreEqual(4, functionStream.GetAsInt(PdfName.FunctionType).Value);
         }
 

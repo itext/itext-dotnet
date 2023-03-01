@@ -464,8 +464,9 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <returns>
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// , should be
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>.
+        /// , should be an object representing custom function (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating such function objects).
         /// </returns>
         public virtual PdfObject GetBlackGenerationFunction() {
             return GetPdfObject().Get(PdfName.BG);
@@ -478,8 +479,11 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <param name="blackGenerationFunction">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// , shall be
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>.
+        /// , shall be an object representing custom function
+        /// (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating such
+        /// function objects).
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetBlackGenerationFunction(PdfObject blackGenerationFunction
@@ -495,12 +499,14 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// key.
         /// </summary>
         /// <returns>
-        /// a
+        /// the returned value is
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// value, should be either
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
-        /// or
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>.
+        /// value, which is either a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// of
+        /// a predefined value or an object representing custom function (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating such function objects).
         /// </returns>
         public virtual PdfObject GetBlackGenerationFunction2() {
             return GetPdfObject().Get(PdfName.BG2);
@@ -530,9 +536,11 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <param name="blackGenerationFunction2">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// value, shall be either
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
-        /// or
+        /// value, shall be an object representing custom function
+        /// (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating such
+        /// function objects) or
         /// <c>Default</c>.
         /// </param>
         /// <returns>object itself.</returns>
@@ -549,8 +557,9 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <returns>
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// , should be
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>.
+        /// , should be an object representing custom function (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating such function objects).
         /// </returns>
         public virtual PdfObject GetUndercolorRemovalFunction() {
             return GetPdfObject().Get(PdfName.UCR);
@@ -564,8 +573,11 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <param name="undercolorRemovalFunction">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// , shall be
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>.
+        /// , shall be an object representing custom function
+        /// (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating
+        /// such function objects).
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetUndercolorRemovalFunction(PdfObject undercolorRemovalFunction
@@ -581,12 +593,14 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// key.
         /// </summary>
         /// <returns>
-        /// a
+        /// the returned value is
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// value, should be either
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
-        /// or
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>.
+        /// value, which is either a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// of
+        /// a predefined value or an object representing custom function (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating such function objects).
         /// </returns>
         public virtual PdfObject GetUndercolorRemovalFunction2() {
             return GetPdfObject().Get(PdfName.UCR2);
@@ -616,9 +630,11 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <param name="undercolorRemovalFunction2">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// value, shall be either
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
-        /// or
+        /// value, shall be an object representing custom function
+        /// (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating such
+        /// function objects) or
         /// <c>Default</c>.
         /// </param>
         /// <returns>object itself.</returns>
@@ -633,14 +649,16 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// key.
         /// </summary>
         /// <returns>
-        /// a
+        /// the returned value is
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// , should be either
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
-        /// ,
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// value, which is either a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>.
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of
+        /// a predefined value or an object representing custom function (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating such function objects).
         /// </returns>
         public virtual PdfObject GetTransferFunction() {
             return GetPdfObject().Get(PdfName.TR);
@@ -654,12 +672,14 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <param name="transferFunction">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// , shall be either
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
-        /// ,
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// , shall be either a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>.
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of
+        /// a predefined value or an object representing custom function (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating such function objects).
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetTransferFunction(PdfObject transferFunction) {
@@ -674,14 +694,16 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// key.
         /// </summary>
         /// <returns>
-        /// a
+        /// the returned value is
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// , should be either
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
-        /// ,
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// value, which is either a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.PdfName"/>.
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of
+        /// a predefined value or an object representing custom function (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating such function objects).
         /// </returns>
         public virtual PdfObject GetTransferFunction2() {
             return GetPdfObject().Get(PdfName.TR2);
@@ -711,14 +733,14 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <param name="transferFunction2">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// , shall be either
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
-        /// ,
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// ,
+        /// , shall be either a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// or
-        /// <c>Default</c>.
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of
+        /// a predefined value or an object representing custom function (see
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object wrapper for convenience API in reading/manipulating such function objects).
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetTransferFunction2(PdfObject transferFunction2) {

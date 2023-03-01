@@ -55,7 +55,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             int x1 = 80;
             int y1 = 400;
             PdfArray shadingVector = new PdfArray(new int[] { x0, y0, x1, y1 });
-            PdfFunction.Type3 stitchingFunction = CreateStitchingCmykShadingFunction();
+            PdfType3Function stitchingFunction = CreateStitchingCmykShadingFunction();
             PdfShading.Axial axialShading = new PdfShading.Axial(new PdfDeviceCs.Cmyk(), shadingVector, stitchingFunction
                 );
             pdfCanvas.PaintShading(axialShading);
@@ -119,7 +119,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             int y1 = 400;
             int r1 = 50;
             PdfArray shadingVector = new PdfArray(new int[] { x0, y0, r0, x1, y1, r1 });
-            PdfFunction.Type3 stitchingFunction = CreateStitchingCmykShadingFunction();
+            PdfType3Function stitchingFunction = CreateStitchingCmykShadingFunction();
             PdfShading.Radial radialShading = new PdfShading.Radial(new PdfDeviceCs.Cmyk(), shadingVector, stitchingFunction
                 );
             pdfCanvas.PaintShading(radialShading);
@@ -149,19 +149,17 @@ namespace iText.Kernel.Pdf.Colorspace {
             AssertShadingDictionaryResult(outName, cmpName, "Sh1");
         }
 
-        private static PdfFunction.Type3 CreateStitchingCmykShadingFunction() {
-            PdfArray domain0to1 = new PdfArray(new float[] { 0, 1 });
-            PdfArray range0to1For4n = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1, 0, 1 });
+        private static PdfType3Function CreateStitchingCmykShadingFunction() {
+            float[] domain0to1 = new float[] { 0, 1 };
+            float[] range0to1For4n = new float[] { 0, 1, 0, 1, 0, 1, 0, 1 };
             float[] cmykColor0 = new float[] { 0.2f, 0.4f, 0f, 0f };
             float[] cmykColor1 = new float[] { 0.2f, 1f, 0f, 0f };
-            PdfFunction.Type2 function0 = new PdfFunction.Type2(domain0to1, null, new PdfArray(cmykColor0), new PdfArray
-                (cmykColor1), new PdfNumber(1));
-            PdfFunction.Type2 function1 = new PdfFunction.Type2(domain0to1, null, new PdfArray(cmykColor1), new PdfArray
-                (cmykColor0), new PdfNumber(1));
-            PdfArray boundForTwoFunctionsSubdomains = new PdfArray(new float[] { 0.5f });
-            PdfArray encodeStitchingSubdomainToNthFunctionDomain = new PdfArray(new float[] { 0, 1, 0, 1 });
-            return new PdfFunction.Type3(domain0to1, range0to1For4n, new List<PdfFunction>(JavaUtil.ArraysAsList(function0
-                , function1)), boundForTwoFunctionsSubdomains, encodeStitchingSubdomainToNthFunctionDomain);
+            PdfType2Function function0 = new PdfType2Function(domain0to1, null, cmykColor0, cmykColor1, 1);
+            PdfType2Function function1 = new PdfType2Function(domain0to1, null, cmykColor1, cmykColor0, 1);
+            float[] boundForTwoFunctionsSubdomains = new float[] { 0.5f };
+            float[] encodeStitchingSubdomainToNthFunctionDomain = new float[] { 0, 1, 0, 1 };
+            return new PdfType3Function(domain0to1, range0to1For4n, new List<AbstractPdfFunction<PdfDictionary>>(JavaUtil.ArraysAsList
+                (function0, function1)), boundForTwoFunctionsSubdomains, encodeStitchingSubdomainToNthFunctionDomain);
         }
 
         private static void AssertShadingDictionaryResult(String outName, String cmpName, String shadingResourceName

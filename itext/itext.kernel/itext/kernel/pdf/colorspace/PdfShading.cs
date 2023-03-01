@@ -249,11 +249,11 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// </summary>
         /// <param name="function">
         /// The
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
         /// to set.
         /// </param>
-        public virtual void SetFunction(PdfFunction function) {
-            GetPdfObject().Put(PdfName.Function, function.GetPdfObject());
+        public virtual void SetFunction(IPdfFunction function) {
+            GetPdfObject().Put(PdfName.Function, function.GetAsPdfObject());
             SetModified();
         }
 
@@ -263,13 +263,13 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// </summary>
         /// <param name="functions">
         /// The array of
-        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
         /// to be set.
         /// </param>
-        public virtual void SetFunction(PdfFunction[] functions) {
+        public virtual void SetFunction(IPdfFunction[] functions) {
             PdfArray arr = new PdfArray();
-            foreach (PdfFunction func in functions) {
-                arr.Add(func.GetPdfObject());
+            foreach (IPdfFunction func in functions) {
+                arr.Add(func.GetAsPdfObject());
             }
             GetPdfObject().Put(PdfName.Function, arr);
             SetModified();
@@ -328,10 +328,10 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             /// <param name="function">
             /// the
-            /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+            /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
             /// , that is used to calculate color transitions.
             /// </param>
-            public FunctionBased(PdfColorSpace colorSpace, PdfFunction function)
+            public FunctionBased(PdfColorSpace colorSpace, IPdfFunction function)
                 : this(colorSpace.GetPdfObject(), function) {
             }
 
@@ -343,10 +343,10 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             /// <param name="function">
             /// the
-            /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+            /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
             /// , that is used to calculate color transitions.
             /// </param>
-            public FunctionBased(PdfObject colorSpace, PdfFunction function)
+            public FunctionBased(PdfObject colorSpace, IPdfFunction function)
                 : base(new PdfDictionary(), PdfShading.ShadingType.FUNCTION_BASED, PdfColorSpace.MakeColorSpace(colorSpace
                     )) {
                 SetFunction(function);
@@ -490,8 +490,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             public Axial(PdfColorSpace cs, float x0, float y0, float[] color0, float x1, float y1, float[] color1)
                 : base(new PdfDictionary(), PdfShading.ShadingType.AXIAL, cs) {
                 SetCoords(x0, y0, x1, y1);
-                PdfFunction func = new PdfFunction.Type2(new PdfArray(new float[] { 0, 1 }), null, new PdfArray(color0), new 
-                    PdfArray(color1), new PdfNumber(1));
+                IPdfFunction func = new PdfType2Function(new float[] { 0, 1 }, null, color0, color1, 1);
                 SetFunction(func);
             }
 
@@ -544,10 +543,10 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             /// <param name="function">
             /// the
-            /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+            /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
             /// object, that is used to calculate color transitions.
             /// </param>
-            public Axial(PdfColorSpace cs, PdfArray coords, PdfFunction function)
+            public Axial(PdfColorSpace cs, PdfArray coords, IPdfFunction function)
                 : this(cs, coords, null, function) {
             }
 
@@ -574,10 +573,10 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             /// <param name="function">
             /// the
-            /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+            /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
             /// object, that is used to calculate color transitions.
             /// </param>
-            public Axial(PdfColorSpace cs, PdfArray coords, PdfArray domain, PdfFunction function)
+            public Axial(PdfColorSpace cs, PdfArray coords, PdfArray domain, IPdfFunction function)
                 : base(new PdfDictionary(), PdfShading.ShadingType.AXIAL, cs) {
                 SetCoords(coords);
                 if (domain != null) {
@@ -803,8 +802,7 @@ namespace iText.Kernel.Pdf.Colorspace {
                 , float[] color1)
                 : base(new PdfDictionary(), PdfShading.ShadingType.RADIAL, cs) {
                 SetCoords(x0, y0, r0, x1, y1, r1);
-                PdfFunction func = new PdfFunction.Type2(new PdfArray(new float[] { 0, 1 }), null, new PdfArray(color0), new 
-                    PdfArray(color1), new PdfNumber(1));
+                IPdfFunction func = new PdfType2Function(new float[] { 0, 1 }, null, color0, color1, 1);
                 SetFunction(func);
             }
 
@@ -877,10 +875,10 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             /// <param name="function">
             /// the
-            /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+            /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
             /// object, that is used to calculate color transitions.
             /// </param>
-            public Radial(PdfColorSpace cs, PdfArray coords, PdfFunction function)
+            public Radial(PdfColorSpace cs, PdfArray coords, IPdfFunction function)
                 : base(new PdfDictionary(), PdfShading.ShadingType.RADIAL, cs) {
                 SetCoords(coords);
                 SetFunction(function);

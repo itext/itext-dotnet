@@ -56,16 +56,16 @@ namespace iText.Kernel.Pdf.Function {
             : base(new PdfStream(code), PdfFunctionFactory.FUNCTION_TYPE_4, domain, range) {
         }
 
+        public PdfType4Function(float[] domain, float[] range, byte[] code)
+            : this(ConvertFloatArrayToDoubleArray(domain), ConvertFloatArrayToDoubleArray(range), code) {
+        }
+
         public override bool CheckCompatibilityWithColorSpace(PdfColorSpace alternateSpace) {
             return GetInputSize() == 1 && GetOutputSize() == alternateSpace.GetNumberOfComponents();
         }
 
         public override double[] Calculate(double[] input) {
             throw new NotSupportedException(KernelExceptionMessageConstant.TYPE4_EXECUTION_NOT_SUPPORTED);
-        }
-
-        protected internal override bool IsWrappedObjectMustBeIndirect() {
-            return false;
         }
     }
 }

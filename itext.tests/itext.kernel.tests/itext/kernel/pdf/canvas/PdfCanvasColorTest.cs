@@ -232,8 +232,8 @@ namespace iText.Kernel.Pdf.Canvas {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
-            PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(new float[] { 0, 1 }), new PdfArray(new float
-                [] { 0, 1, 0, 1, 0, 1 }), "{0 0}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
+            PdfType4Function function = new PdfType4Function(new float[] { 0, 1 }, new float[] { 0, 1, 0, 1, 0, 1 }, "{0 0}"
+                .GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             PdfSpecialCs.Separation separation = new PdfSpecialCs.Separation("MyRed", new PdfDeviceCs.Rgb(), function);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(new Separation(separation, 0.25f)).Rectangle(50, 500, 50, 50).Fill();
@@ -271,8 +271,8 @@ namespace iText.Kernel.Pdf.Canvas {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
-            PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(new float[] { 0, 1, 0, 1 }), new PdfArray(
-                new float[] { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
+            PdfType4Function function = new PdfType4Function(new float[] { 0, 1, 0, 1 }, new float[] { 0, 1, 0, 1, 0, 
+                1 }, "{0}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             List<String> tmpArray = new List<String>(2);
             tmpArray.Add("MyRed");
             tmpArray.Add("MyGreen");

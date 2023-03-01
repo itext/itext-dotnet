@@ -482,11 +482,11 @@ namespace iText.Pdfa {
             PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
             //Tint transformation function is a stream
             byte[] samples = new byte[] { 0x00, 0x00, 0x00, 0x01, 0x01, 0x01 };
-            PdfArray domain = new PdfArray(new float[] { 0, 1 });
-            PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
-            PdfArray size = new PdfArray(new float[] { 2 });
-            PdfNumber bitsPerSample = new PdfNumber(8);
-            PdfFunction.Type0 type0 = new PdfFunction.Type0(domain, range, size, bitsPerSample, samples);
+            float[] domain = new float[] { 0, 1 };
+            float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
+            int[] size = new int[] { 2 };
+            int bitsPerSample = 8;
+            PdfType0Function type0 = new PdfType0Function(domain, size, range, 1, bitsPerSample, samples);
             PdfColorSpace separationColourSpace = new PdfSpecialCs.Separation("separationTestFunction0", alternateSpace
                 , type0);
             //Add to document
@@ -503,12 +503,12 @@ namespace iText.Pdfa {
             PdfPage page = doc.AddNewPage();
             PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
             //Tint transformation function is a dictionary
-            PdfArray domain = new PdfArray(new float[] { 0, 1 });
-            PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
-            PdfArray C0 = new PdfArray(new float[] { 0, 0, 0 });
-            PdfArray C1 = new PdfArray(new float[] { 1, 1, 1 });
-            PdfNumber n = new PdfNumber(1);
-            PdfFunction.Type2 type2 = new PdfFunction.Type2(domain, range, C0, C1, n);
+            float[] domain = new float[] { 0, 1 };
+            float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
+            float[] C0 = new float[] { 0, 0, 0 };
+            float[] C1 = new float[] { 1, 1, 1 };
+            int n = 1;
+            PdfType2Function type2 = new PdfType2Function(domain, range, C0, C1, n);
             PdfColorSpace separationColourSpace = new PdfSpecialCs.Separation("separationTestFunction2", alternateSpace
                 , type2);
             //Add to document
@@ -525,12 +525,12 @@ namespace iText.Pdfa {
             PdfPage page = doc.AddNewPage();
             PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
             //Tint transformation function is a dictionary
-            PdfArray domain = new PdfArray(new float[] { 0, 1 });
-            PdfArray range = new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 });
-            PdfArray C0 = new PdfArray(new float[] { 0, 0, 0 });
-            PdfArray C1 = new PdfArray(new float[] { 1, 1, 1 });
-            PdfNumber n = new PdfNumber(1);
-            PdfFunction.Type2 type2 = new PdfFunction.Type2(domain, range, C0, C1, n);
+            float[] domain = new float[] { 0, 1 };
+            float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
+            float[] C0 = new float[] { 0, 0, 0 };
+            float[] C1 = new float[] { 1, 1, 1 };
+            int n = 1;
+            PdfType2Function type2 = new PdfType2Function(domain, range, C0, C1, n);
             PdfCanvas canvas = new PdfCanvas(page);
             String separationName = "separationTest";
             canvas.SetColor(new Separation(separationName, alternateSpace, type2, 0.5f), true);

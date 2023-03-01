@@ -112,6 +112,12 @@ namespace iText.Kernel.Pdf.Function {
             : this(domain, size, range, order, null, null, bitsPerSample, samples) {
         }
 
+        public PdfType0Function(float[] domain, int[] size, float[] range, int order, int bitsPerSample, byte[] samples
+            )
+            : this(ConvertFloatArrayToDoubleArray(domain), size, ConvertFloatArrayToDoubleArray(range), order, bitsPerSample
+                , samples) {
+        }
+
         public PdfType0Function(double[] domain, int[] size, double[] range, int order, int[] encode, double[] decode
             , int bitsPerSample, byte[] samples)
             : base(new PdfStream(samples), PdfFunctionFactory.FUNCTION_TYPE_0, domain, range) {
@@ -219,10 +225,6 @@ namespace iText.Kernel.Pdf.Function {
                 result = Interpolate(normal, floor);
             }
             return Clip(result, GetRange());
-        }
-
-        protected internal override bool IsWrappedObjectMustBeIndirect() {
-            return false;
         }
 
         /// <summary>Encode normalized input value.</summary>

@@ -279,6 +279,10 @@ namespace iText.Kernel.Pdf.Function {
             return base.GetPdfObject();
         }
 
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
+            return true;
+        }
+
         protected internal static double[] Clip(double[] values, double[] limits) {
             System.Diagnostics.Debug.Assert((values.Length * 2 == limits.Length));
             double[] result = new double[values.Length];
@@ -301,6 +305,17 @@ namespace iText.Kernel.Pdf.Function {
                 normal[i] = Math.Min(Math.Max(0, (values[i] - lowerBound) / (upperBound - lowerBound)), 1);
             }
             return normal;
+        }
+
+        protected internal static double[] ConvertFloatArrayToDoubleArray(float[] array) {
+            if (array == null) {
+                return null;
+            }
+            double[] arrayDouble = new double[array.Length];
+            for (int i = 0; i < array.Length; i++) {
+                arrayDouble[i] = array[i];
+            }
+            return arrayDouble;
         }
 
         public abstract double[] Calculate(double[] arg1);
