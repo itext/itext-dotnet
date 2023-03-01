@@ -97,6 +97,7 @@ namespace iText.Layout.Renderer {
             result.GetOverflowRenderer().Layout(layoutContext);
             Regex regex = iText.Commons.Utils.StringUtil.RegexCompile("^.-.*?-.*$");
             IList<IRenderer> childRenderers = listRenderer.GetChildRenderers();
+            // Assertion needs to be changed to assertEquals after fix.
             NUnit.Framework.Assert.AreNotEqual(childRenderers.Where((listitem) => iText.Commons.Utils.Matcher.Match(regex
                 , listitem.ToString()).Matches()).ToList().Count, 0);
         }
