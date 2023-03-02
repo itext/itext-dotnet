@@ -269,7 +269,7 @@ namespace iText.Kernel.Font {
         /// </param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the descent in points</returns>
-        public virtual int GetDescent(String text, float fontSize) {
+        public virtual float GetDescent(String text, float fontSize) {
             int min = 0;
             for (int k = 0; k < text.Length; ++k) {
                 int ch;
@@ -293,7 +293,7 @@ namespace iText.Kernel.Font {
                     }
                 }
             }
-            return (int)FontProgram.ConvertTextSpaceToGlyphSpace(min * fontSize);
+            return FontProgram.ConvertTextSpaceToGlyphSpace(min * fontSize);
         }
 
         /// <summary>Gets the descent of a char code in points.</summary>
@@ -304,7 +304,7 @@ namespace iText.Kernel.Font {
         /// <param name="unicode">the char code to get the descent of</param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the descent in points</returns>
-        public virtual int GetDescent(int unicode, float fontSize) {
+        public virtual float GetDescent(int unicode, float fontSize) {
             int min = 0;
             Glyph glyph = GetGlyph(unicode);
             if (glyph == null) {
@@ -319,7 +319,7 @@ namespace iText.Kernel.Font {
                     min = GetFontProgram().GetFontMetrics().GetTypoDescender();
                 }
             }
-            return (int)FontProgram.ConvertTextSpaceToGlyphSpace(min * fontSize);
+            return FontProgram.ConvertTextSpaceToGlyphSpace(min * fontSize);
         }
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace iText.Kernel.Font {
         /// </param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the ascent in points</returns>
-        public virtual int GetAscent(String text, float fontSize) {
+        public virtual float GetAscent(String text, float fontSize) {
             int max = 0;
             for (int k = 0; k < text.Length; ++k) {
                 int ch;
@@ -364,7 +364,7 @@ namespace iText.Kernel.Font {
                     }
                 }
             }
-            return (int)FontProgram.ConvertTextSpaceToGlyphSpace(max * fontSize);
+            return FontProgram.ConvertTextSpaceToGlyphSpace(max * fontSize);
         }
 
         /// <summary>Gets the ascent of a char code in normalized 1000 units.</summary>
@@ -375,7 +375,7 @@ namespace iText.Kernel.Font {
         /// <param name="unicode">the char code to get the ascent of</param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the ascent in points</returns>
-        public virtual int GetAscent(int unicode, float fontSize) {
+        public virtual float GetAscent(int unicode, float fontSize) {
             int max = 0;
             Glyph glyph = GetGlyph(unicode);
             if (glyph == null) {
@@ -390,7 +390,7 @@ namespace iText.Kernel.Font {
                     max = GetFontProgram().GetFontMetrics().GetTypoAscender();
                 }
             }
-            return (int)FontProgram.ConvertTextSpaceToGlyphSpace(max * fontSize);
+            return FontProgram.ConvertTextSpaceToGlyphSpace(max * fontSize);
         }
 
         public virtual FontProgram GetFontProgram() {

@@ -255,31 +255,31 @@ namespace iText.Kernel.Font {
         public virtual void GetDescentOfGlyphTest() {
             PdfFontUnitTest.TestFont font = new PdfFontUnitTest.TestFont();
             int expectedDescent = font.GetGlyph(PdfFontUnitTest.TestFont.SIMPLE_GLYPH).GetBbox()[1];
-            int expectedValue = (int)(expectedDescent * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
+            float expectedValue = (float)(expectedDescent * FONT_SIZE / (float)FontProgram.UNITS_NORMALIZATION);
             NUnit.Framework.Assert.AreEqual(expectedValue, font.GetDescent(PdfFontUnitTest.TestFont.SIMPLE_GLYPH, FONT_SIZE
-                ));
+                ), 0.1);
         }
 
         [NUnit.Framework.Test]
         public virtual void DescentCannotBePositiveTest() {
             PdfFontUnitTest.TestFont font = new PdfFontUnitTest.TestFont();
             NUnit.Framework.Assert.AreEqual(0, font.GetDescent(PdfFontUnitTest.TestFont.SIMPLE_GLYPH_WITH_POSITIVE_DESCENT
-                , 50));
+                , 50), 0.1);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetDescentOfUnknownGlyphTest() {
             PdfFontUnitTest.TestFont font = new PdfFontUnitTest.TestFont();
-            NUnit.Framework.Assert.AreEqual(0, font.GetDescent(111, 50));
+            NUnit.Framework.Assert.AreEqual(0, font.GetDescent(111, 50), 0.1);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetDescentOfGlyphWithoutBBoxTest() {
             PdfFontUnitTest.TestFont font = new PdfFontUnitTest.TestFont();
             font.SetFontProgram(new PdfFontUnitTest.TestFontProgram());
-            int expectedValue = (int)(FONT_METRICS_DESCENT * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
+            float expectedValue = (float)(FONT_METRICS_DESCENT * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
             NUnit.Framework.Assert.AreEqual(expectedValue, font.GetDescent(PdfFontUnitTest.TestFont.SIMPLE_GLYPH_WITHOUT_BBOX
-                , FONT_SIZE));
+                , FONT_SIZE), 0.1);
         }
 
         [NUnit.Framework.Test]
@@ -290,8 +290,8 @@ namespace iText.Kernel.Font {
             String textAsString = new String(text);
             int expectedMinDescent = Math.Min(font.GetGlyph(PdfFontUnitTest.TestFont.SIMPLE_GLYPH).GetBbox()[1], font.
                 GetGlyph(PdfFontUnitTest.TestFont.COMPLEX_GLYPH).GetBbox()[1]);
-            int expectedValue = (int)(expectedMinDescent * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
-            NUnit.Framework.Assert.AreEqual(expectedValue, font.GetDescent(textAsString, FONT_SIZE));
+            float expectedValue = (float)(expectedMinDescent * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
+            NUnit.Framework.Assert.AreEqual(expectedValue, font.GetDescent(textAsString, FONT_SIZE), 0.1);
         }
 
         [NUnit.Framework.Test]
@@ -303,26 +303,26 @@ namespace iText.Kernel.Font {
             String textAsString = new String(text);
             int expectedMinDescent = Math.Min(font.GetGlyph(PdfFontUnitTest.TestFont.SIMPLE_GLYPH).GetBbox()[1], FONT_METRICS_DESCENT
                 );
-            int expectedValue = (int)(expectedMinDescent * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
-            NUnit.Framework.Assert.AreEqual(expectedValue, font.GetDescent(textAsString, FONT_SIZE));
+            float expectedValue = (float)(expectedMinDescent * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
+            NUnit.Framework.Assert.AreEqual(expectedValue, font.GetDescent(textAsString, FONT_SIZE), 0.1);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetAscentOfGlyphTest() {
             PdfFontUnitTest.TestFont font = new PdfFontUnitTest.TestFont();
             int expectedAscent = font.GetGlyph(PdfFontUnitTest.TestFont.SIMPLE_GLYPH).GetBbox()[3];
-            int expectedValue = (int)(expectedAscent * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
+            float expectedValue = (float)(expectedAscent * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
             NUnit.Framework.Assert.AreEqual(expectedValue, font.GetAscent(PdfFontUnitTest.TestFont.SIMPLE_GLYPH, FONT_SIZE
-                ));
+                ), 0.1);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetAscentOfGlyphWithoutBBoxTest() {
             PdfFontUnitTest.TestFont font = new PdfFontUnitTest.TestFont();
             font.SetFontProgram(new PdfFontUnitTest.TestFontProgram());
-            int expectedValue = (int)(FONT_METRICS_ASCENT * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
+            float expectedValue = (float)(FONT_METRICS_ASCENT * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
             NUnit.Framework.Assert.AreEqual(expectedValue, font.GetAscent(PdfFontUnitTest.TestFont.SIMPLE_GLYPH_WITHOUT_BBOX
-                , FONT_SIZE));
+                , FONT_SIZE), 0.1);
         }
 
         [NUnit.Framework.Test]
@@ -333,8 +333,8 @@ namespace iText.Kernel.Font {
             String textAsString = new String(text);
             int expectedMaxAscent = Math.Max(font.GetGlyph(PdfFontUnitTest.TestFont.SIMPLE_GLYPH).GetBbox()[3], font.GetGlyph
                 (PdfFontUnitTest.TestFont.COMPLEX_GLYPH).GetBbox()[3]);
-            int expectedValue = (int)(expectedMaxAscent * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
-            NUnit.Framework.Assert.AreEqual(expectedValue, font.GetAscent(textAsString, FONT_SIZE));
+            float expectedValue = (float)(expectedMaxAscent * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
+            NUnit.Framework.Assert.AreEqual(expectedValue, font.GetAscent(textAsString, FONT_SIZE), 0.1);
         }
 
         [NUnit.Framework.Test]
@@ -346,8 +346,8 @@ namespace iText.Kernel.Font {
             String textAsString = new String(text);
             int expectedMaxAscent = Math.Max(font.GetGlyph(PdfFontUnitTest.TestFont.SIMPLE_GLYPH).GetBbox()[3], FONT_METRICS_ASCENT
                 );
-            int expectedValue = (int)(expectedMaxAscent * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
-            NUnit.Framework.Assert.AreEqual(expectedValue, font.GetAscent(textAsString, FONT_SIZE));
+            float expectedValue = (float)(expectedMaxAscent * FONT_SIZE / (double)FontProgram.UNITS_NORMALIZATION);
+            NUnit.Framework.Assert.AreEqual(expectedValue, font.GetAscent(textAsString, FONT_SIZE), 0.1);
         }
 
         [NUnit.Framework.Test]
