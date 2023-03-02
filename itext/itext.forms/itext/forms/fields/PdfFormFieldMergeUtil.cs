@@ -83,7 +83,7 @@ namespace iText.Forms.Fields {
                 if (kid is PdfFormField) {
                     // Try to merge for the kid
                     MergeKidsWithSameNames((PdfFormField)kid, throwExceptionOnError);
-                    String kidName = GetPartialName(kid.GetPdfObject());
+                    String kidName = GetPartialName(kid);
                     if (!addedKids.ContainsKey(kidName) || !MergeTwoFieldsWithTheSameNames((PdfFormField)addedKids.Get(kidName
                         ), (PdfFormField)kid, throwExceptionOnError)) {
                         addedKids.Put(kidName, kid);
@@ -133,18 +133,19 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>Gets partial name for the field dictionary.</summary>
-        /// <param name="fieldDict">field dictionary to get name.</param>
+        /// <param name="field">field to get name from.</param>
         /// <returns>
         /// field partial name. Also, null if passed dictionary is a pure widget,
         /// empty string in case it is a field with no /T entry.
         /// </returns>
-        public static String GetPartialName(PdfDictionary fieldDict) {
-            // TODO This method usages should be replaced by PdfFormField#getPartialFieldName after DEVSIX-7308 is closed.
-            if (PdfFormAnnotationUtil.IsPureWidget(fieldDict)) {
+        public static String GetPartialName(AbstractPdfFormField field) {
+            if (PdfFormAnnotationUtil.IsPureWidget(field.GetPdfObject())) {
                 return null;
             }
-            PdfString partialName = fieldDict.GetAsString(PdfName.T);
-            return partialName == null ? "" : partialName.ToUnicodeString();
+            if (field is PdfFormField) {
+                return ((PdfFormField)field).GetPartialFieldName().ToUnicodeString();
+            }
+            return "";
         }
 
         /// <summary>Sometimes widgets contain field related keys, and they are the same as these field keys at parent.
@@ -177,6 +178,10 @@ namespace iText.Forms.Fields {
                     // If not - go over all fields to compare with parent's fields
                     if (!(PdfName.Btn.Equals(parentField.GetFormType()) && parentField.GetFieldFlag(PdfButtonFormField.FF_RADIO
                         ))) {
+                        if (formDict.ContainsKey(PdfName.T)) {
+                            // We only want to perform the merge if field doesn't contain any name (even empty one)
+                            continue;
+                        }
                         foreach (PdfName key in formDict.KeySet()) {
                             // Everything except Parent and Kids must be identical to allow the merge
                             if (!PdfName.Parent.Equals(key) && !PdfName.Kids.Equals(key) && !formDict.Get(key).Equals(parentField.GetPdfObject

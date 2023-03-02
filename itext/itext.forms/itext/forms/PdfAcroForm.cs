@@ -224,7 +224,7 @@ namespace iText.Forms {
         /// to be added to the form
         /// </param>
         public virtual void AddField(PdfFormField field) {
-            if (field.GetFieldName() == null) {
+            if (!field.GetPdfObject().ContainsKey(PdfName.T)) {
                 throw new PdfException(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME);
             }
             PdfPage page;
@@ -251,7 +251,7 @@ namespace iText.Forms {
         /// in case they have the same names
         /// </param>
         public virtual void AddField(PdfFormField field, PdfPage page, bool replaceExisted) {
-            if (field.GetFieldName() == null) {
+            if (!field.GetPdfObject().ContainsKey(PdfName.T)) {
                 throw new PdfException(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME);
             }
             if (!replaceExisted) {
@@ -367,14 +367,13 @@ namespace iText.Forms {
             if (fields.Count == 0) {
                 fields = PopulateFormFieldsMap();
             }
-            IDictionary<String, PdfFormField> allFields = new Dictionary<String, PdfFormField>();
-            allFields.AddAll(fields);
+            IDictionary<String, PdfFormField> allFields = new LinkedDictionary<String, PdfFormField>(fields);
             foreach (KeyValuePair<String, PdfFormField> field in fields) {
                 IList<PdfFormField> kids = field.Value.GetAllChildFormFields();
                 foreach (PdfFormField kid in kids) {
-                    //TODO DEVSIX-7308 Handle form fields without names more carefully
-                    if (kid.GetFieldName() != null) {
-                        allFields.Put(kid.GetFieldName().ToUnicodeString(), kid);
+                    PdfString kidFieldName = kid.GetFieldName();
+                    if (kidFieldName != null) {
+                        allFields.Put(kidFieldName.ToUnicodeString(), kid);
                     }
                 }
             }
@@ -551,11 +550,11 @@ namespace iText.Forms {
         /// <returns>current value for <c>SigFlags</c>.</returns>
         public virtual int GetSignatureFlags() {
             PdfNumber f = GetPdfObject().GetAsNumber(PdfName.SigFlags);
-            if (f != null) {
-                return f.IntValue();
+            if (f == null) {
+                return 0;
             }
             else {
-                return 0;
+                return f.IntValue();
             }
         }
 
@@ -758,14 +757,17 @@ namespace iText.Forms {
             if (fields.Get(fieldName) != null) {
                 return fields.Get(fieldName);
             }
-            String[] splitFields = iText.Commons.Utils.StringUtil.Split(fieldName, "\\.");
-            PdfFormField parentFormField = fields.Get(splitFields[0]);
+            String[] splitFieldsArray = StringSplitUtil.SplitKeepTrailingWhiteSpace(fieldName, '.');
+            if (splitFieldsArray.Length == 0) {
+                return null;
+            }
+            PdfFormField parentFormField = fields.Get(splitFieldsArray[0]);
             PdfFormField kidField = parentFormField;
-            for (int i = 1; i < splitFields.Length; i++) {
-                if (parentFormField.IsFlushed()) {
+            for (int i = 1; i < splitFieldsArray.Length; i++) {
+                if (parentFormField == null || parentFormField.IsFlushed()) {
                     return null;
                 }
-                kidField = parentFormField.GetChildField(splitFields[i]);
+                kidField = parentFormField.GetChildField(splitFieldsArray[i]);
                 parentFormField = kidField;
             }
             return kidField;
@@ -843,8 +845,6 @@ namespace iText.Forms {
             ICollection<PdfFormField> fields;
             if (fieldsForFlattening.IsEmpty()) {
                 this.fields.Clear();
-                //This alternate addition of fields is used due to incorrect handling of fields without names.
-                //Must be replaced with getAllFormFields() after DEVSIX-7308
                 fields = GetAllFormFieldsWithoutNames();
             }
             else {
@@ -1032,6 +1032,12 @@ namespace iText.Forms {
         /// <param name="oldName">the current name of the field</param>
         /// <param name="newName">the new name of the field. Must not be used currently.</param>
         public virtual void RenameField(String oldName, String newName) {
+            PdfFormField oldField = GetField(oldName);
+            if (oldField == null) {
+                LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.FIELDNAME_NOT_FOUND_OPERATION_CAN_NOT_BE_COMPLETED
+                    , oldName));
+                return;
+            }
             GetField(oldName).SetFieldName(newName);
             PdfFormField field = fields.Get(oldName);
             if (field != null) {
@@ -1126,7 +1132,6 @@ namespace iText.Forms {
         private IDictionary<String, PdfFormField> PopulateFormFieldsMap() {
             PdfArray rawFields = GetFields();
             IDictionary<String, PdfFormField> fields = new LinkedDictionary<String, PdfFormField>();
-            int index = 1;
             PdfArray shouldBeRemoved = new PdfArray();
             foreach (PdfObject field in rawFields) {
                 if (field.IsFlushed()) {
@@ -1142,32 +1147,15 @@ namespace iText.Forms {
                 }
                 PdfFormFieldMergeUtil.MergeKidsWithSameNames(formField, false);
                 PdfString fieldName = formField.GetFieldName();
-                String name;
-                if (fieldName == null) {
-                    while (fieldName == null) {
-                        if (formField.GetParent() == null) {
-                            LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD, field.GetIndirectReference
-                                ()));
-                            break;
-                        }
-                        PdfFormField parentField = PdfFormField.MakeFormField(formField.GetParent(), document);
-                        fieldName = parentField.GetFieldName();
+                if (fieldName != null) {
+                    String name = formField.GetFieldName().ToUnicodeString();
+                    if (formField.IsInReadingMode() || !fields.ContainsKey(name) || !PdfFormFieldMergeUtil.MergeTwoFieldsWithTheSameNames
+                        (fields.Get(name), formField, true)) {
+                        fields.Put(name, formField);
                     }
-                    if (fieldName == null) {
-                        continue;
+                    else {
+                        shouldBeRemoved.Add(field);
                     }
-                    name = fieldName.ToUnicodeString() + "." + index;
-                    index++;
-                }
-                else {
-                    name = fieldName.ToUnicodeString();
-                }
-                if (formField.IsInReadingMode() || !fields.ContainsKey(name) || !PdfFormFieldMergeUtil.MergeTwoFieldsWithTheSameNames
-                    (fields.Get(name), formField, true)) {
-                    fields.Put(name, formField);
-                }
-                else {
-                    shouldBeRemoved.Add(field);
                 }
             }
             foreach (PdfObject field in shouldBeRemoved) {

@@ -44,12 +44,10 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD)]
         public virtual void OrphanedNamelessFormFieldTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "orphanedFormField.pdf"))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                // 2 out of 3 have been gathered
-                NUnit.Framework.Assert.AreEqual(2, form.GetDirectFormFields().Count);
+                NUnit.Framework.Assert.AreEqual(3, form.GetDirectFormFields().Count);
             }
         }
 

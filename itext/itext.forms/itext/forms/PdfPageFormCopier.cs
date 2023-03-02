@@ -215,8 +215,13 @@ namespace iText.Forms {
             PdfDictionary parent = newField.GetParent();
             if (parent != null) {
                 newField.SetParent(PdfFormField.MakeFormField(parent, newField.GetDocument()));
-                if (null == fieldName) {
-                    fieldName = parent.GetAsString(PdfName.T);
+                if (fieldName == null) {
+                    if (newField.IsTerminalFormField()) {
+                        fieldName = new PdfString(parent.GetAsString(PdfName.T).ToUnicodeString() + ".");
+                    }
+                    else {
+                        fieldName = parent.GetAsString(PdfName.T);
+                    }
                 }
             }
             String fullFieldName = fieldName.ToUnicodeString();

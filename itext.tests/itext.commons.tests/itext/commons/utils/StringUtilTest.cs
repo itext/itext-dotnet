@@ -48,11 +48,14 @@ namespace iText.Commons.Utils {
     /// <summary>At the moment there is no StringUtil class in Java, but there is one in C# and we are testing</summary>
     [NUnit.Framework.Category("UnitTest")]
     public class StringUtilTest : ExtendedITextTest {
+        private const char SPLIT_PERIOD = '.';
+
         [NUnit.Framework.Test]
         public virtual void PatternSplitTest01() {
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6457 fix different behavior of Pattern.split method)
             // Pattern.split in Java works differently compared to Regex.Split in C#
-            // In C#, empty strings are possible at the beginning of the resultant array for non-capturing groups in split regex
+            // In C#, empty strings are possible at the beginning of the resultant array for non-capturing groups in
+            // split regex
             // Thus, in C# we use a separate utility for splitting to align the implementation with Java
             // This test verifies that the resultant behavior is the same
             Regex pattern = iText.Commons.Utils.StringUtil.RegexCompile("(?=[ab])");
@@ -85,6 +88,71 @@ namespace iText.Commons.Utils {
             String source = "";
             String[] expected = new String[] { "" };
             String[] result = iText.Commons.Utils.StringUtil.Split(source, "(?=[ab])");
+            NUnit.Framework.Assert.AreEqual(expected, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitKeepEmptyParts01() {
+            String source = "";
+            String[] expected = new String[] { "" };
+            String[] result = StringSplitUtil.SplitKeepTrailingWhiteSpace(source, SPLIT_PERIOD);
+            NUnit.Framework.Assert.AreEqual(iText.Commons.Utils.StringUtil.Split(source, SPLIT_PERIOD.ToString()), result
+                );
+            NUnit.Framework.Assert.AreEqual(expected, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitKeepEmptyParts02() {
+            String source = null;
+            NUnit.Framework.Assert.Catch(typeof(Exception), () => StringSplitUtil.SplitKeepTrailingWhiteSpace(source, 
+                SPLIT_PERIOD));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitKeepEmptyParts03() {
+            String source = "test.test1";
+            String[] expected = new String[] { "test", "test1" };
+            String[] result = StringSplitUtil.SplitKeepTrailingWhiteSpace(source, SPLIT_PERIOD);
+            NUnit.Framework.Assert.AreEqual(expected, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitKeepEmptyParts04() {
+            String source = "test..test1";
+            String[] expected = new String[] { "test", "", "test1" };
+            String[] result = StringSplitUtil.SplitKeepTrailingWhiteSpace(source, SPLIT_PERIOD);
+            NUnit.Framework.Assert.AreEqual(expected, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitKeepEmptyParts05() {
+            String source = "test...test1";
+            String[] expected = new String[] { "test", "", "", "test1" };
+            String[] result = StringSplitUtil.SplitKeepTrailingWhiteSpace(source, SPLIT_PERIOD);
+            NUnit.Framework.Assert.AreEqual(expected, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitKeepEmptyParts06() {
+            String source = ".test1";
+            String[] expected = new String[] { "", "test1" };
+            String[] result = StringSplitUtil.SplitKeepTrailingWhiteSpace(source, SPLIT_PERIOD);
+            NUnit.Framework.Assert.AreEqual(expected, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitKeepEmptyPartsDifferentBehaviour01() {
+            String source = "test.";
+            String[] expected = new String[] { "test", "" };
+            String[] result = StringSplitUtil.SplitKeepTrailingWhiteSpace(source, SPLIT_PERIOD);
+            NUnit.Framework.Assert.AreEqual(expected, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitKeepEmptyPartsDifferentBehaviour02() {
+            String source = "test..";
+            String[] expected = new String[] { "test", "", "" };
+            String[] result = StringSplitUtil.SplitKeepTrailingWhiteSpace(source, SPLIT_PERIOD);
             NUnit.Framework.Assert.AreEqual(expected, result);
         }
     }

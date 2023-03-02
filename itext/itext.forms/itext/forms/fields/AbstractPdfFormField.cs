@@ -65,6 +65,9 @@ namespace iText.Forms.Fields {
     /// must be indirect.
     /// </remarks>
     public abstract class AbstractPdfFormField : PdfObjectWrapper<PdfDictionary> {
+        private static readonly PdfName[] TERMINAL_FIELDS = new PdfName[] { PdfName.Btn, PdfName.Tx, PdfName.Ch, PdfName
+            .Sig };
+
         /// <summary>Size of text in form fields when font size is not explicitly set.</summary>
         internal const int DEFAULT_FONT_SIZE = 12;
 
@@ -167,9 +170,12 @@ namespace iText.Forms.Fields {
             }
             PdfString name = GetPdfObject().GetAsString(PdfName.T);
             if (name != null) {
-                name = new PdfString(parentName + name.ToUnicodeString(), PdfEncodings.UNICODE_BIG);
+                return new PdfString(parentName + name.ToUnicodeString(), PdfEncodings.UNICODE_BIG);
             }
-            return name;
+            if (IsTerminalFormField()) {
+                return new PdfString(parentName, PdfEncodings.UNICODE_BIG);
+            }
+            return null;
         }
 
         /// <summary>
@@ -404,6 +410,18 @@ namespace iText.Forms.Fields {
             UpdateFontAndFontSize(font, fontSize);
             RegenerateField();
             return this;
+        }
+
+        public virtual bool IsTerminalFormField() {
+            if (GetPdfObject() == null || GetPdfObject().Get(PdfName.FT) == null) {
+                return false;
+            }
+            foreach (PdfName terminalField in TERMINAL_FIELDS) {
+                if (terminalField.Equals(GetPdfObject().Get(PdfName.FT))) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         internal virtual void UpdateFontAndFontSize(PdfFont font, float fontSize) {

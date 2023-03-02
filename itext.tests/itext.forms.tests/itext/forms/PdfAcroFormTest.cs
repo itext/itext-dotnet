@@ -350,7 +350,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        public virtual void AddRootFieldWithDirtyAnnotationsTest() {
+        public virtual void AddRootFieldWithDirtyNamedAnnotationsTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
                 PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
@@ -361,6 +361,34 @@ namespace iText.Forms {
                 PdfFormField secondDirtyAnnot = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle
                     (200, 600, 300, 40)).CreateText();
                 secondDirtyAnnot.GetPdfObject().Remove(PdfName.V);
+                rootField.AddKid(firstDirtyAnnot);
+                rootField.AddKid(secondDirtyAnnot);
+                NUnit.Framework.Assert.AreEqual(1, rootField.GetKids().Size());
+                NUnit.Framework.Assert.AreEqual(2, firstDirtyAnnot.GetKids().Size());
+                acroForm.AddField(rootField);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
+                PdfArray fieldKids = acroForm.GetField("root").GetKids();
+                NUnit.Framework.Assert.AreEqual(1, fieldKids.Size());
+                NUnit.Framework.Assert.IsFalse(PdfFormAnnotationUtil.IsPureWidget((PdfDictionary)fieldKids.Get(0)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddRootFieldWithDirtyUnnamedAnnotationsTest() {
+            using (PdfDocument outputDoc = CreateDocument()) {
+                outputDoc.AddNewPage();
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfFormField rootField = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
+                PdfFormField firstDirtyAnnot = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle
+                    (100, 500, 200, 30)).CreateText();
+                firstDirtyAnnot.GetPdfObject().Remove(PdfName.V);
+                // Remove name in order to make dirty annotation being merged
+                firstDirtyAnnot.GetPdfObject().Remove(PdfName.T);
+                PdfFormField secondDirtyAnnot = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle
+                    (200, 600, 300, 40)).CreateText();
+                secondDirtyAnnot.GetPdfObject().Remove(PdfName.V);
+                // Remove name in order to make dirty annotation being merged
+                secondDirtyAnnot.GetPdfObject().Remove(PdfName.T);
                 rootField.AddKid(firstDirtyAnnot);
                 rootField.AddKid(secondDirtyAnnot);
                 NUnit.Framework.Assert.AreEqual(1, rootField.GetKids().Size());

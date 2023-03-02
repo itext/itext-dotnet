@@ -431,9 +431,7 @@ namespace iText.Forms.Fields {
                 SetFieldValue(value, generateAppearance);
             }
             else {
-                PdfString partialFieldName = GetPartialFieldName();
-                //TODO Remove this check after DEVSIX-7308 ticket will be closed.
-                String fieldName = partialFieldName == null ? "" : partialFieldName.ToUnicodeString();
+                String fieldName = GetPartialFieldName().ToUnicodeString();
                 foreach (iText.Forms.Fields.PdfFormField field in parent.GetChildFormFields()) {
                     if (fieldName.Equals(field.GetPartialFieldName().ToUnicodeString())) {
                         field.SetFieldValue(value, generateAppearance);
@@ -698,11 +696,15 @@ namespace iText.Forms.Fields {
         /// <summary>Gets the current field partial name.</summary>
         /// <returns>
         /// the current field partial name, as a
-        /// <see cref="iText.Kernel.Pdf.PdfString"/>.
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// . If the field has no partial name,
+        /// an empty
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// is returned.
         /// </returns>
         public virtual PdfString GetPartialFieldName() {
-            //TODO DEVSIX-7308 Handle form fields without names more carefully
-            return GetPdfObject().GetAsString(PdfName.T);
+            PdfString partialName = GetPdfObject().GetAsString(PdfName.T);
+            return partialName == null ? new PdfString("") : partialName;
         }
 
         /// <summary>Changes the alternate name of the field to the specified value.</summary>
@@ -1539,9 +1541,9 @@ namespace iText.Forms.Fields {
             if (IsInReadingMode() || PdfFormAnnotationUtil.IsPureWidget(newKid.GetPdfObject())) {
                 return false;
             }
-            String newKidPartialName = PdfFormFieldMergeUtil.GetPartialName(newKid.GetPdfObject());
+            String newKidPartialName = PdfFormFieldMergeUtil.GetPartialName(newKid);
             foreach (AbstractPdfFormField kid in childFields) {
-                String kidPartialName = PdfFormFieldMergeUtil.GetPartialName(kid.GetPdfObject());
+                String kidPartialName = PdfFormFieldMergeUtil.GetPartialName(kid);
                 if (kidPartialName != null && kidPartialName.Equals(newKidPartialName)) {
                     // Merge kid with the first found field with the same name.
                     return PdfFormFieldMergeUtil.MergeTwoFieldsWithTheSameNames((iText.Forms.Fields.PdfFormField)kid, (iText.Forms.Fields.PdfFormField

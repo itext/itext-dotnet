@@ -804,15 +804,13 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-7308 update cmp files after the ticket will be resolved")]
         public virtual void MaxLenDeepInheritanceTest() {
             String srcFilename = sourceFolder + "maxLenDeepInheritanceTest.pdf";
             String destFilename = destinationFolder + "maxLenDeepInheritanceTest.pdf";
             String cmpFilename = sourceFolder + "cmp_maxLenDeepInheritanceTest.pdf";
             PdfDocument destDoc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(destFilename));
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
-            // TODO After DEVSIX-7308 getField should return field without partial name here
-            acroForm.GetField("text.1.").SetValue("WoOooOw");
+            acroForm.GetField("text.1.").SetColor(ColorConstants.RED);
             destDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFilename, destinationFolder
                 , "diff_"));
@@ -1088,7 +1086,6 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void FillUnmergedTextFormField() {
-            //TODO DEVSIX-7308 Handle form fields without names more carefully
             String file = sourceFolder + "fillUnmergedTextFormField.pdf";
             String outfile = destinationFolder + "fillUnmergedTextFormField.pdf";
             String text = "John";
@@ -1244,7 +1241,7 @@ namespace iText.Forms {
             using (PdfDocument doc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf))) {
                 PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(doc, false);
                 foreach (AbstractPdfFormField field in acroForm.GetAllFormFieldsAndAnnotations()) {
-                    if (field is PdfFormField && field.GetPdfObject().Get(PdfName.V).ToString() == "child") {
+                    if (field is PdfFormField && "child".Equals(field.GetPdfObject().Get(PdfName.V).ToString())) {
                         // Child has value "root" still because it doesn't contain T entry
                         NUnit.Framework.Assert.AreEqual("root", ((PdfFormField)field).GetValue().ToString());
                     }
@@ -1253,6 +1250,15 @@ namespace iText.Forms {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetSigFlagsTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+                form.SetSignatureFlag(1);
+                NUnit.Framework.Assert.AreEqual(1, form.GetSignatureFlags());
+            }
         }
     }
 }
