@@ -123,5 +123,34 @@ namespace iText.Kernel.Pdf {
             textArray.AddAll(collection);
             NUnit.Framework.Assert.AreEqual(collection.list, textArray.list);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void AddZeroSumTest() {
+            PdfTextArray textArray = new PdfTextArray();
+            textArray.Add(new PdfString("test"));
+            textArray.Add(new PdfNumber(11));
+            textArray.Add(new PdfNumber(12));
+            textArray.Add(new PdfNumber(-13));
+            textArray.Add(new PdfNumber(8));
+            textArray.Add(new PdfNumber(-18));
+            textArray.Add(new PdfString("test"));
+            PdfArray expected = new PdfArray();
+            expected.Add(new PdfString("test"));
+            expected.Add(new PdfString("test"));
+            NUnit.Framework.Assert.AreEqual(expected.list, textArray.list);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddZeroSumAtTheBeginningTest() {
+            PdfTextArray textArray = new PdfTextArray();
+            textArray.Add(new PdfNumber(11));
+            textArray.Add(new PdfNumber(-11));
+            textArray.Add(new PdfNumber(13));
+            textArray.Add(new PdfString("test"));
+            PdfArray expected = new PdfArray();
+            expected.Add(new PdfNumber(13));
+            expected.Add(new PdfString("test"));
+            NUnit.Framework.Assert.AreEqual(expected.list, textArray.list);
+        }
     }
 }

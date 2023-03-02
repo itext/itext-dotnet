@@ -123,6 +123,7 @@ namespace iText.Kernel.Pdf {
                     }
                     else {
                         Remove(Size() - 1);
+                        lastNumber = float.NaN;
                     }
                 }
                 else {
