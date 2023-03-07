@@ -1,3 +1,25 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2023 iText Group NV
+Authors: iText Software.
+
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
+
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Layout.Element;
@@ -66,21 +88,21 @@ namespace iText.Forms.Form.Renderer {
             IRenderer paragraphRender = inputFieldRendererWithoutPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is ParagraphRenderer);
             InputField inputFieldWithEmptyPlaceholder = new InputField("");
-            inputFieldWithEmptyPlaceholder.SetPlaceholder(new _Paragraph_82());
+            inputFieldWithEmptyPlaceholder.SetPlaceholder(new _Paragraph_104());
             InputFieldRenderer inputFieldRendererWithEmptyPlaceholder = new InputFieldRenderer(inputFieldWithEmptyPlaceholder
                 );
             paragraphRender = inputFieldRendererWithEmptyPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is ParagraphRenderer);
             NUnit.Framework.Assert.IsFalse(paragraphRender is InputFieldRendererTest.CustomParagraphRenderer);
             InputField inputFieldWithPlaceholder = new InputField("");
-            inputFieldWithPlaceholder.SetPlaceholder(new _Paragraph_95());
+            inputFieldWithPlaceholder.SetPlaceholder(new _Paragraph_117());
             InputFieldRenderer inputFieldRendererWithPlaceholder = new InputFieldRenderer(inputFieldWithPlaceholder);
             paragraphRender = inputFieldRendererWithPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is InputFieldRendererTest.CustomParagraphRenderer);
         }
 
-        private sealed class _Paragraph_82 : Paragraph {
-            public _Paragraph_82() {
+        private sealed class _Paragraph_104 : Paragraph {
+            public _Paragraph_104() {
             }
 
             public override IRenderer CreateRendererSubTree() {
@@ -88,8 +110,8 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
-        private sealed class _Paragraph_95 : Paragraph {
-            public _Paragraph_95() {
+        private sealed class _Paragraph_117 : Paragraph {
+            public _Paragraph_117() {
             }
 
             public override bool IsEmpty() {
