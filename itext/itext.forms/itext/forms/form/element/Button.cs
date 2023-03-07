@@ -50,7 +50,7 @@ namespace iText.Forms.Form.Element {
     /// <summary>
     /// Extension of the
     /// <see cref="FormField{T}"/>
-    /// class representing a button in html
+    /// class representing a button in html.
     /// </summary>
     public class Button : FormField<iText.Forms.Form.Element.Button> {
         public Button(String id)

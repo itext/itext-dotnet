@@ -47,8 +47,6 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Forms.Fields.Borders;
-using iText.Forms.Form;
-using iText.Forms.Form.Element;
 using iText.Forms.Logs;
 using iText.Forms.Util;
 using iText.IO.Font;
@@ -1231,92 +1229,6 @@ namespace iText.Forms.Fields {
                 }
             }
             return false;
-        }
-
-        internal virtual bool DrawWidget() {
-            // TODO DEVSIX-7385 This method is excepted to be used instead of regenerateWidget method
-            PdfName type = parent.GetFormType();
-            IFormField formField;
-            if (PdfName.Tx.Equals(type)) {
-                formField = CreateInputField();
-            }
-            else {
-                if (PdfName.Ch.Equals(type)) {
-                    formField = CreateChoiceField();
-                }
-                else {
-                    if (PdfName.Btn.Equals(type)) {
-                        if (parent.GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
-                            formField = CreateInputButton();
-                        }
-                        else {
-                            if (parent.GetFieldFlag(PdfButtonFormField.FF_RADIO)) {
-                                formField = CreateRadio();
-                            }
-                            else {
-                                formField = CreateCheckbox();
-                            }
-                        }
-                    }
-                    else {
-                        return false;
-                    }
-                }
-            }
-            // TODO DEVSIX-7359 This method is a placeholder and is not expected to work correctly right now.
-            //  Shall be changed.
-            DrawFieldAndSaveAppearance(formField);
-            return true;
-        }
-
-        internal virtual void DrawFieldAndSaveAppearance(IFormField formField) {
-            Rectangle rectangle = GetRect(this.GetPdfObject());
-            // TODO DEVSIX-7359 rectangle for xObject is incorrect. The most close result appears with +5 instead of +1000,
-            //  however several tests hang because of not enough space.
-            //  It may be that rectangle should be unique for each element.
-            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth() + 1000, rectangle.GetHeight
-                () + 1000));
-            iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, this.GetDocument());
-            // TODO DEVSIX-7359 setters for such values are expected to be implemented on the necessary level.
-            //  For all properties, which are expected to be used by user,
-            //  special setters shall present on model elements level.
-            formField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-            formField.SetProperty(FormProperty.FORM_FIELD_VALUE, parent.GetValueAsString());
-            canvas.Add(formField);
-            PdfDictionary ap = new PdfDictionary();
-            ap.Put(PdfName.N, xObject.GetPdfObject());
-            ap.SetModified();
-            Put(PdfName.AP, ap);
-        }
-
-        internal virtual IFormField CreateInputField() {
-            // TODO DEVSIX-7362 implement logic for text field.
-            InputField inputField = new InputField(parent.GetFieldName().ToUnicodeString());
-            return inputField;
-        }
-
-        internal virtual IFormField CreateChoiceField() {
-            // TODO DEVSIX-7394 implement logic for choice form fields.
-            ComboBoxField comboBoxField = new ComboBoxField(parent.GetFieldName().ToUnicodeString());
-            return comboBoxField;
-        }
-
-        internal virtual IFormField CreateInputButton() {
-            // TODO DEVSIX-7359 implement logic for push button.
-            InputButton inputButton = new InputButton(parent.GetFieldName().ToUnicodeString());
-            return inputButton;
-        }
-
-        internal virtual IFormField CreateRadio() {
-            // TODO DEVSIX-7360 implement logic for radio button.
-            Radio radio = new Radio(parent.GetFieldName().ToUnicodeString());
-            return radio;
-        }
-
-        internal virtual IFormField CreateCheckbox() {
-            // TODO DEVSIX-7361 implement logic for checkbox.
-            CheckBox checkBox = new CheckBox(parent.GetFieldName().ToUnicodeString());
-            return checkBox;
         }
 
         private static double DegreeToRadians(double angle) {

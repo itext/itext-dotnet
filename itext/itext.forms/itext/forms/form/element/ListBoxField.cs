@@ -49,10 +49,14 @@ namespace iText.Forms.Form.Element {
     /// <summary>A field that represents a control for selecting one or several of the provided options.</summary>
     public class ListBoxField : AbstractSelectField {
         /// <summary>Creates a new list box field.</summary>
-        /// <param name="size">the size of the list box, which will define the height of visible properties, shall be greater than zero
-        ///     </param>
-        /// <param name="allowMultipleSelection">a boolean flag that defines whether multiple options are allowed to be selected at once
-        ///     </param>
+        /// <param name="size">
+        /// the size of the list box, which will define the height of visible properties,
+        /// shall be greater than zero
+        /// </param>
+        /// <param name="allowMultipleSelection">
+        /// a boolean flag that defines whether multiple options are allowed
+        /// to be selected at once
+        /// </param>
         /// <param name="id">the id</param>
         public ListBoxField(String id, int size, bool allowMultipleSelection)
             : base(id) {

@@ -133,16 +133,15 @@ namespace iText.Forms.Form.Renderer {
         /// <returns>true, if fields need to be flattened</returns>
         public virtual bool IsFlatten() {
             bool? flatten = GetPropertyAsBoolean(FormProperty.FORM_FIELD_FLATTEN);
-            return flatten != null ? (bool)flatten : (bool)modelElement.GetDefaultProperty<bool>(FormProperty.FORM_FIELD_FLATTEN
-                );
+            return flatten == null ? (bool)modelElement.GetDefaultProperty<bool>(FormProperty.FORM_FIELD_FLATTEN) : (bool
+                )flatten;
         }
 
         /// <summary>Gets the default value of the form field.</summary>
         /// <returns>the default value of the form field</returns>
         public virtual String GetDefaultValue() {
             String defaultValue = this.GetProperty<String>(FormProperty.FORM_FIELD_VALUE);
-            return defaultValue != null ? defaultValue : modelElement.GetDefaultProperty<String>(FormProperty.FORM_FIELD_VALUE
-                );
+            return defaultValue == null ? modelElement.GetDefaultProperty<String>(FormProperty.FORM_FIELD_VALUE) : defaultValue;
         }
     }
 }

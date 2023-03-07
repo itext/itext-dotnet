@@ -48,7 +48,7 @@ namespace iText.Forms.Form.Element {
     /// <summary>An abstract class for fields that represents a control for selecting one or several of the provided options.
     ///     </summary>
     public abstract class AbstractSelectField : FormField<iText.Forms.Form.Element.AbstractSelectField> {
-        private IList<IBlockElement> options = new List<IBlockElement>();
+        private readonly IList<IBlockElement> options = new List<IBlockElement>();
 
         protected internal AbstractSelectField(String id)
             : base(id) {

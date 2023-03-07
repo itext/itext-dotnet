@@ -115,14 +115,14 @@ namespace iText.Forms.Form.Renderer {
             IList<LineRenderer> flatLines = ((ParagraphRenderer)flatRenderer).GetLines();
             UpdatePdfFont((ParagraphRenderer)flatRenderer);
             Rectangle flatBBox = flatRenderer.GetOccupiedArea().GetBBox();
-            if (!flatLines.IsEmpty() && font != null) {
-                CropContentLines(flatLines, flatBBox);
-            }
-            else {
+            if (flatLines.IsEmpty() || font == null) {
                 ITextLogManager.GetLogger(GetType()).LogError(MessageFormatUtil.Format(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE
                     , "text area"));
                 SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flatBBox.SetHeight(0);
+            }
+            else {
+                CropContentLines(flatLines, flatBBox);
             }
             flatBBox.SetWidth((float)RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth()));
         }
@@ -135,11 +135,9 @@ namespace iText.Forms.Form.Renderer {
         }
 
         internal override IRenderer CreateParagraphRenderer(String defaultValue) {
-            if (String.IsNullOrEmpty(defaultValue)) {
-                if (null != ((TextArea)modelElement).GetPlaceholder() && !((TextArea)modelElement).GetPlaceholder().IsEmpty
-                    ()) {
-                    return ((TextArea)modelElement).GetPlaceholder().CreateRendererSubTree();
-                }
+            if (String.IsNullOrEmpty(defaultValue) && null != ((TextArea)modelElement).GetPlaceholder() && !((TextArea
+                )modelElement).GetPlaceholder().IsEmpty()) {
+                return ((TextArea)modelElement).GetPlaceholder().CreateRendererSubTree();
             }
             return base.CreateParagraphRenderer(defaultValue);
         }

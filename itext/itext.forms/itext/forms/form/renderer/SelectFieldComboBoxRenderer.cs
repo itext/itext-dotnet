@@ -59,7 +59,7 @@ namespace iText.Forms.Form.Renderer {
     /// implementation for select field renderer.
     /// </summary>
     public class SelectFieldComboBoxRenderer : AbstractSelectFieldRenderer {
-        private IRenderer minMaxWidthRenderer;
+        private readonly IRenderer minMaxWidthRenderer;
 
         /// <summary>
         /// Creates a new
@@ -92,14 +92,14 @@ namespace iText.Forms.Form.Renderer {
             return true;
         }
 
-        protected internal override IRenderer CreateFlatRenderer() {
-            return CreateFlatRenderer(false);
-        }
-
         protected internal override void ApplyAcroField(DrawContext drawContext) {
         }
 
         // TODO DEVSIX-1901
+        protected internal override IRenderer CreateFlatRenderer() {
+            return CreateFlatRenderer(false);
+        }
+
         private IRenderer CreateFlatRenderer(bool addAllOptionsToChildren) {
             AbstractSelectField selectField = (AbstractSelectField)modelElement;
             IList<IBlockElement> options = selectField.GetOptions();

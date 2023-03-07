@@ -48,7 +48,7 @@ namespace iText.Forms.Form.Element {
     /// <summary>
     /// Extension of the
     /// <see cref="FormField{T}"/>
-    /// class representing a input with type button or submit in html
+    /// class representing a input with type button or submit in html.
     /// </summary>
     public class InputButton : FormField<iText.Forms.Form.Element.InputButton> {
         /// <summary>

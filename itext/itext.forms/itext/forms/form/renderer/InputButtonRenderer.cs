@@ -91,7 +91,13 @@ namespace iText.Forms.Form.Renderer {
             IList<LineRenderer> flatLines = ((ParagraphRenderer)flatRenderer).GetLines();
             Rectangle flatBBox = flatRenderer.GetOccupiedArea().GetBBox();
             UpdatePdfFont((ParagraphRenderer)flatRenderer);
-            if (!flatLines.IsEmpty() && font != null) {
+            if (flatLines.IsEmpty() || font == null) {
+                ITextLogManager.GetLogger(GetType()).LogError(MessageFormatUtil.Format(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE
+                    , "button"));
+                SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
+                flatBBox.SetY(flatBBox.GetTop()).SetHeight(0);
+            }
+            else {
                 if (flatLines.Count != 1) {
                     isSplit = true;
                 }
@@ -102,12 +108,6 @@ namespace iText.Forms.Form.Renderer {
                     drawnLine.Move(flatBBox.GetX() - drawnLine.GetOccupiedArea().GetBBox().GetX(), 0);
                     flatBBox.SetWidth(drawnLine.GetOccupiedArea().GetBBox().GetWidth());
                 }
-            }
-            else {
-                ITextLogManager.GetLogger(GetType()).LogError(MessageFormatUtil.Format(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE
-                    , "button"));
-                SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-                flatBBox.SetY(flatBBox.GetTop()).SetHeight(0);
             }
         }
 

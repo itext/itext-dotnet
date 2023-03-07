@@ -44,7 +44,7 @@ using System;
 using iText.Layout.Element;
 
 namespace iText.Forms.Form.Element {
-    /// <summary>Common interface for HTML form elements</summary>
+    /// <summary>Common interface for HTML form elements.</summary>
     public interface IFormField : IBlockElement {
         /// <summary>Gets the id.</summary>
         /// <returns>the id</returns>

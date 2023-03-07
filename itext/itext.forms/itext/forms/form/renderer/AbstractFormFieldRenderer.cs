@@ -82,16 +82,15 @@ namespace iText.Forms.Form.Renderer {
         /// <returns>true, if fields need to be flattened</returns>
         public virtual bool IsFlatten() {
             bool? flatten = GetPropertyAsBoolean(FormProperty.FORM_FIELD_FLATTEN);
-            return flatten != null ? (bool)flatten : (bool)modelElement.GetDefaultProperty<bool>(FormProperty.FORM_FIELD_FLATTEN
-                );
+            return flatten == null ? (bool)modelElement.GetDefaultProperty<bool>(FormProperty.FORM_FIELD_FLATTEN) : (bool
+                )flatten;
         }
 
         /// <summary>Gets the default value of the form field.</summary>
         /// <returns>the default value of the form field</returns>
         public virtual String GetDefaultValue() {
             String defaultValue = this.GetProperty<String>(FormProperty.FORM_FIELD_VALUE);
-            return defaultValue != null ? defaultValue : modelElement.GetDefaultProperty<String>(FormProperty.FORM_FIELD_VALUE
-                );
+            return defaultValue == null ? modelElement.GetDefaultProperty<String>(FormProperty.FORM_FIELD_VALUE) : defaultValue;
         }
 
         /* (non-Javadoc)
@@ -109,7 +108,11 @@ namespace iText.Forms.Form.Renderer {
             Rectangle bBox = layoutContext.GetArea().GetBBox().Clone().MoveDown(INF - parentHeight).SetHeight(INF);
             layoutContext.GetArea().SetBBox(bBox);
             LayoutResult result = base.Layout(layoutContext);
-            if (!childRenderers.IsEmpty()) {
+            if (childRenderers.IsEmpty()) {
+                ITextLogManager.GetLogger(GetType()).LogError(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD);
+                occupiedArea.GetBBox().SetWidth(0).SetHeight(0);
+            }
+            else {
                 flatRenderer = childRenderers[0];
                 ProcessLangAttribute();
                 childRenderers.Clear();
@@ -123,10 +126,6 @@ namespace iText.Forms.Form.Renderer {
                     ApplyBorderBox(occupiedArea.GetBBox(), true);
                     ApplyMargins(occupiedArea.GetBBox(), true);
                 }
-            }
-            else {
-                ITextLogManager.GetLogger(GetType()).LogError(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD);
-                occupiedArea.GetBBox().SetWidth(0).SetHeight(0);
             }
             if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && !IsRendererFit(parentWidth, parentHeight
                 )) {

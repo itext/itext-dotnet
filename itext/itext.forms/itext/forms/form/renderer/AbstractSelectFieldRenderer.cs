@@ -65,7 +65,7 @@ namespace iText.Forms.Form.Renderer {
         /// instance.
         /// </summary>
         /// <param name="modelElement">the model element</param>
-        public AbstractSelectFieldRenderer(AbstractSelectField modelElement)
+        protected internal AbstractSelectFieldRenderer(AbstractSelectField modelElement)
             : base(modelElement) {
             AddChild(CreateFlatRenderer());
             if (!IsFlatten()) {
@@ -163,21 +163,21 @@ namespace iText.Forms.Form.Renderer {
         protected internal virtual IList<IRenderer> GetOptionsMarkedSelected(IRenderer optionsSubTree) {
             IList<IRenderer> selectedOptions = new List<IRenderer>();
             foreach (IRenderer option in optionsSubTree.GetChildRenderers()) {
-                if (!IsOptionRenderer(option)) {
-                    IList<IRenderer> subSelectedOptions = GetOptionsMarkedSelected(option);
-                    selectedOptions.AddAll(subSelectedOptions);
-                }
-                else {
+                if (IsOptionRenderer(option)) {
                     if (true.Equals(option.GetProperty<bool?>(FormProperty.FORM_FIELD_SELECTED))) {
                         selectedOptions.Add(option);
                     }
+                }
+                else {
+                    IList<IRenderer> subSelectedOptions = GetOptionsMarkedSelected(option);
+                    selectedOptions.AddAll(subSelectedOptions);
                 }
             }
             return selectedOptions;
         }
 
         private LayoutResult MakeLayoutResultFull(LayoutArea layoutArea, LayoutResult layoutResult) {
-            IRenderer splitRenderer = layoutResult.GetSplitRenderer() != null ? layoutResult.GetSplitRenderer() : this;
+            IRenderer splitRenderer = layoutResult.GetSplitRenderer() == null ? this : layoutResult.GetSplitRenderer();
             if (occupiedArea == null) {
                 occupiedArea = new LayoutArea(layoutArea.GetPageNumber(), new Rectangle(layoutArea.GetBBox().GetLeft(), layoutArea
                     .GetBBox().GetTop(), 0, 0));

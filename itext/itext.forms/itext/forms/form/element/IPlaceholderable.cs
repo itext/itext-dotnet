@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using iText.Layout.Element;
 
 namespace iText.Forms.Form.Element {
-    /// <summary>A marker interface that specifies that the layout object has placeholder</summary>
+    /// <summary>A marker interface that specifies that the layout object has placeholder.</summary>
     public interface IPlaceholderable {
         /// <summary>Gets the placeholder paragraph.</summary>
         /// <returns>the placeholder paragraph</returns>

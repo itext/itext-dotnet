@@ -82,27 +82,6 @@ namespace iText.Forms.Form.Renderer {
             return paragraph.CreateRendererSubTree();
         }
 
-        /// <summary>Adjust number of content lines.</summary>
-        /// <param name="lines">the lines that need to be rendered</param>
-        /// <param name="bBox">the bounding box</param>
-        /// <param name="rows">the desired number of lines</param>
-        internal virtual void AdjustNumberOfContentLines(IList<LineRenderer> lines, Rectangle bBox, int rows) {
-            if (lines.Count != rows) {
-                float rowsHeight = GetHeightRowsBased(lines, bBox, rows);
-                AdjustNumberOfContentLines(lines, bBox, rows, rowsHeight);
-            }
-        }
-
-        /// <summary>Adjust number of content lines.</summary>
-        /// <param name="lines">the lines that need to be rendered</param>
-        /// <param name="bBox">the bounding box</param>
-        /// <param name="height">the desired height of content</param>
-        internal virtual void AdjustNumberOfContentLines(IList<LineRenderer> lines, Rectangle bBox, float height) {
-            float averageLineHeight = bBox.GetHeight() / lines.Count;
-            int visibleLinesNumber = (int)Math.Ceiling(height / averageLineHeight);
-            AdjustNumberOfContentLines(lines, bBox, visibleLinesNumber, height);
-        }
-
         /// <summary>Applies the default field properties.</summary>
         /// <param name="inputField">the input field</param>
         internal virtual void ApplyDefaultFieldProperties(PdfFormField inputField) {
@@ -145,14 +124,34 @@ namespace iText.Forms.Form.Renderer {
 
         //The width based on cols of textarea and size of input doesn't affected by box sizing, so we emulate it here
         internal virtual float UpdateHtmlColsSizeBasedWidth(float width) {
-            if (BoxSizingPropertyValue.BORDER_BOX.Equals(this.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING
-                ))) {
+            if (BoxSizingPropertyValue.BORDER_BOX == this.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING)) {
                 Rectangle dummy = new Rectangle(width, 0);
                 ApplyBorderBox(dummy, true);
                 ApplyPaddings(dummy, true);
                 return dummy.GetWidth();
             }
             return width;
+        }
+
+        /// <summary>Adjust number of content lines.</summary>
+        /// <param name="lines">the lines that need to be rendered</param>
+        /// <param name="bBox">the bounding box</param>
+        /// <param name="rows">the desired number of lines</param>
+        internal virtual void AdjustNumberOfContentLines(IList<LineRenderer> lines, Rectangle bBox, int rows) {
+            if (lines.Count != rows) {
+                float rowsHeight = GetHeightRowsBased(lines, bBox, rows);
+                AdjustNumberOfContentLines(lines, bBox, rows, rowsHeight);
+            }
+        }
+
+        /// <summary>Adjust number of content lines.</summary>
+        /// <param name="lines">the lines that need to be rendered</param>
+        /// <param name="bBox">the bounding box</param>
+        /// <param name="height">the desired height of content</param>
+        internal virtual void AdjustNumberOfContentLines(IList<LineRenderer> lines, Rectangle bBox, float height) {
+            float averageLineHeight = bBox.GetHeight() / lines.Count;
+            int visibleLinesNumber = (int)Math.Ceiling(height / averageLineHeight);
+            AdjustNumberOfContentLines(lines, bBox, visibleLinesNumber, height);
         }
 
         private static void AdjustNumberOfContentLines(IList<LineRenderer> lines, Rectangle bBox, int linesNumber, 

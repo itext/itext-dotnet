@@ -128,8 +128,8 @@ namespace iText.Forms.Form.Renderer {
                 Paragraph pStub = new Paragraph("\u00A0").SetMargin(0);
                 pStub.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
                 pStub.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
-                pStub.SetProperty(FormProperty.FORM_FIELD_SELECTED, false);
                 // applying this property for the sake of finding this element as option
+                pStub.SetProperty(FormProperty.FORM_FIELD_SELECTED, false);
                 optionsContainer.Add(pStub);
                 rendererSubTree = optionsContainer.CreateRendererSubTree();
             }
@@ -183,10 +183,10 @@ namespace iText.Forms.Form.Renderer {
             if (maxOptionActualHeight == float.Epsilon) {
                 UnitValue fontSize = flatRenderer.GetProperty<UnitValue>(Property.FONT_SIZE);
                 if (fontSize != null && fontSize.IsPointValue()) {
+                    // according to default styles for options (min-height: 1.2em)
                     maxOptionActualHeight = fontSize.GetValue() * 1.2f;
                 }
                 else {
-                    // according to default styles for options (min-height: 1.2em)
                     maxOptionActualHeight = 0;
                 }
             }
@@ -244,7 +244,8 @@ namespace iText.Forms.Form.Renderer {
         }
 
         /// <summary>
-        /// The `select` tag has default color css property, therefore it makes sense to explicitly override this property to all children,
+        /// The `select` tag has default color css property,
+        /// therefore it makes sense to explicitly override this property to all children,
         /// otherwise it will be not applied due to the css resolving mechanism.
         /// </summary>
         private void SetFontColorRecursively(IRenderer selectedOption) {

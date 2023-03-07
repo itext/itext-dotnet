@@ -86,23 +86,21 @@ namespace iText.Forms.Form.Renderer {
         /// <returns>the input field size</returns>
         public virtual int GetSize() {
             int? size = this.GetPropertyAsInteger(FormProperty.FORM_FIELD_SIZE);
-            return size != null ? (int)size : (int)modelElement.GetDefaultProperty<int>(FormProperty.FORM_FIELD_SIZE);
+            return size == null ? (int)modelElement.GetDefaultProperty<int>(FormProperty.FORM_FIELD_SIZE) : (int)size;
         }
 
         /// <summary>Checks if the input field is a password field.</summary>
         /// <returns>true, if the input field is a password field</returns>
         public virtual bool IsPassword() {
             bool? password = GetPropertyAsBoolean(FormProperty.FORM_FIELD_PASSWORD_FLAG);
-            return password != null ? (bool)password : (bool)modelElement.GetDefaultProperty<bool>(FormProperty.FORM_FIELD_PASSWORD_FLAG
-                );
+            return password == null ? (bool)modelElement.GetDefaultProperty<bool>(FormProperty.FORM_FIELD_PASSWORD_FLAG
+                ) : (bool)password;
         }
 
         internal override IRenderer CreateParagraphRenderer(String defaultValue) {
-            if (String.IsNullOrEmpty(defaultValue)) {
-                if (null != ((InputField)modelElement).GetPlaceholder() && !((InputField)modelElement).GetPlaceholder().IsEmpty
-                    ()) {
-                    return ((InputField)modelElement).GetPlaceholder().CreateRendererSubTree();
-                }
+            if (String.IsNullOrEmpty(defaultValue) && null != ((InputField)modelElement).GetPlaceholder() && !((InputField
+                )modelElement).GetPlaceholder().IsEmpty()) {
+                return ((InputField)modelElement).GetPlaceholder().CreateRendererSubTree();
             }
             return base.CreateParagraphRenderer(defaultValue);
         }
@@ -114,14 +112,14 @@ namespace iText.Forms.Form.Renderer {
             IList<LineRenderer> flatLines = ((ParagraphRenderer)flatRenderer).GetLines();
             Rectangle flatBBox = flatRenderer.GetOccupiedArea().GetBBox();
             UpdatePdfFont((ParagraphRenderer)flatRenderer);
-            if (!flatLines.IsEmpty() && font != null) {
-                CropContentLines(flatLines, flatBBox);
-            }
-            else {
+            if (flatLines.IsEmpty() || font == null) {
                 ITextLogManager.GetLogger(GetType()).LogError(MessageFormatUtil.Format(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE
                     , "text input"));
                 SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flatBBox.SetY(flatBBox.GetTop()).SetHeight(0);
+            }
+            else {
+                CropContentLines(flatLines, flatBBox);
             }
             flatBBox.SetWidth((float)RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth()));
         }

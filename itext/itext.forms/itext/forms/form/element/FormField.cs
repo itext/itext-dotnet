@@ -54,7 +54,7 @@ namespace iText.Forms.Form.Element {
     public abstract class FormField<T> : AbstractElement<T>, IFormField
         where T : IFormField {
         /// <summary>The id.</summary>
-        private String id;
+        private readonly String id;
 
         /// <summary>
         /// Instantiates a new
