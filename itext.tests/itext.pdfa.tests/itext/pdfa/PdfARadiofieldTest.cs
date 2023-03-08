@@ -82,18 +82,19 @@ namespace iText.Pdfa {
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-            PdfButtonFormField group = new RadioFormFieldBuilder(doc, "group").SetConformanceLevel(PdfAConformanceLevel
-                .PDF_A_1B).CreateRadioGroup();
+            String formFieldName = "group";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(doc, formFieldName);
+            PdfButtonFormField group = builder.CreateRadioGroup();
             group.SetValue("1", true);
             group.SetReadOnly(true);
             Rectangle rect1 = new Rectangle(36, 700, 20, 20);
             Rectangle rect2 = new Rectangle(36, 680, 20, 20);
-            new RadioFormFieldBuilder(doc).SetWidgetRectangle(rect1).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B
-                ).CreateRadioButton(group, "1").GetFirstFormAnnotation().SetBorderWidth(2).SetBorderColor(ColorConstants
+            PdfFormAnnotation radio1 = builder.CreateRadioButton("1", rect1).SetBorderWidth(2).SetBorderColor(ColorConstants
                 .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormAnnotation.VISIBLE);
-            new RadioFormFieldBuilder(doc).SetWidgetRectangle(rect2).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B
-                ).CreateRadioButton(group, "2").GetFirstFormAnnotation().SetBorderWidth(2).SetBorderColor(ColorConstants
+            PdfFormAnnotation radio2 = builder.CreateRadioButton("2", rect2).SetBorderWidth(2).SetBorderColor(ColorConstants
                 .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormAnnotation.VISIBLE);
+            group.AddKid(radio1);
+            group.AddKid(radio2);
             form.AddField(group);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff

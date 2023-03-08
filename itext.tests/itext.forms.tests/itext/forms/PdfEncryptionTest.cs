@@ -104,12 +104,14 @@ namespace iText.Forms {
                 (100, 550, 200, 30)).CreateText();
             textField2.SetValue("Enter your surname");
             form.AddField(textField2);
-            PdfButtonFormField group = new RadioFormFieldBuilder(pdfDoc, "Sex").CreateRadioGroup();
+            String sexFormFieldName = "Sex";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, sexFormFieldName);
+            PdfButtonFormField group = builder.CreateRadioGroup();
             group.SetValue("Male");
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(100, 530, 10, 10)).CreateRadioButton(group
-                , "Male");
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(120, 530, 10, 10)).CreateRadioButton(group
-                , "Female");
+            PdfFormAnnotation radio1 = builder.CreateRadioButton("Male", new Rectangle(100, 530, 10, 10));
+            PdfFormAnnotation radio2 = builder.CreateRadioButton("Female", new Rectangle(120, 530, 10, 10));
+            group.AddKid(radio1);
+            group.AddKid(radio2);
             form.AddField(group);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
@@ -140,12 +142,16 @@ namespace iText.Forms {
                 (100, 550, 200, 30)).CreateText();
             textField2.SetValue("Enter your surname");
             form.AddField(textField2);
-            PdfButtonFormField group = new RadioFormFieldBuilder(pdfDoc, "Sex").CreateRadioGroup();
+            String sexFormFieldName = "Sex";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, sexFormFieldName);
+            PdfButtonFormField group = builder.CreateRadioGroup();
             group.SetValue("Male");
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(100, 530, 10, 10)).CreateRadioButton(group
-                , "Male");
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(120, 530, 10, 10)).CreateRadioButton(group
-                , "Female");
+            PdfFormAnnotation radio1 = new RadioFormFieldBuilder(pdfDoc, sexFormFieldName).CreateRadioButton("Male", new 
+                Rectangle(100, 530, 10, 10));
+            PdfFormAnnotation radio2 = new RadioFormFieldBuilder(pdfDoc, sexFormFieldName).CreateRadioButton("Female", 
+                new Rectangle(120, 530, 10, 10));
+            group.AddKid(radio1);
+            group.AddKid(radio2);
             form.AddField(group);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();

@@ -40,6 +40,10 @@ namespace iText.Forms.Exceptions {
 
         public const String FORM_FIELD_MUST_HAVE_A_NAME = "Form field must have a name." + " Set it using PdfFormField#setFieldName call.";
 
+        public const String APEARANCE_NAME_MUST_BE_PROVIDED = "Appearance name must be provided";
+
+        public const String WIDGET_RECTANGLE_MUST_BE_PROVIDED = "Widget rectangle must be provided";
+
         private FormsExceptionMessageConstant() {
         }
     }

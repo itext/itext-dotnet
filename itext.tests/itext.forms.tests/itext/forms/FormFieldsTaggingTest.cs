@@ -173,10 +173,12 @@ namespace iText.Forms {
         private void AddFormFieldsToDocument(PdfDocument pdfDoc, PdfAcroForm acroForm) {
             Rectangle rect = new Rectangle(36, 700, 20, 20);
             Rectangle rect1 = new Rectangle(36, 680, 20, 20);
-            PdfButtonFormField group = new RadioFormFieldBuilder(pdfDoc, "TestGroup").CreateRadioGroup();
+            String formFieldName = "TestGroup";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, formFieldName);
+            PdfButtonFormField group = builder.CreateRadioGroup();
             group.SetValue("1", true);
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect).CreateRadioButton(group, "1");
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect1).CreateRadioButton(group, "2");
+            group.AddKid(builder.CreateRadioButton("1", rect));
+            group.AddKid(builder.CreateRadioButton("2", rect1));
             acroForm.AddField(group);
             PdfButtonFormField pushButton = new PushButtonFormFieldBuilder(pdfDoc, "push").SetWidgetRectangle(new Rectangle
                 (36, 650, 40, 20)).SetCaption("Capcha").CreatePushButton();

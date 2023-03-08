@@ -49,6 +49,9 @@ namespace iText.Forms.Logs {
 
         public const String N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY = "\\N entry is required to be present in an appearance dictionary.";
 
+        public const String RADIO_HAS_NO_RECTANGLE = "Radiobutton was added without defining rectangle, it will " 
+            + "not be displayed";
+
         public const String NO_FIELDS_IN_ACROFORM = "Required AcroForm entry /Fields does not exist in the document. Empty array /Fields will be created.";
 
         public const String PROVIDE_FORMFIELD_NAME = "No form field name provided. Process will not be continued.";

@@ -241,10 +241,14 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             Rectangle rect = new Rectangle(36, 700, 20, 20);
             Rectangle rect1 = new Rectangle(36, 680, 20, 20);
-            PdfButtonFormField group = new RadioFormFieldBuilder(pdfDoc, "TestGroup").CreateRadioGroup();
+            String formFieldName = "TestGroup";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, formFieldName);
+            PdfButtonFormField group = builder.CreateRadioGroup();
             group.SetValue("1", true);
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect).CreateRadioButton(group, "1");
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect1).CreateRadioButton(group, "2");
+            PdfFormAnnotation radio1 = builder.CreateRadioButton("1", rect);
+            PdfFormAnnotation radio2 = builder.CreateRadioButton("2", rect1);
+            group.AddKid(radio1);
+            group.AddKid(radio2);
             form.AddField(group);
             PdfButtonFormField pushButton = new PushButtonFormFieldBuilder(pdfDoc, "push").SetWidgetRectangle(new Rectangle
                 (36, 650, 40, 20)).SetCaption("Capcha").CreatePushButton();
@@ -270,10 +274,12 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             Rectangle rect1 = new Rectangle(36, 700, 20, 20);
             Rectangle rect2 = new Rectangle(36, 680, 20, 20);
-            PdfButtonFormField group = new RadioFormFieldBuilder(pdfDoc, "TestGroup").CreateRadioGroup();
+            String formFieldName = "TestGroup";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, formFieldName);
+            PdfButtonFormField group = builder.CreateRadioGroup();
             group.SetValue("1", true);
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect1).CreateRadioButton(group, "1");
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect2).CreateRadioButton(group, "2");
+            group.AddKid(builder.CreateRadioButton("1", rect1));
+            group.AddKid(builder.CreateRadioButton("2", rect2));
             form.AddField(group);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
@@ -288,14 +294,17 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             Rectangle rect1 = new Rectangle(36, 700, 20, 20);
             Rectangle rect2 = new Rectangle(36, 680, 20, 20);
-            PdfButtonFormField group2 = new RadioFormFieldBuilder(pdfDoc, "TestGroup2").CreateRadioGroup();
+            String formFieldName2 = "TestGroup2";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, formFieldName2);
+            PdfButtonFormField group2 = builder.CreateRadioGroup();
             group2.SetValue("1", true);
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect1).CreateRadioButton(group2, "1").GetFirstFormAnnotation
-                ().SetBorderWidth(2).SetBorderColor(ColorConstants.RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).
-                SetVisibility(PdfFormAnnotation.VISIBLE);
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect2).CreateRadioButton(group2, "2").GetFirstFormAnnotation
-                ().SetBorderWidth(2).SetBorderColor(ColorConstants.RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).
-                SetVisibility(PdfFormAnnotation.VISIBLE);
+            PdfFormAnnotation radio1 = builder.CreateRadioButton("1", rect1).SetBorderWidth(2).SetBorderColor(ColorConstants
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormAnnotation.VISIBLE);
+            group2.AddKid(radio1);
+            PdfFormAnnotation radio2 = new RadioFormFieldBuilder(pdfDoc, formFieldName2).CreateRadioButton("2", rect2)
+                .SetBorderWidth(2).SetBorderColor(ColorConstants.RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility
+                (PdfFormAnnotation.VISIBLE);
+            group2.AddKid(radio2);
             form.AddField(group2);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
@@ -310,14 +319,16 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             Rectangle rect1 = new Rectangle(36, 700, 20, 20);
             Rectangle rect2 = new Rectangle(36, 680, 20, 20);
-            PdfButtonFormField group2 = new RadioFormFieldBuilder(pdfDoc, "TestGroup2").CreateRadioGroup();
+            String formFieldName2 = "TestGroup2";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, formFieldName2);
+            PdfButtonFormField group2 = builder.CreateRadioGroup();
             group2.SetValue("1", true);
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect1).CreateRadioButton(group2, "1").GetFirstFormAnnotation
-                ().SetBorderWidth(2).SetBorderColor(ColorConstants.RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).
-                SetVisibility(PdfFormAnnotation.VISIBLE);
-            new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(rect2).CreateRadioButton(group2, "2").GetFirstFormAnnotation
-                ().SetBorderWidth(2).SetBorderColor(ColorConstants.RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).
-                SetVisibility(PdfFormAnnotation.VISIBLE);
+            PdfFormAnnotation radio1 = builder.CreateRadioButton("1", rect1).SetBorderWidth(2).SetBorderColor(ColorConstants
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormAnnotation.VISIBLE);
+            PdfFormAnnotation radio2 = builder.CreateRadioButton("2", rect2).SetBorderWidth(2).SetBorderColor(ColorConstants
+                .RED).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetVisibility(PdfFormAnnotation.VISIBLE);
+            group2.AddKid(radio1);
+            group2.AddKid(radio2);
             group2.RegenerateField();
             form.AddField(group2);
             pdfDoc.Close();
@@ -917,12 +928,15 @@ namespace iText.Forms {
             form.AddField(new PushButtonFormFieldBuilder(pdfDoc, "push button").SetWidgetRectangle(new Rectangle(36, 526
                 , 80, 20)).SetCaption("push").CreatePushButton());
             // radio button
-            PdfButtonFormField radioGroup = new RadioFormFieldBuilder(pdfDoc, "radio group").CreateRadioGroup();
+            String formFieldName = "radio group";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, formFieldName);
+            PdfButtonFormField radioGroup = builder.CreateRadioGroup();
             radioGroup.SetValue("1", true);
-            form.AddField(new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(36, 496, 20, 20)).CreateRadioButton
-                (radioGroup, "1").SetFieldName("radio 1"));
-            form.AddField(new RadioFormFieldBuilder(pdfDoc).SetWidgetRectangle(new Rectangle(66, 496, 20, 20)).CreateRadioButton
-                (radioGroup, "2").SetFieldName("radio 2"));
+            PdfFormAnnotation radio1 = builder.CreateRadioButton("1", new Rectangle(36, 496, 20, 20));
+            radioGroup.AddKid(radio1);
+            PdfFormAnnotation radio2 = builder.CreateRadioButton("2", new Rectangle(66, 496, 20, 20));
+            radioGroup.AddKid(radio2);
+            form.AddField(radioGroup);
             // signature
             PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").CreateSignature().SetValue("Signature"
                 );

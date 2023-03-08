@@ -291,7 +291,9 @@ namespace iText.Forms.Fields {
         /// <inheritDoc/>
         /// </returns>
         public override bool RegenerateField() {
-            parent.UpdateDefaultAppearance();
+            if (parent != null) {
+                parent.UpdateDefaultAppearance();
+            }
             return RegenerateWidget();
         }
 
@@ -1208,6 +1210,9 @@ namespace iText.Forms.Fields {
         }
 
         internal virtual bool RegenerateWidget() {
+            if (parent == null) {
+                return true;
+            }
             PdfName type = parent.GetFormType();
             if (PdfName.Tx.Equals(type) || PdfName.Ch.Equals(type)) {
                 return RegenerateTextAndChoiceField();

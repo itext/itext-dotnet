@@ -134,9 +134,9 @@ namespace iText.Forms.Form.Renderer {
             if (IsBoxChecked()) {
                 radioGroup.SetValue(GetModelId());
             }
-            PdfFormField radio = new RadioFormFieldBuilder(doc).SetWidgetRectangle(area).CreateRadioButton(radioGroup, 
-                GetModelId());
-            radio.SetCheckType(PdfFormField.TYPE_CIRCLE);
+            PdfFormAnnotation radio = new RadioFormFieldBuilder(doc, null).CreateRadioButton(GetModelId(), area);
+            radioGroup.AddKid(radio);
+            radioGroup.SetCheckType(PdfFormField.TYPE_CIRCLE);
             if (addNew) {
                 form.AddField(radioGroup, page);
             }

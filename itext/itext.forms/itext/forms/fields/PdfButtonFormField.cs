@@ -43,8 +43,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Utils;
+using iText.Forms.Logs;
 using iText.IO.Util;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Xobject;
@@ -52,6 +56,9 @@ using iText.Kernel.Pdf.Xobject;
 namespace iText.Forms.Fields {
     /// <summary>An interactive control on the screen that raises events and/or can retain data.</summary>
     public class PdfButtonFormField : PdfFormField {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfButtonFormField
+            ));
+
         /// <summary>Button field flags</summary>
         public static readonly int FF_NO_TOGGLE_TO_OFF = MakeFieldFlag(15);
 
@@ -202,6 +209,25 @@ namespace iText.Forms.Fields {
             this.form = form;
             RegenerateField();
             return this;
+        }
+
+        public override PdfFormField AddKid(AbstractPdfFormField kid) {
+            if (IsRadio() && kid is PdfFormAnnotation) {
+                PdfFormAnnotation kidAsFormAnnotation = (PdfFormAnnotation)kid;
+                // annotation will always be an object because of the assert in getWidget
+                PdfWidgetAnnotation annotation = kidAsFormAnnotation.GetWidget();
+                PdfName appearanceState = annotation.GetPdfObject().GetAsName(PdfName.AS);
+                if (!appearanceState.Equals(GetValue())) {
+                    annotation.SetAppearanceState(new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
+                }
+                if (annotation.GetRectangle() == null) {
+                    LOGGER.LogWarning(FormsLogMessageConstants.RADIO_HAS_NO_RECTANGLE);
+                    return base.AddKid(kid);
+                }
+                Rectangle r = annotation.GetRectangle().ToRectangle();
+                kidAsFormAnnotation.DrawRadioAppearance(r.GetWidth(), r.GetHeight(), appearanceState.GetValue());
+            }
+            return base.AddKid(kid);
         }
     }
 }

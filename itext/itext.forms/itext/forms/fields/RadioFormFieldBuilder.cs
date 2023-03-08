@@ -21,6 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Forms.Exceptions;
+using iText.Kernel.Exceptions;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
@@ -29,16 +32,9 @@ namespace iText.Forms.Fields {
     public class RadioFormFieldBuilder : TerminalFormFieldBuilder<iText.Forms.Fields.RadioFormFieldBuilder> {
         /// <summary>Creates builder for radio form field creation.</summary>
         /// <param name="document">document to be used for form field creation</param>
-        /// <param name="formFieldName">name of the form field</param>
-        public RadioFormFieldBuilder(PdfDocument document, String formFieldName)
-            : base(document, formFieldName) {
-        }
-
-        // TODO DEVSIX-6319 Remove this constructor when radio buttons will become widgets instead of form fields.
-        /// <summary>Creates builder for radio button creation.</summary>
-        /// <param name="document">document to be used for form field creation</param>
-        public RadioFormFieldBuilder(PdfDocument document)
-            : base(document, null) {
+        /// <param name="radioGroupFormFieldName">name of the form field</param>
+        public RadioFormFieldBuilder(PdfDocument document, String radioGroupFormFieldName)
+            : base(document, radioGroupFormFieldName) {
         }
 
         /// <summary>Creates radio group form field instance based on provided parameters.</summary>
@@ -48,44 +44,37 @@ namespace iText.Forms.Fields {
         /// instance
         /// </returns>
         public virtual PdfButtonFormField CreateRadioGroup() {
-            PdfButtonFormField radio = new PdfButtonFormField(GetDocument());
-            radio.pdfAConformanceLevel = GetConformanceLevel();
-            radio.SetFieldName(GetFormFieldName());
-            radio.SetFieldFlags(PdfButtonFormField.FF_RADIO);
-            return radio;
+            PdfButtonFormField radioGroup = new PdfButtonFormField(GetDocument());
+            radioGroup.pdfAConformanceLevel = GetConformanceLevel();
+            radioGroup.SetFieldName(GetFormFieldName());
+            radioGroup.SetFieldFlags(PdfButtonFormField.FF_RADIO);
+            return radioGroup;
         }
 
         /// <summary>Creates radio button form field instance based on provided parameters.</summary>
-        /// <param name="radioGroup">radio group to which new radio button will be added</param>
         /// <param name="appearanceName">name of the "on" appearance state.</param>
+        /// <param name="rectangle">the place where the widget should be placed.</param>
         /// <returns>new radio button instance</returns>
-        public virtual PdfFormField CreateRadioButton(PdfButtonFormField radioGroup, String appearanceName) {
-            PdfFormField radio;
-            if (GetWidgetRectangle() == null) {
-                radio = new PdfButtonFormField(GetDocument());
+        public virtual PdfFormAnnotation CreateRadioButton(String appearanceName, Rectangle rectangle) {
+            if (appearanceName == null) {
+                throw new PdfException(FormsExceptionMessageConstant.APEARANCE_NAME_MUST_BE_PROVIDED);
             }
-            else {
-                PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
-                if (null != GetConformanceLevel()) {
-                    annotation.SetFlag(PdfAnnotation.PRINT);
-                }
-                PdfObject radioGroupValue = radioGroup.GetValue();
-                PdfName appearanceState = new PdfName(appearanceName);
-                if (appearanceState.Equals(radioGroupValue)) {
-                    annotation.SetAppearanceState(appearanceState);
-                }
-                else {
-                    annotation.SetAppearanceState(new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
-                }
-                radio = new PdfButtonFormField(annotation, GetDocument());
+            Rectangle widgetRectangle = GetWidgetRectangle();
+            if (rectangle != null) {
+                widgetRectangle = rectangle;
             }
+            if (widgetRectangle == null) {
+                throw new PdfException(FormsExceptionMessageConstant.WIDGET_RECTANGLE_MUST_BE_PROVIDED);
+            }
+            PdfName appearancePdfName = new PdfName(appearanceName);
+            PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(widgetRectangle);
+            annotation.SetAppearanceState(appearancePdfName);
+            if (GetConformanceLevel() != null) {
+                annotation.SetFlag(PdfAnnotation.PRINT);
+            }
+            PdfFormAnnotation radio = new PdfFormAnnotation(annotation, GetDocument());
+            SetPageToField(radio);
             radio.pdfAConformanceLevel = GetConformanceLevel();
-            if (GetWidgetRectangle() != null) {
-                radio.GetFirstFormAnnotation().DrawRadioAppearance(GetWidgetRectangle().GetWidth(), GetWidgetRectangle().GetHeight
-                    (), appearanceName);
-                SetPageToField(radio);
-            }
-            radioGroup.AddKid(radio);
             return radio;
         }
 

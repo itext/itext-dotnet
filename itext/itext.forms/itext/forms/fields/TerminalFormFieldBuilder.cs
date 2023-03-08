@@ -96,5 +96,11 @@ namespace iText.Forms.Fields {
                 field.GetFirstFormAnnotation().SetPage(page);
             }
         }
+
+        internal virtual void SetPageToField(PdfFormAnnotation field) {
+            if (page != 0) {
+                field.SetPage(page);
+            }
+        }
     }
 }

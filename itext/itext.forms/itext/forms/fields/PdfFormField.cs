@@ -243,7 +243,9 @@ namespace iText.Forms.Fields {
             : this((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)) {
             widget.MakeIndirect(pdfDocument);
             AddKid(widget);
-            Put(PdfName.FT, GetFormType());
+            if (GetFormType() != null) {
+                Put(PdfName.FT, GetFormType());
+            }
         }
 
         /// <summary>
