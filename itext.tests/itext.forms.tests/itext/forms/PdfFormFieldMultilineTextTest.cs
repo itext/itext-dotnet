@@ -29,6 +29,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Forms {
@@ -78,7 +79,7 @@ namespace iText.Forms {
             PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "fieldName").SetWidgetRectangle(rect).CreateMultilineText
                 ();
             field.SetValue("some value\nsecond line\nthird");
-            field.SetJustification(PdfTextFormField.ALIGN_RIGHT);
+            field.SetJustification(HorizontalAlignment.RIGHT);
             form.AddField(field);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();

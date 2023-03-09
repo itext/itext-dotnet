@@ -83,8 +83,6 @@ namespace iText.Forms.Fields {
         /// <summary>Index of color value in default appearance element.</summary>
         private const int DA_COLOR = 2;
 
-        private static readonly ICollection<PdfName> formFieldKeys = new HashSet<PdfName>();
-
         protected internal PdfFont font;
 
         protected internal float fontSize = -1;

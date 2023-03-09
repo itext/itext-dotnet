@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Forms.Fields.Properties;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
@@ -28,7 +29,7 @@ namespace iText.Forms.Fields {
     /// <summary>Builder for checkbox form field.</summary>
     public class CheckBoxFormFieldBuilder : TerminalFormFieldBuilder<iText.Forms.Fields.CheckBoxFormFieldBuilder
         > {
-        private int checkType = PdfFormField.TYPE_CROSS;
+        private CheckBoxType checkType = CheckBoxType.CROSS;
 
         /// <summary>
         /// Creates builder for
@@ -43,18 +44,18 @@ namespace iText.Forms.Fields {
 
         /// <summary>Gets check type for checkbox form field.</summary>
         /// <returns>check type to be set for checkbox form field</returns>
-        public virtual int GetCheckType() {
+        public virtual CheckBoxType GetCheckType() {
             return checkType;
         }
 
         /// <summary>Sets check type for checkbox form field.</summary>
         /// <remarks>
         /// Sets check type for checkbox form field. Default value is
-        /// <see cref="PdfFormField.TYPE_CROSS"/>.
+        /// <see cref="iText.Forms.Fields.Properties.CheckBoxType.CROSS"/>.
         /// </remarks>
         /// <param name="checkType">check type to be set for checkbox form field</param>
         /// <returns>this builder</returns>
-        public virtual iText.Forms.Fields.CheckBoxFormFieldBuilder SetCheckType(int checkType) {
+        public virtual iText.Forms.Fields.CheckBoxFormFieldBuilder SetCheckType(CheckBoxType checkType) {
             this.checkType = checkType;
             return this;
         }

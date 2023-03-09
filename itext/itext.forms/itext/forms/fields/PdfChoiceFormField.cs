@@ -57,17 +57,40 @@ namespace iText.Forms.Fields {
     /// are to be represented by a viewer as a list box or a combo box.
     /// </remarks>
     public class PdfChoiceFormField : PdfFormField {
-        /// <summary>Choice field flags</summary>
+        /// <summary>If true, the field is a combo box.</summary>
+        /// <remarks>
+        /// If true, the field is a combo box.
+        /// If false, the field is a list box.
+        /// </remarks>
         public static readonly int FF_COMBO = MakeFieldFlag(18);
 
+        /// <summary>If true, the combo box shall include an editable text box as well as a drop-down list.</summary>
+        /// <remarks>
+        /// If true, the combo box shall include an editable text box as well as a drop-down list.
+        /// If false, it shall include only a drop-down list.
+        /// This flag shall be used only if the Combo flag is true.
+        /// </remarks>
         public static readonly int FF_EDIT = MakeFieldFlag(19);
 
+        /// <summary>If true, the field's option items shall be sorted alphabetically.</summary>
+        /// <remarks>
+        /// If true, the field's option items shall be sorted alphabetically.
+        /// This flag is intended for use by writers, not by readers.
+        /// </remarks>
         public static readonly int FF_SORT = MakeFieldFlag(20);
 
+        /// <summary>If true, more than one of the field's option items may be selected simultaneously.</summary>
+        /// <remarks>
+        /// If true, more than one of the field's option items may be selected simultaneously.
+        /// If false, at most one item shall be selected.
+        /// </remarks>
         public static readonly int FF_MULTI_SELECT = MakeFieldFlag(22);
 
+        /// <summary>If true, text entered in the field shall be spell-checked.</summary>
         public static readonly int FF_DO_NOT_SPELL_CHECK = MakeFieldFlag(23);
 
+        /// <summary>If true, the new value shall be committed as soon as a selection is made (commonly with the pointing device).
+        ///     </summary>
         public static readonly int FF_COMMIT_ON_SEL_CHANGE = MakeFieldFlag(27);
 
         protected internal PdfChoiceFormField(PdfDocument pdfDocument)
@@ -137,10 +160,10 @@ namespace iText.Forms.Fields {
             return SetListSelected(optionValues, true);
         }
 
-        /// <summary>Highlights the options and generates field appearance if needed..</summary>
+        /// <summary>Highlights the options and generates field appearance if needed.</summary>
         /// <remarks>
-        /// Highlights the options and generates field appearance if needed.. If this method is used for Combo box, the first value in input array
-        /// will be the field value
+        /// Highlights the options and generates field appearance if needed. If this method is used for Combo box,
+        /// the first value in input array will be the field value
         /// </remarks>
         /// <param name="optionValues">Array of options to be highlighted</param>
         /// <param name="generateAppearance">if false, appearance won't be regenerated</param>
@@ -335,14 +358,16 @@ namespace iText.Forms.Fields {
             return (iText.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_MULTI_SELECT, multiSelect);
         }
 
-        /// <summary>If true, more than one of the field's option items may be selected simultaneously; if false, at most one item shall be selected.
-        ///     </summary>
+        /// <summary>
+        /// If true, more than one of the field's option items may be selected simultaneously; if false, at most one item
+        /// shall be selected.
+        /// </summary>
         /// <returns>whether or not multiple selection is currently allowed</returns>
         public virtual bool IsMultiSelect() {
             return GetFieldFlag(FF_MULTI_SELECT);
         }
 
-        /// <summary>If true, text entered in the field shall be spell-checked..</summary>
+        /// <summary>If true, text entered in the field shall be spell-checked.</summary>
         /// <param name="spellCheck">whether or not to require the PDF viewer to perform a spell check</param>
         /// <returns>
         /// current

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Forms.Fields;
+using iText.Forms.Fields.Properties;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -53,7 +54,7 @@ namespace iText.Forms {
             PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), new PdfWriter(DESTINATION_DIR
                  + outputFile), new StampingProperties().UseAppendMode());
             PdfFormField field = new CheckBoxFormFieldBuilder(outputDoc, "checkboxname").SetWidgetRectangle(new Rectangle
-                (10, 10, 24, 24)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_CHECK).SetValue("On");
+                (10, 10, 24, 24)).CreateCheckBox().SetCheckType(CheckBoxType.CHECK).SetValue("On");
             PdfAcroForm.GetAcroForm(outputDoc, true).AddField(field);
             outputDoc.Close();
             CompareWithCmp(outputFile);
@@ -108,7 +109,7 @@ namespace iText.Forms {
             PdfDocument document = new PdfDocument(new PdfReader(INPUT_FILE_WITH_INDIRECT_FIELDS_ARRAY), new PdfWriter
                 (DESTINATION_DIR + outputFile), new StampingProperties().UseAppendMode());
             PdfFormField field = new CheckBoxFormFieldBuilder(document, "checkboxname").SetWidgetRectangle(new Rectangle
-                (10, 10, 24, 24)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_CHECK).SetValue("On");
+                (10, 10, 24, 24)).CreateCheckBox().SetCheckType(CheckBoxType.CHECK).SetValue("On");
             // Get an existing acroform and add new field to it
             PdfAcroForm.GetAcroForm(document, false).AddField(field);
             document.Close();
@@ -155,7 +156,7 @@ namespace iText.Forms {
             PdfDocument outputDoc = new PdfDocument(new PdfReader(inputFile), new PdfWriter(DESTINATION_DIR + outputFile
                 ), new StampingProperties().UseAppendMode());
             PdfFormField field = new CheckBoxFormFieldBuilder(outputDoc, "checkboxname").SetWidgetRectangle(new Rectangle
-                (10, 10, 24, 24)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_CHECK).SetValue("On");
+                (10, 10, 24, 24)).CreateCheckBox().SetCheckType(CheckBoxType.CHECK).SetValue("On");
             PdfAcroForm.GetAcroForm(outputDoc, true).AddField(field);
             outputDoc.Close();
             CompareWithCmp(outputFile);

@@ -48,6 +48,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.Forms.Fields.Properties;
 using iText.Forms.Logs;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -87,34 +88,13 @@ namespace iText.Forms.Fields {
         /// <summary>Flag that designates, if set, that the field's contents must be obfuscated.</summary>
         public static readonly int FF_PASSWORD = MakeFieldFlag(14);
 
-        public const int ALIGN_LEFT = 0;
-
-        public const int ALIGN_CENTER = 1;
-
-        public const int ALIGN_RIGHT = 2;
-
-        /// <summary>A field with the symbol check</summary>
-        public const int TYPE_CHECK = 1;
-
-        /// <summary>A field with the symbol circle</summary>
-        public const int TYPE_CIRCLE = 2;
-
-        /// <summary>A field with the symbol cross</summary>
-        public const int TYPE_CROSS = 3;
-
-        /// <summary>A field with the symbol diamond</summary>
-        public const int TYPE_DIAMOND = 4;
-
-        /// <summary>A field with the symbol square</summary>
-        public const int TYPE_SQUARE = 5;
-
-        /// <summary>A field with the symbol star</summary>
-        public const int TYPE_STAR = 6;
-
+        /// <summary>The ReadOnly flag, which specifies whether or not the field can be changed.</summary>
         public static readonly int FF_READ_ONLY = MakeFieldFlag(1);
 
+        /// <summary>The Required flag, which specifies whether or not the field must be filled in.</summary>
         public static readonly int FF_REQUIRED = MakeFieldFlag(2);
 
+        /// <summary>The NoExport flag, which specifies whether or not exporting is forbidden.</summary>
         public static readonly int FF_NO_EXPORT = MakeFieldFlag(3);
 
         /// <summary>List of all allowable keys in form fields.</summary>
@@ -130,9 +110,11 @@ namespace iText.Forms.Fields {
 
         protected internal ImageData img;
 
-        protected internal int checkType;
-
         protected internal PdfFormXObject form;
+
+        protected internal CheckBoxType checkType = CheckBoxType.CROSS;
+
+        private IList<AbstractPdfFormField> childFields = new List<AbstractPdfFormField>();
 
         static PdfFormField() {
             FORM_FIELD_KEYS.Add(PdfName.FT);
@@ -158,8 +140,6 @@ namespace iText.Forms.Fields {
             FORM_FIELD_KEYS.Add(PdfName.Lock);
             FORM_FIELD_KEYS.Add(PdfName.SV);
         }
-
-        private IList<AbstractPdfFormField> childFields = new List<AbstractPdfFormField>();
 
         /// <summary>
         /// Creates a form field as a wrapper object around a
@@ -1116,12 +1096,12 @@ namespace iText.Forms.Fields {
         /// 2 Right-justified
         /// </summary>
         /// <returns>the current justification attribute.</returns>
-        public virtual int? GetJustification() {
+        public virtual HorizontalAlignment? GetJustification() {
             int? justification = GetPdfObject().GetAsInt(PdfName.Q);
             if (justification == null && GetParent() != null) {
                 justification = GetParent().GetAsInt(PdfName.Q);
             }
-            return justification;
+            return justification == null ? null : NumberToHorizontalAlignment((int)justification);
         }
 
         /// <summary>
@@ -1135,8 +1115,8 @@ namespace iText.Forms.Fields {
         /// the edited
         /// <see cref="PdfFormField"/>.
         /// </returns>
-        public virtual iText.Forms.Fields.PdfFormField SetJustification(int justification) {
-            Put(PdfName.Q, new PdfNumber(justification));
+        public virtual iText.Forms.Fields.PdfFormField SetJustification(HorizontalAlignment? justification) {
+            Put(PdfName.Q, new PdfNumber((int)(justification)));
             RegenerateField();
             return this;
         }
@@ -1204,12 +1184,12 @@ namespace iText.Forms.Fields {
         /// the edited
         /// <see cref="PdfFormField"/>.
         /// </returns>
-        public virtual iText.Forms.Fields.PdfFormField SetCheckType(int checkType) {
-            if (checkType < TYPE_CHECK || checkType > TYPE_STAR) {
-                checkType = TYPE_CROSS;
+        public virtual iText.Forms.Fields.PdfFormField SetCheckType(CheckBoxType checkType) {
+            if (checkType == null) {
+                checkType = CheckBoxType.CROSS;
             }
             this.checkType = checkType;
-            text = CHECKBOX_TYPE_ZAPFDINGBATS_CODE[checkType - 1];
+            text = CHECKBOX_TYPE_ZAPFDINGBATS_CODE[(int)(checkType)];
             if (GetPdfAConformanceLevel() != null) {
                 return this;
             }
@@ -1392,17 +1372,17 @@ namespace iText.Forms.Fields {
         }
 
         internal virtual TextAlignment? ConvertJustificationToTextAlignment() {
-            int? justification = GetJustification();
-            if (justification == null) {
-                justification = 0;
-            }
-            TextAlignment? textAlignment = TextAlignment.LEFT;
-            if (justification == ALIGN_RIGHT) {
+            HorizontalAlignment? justification = GetJustification();
+            TextAlignment? textAlignment;
+            if (justification == HorizontalAlignment.RIGHT) {
                 textAlignment = TextAlignment.RIGHT;
             }
             else {
-                if (justification == ALIGN_CENTER) {
+                if (justification == HorizontalAlignment.CENTER) {
                     textAlignment = TextAlignment.CENTER;
+                }
+                else {
+                    textAlignment = TextAlignment.LEFT;
                 }
             }
             return textAlignment;
@@ -1485,6 +1465,22 @@ namespace iText.Forms.Fields {
                 }
             }
             return formType;
+        }
+
+        private static HorizontalAlignment? NumberToHorizontalAlignment(int alignment) {
+            switch (alignment) {
+                case 1: {
+                    return HorizontalAlignment.CENTER;
+                }
+
+                case 2: {
+                    return HorizontalAlignment.RIGHT;
+                }
+
+                default: {
+                    return HorizontalAlignment.LEFT;
+                }
+            }
         }
 
         private iText.Forms.Fields.PdfFormField SetFieldValue(String value, bool generateAppearance) {

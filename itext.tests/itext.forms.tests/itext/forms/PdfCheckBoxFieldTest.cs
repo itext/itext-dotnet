@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
+using iText.Forms.Fields.Properties;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -125,15 +126,15 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
             pdfDoc.AddNewPage();
             AddCheckBox(pdfDoc, 0, 730, 10, new CheckBoxFormFieldBuilder(pdfDoc, "cb_1").SetWidgetRectangle(new Rectangle
-                (50, 730, 10, 10)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_CIRCLE).SetValue("YES"));
+                (50, 730, 10, 10)).CreateCheckBox().SetCheckType(CheckBoxType.CIRCLE).SetValue("YES"));
             AddCheckBox(pdfDoc, 0, 700, 10, new CheckBoxFormFieldBuilder(pdfDoc, "cb_2").SetWidgetRectangle(new Rectangle
-                (50, 700, 10, 10)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_CROSS).SetValue("YES"));
+                (50, 700, 10, 10)).CreateCheckBox().SetCheckType(CheckBoxType.CROSS).SetValue("YES"));
             AddCheckBox(pdfDoc, 0, 670, 10, new CheckBoxFormFieldBuilder(pdfDoc, "cb_3").SetWidgetRectangle(new Rectangle
-                (50, 670, 10, 10)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_DIAMOND).SetValue("YES"));
+                (50, 670, 10, 10)).CreateCheckBox().SetCheckType(CheckBoxType.DIAMOND).SetValue("YES"));
             AddCheckBox(pdfDoc, 0, 640, 10, new CheckBoxFormFieldBuilder(pdfDoc, "cb_4").SetWidgetRectangle(new Rectangle
-                (50, 640, 10, 10)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_SQUARE).SetValue("YES"));
+                (50, 640, 10, 10)).CreateCheckBox().SetCheckType(CheckBoxType.SQUARE).SetValue("YES"));
             AddCheckBox(pdfDoc, 0, 610, 10, new CheckBoxFormFieldBuilder(pdfDoc, "cb_5").SetWidgetRectangle(new Rectangle
-                (50, 610, 10, 10)).CreateCheckBox().SetCheckType(PdfFormField.TYPE_STAR).SetValue("YES"));
+                (50, 610, 10, 10)).CreateCheckBox().SetCheckType(CheckBoxType.STAR).SetValue("YES"));
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
@@ -196,7 +197,7 @@ namespace iText.Forms {
             Rectangle rect = new Rectangle(50, yPos, checkBoxW, checkBoxH);
             AddCheckBox(pdfDoc, fontSize, yPos, checkBoxW, new CheckBoxFormFieldBuilder(pdfDoc, MessageFormatUtil.Format
                 ("cb_fs_{0}_{1}_{2}", fontSize, checkBoxW, checkBoxH)).SetWidgetRectangle(rect).CreateCheckBox().SetCheckType
-                (PdfFormField.TYPE_CHECK).SetValue("YES"));
+                (CheckBoxType.CHECK).SetValue("YES"));
         }
 
         private void AddCheckBox(PdfDocument pdfDoc, float fontSize, float yPos, float checkBoxW, PdfFormField checkBox

@@ -47,6 +47,7 @@ using iText.Forms.Logs;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -190,22 +191,22 @@ namespace iText.Forms {
                     else {
                         newValue = "HELLO!";
                     }
-                    int? justification = field.GetJustification();
-                    if (null == justification || 0 == (int)justification) {
+                    HorizontalAlignment? justification = field.GetJustification();
+                    if (null == justification || justification == HorizontalAlignment.LEFT) {
                         // reddish
                         foreach (PdfFormAnnotation annot in field.GetChildFormAnnotations()) {
                             annot.SetBackgroundColor(new DeviceRgb(255, 200, 200));
                         }
                     }
                     else {
-                        if (1 == (int)justification) {
+                        if (justification == HorizontalAlignment.CENTER) {
                             // greenish
                             foreach (PdfFormAnnotation annot in field.GetChildFormAnnotations()) {
                                 annot.SetBackgroundColor(new DeviceRgb(200, 255, 200));
                             }
                         }
                         else {
-                            if (2 == (int)justification) {
+                            if (justification == HorizontalAlignment.RIGHT) {
                                 // blueish
                                 foreach (PdfFormAnnotation annot in field.GetChildFormAnnotations()) {
                                     annot.SetBackgroundColor(new DeviceRgb(200, 200, 255));

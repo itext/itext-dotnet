@@ -45,6 +45,7 @@ using System.IO;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.Forms.Fields.Properties;
 using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
@@ -200,7 +201,7 @@ namespace iText.Pdfa {
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             form.AddField(new CheckBoxFormFieldBuilder(pdfDoc, "checkBox").SetWidgetRectangle(new Rectangle(36, 726, 20
-                , 20)).SetCheckType(PdfFormField.TYPE_STAR).SetConformanceLevel(conformanceLevel).CreateCheckBox().SetValue
+                , 20)).SetCheckType(CheckBoxType.STAR).SetConformanceLevel(conformanceLevel).CreateCheckBox().SetValue
                 ("1"));
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
