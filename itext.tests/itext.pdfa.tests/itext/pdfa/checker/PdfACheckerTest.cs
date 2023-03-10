@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Kernel.Colors;
@@ -49,11 +50,15 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Pdfa;
 using iText.Test;
 
 namespace iText.Pdfa.Checker {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfACheckerTest : ExtendedITextTest {
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/pdfs/";
+
         private PdfAChecker pdfAChecker;
 
         [NUnit.Framework.SetUp]
@@ -79,6 +84,18 @@ namespace iText.Pdfa.Checker {
                     }
                 }
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckContentStreamPdfAText() {
+            //TODO adapt after DEVSIX-5759 is fixed
+            PdfA1Checker testChecker = new PdfA1Checker(PdfAConformanceLevel.PDF_A_1B);
+            PdfADocument pdfa = new PdfADocument(new PdfReader(new FileInfo(SOURCE_FOLDER + "InlineImagesPdfA.pdf")), 
+                new PdfWriter(new MemoryStream()).SetSmartMode(true));
+            PdfStream firstContentStream = pdfa.GetPage(1).GetFirstContentStream();
+            testChecker.SetFullCheckMode(true);
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => testChecker.CheckContentStream(firstContentStream
+                ), "NullPointer was not thrown on inline image.");
         }
 
         private class EmptyPdfAChecker : PdfAChecker {
