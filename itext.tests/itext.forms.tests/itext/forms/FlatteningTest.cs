@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Forms.Logs;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
@@ -83,6 +84,22 @@ namespace iText.Forms {
             PdfAcroForm.GetAcroForm(doc, false).FlattenFields();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HiddenFieldsFlatten() {
+            //TODO: Adapt assertion after DEVSIX-3079 is fixed
+            String filename = "hiddenField";
+            String src = sourceFolder + filename + ".pdf";
+            String dest = destinationFolder + filename + "_flattened.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
+            acroForm.GetField("hiddenField").GetPdfObject().Put(PdfName.F, new PdfNumber(2));
+            acroForm.FlattenFields();
+            String textAfterFlatten = PdfTextExtractor.GetTextFromPage(document.GetPage(1));
+            document.Close();
+            NUnit.Framework.Assert.IsTrue(textAfterFlatten.Contains("hiddenFieldValue"), "Pdf does not contain the expected text"
+                );
         }
     }
 }
