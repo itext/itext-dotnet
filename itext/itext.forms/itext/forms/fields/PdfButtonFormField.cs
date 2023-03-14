@@ -48,7 +48,6 @@ using iText.Commons;
 using iText.Commons.Utils;
 using iText.Forms.Logs;
 using iText.IO.Util;
-using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Xobject;
@@ -253,6 +252,15 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <param name="kid">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
         public override PdfFormField AddKid(AbstractPdfFormField kid) {
             if (IsRadio() && kid is PdfFormAnnotation) {
                 PdfFormAnnotation kidAsFormAnnotation = (PdfFormAnnotation)kid;
@@ -266,8 +274,7 @@ namespace iText.Forms.Fields {
                     LOGGER.LogWarning(FormsLogMessageConstants.RADIO_HAS_NO_RECTANGLE);
                     return base.AddKid(kid);
                 }
-                Rectangle r = annotation.GetRectangle().ToRectangle();
-                kidAsFormAnnotation.DrawRadioAppearance(r.GetWidth(), r.GetHeight(), appearanceState.GetValue());
+                kidAsFormAnnotation.DrawRadioButtonAndSaveAppearance(appearanceState.GetValue());
             }
             return base.AddKid(kid);
         }

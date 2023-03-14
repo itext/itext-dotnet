@@ -44,6 +44,8 @@ namespace iText.Forms.Exceptions {
 
         public const String WIDGET_RECTANGLE_MUST_BE_PROVIDED = "Widget rectangle must be provided";
 
+        public const String EMPTY_RADIO_GROUP_NAME = "Radio group name cannot be empty.";
+
         private FormsExceptionMessageConstant() {
         }
     }

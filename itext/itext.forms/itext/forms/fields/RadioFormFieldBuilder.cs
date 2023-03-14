@@ -56,7 +56,7 @@ namespace iText.Forms.Fields {
         /// <param name="rectangle">the place where the widget should be placed.</param>
         /// <returns>new radio button instance</returns>
         public virtual PdfFormAnnotation CreateRadioButton(String appearanceName, Rectangle rectangle) {
-            if (appearanceName == null) {
+            if (appearanceName == null || String.IsNullOrEmpty(appearanceName)) {
                 throw new PdfException(FormsExceptionMessageConstant.APEARANCE_NAME_MUST_BE_PROVIDED);
             }
             Rectangle widgetRectangle = GetWidgetRectangle();

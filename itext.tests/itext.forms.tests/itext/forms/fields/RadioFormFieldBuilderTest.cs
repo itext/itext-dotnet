@@ -78,10 +78,14 @@ namespace iText.Forms.Fields {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CreateRadioButtonWithAppearanceNameNullThrowsExceptionTest() {
+        public virtual void CreateRadioButtonWithEmptyAppearanceNameThrowsExceptionTest() {
             RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
             NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
                 builder.CreateRadioButton(null, DUMMY_RECTANGLE);
+            }
+            );
+            NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                builder.CreateRadioButton("", DUMMY_RECTANGLE);
             }
             );
         }

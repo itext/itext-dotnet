@@ -73,11 +73,17 @@ namespace iText.Forms.Form {
         /// <summary>The Constant FORM_FIELD_SELECTED.</summary>
         public const int FORM_FIELD_SELECTED = PROPERTY_START + 9;
 
-        /// <summary>The Constant FORM_FIELD_SELECTED.</summary>
+        /// <summary>The Constant FORM_FIELD_LABEL.</summary>
         public const int FORM_FIELD_LABEL = PROPERTY_START + 10;
 
         /// <summary>The Constant FORM_ACCESSIBILITY_LANGUAGE.</summary>
         public const int FORM_ACCESSIBILITY_LANGUAGE = PROPERTY_START + 11;
+
+        /// <summary>The Constant FORM_FIELD_RADIO_GROUP_NAME.</summary>
+        public const int FORM_FIELD_RADIO_GROUP_NAME = PROPERTY_START + 12;
+
+        /// <summary>The Constant FORM_FIELD_RADIO_BORDER_CIRCLE.</summary>
+        public const int FORM_FIELD_RADIO_BORDER_CIRCLE = PROPERTY_START + 13;
 
         private FormProperty() {
         }

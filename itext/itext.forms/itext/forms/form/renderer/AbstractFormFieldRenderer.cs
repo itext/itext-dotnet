@@ -107,6 +107,9 @@ namespace iText.Forms.Form.Renderer {
             AddChild(renderer);
             Rectangle bBox = layoutContext.GetArea().GetBBox().Clone().MoveDown(INF - parentHeight).SetHeight(INF);
             layoutContext.GetArea().SetBBox(bBox);
+            // A workaround for the issue that super.layout clears Property.FORCED_PLACEMENT,
+            // but we need it later in this function
+            bool isForcedPlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
             LayoutResult result = base.Layout(layoutContext);
             if (childRenderers.IsEmpty()) {
                 ITextLogManager.GetLogger(GetType()).LogError(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD);
@@ -126,9 +129,18 @@ namespace iText.Forms.Form.Renderer {
                     ApplyBorderBox(occupiedArea.GetBBox(), true);
                     ApplyMargins(occupiedArea.GetBBox(), true);
                 }
+                else {
+                    if (isForcedPlacement) {
+                        // This block of code appeared here because of
+                        // TODO DEVSIX-5042 HEIGHT property is ignored when FORCED_PLACEMENT is true
+                        // Height is wrong for the flat renderer and we adjust it here
+                        Rectangle fBox = GetOccupiedArea().GetBBox();
+                        LayoutArea childOccupiedArea = flatRenderer.GetOccupiedArea();
+                        childOccupiedArea.GetBBox().SetY(fBox.GetY()).SetHeight(fBox.GetHeight());
+                    }
+                }
             }
-            if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && !IsRendererFit(parentWidth, parentHeight
-                )) {
+            if (!isForcedPlacement && !IsRendererFit(parentWidth, parentHeight)) {
                 occupiedArea.GetBBox().SetWidth(0).SetHeight(0);
                 return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this).SetMinMaxWidth(new 
                     MinMaxWidth());

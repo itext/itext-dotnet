@@ -94,5 +94,24 @@ namespace iText.Forms.Form.Element {
                 }
             }
         }
+
+        /// <summary>Set the form field to be interactive and added into Acroform instead of drawing it on a page.</summary>
+        /// <param name="interactive">
+        /// 
+        /// <see langword="true"/>
+        /// if the form field element shall be added into Acroform,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// By default, the form field element is not interactive and drawn on a page.
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="FormField{T}"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Forms.Form.Element.FormField<T> SetInteractive(bool interactive) {
+            SetProperty(FormProperty.FORM_FIELD_FLATTEN, !interactive);
+            return this;
+        }
     }
 }

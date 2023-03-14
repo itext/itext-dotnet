@@ -41,7 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Forms.Form.Element {
@@ -53,15 +55,68 @@ namespace iText.Forms.Form.Element {
     /// <see cref="iText.Forms.Form.Renderer.RadioRenderer"/>
     /// is used instead of the default renderer for fields.
     /// </summary>
-    public class Radio : FormField<TextArea> {
+    public class Radio : FormField<iText.Forms.Form.Element.Radio> {
         /// <summary>
         /// Creates a new
         /// <see cref="Radio"/>
         /// instance.
         /// </summary>
-        /// <param name="id">the id</param>
+        /// <param name="id">the id.</param>
         public Radio(String id)
             : base(id) {
+            // Draw the borders inside the element by default
+            SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+            // Rounded border
+            SetBorderRadius(new BorderRadius(UnitValue.CreatePercentValue(50)));
+            // Draw border as a circle by default
+            SetProperty(FormProperty.FORM_FIELD_RADIO_BORDER_CIRCLE, true);
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="Radio"/>
+        /// instance.
+        /// </summary>
+        /// <param name="id">the id.</param>
+        /// <param name="radioGroupName">
+        /// the name of the radio group the radio button belongs to. It has sense only in case
+        /// this Radio element will not be rendered but Acroform field will be created instead.
+        /// </param>
+        public Radio(String id, String radioGroupName)
+            : this(id) {
+            SetProperty(FormProperty.FORM_FIELD_RADIO_GROUP_NAME, radioGroupName);
+        }
+
+        /// <summary>Sets the state of the radio button.</summary>
+        /// <param name="checked">
+        /// 
+        /// <see langword="true"/>
+        /// if the radio button shall be checked,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// By default, the radio button is unchecked.
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="Radio"/>
+        /// button.
+        /// </returns>
+        public virtual iText.Forms.Form.Element.Radio SetChecked(bool @checked) {
+            SetProperty(FormProperty.FORM_FIELD_CHECKED, @checked);
+            return this;
+        }
+
+        /// <summary>Sets the radio button width and height.</summary>
+        /// <param name="size">radio button width and height.</param>
+        /// <returns>
+        /// this same
+        /// <see cref="Radio"/>
+        /// button.
+        /// </returns>
+        public virtual iText.Forms.Form.Element.Radio SetSize(float size) {
+            SetProperty(Property.WIDTH, UnitValue.CreatePointValue(size));
+            SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(size));
+            return this;
         }
 
         /* (non-Javadoc)

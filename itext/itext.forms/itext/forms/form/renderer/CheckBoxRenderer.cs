@@ -107,7 +107,7 @@ namespace iText.Forms.Form.Renderer {
         /// <summary>Defines whether the box is checked or not.</summary>
         /// <returns>the default value of the checkbox field</returns>
         public virtual bool IsBoxChecked() {
-            return null != this.GetProperty<Object>(FormProperty.FORM_FIELD_CHECKED);
+            return true.Equals(this.GetProperty<bool?>(FormProperty.FORM_FIELD_CHECKED));
         }
 
         protected internal override void ApplyAcroField(DrawContext drawContext) {
