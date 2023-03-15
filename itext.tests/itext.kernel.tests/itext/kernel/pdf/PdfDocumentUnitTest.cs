@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -208,7 +208,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentNoWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_248(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
+            PdfDocument pdfDocument = new _PdfDocument_247(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
             // This class instance extends pdfDocument
             // TODO DEVSIX-5292 These fields shouldn't be initialized during the document's opening
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -218,15 +218,15 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_248 : PdfDocument {
-            public _PdfDocument_248(PdfReader baseArg1)
+        private sealed class _PdfDocument_247 : PdfDocument {
+            public _PdfDocument_247(PdfReader baseArg1)
                 : base(baseArg1) {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_265(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"), new PdfWriter
+            PdfDocument pdfDocument = new _PdfDocument_264(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"), new PdfWriter
                 (new ByteArrayOutputStream()));
             // This class instance extends pdfDocument
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -237,8 +237,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_265 : PdfDocument {
-            public _PdfDocument_265(PdfReader baseArg1, PdfWriter baseArg2)
+        private sealed class _PdfDocument_264 : PdfDocument {
+            public _PdfDocument_264(PdfReader baseArg1, PdfWriter baseArg2)
                 : base(baseArg1, baseArg2) {
             }
         }

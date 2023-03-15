@@ -4,8 +4,8 @@
     <id>itext7.bouncy-castle-adapter</id>
     <version>8.0.0-SNAPSHOT</version>
     <title>iText 7 bouncy-castle adapter module</title>
-    <authors>iText Software</authors>
-    <owners>iText Software</owners>
+    <authors>Apryse Software</authors>
+    <owners>Apryse Software</owners>
     <licenseUrl>https://www.gnu.org/licenses/agpl.html</licenseUrl>
     <projectUrl>https://itextpdf.com/</projectUrl>
     <icon>ITSC-avatar.png</icon>
@@ -13,7 +13,7 @@
     <description>Bouncy-castle adapter module</description>
     <summary />
     <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
-    <copyright>Copyright (c) 1998-2023 iText Group NV</copyright>
+    <copyright>Copyright (c) 1998-2023 Apryse Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp</tags>
     <dependencies>
