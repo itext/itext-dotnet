@@ -47,8 +47,8 @@ using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
-using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Annot.DA;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
@@ -58,14 +58,14 @@ using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
 
-namespace iText.Kernel.Pdf {
+namespace iText.Kernel.Pdf.Annot {
     [NUnit.Framework.Category("IntegrationTest")]
-    public class PdfAnnotationTest : ExtendedITextTest {
+    public class AddMiscTypesAnnotationsTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfAnnotationTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/annot/AddMiscTypesAnnotationsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfAnnotationTest/";
+             + "/test/itext/kernel/pdf/annot/AddMiscTypesAnnotationsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

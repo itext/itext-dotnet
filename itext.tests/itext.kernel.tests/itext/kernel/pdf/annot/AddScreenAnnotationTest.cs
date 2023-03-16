@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -25,111 +26,77 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         [NUnit.Framework.Test]
-        public virtual void ScreenTestExternalWavFile() {
-            String filename = destinationFolder + "screenAnnotation01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-            PdfPage page1 = pdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
-            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            FileStream fos = new FileStream(destinationFolder + "sample.wav", FileMode.Create);
-            FileStream fis = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read);
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = fis.Read(buffer)) > 0) {
-                fos.Write(buffer, 0, length);
+        public virtual void ScreenEmbeddedWavFromPathTest() {
+            String filename = destinationFolder + "screenEmbeddedWavFromPathTest.pdf";
+            String cmp = sourceFolder + "cmp_" + "screenEmbeddedWavFromPathTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.wav", null, "sample.wav"
+                    , null, null);
+                AddPageWithScreenAnnotation(pdfDoc, spec);
             }
-            fos.Dispose();
-            fis.Dispose();
-            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
-            PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
-            screen.SetAction(action);
-            page1.AddAnnotation(screen);
-            page1.Flush();
-            pdfDoc.Close();
-            CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_screenAnnotation01.pdf", 
-                destinationFolder, "diff_");
+            String errorMessage = new CompareTool().CompareByContent(filename, cmp, destinationFolder);
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
 
         [NUnit.Framework.Test]
-        public virtual void ScreenTestEmbeddedWavFile01() {
-            String filename = destinationFolder + "screenAnnotation02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-            PdfPage page1 = pdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
-            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.wav", null, "sample.wav"
-                , null, null);
-            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
-            screen.SetAction(action);
-            page1.AddAnnotation(screen);
-            page1.Flush();
-            pdfDoc.Close();
-        }
-
-        //        CompareTool compareTool = new CompareTool();
-        //        String errorMessage = compareTool.compareByContent(filename, sourceFolder + "cmp_screenAnnotation02.pdf", destinationFolder, "diff_");
-        //        if (errorMessage != null) {
-        //            Assert.fail(errorMessage);
-        //        }
-        [NUnit.Framework.Test]
-        public virtual void ScreenTestEmbeddedWavFile02() {
-            String filename = destinationFolder + "screenAnnotation03.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-            PdfPage page1 = pdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
-            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, new FileStream(sourceFolder + "sample.wav", 
-                FileMode.Open, FileAccess.Read), null, "sample.wav", null, null);
-            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
-            screen.SetAction(action);
-            page1.AddAnnotation(screen);
-            page1.Flush();
-            pdfDoc.Close();
-        }
-
-        //        CompareTool compareTool = new CompareTool();
-        //        String errorMessage = compareTool.compareByContent(filename, sourceFolder + "cmp_screenAnnotation03.pdf", destinationFolder, "diff_");
-        //        if (errorMessage != null) {
-        //            Assert.fail(errorMessage);
-        //        }
-        [NUnit.Framework.Test]
-        public virtual void ScreenTestEmbeddedWavFile03() {
-            String filename = destinationFolder + "screenAnnotation04.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-            PdfPage page1 = pdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
-            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            Stream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read);
-            MemoryStream baos = new MemoryStream();
-            int reads = @is.Read();
-            while (reads != -1) {
-                baos.Write(reads);
-                reads = @is.Read();
+        public virtual void ScreenEmbeddedWavFromStreamTest() {
+            String filename = destinationFolder + "screenEmbeddedWavFromStreamTest.pdf";
+            String cmp = sourceFolder + "cmp_" + "screenEmbeddedWavFromStreamTest.pdf";
+            using (FileStream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read)) {
+                using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                    PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, @is, null, "sample.wav", null, null);
+                    AddPageWithScreenAnnotation(pdfDoc, spec);
+                }
             }
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, baos.ToArray(), null, "sample.wav", null, null
-                , null);
-            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
+            String errorMessage = new CompareTool().CompareByContent(filename, cmp, destinationFolder);
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ScreenEmbeddedWavFromBytesTest() {
+            String filename = destinationFolder + "screenEmbeddedWavFromBytesTest.pdf";
+            String cmp = sourceFolder + "cmp_" + "screenEmbeddedWavFromBytesTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                byte[] fileStore = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder + "sample.wav"));
+                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, fileStore, null, "sample.wav", null, null, null
+                    );
+                AddPageWithScreenAnnotation(pdfDoc, spec);
+            }
+            String errorMessage = new CompareTool().CompareByContent(filename, cmp, destinationFolder);
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ScreenExternalWavTest() {
+            String filename = destinationFolder + "screenExternalWavTest.pdf";
+            String cmp = sourceFolder + "cmp_" + "screenExternalWavTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                FileUtil.Copy(sourceFolder + "sample.wav", destinationFolder + "sample.wav");
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
+                AddPageWithScreenAnnotation(pdfDoc, spec);
+            }
+            String errorMessage = new CompareTool().CompareByContent(filename, cmp, destinationFolder);
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        private void AddPageWithScreenAnnotation(PdfDocument pdfDoc, PdfFileSpec spec) {
+            PdfPage page1 = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
+                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
+            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+            PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
             page1.Flush();
-            pdfDoc.Close();
         }
-        //        CompareTool compareTool = new CompareTool();
-        //        String errorMessage = compareTool.compareByContent(filename, sourceFolder + "cmp_screenAnnotation04.pdf", destinationFolder, "diff_");
-        //        if (errorMessage != null) {
-        //            Assert.fail(errorMessage);
-        //        }
     }
 }

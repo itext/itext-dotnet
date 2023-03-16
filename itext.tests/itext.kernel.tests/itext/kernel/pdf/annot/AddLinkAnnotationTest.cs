@@ -130,7 +130,7 @@ namespace iText.Kernel.Pdf.Annot {
             pdfDocument.GetPage(1).AddAnnotation(link);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
-                 + "cmp_" + fileName, destinationFolder, "diff_"));
+                 + "cmp_" + fileName, destinationFolder));
         }
     }
 }
