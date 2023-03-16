@@ -851,11 +851,6 @@ namespace iText.Kernel.Pdf {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetArtBox(Rectangle rectangle) {
-            if (GetPdfObject().GetAsRectangle(PdfName.TrimBox) != null) {
-                GetPdfObject().Remove(PdfName.TrimBox);
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE);
-            }
             Put(PdfName.ArtBox, new PdfArray(rectangle));
             return this;
         }
@@ -890,11 +885,6 @@ namespace iText.Kernel.Pdf {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetTrimBox(Rectangle rectangle) {
-            if (GetPdfObject().GetAsRectangle(PdfName.ArtBox) != null) {
-                GetPdfObject().Remove(PdfName.ArtBox);
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE);
-            }
             Put(PdfName.TrimBox, new PdfArray(rectangle));
             return this;
         }
@@ -1147,10 +1137,13 @@ namespace iText.Kernel.Pdf {
         /// <summary>Removes an annotation from the page.</summary>
         /// <remarks>
         /// Removes an annotation from the page.
-        /// <br /><br />
-        /// NOTE: If document is tagged, PdfDocument's PdfTagStructure instance will point at annotation tag parent after method call.
+        /// <para />
+        /// When document is tagged a corresponding logical structure content item for this annotation
+        /// will be removed; its immediate structure element parent will be removed as well if the following
+        /// conditions are met: annotation content item was its single child and structure element role
+        /// is either Annot or Form.
         /// </remarks>
-        /// <param name="annotation">an annotation to be removed.</param>
+        /// <param name="annotation">an annotation to be removed</param>
         /// <returns>
         /// this
         /// <see cref="PdfPage"/>
@@ -1163,18 +1156,22 @@ namespace iText.Kernel.Pdf {
         /// <summary>Removes an annotation from the page.</summary>
         /// <remarks>
         /// Removes an annotation from the page.
-        /// <br /><br />
-        /// NOTE: If document is tagged, PdfDocument's PdfTagStructure instance will point at annotation tag parent after method call.
+        /// <para />
+        /// When document is tagged a corresponding logical structure content item for this annotation
+        /// will be removed; its immediate structure element parent will be removed as well if the following
+        /// conditions are met: annotation content item was its single child and structure element role
+        /// is either Annot or Form.
         /// </remarks>
-        /// <param name="annotation">an annotation to be removed.</param>
+        /// <param name="annotation">an annotation to be removed</param>
         /// <param name="rememberTagPointer">
-        /// true if
+        /// if set to true, the
+        /// <see cref="iText.Kernel.Pdf.Tagutils.TagStructureContext.GetAutoTaggingPointer()"/>
+        /// instance of
         /// <see cref="iText.Kernel.Pdf.Tagutils.TagTreePointer"/>
-        /// for removed annotation parent struct elem should be set
-        /// to autoTaggingPointer of the current document. Used in case annotation will be
-        /// replaced by another one later (e.g. when merged field is separated to field and
-        /// pure widget, so merged field should be replaced by widget in page annotations
-        /// and tag structure).
+        /// will be moved to the parent of the removed
+        /// annotation tag. Can be used to add a new annotation to the same place in the
+        /// tag structure. (E.g. when merged Acroform field is split into a field and
+        /// a pure widget, the page annotation needs to be replaced by the new one)
         /// </param>
         /// <returns>
         /// this
@@ -1187,12 +1184,14 @@ namespace iText.Kernel.Pdf {
             if (annots != null) {
                 annots.Remove(annotation.GetPdfObject());
                 if (annots.IsEmpty()) {
-                    GetPdfObject().Remove(PdfName.Annots);
-                    SetModified();
+                    Remove(PdfName.Annots);
                 }
                 else {
                     if (annots.GetIndirectReference() == null) {
                         SetModified();
+                    }
+                    else {
+                        annots.SetModified();
                     }
                 }
             }
@@ -1202,7 +1201,7 @@ namespace iText.Kernel.Pdf {
                 if (tagPointer != null) {
                     bool standardAnnotTagRole = StandardRoles.ANNOT.Equals(tagPointer.GetRole()) || StandardRoles.FORM.Equals(
                         tagPointer.GetRole());
-                    if (tagPointer.GetKidsRoles().Count == 0 && standardAnnotTagRole) {
+                    if (tagPointer.GetKidsRoles().IsEmpty() && standardAnnotTagRole) {
                         tagPointer.RemoveTag();
                     }
                 }
@@ -1472,18 +1471,18 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Helper method that associate specified value with specified key in the underlined
+        /// Helper method that associates specified value with the specified key in the underlying
         /// <see cref="PdfDictionary"/>.
         /// </summary>
         /// <remarks>
-        /// Helper method that associate specified value with specified key in the underlined
-        /// <see cref="PdfDictionary"/>.
-        /// May be used in chain.
+        /// Helper method that associates specified value with the specified key in the underlying
+        /// <see cref="PdfDictionary"/>
+        /// . Can be used in method chaining.
         /// </remarks>
         /// <param name="key">
         /// the
         /// <see cref="PdfName"/>
-        /// key with which the specified value is to be associated.
+        /// key with which the specified value is to be associated
         /// </param>
         /// <param name="value">
         /// the
@@ -1497,6 +1496,33 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
+            return this;
+        }
+
+        /// <summary>
+        /// Helper method that removes the value associated with the specified key
+        /// from the underlying
+        /// <see cref="PdfDictionary"/>.
+        /// </summary>
+        /// <remarks>
+        /// Helper method that removes the value associated with the specified key
+        /// from the underlying
+        /// <see cref="PdfDictionary"/>
+        /// . Can be used in method chaining.
+        /// </remarks>
+        /// <param name="key">
+        /// the
+        /// <see cref="PdfName"/>
+        /// key for which associated value is to be removed
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// object
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfPage Remove(PdfName key) {
+            GetPdfObject().Remove(key);
             SetModified();
             return this;
         }
