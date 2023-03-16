@@ -132,5 +132,53 @@ namespace iText.Kernel.Pdf.Annot {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
                  + "cmp_" + fileName, destinationFolder));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveLinkAnnotationTaggedAsLinkTest() {
+            String input = sourceFolder + "taggedLinkAnnotationAsLink.pdf";
+            String output = destinationFolder + "removeLinkAnnotationTaggedAsLinkTest.pdf";
+            String cmp = sourceFolder + "cmp_" + "removeLinkAnnotationTaggedAsLinkTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output))) {
+                PdfPage page = pdfDoc.GetPage(1);
+                page.RemoveAnnotation(page.GetAnnotations()[0]);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveLinkAnnotationTaggedAsAnnotTest() {
+            String input = sourceFolder + "taggedLinkAnnotationAsAnnot.pdf";
+            String output = destinationFolder + "removeLinkAnnotationTaggedAsAnnotTest.pdf";
+            String cmp = sourceFolder + "cmp_" + "removeLinkAnnotationTaggedAsAnnotTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output))) {
+                PdfPage page = pdfDoc.GetPage(1);
+                page.RemoveAnnotation(page.GetAnnotations()[0]);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveLinkAnnotationTagWithContentTest() {
+            String input = sourceFolder + "taggedLinkAnnotationTagWithContent.pdf";
+            String output = destinationFolder + "removeLinkAnnotationTagWithContentTest.pdf";
+            String cmp = sourceFolder + "cmp_" + "removeLinkAnnotationTagWithContentTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output))) {
+                PdfPage page = pdfDoc.GetPage(1);
+                page.RemoveAnnotation(page.GetAnnotations()[0]);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveLinkAnnotationWithNoTagTest() {
+            String input = sourceFolder + "taggedInvalidNoLinkAnnotationTag.pdf";
+            String output = destinationFolder + "removeLinkAnnotationWithNoTagTest.pdf";
+            String cmp = sourceFolder + "cmp_" + "removeLinkAnnotationWithNoTagTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output))) {
+                PdfPage page = pdfDoc.GetPage(1);
+                page.RemoveAnnotation(page.GetAnnotations()[0]);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder));
+        }
     }
 }
