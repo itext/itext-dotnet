@@ -88,15 +88,9 @@ namespace iText.Svg.Exceptions {
 
         public const String PARAMETER_CANNOT_BE_NULL = "Parameters cannot be null.";
 
-        [Obsolete]
-        public const String PATH_OBJECT_MUST_HAVE_D_ATTRIBUTE = "A Path object must have an attribute with the name 'd'.";
-
         public const String POINTS_ATTRIBUTE_INVALID_LIST = "Points attribute {0} on polyline tag does not contain a valid set of points";
 
         public const String QUADRATIC_CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x1 y1 x y)+ parameters are expected for quadratic curves. Got: {0}";
-
-        [Obsolete]
-        public const String RENDERER_WITHOUT_OBJECT_BOUNDING_BOX = "The renderer has no object bounding box.";
 
         public const String ROOT_SVG_NO_BBOX = "The root svg tag needs to have a bounding box defined.";
 

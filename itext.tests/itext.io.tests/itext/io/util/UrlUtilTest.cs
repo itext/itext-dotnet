@@ -58,14 +58,6 @@ namespace iText.IO.Util {
             CreateDestinationFolder(destinationFolder);
         }
 
-        // Tests that after invocation of the getFinalURL method for local files, no handles are left open and the file is free to be removed
-        [NUnit.Framework.Test]
-        public virtual void GetFinalURLDoesNotLockFileTest() {
-            FileInfo tempFile = FileUtil.CreateTempFile(destinationFolder);
-            UrlUtil.GetFinalURL(UrlUtil.ToURL(tempFile.FullName));
-            NUnit.Framework.Assert.IsTrue(FileUtil.DeleteFile(tempFile));
-        }
-
         // This test checks that when we pass invalid url and trying get stream related to final redirected url,exception
         // would be thrown.
         [NUnit.Framework.Test]

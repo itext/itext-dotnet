@@ -148,16 +148,7 @@ namespace iText.Commons.Utils {
         {
             return date.ToString(pattern, CultureInfo.InvariantCulture);
         }
-        
-		/// <summary>
-        /// Gets the offset of time zone from UTC.
-        /// </summary>
-        /// <returns>the offset of time zone from UTC</returns>
-        [System.ObsoleteAttribute(@"Unused and will be removed in the next major release.")]
-        public static long GetCurrentTimeZoneOffset() {
-            return GetCurrentTimeZoneOffset(GetCurrentTime());
-        }
-        
+
         /// <summary>
         /// Gets the offset of time zone from UTC at the specified date.
         /// </summary>
