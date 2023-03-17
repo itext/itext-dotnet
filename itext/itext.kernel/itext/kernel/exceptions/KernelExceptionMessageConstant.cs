@@ -494,15 +494,9 @@ namespace iText.Kernel.Exceptions {
 
         public const String UNEXPECTED_CHARACTER_FOUND_AFTER_ID_IN_INLINE_IMAGE = "Unexpected character {0} " + "found after ID in inline image.";
 
-        [Obsolete]
-        public const String UNEXPECTED_CLOSE_BRACKET = "Unexpected close bracket.";
-
         public const String UNEXPECTED_COLOR_SPACE = "Unexpected ColorSpace: {0}.";
 
         public const String UNEXPECTED_END_OF_FILE = "Unexpected end of file.";
-
-        [Obsolete]
-        public const String UNEXPECTED_GT_GT = "unexpected >>.";
 
         public const String UNEXPECTED_TOKEN = "unexpected {0} was encountered.";
 

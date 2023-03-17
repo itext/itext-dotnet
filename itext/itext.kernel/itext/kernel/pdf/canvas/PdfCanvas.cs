@@ -1856,37 +1856,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>
         /// Adds
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
-        /// to the specified position in the case of
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
-        /// or moves to the specified offset in the case of
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
-        /// </summary>
-        /// <param name="xObject">the xObject to add</param>
-        /// <param name="x">the horizontal offset of the formXObject position or the horizontal position of the imageXObject
-        ///     </param>
-        /// <param name="y">the vertical offset of the formXObject position or the vertical position of the imageXObject
-        ///     </param>
-        /// <returns>the current canvas</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddXObjectAt(iText.Kernel.Pdf.Xobject.PdfXObject, float, float) instead"
-            )]
-        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, float x, float y) {
-            //TODO DEVSIX-5729 Remove deprecated api in PdfCanvas
-            if (xObject is PdfFormXObject) {
-                return AddForm((PdfFormXObject)xObject, x, y);
-            }
-            else {
-                if (xObject is PdfImageXObject) {
-                    return AddImageAt((PdfImageXObject)xObject, x, y);
-                }
-                else {
-                    throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Adds
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
         /// fitted into specific rectangle on canvas.
         /// </summary>
         /// <param name="xObject">the xObject to add</param>
@@ -2192,22 +2161,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 , bBoxMax);
             return AddFormWithTransformationMatrix(form, result[0], result[1], result[2], result[3], result[4], result
                 [5], false);
-        }
-
-        /// <summary>
-        /// Adds
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// to the canvas and moves to the specified offset.
-        /// </summary>
-        /// <param name="form">the formXObject to add</param>
-        /// <param name="x">the horizontal offset of the formXObject position</param>
-        /// <param name="y">the vertical offset of the formXObject position</param>
-        /// <returns>the current canvas</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddFormAt(iText.Kernel.Pdf.Xobject.PdfFormXObject, float, float) instead"
-            )]
-        private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float x, float y) {
-            //TODO DEVSIX-5729 Remove deprecated api in PdfCanvas
-            return AddFormWithTransformationMatrix(form, 1, 0, 0, 1, x, y, true);
         }
 
         /// <summary>

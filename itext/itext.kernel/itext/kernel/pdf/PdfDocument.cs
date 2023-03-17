@@ -1960,26 +1960,6 @@ namespace iText.Kernel.Pdf {
             tagStructureContext = new TagStructureContext(this);
         }
 
-        /// <summary>Save the link annotation in a temporary storage for further copying.</summary>
-        /// <remarks>
-        /// Save the link annotation in a temporary storage for further copying.
-        /// Save destinations in a temporary storage for further copying.
-        /// </remarks>
-        /// <param name="page">
-        /// just copied
-        /// <see cref="PdfPage"/>
-        /// link annotation belongs to.
-        /// </param>
-        /// <param name="annotation">
-        /// 
-        /// <see cref="iText.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
-        /// itself.
-        /// </param>
-        [System.ObsoleteAttribute(@"will be removed in next major version, it is being replaced with storeDestinationToReaddress"
-            )]
-        protected internal virtual void StoreLinkAnnotation(PdfPage page, PdfLinkAnnotation annotation) {
-        }
-
         /// <summary>Save destinations in a temporary storage for further copying.</summary>
         /// <param name="destination">
         /// the

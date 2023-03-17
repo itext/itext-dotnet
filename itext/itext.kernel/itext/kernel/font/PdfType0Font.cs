@@ -242,39 +242,6 @@ namespace iText.Kernel.Font {
             return result + 'V';
         }
 
-        /// <summary>Get Unicode mapping name from ordering.</summary>
-        /// <param name="ordering">the text ordering to base to unicode mapping on</param>
-        /// <returns>Unicode mapping name</returns>
-        [System.ObsoleteAttribute(@"Replaced by GetUniMapFromOrdering(System.String, bool) for proper handling of IDENTITY_V encoding."
-            )]
-        public static String GetUniMapFromOrdering(String ordering) {
-            switch (ordering) {
-                case "CNS1": {
-                    return "UniCNS-UTF16-H";
-                }
-
-                case "Japan1": {
-                    return "UniJIS-UTF16-H";
-                }
-
-                case "Korea1": {
-                    return "UniKS-UTF16-H";
-                }
-
-                case "GB1": {
-                    return "UniGB-UTF16-H";
-                }
-
-                case "Identity": {
-                    return "Identity-H";
-                }
-
-                default: {
-                    return null;
-                }
-            }
-        }
-
         public override Glyph GetGlyph(int unicode) {
             // TODO handle unicode value with cmap and use only glyphByCode
             Glyph glyph = GetFontProgram().GetGlyph(unicode);
