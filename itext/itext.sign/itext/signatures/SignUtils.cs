@@ -214,7 +214,7 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="cert"></param>
         /// <returns></returns>
-        /// TODO DEVSIX-2534
+        /// TODO DEVSIX-2634
         [Obsolete]
         internal static bool HasUnsupportedCriticalExtension(IX509Certificate cert) {
             if ( cert == null ) {
