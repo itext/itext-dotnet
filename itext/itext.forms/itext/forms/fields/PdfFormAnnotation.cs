@@ -995,8 +995,8 @@ namespace iText.Forms.Fields {
             if (apDic == null) {
                 Put(PdfName.AP, apDic = new PdfDictionary());
             }
-            appearance = DrawPushButtonAppearance(rect.GetWidth(), rect.GetHeight(), parent.text, GetFont(), GetFontSize
-                (widget.GetAsArray(PdfName.Rect), parent.text));
+            appearance = DrawPushButtonAppearance(rect.GetWidth(), rect.GetHeight(), parent.GetDisplayValue(), GetFont
+                (), GetFontSize(widget.GetAsArray(PdfName.Rect), parent.GetDisplayValue()));
             apDic.Put(PdfName.N, appearance.GetPdfObject());
             if (GetPdfAConformanceLevel() != null) {
                 CreatePushButtonAppearanceState(widget);
@@ -1027,7 +1027,7 @@ namespace iText.Forms.Fields {
         }
 
         internal virtual bool RegenerateTextAndChoiceField() {
-            String value = parent.GetValueAsString();
+            String value = parent.GetDisplayValue();
             PdfName type = parent.GetFormType();
             PdfPage page = PdfAnnotation.MakeAnnotation(GetPdfObject()).GetPage();
             PdfArray bBox = GetPdfObject().GetAsArray(PdfName.Rect);

@@ -60,6 +60,8 @@ namespace iText.Forms.Logs {
 
         public const String FIELDNAME_NOT_FOUND_OPERATION_CAN_NOT_BE_COMPLETED = "Fieldname: <{0}> not found. Operation can not be completed.";
 
+        public const String FIELD_VALUE_CANNOT_BE_NULL = "Field value cannot be null.";
+
         private FormsLogMessageConstants() {
         }
     }

@@ -1268,6 +1268,76 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY)]
+        public virtual void SetValueWithDisplayTest() {
+            String outPdf = destinationFolder + "setValueWithDisplayTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_setValueWithDisplayTest.pdf";
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(doc, true);
+                PdfFormField textField = new TextFormFieldBuilder(doc, "text").SetWidgetRectangle(new Rectangle(100, 700, 
+                    200, 20)).CreateText();
+                textField.SetValue("some text", "*****");
+                textField.SetColor(ColorConstants.BLUE);
+                acroForm.AddField(textField);
+                PdfFormField textField2 = new TextFormFieldBuilder(doc, "text2").SetWidgetRectangle(new Rectangle(100, 650
+                    , 100, 20)).CreateText();
+                textField2.SetValue("some text", "*****");
+                textField2.SetColor(ColorConstants.BLUE);
+                textField2.SetValue("new value");
+                acroForm.AddField(textField2);
+                PdfFormField textField3 = new TextFormFieldBuilder(doc, "text3").SetWidgetRectangle(new Rectangle(250, 650
+                    , 100, 20)).CreateText();
+                textField3.SetValue("some text", null);
+                acroForm.AddField(textField3);
+                PdfFormField textField4 = new TextFormFieldBuilder(doc, "text4").SetWidgetRectangle(new Rectangle(400, 650
+                    , 100, 20)).CreateText();
+                textField4.SetValue("some other text", "");
+                textField4.GetFirstFormAnnotation().SetBorderColor(ColorConstants.LIGHT_GRAY);
+                acroForm.AddField(textField4);
+                PdfButtonFormField pushButtonField = new PushButtonFormFieldBuilder(doc, "button").SetWidgetRectangle(new 
+                    Rectangle(36, 600, 200, 20)).SetCaption("Click").CreatePushButton();
+                pushButtonField.SetValue("Some button text", "*****");
+                pushButtonField.SetColor(ColorConstants.BLUE);
+                acroForm.AddField(pushButtonField);
+                String[] options = new String[] { "First Item", "Second Item", "Third Item", "Fourth Item" };
+                PdfChoiceFormField choiceField = new ChoiceFormFieldBuilder(doc, "choice").SetWidgetRectangle(new Rectangle
+                    (36, 550, 200, 20)).SetOptions(options).CreateComboBox();
+                choiceField.SetValue("First Item", "display value");
+                choiceField.SetColor(ColorConstants.BLUE);
+                acroForm.AddField(choiceField);
+                RadioFormFieldBuilder builder = new RadioFormFieldBuilder(doc, "group");
+                PdfButtonFormField radioGroupField = builder.CreateRadioGroup();
+                PdfFormAnnotation radio = builder.CreateRadioButton("1", new Rectangle(36, 500, 20, 20));
+                radioGroupField.AddKid(radio);
+                radioGroupField.SetValue("1", "display value");
+                acroForm.AddField(radioGroupField);
+                PdfButtonFormField checkBoxField = new CheckBoxFormFieldBuilder(doc, "check").SetWidgetRectangle(new Rectangle
+                    (36, 450, 20, 20)).CreateCheckBox();
+                checkBoxField.SetValue("1", "display value");
+                acroForm.AddField(checkBoxField);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(FormsLogMessageConstants.FIELD_VALUE_CANNOT_BE_NULL, Count = 2)]
+        public virtual void SetNullValueTest() {
+            String outPdf = destinationFolder + "setNullValueTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_setNullValueTest.pdf";
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(doc, true);
+                PdfFormField textField = new TextFormFieldBuilder(doc, "text").SetWidgetRectangle(new Rectangle(100, 700, 
+                    200, 20)).CreateText();
+                textField.SetValue(null);
+                textField.SetValue(null, "*****");
+                acroForm.AddField(textField);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void GetSigFlagsTest() {
             using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);

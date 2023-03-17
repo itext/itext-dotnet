@@ -114,6 +114,8 @@ namespace iText.Forms.Fields {
 
         protected internal CheckBoxType checkType = CheckBoxType.CROSS;
 
+        private String displayValue;
+
         private IList<AbstractPdfFormField> childFields = new List<AbstractPdfFormField>();
 
         static PdfFormField() {
@@ -442,28 +444,24 @@ namespace iText.Forms.Fields {
         /// is used to build the appearance.
         /// </remarks>
         /// <param name="value">the field value.</param>
-        /// <param name="display">
+        /// <param name="displayValue">
         /// the string that is used for the appearance. If <c>null</c>
         /// the <c>value</c> parameter will be used.
         /// </param>
         /// <returns>the edited field.</returns>
-        public virtual iText.Forms.Fields.PdfFormField SetValue(String value, String display) {
-            if (display == null) {
+        public virtual iText.Forms.Fields.PdfFormField SetValue(String value, String displayValue) {
+            if (value == null) {
+                LOGGER.LogWarning(FormsLogMessageConstants.FIELD_VALUE_CANNOT_BE_NULL);
+                return this;
+            }
+            // Not valid for checkboxes and radiobuttons
+            // TODO: DEVSIX-6344 - Move specific methods to related form fields classes
+            if (displayValue == null || displayValue.Equals(value)) {
                 return SetValue(value);
             }
-            SetValue(display, true);
-            PdfName formType = GetFormType();
-            if (PdfName.Btn.Equals(formType)) {
-                if ((GetFieldFlags() & PdfButtonFormField.FF_PUSH_BUTTON) != 0) {
-                    text = value;
-                }
-                else {
-                    Put(PdfName.V, new PdfName(value));
-                }
-            }
-            else {
-                Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
-            }
+            SetValue(displayValue, true);
+            SetValue(value, false);
+            this.displayValue = displayValue;
             return this;
         }
 
@@ -898,6 +896,28 @@ namespace iText.Forms.Fields {
                             return "";
                         }
                     }
+                }
+            }
+        }
+
+        /// <summary>Gets the current display value of the form field.</summary>
+        /// <returns>
+        /// the current display value, as a
+        /// <see cref="System.String"/>
+        /// , if it exists.
+        /// If not, returns the value as a
+        /// <see cref="System.String"/>.
+        /// </returns>
+        public virtual String GetDisplayValue() {
+            if (displayValue != null) {
+                return displayValue;
+            }
+            else {
+                if (text != null) {
+                    return text;
+                }
+                else {
+                    return GetValueAsString();
                 }
             }
         }
@@ -1484,6 +1504,12 @@ namespace iText.Forms.Fields {
         }
 
         private iText.Forms.Fields.PdfFormField SetFieldValue(String value, bool generateAppearance) {
+            if (value == null) {
+                LOGGER.LogWarning(FormsLogMessageConstants.FIELD_VALUE_CANNOT_BE_NULL);
+                return this;
+            }
+            // First, get rid of displayValue
+            displayValue = null;
             PdfName formType = GetFormType();
             if (PdfName.Btn.Equals(formType)) {
                 if (GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
