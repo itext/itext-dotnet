@@ -119,6 +119,16 @@ namespace iText.Kernel.Actions.Events {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DoActionNullEventMapTest() {
+            using (PdfDocument document = new FlushPdfDocumentEventTest.DummyPdfDocument(new PdfReader(SOURCE_FOLDER +
+                 "hello.pdf"))) {
+                NUnit.Framework.Assert.DoesNotThrow(() => new FlushPdfDocumentEvent(document).DoAction());
+                NUnit.Framework.Assert.IsTrue(document.GetDocumentInfo().GetProducer().Contains("Apryse Group NV (no registered products)"
+                    ));
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void FlushEventAfterEachEventTest() {
             String resourceInit = SOURCE_FOLDER + "hello.pdf";
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -131,6 +141,16 @@ namespace iText.Kernel.Actions.Events {
                 String modifiedByItext = "modified using iText\u00ae Core";
                 NUnit.Framework.Assert.AreNotEqual(producerLine.IndexOf(modifiedByItext, StringComparison.Ordinal), producerLine
                     .LastIndexOf(modifiedByItext));
+            }
+        }
+
+        private class DummyPdfDocument : PdfDocument {
+            public DummyPdfDocument(PdfReader reader)
+                : base(reader) {
+            }
+
+            public override SequenceId GetDocumentIdWrapper() {
+                return null;
             }
         }
 
