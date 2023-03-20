@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace iText.IO.Util {
     /// <summary>
@@ -57,5 +59,11 @@ namespace iText.IO.Util {
 
             return enumInstance.Value;
         }
+
+        public static  List<T> GetAllValuesOfEnum<T>() where T : struct {
+            var enumValues = Enum.GetValues( typeof(T));
+            return enumValues.Cast<T>().ToList();
+        }
+        
     }
 }
