@@ -4,7 +4,7 @@ The **iText 7 Core/Community** release contains:
 
 - ```kernel.dll```: low-level functionality
 - ```io.dll```:  low-level functionality
-- ```layout.dll```: high-level functionality
+- ```layout.dll```: high-level functionality. For more information see [layout overview][layoutMd].
 - ```forms.dll```: AcroForms
 - ```pdfa.dll```: PDF/A-specific functionality
 - ```pdftest.dll```: test helper classes
@@ -15,6 +15,9 @@ The **iText 7 Core/Community** release contains:
 - ```styled-xml-parser.dll```: use this if you need support for SVG or html2pdf
 - ```svg.dll```: SVG support
 - ```commons.dll```: commons module
+- ```bouncy-castle-connector.dll```: auxiliary internal module
+- ```bouncy-castle-adapter.dll```: use this to apply BouncyCastle as low-level cryptography library
+- ```bouncy-castle-fips-adapter.dll```: use this to apply BouncyCastle FIPS as low-level cryptography library
 
 The **iText 7 Community** source code is hosted on [Github][github], where you can also [download the latest releases][latest].
 
@@ -52,6 +55,7 @@ Contact [sales] for more info.
 [agpl]: LICENSE.md
 [building]: BUILDING.md
 [contributing]: CONTRIBUTING.md
+[layoutMd]: itext/itext.layout/MODULE_OVERVIEW.md
 [itext]: https://itextpdf.com/
 [github]: https://github.com/itext/itext7-dotnet
 [latest]: https://github.com/itext/itext7-dotnet/releases/latest
