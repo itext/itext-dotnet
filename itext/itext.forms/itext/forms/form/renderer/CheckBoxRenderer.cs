@@ -43,15 +43,12 @@ address: sales@itextpdf.com
 using System;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.Forms.Fields.Properties;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
-using iText.Forms.Util;
-using iText.Kernel.Colors;
+using iText.Forms.Form.Renderer.Checkboximpl;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Canvas;
-using iText.Layout.Borders;
-using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -63,16 +60,6 @@ namespace iText.Forms.Form.Renderer {
     /// implementation for checkboxes.
     /// </summary>
     public class CheckBoxRenderer : AbstractFormFieldRenderer {
-        private static readonly Color DEFAULT_BORDER_COLOR = ColorConstants.DARK_GRAY;
-
-        private static readonly Color DEFAULT_BACKGROUND_COLOR = ColorConstants.WHITE;
-
-        private const float DEFAULT_BORDER_WIDTH = 0.75f;
-
-        // 1px
-        private const float DEFAULT_SIZE = 8.25f;
-
-        // 11px
         /// <summary>
         /// Creates a new
         /// <see cref="CheckBoxRenderer"/>
@@ -90,11 +77,40 @@ namespace iText.Forms.Form.Renderer {
             return new iText.Forms.Form.Renderer.CheckBoxRenderer((CheckBox)modelElement);
         }
 
+        /// <summary>Gets the rendering mode of the checkbox.</summary>
+        /// <returns>the rendering mode of the checkbox</returns>
+        public virtual RenderingMode? GetRenderingMode() {
+            RenderingMode? renderingMode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
+            if (renderingMode != null) {
+                return renderingMode;
+            }
+            return RenderingMode.DEFAULT_LAYOUT_MODE;
+        }
+
+        /// <summary>Returns whether or not the checkbox is in PDF/A mode.</summary>
+        /// <returns>true if the checkbox is in PDF/A mode, false otherwise</returns>
+        public virtual bool IsPdfA() {
+            return this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL) != null;
+        }
+
+        /// <summary>Creates a flat renderer for the checkbox.</summary>
+        /// <returns>an IRenderer object for the flat renderer</returns>
         protected internal override IRenderer CreateFlatRenderer() {
-            Paragraph paragraph = new Paragraph().SetWidth(DEFAULT_SIZE).SetHeight(DEFAULT_SIZE).SetBorder(new SolidBorder
-                (DEFAULT_BORDER_COLOR, DEFAULT_BORDER_WIDTH)).SetBackgroundColor(DEFAULT_BACKGROUND_COLOR).SetHorizontalAlignment
-                (HorizontalAlignment.CENTER);
-            return new CheckBoxRenderer.FlatParagraphRenderer(this, paragraph);
+            return CreateCheckBoxRenderFactory().CreateFlatRenderer();
+        }
+
+        /// <summary>Creates a CheckBoxRenderFactory for the checkbox based on the different rendering modes and PDFA mode.
+        ///     </summary>
+        /// <returns>a CheckBoxRenderFactory object for the checkbox</returns>
+        public virtual AbstractCheckBoxRendererFactory CreateCheckBoxRenderFactory() {
+            // html rendering is pdfa compliant so we dont have to check if its pdfa
+            if (GetRenderingMode() == RenderingMode.HTML_MODE) {
+                return new CheckBoxHtmlRendererFactory(this);
+            }
+            if (GetRenderingMode() == RenderingMode.DEFAULT_LAYOUT_MODE && IsPdfA()) {
+                return new CheckBoxPdfARendererFactory(this);
+            }
+            return new CheckBoxPdfRendererFactory(this);
         }
 
         /* (non-Javadoc)
@@ -115,36 +131,20 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
-            PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateCheckBox
-                ();
-            checkBox.SetValue(IsBoxChecked() ? "Yes" : "Off", true);
+            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
+                (this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
+            if (this.HasProperty(FormProperty.FORM_CHECKBOX_TYPE)) {
+                builder.SetCheckType((CheckBoxType)this.GetProperty<CheckBoxType?>(FormProperty.FORM_CHECKBOX_TYPE));
+            }
+            PdfButtonFormField checkBox = builder.CreateCheckBox();
+            checkBox.SetValue(IsBoxChecked() ? PdfFormAnnotation.ON_STATE_VALUE : PdfFormAnnotation.OFF_STATE_VALUE, true
+                );
             PdfAcroForm.GetAcroForm(doc, true).AddField(checkBox, page);
             WriteAcroFormFieldLangAttribute(doc);
         }
 
         protected internal override bool IsLayoutBasedOnFlatRenderer() {
             return false;
-        }
-
-        private class FlatParagraphRenderer : ParagraphRenderer {
-            public FlatParagraphRenderer(CheckBoxRenderer _enclosing, Paragraph modelElement)
-                : base(modelElement) {
-                this._enclosing = _enclosing;
-            }
-
-            public override void DrawChildren(DrawContext drawContext) {
-                if (this._enclosing.IsBoxChecked()) {
-                    PdfCanvas canvas = drawContext.GetCanvas();
-                    Rectangle rectangle = this.GetInnerAreaBBox();
-                    canvas.SaveState();
-                    canvas.SetFillColor(ColorConstants.BLACK);
-                    DrawingUtil.DrawPdfACheck(canvas, rectangle.GetWidth(), rectangle.GetHeight(), rectangle.GetLeft(), rectangle
-                        .GetBottom());
-                    canvas.RestoreState();
-                }
-            }
-
-            private readonly CheckBoxRenderer _enclosing;
         }
     }
 }

@@ -85,6 +85,12 @@ namespace iText.Forms.Form {
         /// <summary>The Constant FORM_FIELD_RADIO_BORDER_CIRCLE.</summary>
         public const int FORM_FIELD_RADIO_BORDER_CIRCLE = PROPERTY_START + 13;
 
+        /// <summary>The Constant FORM_CHECKBOX_TYPE.</summary>
+        public const int FORM_CHECKBOX_TYPE = PROPERTY_START + 14;
+
+        /// <summary>The Constant FORM_CONFORMANCE_LEVEL.</summary>
+        public const int FORM_CONFORMANCE_LEVEL = PROPERTY_START + 15;
+
         private FormProperty() {
         }
         // Empty constructor.

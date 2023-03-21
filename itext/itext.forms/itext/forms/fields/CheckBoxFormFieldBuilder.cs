@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.Forms.Fields.Properties;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -84,6 +85,13 @@ namespace iText.Forms.Fields {
             check.SetFieldName(GetFormFieldName());
             check.Put(PdfName.V, new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
             if (GetWidgetRectangle() != null) {
+                //TODO DEVSIX-7426 remove flag
+                if (ExperimentalFeatures.ENABLE_EXPERIMENTAL_CHECKBOX_RENDERING) {
+                    check.GetFirstFormAnnotation().DrawCheckBoxAndSaveAppearanceExperimental(PdfFormAnnotation.ON_STATE_VALUE);
+                    SetPageToField(check);
+                    return check;
+                }
+                //TODO DEVSIX-7426 remove from here till end
                 if (GetConformanceLevel() == null) {
                     check.GetFirstFormAnnotation().DrawCheckAppearance(GetWidgetRectangle().GetWidth(), GetWidgetRectangle().GetHeight
                         (), PdfFormAnnotation.ON_STATE_VALUE);

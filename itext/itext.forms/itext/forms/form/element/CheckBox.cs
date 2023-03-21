@@ -41,7 +41,15 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
+using iText.Forms.Fields.Properties;
+using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
+using iText.Forms.Logs;
+using iText.Kernel.Pdf;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Forms.Form.Element {
@@ -53,7 +61,10 @@ namespace iText.Forms.Form.Element {
     /// <see cref="iText.Forms.Form.Renderer.CheckBoxRenderer"/>
     /// is used instead of the default renderer for fields.
     /// </summary>
-    public class CheckBox : FormField<TextArea> {
+    public class CheckBox : FormField<iText.Forms.Form.Element.CheckBox> {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Element.CheckBox
+            ));
+
         /// <summary>
         /// Creates a new
         /// <see cref="CheckBox"/>
@@ -62,6 +73,63 @@ namespace iText.Forms.Form.Element {
         /// <param name="id">the id</param>
         public CheckBox(String id)
             : base(id) {
+        }
+
+        /// <summary>Sets the checked state of the checkbox.</summary>
+        /// <param name="checked">the checked state to set</param>
+        /// <returns>this checkbox instance</returns>
+        public virtual iText.Forms.Form.Element.CheckBox SetChecked(bool @checked) {
+            SetProperty(FormProperty.FORM_FIELD_CHECKED, @checked);
+            return this;
+        }
+
+        /// <summary>Sets the rendering mode for the checkbox.</summary>
+        /// <param name="renderingMode">the rendering mode to set</param>
+        /// <returns>this checkbox instance</returns>
+        public virtual iText.Forms.Form.Element.CheckBox SetRenderingMode(RenderingMode? renderingMode) {
+            if (renderingMode == null) {
+                LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.INVALID_VALUE_FALLBACK_TO_DEFAULT, "renderingMode"
+                    , null));
+                return this;
+            }
+            SetProperty(Property.RENDERING_MODE, renderingMode);
+            return this;
+        }
+
+        /// <summary>Sets the PDF/A conformance level for the checkbox.</summary>
+        /// <param name="conformanceLevel">the PDF/A conformance level to set</param>
+        /// <returns>this checkbox instance</returns>
+        public virtual iText.Forms.Form.Element.CheckBox SetPdfAConformanceLevel(PdfAConformanceLevel conformanceLevel
+            ) {
+            SetProperty(FormProperty.FORM_CONFORMANCE_LEVEL, conformanceLevel);
+            return this;
+        }
+
+        /// <summary>Sets the icon of the checkbox.</summary>
+        /// <param name="checkBoxType">the type of the checkbox to set</param>
+        /// <returns>this checkbox instance</returns>
+        public virtual iText.Forms.Form.Element.CheckBox SetCheckBoxType(CheckBoxType checkBoxType) {
+            if (checkBoxType == null) {
+                LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.INVALID_VALUE_FALLBACK_TO_DEFAULT, "checkBoxType"
+                    , null));
+                return this;
+            }
+            SetProperty(FormProperty.FORM_CHECKBOX_TYPE, checkBoxType);
+            return this;
+        }
+
+        /// <summary>Sets the size of the checkbox.</summary>
+        /// <param name="size">the size of the checkbox to set, in points</param>
+        /// <returns>this checkbox instance</returns>
+        public virtual iText.Forms.Form.Element.CheckBox SetSize(float size) {
+            if (size <= 0) {
+                LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.INVALID_VALUE_FALLBACK_TO_DEFAULT, "size"
+                    , size));
+                return this;
+            }
+            SetProperty(Property.WIDTH, UnitValue.CreatePointValue(size));
+            SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(size));
+            return this;
         }
 
         /* (non-Javadoc)

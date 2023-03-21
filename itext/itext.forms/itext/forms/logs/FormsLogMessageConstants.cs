@@ -60,6 +60,11 @@ namespace iText.Forms.Logs {
 
         public const String FIELDNAME_NOT_FOUND_OPERATION_CAN_NOT_BE_COMPLETED = "Fieldname: <{0}> not found. Operation can not be completed.";
 
+        public const String INVALID_VALUE_FALLBACK_TO_DEFAULT = "Value '{0}': <{1}> invalid. Default value will be used.";
+
+        public const String CHECKBOX_FONT_SIZE_IS_NOT_POSITIVE = "Shouldn't come here because then we should have "
+             + "taken default size";
+
         public const String FIELD_VALUE_CANNOT_BE_NULL = "Field value cannot be null.";
 
         private FormsLogMessageConstants() {
