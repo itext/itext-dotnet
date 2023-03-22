@@ -295,12 +295,9 @@ namespace iText.Signatures {
         /// <param name="fieldName">The name indicating the field to be signed.</param>
         public virtual void SetFieldName(String fieldName) {
             if (fieldName != null) {
-                if (fieldName.IndexOf('.') >= 0) {
-                    throw new ArgumentException(SignExceptionMessageConstant.FIELD_NAMES_CANNOT_CONTAIN_A_DOT);
-                }
                 PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
-                if (acroForm.GetField(fieldName) != null) {
-                    PdfFormField field = acroForm.GetField(fieldName);
+                PdfFormField field = acroForm.GetField(fieldName);
+                if (field != null) {
                     if (!PdfName.Sig.Equals(field.GetFormType())) {
                         throw new ArgumentException(SignExceptionMessageConstant.FIELD_TYPE_IS_NOT_A_SIGNATURE_FIELD_TYPE);
                     }
@@ -313,6 +310,13 @@ namespace iText.Signatures {
                         PdfWidgetAnnotation widget = widgets[0];
                         appearance.SetPageRect(GetWidgetRectangle(widget));
                         appearance.SetPageNumber(GetWidgetPageNumber(widget));
+                    }
+                }
+                else {
+                    // Do not allow dots for new fields
+                    // For existing fields dots are allowed because there it might be fully qualified name
+                    if (fieldName.IndexOf('.') >= 0) {
+                        throw new ArgumentException(SignExceptionMessageConstant.FIELD_NAMES_CANNOT_CONTAIN_A_DOT);
                     }
                 }
                 this.fieldName = fieldName;

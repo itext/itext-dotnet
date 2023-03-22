@@ -91,6 +91,20 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SignIntoExistingFieldWithDotsTest() {
+            String srcFile = SOURCE_FOLDER + "signIntoExistingFieldWithDots.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_signIntoExistingFieldWithDots.pdf";
+            String outPdf = DESTINATION_FOLDER + "signIntoExistingFieldWithDots.pdf";
+            Rectangle randomRect = new Rectangle(1, 1, 100, 100);
+            String fieldName = "Signature1.1";
+            Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1"
+                , "TestCity", randomRect, false, false, PdfSigner.NOT_CERTIFIED, 12f);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                , GetTestMap(new Rectangle(163, 128, 430, 202))));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SignWithTempFileTest() {
             String srcFile = SOURCE_FOLDER + "simpleDocument.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_signedWithTempFile.pdf";
