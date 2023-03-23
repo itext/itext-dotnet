@@ -25,13 +25,12 @@ using System.Collections.Generic;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
-    /// <author>psoares</author>
-    public class CMapCidByte : AbstractCMap {
-        private IDictionary<int, byte[]> map = new Dictionary<int, byte[]>();
+    public class CMapCidToCodepoint : AbstractCMap {
+        private static readonly byte[] EMPTY = new byte[] {  };
 
-        private readonly byte[] EMPTY = new byte[] {  };
+        private readonly IDictionary<int, byte[]> map = new Dictionary<int, byte[]>();
 
-        private IList<byte[]> codeSpaceRanges = new List<byte[]>();
+        private readonly IList<byte[]> codeSpaceRanges = new List<byte[]>();
 
         internal override void AddChar(String mark, CMapObject code) {
             if (code.IsNumber()) {
@@ -52,14 +51,14 @@ namespace iText.IO.Font.Cmap {
 
         public virtual IntHashtable GetReversMap() {
             IntHashtable code2cid = new IntHashtable(map.Count);
-            foreach (int cid in map.Keys) {
-                byte[] bytes = map.Get(cid);
+            foreach (KeyValuePair<int, byte[]> entry in map) {
+                byte[] bytes = entry.Value;
                 int byteCode = 0;
                 foreach (byte b in bytes) {
                     byteCode <<= 8;
                     byteCode += b & 0xff;
                 }
-                code2cid.Put(byteCode, cid);
+                code2cid.Put(byteCode, entry.Key);
             }
             return code2cid;
         }

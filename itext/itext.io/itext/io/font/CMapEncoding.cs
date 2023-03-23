@@ -27,25 +27,22 @@ using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Font.Cmap;
 using iText.IO.Source;
-using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class CMapEncoding {
         private static readonly IList<byte[]> IDENTITY_H_V_CODESPACE_RANGES = JavaUtil.ArraysAsList(new byte[] { 0
             , 0 }, new byte[] { (byte)0xff, (byte)0xff });
 
-        private String cmap;
+        private readonly String cmap;
 
         private String uniMap;
 
         // true if CMap is Identity-H/V
         private bool isDirect;
 
-        private CMapCidUni cid2Uni;
+        private CMapCidToCodepoint cid2Code;
 
-        private CMapCidByte cid2Code;
-
-        private IntHashtable code2Cid;
+        private CMapCodepointToCid code2Cid;
 
         private IList<byte[]> codeSpaceRanges;
 
@@ -66,23 +63,22 @@ namespace iText.IO.Font {
             this.cmap = cmap;
             this.uniMap = uniMap;
             if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V)) {
-                cid2Uni = FontCache.GetCid2UniCmap(uniMap);
                 isDirect = true;
                 this.codeSpaceRanges = IDENTITY_H_V_CODESPACE_RANGES;
             }
             else {
-                cid2Code = FontCache.GetCid2Byte(cmap);
-                code2Cid = cid2Code.GetReversMap();
+                cid2Code = FontCache.GetCidToCodepointCmap(cmap);
+                code2Cid = iText.IO.Font.CMapEncoding.GetCodeToCidCmap(cmap, cid2Code);
                 this.codeSpaceRanges = cid2Code.GetCodeSpaceRanges();
             }
         }
 
         public CMapEncoding(String cmap, byte[] cmapBytes) {
             this.cmap = cmap;
-            cid2Code = new CMapCidByte();
+            cid2Code = new CMapCidToCodepoint();
             try {
                 CMapParser.ParseCid(cmap, cid2Code, new CMapLocationFromBytes(cmapBytes));
-                code2Cid = cid2Code.GetReversMap();
+                code2Cid = iText.IO.Font.CMapEncoding.GetCodeToCidCmap(cmap, cid2Code);
                 this.codeSpaceRanges = cid2Code.GetCodeSpaceRanges();
             }
             catch (System.IO.IOException) {
@@ -191,7 +187,7 @@ namespace iText.IO.Font {
                 return cmapCode;
             }
             else {
-                return code2Cid.Get(cmapCode);
+                return code2Cid.Lookup(cmapCode);
             }
         }
 
@@ -215,6 +211,16 @@ namespace iText.IO.Font {
                 }
             }
             return false;
+        }
+
+        private static CMapCodepointToCid GetCodeToCidCmap(String cmap, CMapCidToCodepoint cid2Code) {
+            try {
+                return FontCache.GetCodepointToCidCmap(cmap);
+            }
+            catch (iText.IO.Exceptions.IOException) {
+                // if not found, fall back to reversing
+                return new CMapCodepointToCid(cid2Code);
+            }
         }
     }
 }

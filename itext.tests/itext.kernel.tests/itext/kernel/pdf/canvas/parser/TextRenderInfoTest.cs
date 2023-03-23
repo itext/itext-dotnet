@@ -33,7 +33,7 @@ using iText.Test;
 namespace iText.Kernel.Pdf.Canvas.Parser {
     [NUnit.Framework.Category("IntegrationTest")]
     public class TextRenderInfoTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/TextRenderInfoTest/";
 
         public const int FIRST_PAGE = 1;
@@ -44,7 +44,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         public virtual void TestCharacterRenderInfos() {
             PdfCanvasProcessor parser = new PdfCanvasProcessor(new TextRenderInfoTest.CharacterPositionEventListener()
                 );
-            parser.ProcessPageContent(new PdfDocument(new PdfReader(sourceFolder + "simple_text.pdf")).GetPage(FIRST_PAGE
+            parser.ProcessPageContent(new PdfDocument(new PdfReader(SOURCE_FOLDER + "simple_text.pdf")).GetPage(FIRST_PAGE
                 ));
         }
 
@@ -60,7 +60,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         public virtual void TestUnicodeEmptyString() {
             StringBuilder sb = new StringBuilder();
             String inFile = "japanese_text.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inFile));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFile));
             ITextExtractionStrategy start = new SimpleTextExtractionStrategy();
             sb.Append(PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(FIRST_PAGE), start));
             String result = sb.JSubstring(0, sb.ToString().IndexOf("\n", StringComparison.Ordinal));
@@ -74,7 +74,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String inFile = "type3font_text.pdf";
             LineSegment origLineSegment = new LineSegment(new Vector(20.3246f, 769.4974f, 1.0f), new Vector(151.22923f
                 , 769.4974f, 1.0f));
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inFile));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFile));
             TextRenderInfoTest.TextPositionEventListener renderListener = new TextRenderInfoTest.TextPositionEventListener
                 ();
             PdfCanvasProcessor processor = new PdfCanvasProcessor(renderListener);
@@ -83,6 +83,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 FIRST_ELEMENT_INDEX), origLineSegment.GetStartPoint().Get(FIRST_ELEMENT_INDEX), 1 / 2f);
             NUnit.Framework.Assert.AreEqual(renderListener.GetLineSegments()[FIRST_ELEMENT_INDEX].GetEndPoint().Get(FIRST_ELEMENT_INDEX
                 ), origLineSegment.GetEndPoint().Get(FIRST_ELEMENT_INDEX), 1 / 2f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestDoubleMappedCharacterExtraction() {
+            String inFile = "double_cmap_mapping.pdf";
+            // TODO after fixing DEVSIX-6089 first hyphen should be 002D instead of 2011. The similar for the second line
+            String expectedResult = "Regular hyphen [\u2011] and non‑breaking hyphen [\u2011] (both CID 14)\n" + "Turtle kyuujitai [\u9f9c] and turtle radical [\u9f9c] (both CID 7472)";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFile));
+            ITextExtractionStrategy strategy = new SimpleTextExtractionStrategy();
+            String result = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(FIRST_PAGE), strategy).Trim();
+            NUnit.Framework.Assert.AreEqual(expectedResult, result);
         }
 
         private class TextPositionEventListener : IEventListener {

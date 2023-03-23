@@ -134,8 +134,7 @@ namespace iText.IO.Font {
         }
 
         public static CMapUniCid GetUni2CidCmap(String uniMap) {
-            CMapUniCid uniCid = new CMapUniCid();
-            return ParseCmap(uniMap, uniCid);
+            return ParseCmap(uniMap, new CMapUniCid());
         }
 
         public static CMapByteCid GetByte2CidCmap(String cmap) {
@@ -143,9 +142,13 @@ namespace iText.IO.Font {
             return ParseCmap(cmap, uniCid);
         }
 
-        public static CMapCidByte GetCid2Byte(String cmap) {
-            CMapCidByte cidByte = new CMapCidByte();
+        public static CMapCidToCodepoint GetCidToCodepointCmap(String cmap) {
+            CMapCidToCodepoint cidByte = new CMapCidToCodepoint();
             return ParseCmap(cmap, cidByte);
+        }
+
+        public static CMapCodepointToCid GetCodepointToCidCmap(String uniMap) {
+            return ParseCmap(uniMap, new CMapCodepointToCid());
         }
 
         /// <summary>

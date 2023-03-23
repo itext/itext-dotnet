@@ -90,9 +90,6 @@ namespace iText.Kernel.Font {
                 }
                 else {
                     CMapUniCid uni = FontCache.GetUni2CidCmap(uniMap);
-                    if (uni == null) {
-                        return null;
-                    }
                     toUnicode = uni.ExportToUnicode();
                 }
                 uniMaps.Put(uniMap, toUnicode);

@@ -133,8 +133,8 @@ namespace iText.IO.Font {
         public virtual void GetCid2ByteCMapNoFontAsian() {
             // Without font-asian module in the class path
             // no CMap can be found.
-            NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => FontCache.GetCid2Byte("78ms-RKSJ-H"
-                ));
+            NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => FontCache.GetCidToCodepointCmap
+                ("78ms-RKSJ-H"));
         }
 
         private class FontProgramMock : FontProgram {
