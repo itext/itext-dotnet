@@ -103,5 +103,17 @@ namespace iText.Kernel.Font {
             NUnit.Framework.Assert.AreEqual("Identity-H", PdfType0Font.GetUniMapFromOrdering("Identity", true));
             NUnit.Framework.Assert.AreEqual("Identity-V", PdfType0Font.GetUniMapFromOrdering("Identity", false));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void DescendantCidFontWithoutOrderingTest() {
+            PdfDictionary fontDict = new PdfDictionary();
+            PdfArray descendantFonts = new PdfArray();
+            PdfDictionary descendantFont = new PdfDictionary();
+            descendantFont.Put(PdfName.CIDSystemInfo, new PdfDictionary());
+            descendantFonts.Add(descendantFont);
+            fontDict.Put(PdfName.DescendantFonts, descendantFonts);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfType0Font(fontDict));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.ORDERING_SHOULD_BE_DETERMINED, e.Message);
+        }
     }
 }

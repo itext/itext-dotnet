@@ -39,6 +39,13 @@ namespace iText.Kernel.Font {
         private static readonly Dictionary<String, CMapToUnicode> uniMaps = new Dictionary<String, CMapToUnicode>(
             );
 
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.FontUtil));
+
+        private const String UNIVERSAL_CMAP_DIR = "ToUnicode.";
+
+        private static readonly ICollection<String> UNIVERSAL_CMAP_ORDERINGS = new HashSet<String>(JavaUtil.ArraysAsList
+            ("CNS1", "GB1", "Japan1", "Korea1", "KR"));
+
         private FontUtil() {
         }
 
@@ -62,9 +69,8 @@ namespace iText.Kernel.Font {
                     cMapToUnicode = new CMapToUnicode();
                     CMapParser.ParseCid("", cMapToUnicode, lb);
                 }
-                catch (Exception) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(CMapToUnicode));
-                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
+                catch (Exception e) {
+                    LOGGER.LogError(e, iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
                     cMapToUnicode = CMapToUnicode.EmptyCMapToUnicodeMap;
                 }
             }
@@ -72,6 +78,22 @@ namespace iText.Kernel.Font {
                 if (PdfName.IdentityH.Equals(toUnicode)) {
                     cMapToUnicode = CMapToUnicode.GetIdentity();
                 }
+            }
+            return cMapToUnicode;
+        }
+
+        internal static CMapToUnicode ParseUniversalToUnicodeCMap(String ordering) {
+            if (!UNIVERSAL_CMAP_ORDERINGS.Contains(ordering)) {
+                return null;
+            }
+            String cmapRelPath = UNIVERSAL_CMAP_DIR + "Adobe-" + ordering + "-UCS2";
+            CMapToUnicode cMapToUnicode = new CMapToUnicode();
+            try {
+                CMapParser.ParseCid(cmapRelPath, cMapToUnicode, new CMapLocationResource());
+            }
+            catch (Exception e) {
+                LOGGER.LogError(e, iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
+                return null;
             }
             return cMapToUnicode;
         }

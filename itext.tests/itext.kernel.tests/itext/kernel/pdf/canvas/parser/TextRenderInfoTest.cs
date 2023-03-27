@@ -89,7 +89,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         public virtual void TestDoubleMappedCharacterExtraction() {
             String inFile = "double_cmap_mapping.pdf";
             // TODO after fixing DEVSIX-6089 first hyphen should be 002D instead of 2011. The similar for the second line
-            String expectedResult = "Regular hyphen [\u2011] and non‑breaking hyphen [\u2011] (both CID 14)\n" + "Turtle kyuujitai [\u9f9c] and turtle radical [\u9f9c] (both CID 7472)";
+            String expectedResult = "Regular hyphen [\u002D] and non-breaking hyphen [\u002D] (both CID 14)\n" + "Turtle kyuujitai [\u9f9c] and turtle radical [\u9f9c] (both CID 7472)";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFile));
             ITextExtractionStrategy strategy = new SimpleTextExtractionStrategy();
             String result = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(FIRST_PAGE), strategy).Trim();

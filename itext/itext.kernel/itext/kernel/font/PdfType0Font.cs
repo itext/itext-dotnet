@@ -111,13 +111,23 @@ namespace iText.Kernel.Font {
             newFont = false;
             PdfDictionary cidFont = fontDictionary.GetAsArray(PdfName.DescendantFonts).GetAsDictionary(0);
             PdfObject cmap = fontDictionary.Get(PdfName.Encoding);
+            String ordering = GetOrdering(cidFont);
+            if (ordering == null) {
+                throw new PdfException(KernelExceptionMessageConstant.ORDERING_SHOULD_BE_DETERMINED);
+            }
+            CMapToUnicode toUnicodeCMap;
             PdfObject toUnicode = fontDictionary.Get(PdfName.ToUnicode);
-            CMapToUnicode toUnicodeCMap = FontUtil.ProcessToUnicode(toUnicode);
+            if (toUnicode == null) {
+                toUnicodeCMap = FontUtil.ParseUniversalToUnicodeCMap(ordering);
+            }
+            else {
+                toUnicodeCMap = FontUtil.ProcessToUnicode(toUnicode);
+            }
             if (cmap.IsName() && (PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap).GetValue()) || PdfEncodings.IDENTITY_V
                 .Equals(((PdfName)cmap).GetValue()))) {
                 if (toUnicodeCMap == null) {
-                    String uniMap = GetUniMapFromOrdering(GetOrdering(cidFont), PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap)
-                        .GetValue()));
+                    String uniMap = GetUniMapFromOrdering(ordering, PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap).GetValue())
+                        );
                     toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(uniMap);
                     if (toUnicodeCMap == null) {
                         toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(PdfEncodings.IDENTITY_H);
@@ -132,7 +142,7 @@ namespace iText.Kernel.Font {
             }
             else {
                 String cidFontName = cidFont.GetAsName(PdfName.BaseFont).GetValue();
-                String uniMap = GetUniMapFromOrdering(GetOrdering(cidFont), true);
+                String uniMap = GetUniMapFromOrdering(ordering, true);
                 if (uniMap != null && uniMap.StartsWith("Uni") && CidFontProperties.IsCidFont(cidFontName, uniMap)) {
                     try {
                         fontProgram = FontProgramFactory.CreateFont(cidFontName);

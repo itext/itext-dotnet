@@ -380,6 +380,8 @@ namespace iText.Kernel.Exceptions {
         public const String OPERATOR_EI_NOT_FOUND_AFTER_END_OF_IMAGE_DATA = "Operator EI not found after the end "
              + "of image data.";
 
+        public const String ORDERING_SHOULD_BE_DETERMINED = "Ordering should be determined for CIDFont of Type0 font.";
+
         public const String PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT = "The passed page belongs to document {0} (page {1} of the document) and therefore cannot be added "
              + "to this document ({2}).";
 
