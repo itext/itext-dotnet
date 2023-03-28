@@ -28,14 +28,14 @@ using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     internal class SmartModePdfObjectsSerializer {
-        private IIDigest md5;
+        private IIDigest sha512;
 
         private Dictionary<SerializedObjectContent, PdfIndirectReference> serializedContentToObj = new Dictionary<
             SerializedObjectContent, PdfIndirectReference>();
 
         internal SmartModePdfObjectsSerializer() {
             try {
-                md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
+                sha512 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-512");
             }
             catch (Exception e) {
                 throw new PdfException(e);
@@ -109,7 +109,7 @@ namespace iText.Kernel.Pdf {
                 SerDic((PdfDictionary)obj, bb, level - 1, serializedCache);
                 bb.Append("$B");
                 if (level > 0) {
-                    bb.Append(md5.Digest(((PdfStream)obj).GetBytes(false)));
+                    bb.Append(sha512.Digest(((PdfStream)obj).GetBytes(false)));
                 }
             }
             else {

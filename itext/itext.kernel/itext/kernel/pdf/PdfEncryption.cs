@@ -328,9 +328,9 @@ namespace iText.Kernel.Pdf {
         }
 
         public static byte[] GenerateNewDocumentId() {
-            IIDigest md5;
+            IIDigest sha512;
             try {
-                md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
+                sha512 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-512");
             }
             catch (Exception e) {
                 throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);
@@ -338,7 +338,7 @@ namespace iText.Kernel.Pdf {
             long time = SystemUtil.GetTimeBasedSeed();
             long mem = SystemUtil.GetFreeMemory();
             String s = time + "+" + mem + "+" + (seq++);
-            return md5.Digest(s.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
+            return sha512.Digest(s.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
         }
 
         /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>
