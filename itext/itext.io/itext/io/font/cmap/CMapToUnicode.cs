@@ -34,7 +34,9 @@ namespace iText.IO.Font.Cmap {
         public static iText.IO.Font.Cmap.CMapToUnicode EmptyCMapToUnicodeMap = new iText.IO.Font.Cmap.CMapToUnicode
             (true);
 
-        private IDictionary<int, char[]> byteMappings;
+        private readonly IDictionary<int, char[]> byteMappings;
+
+        private readonly IList<byte[]> codeSpaceRanges = new List<byte[]>();
 
         private CMapToUnicode(bool emptyCMap) {
             byteMappings = JavaCollectionsUtil.EmptyMap<int, char[]>();
@@ -50,6 +52,7 @@ namespace iText.IO.Font.Cmap {
             for (int i = 0; i < 65537; i++) {
                 uni.AddChar(i, iText.IO.Util.TextUtil.ConvertFromUtf32(i));
             }
+            uni.AddCodeSpaceRange(new byte[] { 0, 0 }, new byte[] { (byte)0xff, (byte)0xff });
             return uni;
         }
 
@@ -113,6 +116,24 @@ namespace iText.IO.Font.Cmap {
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Returns a list containing sequential pairs of code space beginning and endings:
+        /// (begincodespacerange1, endcodespacerange1, begincodespacerange2, endcodespacerange1, ...)
+        /// </summary>
+        /// <returns>
+        /// list of
+        /// <c>byte[]</c>
+        /// that contain code space ranges
+        /// </returns>
+        public virtual IList<byte[]> GetCodeSpaceRanges() {
+            return codeSpaceRanges;
+        }
+
+        internal override void AddCodeSpaceRange(byte[] low, byte[] high) {
+            codeSpaceRanges.Add(low);
+            codeSpaceRanges.Add(high);
         }
 
         private int ConvertToInt(char[] s) {

@@ -191,26 +191,8 @@ namespace iText.IO.Font {
             }
         }
 
-        public virtual bool ContainsCodeInCodeSpaceRange(int code, int length) {
-            for (int i = 0; i < codeSpaceRanges.Count; i += 2) {
-                if (length == codeSpaceRanges[i].Length) {
-                    int mask = 0xff;
-                    int totalShift = 0;
-                    byte[] low = codeSpaceRanges[i];
-                    byte[] high = codeSpaceRanges[i + 1];
-                    bool fitsIntoRange = true;
-                    for (int ind = length - 1; ind >= 0; ind--, totalShift += 8, mask <<= 8) {
-                        int actualByteValue = (code & mask) >> totalShift;
-                        if (!(actualByteValue >= (0xff & low[ind]) && actualByteValue <= (0xff & high[ind]))) {
-                            fitsIntoRange = false;
-                        }
-                    }
-                    if (fitsIntoRange) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+        public virtual IList<byte[]> GetCodeSpaceRanges() {
+            return codeSpaceRanges;
         }
 
         private static CMapCodepointToCid GetCodeToCidCmap(String cmap, CMapCidToCodepoint cid2Code) {

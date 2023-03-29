@@ -96,6 +96,16 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.AreEqual(expectedResult, result);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void TestEmbeddedIdentityToUnicodeTest() {
+            String inFile = "embedded_identity_to_unicode.pdf";
+            String expectedResult = "Regular hyphen [\u002d] and non-breaking hyphen [\u2011] (both CID 14)\n" + "Turtle kyuujitai [\u9f9c] and turtle radical [\u2fd4] (both CID 7472)";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFile));
+            ITextExtractionStrategy start = new SimpleTextExtractionStrategy();
+            String result = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(FIRST_PAGE), start).Trim();
+            NUnit.Framework.Assert.AreEqual(expectedResult, result);
+        }
+
         private class TextPositionEventListener : IEventListener {
             internal IList<LineSegment> lineSegments = new List<LineSegment>();
 

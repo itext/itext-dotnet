@@ -61,6 +61,8 @@ namespace iText.Kernel.Font {
 
         protected internal char[] specificUnicodeDifferences;
 
+        private readonly CMapToUnicode embeddedToUnicode;
+
         internal PdfType0Font(TrueTypeFont ttf, String cmap)
             : base() {
             if (!PdfEncodings.IDENTITY_H.Equals(cmap) && !PdfEncodings.IDENTITY_V.Equals(cmap)) {
@@ -76,6 +78,7 @@ namespace iText.Kernel.Font {
             cmapEncoding = new CMapEncoding(cmap);
             usedGlyphs = new SortedSet<int>();
             cidFontType = CID_FONT_TYPE_2;
+            embeddedToUnicode = null;
             if (ttf.IsFontSpecific()) {
                 specificUnicodeDifferences = new char[256];
                 byte[] bytes = new byte[1];
@@ -104,6 +107,7 @@ namespace iText.Kernel.Font {
             cmapEncoding = new CMapEncoding(cmap, uniMap);
             usedGlyphs = new SortedSet<int>();
             cidFontType = CID_FONT_TYPE_0;
+            embeddedToUnicode = null;
         }
 
         internal PdfType0Font(PdfDictionary fontDictionary)
@@ -119,9 +123,11 @@ namespace iText.Kernel.Font {
             PdfObject toUnicode = fontDictionary.Get(PdfName.ToUnicode);
             if (toUnicode == null) {
                 toUnicodeCMap = FontUtil.ParseUniversalToUnicodeCMap(ordering);
+                embeddedToUnicode = null;
             }
             else {
                 toUnicodeCMap = FontUtil.ProcessToUnicode(toUnicode);
+                embeddedToUnicode = toUnicodeCMap;
             }
             if (cmap.IsName() && (PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap).GetValue()) || PdfEncodings.IDENTITY_V
                 .Equals(((PdfName)cmap).GetValue()))) {
@@ -555,6 +561,11 @@ namespace iText.Kernel.Font {
         /// <summary><inheritDoc/></summary>
         public override bool AppendDecodedCodesToGlyphsList(IList<Glyph> list, PdfString characterCodes) {
             bool allCodesDecoded = true;
+            bool isToUnicodeEmbedded = embeddedToUnicode != null;
+            CMapEncoding cmap = GetCmap();
+            FontProgram fontProgram = GetFontProgram();
+            IList<byte[]> codeSpaceRanges = isToUnicodeEmbedded ? embeddedToUnicode.GetCodeSpaceRanges() : cmap.GetCodeSpaceRanges
+                ();
             String charCodesSequence = characterCodes.GetValue();
             // A sequence of one or more bytes shall be extracted from the string and matched against the codespace
             // ranges in the CMap. That is, the first byte shall be matched against 1-byte codespace ranges; if no match is
@@ -568,14 +579,17 @@ namespace iText.Kernel.Font {
                 for (int codeLength = 1; codeLength <= MAX_CID_CODE_LENGTH && i + codeLength <= charCodesSequence.Length; 
                     codeLength++) {
                     code = (code << 8) + charCodesSequence[i + codeLength - 1];
-                    if (!GetCmap().ContainsCodeInCodeSpaceRange(code, codeLength)) {
-                        continue;
-                    }
-                    else {
+                    if (iText.Kernel.Font.PdfType0Font.ContainsCodeInCodeSpaceRange(codeSpaceRanges, code, codeLength)) {
                         codeSpaceMatchedLength = codeLength;
                     }
-                    int glyphCode = GetCmap().GetCidCode(code);
-                    glyph = GetFontProgram().GetGlyphByCode(glyphCode);
+                    else {
+                        continue;
+                    }
+                    // According to paragraph 9.10.2 of PDF Specification ISO 32000-2, if toUnicode is embedded, it is
+                    // necessary to use it to map directly code points to unicode. If not embedded, use CMap to map code
+                    // points to CIDs and then CIDFont to map CIDs to unicode.
+                    int glyphCode = isToUnicodeEmbedded ? code : cmap.GetCidCode(code);
+                    glyph = fontProgram.GetGlyphByCode(glyphCode);
                     if (glyph != null) {
                         i += codeLength - 1;
                         break;
@@ -594,12 +608,12 @@ namespace iText.Kernel.Font {
                     }
                     i += codeSpaceMatchedLength - 1;
                 }
-                if (glyph != null && glyph.GetChars() != null) {
-                    list.Add(glyph);
+                if (glyph == null || glyph.GetChars() == null) {
+                    list.Add(new Glyph(0, fontProgram.GetGlyphByCode(0).GetWidth(), -1));
+                    allCodesDecoded = false;
                 }
                 else {
-                    list.Add(new Glyph(0, GetFontProgram().GetGlyphByCode(0).GetWidth(), -1));
-                    allCodesDecoded = false;
+                    list.Add(glyph);
                 }
             }
             return allCodesDecoded;
@@ -669,6 +683,28 @@ namespace iText.Kernel.Font {
                 return null;
             }
             return cidinfo.ContainsKey(PdfName.Ordering) ? cidinfo.Get(PdfName.Ordering).ToString() : null;
+        }
+
+        private static bool ContainsCodeInCodeSpaceRange(IList<byte[]> codeSpaceRanges, int code, int length) {
+            for (int i = 0; i < codeSpaceRanges.Count; i += 2) {
+                if (length == codeSpaceRanges[i].Length) {
+                    int mask = 0xff;
+                    int totalShift = 0;
+                    byte[] low = codeSpaceRanges[i];
+                    byte[] high = codeSpaceRanges[i + 1];
+                    bool fitsIntoRange = true;
+                    for (int ind = length - 1; ind >= 0; ind--, totalShift += 8, mask <<= 8) {
+                        int actualByteValue = (code & mask) >> totalShift;
+                        if (!(actualByteValue >= (0xff & low[ind]) && actualByteValue <= (0xff & high[ind]))) {
+                            fitsIntoRange = false;
+                        }
+                    }
+                    if (fitsIntoRange) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private void FlushFontData() {

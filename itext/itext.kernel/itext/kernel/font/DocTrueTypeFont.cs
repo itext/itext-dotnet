@@ -111,12 +111,7 @@ namespace iText.Kernel.Font {
                 fontProgram.avgWidth = 0;
                 foreach (int cid in toUnicode.GetCodes()) {
                     int width = widths.ContainsKey(cid) ? widths.Get(cid) : defaultWidth;
-                    Glyph glyph = new Glyph(cid, width, toUnicode.Lookup(cid));
-                    if (glyph.HasValidUnicode()) {
-                        fontProgram.unicodeToGlyph.Put(glyph.GetUnicode(), glyph);
-                    }
-                    fontProgram.codeToGlyph.Put(cid, glyph);
-                    fontProgram.avgWidth += width;
+                    fontProgram.RegisterGlyph(cid, width, toUnicode.Lookup(cid));
                 }
                 if (fontProgram.codeToGlyph.Count != 0) {
                     fontProgram.avgWidth /= fontProgram.codeToGlyph.Count;
@@ -253,6 +248,15 @@ namespace iText.Kernel.Font {
                     break;
                 }
             }
+        }
+
+        private void RegisterGlyph(int cid, int width, char[] unicode) {
+            Glyph glyph = new Glyph(cid, width, unicode);
+            if (glyph.HasValidUnicode()) {
+                this.unicodeToGlyph.Put(glyph.GetUnicode(), glyph);
+            }
+            this.codeToGlyph.Put(cid, glyph);
+            this.avgWidth += width;
         }
     }
 }
