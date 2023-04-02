@@ -89,7 +89,8 @@ namespace iText.Kernel.Pdf {
                 //do nothing
                 return false;
             }
-            if (dict.GetAsDictionary(PdfName.A) != null && dict.GetAsDictionary(PdfName.A).Get(PdfName.D) != null) {
+            if (dict.GetAsDictionary(PdfName.A) != null && dict.GetAsDictionary(PdfName.A).Get(PdfName.D) != null && !
+                PdfName.GoToR.Equals(dict.GetAsDictionary(PdfName.A).Get(PdfName.S))) {
                 fromDocument.StoreDestinationToReaddress(PdfDestination.MakeDestination(dict.GetAsDictionary(PdfName.A).Get
                     (PdfName.D)), (nd) => {
                     PdfObject newAnnot = value.CopyTo(targetDocument);
