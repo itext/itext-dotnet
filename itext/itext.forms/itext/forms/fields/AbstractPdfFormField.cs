@@ -44,14 +44,14 @@ namespace iText.Forms.Fields {
     /// must be indirect.
     /// </remarks>
     public abstract class AbstractPdfFormField : PdfObjectWrapper<PdfDictionary> {
-        private static readonly PdfName[] TERMINAL_FIELDS = new PdfName[] { PdfName.Btn, PdfName.Tx, PdfName.Ch, PdfName
-            .Sig };
-
         /// <summary>Size of text in form fields when font size is not explicitly set.</summary>
-        internal const int DEFAULT_FONT_SIZE = 12;
+        public const int DEFAULT_FONT_SIZE = 12;
 
         /// <summary>Minimal size of text in form fields.</summary>
-        internal const int MIN_FONT_SIZE = 4;
+        public const int MIN_FONT_SIZE = 4;
+
+        private static readonly PdfName[] TERMINAL_FIELDS = new PdfName[] { PdfName.Btn, PdfName.Tx, PdfName.Ch, PdfName
+            .Sig };
 
         /// <summary>Index of font value in default appearance element.</summary>
         private const int DA_FONT = 0;

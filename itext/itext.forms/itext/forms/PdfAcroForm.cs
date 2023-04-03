@@ -1242,6 +1242,14 @@ namespace iText.Forms {
             }
         }
 
+        /// <summary>Put a key/value pair in the  dictionary and overwrites the previous value if it already exists.</summary>
+        /// <param name="key">the key as pdf name</param>
+        /// <param name="value">the value as pdf object</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAcroForm"/>
+        /// instance
+        /// </returns>
         public virtual iText.Forms.PdfAcroForm Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             SetModified();

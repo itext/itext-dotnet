@@ -85,13 +85,13 @@ namespace iText.Forms.Fields {
             check.SetFieldName(GetFormFieldName());
             check.Put(PdfName.V, new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
             if (GetWidgetRectangle() != null) {
-                //TODO DEVSIX-7426 remove flag
+                //TODO DEVSIX-7443 remove flag
                 if (ExperimentalFeatures.ENABLE_EXPERIMENTAL_CHECKBOX_RENDERING) {
                     check.GetFirstFormAnnotation().DrawCheckBoxAndSaveAppearanceExperimental(PdfFormAnnotation.ON_STATE_VALUE);
                     SetPageToField(check);
                     return check;
                 }
-                //TODO DEVSIX-7426 remove from here till end
+                //TODO DEVSIX-7443 remove from here till end
                 if (GetConformanceLevel() == null) {
                     check.GetFirstFormAnnotation().DrawCheckAppearance(GetWidgetRectangle().GetWidth(), GetWidgetRectangle().GetHeight
                         (), PdfFormAnnotation.ON_STATE_VALUE);

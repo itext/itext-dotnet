@@ -53,6 +53,8 @@ namespace iText.Forms.Form.Element {
         /// <param name="id">the id</param>
         public CheckBox(String id)
             : base(id) {
+            SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+            SetChecked(false);
         }
 
         /// <summary>Sets the checked state of the checkbox.</summary>
@@ -60,19 +62,6 @@ namespace iText.Forms.Form.Element {
         /// <returns>this checkbox instance</returns>
         public virtual iText.Forms.Form.Element.CheckBox SetChecked(bool @checked) {
             SetProperty(FormProperty.FORM_FIELD_CHECKED, @checked);
-            return this;
-        }
-
-        /// <summary>Sets the rendering mode for the checkbox.</summary>
-        /// <param name="renderingMode">the rendering mode to set</param>
-        /// <returns>this checkbox instance</returns>
-        public virtual iText.Forms.Form.Element.CheckBox SetRenderingMode(RenderingMode? renderingMode) {
-            if (renderingMode == null) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.INVALID_VALUE_FALLBACK_TO_DEFAULT, "renderingMode"
-                    , null));
-                return this;
-            }
-            SetProperty(Property.RENDERING_MODE, renderingMode);
             return this;
         }
 

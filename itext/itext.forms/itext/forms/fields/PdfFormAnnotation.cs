@@ -31,7 +31,6 @@ using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Forms.Logs;
 using iText.Forms.Util;
-using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -43,7 +42,6 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
-using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -582,7 +580,8 @@ namespace iText.Forms.Fields {
             Paragraph paragraph = CreateParagraphForTextFieldValue(value).SetFont(font).SetMargin(0).SetPadding(3).SetMultipliedLeading
                 (1);
             if (GetFontSize() == 0) {
-                paragraph.SetFontSize(ApproximateFontSizeToFitMultiLine(paragraph, areaRect, modelCanvas.GetRenderer()));
+                paragraph.SetFontSize(FontSizeUtil.ApproximateFontSizeToFitMultiLine(paragraph, areaRect, modelCanvas.GetRenderer
+                    ()));
             }
             else {
                 paragraph.SetFontSize(GetFontSize());
@@ -644,7 +643,7 @@ namespace iText.Forms.Fields {
         /// <param name="height">the height of the checkbox to draw</param>
         /// <param name="onStateName">the state of the form field that will be drawn</param>
         protected internal virtual void DrawCheckAppearance(float width, float height, String onStateName) {
-            //TODO DEVSIX-7426 remove method
+            //TODO DEVSIX-7443 remove method
             Rectangle rect = new Rectangle(0, 0, width, height);
             PdfStream streamOn = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
@@ -683,7 +682,7 @@ namespace iText.Forms.Fields {
         /// </param>
         protected internal virtual void DrawPdfA2CheckAppearance(float width, float height, String onStateName, CheckBoxType
              checkType) {
-            //TODO DEVSIX-7426 remove method
+            //TODO DEVSIX-7443 remove method
             parent.checkType = checkType;
             Rectangle rect = new Rectangle(0, 0, width, height);
             PdfStream streamOn = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
@@ -793,7 +792,7 @@ namespace iText.Forms.Fields {
         /// <param name="height">the width of the button</param>
         /// <param name="fontSize">the size of the font</param>
         protected internal virtual void DrawCheckBox(PdfCanvas canvas, float width, float height, float fontSize) {
-            //TODO DEVSIX-7426 remove method
+            //TODO DEVSIX-7443 remove method
             if (parent.checkType == CheckBoxType.CROSS) {
                 DrawingUtil.DrawCross(canvas, width, height, borderWidth);
                 return;
@@ -801,7 +800,9 @@ namespace iText.Forms.Fields {
             PdfFont ufont = GetFont();
             if (fontSize <= 0) {
                 // there is no min font size for checkbox, however we can't set 0, because it means auto size.
-                fontSize = ApproximateFontSizeToFitSingleLine(ufont, new Rectangle(width, height), parent.text, 0.1f);
+                float minFontSize = 0.1F;
+                fontSize = FontSizeUtil.ApproximateFontSizeToFitSingleLine(ufont, new Rectangle(width, height), parent.text
+                    , minFontSize, borderWidth);
             }
             // PdfFont gets all width in 1000 normalized units
             canvas.BeginText().SetFontAndSize(ufont, fontSize).ResetFillColorRgb().SetTextMatrix((width - ufont.GetWidth
@@ -809,8 +810,17 @@ namespace iText.Forms.Fields {
                 ).EndText();
         }
 
-        //TODO DEVSIX-7426 remove method
+        /// <summary>Performs the low-level drawing operations to draw a PDF A complication checkbox.</summary>
+        /// <param name="canvas">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// of the page to draw on.
+        /// </param>
+        /// <param name="width">the width of the button</param>
+        /// <param name="height">the height of the button</param>
+        /// <param name="on">the state of the checkbox</param>
         protected internal virtual void DrawPdfACheckBox(PdfCanvas canvas, float width, float height, bool on) {
+            //TODO DEVSIX-7443 remove method
             if (!on) {
                 return;
             }
@@ -986,7 +996,7 @@ namespace iText.Forms.Fields {
             }
         }
 
-        //TODO DEVSIX-7426 remove method
+        //TODO DEVSIX-7443 remove method
         internal virtual void RegenerateCheckboxField(CheckBoxType checkType) {
             parent.SetCheckType(checkType);
             String value = parent.GetValueAsString();
@@ -1155,12 +1165,12 @@ namespace iText.Forms.Fields {
                             DrawRadioButtonAndSaveAppearance(GetRadioButtonValue());
                         }
                         else {
-                            //TODO DEVSIX-7426 remove flag
+                            //TODO DEVSIX-7443 remove flag
                             if (ExperimentalFeatures.ENABLE_EXPERIMENTAL_CHECKBOX_RENDERING) {
                                 DrawCheckBoxAndSaveAppearanceExperimental(parent.GetValueAsString());
                             }
                             else {
-                                //TODO DEVSIX-7426 remove method
+                                //TODO DEVSIX-7443 remove method
                                 RegenerateCheckboxField(parent.checkType);
                             }
                         }
@@ -1220,65 +1230,11 @@ namespace iText.Forms.Fields {
                     return DEFAULT_FONT_SIZE;
                 }
                 else {
-                    return ApproximateFontSizeToFitSingleLine(GetFont(), bBox.ToRectangle(), value, MIN_FONT_SIZE);
+                    return FontSizeUtil.ApproximateFontSizeToFitSingleLine(GetFont(), bBox.ToRectangle(), value, MIN_FONT_SIZE
+                        , borderWidth);
                 }
             }
             return GetFontSize();
-        }
-
-        private static float ApproximateFontSizeToFitMultiLine(Paragraph paragraph, Rectangle rect, IRenderer parentRenderer
-            ) {
-            IRenderer renderer = paragraph.CreateRendererSubTree().SetParent(parentRenderer);
-            LayoutContext layoutContext = new LayoutContext(new LayoutArea(1, rect));
-            float lFontSize = MIN_FONT_SIZE;
-            float rFontSize = DEFAULT_FONT_SIZE;
-            paragraph.SetFontSize(DEFAULT_FONT_SIZE);
-            if (renderer.Layout(layoutContext).GetStatus() != LayoutResult.FULL) {
-                int numberOfIterations = 6;
-                for (int i = 0; i < numberOfIterations; i++) {
-                    float mFontSize = (lFontSize + rFontSize) / 2;
-                    paragraph.SetFontSize(mFontSize);
-                    LayoutResult result = renderer.Layout(layoutContext);
-                    if (result.GetStatus() == LayoutResult.FULL) {
-                        lFontSize = mFontSize;
-                    }
-                    else {
-                        rFontSize = mFontSize;
-                    }
-                }
-            }
-            else {
-                lFontSize = DEFAULT_FONT_SIZE;
-            }
-            return lFontSize;
-        }
-
-        // For text field that value shall be min 4, for checkbox there is no min value.
-        private float ApproximateFontSizeToFitSingleLine(PdfFont localFont, Rectangle bBox, String value, float minValue
-            ) {
-            float fs;
-            float height = bBox.GetHeight() - borderWidth * 2;
-            int[] fontBbox = localFont.GetFontProgram().GetFontMetrics().GetBbox();
-            fs = FontProgram.ConvertGlyphSpaceToTextSpace(height / (fontBbox[2] - fontBbox[1]));
-            float baseWidth = localFont.GetWidth(value, 1);
-            if (baseWidth != 0) {
-                float availableWidth = Math.Max(bBox.GetWidth() - borderWidth * 2, 0);
-                // This constant is taken based on what was the resultant padding in previous version
-                // of this algorithm in case border width was zero.
-                float absMaxPadding = 4f;
-                // relative value is quite big in order to preserve visible padding on small field sizes.
-                // This constant is taken arbitrary, based on visual similarity to Acrobat behaviour.
-                float relativePaddingForSmallSizes = 0.15f;
-                // with current constants, if availableWidth is less than ~26 points, padding will be made relative
-                if (availableWidth * relativePaddingForSmallSizes < absMaxPadding) {
-                    availableWidth -= availableWidth * relativePaddingForSmallSizes * 2;
-                }
-                else {
-                    availableWidth -= absMaxPadding * 2;
-                }
-                fs = Math.Min(fs, availableWidth / baseWidth);
-            }
-            return Math.Max(fs, minValue);
         }
 
         /// <summary>
@@ -1444,7 +1400,7 @@ namespace iText.Forms.Fields {
         /// <summary>Experimental method to draw a checkbox and save its appearance.</summary>
         /// <param name="onStateName">the name of the appearance state for the checked state</param>
         protected internal virtual void DrawCheckBoxAndSaveAppearanceExperimental(String onStateName) {
-            //TODO DEVSIX-7426 rename experimental method
+            //TODO DEVSIX-7443 rename experimental method
             Rectangle rect = GetRect(this.GetPdfObject());
             if (rect == null) {
                 return;
@@ -1453,16 +1409,15 @@ namespace iText.Forms.Fields {
             if (formField == null) {
                 return;
             }
-            // First draw off appearance
             if (GetWidget().GetNormalAppearanceObject() == null) {
                 GetWidget().SetNormalAppearance(new PdfDictionary());
             }
             PdfDictionary normalAppearance = GetWidget().GetNormalAppearanceObject();
-            // Draw on appearance
             formField.SetChecked(false);
             PdfFormXObject xObjectOff = new PdfFormXObject(new Rectangle(0, 0, rect.GetWidth(), rect.GetHeight()));
             iText.Layout.Canvas canvasOff = new iText.Layout.Canvas(xObjectOff, GetDocument());
             canvasOff.Add(formField);
+            xObjectOff.GetResources().AddFont(GetDocument(), GetFont());
             normalAppearance.Put(new PdfName(OFF_STATE_VALUE), xObjectOff.GetPdfObject());
             if (onStateName != null && !String.IsNullOrEmpty(onStateName) && !iText.Forms.Fields.PdfFormAnnotation.OFF_STATE_VALUE
                 .Equals(onStateName)) {
@@ -1472,9 +1427,17 @@ namespace iText.Forms.Fields {
                 canvas.Add(formField);
                 normalAppearance.Put(new PdfName(onStateName), xObject.GetPdfObject());
             }
-            PdfDictionary mk = new PdfDictionary();
-            mk.Put(PdfName.CA, new PdfString(parent.text));
-            GetWidget().Put(PdfName.MK, mk);
+            if (GetWidget().GetAppearanceCharacteristics() == null) {
+                GetWidget().SetAppearanceCharacteristics(new PdfDictionary());
+            }
+            PdfDictionary mk = GetWidget().GetAppearanceCharacteristics();
+            if (parent.text != null) {
+                mk.Put(PdfName.CA, new PdfString(parent.text));
+            }
+            SetCheckBoxAppearanceState(onStateName);
+        }
+
+        private void SetCheckBoxAppearanceState(String onStateName) {
             PdfWidgetAnnotation widget = GetWidget();
             if (widget.GetNormalAppearanceObject() != null && widget.GetNormalAppearanceObject().ContainsKey(new PdfName
                 (onStateName))) {
@@ -1483,6 +1446,12 @@ namespace iText.Forms.Fields {
             else {
                 widget.SetAppearanceState(new PdfName(OFF_STATE_VALUE));
             }
+            // Remove appearance state if it is not used
+            int amountOfAppearanceStatesAllowed = 2;
+            if (widget.GetNormalAppearanceObject().KeySet().Count > amountOfAppearanceStatesAllowed && !ON_STATE_VALUE
+                .Equals(onStateName)) {
+                widget.GetNormalAppearanceObject().Remove(new PdfName(ON_STATE_VALUE));
+            }
         }
 
         private CheckBox CreateCheckBox() {
@@ -1490,21 +1459,31 @@ namespace iText.Forms.Fields {
             if (rect == null) {
                 return null;
             }
-            // id doesn't matter here
+            rect = rect.Clone();
             CheckBox checkBox = new CheckBox("");
             if (GetBorderWidth() > 0 && borderColor != null) {
-                Border border = new SolidBorder(Math.Max(1, GetBorderWidth()));
-                border.SetColor(borderColor);
+                float borderWidth = GetBorderWidth();
+                PdfDictionary bs = GetWidget().GetBorderStyle();
+                Border border = FormBorderFactory.GetBorder(bs, borderWidth, borderColor, backgroundColor);
+                if (border == null) {
+                    // TODO DEVSIX-7443 1 is copied from the previous implementation, but it is not clear why it is needed
+                    // we should actually check if we want to use a fallback value or if we would allow the user to have a
+                    // very thin border
+                    borderWidth = Math.Max(1, GetBorderWidth());
+                    border = new SolidBorder(borderColor, borderWidth);
+                }
                 checkBox.SetBorder(border);
             }
             if (backgroundColor != null) {
                 checkBox.SetBackgroundColor(backgroundColor);
             }
+            //make font size auto calculated
+            checkBox.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(GetFontSize()));
             // Set fixed size
             checkBox.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(rect.GetWidth()));
             checkBox.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rect.GetHeight()));
             // Always flatten
-            checkBox.SetInteractive(false);
+            checkBox.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
             checkBox.SetPdfAConformanceLevel(GetPdfAConformanceLevel());
             checkBox.SetCheckBoxType(parent.checkType);
             return checkBox;
