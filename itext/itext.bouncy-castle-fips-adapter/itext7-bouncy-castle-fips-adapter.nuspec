@@ -23,9 +23,9 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\netstandard2.0\bc-fips-1.0.1.1.dll" target="lib\netstandard2.0" />
+    <file src="bin\Release\netstandard2.0\bc-fips-1.0.2.dll" target="lib\netstandard2.0" />
 	
-    <file src="bin\Release\netstandard2.0\bcpkix-fips-1.0.1.1.dll" target="lib\netstandard2.0" />
+    <file src="bin\Release\netstandard2.0\bcpkix-fips-1.0.2.dll" target="lib\netstandard2.0" />
   
     <file src="bin\Release\netstandard2.0\itext.bouncy-castle-fips-adapter.dll" target="lib\netstandard2.0" />
     <file src="bin\Release\netstandard2.0\itext.bouncy-castle-fips-adapter.xml" target="lib\netstandard2.0" />

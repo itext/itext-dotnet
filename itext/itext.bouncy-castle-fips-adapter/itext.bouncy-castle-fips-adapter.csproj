@@ -22,16 +22,15 @@
   <PropertyGroup>
     <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <Reference Include="bc-fips-1.0.1.1, Version=1.0.1.1, Culture=neutral, PublicKeyToken=null">
-      <HintPath>lib\bc-fips\bc-fips-1.0.1.1.dll</HintPath>
-    </Reference>
-    <Reference Include="bcpkix-fips-1.0.1.1, Version=1.0.1.1, Culture=neutral, PublicKeyToken=null">
-      <HintPath>lib\bc-fips\bcpkix-fips-1.0.1.1.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itext.commons\itext.commons.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="bc-fips-1.0.2">
+      <HintPath>lib\bc-fips\bc-fips-1.0.2.dll</HintPath>
+    </Reference>
+    <Reference Include="bcpkix-fips-1.0.2">
+      <HintPath>lib\bc-fips\bcpkix-fips-1.0.2.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
