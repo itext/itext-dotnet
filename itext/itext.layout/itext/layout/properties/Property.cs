@@ -338,6 +338,8 @@ namespace iText.Layout.Properties {
 
         public const int WORD_SPACING = 78;
 
+        public const int ADD_MARKED_CONTENT_TEXT = 137;
+
         /// <summary>
         /// Some properties must be passed to
         /// <see cref="iText.Layout.IPropertyContainer"/>
@@ -353,7 +355,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 135;
+        private const int MAX_INHERITED_PROPERTY_ID = 137;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -396,6 +398,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LINE_HEIGHT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.OVERFLOW_WRAP] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.META_INFO] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.ADD_MARKED_CONTENT_TEXT] = true;
         }
 
         private Property() {

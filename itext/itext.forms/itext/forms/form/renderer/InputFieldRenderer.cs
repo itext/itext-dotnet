@@ -132,7 +132,7 @@ namespace iText.Forms.Form.Renderer {
                     , Property.FONT_SIZE));
             }
             PdfDocument doc = drawContext.GetDocument();
-            Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
+            Rectangle area = this.GetOccupiedArea().GetBBox().Clone();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             float fontSizeValue = fontSize.GetValue();
             PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateText().SetValue
@@ -166,6 +166,17 @@ namespace iText.Forms.Form.Renderer {
                 return width;
             }
             return base.GetProperty<T1>(key);
+        }
+
+        public override void Draw(DrawContext drawContext) {
+            if (flatRenderer != null) {
+                if (IsFlatten()) {
+                    base.Draw(drawContext);
+                }
+                else {
+                    DrawChildren(drawContext);
+                }
+            }
         }
 
         protected override bool SetMinMaxWidthBasedOnFixedWidth(MinMaxWidth minMaxWidth) {

@@ -44,6 +44,12 @@ namespace iText.Forms.Form.Renderer {
     /// implementation for text area fields.
     /// </summary>
     public class TextAreaRenderer : AbstractTextFieldRenderer {
+        /// <summary>Minimal size of text in form fields.</summary>
+        private const int MIN_FONT_SIZE = 4;
+
+        /// <summary>Size of text in form fields when font size is not explicitly set.</summary>
+        private const int DEFAULT_FONT_SIZE = 12;
+
         /// <summary>
         /// Creates a new
         /// <see cref="TextAreaRenderer"/>
@@ -74,6 +80,17 @@ namespace iText.Forms.Form.Renderer {
             return (int)modelElement.GetDefaultProperty<int>(FormProperty.FORM_FIELD_ROWS);
         }
 
+        public override void Draw(DrawContext drawContext) {
+            if (flatRenderer != null) {
+                if (IsFlatten()) {
+                    base.Draw(drawContext);
+                }
+                else {
+                    DrawChildren(drawContext);
+                }
+            }
+        }
+
         protected override float? GetLastYLineRecursively() {
             if (occupiedArea != null && occupiedArea.GetBBox() != null) {
                 return occupiedArea.GetBBox().GetBottom();
@@ -86,6 +103,14 @@ namespace iText.Forms.Form.Renderer {
         */
         public override IRenderer GetNextRenderer() {
             return new iText.Forms.Form.Renderer.TextAreaRenderer((TextArea)GetModelElement());
+        }
+
+        public override LayoutResult Layout(LayoutContext layoutContext) {
+            UnitValue fontSize = GetPropertyAsUnitValue(Property.FONT_SIZE);
+            if (fontSize != null && fontSize.GetValue() < EPS) {
+                ApproximateFontSizeToFitMultiLine(layoutContext);
+            }
+            return base.Layout(layoutContext);
         }
 
         /* (non-Javadoc)
@@ -136,14 +161,13 @@ namespace iText.Forms.Form.Renderer {
                     , Property.FONT_SIZE));
             }
             PdfDocument doc = drawContext.GetDocument();
-            Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
+            Rectangle area = GetOccupiedArea().GetBBox().Clone();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             float fontSizeValue = fontSize.GetValue();
             PdfString defaultValue = new PdfString(GetDefaultValue());
-            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateText().SetValue
-                (value);
+            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateMultilineText
+                ().SetValue(value);
             inputField.SetFont(font).SetFontSize(fontSizeValue);
-            inputField.SetFieldFlag(PdfFormField.FF_MULTILINE, true);
             inputField.SetDefaultValue(defaultValue);
             ApplyDefaultFieldProperties(inputField);
             PdfAcroForm.GetAcroForm(doc, true).AddField(inputField, page);
@@ -208,6 +232,33 @@ namespace iText.Forms.Form.Renderer {
                     }
                 }
             }
+        }
+
+        private void ApproximateFontSizeToFitMultiLine(LayoutContext layoutContext) {
+            IRenderer flatRenderer = CreateFlatRenderer();
+            flatRenderer.SetParent(this);
+            TextArea modelElement = (TextArea)this.GetModelElement();
+            float lFontSize = MIN_FONT_SIZE;
+            float rFontSize = DEFAULT_FONT_SIZE;
+            flatRenderer.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(DEFAULT_FONT_SIZE));
+            if (flatRenderer.Layout(layoutContext).GetStatus() == LayoutResult.FULL) {
+                lFontSize = DEFAULT_FONT_SIZE;
+            }
+            else {
+                int numberOfIterations = 6;
+                for (int i = 0; i < numberOfIterations; i++) {
+                    float mFontSize = (lFontSize + rFontSize) / 2;
+                    flatRenderer.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(mFontSize));
+                    LayoutResult result = flatRenderer.Layout(layoutContext);
+                    if (result.GetStatus() == LayoutResult.FULL) {
+                        lFontSize = mFontSize;
+                    }
+                    else {
+                        rFontSize = mFontSize;
+                    }
+                }
+            }
+            modelElement.SetFontSize(lFontSize);
         }
     }
 }

@@ -171,22 +171,22 @@ namespace iText.Forms {
                     else {
                         newValue = "HELLO!";
                     }
-                    HorizontalAlignment? justification = field.GetJustification();
-                    if (null == justification || justification == HorizontalAlignment.LEFT) {
+                    TextAlignment? justification = field.GetJustification();
+                    if (null == justification || justification == TextAlignment.LEFT) {
                         // reddish
                         foreach (PdfFormAnnotation annot in field.GetChildFormAnnotations()) {
                             annot.SetBackgroundColor(new DeviceRgb(255, 200, 200));
                         }
                     }
                     else {
-                        if (justification == HorizontalAlignment.CENTER) {
+                        if (justification == TextAlignment.CENTER) {
                             // greenish
                             foreach (PdfFormAnnotation annot in field.GetChildFormAnnotations()) {
                                 annot.SetBackgroundColor(new DeviceRgb(200, 255, 200));
                             }
                         }
                         else {
-                            if (justification == HorizontalAlignment.RIGHT) {
+                            if (justification == TextAlignment.RIGHT) {
                                 // blueish
                                 foreach (PdfFormAnnotation annot in field.GetChildFormAnnotations()) {
                                     annot.SetBackgroundColor(new DeviceRgb(200, 200, 255));

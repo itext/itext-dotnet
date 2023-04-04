@@ -79,7 +79,7 @@ namespace iText.Forms {
             PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "fieldName").SetWidgetRectangle(rect).CreateMultilineText
                 ();
             field.SetValue("some value\nsecond line\nthird");
-            field.SetJustification(HorizontalAlignment.RIGHT);
+            field.SetJustification(TextAlignment.RIGHT);
             form.AddField(field);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();

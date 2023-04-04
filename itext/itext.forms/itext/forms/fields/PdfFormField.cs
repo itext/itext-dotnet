@@ -1095,7 +1095,7 @@ namespace iText.Forms.Fields {
         /// 2 Right-justified
         /// </summary>
         /// <returns>the current justification attribute.</returns>
-        public virtual HorizontalAlignment? GetJustification() {
+        public virtual TextAlignment? GetJustification() {
             int? justification = GetPdfObject().GetAsInt(PdfName.Q);
             if (justification == null && GetParent() != null) {
                 justification = GetParent().GetAsInt(PdfName.Q);
@@ -1114,9 +1114,11 @@ namespace iText.Forms.Fields {
         /// the edited
         /// <see cref="PdfFormField"/>.
         /// </returns>
-        public virtual iText.Forms.Fields.PdfFormField SetJustification(HorizontalAlignment? justification) {
-            Put(PdfName.Q, new PdfNumber((int)(justification)));
-            RegenerateField();
+        public virtual iText.Forms.Fields.PdfFormField SetJustification(TextAlignment? justification) {
+            if (justification != null) {
+                Put(PdfName.Q, new PdfNumber((int)(justification)));
+                RegenerateField();
+            }
             return this;
         }
 
@@ -1370,23 +1372,6 @@ namespace iText.Forms.Fields {
             return sb.ToString();
         }
 
-        internal virtual TextAlignment? ConvertJustificationToTextAlignment() {
-            HorizontalAlignment? justification = GetJustification();
-            TextAlignment? textAlignment;
-            if (justification == HorizontalAlignment.RIGHT) {
-                textAlignment = TextAlignment.RIGHT;
-            }
-            else {
-                if (justification == HorizontalAlignment.CENTER) {
-                    textAlignment = TextAlignment.CENTER;
-                }
-                else {
-                    textAlignment = TextAlignment.LEFT;
-                }
-            }
-            return textAlignment;
-        }
-
         /// <summary>Adds a field to the children of the current field.</summary>
         /// <param name="kid">the field, which should become a child.</param>
         /// <returns>the kid itself.</returns>
@@ -1466,18 +1451,18 @@ namespace iText.Forms.Fields {
             return formType;
         }
 
-        private static HorizontalAlignment? NumberToHorizontalAlignment(int alignment) {
+        private static TextAlignment? NumberToHorizontalAlignment(int alignment) {
             switch (alignment) {
                 case 1: {
-                    return HorizontalAlignment.CENTER;
+                    return TextAlignment.CENTER;
                 }
 
                 case 2: {
-                    return HorizontalAlignment.RIGHT;
+                    return TextAlignment.RIGHT;
                 }
 
                 default: {
-                    return HorizontalAlignment.LEFT;
+                    return TextAlignment.LEFT;
                 }
             }
         }

@@ -649,8 +649,7 @@ namespace iText.Forms {
         /// </remarks>
         /// <param name="justification">an integer representing a justification value</param>
         /// <returns>current AcroForm</returns>
-        /// <seealso cref="iText.Forms.Fields.PdfFormField.SetJustification(iText.Layout.Properties.HorizontalAlignment?)
-        ///     "/>
+        /// <seealso cref="iText.Forms.Fields.PdfFormField.SetJustification(iText.Layout.Properties.TextAlignment?)"/>
         public virtual iText.Forms.PdfAcroForm SetDefaultJustification(int justification) {
             return Put(PdfName.Q, new PdfNumber(justification));
         }

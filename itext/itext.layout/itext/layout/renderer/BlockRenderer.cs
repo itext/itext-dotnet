@@ -439,6 +439,7 @@ namespace iText.Layout.Renderer {
             bool processOverflow = overflowXHidden || overflowYHidden;
             DrawBackground(drawContext);
             DrawBorder(drawContext);
+            AddMarkedContent(drawContext, true);
             if (processOverflow) {
                 drawContext.GetCanvas().SaveState();
                 int pageNumber = occupiedArea.GetPageNumber();
@@ -469,6 +470,7 @@ namespace iText.Layout.Renderer {
                 drawContext.GetCanvas().Rectangle(clippedArea).Clip().EndPath();
             }
             DrawChildren(drawContext);
+            AddMarkedContent(drawContext, false);
             DrawPositionedChildren(drawContext);
             if (processOverflow) {
                 drawContext.GetCanvas().RestoreState();
@@ -1018,6 +1020,18 @@ namespace iText.Layout.Renderer {
             for (int i = splitRenderer.GetChildRenderers().Count - 1; i >= 0; --i) {
                 if (splitRenderer.GetChildRenderers()[i] == null) {
                     splitRenderer.GetChildRenderers().JRemoveAt(i);
+                }
+            }
+        }
+
+        private void AddMarkedContent(DrawContext drawContext, bool isBegin) {
+            if (true.Equals(this.GetProperty<bool?>(Property.ADD_MARKED_CONTENT_TEXT))) {
+                PdfCanvas canvas = drawContext.GetCanvas();
+                if (isBegin) {
+                    canvas.BeginVariableText().SaveState().EndPath();
+                }
+                else {
+                    canvas.RestoreState().EndVariableText();
                 }
             }
         }

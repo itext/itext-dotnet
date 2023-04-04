@@ -24,6 +24,7 @@ using System;
 using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Forms.Form.Element {
@@ -36,6 +37,9 @@ namespace iText.Forms.Form.Element {
     /// is used instead of the default renderer for fields.
     /// </summary>
     public class TextArea : FormField<iText.Forms.Form.Element.TextArea>, IPlaceholderable {
+        /// <summary>Default padding X offset.</summary>
+        private const float X_OFFSET = 1;
+
         /// <summary>The placeholder paragraph.</summary>
         private Paragraph placeholder;
 
@@ -47,6 +51,28 @@ namespace iText.Forms.Form.Element {
         /// <param name="id">the id</param>
         public TextArea(String id)
             : base(id) {
+            SetProperties();
+        }
+
+        /// <summary>Determines, whether the input field will be password.</summary>
+        /// <remarks>
+        /// Determines, whether the input field will be password.
+        /// <para />
+        /// Usually means that instead of glyphs '*' will be shown in case of flatten field.
+        /// <para />
+        /// If the field is not flatten, value will be ignored.
+        /// </remarks>
+        /// <param name="isPassword">
+        /// 
+        /// <see langword="true"/>
+        /// is this field shall be considered as password,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </param>
+        /// <returns>this input field</returns>
+        public virtual iText.Forms.Form.Element.TextArea UseAsPassword(bool isPassword) {
+            SetProperty(FormProperty.FORM_FIELD_PASSWORD_FLAG, isPassword);
+            return this;
         }
 
         /* (non-Javadoc)
@@ -83,6 +109,17 @@ namespace iText.Forms.Form.Element {
         */
         protected override IRenderer MakeNewRenderer() {
             return new TextAreaRenderer(this);
+        }
+
+        private void SetProperties() {
+            SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(X_OFFSET));
+            SetProperty(Property.PADDING_RIGHT, UnitValue.CreatePointValue(X_OFFSET));
+            SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(X_OFFSET));
+            SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(X_OFFSET));
+            SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+            SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 1));
+            SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+            SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.HIDDEN);
         }
     }
 }

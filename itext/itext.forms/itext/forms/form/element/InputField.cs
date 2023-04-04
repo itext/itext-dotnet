@@ -24,6 +24,7 @@ using System;
 using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Forms.Form.Element {
@@ -36,14 +37,39 @@ namespace iText.Forms.Form.Element {
     /// is used.
     /// </summary>
     public class InputField : FormField<iText.Forms.Form.Element.InputField>, IPlaceholderable {
+        /// <summary>Default padding X offset.</summary>
+        private const float X_OFFSET = 2;
+
+        /// <summary>The placeholder paragraph.</summary>
+        private Paragraph placeholder;
+
         /// <summary>Creates a new input field.</summary>
         /// <param name="id">the id</param>
         public InputField(String id)
             : base(id) {
+            SetProperties();
         }
 
-        /// <summary>The placeholder paragraph.</summary>
-        private Paragraph placeholder;
+        /// <summary>Determines, whether the input field will be password.</summary>
+        /// <remarks>
+        /// Determines, whether the input field will be password.
+        /// <para />
+        /// Usually means that instead of glyphs '*' will be shown in case of flatten field.
+        /// <para />
+        /// If the field is not flatten, value will be ignored.
+        /// </remarks>
+        /// <param name="isPassword">
+        /// 
+        /// <see langword="true"/>
+        /// is this field shall be considered as password,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </param>
+        /// <returns>this input field</returns>
+        public virtual iText.Forms.Form.Element.InputField UseAsPassword(bool isPassword) {
+            SetProperty(FormProperty.FORM_FIELD_PASSWORD_FLAG, isPassword);
+            return this;
+        }
 
         /// <summary><inheritDoc/></summary>
         public virtual Paragraph GetPlaceholder() {
@@ -79,6 +105,12 @@ namespace iText.Forms.Form.Element {
         */
         protected override IRenderer MakeNewRenderer() {
             return new InputFieldRenderer(this);
+        }
+
+        private void SetProperties() {
+            SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(X_OFFSET));
+            SetProperty(Property.PADDING_RIGHT, UnitValue.CreatePointValue(X_OFFSET));
+            SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
         }
     }
 }

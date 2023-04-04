@@ -90,7 +90,7 @@ namespace iText.Forms.Form.Element {
         /// <summary>Sets the size of the checkbox.</summary>
         /// <param name="size">the size of the checkbox to set, in points</param>
         /// <returns>this checkbox instance</returns>
-        public virtual iText.Forms.Form.Element.CheckBox SetSize(float size) {
+        public override iText.Forms.Form.Element.CheckBox SetSize(float size) {
             if (size <= 0) {
                 LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.INVALID_VALUE_FALLBACK_TO_DEFAULT, "size"
                     , size));

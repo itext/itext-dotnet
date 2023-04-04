@@ -73,7 +73,7 @@ namespace iText.Forms {
             fields.Get("field_3").SetValue("surname surname surname surname surname surname");
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(inPdf, sourceFolder + "cmp_autosizeInheritedDAFormFields.pdf"
-                , inPdf, "diff_"));
+                , destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -86,7 +86,7 @@ namespace iText.Forms {
             form.GetField("root.child.text2").SetValue("surname surname surname surname surname");
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(inPdf, sourceFolder + "cmp_autosizeInheritedDAFormFieldsWithKids.pdf"
-                , inPdf));
+                , destinationFolder, inPdf));
         }
 
         [NUnit.Framework.Test]

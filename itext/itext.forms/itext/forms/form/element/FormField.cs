@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Forms.Form;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 
 namespace iText.Forms.Form.Element {
     /// <summary>
@@ -75,6 +76,43 @@ namespace iText.Forms.Form.Element {
             }
         }
 
+        /// <summary>Sets the form field's width and height.</summary>
+        /// <param name="size">form field's width and height.</param>
+        /// <returns>
+        /// this same
+        /// <see cref="FormField{T}"/>
+        /// element.
+        /// </returns>
+        public virtual T SetSize(float size) {
+            SetProperty(Property.WIDTH, UnitValue.CreatePointValue(size));
+            SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(size));
+            return (T)(Object)this;
+        }
+
+        /// <summary>Set the form field's width.</summary>
+        /// <param name="width">form field's width</param>
+        /// <returns>
+        /// this
+        /// <see cref="FormField{T}"/>
+        /// element.
+        /// </returns>
+        public virtual T SetWidth(float width) {
+            SetProperty(Property.WIDTH, UnitValue.CreatePointValue(width));
+            return (T)(Object)this;
+        }
+
+        /// <summary>Set the form field's height.</summary>
+        /// <param name="height">form field's height</param>
+        /// <returns>
+        /// this
+        /// <see cref="FormField{T}"/>
+        /// element.
+        /// </returns>
+        public virtual T SetHeight(float height) {
+            SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(height));
+            return (T)(Object)this;
+        }
+
         /// <summary>Set the form field to be interactive and added into Acroform instead of drawing it on a page.</summary>
         /// <param name="interactive">
         /// 
@@ -89,9 +127,22 @@ namespace iText.Forms.Form.Element {
         /// <see cref="FormField{T}"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.FormField<T> SetInteractive(bool interactive) {
+        public virtual T SetInteractive(bool interactive) {
             SetProperty(FormProperty.FORM_FIELD_FLATTEN, !interactive);
-            return this;
+            return (T)(Object)this;
+        }
+
+        /// <summary>Set value to the form field.</summary>
+        /// <remarks>Set value to the form field. Meaning of this depends on the form field type.</remarks>
+        /// <param name="value">string value to be set</param>
+        /// <returns>
+        /// this
+        /// <see cref="FormField{T}"/>
+        /// element.
+        /// </returns>
+        public virtual T SetValue(String value) {
+            SetProperty(FormProperty.FORM_FIELD_VALUE, value);
+            return (T)(Object)this;
         }
     }
 }

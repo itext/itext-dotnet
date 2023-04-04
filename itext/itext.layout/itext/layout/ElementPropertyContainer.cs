@@ -330,6 +330,11 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
+        public virtual T SetFontColor(TransparentColor transparentColor) {
+            SetProperty(Property.FONT_COLOR, transparentColor);
+            return (T)(Object)this;
+        }
+
         /// <summary>Sets the font size of this Element, measured in points.</summary>
         /// <param name="fontSize">a floating point value</param>
         /// <returns>this Element.</returns>

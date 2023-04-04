@@ -86,19 +86,6 @@ namespace iText.Forms.Form.Element {
             return this;
         }
 
-        /// <summary>Sets the radio button width and height.</summary>
-        /// <param name="size">radio button width and height.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="Radio"/>
-        /// button.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.Radio SetSize(float size) {
-            SetProperty(Property.WIDTH, UnitValue.CreatePointValue(size));
-            SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(size));
-            return this;
-        }
-
         /* (non-Javadoc)
         * @see com.itextpdf.layout.element.AbstractElement#makeNewRenderer()
         */

@@ -21,11 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.Forms.Form;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
+using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -39,9 +42,18 @@ namespace iText.Forms.Form.Element {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/form/element/TextAreaTest/";
 
+        private static bool experimentalRenderingPreviousValue;
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
+            experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
+            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
         }
 
         [NUnit.Framework.Test]
@@ -107,6 +119,152 @@ namespace iText.Forms.Form.Element {
                 flattenTextArea.SetProperty(Property.MIN_HEIGHT, new UnitValue(UnitValue.POINT, 100));
                 flattenTextArea.SetProperty(Property.BORDER, new SolidBorder(2f));
                 document.Add(flattenTextArea);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HugeMarginPaddingBorderTest() {
+            // TODO Paddings are not taken into account in interactive form. Shall be fixed in DEVSIX-7423
+            String outPdf = DESTINATION_FOLDER + "hugeMarginPaddingBorder.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_hugeMarginPaddingBorder.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                TextArea formTextArea = new TextArea("flatten text area with height");
+                formTextArea.SetInteractive(true);
+                formTextArea.SetValue("flatten\ntext area\nwith height");
+                formTextArea.SetBorder(new SolidBorder(20));
+                formTextArea.SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(20));
+                formTextArea.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(20));
+                formTextArea.SetProperty(Property.PADDING_RIGHT, UnitValue.CreatePointValue(20));
+                formTextArea.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(20));
+                formTextArea.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(20));
+                formTextArea.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(20));
+                formTextArea.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(20));
+                formTextArea.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(20));
+                document.Add(formTextArea);
+                TextArea flattenTextArea = new TextArea("flatten text area with height");
+                flattenTextArea.SetInteractive(false);
+                flattenTextArea.SetValue("flatten\ntext area\nwith height");
+                flattenTextArea.SetBorder(new SolidBorder(20));
+                flattenTextArea.SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(20));
+                flattenTextArea.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(20));
+                flattenTextArea.SetProperty(Property.PADDING_RIGHT, UnitValue.CreatePointValue(20));
+                flattenTextArea.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(20));
+                flattenTextArea.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(20));
+                flattenTextArea.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(20));
+                flattenTextArea.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(20));
+                flattenTextArea.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(20));
+                document.Add(flattenTextArea);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextAreaDoesNotFitTest() {
+            String outPdf = DESTINATION_FOLDER + "textAreaDoesNotFit.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_textAreaDoesNotFit.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                Div div = new Div();
+                div.SetWidth(UnitValue.CreatePointValue(400));
+                div.SetHeight(UnitValue.CreatePointValue(730));
+                div.SetBackgroundColor(ColorConstants.PINK);
+                document.Add(div);
+                TextArea textArea = new TextArea("text area");
+                textArea.SetInteractive(true);
+                textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "some text to not\nbe able to fit in on the page\nmore text just text\nreally big height"
+                    );
+                textArea.SetHeight(50);
+                textArea.SetProperty(Property.BORDER, new SolidBorder(2f));
+                document.Add(textArea);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextAreaWith0FontSizeDoesNotFitTest() {
+            String outPdf = DESTINATION_FOLDER + "textAreaWith0FontSizeDoesNotFit.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWith0FontSizeDoesNotFit.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                document.Add(new Div().SetBackgroundColor(ColorConstants.RED).SetHeight(695));
+                TextArea textArea = new TextArea("text area");
+                textArea.SetInteractive(true);
+                textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will \nbe approximated\nbased on the content"
+                    );
+                textArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                textArea.SetFontSize(0);
+                textArea.SetHeight(75);
+                document.Add(textArea);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextAreaWith0FontSizeFitsTest() {
+            String outPdf = DESTINATION_FOLDER + "textAreaWith0FontSizeFits.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWith0FontSizeFits.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                TextArea textArea = new TextArea("text area");
+                textArea.SetInteractive(true);
+                textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will not \nbe approximated\nbased on the content"
+                    );
+                textArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                textArea.SetFontSize(0);
+                textArea.SetHeight(75);
+                document.Add(textArea);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextAreaWithBorderLessThan1Test() {
+            String outPdf = DESTINATION_FOLDER + "textAreaWithBorderLessThan1.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWithBorderLessThan1.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                TextArea textArea = new TextArea("text area");
+                textArea.SetInteractive(true);
+                textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Is border visible?\nAnd after clicking on the field?\nIt should be by the way"
+                    );
+                textArea.SetProperty(Property.BORDER, new SolidBorder(0.5f));
+                document.Add(textArea);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextAreaWithJustificationTest() {
+            String outPdf = DESTINATION_FOLDER + "textAreaWithJustification.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWithJustification.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                TextArea textArea = new TextArea("text area");
+                textArea.SetValue("text area with justification\nWords shall be in the center\nAre they?");
+                textArea.SetInteractive(true);
+                textArea.SetTextAlignment(TextAlignment.CENTER);
+                document.Add(textArea);
+                TextArea flattenedTextArea = new TextArea("flattened text area");
+                flattenedTextArea.SetValue("text area with justification\nWords shall be in the center\nAre they?");
+                flattenedTextArea.SetInteractive(false);
+                flattenedTextArea.SetTextAlignment(TextAlignment.CENTER);
+                document.Add(flattenedTextArea);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextAreaWithCustomBorderTest() {
+            String outPdf = DESTINATION_FOLDER + "textAreaWithCustomBorder.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWithCustomBorder.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                TextArea textArea = new TextArea("text area");
+                textArea.SetValue("text area with custom border\nBorder shall be orange, 10 points wide and dashed");
+                textArea.SetInteractive(true);
+                textArea.SetBorder(new DashedBorder(ColorConstants.ORANGE, 10));
+                document.Add(textArea);
+                TextArea flattenedTextArea = new TextArea("flattened text area");
+                flattenedTextArea.SetValue("text area with custom border\nBorder shall be orange, 10 points wide and dashed"
+                    );
+                flattenedTextArea.SetInteractive(false);
+                flattenedTextArea.SetBorder(new DashedBorder(ColorConstants.ORANGE, 10));
+                document.Add(flattenedTextArea);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }

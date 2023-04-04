@@ -138,6 +138,25 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        public virtual void FormFieldWithFloatBorderTest() {
+            String filename = destinationFolder + "formFieldWithFloatBorder.pdf";
+            String cmpFilename = sourceFolder + "cmp_formFieldWithFloatBorder.pdf";
+            // In this test it's important to open the document in the acrobat and make sure that border width
+            // does not change after clicking on the field. Acrobat doesn't support float border width therefore we round it
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(filename))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, true);
+                PdfTextFormField textFormField = new TextFormFieldBuilder(pdfDocument, "text field").SetWidgetRectangle(new 
+                    Rectangle(100, 600, 100, 100)).CreateText();
+                textFormField.SetValue("text field value");
+                textFormField.GetFirstFormAnnotation().SetBorderWidth(5.25f);
+                textFormField.GetFirstFormAnnotation().SetBorderColor(ColorConstants.RED);
+                form.AddField(textFormField);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TextFieldLeadingSpacesAreNotTrimmedTest() {
             String filename = destinationFolder + "textFieldLeadingSpacesAreNotTrimmed.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
@@ -729,8 +748,8 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
             form.GetField("text1").SetValue("123");
-            form.GetField("text2").SetJustification(HorizontalAlignment.CENTER).SetValue("123");
-            form.GetField("text3").SetJustification(HorizontalAlignment.RIGHT).SetValue("123");
+            form.GetField("text2").SetJustification(TextAlignment.CENTER).SetValue("123");
+            form.GetField("text3").SetJustification(TextAlignment.RIGHT).SetValue("123");
             form.GetField("text4").SetValue("12345678");
             form.GetField("text5").SetValue("123456789101112131415161718");
             pdfDoc.Close();
@@ -1017,7 +1036,7 @@ namespace iText.Forms {
             for (int x = offSet; x < (offSet + 3); x++) {
                 Rectangle rect = new Rectangle(100 + (30 * x), 100 + (100 * x), 55, 30);
                 PdfFormField field = new TextFormFieldBuilder(pdfDoc, "f-" + x).SetWidgetRectangle(rect).CreateText();
-                field.SetValue("").SetJustification(HorizontalAlignment.RIGHT).SetFont(font).SetFontSize(12.0f);
+                field.SetValue("").SetJustification(TextAlignment.RIGHT).SetFont(font).SetFontSize(12.0f);
                 if (text != null) {
                     field.SetValue(text);
                 }

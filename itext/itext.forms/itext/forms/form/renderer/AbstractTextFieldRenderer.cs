@@ -27,6 +27,7 @@ using iText.Forms.Form.Element;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -66,10 +67,23 @@ namespace iText.Forms.Form.Renderer {
         /// <param name="inputField">the input field</param>
         internal virtual void ApplyDefaultFieldProperties(PdfFormField inputField) {
             inputField.GetWidgets()[0].SetHighlightMode(PdfAnnotation.HIGHLIGHT_NONE);
-            inputField.GetFirstFormAnnotation().SetBorderWidth(0);
             TransparentColor color = GetPropertyAsTransparentColor(Property.FONT_COLOR);
             if (color != null) {
                 inputField.SetColor(color.GetColor());
+            }
+            inputField.SetJustification(this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT));
+            Border border = this.GetProperty<Border>(Property.BORDER);
+            if (border == null) {
+                // TODO For now we will use left border everywhere, shall be fixed in DEVSIX-7423.
+                border = this.GetProperty<Border>(Property.BORDER_LEFT);
+            }
+            if (border != null) {
+                inputField.GetFirstFormAnnotation().SetBorderColor(border.GetColor());
+                inputField.GetFirstFormAnnotation().SetBorderWidth(border.GetWidth());
+            }
+            Background background = this.GetProperty<Background>(Property.BACKGROUND);
+            if (background != null) {
+                inputField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
             }
         }
 
