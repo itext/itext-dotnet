@@ -24,7 +24,6 @@ using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
-using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Forms.Fields {
     /// <summary>Builder for push button form field.</summary>
@@ -82,17 +81,11 @@ namespace iText.Forms.Fields {
             field.text = caption;
             if (annotation != null) {
                 field.GetFirstFormAnnotation().backgroundColor = ColorConstants.LIGHT_GRAY;
-                PdfFormXObject xObject = field.GetFirstFormAnnotation().DrawPushButtonAppearance(GetWidgetRectangle().GetWidth
-                    (), GetWidgetRectangle().GetHeight(), caption, GetDocument().GetDefaultFont(), AbstractPdfFormField.DEFAULT_FONT_SIZE
-                    );
-                annotation.SetNormalAppearance(xObject.GetPdfObject());
+                field.GetFirstFormAnnotation().DrawPushButtonFieldAndSaveAppearance();
                 PdfDictionary mk = new PdfDictionary();
                 mk.Put(PdfName.CA, new PdfString(caption));
                 mk.Put(PdfName.BG, new PdfArray(field.GetFirstFormAnnotation().backgroundColor.GetColorValue()));
                 annotation.SetAppearanceCharacteristics(mk);
-                if (GetConformanceLevel() != null) {
-                    PdfFormAnnotation.CreatePushButtonAppearanceState(annotation.GetPdfObject());
-                }
                 SetPageToField(field);
             }
             return field;

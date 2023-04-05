@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using iText.Forms.Form;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -63,12 +62,12 @@ namespace iText.Forms.Form.Element {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outPdf, FileMode.Create)))) {
                 using (Document document = new Document(pdfDocument)) {
                     Button button = new Button("button");
-                    button.Add(new Paragraph("button child"));
-                    InputButton inputButton = new InputButton("input button");
-                    button.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
-                    inputButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
-                    button.SetProperty(FormProperty.FORM_FIELD_VALUE, "button value");
-                    inputButton.SetProperty(FormProperty.FORM_FIELD_VALUE, "input button value");
+                    button.Add(new Paragraph("button child paragraph"));
+                    Button inputButton = new Button("input button");
+                    button.SetInteractive(true);
+                    inputButton.SetInteractive(true);
+                    button.Add(new Paragraph("button value"));
+                    inputButton.SetSingleLineValue("input button value");
                     button.SetProperty(Property.FONT_COLOR, color == null ? null : new TransparentColor(color));
                     inputButton.SetProperty(Property.BACKGROUND, color == null ? null : new Background(color));
                     document.Add(button);

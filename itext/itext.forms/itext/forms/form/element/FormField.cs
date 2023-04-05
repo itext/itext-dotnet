@@ -50,32 +50,6 @@ namespace iText.Forms.Form.Element {
             this.id = id;
         }
 
-        /* (non-Javadoc)
-        * @see IFormField#getId()
-        */
-        public virtual String GetId() {
-            return id;
-        }
-
-        /* (non-Javadoc)
-        * @see com.itextpdf.layout.ElementPropertyContainer#getDefaultProperty(int)
-        */
-        public override T1 GetDefaultProperty<T1>(int property) {
-            switch (property) {
-                case FormProperty.FORM_FIELD_FLATTEN: {
-                    return (T1)(Object)true;
-                }
-
-                case FormProperty.FORM_FIELD_VALUE: {
-                    return (T1)(Object)"";
-                }
-
-                default: {
-                    return base.GetDefaultProperty<T1>(property);
-                }
-            }
-        }
-
         /// <summary>Sets the form field's width and height.</summary>
         /// <param name="size">form field's width and height.</param>
         /// <returns>
@@ -113,35 +87,65 @@ namespace iText.Forms.Form.Element {
             return (T)(Object)this;
         }
 
-        /// <summary>Set the form field to be interactive and added into Acroform instead of drawing it on a page.</summary>
-        /// <param name="interactive">
+        /// <summary><inheritDoc/></summary>
+        /// <param name="value">
         /// 
-        /// <see langword="true"/>
-        /// if the form field element shall be added into Acroform,
-        /// <see langword="false"/>
-        /// otherwise.
-        /// By default, the form field element is not interactive and drawn on a page.
+        /// <inheritDoc/>
         /// </param>
         /// <returns>
-        /// this same
-        /// <see cref="FormField{T}"/>
-        /// instance.
+        /// 
+        /// <inheritDoc/>
         /// </returns>
-        public virtual T SetInteractive(bool interactive) {
-            SetProperty(FormProperty.FORM_FIELD_FLATTEN, !interactive);
+        public virtual IFormField SetValue(String value) {
+            SetProperty(FormProperty.FORM_FIELD_VALUE, value);
             return (T)(Object)this;
         }
 
-        /// <summary>Set value to the form field.</summary>
-        /// <remarks>Set value to the form field. Meaning of this depends on the form field type.</remarks>
-        /// <param name="value">string value to be set</param>
+        /// <summary><inheritDoc/></summary>
         /// <returns>
-        /// this
-        /// <see cref="FormField{T}"/>
-        /// element.
+        /// 
+        /// <inheritDoc/>
         /// </returns>
-        public virtual T SetValue(String value) {
-            SetProperty(FormProperty.FORM_FIELD_VALUE, value);
+        public virtual String GetId() {
+            return id;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <param name="property">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public override T1 GetDefaultProperty<T1>(int property) {
+            switch (property) {
+                case FormProperty.FORM_FIELD_FLATTEN: {
+                    return (T1)(Object)true;
+                }
+
+                case FormProperty.FORM_FIELD_VALUE: {
+                    return (T1)(Object)"";
+                }
+
+                default: {
+                    return base.GetDefaultProperty<T1>(property);
+                }
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <param name="interactive">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual IFormField SetInteractive(bool interactive) {
+            SetProperty(FormProperty.FORM_FIELD_FLATTEN, !interactive);
             return (T)(Object)this;
         }
     }

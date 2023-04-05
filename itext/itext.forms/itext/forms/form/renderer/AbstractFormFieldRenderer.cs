@@ -61,7 +61,20 @@ namespace iText.Forms.Form.Renderer {
         /// <summary>Checks if form fields need to be flattened.</summary>
         /// <returns>true, if fields need to be flattened</returns>
         public virtual bool IsFlatten() {
-            bool? flatten = GetPropertyAsBoolean(FormProperty.FORM_FIELD_FLATTEN);
+            bool? flatten;
+            if (parent != null) {
+                // First check parent. This is a workaround for the case when some fields are inside other fields
+                // either directly or via other elements (input text field inside div inside input button field). In this
+                // case we do not want to create a form field for the inner field and just flatten it.
+                IRenderer nextParent = parent;
+                while (nextParent != null) {
+                    if (nextParent is iText.Forms.Form.Renderer.AbstractFormFieldRenderer) {
+                        return true;
+                    }
+                    nextParent = nextParent.GetParent();
+                }
+            }
+            flatten = GetPropertyAsBoolean(FormProperty.FORM_FIELD_FLATTEN);
             return flatten == null ? (bool)modelElement.GetDefaultProperty<bool>(FormProperty.FORM_FIELD_FLATTEN) : (bool
                 )flatten;
         }

@@ -26,8 +26,37 @@ using iText.Layout.Element;
 namespace iText.Forms.Form.Element {
     /// <summary>Common interface for HTML form elements.</summary>
     public interface IFormField : IBlockElement {
+        /// <summary>
+        /// Sets the
+        /// <see cref="iText.Forms.Form.FormProperty.FORM_FIELD_VALUE"/>
+        /// property.
+        /// </summary>
+        /// <param name="value">string value of the property to be set.</param>
+        /// <returns>
+        /// this same
+        /// <see cref="IFormField"/>
+        /// instance.
+        /// </returns>
+        IFormField SetValue(String value);
+
+        /// <summary>Set the form field to be interactive and added into Acroform instead of drawing it on a page.</summary>
+        /// <param name="interactive">
+        /// 
+        /// <see langword="true"/>
+        /// if the form field element shall be added into Acroform,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// By default, the form field element is not interactive and drawn on a page.
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="IFormField"/>
+        /// instance.
+        /// </returns>
+        IFormField SetInteractive(bool interactive);
+
         /// <summary>Gets the id.</summary>
-        /// <returns>the id</returns>
+        /// <returns>the id.</returns>
         String GetId();
     }
 }

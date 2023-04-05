@@ -33,9 +33,9 @@ namespace iText.Forms.Logs {
 
         public const String CANNOT_CREATE_FORMFIELD = "Cannot create form field from a given PDF object: {0}";
 
-        public const String ERROR_WHILE_LAYOUT_OF_FORM_FIELD = "Cannot layout form field field. It won't be displayed";
+        public const String ERROR_WHILE_LAYOUT_OF_FORM_FIELD = "Cannot layout form field. It won't be displayed";
 
-        public const String ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE = "Error during layout of form filed with type {0}.";
+        public const String ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE = "Error during layout of form field with type {0}.";
 
         public const String CANNOT_MERGE_FORMFIELDS = "Cannot merge form fields with the same fully qualified " + 
             "names. Partial name is {0}. Field type (FT), value (V), and default value (DV) should be the same";

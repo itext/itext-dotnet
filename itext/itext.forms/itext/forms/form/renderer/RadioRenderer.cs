@@ -165,12 +165,10 @@ namespace iText.Forms.Form.Renderer {
                 radioGroup.SetValue(GetModelId());
             }
             PdfFormAnnotation radio = new RadioFormFieldBuilder(doc, null).CreateRadioButton(GetModelId(), area);
-            // Set background color
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
                 radio.SetBackgroundColor(background.GetColor());
             }
-            // Set border color and border width
             Border border = this.GetProperty<Border>(Property.BORDER);
             if (border != null) {
                 radio.SetBorderColor(border.GetColor());

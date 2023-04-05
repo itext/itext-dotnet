@@ -84,6 +84,8 @@ namespace iText.Forms.Fields {
 
         protected internal Color borderColor;
 
+        private Button formFieldElement;
+
         /// <summary>
         /// Creates a form field annotation as a wrapper of a
         /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>.
@@ -378,6 +380,18 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+        /// <summary>Sets an element associated with the current field.</summary>
+        /// <param name="element">model element to set.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFormAnnotation"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfFormAnnotation SetFormFieldElement(Button element) {
+            this.formFieldElement = element;
+            RegenerateWidget();
+            return this;
+        }
+
         /// <summary>Gets the appearance state names.</summary>
         /// <returns>an array of Strings containing the names of the appearance states.</returns>
         public override String[] GetAppearanceStates() {
@@ -540,9 +554,7 @@ namespace iText.Forms.Fields {
             SetMetaInfoToCanvas(modelCanvas);
             Style paragraphStyle = new Style().SetFont(font).SetFontSize(fontSize);
             paragraphStyle.SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 1));
-            if (GetColor() != null) {
-                paragraphStyle.SetProperty(Property.FONT_COLOR, new TransparentColor(GetColor()));
-            }
+            paragraphStyle.SetFontColor(GetColor());
             int maxLen = new PdfTextFormField(parent.GetPdfObject()).GetMaxLen();
             // check if /Comb has been set
             if (parent.GetFieldFlag(PdfTextFormField.FF_COMB) && 0 != maxLen) {
@@ -728,78 +740,65 @@ namespace iText.Forms.Fields {
             widget.SetNormalAppearance(normalAppearance);
         }
 
-        /// <summary>Draws the appearance for a push button.</summary>
-        /// <param name="width">the width of the pushbutton</param>
-        /// <param name="height">the width of the pushbutton</param>
-        /// <param name="text">the text to display on the button</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        /// <returns>
-        /// a new
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// </returns>
-        protected internal virtual PdfFormXObject DrawPushButtonAppearance(float width, float height, String text, 
-            PdfFont font, float fontSize) {
-            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
-            PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
+        /// <summary>Draws the appearance of a push button and saves it into an appearance stream.</summary>
+        protected internal virtual void DrawPushButtonFieldAndSaveAppearance() {
+            Rectangle rectangle = GetRect(this.GetPdfObject());
+            if (rectangle == null) {
+                return;
+            }
+            float width = rectangle.GetWidth();
+            float height = rectangle.GetHeight();
+            CreateInputButton();
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
-            DrawBorder(canvas, xObject, width, height);
+            ApplyRotation(xObject, height, width);
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, this.GetDocument());
+            SetMetaInfoToCanvas(canvas);
+            String caption = parent.GetDisplayValue();
+            if (caption != null && !String.IsNullOrEmpty(caption)) {
+                formFieldElement.SetSingleLineValue(caption);
+            }
+            float imagePadding = borderColor == null ? 0 : borderWidth;
             if (parent.img != null) {
-                PdfImageXObject imgXObj = new PdfImageXObject(parent.img);
-                canvas.AddXObjectWithTransformationMatrix(imgXObj, width - borderWidth, 0, 0, height - borderWidth, borderWidth
-                     / 2, borderWidth / 2);
-                xObject.GetResources().AddImage(imgXObj);
+                // If we got here, the button will only contain the image that the user has set into the annotation.
+                // There is no way to pass other elements with this image.
+                formFieldElement.GetChildren().Clear();
+                Image image = new Image(new PdfImageXObject(parent.img), imagePadding, imagePadding);
+                image.SetHeight(height - 2 * imagePadding);
+                image.SetWidth(width - 2 * imagePadding);
+                formFieldElement.Add(image);
             }
             else {
                 if (parent.form != null) {
-                    canvas.AddXObjectWithTransformationMatrix(parent.form, (height - borderWidth) / parent.form.GetHeight(), 0
-                        , 0, (height - borderWidth) / parent.form.GetHeight(), borderWidth / 2, borderWidth / 2);
-                    xObject.GetResources().AddForm(parent.form);
+                    // If we got here, the button will only contain the image that the user has set as form into the annotation.
+                    // There is no way to pass other elements with this image as form.
+                    formFieldElement.GetChildren().Clear();
+                    Image image = new Image(parent.form, imagePadding, imagePadding);
+                    image.SetHeight(height - 2 * imagePadding);
+                    formFieldElement.Add(image);
                 }
                 else {
-                    DrawButton(canvas, 0, 0, width, height, text, font, fontSize);
-                    xObject.GetResources().AddFont(GetDocument(), font);
+                    xObject.GetResources().AddFont(GetDocument(), GetFont());
                 }
             }
-            xObject.GetPdfObject().GetOutputStream().WriteBytes(stream.GetBytes());
-            return xObject;
-        }
-
-        /// <summary>Performs the low-level drawing operations to draw a button object.</summary>
-        /// <param name="canvas">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
-        /// of the page to draw on.
-        /// </param>
-        /// <param name="x">will be ignored, according to spec it shall be 0</param>
-        /// <param name="y">will be ignored, according to spec it shall be 0</param>
-        /// <param name="width">the width of the button</param>
-        /// <param name="height">the width of the button</param>
-        /// <param name="text">the text to display on the button</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// </param>
-        /// <param name="fontSize">the size of the font</param>
-        protected internal virtual void DrawButton(PdfCanvas canvas, float x, float y, float width, float height, 
-            String text, PdfFont font, float fontSize) {
-            if (GetColor() == null) {
-                color = ColorConstants.BLACK;
+            canvas.Add(formFieldElement);
+            PdfDictionary ap = new PdfDictionary();
+            PdfStream normalAppearanceStream = xObject.GetPdfObject();
+            if (normalAppearanceStream != null) {
+                PdfName stateName = GetPdfObject().GetAsName(PdfName.AS);
+                if (stateName == null) {
+                    stateName = new PdfName("push");
+                }
+                GetPdfObject().Put(PdfName.AS, stateName);
+                PdfDictionary normalAppearance = new PdfDictionary();
+                normalAppearance.Put(stateName, normalAppearanceStream);
+                ap.Put(PdfName.N, normalAppearance);
+                ap.SetModified();
             }
-            if (text == null) {
-                text = "";
-            }
-            Paragraph paragraph = new Paragraph(text).SetFont(font).SetFontSize(fontSize).SetMargin(0).SetMultipliedLeading
-                (1).SetVerticalAlignment(VerticalAlignment.MIDDLE);
-            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, new Rectangle(0, -height, width, 2 * height
-                ));
-            modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
-            SetMetaInfoToCanvas(modelCanvas);
-            modelCanvas.ShowTextAligned(paragraph, width / 2, height / 2, TextAlignment.CENTER, VerticalAlignment.MIDDLE
-                );
+            Put(PdfName.AP, ap);
+            // We need to draw waitingDrawingElements (drawn inside close method), but the close method
+            // flushes TagTreePointer that will be used later, so set null to the corresponding property.
+            canvas.SetProperty(Property.TAGGING_HELPER, null);
+            canvas.Close();
         }
 
         /// <summary>Performs the low-level drawing operations to draw a checkbox object.</summary>
@@ -1019,41 +1018,10 @@ namespace iText.Forms.Fields {
             appearance.GetPdfObject().SetData(stream.GetBytes());
         }
 
-        internal static void CreatePushButtonAppearanceState(PdfDictionary widget) {
-            PdfDictionary appearances = widget.GetAsDictionary(PdfName.AP);
-            PdfStream normalAppearanceStream = appearances.GetAsStream(PdfName.N);
-            if (normalAppearanceStream != null) {
-                PdfName stateName = widget.GetAsName(PdfName.AS);
-                if (stateName == null) {
-                    stateName = new PdfName("push");
-                }
-                widget.Put(PdfName.AS, stateName);
-                PdfDictionary normalAppearance = new PdfDictionary();
-                normalAppearance.Put(stateName, normalAppearanceStream);
-                appearances.Put(PdfName.N, normalAppearance);
-            }
-        }
-
         internal static void SetMetaInfoToCanvas(iText.Layout.Canvas canvas) {
             MetaInfoContainer metaInfo = FormsMetaInfoStaticContainer.GetMetaInfoForLayout();
             if (metaInfo != null) {
                 canvas.SetProperty(Property.META_INFO, metaInfo);
-            }
-        }
-
-        internal virtual void RegeneratePushButtonField() {
-            PdfDictionary widget = GetPdfObject();
-            PdfFormXObject appearance;
-            Rectangle rect = GetRect(widget);
-            PdfDictionary apDic = widget.GetAsDictionary(PdfName.AP);
-            if (apDic == null) {
-                Put(PdfName.AP, apDic = new PdfDictionary());
-            }
-            appearance = DrawPushButtonAppearance(rect.GetWidth(), rect.GetHeight(), parent.GetDisplayValue(), GetFont
-                (), GetFontSize(widget.GetAsArray(PdfName.Rect), parent.GetDisplayValue()));
-            apDic.Put(PdfName.N, appearance.GetPdfObject());
-            if (GetPdfAConformanceLevel() != null) {
-                CreatePushButtonAppearanceState(widget);
             }
         }
 
@@ -1224,7 +1192,7 @@ namespace iText.Forms.Fields {
                 else {
                     if (PdfName.Btn.Equals(type)) {
                         if (parent.GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
-                            RegeneratePushButtonField();
+                            DrawPushButtonFieldAndSaveAppearance();
                         }
                         else {
                             if (parent.GetFieldFlag(PdfButtonFormField.FF_RADIO)) {
@@ -1248,6 +1216,39 @@ namespace iText.Forms.Fields {
             return false;
         }
 
+        internal virtual void CreateInputButton() {
+            Rectangle rect = GetRect(GetPdfObject());
+            if (rect == null) {
+                formFieldElement = null;
+                return;
+            }
+            if (formFieldElement == null) {
+                // Create it one time and re-set properties during each widget regeneration.
+                formFieldElement = new Button(parent.GetFieldName().ToUnicodeString());
+            }
+            formFieldElement.SetFont(GetFont());
+            formFieldElement.SetFontSize(GetFontSize(GetPdfObject().GetAsArray(PdfName.Rect), parent.GetDisplayValue()
+                ));
+            if (GetColor() == null) {
+                TransparentColor transparentColor = formFieldElement.GetProperty<TransparentColor>(Property.FONT_COLOR);
+                color = transparentColor == null ? ColorConstants.BLACK : transparentColor.GetColor();
+            }
+            formFieldElement.SetFontColor(color);
+            formFieldElement.SetBackgroundColor(backgroundColor);
+            if (borderWidth > 0 && borderColor != null) {
+                float borderWidth = Math.Max(1, GetBorderWidth());
+                // Don't take border into account as it will be drawn inside
+                Border border = FormBorderFactory.GetBorder(GetWidget().GetBorderStyle(), borderWidth, borderColor, backgroundColor
+                    );
+                formFieldElement.SetBorder(border != null ? border : new SolidBorder(borderColor, borderWidth));
+            }
+            // Set fixed size
+            formFieldElement.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(rect.GetWidth()));
+            formFieldElement.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rect.GetHeight()));
+            // Always flatten
+            formFieldElement.SetInteractive(false);
+        }
+
         internal virtual Radio CreateRadio() {
             Rectangle rect = GetRect(GetPdfObject());
             if (rect == null) {
@@ -1268,7 +1269,7 @@ namespace iText.Forms.Fields {
             radio.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(rect.GetWidth()));
             radio.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rect.GetHeight()));
             // Always flatten
-            radio.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
+            radio.SetInteractive(false);
             return radio;
         }
 

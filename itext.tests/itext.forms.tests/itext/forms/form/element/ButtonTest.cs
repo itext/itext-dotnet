@@ -21,11 +21,22 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
+using iText.Forms;
+using iText.Forms.Fields;
 using iText.Forms.Form;
+using iText.Forms.Form.Renderer;
+using iText.IO.Image;
+using iText.IO.Util;
+using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Forms.Form.Element {
@@ -49,16 +60,103 @@ namespace iText.Forms.Form.Element {
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 Button formButton = new Button("form button");
                 formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
-                formButton.SetProperty(FormProperty.FORM_FIELD_VALUE, "form button");
-                formButton.Add(new Paragraph("text to display"));
+                formButton.Add(new Paragraph("form button"));
+                formButton.Add(new Paragraph("paragraph with yellow border inside button").SetBorder(new SolidBorder(ColorConstants
+                    .YELLOW, 1)));
                 document.Add(formButton);
+                document.Add(new Paragraph(""));
                 Button flattenButton = new Button("flatten button");
                 flattenButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-                flattenButton.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten button");
-                formButton.Add(new Paragraph("text to display"));
+                flattenButton.Add(new Paragraph("flatten button"));
+                flattenButton.Add(new Paragraph("paragraph with pink border inside button").SetBorder(new SolidBorder(ColorConstants
+                    .PINK, 1)));
                 document.Add(flattenButton);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CustomizedButtonTest() {
+            String outPdf = DESTINATION_FOLDER + "customizedButton.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_customizedButton.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                Button formButton = new Button("form button");
+                formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
+                formButton.SetValue("form button");
+                formButton.SetFontColor(ColorConstants.BLUE);
+                formButton.SetBackgroundColor(ColorConstants.YELLOW);
+                formButton.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
+                document.Add(formButton);
+                document.Add(new Paragraph(""));
+                Button flattenButton = new Button("flatten  button");
+                flattenButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
+                flattenButton.SetValue("flatten button");
+                flattenButton.SetFontColor(ColorConstants.BLUE);
+                flattenButton.SetBackgroundColor(ColorConstants.YELLOW);
+                flattenButton.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
+                document.Add(flattenButton);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ButtonVerticalAlignmentTest() {
+            String outPdf = DESTINATION_FOLDER + "buttonVerticalAlignment.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_buttonVerticalAlignment.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                Button formButton = new Button("form button");
+                formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
+                formButton.SetValue("capture on bottom");
+                formButton.SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.BOTTOM);
+                formButton.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100));
+                document.Add(formButton);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddButtonInTwoWaysTest() {
+            String outPdf = DESTINATION_FOLDER + "addButtonInTwoWays.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_addButtonInTwoWays.pdf";
+            String imagePath = SOURCE_FOLDER + "Desert.jpg";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                // Create push button using html element
+                Button formButton = new Button("button");
+                formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
+                formButton.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+                formButton.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100));
+                formButton.Add(new Image(new PdfImageXObject(ImageDataFactory.Create(StreamUtil.InputStreamToArray(new FileStream
+                    (imagePath, FileMode.Open, FileAccess.Read))))).SetWidth(98).SetHeight(98));
+                formButton.SetFontColor(ColorConstants.BLUE);
+                formButton.SetBackgroundColor(ColorConstants.YELLOW);
+                formButton.SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                document.Add(formButton);
+                // Create push button using form field
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(document.GetPdfDocument(), true);
+                PdfButtonFormField button = new PushButtonFormFieldBuilder(document.GetPdfDocument(), "push").SetWidgetRectangle
+                    (new Rectangle(36, 600, 100, 100)).CreatePushButton();
+                button.SetImage(imagePath);
+                button.GetFirstFormAnnotation().SetBorderWidth(1).SetBorderColor(ColorConstants.MAGENTA).SetBackgroundColor
+                    (ColorConstants.PINK).SetVisibility(PdfFormAnnotation.VISIBLE);
+                form.AddField(button);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsFlattenTest() {
+            Button button = new Button("button");
+            button.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
+            ButtonRenderer buttonRenderer = new ButtonRenderer(button);
+            NUnit.Framework.Assert.IsFalse(buttonRenderer.IsFlatten());
+            button.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
+            NUnit.Framework.Assert.IsTrue(buttonRenderer.IsFlatten());
+            InputField inputField = new InputField("input");
+            inputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
+            button.Add(inputField);
+            buttonRenderer = (ButtonRenderer)button.CreateRendererSubTree();
+            NUnit.Framework.Assert.IsTrue(((InputFieldRenderer)buttonRenderer.GetChildRenderers()[0].SetParent(buttonRenderer
+                )).IsFlatten());
         }
     }
 }

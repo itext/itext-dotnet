@@ -337,6 +337,63 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CustomizedPushButtonFieldTest() {
+            String file = "customizedPushButtonFieldTest.pdf";
+            String filename = destinationFolder + file;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String itext = "itextpdf";
+            PdfButtonFormField button = new PushButtonFormFieldBuilder(pdfDoc, itext).SetWidgetRectangle(new Rectangle
+                (36, 500, 200, 200)).SetCaption(itext).CreatePushButton();
+            button.SetFontSize(0);
+            button.SetValue(itext);
+            button.GetFirstFormAnnotation().SetBorderWidth(10).SetBorderColor(ColorConstants.GREEN).SetBackgroundColor
+                (ColorConstants.GRAY).SetVisibility(PdfFormAnnotation.VISIBLE);
+            form.AddField(button);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CustomizedPushButtonField2Test() {
+            String file = "customizedPushButtonField2Test.pdf";
+            String filename = destinationFolder + file;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String itext = "itextpdf";
+            PdfButtonFormField button = new PushButtonFormFieldBuilder(pdfDoc, itext).SetWidgetRectangle(new Rectangle
+                (36, 500, 300, 110)).SetCaption(itext).CreatePushButton();
+            button.SetFontSize(0);
+            button.SetValue(itext);
+            button.GetFirstFormAnnotation().SetBorderWidth(10).SetBorderColor(ColorConstants.GREEN).SetBackgroundColor
+                (ColorConstants.GRAY).SetVisibility(PdfFormAnnotation.VISIBLE);
+            form.AddField(button);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CustomizedPushButtonField3Test() {
+            String file = "customizedPushButtonField3Test.pdf";
+            String filename = destinationFolder + file;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String text = "toolongtext";
+            PdfButtonFormField button = new PushButtonFormFieldBuilder(pdfDoc, text).SetWidgetRectangle(new Rectangle(
+                36, 500, 160, 300)).SetCaption(text).CreatePushButton();
+            button.SetFontSize(40);
+            button.SetValue(text);
+            button.GetFirstFormAnnotation().SetBorderWidth(10).SetBorderColor(ColorConstants.GREEN).SetBackgroundColor
+                (ColorConstants.GRAY).SetVisibility(PdfFormAnnotation.VISIBLE);
+            form.AddField(button);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ButtonFieldTest02() {
             String filename = destinationFolder + "buttonFieldTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "buttonFieldTest02_input.pdf"), new PdfWriter

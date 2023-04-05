@@ -239,7 +239,7 @@ namespace iText.Kernel.Font {
         /// Gets the descent of a
         /// <c>String</c>
         /// in points. The descent will always be
-        /// less than or equal to zero even if all the characters have an higher descent.
+        /// less than or equal to zero even if all the characters have a higher descent.
         /// </remarks>
         /// <param name="text">
         /// the
@@ -278,7 +278,7 @@ namespace iText.Kernel.Font {
         /// <summary>Gets the descent of a char code in points.</summary>
         /// <remarks>
         /// Gets the descent of a char code in points. The descent will always be
-        /// less than or equal to zero even if all the characters have an higher descent.
+        /// less than or equal to zero even if all the characters have a higher descent.
         /// </remarks>
         /// <param name="unicode">the char code to get the descent of</param>
         /// <param name="fontSize">the font size</param>

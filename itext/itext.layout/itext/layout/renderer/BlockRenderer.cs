@@ -591,7 +591,7 @@ namespace iText.Layout.Renderer {
             if (FloatingHelper.IsRendererFloating(this) || this is CellRenderer) {
                 // include floats in vertical alignment
                 foreach (IRenderer child in childRenderers) {
-                    if (child.GetOccupiedArea().GetBBox().GetBottom() < lowestChildBottom) {
+                    if (child.GetOccupiedArea() != null && child.GetOccupiedArea().GetBBox().GetBottom() < lowestChildBottom) {
                         lowestChildBottom = child.GetOccupiedArea().GetBBox().GetBottom();
                     }
                 }
@@ -600,7 +600,7 @@ namespace iText.Layout.Renderer {
                 int lastChildIndex = childRenderers.Count - 1;
                 while (lastChildIndex >= 0) {
                     IRenderer child = childRenderers[lastChildIndex--];
-                    if (!FloatingHelper.IsRendererFloating(child)) {
+                    if (!FloatingHelper.IsRendererFloating(child) && child.GetOccupiedArea() != null) {
                         lowestChildBottom = child.GetOccupiedArea().GetBBox().GetBottom();
                         break;
                     }

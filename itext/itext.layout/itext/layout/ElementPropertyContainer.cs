@@ -138,11 +138,11 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
-        /// <summary>Sets values for a absolute repositioning of the Element.</summary>
+        /// <summary>Sets values for an absolute repositioning of the Element.</summary>
         /// <remarks>
-        /// Sets values for a absolute repositioning of the Element.
+        /// Sets values for an absolute repositioning of the Element.
         /// The coordinates specified correspond to the
-        /// bottom-left corner of the element and it grows upwards.
+        /// bottom-left corner of the element, and it grows upwards.
         /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to

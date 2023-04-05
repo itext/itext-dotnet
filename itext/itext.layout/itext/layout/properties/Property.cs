@@ -44,6 +44,9 @@ namespace iText.Layout.Properties {
 
         public const int ALIGN_SELF = 129;
 
+        // This property is needed for form field appearance with right-to-left text. By setting true we avoid writing
+        // /ActualText and /ReversedChars to form field appearance streams because this resulted in Acrobat showing
+        // an empty appearance in such cases.
         public const int APPEARANCE_STREAM_LAYOUT = 82;
 
         public const int AREA_BREAK_TYPE = 2;

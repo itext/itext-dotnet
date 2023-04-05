@@ -143,6 +143,7 @@ namespace iText.Forms {
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
             PdfButtonFormField pushButton = new PushButtonFormFieldBuilder(pdfDoc, "push").SetWidgetRectangle(new Rectangle
                 (36, 650, 40, 20)).SetCaption("Capcha").CreatePushButton();
+            pushButton.SetFontSize(12f);
             TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
             tagPointer.MoveToKid(StandardRoles.DIV);
             acroForm.AddField(pushButton);

@@ -1157,7 +1157,7 @@ namespace iText.Layout.Renderer {
         /// <param name="rect">a rectangle the border box will be applied on.</param>
         /// <param name="reverse">
         /// indicates whether the border box will be applied
-        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// inside (in case of false) or outside (in case of true) the rectangle.
         /// </param>
         /// <returns>
         /// a
@@ -1174,7 +1174,7 @@ namespace iText.Layout.Renderer {
         /// <param name="rect">a rectangle paddings will be applied on.</param>
         /// <param name="reverse">
         /// indicates whether paddings will be applied
-        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// inside (in case of false) or outside (in case of true) the rectangle.
         /// </param>
         /// <returns>
         /// a
@@ -1797,7 +1797,7 @@ namespace iText.Layout.Renderer {
             }
             return rect.ApplyMargins(paddings[0] != null ? paddings[0].GetValue() : 0, paddings[1] != null ? paddings[
                 1].GetValue() : 0, paddings[2] != null ? paddings[2].GetValue() : 0, paddings[3] != null ? paddings[3]
-                .GetValue() : 3, reverse);
+                .GetValue() : 0, reverse);
         }
 
         /// <summary>Applies the given border box (borders) on the given rectangle</summary>
@@ -1989,7 +1989,7 @@ namespace iText.Layout.Renderer {
             ) {
             if (wasHeightClipped) {
                 // if height was clipped, max height exists and can be resolved
-                ILogger logger = ITextLogManager.GetLogger(typeof(BlockRenderer));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                 logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT);
                 if (enlargeOccupiedAreaOnHeightWasClipped) {
                     float? maxHeight = RetrieveMaxHeight();

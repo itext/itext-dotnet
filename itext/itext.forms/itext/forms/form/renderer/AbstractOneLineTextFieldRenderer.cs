@@ -42,10 +42,6 @@ namespace iText.Forms.Form.Renderer {
             : base(modelElement) {
         }
 
-        public override void Move(float dxRight, float dyUp) {
-            base.Move(dxRight, dyUp);
-        }
-
         /// <summary>Crops the content lines.</summary>
         /// <param name="lines">a list of lines</param>
         /// <param name="bBox">the bounding box</param>
