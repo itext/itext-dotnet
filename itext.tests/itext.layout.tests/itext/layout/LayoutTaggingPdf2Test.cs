@@ -57,7 +57,7 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             Paragraph h9 = new Paragraph("Header level 9");
             h9.GetAccessibilityProperties().SetRole("H9");
-            Paragraph h11 = new Paragraph("Hello World from iText7");
+            Paragraph h11 = new Paragraph("Hello World from iText");
             h11.GetAccessibilityProperties().SetRole("H11");
             document.Add(h9);
             AddSimpleContentToDoc(document, h11);
@@ -74,7 +74,7 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             Paragraph h1 = new Paragraph("Header level 1");
             h1.GetAccessibilityProperties().SetRole(StandardRoles.H1);
-            Paragraph helloWorldPara = new Paragraph("Hello World from iText7");
+            Paragraph helloWorldPara = new Paragraph("Hello World from iText");
             document.Add(h1);
             AddSimpleContentToDoc(document, helloWorldPara);
             document.Close();
@@ -92,7 +92,7 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             Paragraph h1 = new Paragraph("Header level 1");
             h1.GetAccessibilityProperties().SetRole(StandardRoles.H1);
-            Paragraph helloWorldPara = new Paragraph("Hello World from iText7");
+            Paragraph helloWorldPara = new Paragraph("Hello World from iText");
             document.Add(h1);
             AddSimpleContentToDoc(document, helloWorldPara);
             document.Close();
@@ -556,7 +556,7 @@ namespace iText.Layout {
              xhtmlNs, PdfNamespace html4Ns, String hnRole, Document document) {
             Paragraph h1P = new Paragraph("Header level 1");
             h1P.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.h1);
-            Paragraph helloWorldPara = new Paragraph("Hello World from iText7");
+            Paragraph helloWorldPara = new Paragraph("Hello World from iText");
             helloWorldPara.GetAccessibilityProperties().SetRole(LayoutTaggingPdf2Test.HtmlRoles.p);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
                 )).SetWidth(100);

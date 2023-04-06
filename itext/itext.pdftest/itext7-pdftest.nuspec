@@ -3,7 +3,7 @@
   <metadata>
     <id>itext7.pdftest</id>
     <version>8.0.0-SNAPSHOT</version>
-    <title>iText 7 pdftest module</title>
+    <title>iText pdftest module</title>
     <authors>Apryse Software</authors>
     <owners>Apryse Software</owners>
     <licenseUrl>https://www.gnu.org/licenses/agpl.html</licenseUrl>

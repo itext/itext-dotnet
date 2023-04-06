@@ -63,7 +63,7 @@ namespace iText.Kernel.Pdf {
             PdfReader reader2 = new PdfReader(filename1);
             PdfWriter writer2 = new PdfWriter(filename2);
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
-            pdfDoc2.GetDocumentInfo().SetCreator("iText 7").SetTitle("Empty iText 7 Document");
+            pdfDoc2.GetDocumentInfo().SetCreator("iText").SetTitle("Empty iText Document");
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(filename2);
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
@@ -80,7 +80,7 @@ namespace iText.Kernel.Pdf {
             PdfDictionary trailer = document.GetTrailer();
             PdfDictionary info = trailer.GetAsDictionary(PdfName.Info);
             PdfString creator = info.GetAsString(PdfName.Creator);
-            NUnit.Framework.Assert.AreEqual("iText 7", creator.ToString());
+            NUnit.Framework.Assert.AreEqual("iText", creator.ToString());
             byte[] bytes = document.GetPage(1).GetContentBytes();
             NUnit.Framework.Assert.AreEqual("%Hello World\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes));
             String date = document.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate).GetValue();
@@ -739,7 +739,7 @@ namespace iText.Kernel.Pdf {
             pdfDoc1.Close();
             PdfDocument pdfDoc2 = new PdfDocument(new PdfReader(filename1), new PdfWriter(filename2), new StampingProperties
                 ().UseAppendMode());
-            pdfDoc2.GetDocumentInfo().SetCreator("iText 7").SetTitle("Empty iText 7 Document");
+            pdfDoc2.GetDocumentInfo().SetCreator("iText").SetTitle("Empty iText Document");
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(filename2);
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
@@ -756,7 +756,7 @@ namespace iText.Kernel.Pdf {
             PdfDictionary trailer = pdfDocument.GetTrailer();
             PdfDictionary info = trailer.GetAsDictionary(PdfName.Info);
             PdfString creator = info.GetAsString(PdfName.Creator);
-            NUnit.Framework.Assert.AreEqual("iText 7", creator.ToString());
+            NUnit.Framework.Assert.AreEqual("iText", creator.ToString());
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
             NUnit.Framework.Assert.AreEqual("%Hello World\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes));
             String date = pdfDocument.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate).GetValue();

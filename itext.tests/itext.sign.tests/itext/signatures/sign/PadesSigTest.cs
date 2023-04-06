@@ -143,7 +143,7 @@ namespace iText.Signatures.Sign {
                 new StampingProperties());
             signer.SetFieldName("Signature1");
             signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
-                ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText7.");
+                ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText.");
             if (sigPolicyIdentifier != null) {
                 signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES, sigPolicyIdentifier
                     );

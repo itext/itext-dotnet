@@ -47,7 +47,7 @@ namespace iText.Kernel.Pdf {
             String filename = "emptyDocumentWithXmp.pdf";
             PdfWriter writer = new PdfWriter(destinationFolder + filename, new WriterProperties().AddXmpMetadata());
             PdfDocument pdfDoc = new PdfDocument(writer);
-            pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 7").SetTitle("Empty iText 7 Document"
+            pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText").SetTitle("Empty iText Document"
                 );
             pdfDoc.GetDocumentInfo().GetPdfObject().Remove(PdfName.CreationDate);
             pdfDoc.GetDocumentInfo().GetPdfObject().Remove(PdfName.ModDate);
@@ -135,7 +135,7 @@ namespace iText.Kernel.Pdf {
             MemoryStream fos = new MemoryStream();
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
-            pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 7").SetTitle("Empty iText 7 Document"
+            pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText").SetTitle("Empty iText Document"
                 );
             pdfDoc.GetDocumentInfo().GetPdfObject().Remove(PdfName.CreationDate);
             pdfDoc.GetDocumentInfo().GetPdfObject().Remove(PdfName.ModDate);

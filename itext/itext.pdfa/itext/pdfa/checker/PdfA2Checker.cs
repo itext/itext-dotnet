@@ -311,14 +311,14 @@ namespace iText.Pdfa.Checker {
 
         protected internal override void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
             String encoding = trueTypeFont.GetFontEncoding().GetBaseEncoding();
-            // non-symbolic true type font will always has an encoding entry in font dictionary in itext7
+            // non-symbolic true type font will always has an encoding entry in font dictionary in itext
             if (!PdfEncodings.WINANSI.Equals(encoding) && !PdfEncodings.MACROMAN.Equals(encoding)) {
                 throw new PdfAConformanceException(PdfAConformanceException.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_ENCODING_OR_WIN_ANSI_ENCODING
                     , trueTypeFont);
             }
         }
 
-        // if font has differences array, itext7 ensures that all names in it are listed in AdobeGlyphList
+        // if font has differences array, itext ensures that all names in it are listed in AdobeGlyphList
         protected internal override double GetMaxRealValue() {
             return float.MaxValue;
         }

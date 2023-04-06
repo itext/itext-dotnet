@@ -53,9 +53,9 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const String AUTHOR = "iText Software";
 
-        private const String CREATOR = "iText 7";
+        private const String CREATOR = "iText";
 
-        private const String TITLE = "Empty iText 7 Document";
+        private const String TITLE = "Empty iText Document";
 
         private sealed class _ContentProvider_83 : PdfCanvasTest.ContentProvider {
             public _ContentProvider_83() {

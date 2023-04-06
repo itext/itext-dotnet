@@ -537,7 +537,7 @@ namespace iText.Layout {
             img.SetAutoScale(true);
             Table table = new Table(UnitValue.CreatePercentArray(4)).UseAllAvailableWidth();
             for (int k = 0; k < 5; k++) {
-                table.AddCell("Hello World from iText7");
+                table.AddCell("Hello World from iText");
                 List list = new List().SetListSymbol("-> ");
                 list.Add("list item").Add("list item").Add("list item").Add("list item").Add("list item");
                 Cell cell = new Cell().Add(list);

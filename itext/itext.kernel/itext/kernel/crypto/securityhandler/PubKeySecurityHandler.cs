@@ -214,7 +214,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 }
                 catch (AbstractGeneralSecurityException) {
                     EncodedRecipients = null;
-                    // break was added while porting to itext7
+                    // break was added while porting to itext
                     break;
                 }
                 catch (System.IO.IOException) {

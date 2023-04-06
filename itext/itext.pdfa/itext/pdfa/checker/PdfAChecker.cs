@@ -47,7 +47,7 @@ namespace iText.Pdfa.Checker {
     /// should always refuse to create non-compliant PDF/A, which would be possible
     /// with client code implementations. Any future generations of the PDF/A
     /// standard and its derivates will get their own implementation in the
-    /// iText 7 - pdfa project.
+    /// iText - pdfa project.
     /// </remarks>
     public abstract class PdfAChecker {
         /// <summary>

@@ -1387,7 +1387,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        // Do nothing here. Itext7 handles cell and table borders collapse and draws result borders during #drawBorders()
+        // Do nothing here. iText handles cell and table borders collapse and draws result borders during #drawBorders()
         protected internal virtual void DrawBorders(DrawContext drawContext) {
             DrawBorders(drawContext, null != headerRenderer, null != footerRenderer);
         }
