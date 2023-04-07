@@ -20,17 +20,25 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
+using iText.IO.Font.Otf;
+using iText.Kernel.Font;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Renderer;
 
-namespace iText.Forms.Fields {
+namespace iText.Forms.Form.Renderer {
     /// <summary>Custom implementation for rendering form field values.</summary>
     /// <remarks>
     /// Custom implementation for rendering form field values. It makes sure that text value
     /// trimming strategy matches Acrobat's behavior
     /// </remarks>
-    internal class FormFieldValueNonTrimmingTextRenderer : TextRenderer {
+    public class FormFieldValueNonTrimmingTextRenderer : TextRenderer {
+        // Temporarily public, make it package private on cleanup of PdfFormAnnotation
+        // TODO DEVSIX-7423 (or put another devsix if the usage of this class is not removed from PdfFormAnnotation
+        //  as part of DEVSIX-7423)
         // Determines whether we want to trim leading space. In particular we don't want to trim
         // the very first leading spaces of the text value. When text overflows to the next lines,
         // whether we should trim the text depends on why the overflow happened
@@ -41,17 +49,17 @@ namespace iText.Forms.Fields {
         }
 
         public override IRenderer GetNextRenderer() {
-            return new iText.Forms.Fields.FormFieldValueNonTrimmingTextRenderer((Text)GetModelElement());
+            return new iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer((Text)GetModelElement());
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutResult baseLayoutResult = base.Layout(layoutContext);
-            if (baseLayoutResult is TextLayoutResult && baseLayoutResult.GetOverflowRenderer() is iText.Forms.Fields.FormFieldValueNonTrimmingTextRenderer
+            if (baseLayoutResult is TextLayoutResult && baseLayoutResult.GetOverflowRenderer() is iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer
                  && !((TextLayoutResult)baseLayoutResult).IsSplitForcedByNewline()) {
                 // In case the overflow to the next line happened naturally (without a forced line break),
                 // we don't want to preserve the extra spaces at the beginning of the next line
-                ((iText.Forms.Fields.FormFieldValueNonTrimmingTextRenderer)baseLayoutResult.GetOverflowRenderer()).SetCallTrimFirst
-                    (true);
+                ((iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer)baseLayoutResult.GetOverflowRenderer()).
+                    SetCallTrimFirst(true);
             }
             return baseLayoutResult;
         }
@@ -60,6 +68,20 @@ namespace iText.Forms.Fields {
             if (callTrimFirst) {
                 base.TrimFirst();
             }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected override TextRenderer CreateCopy(GlyphLine gl, PdfFont font) {
+            if (typeof(iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer) != this.GetType()) {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer
+                    ));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN
+                    ));
+            }
+            iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer copy = new iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer
+                ((Text)this.modelElement);
+            copy.SetProcessedGlyphLineAndFont(gl, font);
+            return copy;
         }
 
         private void SetCallTrimFirst(bool callTrimFirst) {

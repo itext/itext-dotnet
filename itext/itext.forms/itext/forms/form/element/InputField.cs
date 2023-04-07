@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Forms.Exceptions;
 using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
 using iText.Layout.Element;
@@ -42,6 +43,10 @@ namespace iText.Forms.Form.Element {
 
         /// <summary>The placeholder paragraph.</summary>
         private Paragraph placeholder;
+
+        /// <summary>Field rotation, counterclockwise.</summary>
+        /// <remarks>Field rotation, counterclockwise. Must be a multiple of 90 degrees.</remarks>
+        private int rotation = 0;
 
         /// <summary>Creates a new input field.</summary>
         /// <param name="id">the id</param>
@@ -98,6 +103,30 @@ namespace iText.Forms.Form.Element {
                     return base.GetDefaultProperty<T1>(property);
                 }
             }
+        }
+
+        /// <summary>Set rotation of the input field.</summary>
+        /// <param name="rotation">
+        /// new rotation value, counterclockwise. Must be a multiple of 90 degrees.
+        /// It has sense only in interactive mode, see
+        /// <see cref="FormField{T}.SetInteractive(bool)"/>.
+        /// </param>
+        /// <returns>
+        /// the edited
+        /// <see cref="InputField"/>.
+        /// </returns>
+        public virtual iText.Forms.Form.Element.InputField SetRotation(int rotation) {
+            if (rotation % 90 != 0) {
+                throw new ArgumentException(FormsExceptionMessageConstant.INVALID_ROTATION_VALUE);
+            }
+            this.rotation = rotation;
+            return this;
+        }
+
+        /// <summary>Get rotation.</summary>
+        /// <returns>rotation value.</returns>
+        public virtual int GetRotation() {
+            return this.rotation;
         }
 
         /* (non-Javadoc)

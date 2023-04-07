@@ -42,7 +42,10 @@ namespace iText.Forms.Logs {
 
         public const String FORM_FIELD_WAS_FLUSHED = "A form field was flushed. There's no way to create this field in the AcroForm dictionary.";
 
-        public const String INCORRECT_PAGEROTATION = "Encounterd a page rotation that was not a multiple of 90°/ (Pi/2) when generating default appearances "
+        public const String INCORRECT_PAGE_ROTATION = "Encountered a page rotation that was not a multiple of 90°/ (Pi/2) when generating default appearances "
+             + "for form fields";
+
+        public const String INCORRECT_WIDGET_ROTATION = "Encountered a widget rotation that was not a multiple of 90°/ (Pi/2) when generating default appearances "
              + "for form fields";
 
         public const String INPUT_FIELD_DOES_NOT_FIT = "Input field doesn't fit in outer object. It will be clipped";

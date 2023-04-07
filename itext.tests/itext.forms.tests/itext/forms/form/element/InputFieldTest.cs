@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Utils;
+using iText.Forms.Exceptions;
 using iText.Forms.Form;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
@@ -229,6 +230,36 @@ namespace iText.Forms.Form.Element {
                 document.Add(flattenInputField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RotationTest() {
+            String outPdf = DESTINATION_FOLDER + "rotationTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_rotationTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                InputField inputField = new InputField("1");
+                inputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "Long long text");
+                inputField.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(0));
+                inputField.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(0));
+                inputField.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(0));
+                inputField.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(0));
+                inputField.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(50));
+                inputField.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+                inputField.SetInteractive(true);
+                inputField.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+                document.Add(inputField);
+                inputField.SetRotation(90);
+                document.Add(inputField);
+                inputField.SetRotation(180);
+                document.Add(inputField);
+                inputField.SetRotation(270);
+                document.Add(inputField);
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => inputField.SetRotation
+                    (45));
+                NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.INVALID_ROTATION_VALUE, exception.Message);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff"
+                ));
         }
     }
 }

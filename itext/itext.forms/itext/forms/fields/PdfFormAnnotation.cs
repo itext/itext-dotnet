@@ -29,6 +29,7 @@ using iText.Forms.Fields.Borders;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
+using iText.Forms.Form.Renderer;
 using iText.Forms.Logs;
 using iText.Forms.Util;
 using iText.Kernel.Colors;
@@ -666,7 +667,10 @@ namespace iText.Forms.Fields {
                     canvas.Rectangle(0, 0, width, height).Stroke();
                 }
             }
-            ApplyRotation(xObject, height, width);
+            PdfArray matrix = GetRotationMatrix(GetRotation() % 360, height, width);
+            if (matrix != null) {
+                xObject.Put(PdfName.Matrix, matrix);
+            }
             canvas.RestoreState();
         }
 
@@ -750,7 +754,10 @@ namespace iText.Forms.Fields {
             float height = rectangle.GetHeight();
             CreateInputButton();
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
-            ApplyRotation(xObject, height, width);
+            PdfArray matrix = GetRotationMatrix(GetRotation() % 360, height, width);
+            if (matrix != null) {
+                xObject.Put(PdfName.Matrix, matrix);
+            }
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, this.GetDocument());
             SetMetaInfoToCanvas(canvas);
             String caption = parent.GetDisplayValue();
@@ -934,13 +941,25 @@ namespace iText.Forms.Fields {
             if (backgroundColor != null) {
                 textFormField.SetProperty(Property.BACKGROUND, new Background(backgroundColor, 1f, 0, 0, 0, 0));
             }
-            textFormField.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(rectangle.GetWidth()));
-            textFormField.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rectangle.GetHeight()));
             // Always flatten
             textFormField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
+            // Rotation
+            int fieldRotation = GetRotation() % 360;
+            PdfArray matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
+            if (fieldRotation == 90 || fieldRotation == 270) {
+                Rectangle invertedRectangle = rectangle.Clone();
+                invertedRectangle.SetWidth(rectangle.GetHeight());
+                invertedRectangle.SetHeight(rectangle.GetWidth());
+                rectangle = invertedRectangle;
+            }
+            // Set fixed size
+            textFormField.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(rectangle.GetWidth()));
+            textFormField.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rectangle.GetHeight()));
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth(), rectangle.GetHeight(
                 )));
-            ApplyRotation(xObject, rectangle.GetWidth(), rectangle.GetHeight());
+            if (matrix != null) {
+                xObject.Put(PdfName.Matrix, matrix);
+            }
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, this.GetDocument());
             canvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             canvas.Add(textFormField);
@@ -1097,7 +1116,7 @@ namespace iText.Forms.Fields {
             else {
                 //Avoid NPE when handling corrupt pdfs
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormAnnotation));
-                logger.LogError(FormsLogMessageConstants.INCORRECT_PAGEROTATION);
+                logger.LogError(FormsLogMessageConstants.INCORRECT_PAGE_ROTATION);
                 matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
             }
             //Apply field rotation
@@ -1413,26 +1432,28 @@ namespace iText.Forms.Fields {
             return new String(pchar);
         }
 
-        private void ApplyRotation(PdfFormXObject xObject, float height, float width) {
-            switch (GetRotation()) {
+        private static PdfArray GetRotationMatrix(int rotation, float height, float width) {
+            switch (rotation) {
+                case 0: {
+                    return null;
+                }
+
                 case 90: {
-                    xObject.Put(PdfName.Matrix, new PdfArray(new float[] { 0, 1, -1, 0, height, 0 }));
-                    break;
+                    return new PdfArray(new float[] { 0, 1, -1, 0, height, 0 });
                 }
 
                 case 180: {
-                    xObject.Put(PdfName.Matrix, new PdfArray(new float[] { -1, 0, 0, -1, width, height }));
-                    break;
+                    return new PdfArray(new float[] { -1, 0, 0, -1, width, height });
                 }
 
                 case 270: {
-                    xObject.Put(PdfName.Matrix, new PdfArray(new float[] { 0, -1, 1, 0, 0, width }));
-                    break;
+                    return new PdfArray(new float[] { 0, -1, 1, 0, 0, width });
                 }
 
                 default: {
-                    // Rotation 0 - do nothing
-                    break;
+                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormAnnotation));
+                    logger.LogError(FormsLogMessageConstants.INCORRECT_WIDGET_ROTATION);
+                    return null;
                 }
             }
         }

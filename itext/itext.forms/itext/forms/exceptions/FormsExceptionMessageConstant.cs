@@ -48,6 +48,8 @@ namespace iText.Forms.Exceptions {
 
         public const String CHECKBOX_TYPE_NOT_SUPPORTED = "Unsupported checkbox type for PDF/A";
 
+        public const String INVALID_ROTATION_VALUE = "Invalid rotation. Rotation must be a multiple of 90 degrees.";
+
         private FormsExceptionMessageConstant() {
         }
     }

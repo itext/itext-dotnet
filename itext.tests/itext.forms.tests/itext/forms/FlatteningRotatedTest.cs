@@ -21,14 +21,18 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Forms {
     [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.TestFixtureSource("InputFileNamesTestFixtureData")]
     public class FlatteningRotatedTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/FlatteningRotatedTest/";
@@ -36,33 +40,65 @@ namespace iText.Forms {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/FlatteningRotatedTest/";
 
+        private readonly String inputPdfFileName;
+
+        private static bool experimentalRenderingPreviousValue;
+
+        public static ICollection<Object[]> InputFileNames() {
+            IList<Object[]> inputFileNames = new List<Object[]>();
+            for (int pageRot = 0; pageRot < 360; pageRot += 90) {
+                for (int fieldRot = 0; fieldRot < 360; fieldRot += 90) {
+                    inputFileNames.Add(new Object[] { "FormFlatteningDefaultAppearance_" + pageRot + "_" + fieldRot });
+                }
+            }
+            return inputFileNames;
+        }
+
+        public static ICollection<NUnit.Framework.TestFixtureData> InputFileNamesTestFixtureData() {
+            return InputFileNames().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
+        }
+
+        public FlatteningRotatedTest(Object inputPdfFileName) {
+            this.inputPdfFileName = (String)inputPdfFileName;
+        }
+
+        public FlatteningRotatedTest(Object[] array)
+            : this(array[0]) {
+        }
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
+            experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
+            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
+        }
+
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
         }
 
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTest_DefaultAppearanceGeneration_Rot() {
-            String srcFilePatternPattern = "FormFlatteningDefaultAppearance_{0}_";
-            String destPatternPattern = "FormFlatteningDefaultAppearance_{0}_";
-            String[] rotAngle = new String[] { "0", "90", "180", "270" };
-            foreach (String angle in rotAngle) {
-                String srcFilePattern = MessageFormatUtil.Format(srcFilePatternPattern, angle);
-                String destPattern = MessageFormatUtil.Format(destPatternPattern, angle);
-                for (int i = 0; i < 360; i += 90) {
-                    String src = sourceFolder + srcFilePattern + i + ".pdf";
-                    String dest = destinationFolder + destPattern + i + "_flattened.pdf";
-                    String cmp = sourceFolder + "cmp_" + srcFilePattern + i + ".pdf";
-                    PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
-                    PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-                    foreach (PdfFormField field in form.GetAllFormFields().Values) {
-                        field.SetValue("Test");
-                    }
-                    form.FlattenFields();
-                    doc.Close();
-                    NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
+            String src = sourceFolder + inputPdfFileName + ".pdf";
+            String dest = destinationFolder + inputPdfFileName + ".pdf";
+            String dest_flattened = destinationFolder + inputPdfFileName + "_flattened.pdf";
+            String cmp = sourceFolder + "cmp_" + inputPdfFileName + ".pdf";
+            String cmp_flattened = sourceFolder + "cmp_" + inputPdfFileName + "_flattened.pdf";
+            using (PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+                foreach (PdfFormField field in form.GetAllFormFields().Values) {
+                    field.SetValue("Long Long Text");
+                    field.GetFirstFormAnnotation().SetBorderWidth(1);
+                    field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLUE);
                 }
             }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
+            using (PdfDocument doc_1 = new PdfDocument(new PdfReader(dest), new PdfWriter(dest_flattened))) {
+                PdfAcroForm.GetAcroForm(doc_1, true).FlattenFields();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest_flattened, cmp_flattened, destinationFolder
+                , "diff_"));
         }
     }
 }

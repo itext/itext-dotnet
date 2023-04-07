@@ -33,6 +33,7 @@ using iText.Forms.Form.Element;
 using iText.Forms.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -82,7 +83,15 @@ namespace iText.Forms.Form.Renderer {
                 )modelElement).GetPlaceholder().IsEmpty()) {
                 return ((InputField)modelElement).GetPlaceholder().CreateRendererSubTree();
             }
-            return base.CreateParagraphRenderer(defaultValue);
+            if (String.IsNullOrEmpty(defaultValue)) {
+                defaultValue = "\u00A0";
+            }
+            Text text = new Text(defaultValue);
+            FormFieldValueNonTrimmingTextRenderer nextRenderer = new FormFieldValueNonTrimmingTextRenderer(text);
+            text.SetNextRenderer(nextRenderer);
+            IRenderer flatRenderer = new Paragraph(text).SetMargin(0).CreateRendererSubTree();
+            flatRenderer.SetProperty(Property.NO_SOFT_WRAP_INLINE, true);
+            return flatRenderer;
         }
 
         /* (non-Javadoc)
@@ -143,6 +152,10 @@ namespace iText.Forms.Form.Renderer {
             }
             else {
                 inputField.SetDefaultValue(new PdfString(value));
+            }
+            int rotation = ((InputField)modelElement).GetRotation();
+            if (rotation != 0) {
+                inputField.GetFirstFormAnnotation().SetRotation(rotation);
             }
             ApplyDefaultFieldProperties(inputField);
             PdfAcroForm.GetAcroForm(doc, true).AddField(inputField, page);
