@@ -50,12 +50,7 @@ namespace iText.Kernel.Font {
         }
 
         public static String AddRandomSubsetPrefixForFontName(String fontName) {
-            StringBuilder newFontName = new StringBuilder(fontName.Length + 7);
-            byte[] randomByte = new byte[1];
-            for (int k = 0; k < 6; ++k) {
-                NUMBER_GENERATOR.GetBytes(randomByte);
-                newFontName.Append((char)(Math.Abs(randomByte[0] % 26) + 'A'));
-            }
+            StringBuilder newFontName = GetRandomFontPrefix(6);
             newFontName.Append('+').Append(fontName);
             return newFontName.ToString();
         }
@@ -120,11 +115,7 @@ namespace iText.Kernel.Font {
         }
 
         internal static String CreateRandomFontName() {
-            StringBuilder s = new StringBuilder("");
-            for (int k = 0; k < 7; ++k) {
-                s.Append((char)(JavaUtil.Random() * 26 + 'A'));
-            }
-            return s.ToString();
+            return GetRandomFontPrefix(7).ToString();
         }
 
         internal static int[] ConvertSimpleWidthsArray(PdfArray widthsArray, int first, int missingWidth) {
@@ -166,6 +157,16 @@ namespace iText.Kernel.Font {
                 }
             }
             return res;
+        }
+
+        private static StringBuilder GetRandomFontPrefix(int length) {
+            StringBuilder stringBuilder = new StringBuilder();
+            byte[] randomByte = new byte[length];
+            NUMBER_GENERATOR.GetBytes(randomByte);
+            for (int k = 0; k < length; ++k) {
+                stringBuilder.Append((char)(Math.Abs(randomByte[k] % 26) + 'A'));
+            }
+            return stringBuilder;
         }
     }
 }
