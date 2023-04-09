@@ -79,6 +79,9 @@ namespace iText.Forms.Fields {
         /// <summary>Default padding X offset.</summary>
         internal const float X_OFFSET = 2;
 
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormAnnotation
+            ));
+
         protected internal float borderWidth = 1;
 
         protected internal Color backgroundColor;
@@ -556,43 +559,8 @@ namespace iText.Forms.Fields {
             Style paragraphStyle = new Style().SetFont(font).SetFontSize(fontSize);
             paragraphStyle.SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 1));
             paragraphStyle.SetFontColor(GetColor());
-            int maxLen = new PdfTextFormField(parent.GetPdfObject()).GetMaxLen();
-            // check if /Comb has been set
-            if (parent.GetFieldFlag(PdfTextFormField.FF_COMB) && 0 != maxLen) {
-                float widthPerCharacter = width / maxLen;
-                int numberOfCharacters = Math.Min(maxLen, value.Length);
-                int start;
-                switch (textAlignment) {
-                    case TextAlignment.RIGHT: {
-                        start = (maxLen - numberOfCharacters);
-                        break;
-                    }
-
-                    case TextAlignment.CENTER: {
-                        start = (maxLen - numberOfCharacters) / 2;
-                        break;
-                    }
-
-                    default: {
-                        start = 0;
-                        break;
-                    }
-                }
-                float startOffset = widthPerCharacter * (start + 0.5f);
-                for (int i = 0; i < numberOfCharacters; i++) {
-                    modelCanvas.ShowTextAligned(new Paragraph(value.JSubstring(i, i + 1)).AddStyle(paragraphStyle), startOffset
-                         + widthPerCharacter * i, rect.GetHeight() / 2, TextAlignment.CENTER, VerticalAlignment.MIDDLE);
-                }
-            }
-            else {
-                if (parent.GetFieldFlag(PdfTextFormField.FF_COMB)) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormAnnotation));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
-                        ));
-                }
-                modelCanvas.ShowTextAligned(CreateParagraphForTextFieldValue(value).AddStyle(paragraphStyle).SetPaddings(0
-                    , X_OFFSET, 0, X_OFFSET), x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
-            }
+            modelCanvas.ShowTextAligned(CreateParagraphForTextFieldValue(value).AddStyle(paragraphStyle).SetPaddings(0
+                , X_OFFSET, 0, X_OFFSET), x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());
         }
@@ -978,65 +946,6 @@ namespace iText.Forms.Fields {
             }
         }
 
-        /// <summary>Draws the visual appearance of Choice box in a form field.</summary>
-        /// <param name="rect">The location on the page for the list field</param>
-        /// <param name="value">The initial value</param>
-        /// <param name="appearance">The appearance</param>
-        internal virtual void DrawChoiceAppearance(Rectangle rect, float fontSize, String value, PdfFormXObject appearance
-            , int topIndex) {
-            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
-            PdfResources resources = appearance.GetResources();
-            PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
-            float width = rect.GetWidth();
-            float height = rect.GetHeight();
-            float widthBorder = 6.0f;
-            float heightBorder = 2.0f;
-            DrawBorder(canvas, appearance, width, height);
-            canvas.BeginVariableText().SaveState().Rectangle(3, 3, width - widthBorder, height - heightBorder).Clip().
-                EndPath();
-            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, new Rectangle(3, 0, Math.Max(0, width - 
-                widthBorder), Math.Max(0, height - heightBorder)));
-            modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
-            SetMetaInfoToCanvas(modelCanvas);
-            Div div = new Div();
-            if (parent.GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
-                div.SetVerticalAlignment(VerticalAlignment.MIDDLE);
-            }
-            div.SetHeight(Math.Max(0, height - heightBorder));
-            IList<String> strings = GetFont().SplitString(value, fontSize, width - widthBorder);
-            for (int index = 0; index < strings.Count; index++) {
-                bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(Property.FULL);
-                if (true.Equals(isFull)) {
-                    break;
-                }
-                Paragraph paragraph = new Paragraph(strings[index]).SetFont(GetFont()).SetFontSize(fontSize).SetMargins(0, 
-                    0, 0, 0).SetMultipliedLeading(1);
-                paragraph.SetProperty(Property.FORCED_PLACEMENT, true);
-                paragraph.SetTextAlignment(parent.GetJustification());
-                if (GetColor() != null) {
-                    paragraph.SetFontColor(GetColor());
-                }
-                if (!parent.GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
-                    PdfArray indices = GetParent().GetAsArray(PdfName.I);
-                    if (indices != null && indices.Size() > 0) {
-                        foreach (PdfObject ind in indices) {
-                            if (!ind.IsNumber()) {
-                                continue;
-                            }
-                            if (((PdfNumber)ind).GetValue() == index + topIndex) {
-                                paragraph.SetBackgroundColor(new DeviceRgb(10, 36, 106));
-                                paragraph.SetFontColor(ColorConstants.LIGHT_GRAY);
-                            }
-                        }
-                    }
-                }
-                div.Add(paragraph);
-            }
-            modelCanvas.Add(div);
-            canvas.RestoreState().EndVariableText();
-            appearance.GetPdfObject().SetData(stream.GetBytes());
-        }
-
         internal static void SetMetaInfoToCanvas(iText.Layout.Canvas canvas) {
             MetaInfoContainer metaInfo = FormsMetaInfoStaticContainer.GetMetaInfoForLayout();
             if (metaInfo != null) {
@@ -1115,8 +1024,7 @@ namespace iText.Forms.Fields {
             }
             else {
                 //Avoid NPE when handling corrupt pdfs
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormAnnotation));
-                logger.LogError(FormsLogMessageConstants.INCORRECT_PAGE_ROTATION);
+                LOGGER.LogError(FormsLogMessageConstants.INCORRECT_PAGE_ROTATION);
                 matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
             }
             //Apply field rotation
@@ -1174,20 +1082,6 @@ namespace iText.Forms.Fields {
                     DrawTextAppearance(bboxRectangle, GetFont(), GetFontSize(bBox, value), value, appearance);
                 }
             }
-            else {
-                int topIndex = 0;
-                if (!parent.GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
-                    PdfNumber topIndexNum = this.GetParent().GetAsNumber(PdfName.TI);
-                    PdfArray options = parent.GetOptions();
-                    if (null != options) {
-                        topIndex = null != topIndexNum ? topIndexNum.IntValue() : 0;
-                        PdfArray visibleOptions = topIndex > 0 ? new PdfArray(options.SubList(topIndex, options.Size())) : (PdfArray
-                            )options.Clone();
-                        value = PdfFormField.OptionsArrayToString(visibleOptions);
-                    }
-                }
-                DrawChoiceAppearance(bboxRectangle, GetFontSize(bBox, value), value, appearance, topIndex);
-            }
             PdfDictionary ap = new PdfDictionary();
             ap.Put(PdfName.N, appearance.GetPdfObject());
             ap.SetModified();
@@ -1200,13 +1094,18 @@ namespace iText.Forms.Fields {
                 return true;
             }
             PdfName type = parent.GetFormType();
-            if (PdfName.Tx.Equals(type) && ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING) {
-                DrawTextFormFieldAndSaveAppearance();
-                return true;
+            if (PdfName.Ch.Equals(type) || this.IsCombTextFormField()) {
+                return TextAndChoiceLegacyDrawer.RegenerateTextAndChoiceField(this);
             }
             else {
-                if (PdfName.Ch.Equals(type) || PdfName.Tx.Equals(type)) {
-                    return RegenerateTextAndChoiceField();
+                if (PdfName.Tx.Equals(type)) {
+                    if (ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING) {
+                        DrawTextFormFieldAndSaveAppearance();
+                        return true;
+                    }
+                    else {
+                        return RegenerateTextAndChoiceField();
+                    }
                 }
                 else {
                     if (PdfName.Btn.Equals(type)) {
@@ -1292,26 +1191,7 @@ namespace iText.Forms.Fields {
             return radio;
         }
 
-        private static double DegreeToRadians(double angle) {
-            return Math.PI * angle / 180.0;
-        }
-
-        private static Paragraph CreateParagraphForTextFieldValue(String value) {
-            Text text = new Text(value);
-            text.SetNextRenderer(new FormFieldValueNonTrimmingTextRenderer(text));
-            return new Paragraph(text);
-        }
-
-        private String GetRadioButtonValue() {
-            foreach (String state in GetAppearanceStates()) {
-                if (!OFF_STATE_VALUE.Equals(state)) {
-                    return state;
-                }
-            }
-            return null;
-        }
-
-        private float GetFontSize(PdfArray bBox, String value) {
+        internal virtual float GetFontSize(PdfArray bBox, String value) {
             if (GetFontSize() == 0) {
                 if (bBox == null || value == null || String.IsNullOrEmpty(value)) {
                     return DEFAULT_FONT_SIZE;
@@ -1322,6 +1202,39 @@ namespace iText.Forms.Fields {
                 }
             }
             return GetFontSize();
+        }
+
+        private static double DegreeToRadians(double angle) {
+            return Math.PI * angle / 180.0;
+        }
+
+        private static Paragraph CreateParagraphForTextFieldValue(String value) {
+            Text text = new Text(value);
+            text.SetNextRenderer(new FormFieldValueNonTrimmingTextRenderer(text));
+            return new Paragraph(text);
+        }
+
+        private bool IsCombTextFormField() {
+            PdfName type = parent.GetFormType();
+            if (PdfName.Tx.Equals(type) && parent.GetFieldFlag(PdfTextFormField.FF_COMB)) {
+                int maxLen = new PdfTextFormField(parent.GetPdfObject()).GetMaxLen();
+                if (maxLen == 0 || parent.IsMultiline()) {
+                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
+                        ));
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private String GetRadioButtonValue() {
+            foreach (String state in GetAppearanceStates()) {
+                if (!OFF_STATE_VALUE.Equals(state)) {
+                    return state;
+                }
+            }
+            return null;
         }
 
         /// <summary>

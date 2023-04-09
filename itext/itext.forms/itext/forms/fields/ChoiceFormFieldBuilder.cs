@@ -143,8 +143,8 @@ namespace iText.Forms.Fields {
                 if (annotation != null) {
                     PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, GetWidgetRectangle().GetWidth(), GetWidgetRectangle
                         ().GetHeight()));
-                    field.GetFirstFormAnnotation().DrawChoiceAppearance(GetWidgetRectangle(), field.fontSize, optionsArrayString
-                        , xObject, 0);
+                    TextAndChoiceLegacyDrawer.DrawChoiceAppearance(field.GetFirstFormAnnotation(), GetWidgetRectangle(), field
+                        .fontSize, optionsArrayString, xObject, 0);
                     annotation.SetNormalAppearance(xObject.GetPdfObject());
                     SetPageToField(field);
                 }
