@@ -28,6 +28,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Colors;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -155,7 +156,7 @@ namespace iText.IO.Image {
                 ProcessPng(pngStream, png);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PngImageException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PNG_IMAGE_EXCEPTION, e);
             }
             finally {
                 if (pngStream != null) {
@@ -283,7 +284,7 @@ namespace iText.IO.Image {
                 png.image.SetXYRatio(png.XYRatio);
             }
             catch (Exception e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PngImageException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PNG_IMAGE_EXCEPTION, e);
             }
         }
 
@@ -609,7 +610,7 @@ namespace iText.IO.Image {
 
                     default: {
                         // Error -- uknown filter type
-                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnknownPngFilter);
+                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.UNKNOWN_PNG_FILTER);
                     }
                 }
                 ProcessPixels(curr, xOffset, xStep, dstY, passWidth, png);

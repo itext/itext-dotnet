@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
@@ -1015,7 +1016,7 @@ namespace iText.Kernel.Pdf {
             catch (iText.IO.Exceptions.IOException e) {
                 message = e.Message;
             }
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException._1IsNotAnAfmOrPfmFontFile
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.IS_NOT_AN_AFM_OR_PFM_FONT_FILE
                 , font), message);
         }
 

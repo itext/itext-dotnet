@@ -24,7 +24,7 @@ using System;
 
 namespace iText.Barcodes.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
-    public sealed class BarcodeExceptionMessageConstant {
+    public sealed class BarcodesExceptionMessageConstant {
         public const String CODABAR_MUST_HAVE_AT_LEAST_START_AND_STOP_CHARACTER = "Codabar must have at least start "
              + "and stop character.";
 
@@ -53,7 +53,7 @@ namespace iText.Barcodes.Exceptions {
 
         public const String THERE_ARE_ILLEGAL_CHARACTERS_FOR_BARCODE_128 = "There are illegal characters for " + "barcode 128 in {0}.";
 
-        private BarcodeExceptionMessageConstant() {
+        private BarcodesExceptionMessageConstant() {
         }
     }
 }

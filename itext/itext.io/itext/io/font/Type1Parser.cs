@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Text;
+using iText.IO.Exceptions;
 using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -99,7 +100,7 @@ namespace iText.IO.Font {
                             return new RandomAccessFileOrArray(sourceFactory.CreateSource(ba.ToArray()));
                         }
                         else {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1IsNotAnAfmOrPfmFontFile).SetMessageParams
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IS_NOT_AN_AFM_OR_PFM_FONT_FILE).SetMessageParams
                                 (afmPath);
                         }
                     }

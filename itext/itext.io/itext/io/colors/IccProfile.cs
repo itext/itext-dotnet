@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Colors {
@@ -43,7 +44,7 @@ namespace iText.IO.Colors {
         /// <returns>IccProfile constructed from the data</returns>
         public static iText.IO.Colors.IccProfile GetInstance(byte[] data, int numComponents) {
             if (data.Length < 128 || data[36] != 0x61 || data[37] != 0x63 || data[38] != 0x73 || data[39] != 0x70) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidIccProfile);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_ICC_PROFILE);
             }
             iText.IO.Colors.IccProfile icc = new iText.IO.Colors.IccProfile();
             icc.data = data;
@@ -53,7 +54,7 @@ namespace iText.IO.Colors {
             icc.numComponents = nc;
             // invalid ICC
             if (nc != numComponents) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IccProfileContains0ComponentsWhileImageDataContains1Components
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.ICC_PROFILE_CONTAINS_COMPONENTS_WHILE_THE_IMAGE_DATA_CONTAINS_COMPONENTS
                     ).SetMessageParams(nc, numComponents);
             }
             return icc;
@@ -80,13 +81,13 @@ namespace iText.IO.Colors {
                 while (remain > 0) {
                     int n = file.Read(head, ptr, remain);
                     if (n < 0) {
-                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidIccProfile);
+                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_ICC_PROFILE);
                     }
                     remain -= n;
                     ptr += n;
                 }
                 if (head[36] != 0x61 || head[37] != 0x63 || head[38] != 0x73 || head[39] != 0x70) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidIccProfile);
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_ICC_PROFILE);
                 }
                 remain = (head[0] & 0xff) << 24 | (head[1] & 0xff) << 16 | (head[2] & 0xff) << 8 | head[3] & 0xff;
                 byte[] icc = new byte[remain];
@@ -96,7 +97,7 @@ namespace iText.IO.Colors {
                 while (remain > 0) {
                     int n = file.Read(icc, ptr, remain);
                     if (n < 0) {
-                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidIccProfile);
+                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_ICC_PROFILE);
                     }
                     remain -= n;
                     ptr += n;
@@ -104,7 +105,7 @@ namespace iText.IO.Colors {
                 return GetInstance(icc);
             }
             catch (Exception ex) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidIccProfile, ex);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_ICC_PROFILE, ex);
             }
         }
 
@@ -117,7 +118,7 @@ namespace iText.IO.Colors {
                 raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(stream));
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidIccProfile, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_ICC_PROFILE, e);
             }
             return GetInstance(raf);
         }
@@ -131,7 +132,7 @@ namespace iText.IO.Colors {
                 raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(filename));
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidIccProfile, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_ICC_PROFILE, e);
             }
             return GetInstance(raf);
         }
@@ -145,7 +146,7 @@ namespace iText.IO.Colors {
                 colorSpace = iText.Commons.Utils.JavaUtil.GetStringForBytes(data, 16, 4, "US-ASCII");
             }
             catch (ArgumentException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidIccProfile, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_ICC_PROFILE, e);
             }
             return colorSpace;
         }
@@ -159,7 +160,7 @@ namespace iText.IO.Colors {
                 deviceClass = iText.Commons.Utils.JavaUtil.GetStringForBytes(data, 12, 4, "US-ASCII");
             }
             catch (ArgumentException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidIccProfile, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_ICC_PROFILE, e);
             }
             return deviceClass;
         }

@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.IO.Exceptions;
 using iText.IO.Util;
 using iText.Test;
 
@@ -37,7 +38,7 @@ namespace iText.IO.Image {
                 ImageDataFactory.CreateJpeg2000(UrlUtil.ToURL(sourceFolder + "WP_20140410_001.JP2"));
             }
             catch (iText.IO.Exceptions.IOException e) {
-                NUnit.Framework.Assert.AreEqual(iText.IO.Exceptions.IOException.UnsupportedBoxSizeEqEq0, e.Message);
+                NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.UNSUPPORTED_BOX_SIZE_EQ_EQ_0, e.Message);
             }
         }
 

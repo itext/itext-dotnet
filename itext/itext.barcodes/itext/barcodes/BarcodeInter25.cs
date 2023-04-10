@@ -119,7 +119,7 @@ namespace iText.Barcodes {
         public static byte[] GetBarsInter25(String text) {
             text = KeepNumbers(text);
             if ((text.Length & 1) != 0) {
-                throw new PdfException(BarcodeExceptionMessageConstant.TEXT_MUST_BE_EVEN);
+                throw new PdfException(BarcodesExceptionMessageConstant.TEXT_MUST_BE_EVEN);
             }
             byte[] bars = new byte[text.Length * 5 + 7];
             int pb = 0;

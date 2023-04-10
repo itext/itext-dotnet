@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
@@ -251,7 +252,7 @@ namespace iText.IO.Font {
                 return EncodingUtil.ConvertToBytes(text.ToCharArray(), encoding);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CharacterCodeException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.CHARACTER_CODE_EXCEPTION, e);
             }
         }
 
@@ -306,7 +307,7 @@ namespace iText.IO.Font {
                 return EncodingUtil.ConvertToBytes(new char[] { ch }, encoding);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CharacterCodeException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.CHARACTER_CODE_EXCEPTION, e);
             }
         }
 
@@ -363,7 +364,7 @@ namespace iText.IO.Font {
                 return EncodingUtil.ConvertToString(bytes, encoding);
             }
             catch (ArgumentException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnsupportedEncodingException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.UNSUPPORTED_ENCODING_EXCEPTION, e);
             }
         }
 

@@ -76,7 +76,7 @@ namespace iText.IO.Util {
                 }
             }
             if (!CliCommandUtil.IsVersionCommandExecutable(compareExec, MAGICK_COMPARE_KEYWORD)) {
-                throw new ArgumentException(IoExceptionMessage.COMPARE_COMMAND_SPECIFIED_INCORRECTLY);
+                throw new ArgumentException(IoExceptionMessageConstant.COMPARE_COMMAND_SPECIFIED_INCORRECTLY);
             }
         }
 
@@ -231,7 +231,7 @@ namespace iText.IO.Util {
 
         private static long ParseImageMagickProcessOutput(String processOutput) {
             if (null == processOutput) {
-                throw new ArgumentException(IoExceptionMessage.IMAGE_MAGICK_OUTPUT_IS_NULL);
+                throw new ArgumentException(IoExceptionMessageConstant.IMAGE_MAGICK_OUTPUT_IS_NULL);
             }
             if (String.IsNullOrEmpty(processOutput)) {
                 return 0L;
@@ -248,7 +248,8 @@ namespace iText.IO.Util {
                 }
             }
             // Nothing should be done here because of the exception, that will be thrown later.
-            throw new System.IO.IOException(IoExceptionMessage.IMAGE_MAGICK_PROCESS_EXECUTION_FAILED + processOutput);
+            throw new System.IO.IOException(IoExceptionMessageConstant.IMAGE_MAGICK_PROCESS_EXECUTION_FAILED + processOutput
+                );
         }
     }
 }

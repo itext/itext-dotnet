@@ -144,7 +144,8 @@ namespace iText.Kernel.Utils {
             String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
             Exception e = NUnit.Framework.Assert.Catch(typeof(CompareTool.CompareToolExecutionException), () => new CompareTool
                 ("unspecified", null).CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_"));
-            NUnit.Framework.Assert.AreEqual(IoExceptionMessage.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED, e.Message);
+            NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
@@ -156,12 +157,13 @@ namespace iText.Kernel.Utils {
                 gsExec = SystemUtil.GetEnvironmentVariable("gsExec");
             }
             String result = new CompareTool(gsExec, null).CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_");
-            NUnit.Framework.Assert.IsFalse(result.Contains(IoExceptionMessage.COMPARE_COMMAND_IS_NOT_SPECIFIED));
+            NUnit.Framework.Assert.IsFalse(result.Contains(IoExceptionMessageConstant.COMPARE_COMMAND_IS_NOT_SPECIFIED
+                ));
             NUnit.Framework.Assert.IsTrue(new FileInfo(destinationFolder + "diff_1.png").Exists);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(IoExceptionMessage.COMPARE_COMMAND_SPECIFIED_INCORRECTLY)]
+        [LogMessage(IoExceptionMessageConstant.COMPARE_COMMAND_SPECIFIED_INCORRECTLY)]
         public virtual void CompareCommandSpecifiedIncorrectlyTest() {
             String outPdf = sourceFolder + "simple_pdf.pdf";
             String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
@@ -171,7 +173,8 @@ namespace iText.Kernel.Utils {
             }
             String result = new CompareTool(gsExec, "unspecified").CompareVisually(outPdf, cmpPdf, destinationFolder, 
                 "diff_");
-            NUnit.Framework.Assert.IsTrue(result.Contains(IoExceptionMessage.COMPARE_COMMAND_SPECIFIED_INCORRECTLY));
+            NUnit.Framework.Assert.IsTrue(result.Contains(IoExceptionMessageConstant.COMPARE_COMMAND_SPECIFIED_INCORRECTLY
+                ));
         }
 
         [NUnit.Framework.Test]
@@ -244,7 +247,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _T29063411(this);
+            CompareTool compareTool = new _T1812480813(this);
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -257,12 +260,12 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        internal class _T29063411 : CompareTool {
+        internal class _T1812480813 : CompareTool {
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
                 return base.ConvertDocInfoToStrings(info);
             }
 
-            internal _T29063411(CompareToolTest _enclosing) {
+            internal _T1812480813(CompareToolTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 

@@ -1531,8 +1531,8 @@ namespace iText.Kernel.Pdf {
                     decrypt = new PdfEncryption(enc, properties.password, GetOriginalFileId());
                 }
                 else {
-                    throw new UnsupportedSecurityHandlerException(MessageFormatUtil.Format(UnsupportedSecurityHandlerException
-                        .UnsupportedSecurityHandler, filter));
+                    throw new UnsupportedSecurityHandlerException(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNSUPPORTED_SECURITY_HANDLER
+                        , filter));
                 }
             }
         }

@@ -318,7 +318,7 @@ namespace iText.Barcodes {
             BarcodePDF417 barcodePDF417 = new BarcodePDF417();
             barcodePDF417.SetOptions(BarcodePDF417.PDF417_USE_RAW_CODEWORDS);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => barcodePDF417.PaintCode());
-            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE, exception.Message);
+            NUnit.Framework.Assert.AreEqual(BarcodesExceptionMessageConstant.INVALID_CODEWORD_SIZE, exception.Message);
         }
 
         [NUnit.Framework.Test]
@@ -328,7 +328,7 @@ namespace iText.Barcodes {
             // lenCodeWords should be bigger than 1
             barcodePDF417.SetLenCodewords(0);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => barcodePDF417.PaintCode());
-            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE, exception.Message);
+            NUnit.Framework.Assert.AreEqual(BarcodesExceptionMessageConstant.INVALID_CODEWORD_SIZE, exception.Message);
         }
 
         [NUnit.Framework.Test]
@@ -338,7 +338,7 @@ namespace iText.Barcodes {
             // lenCodeWords should be smaller than MAX_DATA_CODEWORDS
             barcodePDF417.SetLenCodewords(927);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => barcodePDF417.PaintCode());
-            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE, exception.Message);
+            NUnit.Framework.Assert.AreEqual(BarcodesExceptionMessageConstant.INVALID_CODEWORD_SIZE, exception.Message);
         }
 
         [NUnit.Framework.Test]

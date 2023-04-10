@@ -41,14 +41,14 @@ namespace iText.IO.Source {
                     );
                 extractedRandomAccessSource.Close();
                 Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => rasInputStream.Read());
-                NUnit.Framework.Assert.AreEqual(IoExceptionMessage.ALREADY_CLOSED, e.Message);
+                NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.ALREADY_CLOSED, e.Message);
                 e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => randomAccessSource.Get(0));
-                NUnit.Framework.Assert.AreEqual(IoExceptionMessage.ALREADY_CLOSED, e.Message);
+                NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.ALREADY_CLOSED, e.Message);
                 e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => randomAccessSource.Get(0, new byte
                     [10], 0, 10));
-                NUnit.Framework.Assert.AreEqual(IoExceptionMessage.ALREADY_CLOSED, e.Message);
+                NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.ALREADY_CLOSED, e.Message);
                 e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => randomAccessSource.Length());
-                NUnit.Framework.Assert.AreEqual(IoExceptionMessage.ALREADY_CLOSED, e.Message);
+                NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.ALREADY_CLOSED, e.Message);
             }
         }
 

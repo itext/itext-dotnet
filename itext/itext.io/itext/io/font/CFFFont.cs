@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Font {
@@ -114,7 +115,7 @@ namespace iText.IO.Font {
                 return (char)(i & 0xff);
             }
             catch (Exception e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
             }
         }
 
@@ -123,7 +124,7 @@ namespace iText.IO.Font {
                 return buf.ReadChar();
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
             }
         }
 
@@ -145,7 +146,7 @@ namespace iText.IO.Font {
                 return buf.ReadShort();
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
             }
         }
 
@@ -154,7 +155,7 @@ namespace iText.IO.Font {
                 return buf.ReadInt();
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
             }
         }
 
@@ -389,7 +390,7 @@ namespace iText.IO.Font {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
                 }
             }
             //System.err.println("finished range emit");

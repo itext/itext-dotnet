@@ -37,7 +37,7 @@ namespace iText.IO.Source {
 
         public virtual int Get(long offset) {
             if (array == null) {
-                throw new InvalidOperationException(IoExceptionMessage.ALREADY_CLOSED);
+                throw new InvalidOperationException(IoExceptionMessageConstant.ALREADY_CLOSED);
             }
             if (offset >= array.Length) {
                 return -1;
@@ -47,7 +47,7 @@ namespace iText.IO.Source {
 
         public virtual int Get(long offset, byte[] bytes, int off, int len) {
             if (array == null) {
-                throw new InvalidOperationException(IoExceptionMessage.ALREADY_CLOSED);
+                throw new InvalidOperationException(IoExceptionMessageConstant.ALREADY_CLOSED);
             }
             if (offset >= array.Length) {
                 return -1;
@@ -61,7 +61,7 @@ namespace iText.IO.Source {
 
         public virtual long Length() {
             if (array == null) {
-                throw new InvalidOperationException(IoExceptionMessage.ALREADY_CLOSED);
+                throw new InvalidOperationException(IoExceptionMessageConstant.ALREADY_CLOSED);
             }
             return array.Length;
         }

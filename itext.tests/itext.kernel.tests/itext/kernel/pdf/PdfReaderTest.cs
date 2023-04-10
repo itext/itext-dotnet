@@ -1832,7 +1832,7 @@ namespace iText.Kernel.Pdf {
             FileInfo copiedFile = CopyFileForTest(fileName, copiedFileName);
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => new PdfReader(fileName
                 ));
-            NUnit.Framework.Assert.AreEqual(iText.IO.Exceptions.IOException.PdfHeaderNotFound, e.Message);
+            NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.PDF_HEADER_NOT_FOUND, e.Message);
             //This check is meaningfull only on Windows, since on other OS the fact of a stream being open doesn't
             // prevent the stream from being deleted.
             NUnit.Framework.Assert.IsTrue(FileUtil.DeleteFile(copiedFile));
@@ -1987,7 +1987,7 @@ namespace iText.Kernel.Pdf {
                 randomAccessSource.Close();
                 Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => new PdfReader(rasInputStream
                     ));
-                NUnit.Framework.Assert.AreEqual(IoExceptionMessage.ALREADY_CLOSED, e.Message);
+                NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.ALREADY_CLOSED, e.Message);
             }
         }
 
@@ -2001,7 +2001,7 @@ namespace iText.Kernel.Pdf {
                     randomAccessSource.Close();
                     Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => new PdfDocument(reader
                         ));
-                    NUnit.Framework.Assert.AreEqual(IoExceptionMessage.ALREADY_CLOSED, e.Message);
+                    NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.ALREADY_CLOSED, e.Message);
                 }
             }
         }

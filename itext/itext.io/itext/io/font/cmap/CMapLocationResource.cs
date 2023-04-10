@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.IO.Exceptions;
 using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -33,8 +34,8 @@ namespace iText.IO.Font.Cmap {
             String fullName = FontResources.CMAPS + location;
             Stream inp = ResourceUtil.GetResourceStream(fullName);
             if (inp == null) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Cmap1WasNotFound).SetMessageParams
-                    (fullName);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.CMAP_WAS_NOT_FOUND).SetMessageParams(
+                    fullName);
             }
             return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(inp)));
         }

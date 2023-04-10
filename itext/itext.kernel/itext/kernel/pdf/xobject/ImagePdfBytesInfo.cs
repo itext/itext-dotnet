@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.IO.Codec;
+using iText.IO.Exceptions;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -76,27 +77,27 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual byte[] DecodeTiffAndPngBytes(byte[] imageBytes) {
             if (pngColorType < 0) {
                 if (bpc != 8) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ColorDepthIsNotSupported).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED).SetMessageParams
                         (bpc);
                 }
                 if (colorspace is PdfArray) {
                     PdfArray ca = (PdfArray)colorspace;
                     PdfObject tyca = ca.Get(0);
                     if (!PdfName.ICCBased.Equals(tyca)) {
-                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported).SetMessageParams
+                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED).SetMessageParams
                             (tyca.ToString());
                     }
                     PdfStream pr = (PdfStream)ca.Get(1);
                     int n = pr.GetAsNumber(PdfName.N).IntValue();
                     if (n != 4) {
-                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.NValueIsNotSupported).SetMessageParams
+                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.N_VALUE_IS_NOT_SUPPORTED).SetMessageParams
                             (n);
                     }
                     icc = pr.GetBytes();
                 }
                 else {
                     if (!PdfName.DeviceCMYK.Equals(colorspace)) {
-                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ColorSpaceIsNotSupported).SetMessageParams
+                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED).SetMessageParams
                             (colorspace.ToString());
                     }
                 }

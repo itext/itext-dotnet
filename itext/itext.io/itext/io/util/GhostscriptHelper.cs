@@ -83,7 +83,7 @@ namespace iText.IO.Util {
                 }
             }
             if (!CliCommandUtil.IsVersionCommandExecutable(gsExec, GHOSTSCRIPT_KEYWORD)) {
-                throw new ArgumentException(IoExceptionMessage.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED);
+                throw new ArgumentException(IoExceptionMessageConstant.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED);
             }
         }
 
@@ -144,7 +144,8 @@ namespace iText.IO.Util {
         public virtual void RunGhostScriptImageGeneration(String pdf, String outDir, String image, String pageList
             ) {
             if (!FileUtil.DirectoryExists(outDir)) {
-                throw new ArgumentException(IoExceptionMessage.CANNOT_OPEN_OUTPUT_DIRECTORY.Replace("<filename>", pdf));
+                throw new ArgumentException(IoExceptionMessageConstant.CANNOT_OPEN_OUTPUT_DIRECTORY.Replace("<filename>", 
+                    pdf));
             }
             if (!ValidateImageFilePattern(image)) {
                 throw new ArgumentException("Invalid output image pattern: " + image);
@@ -165,8 +166,8 @@ namespace iText.IO.Util {
                     ToString(), replacementPdf);
                 if (!SystemUtil.RunProcessAndWait(gsExec, currGsParams)) {
                     temporaryOutputImages = FileUtil.ListFilesInDirectory(replacementImagesDirectory, false);
-                    throw new GhostscriptHelper.GhostscriptExecutionException(IoExceptionMessage.GHOSTSCRIPT_FAILED.Replace("<filename>"
-                        , pdf));
+                    throw new GhostscriptHelper.GhostscriptExecutionException(IoExceptionMessageConstant.GHOSTSCRIPT_FAILED.Replace
+                        ("<filename>", pdf));
                 }
                 temporaryOutputImages = FileUtil.ListFilesInDirectory(replacementImagesDirectory, false);
                 if (null != temporaryOutputImages) {

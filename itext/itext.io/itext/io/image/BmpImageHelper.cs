@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Exceptions;
 using iText.IO.Font;
 
 namespace iText.IO.Image {
@@ -152,7 +153,7 @@ namespace iText.IO.Image {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.BmpImageException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.BMP_IMAGE_EXCEPTION, e);
             }
             RawImageHelper.UpdateImageAttributes(bmp.image, bmp.additional);
         }
@@ -162,7 +163,7 @@ namespace iText.IO.Image {
             if (!bmp.image.IsNoHeader()) {
                 // Start File Header
                 if (!(ReadUnsignedByte(bmp.inputStream) == 'B' && ReadUnsignedByte(bmp.inputStream) == 'M')) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidMagicValueForBmpFileMustBeBM
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_MAGIC_VALUE_FOR_BMP_FILE_MUST_BE_BM
                         );
                 }
                 // Read file size
@@ -404,7 +405,7 @@ namespace iText.IO.Image {
                         }
 
                         default: {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidBmpFileCompression);
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_BMP_FILE_COMPRESSION);
                         }
                     }
                 }
@@ -679,7 +680,7 @@ namespace iText.IO.Image {
                         }
 
                         default: {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidBmpFileCompression);
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_BMP_FILE_COMPRESSION);
                         }
                     }
                     return true;
@@ -698,7 +699,7 @@ namespace iText.IO.Image {
                         }
 
                         default: {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidBmpFileCompression);
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_BMP_FILE_COMPRESSION);
                         }
                     }
                     return true;
@@ -740,7 +741,7 @@ namespace iText.IO.Image {
                         }
 
                         default: {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidBmpFileCompression);
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_BMP_FILE_COMPRESSION);
                         }
                     }
                     return true;
@@ -759,7 +760,7 @@ namespace iText.IO.Image {
                         }
 
                         default: {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidBmpFileCompression);
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_BMP_FILE_COMPRESSION);
                         }
                     }
                     return true;
@@ -808,7 +809,7 @@ namespace iText.IO.Image {
             while (bytesRead < sizeOfPalette) {
                 int r = bmp.inputStream.JRead(bmp.palette, bytesRead, sizeOfPalette - bytesRead);
                 if (r < 0) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IncompletePalette);
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INCOMPLETE_PALETTE);
                 }
                 bytesRead += r;
             }

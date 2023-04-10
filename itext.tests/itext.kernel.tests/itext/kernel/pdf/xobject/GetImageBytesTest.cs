@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Codec;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
@@ -191,7 +192,7 @@ namespace iText.Kernel.Pdf.Xobject {
             PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => processor.ProcessPageContent
                 (pdfDocument.GetPage(1)));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ExpectedTrailingZeroBitsForByteAlignedLines
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.EXPECTED_TRAILING_ZERO_BITS_FOR_BYTE_ALIGNED_LINES
                 ), e.Message);
         }
 

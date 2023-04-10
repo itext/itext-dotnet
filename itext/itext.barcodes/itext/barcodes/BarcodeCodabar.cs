@@ -116,22 +116,22 @@ namespace iText.Barcodes {
             text = text.ToUpperInvariant();
             int len = text.Length;
             if (len < 2) {
-                throw new ArgumentException(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_AT_LEAST_START_AND_STOP_CHARACTER
+                throw new ArgumentException(BarcodesExceptionMessageConstant.CODABAR_MUST_HAVE_AT_LEAST_START_AND_STOP_CHARACTER
                     );
             }
             if (CHARS.IndexOf(text[0]) < START_STOP_IDX || CHARS.IndexOf(text[len - 1]) < START_STOP_IDX) {
-                throw new ArgumentException(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER
+                throw new ArgumentException(BarcodesExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER
                     );
             }
             byte[] bars = new byte[text.Length * 8 - 1];
             for (int k = 0; k < len; ++k) {
                 int idx = CHARS.IndexOf(text[k]);
                 if (idx >= START_STOP_IDX && k > 0 && k < len - 1) {
-                    throw new ArgumentException(BarcodeExceptionMessageConstant.IN_CODABAR_START_STOP_CHARACTERS_ARE_ONLY_ALLOWED_AT_THE_EXTREMES
+                    throw new ArgumentException(BarcodesExceptionMessageConstant.IN_CODABAR_START_STOP_CHARACTERS_ARE_ONLY_ALLOWED_AT_THE_EXTREMES
                         );
                 }
                 if (idx < 0) {
-                    throw new ArgumentException(BarcodeExceptionMessageConstant.ILLEGAL_CHARACTER_IN_CODABAR_BARCODE);
+                    throw new ArgumentException(BarcodesExceptionMessageConstant.ILLEGAL_CHARACTER_IN_CODABAR_BARCODE);
                 }
                 Array.Copy(BARS[idx], 0, bars, k * 8, 7);
             }

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Font;
 using iText.IO.Source;
 
@@ -91,10 +92,10 @@ namespace iText.IO.Font.Cmap {
                 CMapObject obj = ReadObject();
                 if (obj.IsToken()) {
                     if (obj.ToString().Equals(">>")) {
-                        tokeniser.ThrowError(iText.IO.Exceptions.IOException.UnexpectedGtGt);
+                        tokeniser.ThrowError(IoExceptionMessageConstant.UNEXPECTED_GT_GT);
                     }
                     if (obj.ToString().Equals("]")) {
-                        tokeniser.ThrowError(iText.IO.Exceptions.IOException.UnexpectedCloseBracket);
+                        tokeniser.ThrowError(IoExceptionMessageConstant.UNEXPECTED_CLOSE_BRACKET);
                     }
                 }
                 dic.Put(name, obj);
@@ -114,7 +115,7 @@ namespace iText.IO.Font.Cmap {
                         break;
                     }
                     if (obj.ToString().Equals(">>")) {
-                        tokeniser.ThrowError(iText.IO.Exceptions.IOException.UnexpectedGtGt);
+                        tokeniser.ThrowError(IoExceptionMessageConstant.UNEXPECTED_GT_GT);
                     }
                 }
                 array.Add(obj);

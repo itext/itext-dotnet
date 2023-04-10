@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Image;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -143,7 +144,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void ImageWithInvalidMaskTest() {
             ImageData mask = ImageDataFactory.Create(sourceFolder + "mask.png");
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => mask.MakeMask());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ThisImageCanNotBeAnImageMask
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.THIS_IMAGE_CAN_NOT_BE_AN_IMAGE_MASK
                 ), e.Message);
         }
     }

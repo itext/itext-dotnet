@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -534,11 +535,11 @@ namespace iText.IO.Font {
             table_location = tables.Get("hmtx");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                         ("hmtx", fileName);
                 }
                 else {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExist).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST).SetMessageParams
                         ("hmtx");
                 }
             }
@@ -602,11 +603,11 @@ namespace iText.IO.Font {
             tableLocation = tables.Get("head");
             if (tableLocation == null) {
                 if (fileName != null) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                         ("head", fileName);
                 }
                 else {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExist).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST).SetMessageParams
                         ("head");
                 }
             }
@@ -635,11 +636,11 @@ namespace iText.IO.Font {
             tableLocation = tables.Get("glyf");
             if (tableLocation == null) {
                 if (fileName != null) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                         ("glyf", fileName);
                 }
                 else {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExist).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST).SetMessageParams
                         ("glyf");
                 }
             }
@@ -673,11 +674,11 @@ namespace iText.IO.Font {
             int[] table_location = tables.Get("name");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                         ("name", fileName);
                 }
                 else {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExist).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST).SetMessageParams
                         ("name");
                 }
             }
@@ -719,11 +720,11 @@ namespace iText.IO.Font {
             int[] table_location = tables.Get("hhea");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                         ("hhea", fileName);
                 }
                 else {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExist).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST).SetMessageParams
                         ("hhea");
                 }
             }
@@ -747,11 +748,11 @@ namespace iText.IO.Font {
             int[] table_location = tables.Get("head");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                         ("head", fileName);
                 }
                 else {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExist).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST).SetMessageParams
                         ("head");
                 }
             }
@@ -778,11 +779,11 @@ namespace iText.IO.Font {
             int[] table_location = tables.Get("OS/2");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                         ("os/2", fileName);
                 }
                 else {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExist).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST).SetMessageParams
                         ("os/2");
                 }
             }
@@ -866,11 +867,11 @@ namespace iText.IO.Font {
             int[] table_location = tables.Get("cmap");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                         ("cmap", fileName);
                 }
                 else {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExist).SetMessageParams
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST).SetMessageParams
                         ("cmap");
                 }
             }

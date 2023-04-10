@@ -263,7 +263,7 @@ namespace iText.IO.Source
 			Stream stream = ResourceUtil.GetResourceStream(filename);
 			if (stream == null)
 			{
-				throw new System.IO.IOException(MessageFormatUtil.Format(iText.IO.Exceptions.IOException._1NotFoundAsFileOrResource
+				throw new System.IO.IOException(MessageFormatUtil.Format(iText.IO.Exceptions.IoExceptionMessageConstant.NOT_FOUND_AS_FILE_OR_RESOURCE
 					, filename));
 			}
 			return CreateByReadingToMemory(stream);

@@ -157,7 +157,7 @@ namespace iText.IO.Font.Woff2 {
             int x = 0;
             int y = 0;
             if (n_points > in_size) {
-                throw new FontCompressionException(FontCompressionException.RECONSTRUCT_GLYPH_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_GLYPH_FAILED);
             }
             int triplet_index = 0;
             for (int i = 0; i < n_points; ++i) {
@@ -182,7 +182,7 @@ namespace iText.IO.Font.Woff2 {
                     }
                 }
                 if (triplet_index + n_data_bytes > in_size || triplet_index + n_data_bytes < triplet_index) {
-                    throw new FontCompressionException(FontCompressionException.RECONSTRUCT_GLYPH_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_GLYPH_FAILED);
                 }
                 int dx;
                 int dy;
@@ -283,12 +283,12 @@ namespace iText.IO.Font.Woff2 {
                 else {
                     if (repeat_count != 0) {
                         if (flag_offset >= dst_size) {
-                            throw new FontCompressionException(FontCompressionException.RECONSTRUCT_POINT_FAILED);
+                            throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_POINT_FAILED);
                         }
                         dst[flag_offset++] = (byte)repeat_count;
                     }
                     if (flag_offset >= dst_size) {
-                        throw new FontCompressionException(FontCompressionException.RECONSTRUCT_POINT_FAILED);
+                        throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_POINT_FAILED);
                     }
                     dst[flag_offset++] = (byte)flag;
                     repeat_count = 0;
@@ -299,13 +299,13 @@ namespace iText.IO.Font.Woff2 {
             }
             if (repeat_count != 0) {
                 if (flag_offset >= dst_size) {
-                    throw new FontCompressionException(FontCompressionException.RECONSTRUCT_POINT_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_POINT_FAILED);
                 }
                 dst[flag_offset++] = (byte)repeat_count;
             }
             int xy_bytes = x_bytes + y_bytes;
             if (xy_bytes < x_bytes || flag_offset + xy_bytes < flag_offset || flag_offset + xy_bytes > dst_size) {
-                throw new FontCompressionException(FontCompressionException.RECONSTRUCT_POINT_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_POINT_FAILED);
             }
             int x_offset = flag_offset;
             int y_offset = flag_offset + x_bytes;
@@ -424,7 +424,7 @@ namespace iText.IO.Font.Woff2 {
         private static void Pad4(Woff2Out @out) {
             byte[] zeroes = new byte[] { 0, 0, 0 };
             if (@out.Size() + 3 < @out.Size()) {
-                throw new FontCompressionException(FontCompressionException.PADDING_OVERFLOW);
+                throw new FontCompressionException(IoExceptionMessageConstant.PADDING_OVERFLOW);
             }
             int pad_bytes = Round.Round4(@out.Size()) - @out.Size();
             if (pad_bytes > 0) {
@@ -437,7 +437,7 @@ namespace iText.IO.Font.Woff2 {
             long loca_size = loca_values.Length;
             long offset_size = index_format != 0 ? 4 : 2;
             if ((loca_size << 2) >> 2 != loca_size) {
-                throw new FontCompressionException(FontCompressionException.LOCA_SIZE_OVERFLOW);
+                throw new FontCompressionException(IoExceptionMessageConstant.LOCA_SIZE_OVERFLOW);
             }
             byte[] loca_content = new byte[(int)(loca_size * offset_size)];
             int offset = 0;
@@ -469,14 +469,14 @@ namespace iText.IO.Font.Woff2 {
             info.index_format = file.ReadShort();
             int offset = (2 + kNumSubStreams) * 4;
             if (offset > glyf_table.transform_length) {
-                throw new FontCompressionException(FontCompressionException.RECONSTRUCT_GLYF_TABLE_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_GLYF_TABLE_FAILED);
             }
             // Invariant from here on: data_size >= offset
             for (int i = 0; i < kNumSubStreams; ++i) {
                 int substream_size;
                 substream_size = file.ReadInt();
                 if (substream_size > glyf_table.transform_length - offset) {
-                    throw new FontCompressionException(FontCompressionException.RECONSTRUCT_GLYF_TABLE_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_GLYF_TABLE_FAILED);
                 }
                 substreams.Add(new Woff2Dec.StreamInfo(data_offset + offset, substream_size));
                 offset += substream_size;
@@ -516,7 +516,7 @@ namespace iText.IO.Font.Woff2 {
                     int instruction_size = 0;
                     if (!have_bbox) {
                         // composite glyphs must have an explicit bbox
-                        throw new FontCompressionException(FontCompressionException.RECONSTRUCT_GLYF_TABLE_FAILED);
+                        throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_GLYF_TABLE_FAILED);
                     }
                     int composite_size;
                     Woff2Dec.CompositeGlyphInfo compositeGlyphInfo = SizeOfComposite(composite_stream);
@@ -555,13 +555,13 @@ namespace iText.IO.Font.Woff2 {
                             n_points_contour = VariableLength.Read255UShort(n_points_stream);
                             n_points_vec.Add(n_points_contour);
                             if (total_n_points + n_points_contour < total_n_points) {
-                                throw new FontCompressionException(FontCompressionException.RECONSTRUCT_GLYF_TABLE_FAILED);
+                                throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_GLYF_TABLE_FAILED);
                             }
                             total_n_points += n_points_contour;
                         }
                         int flag_size = total_n_points;
                         if (flag_size > flag_stream.GetLength() - flag_stream.GetOffset()) {
-                            throw new FontCompressionException(FontCompressionException.RECONSTRUCT_GLYF_TABLE_FAILED);
+                            throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_GLYF_TABLE_FAILED);
                         }
                         int flags_buf_offset = flag_stream.GetInitialOffset() + flag_stream.GetOffset();
                         int triplet_buf_offset = glyph_stream.GetInitialOffset() + glyph_stream.GetOffset();
@@ -580,7 +580,7 @@ namespace iText.IO.Font.Woff2 {
                         int instruction_size;
                         instruction_size = VariableLength.Read255UShort(glyph_stream);
                         if (total_n_points >= (1 << 27) || instruction_size >= (1 << 30)) {
-                            throw new FontCompressionException(FontCompressionException.RECONSTRUCT_GLYF_TABLE_FAILED);
+                            throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_GLYF_TABLE_FAILED);
                         }
                         int size_needed = 12 + 2 * n_contours + 5 * total_n_points + instruction_size;
                         if (glyph_buf_size < size_needed) {
@@ -599,7 +599,7 @@ namespace iText.IO.Font.Woff2 {
                         for (int contour_ix = 0; contour_ix < n_contours; ++contour_ix) {
                             end_point += n_points_vec[contour_ix];
                             if (end_point >= 65536) {
-                                throw new FontCompressionException(FontCompressionException.RECONSTRUCT_GLYF_TABLE_FAILED);
+                                throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_GLYF_TABLE_FAILED);
                             }
                             glyph_size = StoreBytes.StoreU16(glyph_buf, glyph_size, end_point);
                         }
@@ -680,19 +680,19 @@ namespace iText.IO.Font.Woff2 {
             bool has_monospace_lsbs = (hmtx_flags & 2) == 0;
             // you say you transformed but there is little evidence of it
             if (has_proportional_lsbs && has_monospace_lsbs) {
-                throw new FontCompressionException(FontCompressionException.RECONSTRUCT_HMTX_TABLE_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_HMTX_TABLE_FAILED);
             }
             if (x_mins == null || x_mins.Length != num_glyphs) {
-                throw new FontCompressionException(FontCompressionException.RECONSTRUCT_HMTX_TABLE_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_HMTX_TABLE_FAILED);
             }
             // num_glyphs 0 is OK if there is no 'glyf' but cannot then xform 'hmtx'.
             if (num_hmetrics > num_glyphs) {
-                throw new FontCompressionException(FontCompressionException.RECONSTRUCT_HMTX_TABLE_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_HMTX_TABLE_FAILED);
             }
             // https://www.microsoft.com/typography/otspec/hmtx.htm
             // "...only one entry need be in the array, but that entry is required."
             if (num_hmetrics < 1) {
-                throw new FontCompressionException(FontCompressionException.RECONSTRUCT_HMTX_TABLE_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_HMTX_TABLE_FAILED);
             }
             advance_widths = new short[num_hmetrics];
             for (int i = 0; i < num_hmetrics; i++) {
@@ -747,20 +747,20 @@ namespace iText.IO.Font.Woff2 {
                 while (remain > 0) {
                     int read = stream.JRead(dst_buf, dst_offset, dst_length);
                     if (read < 0) {
-                        throw new FontCompressionException(FontCompressionException.BROTLI_DECODING_FAILED);
+                        throw new FontCompressionException(IoExceptionMessageConstant.BROTLI_DECODING_FAILED);
                     }
                     remain -= read;
                 }
                 //check that we read stream fully
                 if (stream.ReadByte() != -1) {
-                    throw new FontCompressionException(FontCompressionException.BROTLI_DECODING_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.BROTLI_DECODING_FAILED);
                 }
             }
             catch (System.IO.IOException) {
-                throw new FontCompressionException(FontCompressionException.BROTLI_DECODING_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.BROTLI_DECODING_FAILED);
             }
             if (remain != 0) {
-                throw new FontCompressionException(FontCompressionException.BROTLI_DECODING_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.BROTLI_DECODING_FAILED);
             }
         }
 
@@ -796,11 +796,11 @@ namespace iText.IO.Font.Woff2 {
                 if ((flags & Woff2Common.kWoff2FlagsTransform) != 0) {
                     transform_length = VariableLength.ReadBase128(file);
                     if (tag == TableTags.kLocaTableTag && transform_length != 0) {
-                        throw new FontCompressionException(FontCompressionException.READ_TABLE_DIRECTORY_FAILED);
+                        throw new FontCompressionException(IoExceptionMessageConstant.READ_TABLE_DIRECTORY_FAILED);
                     }
                 }
                 if (src_offset + transform_length < src_offset) {
-                    throw new FontCompressionException(FontCompressionException.READ_TABLE_DIRECTORY_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.READ_TABLE_DIRECTORY_FAILED);
                 }
                 table.src_offset = src_offset;
                 table.src_length = transform_length;
@@ -875,7 +875,7 @@ namespace iText.IO.Font.Woff2 {
             // 'glyf' without 'loca' doesn't make sense
             if ((FindTable(tables, TableTags.kGlyfTableTag) == null) == (FindTable(tables, TableTags.kLocaTableTag) !=
                  null)) {
-                throw new FontCompressionException(FontCompressionException.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
             }
             int font_checksum = metadata.header_checksum;
             if (hdr.header_version != 0) {
@@ -887,10 +887,10 @@ namespace iText.IO.Font.Woff2 {
                 Woff2Dec.TableChecksumInfo checksum_key = new Woff2Dec.TableChecksumInfo(table.tag, table.src_offset);
                 bool reused = metadata.checksums.ContainsKey(checksum_key);
                 if (font_index == 0 && reused) {
-                    throw new FontCompressionException(FontCompressionException.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
                 }
                 if (((long)table.src_offset) + table.src_length > transformed_buf_size) {
-                    throw new FontCompressionException(FontCompressionException.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
                 }
                 if (table.tag == TableTags.kHheaTableTag) {
                     info.num_hmetrics = ReadNumHMetrics(transformed_buf, transformed_buf_offset + table.src_offset, table.src_length
@@ -901,7 +901,7 @@ namespace iText.IO.Font.Woff2 {
                     if ((table.flags & Woff2Common.kWoff2FlagsTransform) != Woff2Common.kWoff2FlagsTransform) {
                         if (table.tag == TableTags.kHeadTableTag) {
                             if (table.src_length < 12) {
-                                throw new FontCompressionException(FontCompressionException.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
+                                throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
                             }
                             // checkSumAdjustment = 0
                             StoreBytes.StoreU32(transformed_buf, transformed_buf_offset + table.src_offset + 8, 0);
@@ -934,7 +934,7 @@ namespace iText.IO.Font.Woff2 {
                                         );
                                 }
                                 else {
-                                    throw new FontCompressionException(FontCompressionException.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
+                                    throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
                                 }
                             }
                         }
@@ -955,7 +955,7 @@ namespace iText.IO.Font.Woff2 {
                 font_checksum += Woff2Common.ComputeULongSum(table_entry, 0, 12);
                 Pad4(@out);
                 if (((long)table.dst_offset) + table.dst_length > @out.Size()) {
-                    throw new FontCompressionException(FontCompressionException.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
                 }
                 dest_offset = @out.Size();
             }
@@ -963,7 +963,7 @@ namespace iText.IO.Font.Woff2 {
             Woff2Common.Table head_table = FindTable(tables, TableTags.kHeadTableTag);
             if (head_table != null) {
                 if (head_table.dst_length < 12) {
-                    throw new FontCompressionException(FontCompressionException.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.RECONSTRUCT_TABLE_DIRECTORY_FAILED);
                 }
                 byte[] checksum_adjustment = new byte[4];
                 StoreBytes.StoreU32(checksum_adjustment, 0, (int)(0xB1B0AFBA - font_checksum));
@@ -976,17 +976,17 @@ namespace iText.IO.Font.Woff2 {
             int signature;
             signature = file.ReadInt();
             if (signature != Woff2Common.kWoff2Signature) {
-                throw new FontCompressionException(FontCompressionException.INCORRECT_SIGNATURE);
+                throw new FontCompressionException(IoExceptionMessageConstant.INCORRECT_SIGNATURE);
             }
             hdr.flavor = file.ReadInt();
             int reported_length = file.ReadInt();
             System.Diagnostics.Debug.Assert(reported_length > 0);
             if (length != reported_length) {
-                throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.READ_HEADER_FAILED);
             }
             hdr.num_tables = file.ReadShort();
             if (hdr.num_tables == 0) {
-                throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.READ_HEADER_FAILED);
             }
             // We don't care about these fields of the header:
             //   uint16_t reserved
@@ -1008,7 +1008,7 @@ namespace iText.IO.Font.Woff2 {
             System.Diagnostics.Debug.Assert(meta_length_orig >= 0);
             if (meta_offset != 0) {
                 if (meta_offset >= length || length - meta_offset < meta_length) {
-                    throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.READ_HEADER_FAILED);
                 }
             }
             int priv_offset;
@@ -1019,7 +1019,7 @@ namespace iText.IO.Font.Woff2 {
             System.Diagnostics.Debug.Assert(priv_length >= 0);
             if (priv_offset != 0) {
                 if (priv_offset >= length || length - priv_offset < priv_length) {
-                    throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.READ_HEADER_FAILED);
                 }
             }
             hdr.tables = new Woff2Common.Table[hdr.num_tables];
@@ -1029,13 +1029,13 @@ namespace iText.IO.Font.Woff2 {
             hdr.uncompressed_size = last_table.src_offset + last_table.src_length;
             System.Diagnostics.Debug.Assert(hdr.uncompressed_size > 0);
             if (hdr.uncompressed_size < last_table.src_offset) {
-                throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.READ_HEADER_FAILED);
             }
             hdr.header_version = 0;
             if (hdr.flavor == Woff2Common.kTtcFontFlavor) {
                 hdr.header_version = file.ReadInt();
                 if (hdr.header_version != 0x00010000 && hdr.header_version != 0x00020000) {
-                    throw new FontCompressionException(FontCompressionException.READ_COLLECTION_HEADER_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.READ_COLLECTION_HEADER_FAILED);
                 }
                 int num_fonts;
                 num_fonts = VariableLength.Read255UShort(file);
@@ -1053,7 +1053,7 @@ namespace iText.IO.Font.Woff2 {
                         int table_idx;
                         table_idx = VariableLength.Read255UShort(file);
                         if (table_idx >= hdr.tables.Length) {
-                            throw new FontCompressionException(FontCompressionException.READ_COLLECTION_HEADER_FAILED);
+                            throw new FontCompressionException(IoExceptionMessageConstant.READ_COLLECTION_HEADER_FAILED);
                         }
                         ttc_font.table_indices[j] = (short)table_idx;
                         Woff2Common.Table table = hdr.tables[table_idx];
@@ -1065,29 +1065,29 @@ namespace iText.IO.Font.Woff2 {
                         }
                     }
                     if ((glyf_table == null) != (loca_table == null)) {
-                        throw new FontCompressionException(FontCompressionException.READ_COLLECTION_HEADER_FAILED);
+                        throw new FontCompressionException(IoExceptionMessageConstant.READ_COLLECTION_HEADER_FAILED);
                     }
                 }
             }
             hdr.compressed_offset = file.GetOffset();
             int src_offset = Round.Round4(hdr.compressed_offset + hdr.compressed_length);
             if (src_offset > length) {
-                throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.READ_HEADER_FAILED);
             }
             if (meta_offset != 0) {
                 if (src_offset != meta_offset) {
-                    throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.READ_HEADER_FAILED);
                 }
                 src_offset = Round.Round4(meta_offset + meta_length);
             }
             if (priv_offset != 0) {
                 if (src_offset != priv_offset) {
-                    throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.READ_HEADER_FAILED);
                 }
                 src_offset = Round.Round4(priv_offset + priv_length);
             }
             if (src_offset != Round.Round4(length)) {
-                throw new FontCompressionException(FontCompressionException.READ_HEADER_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.READ_HEADER_FAILED);
             }
         }
 

@@ -44,6 +44,7 @@
 * nuclear facility.
 */
 using System;
+using iText.IO.Exceptions;
 
 namespace iText.IO.Codec {
     /// <summary>A class for performing LZW decoding.</summary>
@@ -91,7 +92,7 @@ namespace iText.IO.Codec {
         /// <returns>The decoded data</returns>
         public virtual byte[] Decode(byte[] data, byte[] uncompData, int h) {
             if (data[0] == (byte)0x00 && data[1] == (byte)0x01) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Tiff50StyleLzwCodesAreNotSupported
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TIFF_50_STYLE_LZW_CODES_ARE_NOT_SUPPORTED
                     );
             }
             InitializeStringTable();

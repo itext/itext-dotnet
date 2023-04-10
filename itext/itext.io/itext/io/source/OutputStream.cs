@@ -115,7 +115,7 @@ namespace iText.IO.Source {
             }
             catch (System.IO.IOException e)
             {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotWriteByte, e);
+                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IoExceptionMessageConstant.CANNOT_WRITE_BYTE, e);
             }
         }
 
@@ -173,7 +173,7 @@ namespace iText.IO.Source {
 			}
 			catch (IOException e)
 			{
-				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotWriteIntNumber, e);
+				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IoExceptionMessageConstant.CANNOT_WRITE_INT_NUMBER, e);
 			}
 		}
 
@@ -187,7 +187,7 @@ namespace iText.IO.Source {
 			}
 			catch (IOException e)
 			{
-				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotWriteIntNumber, e);
+				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IoExceptionMessageConstant.CANNOT_WRITE_INT_NUMBER, e);
 			}
 		}
 
@@ -229,7 +229,7 @@ namespace iText.IO.Source {
 			}
 			catch (IOException e)
 			{
-				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotWriteFloatNumber, e);
+				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IoExceptionMessageConstant.CANNOT_WRITE_FLOAT_NUMBER, e);
 			}
 		}
 
@@ -242,7 +242,7 @@ namespace iText.IO.Source {
 			}
 			catch (IOException e)
 			{
-				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotWriteByte, e);
+				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IoExceptionMessageConstant.CANNOT_WRITE_BYTE, e);
 			}
 		}
 
@@ -270,7 +270,7 @@ namespace iText.IO.Source {
 			}
 			catch (IOException e)
 			{
-				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotWriteBytes, e);
+				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IoExceptionMessageConstant.CANNOT_WRITE_BYTES, e);
 			}
 		}
 
@@ -283,7 +283,7 @@ namespace iText.IO.Source {
 			}
 			catch (IOException e)
 			{
-				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotWriteBytes, e);
+				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IoExceptionMessageConstant.CANNOT_WRITE_BYTES, e);
 			}
 		}
 
@@ -316,7 +316,7 @@ namespace iText.IO.Source {
 			}
 			else
 			{
-				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.BytesCanBeAssignedToByteArrayOutputStreamOnly);
+				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IoExceptionMessageConstant.BYTES_CAN_BE_ASSIGNED_TO_BYTE_ARRAY_OUTPUT_STREAM_ONLY);
 			}
 		}
 
@@ -328,7 +328,7 @@ namespace iText.IO.Source {
 			}
 			else
 			{
-				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.BytesCanBeResetInByteArrayOutputStreamOnly);
+				throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IoExceptionMessageConstant.BYTES_CAN_BE_RESET_IN_BYTE_ARRAY_OUTPUT_STREAM_ONLY);
 			}
 		}
 	}

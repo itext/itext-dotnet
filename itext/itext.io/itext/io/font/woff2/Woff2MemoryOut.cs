@@ -37,7 +37,7 @@ namespace iText.IO.Font.Woff2 {
 
         public virtual void Write(byte[] buf, int buff_offset, int offset, int n) {
             if (offset > buf_size_ || n > buf_size_ - offset) {
-                throw new FontCompressionException(FontCompressionException.WRITE_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.WRITE_FAILED);
             }
             Array.Copy(buf, buff_offset, buf_, offset, n);
             offset_ = Math.Max(offset_, offset + n);

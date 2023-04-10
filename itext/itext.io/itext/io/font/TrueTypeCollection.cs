@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Font {
@@ -57,7 +58,7 @@ namespace iText.IO.Font {
         /// <param name="ttcPath">the path of the collection</param>
         public TrueTypeCollection(String ttcPath) {
             if (!FileUtil.FileExists(ttcPath)) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.FontFile1NotFound).SetMessageParams
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.FONT_FILE_NOT_FOUND).SetMessageParams
                     (ttcPath);
             }
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(ttcPath));
@@ -70,7 +71,7 @@ namespace iText.IO.Font {
         /// <returns>TrueTypeFont</returns>
         public virtual FontProgram GetFontByTccIndex(int ttcIndex) {
             if (ttcIndex > TTCSize - 1) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TtcIndexDoesNotExistInThisTtcFile
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TTC_INDEX_DOESNT_EXIST_IN_THIS_TTC_FILE
                     );
             }
             if (ttcPath != null) {
@@ -110,7 +111,7 @@ namespace iText.IO.Font {
         private void InitFontSize() {
             String mainTag = raf.ReadString(4, PdfEncodings.WINANSI);
             if (!mainTag.Equals("ttcf")) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidTtcFile);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_TTC_FILE);
             }
             raf.SkipBytes(4);
             TTCSize = raf.ReadInt();

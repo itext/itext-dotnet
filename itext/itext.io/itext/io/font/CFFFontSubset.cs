@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -328,7 +329,7 @@ namespace iText.IO.Font {
                 return BuildNewFile(j);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
             }
             finally {
                 try {

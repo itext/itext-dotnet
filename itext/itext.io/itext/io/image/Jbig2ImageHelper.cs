@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Codec;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Image {
@@ -85,7 +86,7 @@ namespace iText.IO.Image {
                 image.data = p.GetData(true);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Jbig2ImageException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.JBIG2_IMAGE_EXCEPTION, e);
             }
         }
     }

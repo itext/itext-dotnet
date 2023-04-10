@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Font {
@@ -238,7 +239,7 @@ namespace iText.IO.Font {
             rf.Seek(directoryOffset);
             int id = rf.ReadInt();
             if (id != 0x00010000) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.NotAtTrueTypeFile).SetMessageParams
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.NOT_AT_TRUE_TYPE_FILE).SetMessageParams
                     (fileName);
             }
             int num_tables = rf.ReadUnsignedShort();
@@ -256,14 +257,14 @@ namespace iText.IO.Font {
         private void ReadLoca() {
             int[] tableLocation = tableDirectory.Get("head");
             if (tableLocation == null) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                     ("head", fileName);
             }
             rf.Seek(tableLocation[TABLE_OFFSET] + HEAD_LOCA_FORMAT_OFFSET);
             locaShortTable = rf.ReadUnsignedShort() == 0;
             tableLocation = tableDirectory.Get("loca");
             if (tableLocation == null) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                     ("loca", fileName);
             }
             rf.Seek(tableLocation[TABLE_OFFSET]);
@@ -338,7 +339,7 @@ namespace iText.IO.Font {
         private void FlatGlyphs() {
             int[] tableLocation = tableDirectory.Get("glyf");
             if (tableLocation == null) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TableDoesNotExistsIn).SetMessageParams
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                     ("glyf", fileName);
             }
             int glyph0 = 0;

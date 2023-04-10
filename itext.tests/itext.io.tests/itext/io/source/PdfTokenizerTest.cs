@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.Test;
 
 namespace iText.IO.Source {
@@ -200,10 +201,10 @@ namespace iText.IO.Source {
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource("/Name1".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ))));
-            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => tok.ThrowError(iText.IO.Exceptions.IOException
-                .ErrorAtFilePointer1, 0));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.ErrorAtFilePointer1
-                , 0), e.Message);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => tok.ThrowError(IoExceptionMessageConstant
+                .ERROR_AT_FILE_POINTER, 0));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.ERROR_AT_FILE_POINTER, 
+                0), e.Message);
         }
 
         [NUnit.Framework.Test]

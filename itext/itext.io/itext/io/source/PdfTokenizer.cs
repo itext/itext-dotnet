@@ -25,6 +25,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 
 namespace iText.IO.Source {
     public class PdfTokenizer : IDisposable {
@@ -207,7 +208,7 @@ namespace iText.IO.Source {
             if (idx < 0) {
                 idx = str.IndexOf("%FDF-", StringComparison.Ordinal);
                 if (idx < 0) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PdfHeaderNotFound, this);
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PDF_HEADER_NOT_FOUND, this);
                 }
             }
             return idx;
@@ -218,7 +219,7 @@ namespace iText.IO.Source {
             String str = ReadString(1024);
             int idx = str.IndexOf("%PDF-", StringComparison.Ordinal);
             if (idx != 0) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PdfHeaderNotFound, this);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PDF_HEADER_NOT_FOUND, this);
             }
             return str.JSubstring(idx + 1, idx + 8);
         }
@@ -228,7 +229,7 @@ namespace iText.IO.Source {
             String str = ReadString(1024);
             int idx = str.IndexOf("%FDF-", StringComparison.Ordinal);
             if (idx != 0) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.FdfStartxrefNotFound, this);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.FDF_STARTXREF_NOT_FOUND, this);
             }
         }
 
@@ -249,7 +250,7 @@ namespace iText.IO.Source {
                 // 9 = "startxref".length()
                 pos = pos - arrLength + 9;
             }
-            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PdfStartxrefNotFound, this);
+            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PDF_STARTXREF_NOT_FOUND, this);
         }
 
         public virtual void NextValidToken() {
@@ -374,7 +375,7 @@ namespace iText.IO.Source {
                 case '>': {
                     ch = file.Read();
                     if (ch != '>') {
-                        ThrowError(iText.IO.Exceptions.IOException.GtNotExpected);
+                        ThrowError(IoExceptionMessageConstant.GT_NOT_EXPECTED);
                     }
                     type = PdfTokenizer.TokenType.EndDic;
                     break;
@@ -416,7 +417,7 @@ namespace iText.IO.Source {
                         v1 = file.Read();
                     }
                     if (v1 < 0 || v2 < 0) {
-                        ThrowError(iText.IO.Exceptions.IOException.ErrorReadingString);
+                        ThrowError(IoExceptionMessageConstant.ERROR_READING_STRING);
                     }
                     break;
                 }
@@ -462,7 +463,7 @@ namespace iText.IO.Source {
                         outBuf.Append(ch);
                     }
                     if (ch == -1) {
-                        ThrowError(iText.IO.Exceptions.IOException.ErrorReadingString);
+                        ThrowError(IoExceptionMessageConstant.ERROR_READING_STRING);
                     }
                     break;
                 }
@@ -745,7 +746,7 @@ namespace iText.IO.Source {
         /// <param name="error">message.</param>
         /// <param name="messageParams">error params.</param>
         public virtual void ThrowError(String error, params Object[] messageParams) {
-            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ErrorAtFilePointer1, new iText.IO.Exceptions.IOException
+            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.ERROR_AT_FILE_POINTER, new iText.IO.Exceptions.IOException
                 (error).SetMessageParams(messageParams)).SetMessageParams(file.GetPosition());
         }
 

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Font.Constants;
 using iText.Test;
 
@@ -34,7 +35,7 @@ namespace iText.IO.Font {
         public virtual void ExceptionMessageTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(System.IO.IOException), () => FontProgramFactory.CreateFont
                 (notExistingFont));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException._1NotFoundAsFileOrResource
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.NOT_FOUND_AS_FILE_OR_RESOURCE
                 , notExistingFont), e.Message);
         }
 

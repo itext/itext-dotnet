@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.IO.Codec;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Image {
@@ -66,7 +67,7 @@ namespace iText.IO.Image {
                 return TIFFDirectory.GetNumDirectories(raf);
             }
             catch (Exception e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TiffImageException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TIFF_IMAGE_EXCEPTION, e);
             }
         }
 

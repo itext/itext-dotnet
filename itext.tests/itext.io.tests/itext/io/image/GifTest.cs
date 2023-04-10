@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Util;
 using iText.Test;
 
@@ -48,8 +49,8 @@ namespace iText.IO.Image {
         public virtual void GifImageFrameOutOfBoundsTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => ImageDataFactory
                 .CreateGifFrame(UrlUtil.ToURL(sourceFolder + "image-2frames.gif"), 3));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.Exceptions.IOException.CannotFind1Frame, 
-                2), e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.CANNOT_FIND_FRAME, 2), 
+                e.Message);
         }
 
         [NUnit.Framework.Test]

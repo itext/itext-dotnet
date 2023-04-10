@@ -210,7 +210,7 @@ namespace iText.IO.Font {
                                         fontProgram = WoffConverter.Convert(fontProgram);
                                     }
                                     catch (ArgumentException woffException) {
-                                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidWoffFile, woffException);
+                                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_WOFF_FILE, woffException);
                                     }
                                 }
                                 else {
@@ -219,7 +219,7 @@ namespace iText.IO.Font {
                                         fontProgram = Woff2Converter.Convert(fontProgram);
                                     }
                                     catch (FontCompressionException woff2Exception) {
-                                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidWoff2File, woff2Exception
+                                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_WOFF2_FONT_FILE, woff2Exception
                                             );
                                     }
                                 }
@@ -247,11 +247,11 @@ namespace iText.IO.Font {
             }
             if (fontBuilt == null) {
                 if (name != null) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TypeOfFont1IsNotRecognized).SetMessageParams
-                        (name);
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TYPE_OF_FONT_IS_NOT_RECOGNIZED_PARAMETERIZED
+                        ).SetMessageParams(name);
                 }
                 else {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TypeOfFontIsNotRecognized);
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TYPE_OF_FONT_IS_NOT_RECOGNIZED);
                 }
             }
             return cached ? FontCache.SaveFont(fontBuilt, fontKey) : fontBuilt;

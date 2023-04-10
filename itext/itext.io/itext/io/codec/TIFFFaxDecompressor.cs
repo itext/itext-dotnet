@@ -44,6 +44,7 @@
 * nuclear facility.
 */
 using System;
+using iText.IO.Exceptions;
 
 namespace iText.IO.Codec {
     /// <summary>Class that can decompress TIFF files.</summary>
@@ -673,7 +674,7 @@ namespace iText.IO.Codec {
                             DecodeT6();
                         }
                         else {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.UnknownCompressionType1).SetMessageParams
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.UNKNOWN_COMPRESSION_TYPE).SetMessageParams
                                 (compression);
                         }
                     }

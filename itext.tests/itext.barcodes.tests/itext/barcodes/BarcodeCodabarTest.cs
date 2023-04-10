@@ -64,7 +64,7 @@ namespace iText.Barcodes {
             BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => BarcodeCodabar.GetBarsCodabar
                 ("qbcd"));
-            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER
+            NUnit.Framework.Assert.AreEqual(BarcodesExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER
                 , exception.Message);
         }
 
@@ -74,7 +74,7 @@ namespace iText.Barcodes {
             BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => BarcodeCodabar.GetBarsCodabar
                 ("abcf"));
-            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER
+            NUnit.Framework.Assert.AreEqual(BarcodesExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER
                 , exception.Message);
         }
 
@@ -84,7 +84,7 @@ namespace iText.Barcodes {
             BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => BarcodeCodabar.GetBarsCodabar
                 ("qbcq"));
-            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER
+            NUnit.Framework.Assert.AreEqual(BarcodesExceptionMessageConstant.CODABAR_MUST_HAVE_ONE_ABCD_AS_START_STOP_CHARACTER
                 , exception.Message);
         }
 
@@ -94,7 +94,7 @@ namespace iText.Barcodes {
             BarcodeCodabar codabar = new BarcodeCodabar(pdfDocument);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => BarcodeCodabar.GetBarsCodabar
                 (""));
-            NUnit.Framework.Assert.AreEqual(BarcodeExceptionMessageConstant.CODABAR_MUST_HAVE_AT_LEAST_START_AND_STOP_CHARACTER
+            NUnit.Framework.Assert.AreEqual(BarcodesExceptionMessageConstant.CODABAR_MUST_HAVE_AT_LEAST_START_AND_STOP_CHARACTER
                 , exception.Message);
         }
     }

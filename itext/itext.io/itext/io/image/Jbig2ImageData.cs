@@ -24,6 +24,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.IO.Codec;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Image {
@@ -66,7 +67,7 @@ namespace iText.IO.Image {
                 return sr.NumberOfPages();
             }
             catch (Exception e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Jbig2ImageException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.JBIG2_IMAGE_EXCEPTION, e);
             }
         }
 

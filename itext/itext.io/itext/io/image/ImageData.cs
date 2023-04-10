@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.IO.Colors;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -208,11 +209,11 @@ namespace iText.IO.Image {
 
         public virtual void SetImageMask(iText.IO.Image.ImageData imageMask) {
             if (this.mask) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ImageMaskCannotContainAnotherImageMask
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IMAGE_MASK_CANNOT_CONTAIN_ANOTHER_IMAGE_MASK
                     );
             }
             if (!imageMask.mask) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ImageIsNotMaskYouMustCallImageDataMakeMask
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IMAGE_IS_NOT_A_MASK_YOU_MUST_CALL_IMAGE_DATA_MAKE_MASK
                     );
             }
             this.imageMask = imageMask;
@@ -224,7 +225,7 @@ namespace iText.IO.Image {
 
         public virtual void MakeMask() {
             if (!CanBeMask()) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ThisImageCanNotBeAnImageMask);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.THIS_IMAGE_CAN_NOT_BE_AN_IMAGE_MASK);
             }
             mask = true;
         }

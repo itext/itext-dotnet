@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.IO.Exceptions;
 using iText.IO.Font;
 using iText.IO.Util;
 
@@ -140,7 +141,7 @@ namespace iText.IO.Image {
                 Process(gifStream, gif, lastFrameNumber);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.GifImageException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.GIF_IMAGE_EXCEPTION, e);
             }
         }
 
@@ -149,8 +150,8 @@ namespace iText.IO.Image {
             ReadHeader(gif);
             ReadContents(gif, lastFrameNumber);
             if (gif.currentFrame <= lastFrameNumber) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotFind1Frame).SetMessageParams
-                    (lastFrameNumber);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.CANNOT_FIND_FRAME).SetMessageParams(lastFrameNumber
+                    );
             }
         }
 
@@ -161,7 +162,7 @@ namespace iText.IO.Image {
                 id.Append((char)gif.input.Read());
             }
             if (!id.ToString().StartsWith("GIF8")) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.GifSignatureNotFound);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.GIF_SIGNATURE_NOT_FOUND);
             }
             ReadLSD(gif);
             if (gif.gctFlag) {
@@ -340,7 +341,7 @@ namespace iText.IO.Image {
                 }
             }
             catch (Exception e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.GifImageException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.GIF_IMAGE_EXCEPTION, e);
             }
         }
 

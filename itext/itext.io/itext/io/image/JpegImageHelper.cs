@@ -27,6 +27,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Colors;
+using iText.IO.Exceptions;
 using iText.IO.Util;
 
 namespace iText.IO.Image {
@@ -99,7 +100,7 @@ namespace iText.IO.Image {
                 ProcessParameters(jpegStream, errorID, image);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.JpegImageException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.JPEG_IMAGE_EXCEPTION, e);
             }
             finally {
                 if (jpegStream != null) {
@@ -155,7 +156,7 @@ namespace iText.IO.Image {
         private static void ProcessParameters(Stream jpegStream, String errorID, ImageData image) {
             byte[][] icc = null;
             if (jpegStream.Read() != 0xFF || jpegStream.Read() != 0xD8) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1IsNotAValidJpegFile).SetMessageParams
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IS_NOT_A_VALID_JPEG_FILE).SetMessageParams
                     (errorID);
             }
             bool firstPass = true;
@@ -163,7 +164,7 @@ namespace iText.IO.Image {
             while (true) {
                 int v = jpegStream.Read();
                 if (v < 0) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PrematureEofWhileReadingJpeg);
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PREMATURE_EOF_WHILE_READING_JPEG);
                 }
                 if (v == 0xFF) {
                     int marker = jpegStream.Read();
@@ -177,7 +178,7 @@ namespace iText.IO.Image {
                         byte[] bcomp = new byte[JFIF_ID.Length];
                         int r = jpegStream.Read(bcomp);
                         if (r != bcomp.Length) {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1CorruptedJfifMarker).SetMessageParams
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.CORRUPTED_JFIF_MARKER).SetMessageParams
                                 (errorID);
                         }
                         bool found = true;
@@ -330,7 +331,7 @@ namespace iText.IO.Image {
                     if (markertype == VALID_MARKER) {
                         StreamUtil.Skip(jpegStream, 2);
                         if (jpegStream.Read() != 0x08) {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1MustHave8BitsPerComponent).SetMessageParams
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.MUST_HAVE_8_BITS_PER_COMPONENT).SetMessageParams
                                 (errorID);
                         }
                         image.SetHeight(GetShort(jpegStream));
@@ -341,7 +342,7 @@ namespace iText.IO.Image {
                     }
                     else {
                         if (markertype == UNSUPPORTED_MARKER) {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1UnsupportedJpegMarker2).SetMessageParams
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.UNSUPPORTED_JPEG_MARKER).SetMessageParams
                                 (errorID, JavaUtil.IntegerToString(marker));
                         }
                         else {

@@ -70,7 +70,8 @@ namespace iText.IO.Util {
         [NUnit.Framework.Test]
         public virtual void GhostScriptEnvVarIsIncorrect() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new GhostscriptHelper("-"));
-            NUnit.Framework.Assert.AreEqual(IoExceptionMessage.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED, e.Message);
+            NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
