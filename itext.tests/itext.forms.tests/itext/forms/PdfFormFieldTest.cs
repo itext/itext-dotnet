@@ -160,29 +160,22 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void TextFieldLeadingSpacesAreNotTrimmedTest() {
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String filename = destinationFolder + "textFieldLeadingSpacesAreNotTrimmed.pdf";
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-                pdfDoc.AddNewPage();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                PdfPage page = pdfDoc.GetFirstPage();
-                Rectangle rect = new Rectangle(210, 490, 300, 22);
-                PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "TestField").SetWidgetRectangle(rect).CreateText
-                    ();
-                field.SetValue("        value with leading space");
-                form.AddField(field, page);
-                pdfDoc.Close();
-                CompareTool compareTool = new CompareTool();
-                String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_textFieldLeadingSpacesAreNotTrimmed.pdf"
-                    , destinationFolder, "diff_");
-                if (errorMessage != null) {
-                    NUnit.Framework.Assert.Fail(errorMessage);
-                }
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
+            String filename = destinationFolder + "textFieldLeadingSpacesAreNotTrimmed.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            pdfDoc.AddNewPage();
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfPage page = pdfDoc.GetFirstPage();
+            Rectangle rect = new Rectangle(210, 490, 300, 22);
+            PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "TestField").SetWidgetRectangle(rect).CreateText
+                ();
+            field.SetValue("        value with leading space");
+            form.AddField(field, page);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_textFieldLeadingSpacesAreNotTrimmed.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
 
@@ -603,163 +596,128 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void FormRegenerateWithInvalidDefaultAppearance01() {
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String testName = "formRegenerateWithInvalidDefaultAppearance01";
-                String outPdf = destinationFolder + testName + ".pdf";
-                String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
-                String srcPdf = sourceFolder + "invalidDA.pdf";
-                PdfWriter writer = new PdfWriter(outPdf);
-                PdfReader reader = new PdfReader(srcPdf);
-                PdfDocument pdfDoc = new PdfDocument(reader, writer);
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
-                fields.Get("Text1").SetValue("New field value");
-                fields.Get("Text2").SetValue("New field value");
-                fields.Get("Text3").SetValue("New field value");
-                pdfDoc.Close();
-                CompareTool compareTool = new CompareTool();
-                String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
-                if (errorMessage != null) {
-                    NUnit.Framework.Assert.Fail(errorMessage);
-                }
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
+            String testName = "formRegenerateWithInvalidDefaultAppearance01";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            String srcPdf = sourceFolder + "invalidDA.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfReader reader = new PdfReader(srcPdf);
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
+            fields.Get("Text1").SetValue("New field value");
+            fields.Get("Text2").SetValue("New field value");
+            fields.Get("Text3").SetValue("New field value");
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase1() {
             //Create a document with formfields and paragraphs in both fonts, and fill them before closing the document
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String testName = "fillFieldWithHebrewCase1";
-                String outPdf = destinationFolder + testName + ".pdf";
-                String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
-                PdfWriter writer = new PdfWriter(outPdf);
-                PdfDocument pdfDoc = new PdfDocument(writer);
-                Document document = new Document(pdfDoc);
-                PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
-                    );
-                hebrew.SetSubset(false);
-                PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
-                sileot.SetSubset(false);
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                String text = "שלום וברכה";
-                CreateAcroForm(pdfDoc, form, hebrew, text, 0);
-                CreateAcroForm(pdfDoc, form, sileot, text, 3);
-                AddParagraph(document, text, hebrew);
-                AddParagraph(document, text, sileot);
-                pdfDoc.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
-                     + testName + "_"));
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            String testName = "fillFieldWithHebrewCase1";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document document = new Document(pdfDoc);
+            PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
+                );
+            hebrew.SetSubset(false);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
+            sileot.SetSubset(false);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String text = "שלום וברכה";
+            CreateAcroForm(pdfDoc, form, hebrew, text, 0);
+            CreateAcroForm(pdfDoc, form, sileot, text, 3);
+            AddParagraph(document, text, hebrew);
+            AddParagraph(document, text, sileot);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                 + testName + "_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase2() {
             //Create a document with formfields and paragraphs in both fonts, and fill them after closing and reopening the document
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String testName = "fillFieldWithHebrewCase2";
-                String outPdf = destinationFolder + testName + ".pdf";
-                String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                PdfWriter writer = new PdfWriter(baos);
-                PdfDocument pdfDoc = new PdfDocument(writer);
-                Document document = new Document(pdfDoc);
-                PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
-                    );
-                hebrew.SetSubset(false);
-                PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
-                sileot.SetSubset(false);
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                CreateAcroForm(pdfDoc, form, hebrew, null, 0);
-                CreateAcroForm(pdfDoc, form, sileot, null, 3);
-                String text = "שלום וברכה";
-                AddParagraph(document, text, hebrew);
-                AddParagraph(document, text, sileot);
-                pdfDoc.Close();
-                PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new PdfWriter(outPdf
-                    ));
-                FillAcroForm(pdfDocument, text);
-                pdfDocument.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
-                     + testName + "_"));
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            String testName = "fillFieldWithHebrewCase2";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter writer = new PdfWriter(baos);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document document = new Document(pdfDoc);
+            PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
+                );
+            hebrew.SetSubset(false);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
+            sileot.SetSubset(false);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            CreateAcroForm(pdfDoc, form, hebrew, null, 0);
+            CreateAcroForm(pdfDoc, form, sileot, null, 3);
+            String text = "שלום וברכה";
+            AddParagraph(document, text, hebrew);
+            AddParagraph(document, text, sileot);
+            pdfDoc.Close();
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new PdfWriter(outPdf
+                ));
+            FillAcroForm(pdfDocument, text);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                 + testName + "_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase3() {
             //Create a document with formfields in both fonts, and fill them before closing the document
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String testName = "fillFieldWithHebrewCase3";
-                String outPdf = destinationFolder + testName + ".pdf";
-                String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
-                PdfWriter writer = new PdfWriter(outPdf);
-                PdfDocument pdfDoc = new PdfDocument(writer);
-                PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
-                    );
-                hebrew.SetSubset(false);
-                PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
-                sileot.SetSubset(false);
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                String text = "שלום וברכה";
-                CreateAcroForm(pdfDoc, form, hebrew, text, 0);
-                CreateAcroForm(pdfDoc, form, sileot, text, 3);
-                pdfDoc.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
-                     + testName + "_"));
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            String testName = "fillFieldWithHebrewCase3";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
+                );
+            hebrew.SetSubset(false);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
+            sileot.SetSubset(false);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String text = "שלום וברכה";
+            CreateAcroForm(pdfDoc, form, hebrew, text, 0);
+            CreateAcroForm(pdfDoc, form, sileot, text, 3);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                 + testName + "_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase4() {
             //Create a document with formfields in both fonts, and fill them after closing and reopening the document
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String testName = "fillFieldWithHebrewCase4";
-                String outPdf = destinationFolder + testName + ".pdf";
-                String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                PdfWriter writer = new PdfWriter(baos);
-                PdfDocument pdfDoc = new PdfDocument(writer);
-                PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
-                    );
-                hebrew.SetSubset(false);
-                PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
-                sileot.SetSubset(false);
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                CreateAcroForm(pdfDoc, form, hebrew, null, 0);
-                CreateAcroForm(pdfDoc, form, sileot, null, 3);
-                pdfDoc.Close();
-                String text = "שלום וברכה";
-                PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new PdfWriter(outPdf
-                    ));
-                FillAcroForm(pdfDocument, text);
-                pdfDocument.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
-                     + testName + "_"));
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            String testName = "fillFieldWithHebrewCase4";
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter writer = new PdfWriter(baos);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
+                );
+            hebrew.SetSubset(false);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
+            sileot.SetSubset(false);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            CreateAcroForm(pdfDoc, form, hebrew, null, 0);
+            CreateAcroForm(pdfDoc, form, sileot, null, 3);
+            pdfDoc.Close();
+            String text = "שלום וברכה";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new PdfWriter(outPdf
+                ));
+            FillAcroForm(pdfDocument, text);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                 + testName + "_"));
         }
 
         [NUnit.Framework.Test]
@@ -1053,25 +1011,33 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void TextFieldWithWideUnicodeRange() {
-            String filename = "textFieldWithWideUnicodeRange.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
-            pdfDoc.AddNewPage();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            form.AddField(new TextFormFieldBuilder(pdfDoc, "text_helvetica").SetWidgetRectangle(new Rectangle(36, 400, 
-                100, 40)).CreateText().SetValue("Helvetica"));
-            PdfFont noto = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
-            noto.SetSubset(false);
-            String value = "aAáÁàÀăĂắẮằẰẵẴẳẲâÂấẤầẦẫẪǎǍåÅǻǺäÄǟǞãÃą" + "ĄāĀảẢạẠặẶẬæÆǽǼbBḃḂcCćĆčČċĊçÇdDd̂D̂ďĎḋḊḑḐđĐðÐeE" 
-                + "éÉèÈĕĔêÊếẾềỀễỄěĚëËẽẼėĖęĘēĒẻẺẹẸệỆəƏfFḟḞgGǵǴğĞ" + "ǧǦġĠģĢḡḠǥǤhHȟȞḧḦħĦḥḤiIíÍìÌĭĬîÎǐǏïÏĩĨİįĮīĪỉỈị" + "ỊıjJĵĴǰJ̌kKḱḰǩǨķĶlLĺĹl̂L̂ľĽļĻłŁŀĿmMm̂M̂ṁṀnNńŃn̂N̂ňŇ"
-                 + "ñÑṅṄņŅŋŊoOóÓòÒŏŎôÔốỐồỒỗỖǒǑöÖȫȪőŐõÕȯȮȱȰøØǿǾǫǪ" + "ǭǬōŌỏỎơƠớỚờỜọỌộỘœŒpPṗṖqQĸrRŕŔřŘŗŖsSśŚšŠṡṠşŞṣ" + "ṢșȘßẞtTťŤṫṪţŢțȚŧŦuUúÚùÙûÛǔǓůŮüÜűŰũŨųŲūŪủỦưƯứ"
-                 + "ỨừỪữỮửỬựỰụỤvVwWẃẂẁẀŵŴẅẄxXẍẌyYýÝỳỲŷŶÿŸỹỸẏẎȳȲỷỶ" + "ỵỴzZźŹẑẐžŽżŻẓẒʒƷǯǮþÞŉ";
-            PdfFormField textField = new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(36, 500
-                , 400, 300)).CreateMultilineText().SetValue(value);
-            textField.SetFont(noto).SetFontSize(12);
-            form.AddField(textField);
-            pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            // TODO: DEVSIX-7441 - remove flag
+            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
+            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = false;
+            try {
+                String filename = "textFieldWithWideUnicodeRange.pdf";
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+                pdfDoc.AddNewPage();
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                form.AddField(new TextFormFieldBuilder(pdfDoc, "text_helvetica").SetWidgetRectangle(new Rectangle(36, 400, 
+                    100, 40)).CreateText().SetValue("Helvetica"));
+                PdfFont noto = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
+                noto.SetSubset(false);
+                String value = "aAáÁàÀăĂắẮằẰẵẴẳẲâÂấẤầẦẫẪǎǍåÅǻǺäÄǟǞãÃą" + "ĄāĀảẢạẠặẶẬæÆǽǼbBḃḂcCćĆčČċĊçÇdDd̂D̂ďĎḋḊḑḐđĐðÐeE" 
+                    + "éÉèÈĕĔêÊếẾềỀễỄěĚëËẽẼėĖęĘēĒẻẺẹẸệỆəƏfFḟḞgGǵǴğĞ" + "ǧǦġĠģĢḡḠǥǤhHȟȞḧḦħĦḥḤiIíÍìÌĭĬîÎǐǏïÏĩĨİįĮīĪỉỈị" + "ỊıjJĵĴǰJ̌kKḱḰǩǨķĶlLĺĹl̂L̂ľĽļĻłŁŀĿmMm̂M̂ṁṀnNńŃn̂N̂ňŇ"
+                     + "ñÑṅṄņŅŋŊoOóÓòÒŏŎôÔốỐồỒỗỖǒǑöÖȫȪőŐõÕȯȮȱȰøØǿǾǫǪ" + "ǭǬōŌỏỎơƠớỚờỜọỌộỘœŒpPṗṖqQĸrRŕŔřŘŗŖsSśŚšŠṡṠşŞṣ" + "ṢșȘßẞtTťŤṫṪţŢțȚŧŦuUúÚùÙûÛǔǓůŮüÜűŰũŨųŲūŪủỦưƯứ"
+                     + "ỨừỪữỮửỬựỰụỤvVwWẃẂẁẀŵŴẅẄxXẍẌyYýÝỳỲŷŶÿŸỹỸẏẎȳȲỷỶ" + "ỵỴzZźŹẑẐžŽżŻẓẒʒƷǯǮþÞŉ";
+                PdfFormField textField = new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(36, 500
+                    , 400, 300)).CreateMultilineText().SetValue(value);
+                textField.SetFont(noto).SetFontSize(12);
+                form.AddField(textField);
+                pdfDoc.Close();
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                     + "cmp_" + filename, destinationFolder, "diff_"));
+            }
+            finally {
+                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
+            }
         }
 
         [NUnit.Framework.Test]
@@ -1184,28 +1150,21 @@ namespace iText.Forms {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [LogMessage(FormsLogMessageConstants.INPUT_FIELD_DOES_NOT_FIT)]
         public virtual void AppendModeAppearance() {
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String inputFile = "appendModeAppearance.pdf";
-                String outputFile = "appendModeAppearance.pdf";
-                String line1 = "ABC";
-                PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inputFile), new PdfWriter(destinationFolder
-                     + outputFile), new StampingProperties().UseAppendMode());
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);
-                form.SetNeedAppearances(true);
-                PdfFormField field;
-                foreach (KeyValuePair<String, PdfFormField> entry in form.GetAllFormFields()) {
-                    field = entry.Value;
-                    field.SetValue(line1);
-                }
-                pdfDocument.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + outputFile, sourceFolder
-                     + "cmp_" + outputFile, destinationFolder, "diff_"));
+            String inputFile = "appendModeAppearance.pdf";
+            String outputFile = "appendModeAppearance.pdf";
+            String line1 = "ABC";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inputFile), new PdfWriter(destinationFolder
+                 + outputFile), new StampingProperties().UseAppendMode());
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);
+            form.SetNeedAppearances(true);
+            PdfFormField field;
+            foreach (KeyValuePair<String, PdfFormField> entry in form.GetAllFormFields()) {
+                field = entry.Value;
+                field.SetValue(line1);
             }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + outputFile, sourceFolder
+                 + "cmp_" + outputFile, destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -1316,31 +1275,24 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void AddChildToFormFieldTest() {
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String outPdf = destinationFolder + "addChildToFormFieldTest.pdf";
-                String cmpPdf = sourceFolder + "cmp_addChildToFormFieldTest.pdf";
-                using (PdfDocument outputDoc = new PdfDocument(new PdfWriter(outPdf))) {
-                    PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
-                    PdfFormField field = new TextFormFieldBuilder(outputDoc, "text1").SetWidgetRectangle(new Rectangle(100, 700
-                        , 200, 20)).CreateText();
-                    acroForm.AddField(field);
-                    PdfFormField root = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100, 600, 
-                        200, 20)).CreateText().SetValue("root");
-                    PdfFormField child = new TextFormFieldBuilder(outputDoc, "child").SetWidgetRectangle(new Rectangle(100, 500
-                        , 200, 20)).CreateText().SetValue("child");
-                    root.AddKid(child);
-                    acroForm.AddField(root);
-                    NUnit.Framework.Assert.AreEqual(2, acroForm.fields.Count);
-                    PdfArray fieldKids = root.GetKids();
-                    NUnit.Framework.Assert.AreEqual(2, fieldKids.Size());
-                }
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
+            String outPdf = destinationFolder + "addChildToFormFieldTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_addChildToFormFieldTest.pdf";
+            using (PdfDocument outputDoc = new PdfDocument(new PdfWriter(outPdf))) {
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfFormField field = new TextFormFieldBuilder(outputDoc, "text1").SetWidgetRectangle(new Rectangle(100, 700
+                    , 200, 20)).CreateText();
+                acroForm.AddField(field);
+                PdfFormField root = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100, 600, 
+                    200, 20)).CreateText().SetValue("root");
+                PdfFormField child = new TextFormFieldBuilder(outputDoc, "child").SetWidgetRectangle(new Rectangle(100, 500
+                    , 200, 20)).CreateText().SetValue("child");
+                root.AddKid(child);
+                acroForm.AddField(root);
+                NUnit.Framework.Assert.AreEqual(2, acroForm.fields.Count);
+                PdfArray fieldKids = root.GetKids();
+                NUnit.Framework.Assert.AreEqual(2, fieldKids.Size());
             }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
         }
 
         [NUnit.Framework.Test]

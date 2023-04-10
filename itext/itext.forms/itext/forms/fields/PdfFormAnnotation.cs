@@ -889,11 +889,11 @@ namespace iText.Forms.Fields {
             }
             IFormField textFormField;
             if (parent.IsMultiline()) {
-                textFormField = new TextArea(GetParentField().GetPartialFieldName().ToUnicodeString());
+                textFormField = new TextArea("");
                 textFormField.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(GetFontSize()));
             }
             else {
-                textFormField = new InputField(GetParentField().GetPartialFieldName().ToUnicodeString());
+                textFormField = new InputField("");
                 textFormField.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(GetFontSize(new PdfArray(rectangle
                     ), parent.GetValueAsString())));
             }

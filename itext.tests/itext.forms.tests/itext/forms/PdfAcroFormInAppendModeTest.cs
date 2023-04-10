@@ -107,21 +107,14 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void ReplaceFieldTest() {
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String outputFile = "replaceFieldTest.pdf";
-                PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), new PdfWriter(DESTINATION_DIR
-                     + outputFile), new StampingProperties().UseAppendMode());
-                PdfFormField newField = new TextFormFieldBuilder(outputDoc, "newfield").SetWidgetRectangle(new Rectangle(20
-                    , 160, 100, 20)).CreateText().SetValue("new field");
-                PdfAcroForm.GetAcroForm(outputDoc, true).ReplaceField("textfield1", newField);
-                outputDoc.Close();
-                CompareWithCmp(outputFile);
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            String outputFile = "replaceFieldTest.pdf";
+            PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), new PdfWriter(DESTINATION_DIR
+                 + outputFile), new StampingProperties().UseAppendMode());
+            PdfFormField newField = new TextFormFieldBuilder(outputDoc, "newfield").SetWidgetRectangle(new Rectangle(20
+                , 160, 100, 20)).CreateText().SetValue("new field");
+            PdfAcroForm.GetAcroForm(outputDoc, true).ReplaceField("textfield1", newField);
+            outputDoc.Close();
+            CompareWithCmp(outputFile);
         }
 
         [NUnit.Framework.Test]

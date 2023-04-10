@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.Kernel.Colors;
@@ -156,24 +155,17 @@ namespace iText.Forms.Widget {
 
         [NUnit.Framework.Test]
         public virtual void FillFormWithRotatedFieldAndPageTest() {
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String outPdf = destinationFolder + "fillFormWithRotatedFieldAndPageTest.pdf";
-                String cmpPdf = sourceFolder + "cmp_fillFormWithRotatedFieldAndPageTest.pdf";
-                using (PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "pdfWithRotatedField.pdf"), new PdfWriter
-                    (outPdf))) {
-                    PdfAcroForm form1 = PdfAcroForm.GetAcroForm(doc, false);
-                    form1.GetField("First field").SetValue("We filled this field").GetFirstFormAnnotation().SetBorderColor(ColorConstants
-                        .BLACK);
-                }
-                String errorMessage = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
-                if (errorMessage != null) {
-                    NUnit.Framework.Assert.Fail(errorMessage);
-                }
+            String outPdf = destinationFolder + "fillFormWithRotatedFieldAndPageTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_fillFormWithRotatedFieldAndPageTest.pdf";
+            using (PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "pdfWithRotatedField.pdf"), new PdfWriter
+                (outPdf))) {
+                PdfAcroForm form1 = PdfAcroForm.GetAcroForm(doc, false);
+                form1.GetField("First field").SetValue("We filled this field").GetFirstFormAnnotation().SetBorderColor(ColorConstants
+                    .BLACK);
             }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
+            String errorMessage = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
 

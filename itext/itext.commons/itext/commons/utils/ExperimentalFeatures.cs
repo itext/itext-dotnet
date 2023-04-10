@@ -7,7 +7,7 @@ namespace iText.Commons.Utils {
         public static bool ENABLE_EXPERIMENTAL_CHECKBOX_RENDERING = false;
 
         /// <summary>Determines, whether the old or the new text form field drawing logic will be used.</summary>
-        public static bool ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = false;
+        public static bool ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
 
         private ExperimentalFeatures() {
         }

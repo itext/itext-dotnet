@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
@@ -41,8 +40,6 @@ namespace iText.Forms {
              + "/test/itext/forms/FlatteningRotatedTest/";
 
         private readonly String inputPdfFileName;
-
-        private static bool experimentalRenderingPreviousValue;
 
         public static ICollection<Object[]> InputFileNames() {
             IList<Object[]> inputFileNames = new List<Object[]>();
@@ -69,13 +66,6 @@ namespace iText.Forms {
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
-            experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-        }
-
-        [NUnit.Framework.OneTimeTearDown]
-        public static void AfterClass() {
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
         }
 
         [NUnit.Framework.Test]

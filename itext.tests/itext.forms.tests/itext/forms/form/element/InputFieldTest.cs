@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Commons.Utils;
 using iText.Forms.Exceptions;
 using iText.Forms.Form;
 using iText.Kernel.Colors;
@@ -42,18 +41,9 @@ namespace iText.Forms.Form.Element {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/form/element/InputFieldTest/";
 
-        private static bool experimentalRenderingPreviousValue;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.OneTimeTearDown]
-        public static void AfterClass() {
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
         }
 
         [NUnit.Framework.Test]

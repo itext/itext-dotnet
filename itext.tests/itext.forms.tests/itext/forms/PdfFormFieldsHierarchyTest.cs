@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -64,44 +63,30 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void AutosizeInheritedDAFormFieldsTest() {
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String inPdf = destinationFolder + "autosizeInheritedDAFormFields.pdf";
-                PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "autosizeInheritedDAFormFields.pdf"), new 
-                    PdfWriter(inPdf));
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
-                fields.Get("field_1").SetValue("1111 2222 3333 4444");
-                fields.Get("field_2").SetValue("1111 2222 3333 4444");
-                fields.Get("field_3").SetValue("surname surname surname surname surname surname");
-                pdfDoc.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(inPdf, sourceFolder + "cmp_autosizeInheritedDAFormFields.pdf"
-                    , destinationFolder, "diff_"));
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            String inPdf = destinationFolder + "autosizeInheritedDAFormFields.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "autosizeInheritedDAFormFields.pdf"), new 
+                PdfWriter(inPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
+            fields.Get("field_1").SetValue("1111 2222 3333 4444");
+            fields.Get("field_2").SetValue("1111 2222 3333 4444");
+            fields.Get("field_3").SetValue("surname surname surname surname surname surname");
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(inPdf, sourceFolder + "cmp_autosizeInheritedDAFormFields.pdf"
+                , destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void AutosizeInheritedDAFormFieldsWithKidsTest() {
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = true;
-            try {
-                String inPdf = destinationFolder + "autosizeInheritedDAFormFieldsWithKids.pdf";
-                PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "autosizeInheritedDAFormFieldsWithKids.pdf"
-                    ), new PdfWriter(inPdf));
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                form.GetField("root.child.text1").SetValue("surname surname surname surname surname");
-                form.GetField("root.child.text2").SetValue("surname surname surname surname surname");
-                pdfDoc.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(inPdf, sourceFolder + "cmp_autosizeInheritedDAFormFieldsWithKids.pdf"
-                    , destinationFolder, inPdf));
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            String inPdf = destinationFolder + "autosizeInheritedDAFormFieldsWithKids.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "autosizeInheritedDAFormFieldsWithKids.pdf"
+                ), new PdfWriter(inPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            form.GetField("root.child.text1").SetValue("surname surname surname surname surname");
+            form.GetField("root.child.text2").SetValue("surname surname surname surname surname");
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(inPdf, sourceFolder + "cmp_autosizeInheritedDAFormFieldsWithKids.pdf"
+                , destinationFolder, inPdf));
         }
 
         [NUnit.Framework.Test]
