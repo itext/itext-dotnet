@@ -120,7 +120,6 @@ namespace iText.Forms.Widget {
 
         [NUnit.Framework.Test]
         public virtual void TextStartsAfterFieldBorderTest() {
-            // TODO DEVSIX-4809 text in form filed with borders must start after border
             String outPdf = destinationFolder + "textStartsAfterFieldBorderTest.pdf";
             String cmpPdf = sourceFolder + "cmp_textStartsAfterFieldBorderTest.pdf";
             using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
@@ -142,7 +141,7 @@ namespace iText.Forms.Widget {
                 underlineFormField.SetValue("Text after border").RegenerateField();
                 PdfFormField simpleFormField = new TextFormFieldBuilder(doc, "formField1").SetWidgetRectangle(new Rectangle
                     (300, 450, 200, 100)).CreateText();
-                simpleFormField.GetFirstFormAnnotation().SetBorderWidth(15f);
+                simpleFormField.GetFirstFormAnnotation().SetBorderWidth(15f).SetBorderColor(DeviceRgb.RED);
                 simpleFormField.SetValue("Text after border").RegenerateField();
                 form.AddField(insetFormField);
                 form.AddField(solidFormField);
