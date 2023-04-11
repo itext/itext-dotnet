@@ -79,14 +79,16 @@ namespace iText.Forms.Fields {
         /// <summary>Default padding X offset.</summary>
         internal const float X_OFFSET = 2;
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormAnnotation
-            ));
-
         protected internal float borderWidth = 1;
 
         protected internal Color backgroundColor;
 
         protected internal Color borderColor;
+
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormAnnotation
+            ));
+
+        private const String LINE_ENDINGS_REGEXP = "\\r\\n|\\r|\\n";
 
         private Button formFieldElement;
 
@@ -888,6 +890,7 @@ namespace iText.Forms.Fields {
                 return;
             }
             IFormField textFormField;
+            String value = parent.GetDisplayValue();
             if (parent.IsMultiline()) {
                 textFormField = new TextArea("");
                 textFormField.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(GetFontSize()));
@@ -896,8 +899,9 @@ namespace iText.Forms.Fields {
                 textFormField = new InputField("");
                 textFormField.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(GetFontSize(new PdfArray(rectangle
                     ), parent.GetValueAsString())));
+                value = iText.Commons.Utils.StringUtil.ReplaceAll(value, LINE_ENDINGS_REGEXP, " ");
             }
-            textFormField.SetProperty(FormProperty.FORM_FIELD_VALUE, parent.GetDisplayValue());
+            textFormField.SetProperty(FormProperty.FORM_FIELD_VALUE, value);
             textFormField.SetProperty(Property.FONT, GetFont());
             textFormField.SetProperty(Property.TEXT_ALIGNMENT, parent.GetJustification());
             textFormField.SetProperty(FormProperty.FORM_FIELD_PASSWORD_FLAG, GetParentField().IsPassword());
