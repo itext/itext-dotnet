@@ -173,6 +173,28 @@ namespace iText.Forms {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void AppearanceRegenerationTest() {
+            String outPdf = destinationFolder + "appearanceRegenerationTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_appearanceRegenerationTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfButtonFormField checkBox1 = new CheckBoxFormFieldBuilder(pdfDoc, "checkbox1").SetWidgetRectangle(new Rectangle
+                    (10, 650, 40, 20)).CreateCheckBox();
+                checkBox1.SetValue("My_Value");
+                String offStream = "1 0 0 1 0.86 0.5 cm 0 0 m\n" + "0 0.204 -0.166 0.371 -0.371 0.371 c\n" + "-0.575 0.371 -0.741 0.204 -0.741 0 c\n"
+                     + "-0.741 -0.204 -0.575 -0.371 -0.371 -0.371 c\n" + "-0.166 -0.371 0 -0.204 0 0 c\n" + "f\n";
+                checkBox1.GetFirstFormAnnotation().SetAppearance(PdfName.N, "Off", new PdfStream(offStream.GetBytes()));
+                String onStream = "1 0 0 1 0.835 0.835 cm 0 0 -0.669 -0.67 re\n" + "f\n";
+                checkBox1.GetFirstFormAnnotation().SetAppearance(PdfName.N, "My_Value", new PdfStream(onStream.GetBytes())
+                    );
+                checkBox1.RegenerateField();
+                form.AddField(checkBox1);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
         private void AddCheckBox(PdfDocument pdfDoc, float fontSize, float yPos, float checkBoxW, float checkBoxH) {
             Rectangle rect = new Rectangle(50, yPos, checkBoxW, checkBoxH);
             AddCheckBox(pdfDoc, fontSize, yPos, checkBoxW, new CheckBoxFormFieldBuilder(pdfDoc, MessageFormatUtil.Format
