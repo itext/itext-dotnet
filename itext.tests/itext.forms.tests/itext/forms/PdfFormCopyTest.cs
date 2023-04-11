@@ -395,7 +395,6 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
         public virtual void CopyAndEditTextFields() {
-            //TODO: update after DEVSIX-2354
             String srcFileName = sourceFolder + "checkPdfFormCopy_Source.pdf";
             String destFilename = destinationFolder + "copyAndEditTextFields.pdf";
             String cmpFileName = sourceFolder + "cmp_copyAndEditTextFields.pdf";
@@ -420,7 +419,6 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
         public virtual void CopyAndEditCheckboxes() {
-            //TODO: update after DEVSIX-2354
             String srcFileName = sourceFolder + "checkPdfFormCopy_Source.pdf";
             String destFilename = destinationFolder + "copyAndEditCheckboxes.pdf";
             String cmpFileName = sourceFolder + "cmp_copyAndEditCheckboxes.pdf";
@@ -443,7 +441,6 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
         public virtual void CopyAndEditRadioButtons() {
-            //TODO: update after DEVSIX-2354
             String srcFileName = sourceFolder + "checkPdfFormCopy_Source.pdf";
             String destFilename = destinationFolder + "copyAndEditRadioButtons.pdf";
             String cmpFileName = sourceFolder + "cmp_copyAndEditRadioButtons.pdf";
