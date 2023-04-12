@@ -1472,5 +1472,17 @@ namespace iText.Commons.Bouncycastle {
         /// otherwise
         /// </returns>
         bool IsInApprovedOnlyMode();
+
+        /// <summary>
+        /// Checks whether an algorithm is supported for encryption by the chosen Bouncy Castle implementation,
+        /// throws an exception when not supported.
+        /// </summary>
+        /// <param name="encryptionType"> the type of encryption
+        ///             STANDARD_ENCRYPTION_40 = 2
+        ///             STANDARD_ENCRYPTION_128 = 3
+        ///             AES_128 = 4
+        ///             AES_256 = 5</param>
+        /// <param name="withCertificate"> true when used with a certificate, false otherwise</param>        
+        void IsEncryptionFeatureSupported(int encryptionType, bool withCertificate);
     }
 }

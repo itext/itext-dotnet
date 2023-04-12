@@ -1090,6 +1090,14 @@ namespace iText.Bouncycastlefips {
         public bool IsInApprovedOnlyMode() {
             return CryptoServicesRegistrar.IsInApprovedOnlyMode();
         }
+        
+        /// <inheritdoc/>
+        public void IsEncryptionFeatureSupported(int encryptionType, bool withCertificate) {
+            if (withCertificate) {
+                throw new UnsupportedEncryptionFeatureException(
+                    UnsupportedEncryptionFeatureException.ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS);
+            }            
+        }
 
         /// <summary><inheritDoc/></summary>
         public SecureRandom GetSecureRandom() {

@@ -1025,7 +1025,12 @@ namespace iText.Bouncycastle {
         public bool IsInApprovedOnlyMode() {
             return false;
         }
-
+        
+        /// <inheritdoc/>
+        public void  IsEncryptionFeatureSupported(int encryptionType, bool withCertificate) {
+            // all features supported
+        }
+        
         /// <summary><inheritDoc/></summary>
         public IPEMParser CreatePEMParser(TextReader reader, char[] password) {
             return new PEMParserBC(new PemReader(reader, new BouncyCastlePasswordFinder(password)));

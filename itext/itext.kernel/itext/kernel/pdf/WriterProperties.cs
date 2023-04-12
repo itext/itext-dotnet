@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Kernel.Pdf {
@@ -276,6 +277,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(IX509Certificate[] certs, int[] permissions
             , int encryptionAlgorithm) {
+            BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(encryptionAlgorithm, true);
             encryptionProperties.SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm);
             return this;
         }
