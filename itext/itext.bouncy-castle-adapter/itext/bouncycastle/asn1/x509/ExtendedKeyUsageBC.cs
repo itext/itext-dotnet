@@ -29,7 +29,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.ExtendedKeyUsage"/>.
     /// </summary>
-    public class ExtendedKeyUsageBC : ASN1EncodableBC, IExtendedKeyUsage {
+    public class ExtendedKeyUsageBC : Asn1EncodableBC, IExtendedKeyUsage {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.X509.ExtendedKeyUsage"/>.
@@ -48,8 +48,8 @@ namespace iText.Bouncycastle.Asn1.X509 {
         /// <see cref="Org.BouncyCastle.Asn1.X509.ExtendedKeyUsage"/>.
         /// </summary>
         /// <param name="purposeId">KeyPurposeId wrapper</param>
-        public ExtendedKeyUsageBC(IKeyPurposeId purposeId)
-            : base(new ExtendedKeyUsage(((KeyPurposeIdBC)purposeId).GetKeyPurposeId())) {
+        public ExtendedKeyUsageBC(IKeyPurposeID purposeId)
+            : base(new ExtendedKeyUsage(((KeyPurposeIDBC)purposeId).GetKeyPurposeID())) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

@@ -30,7 +30,7 @@ namespace iText.Bouncycastlefips.Asn1.Esf {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Esf.SignaturePolicyId"/>.
     /// </summary>
-    public class SignaturePolicyIdBCFips : ASN1EncodableBCFips, ISignaturePolicyId {
+    public class SignaturePolicyIdBCFips : Asn1EncodableBCFips, ISignaturePolicyId {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Esf.SignaturePolicyId"/>.
@@ -51,9 +51,9 @@ namespace iText.Bouncycastlefips.Asn1.Esf {
         /// <param name="objectIdentifier">ASN1ObjectIdentifier wrapper</param>
         /// <param name="algAndValue">OtherHashAlgAndValue wrapper</param>
         /// <param name="policyQualifiers">SigPolicyQualifierInfo array</param>
-        public SignaturePolicyIdBCFips(IASN1ObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue, 
-            params SigPolicyQualifierInfo[] policyQualifiers)
-            : this(new SignaturePolicyId(((ASN1ObjectIdentifierBCFips)objectIdentifier).GetASN1ObjectIdentifier(), ((OtherHashAlgAndValueBCFips
+        public SignaturePolicyIdBCFips(IDerObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue, params 
+            SigPolicyQualifierInfo[] policyQualifiers)
+            : this(new SignaturePolicyId(((DerObjectIdentifierBCFips)objectIdentifier).GetDerObjectIdentifier(), ((OtherHashAlgAndValueBCFips
                 )algAndValue).GetOtherHashAlgAndValue(), policyQualifiers)) {
         }
 
@@ -63,8 +63,8 @@ namespace iText.Bouncycastlefips.Asn1.Esf {
         /// </summary>
         /// <param name="objectIdentifier">ASN1ObjectIdentifier wrapper</param>
         /// <param name="algAndValue">OtherHashAlgAndValue wrapper</param>
-        public SignaturePolicyIdBCFips(IASN1ObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue)
-            : this(new SignaturePolicyId(((ASN1ObjectIdentifierBCFips)objectIdentifier).GetASN1ObjectIdentifier(), ((OtherHashAlgAndValueBCFips
+        public SignaturePolicyIdBCFips(IDerObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue)
+            : this(new SignaturePolicyId(((DerObjectIdentifierBCFips)objectIdentifier).GetDerObjectIdentifier(), ((OtherHashAlgAndValueBCFips
                 )algAndValue).GetOtherHashAlgAndValue())) {
         }
 

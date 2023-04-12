@@ -29,7 +29,7 @@ namespace iText.Bouncycastle.Asn1.Cms {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Cms.Attribute"/>.
     /// </summary>
-    public class AttributeBC : ASN1EncodableBC, IAttribute {
+    public class AttributeBC : Asn1EncodableBC, IAttribute {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Cms.Attribute"/>.
@@ -53,8 +53,8 @@ namespace iText.Bouncycastle.Asn1.Cms {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Set GetAttrValues() {
-            return new ASN1SetBC(GetAttribute().AttrValues);
+        public virtual IAsn1Set GetAttrValues() {
+            return new Asn1SetBC(GetAttribute().AttrValues);
         }
     }
 }

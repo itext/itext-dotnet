@@ -53,7 +53,7 @@ namespace iText.Signatures.Testutils {
 
         private static IList<IX509Certificate> ReadCertificates(String pemFileName) {
             using (TextReader file = new StreamReader(pemFileName)) {
-                IPEMParser parser = FACTORY.CreatePEMParser(file, null);
+                IPemReader parser = FACTORY.CreatePEMParser(file, null);
                 Object readObject = parser.ReadObject();
                 IList<IX509Certificate> certificates = new List<IX509Certificate>();
                 while (readObject != null) {
@@ -68,7 +68,7 @@ namespace iText.Signatures.Testutils {
 
         private static IPrivateKey ReadPrivateKey(String pemFileName, char[] keyPass) {
             using (TextReader file = new StreamReader(pemFileName)) {
-                IPEMParser parser = FACTORY.CreatePEMParser(file, keyPass);
+                IPemReader parser = FACTORY.CreatePEMParser(file, keyPass);
                 Object readObject = parser.ReadObject();
                 while (!(readObject is IPrivateKey) && readObject != null) {
                     readObject = parser.ReadObject();

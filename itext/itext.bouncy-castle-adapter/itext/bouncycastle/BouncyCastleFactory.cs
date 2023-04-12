@@ -43,10 +43,8 @@ using iText.Bouncycastle.Asn1.Ocsp;
 using iText.Bouncycastle.Asn1.Pcks;
 using iText.Bouncycastle.Asn1.Tsp;
 using iText.Bouncycastle.Asn1.Util;
-using iText.Bouncycastle.Asn1.X500;
 using iText.Bouncycastle.Asn1.X509;
 using iText.Bouncycastle.Cert;
-using iText.Bouncycastle.Cert.Jcajce;
 using iText.Bouncycastle.Cert.Ocsp;
 using iText.Bouncycastle.Cms;
 using iText.Bouncycastle.Crypto;
@@ -69,7 +67,6 @@ using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Bouncycastle.Cert.Jcajce;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Crypto;
@@ -86,9 +83,10 @@ using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
 using ContentInfo = Org.BouncyCastle.Asn1.Cms.ContentInfo;
-using ICertificateID = iText.Commons.Bouncycastle.Cert.Ocsp.ICertificateID;
 using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
-using ISingleResp = iText.Commons.Bouncycastle.Cert.Ocsp.ISingleResp;
+using IDigest = iText.Commons.Bouncycastle.Crypto.IDigest;
+using ISigner = iText.Commons.Bouncycastle.Crypto.ISigner;
+using IX509Extension = iText.Commons.Bouncycastle.Asn1.X509.IX509Extension;
 
 namespace iText.Bouncycastle {
     /// <summary>
@@ -112,332 +110,332 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier CreateASN1ObjectIdentifier(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IDerObjectIdentifier CreateASN1ObjectIdentifier(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is DerObjectIdentifier) {
-                return new ASN1ObjectIdentifierBC((DerObjectIdentifier)encodableBC.GetEncodable());
+                return new DerObjectIdentifierBC((DerObjectIdentifier)encodableBC.GetEncodable());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier CreateASN1ObjectIdentifier(String str) {
-            return new ASN1ObjectIdentifierBC(str);
+        public virtual IDerObjectIdentifier CreateASN1ObjectIdentifier(String str) {
+            return new DerObjectIdentifierBC(str);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier CreateASN1ObjectIdentifierInstance(Object @object) {
-            return new ASN1ObjectIdentifierBC(DerObjectIdentifier.GetInstance(@object is ASN1EncodableBC ? ((ASN1EncodableBC
+        public virtual IDerObjectIdentifier CreateASN1ObjectIdentifierInstance(Object @object) {
+            return new DerObjectIdentifierBC(DerObjectIdentifier.GetInstance(@object is Asn1EncodableBC ? ((Asn1EncodableBC
                 )@object).GetEncodable() : @object));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1InputStream CreateASN1InputStream(Stream stream) {
-            return new ASN1InputStreamBC(stream);
+        public virtual IAsn1InputStream CreateASN1InputStream(Stream stream) {
+            return new Asn1InputStreamBC(stream);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1InputStream CreateASN1InputStream(byte[] bytes) {
-            return new ASN1InputStreamBC(bytes);
+        public virtual IAsn1InputStream CreateASN1InputStream(byte[] bytes) {
+            return new Asn1InputStreamBC(bytes);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1OctetString CreateASN1OctetString(IASN1Primitive primitive) {
-            ASN1PrimitiveBC primitiveBC = (ASN1PrimitiveBC)primitive;
+        public virtual IAsn1OctetString CreateASN1OctetString(IAsn1Object primitive) {
+            Asn1ObjectBC primitiveBC = (Asn1ObjectBC)primitive;
             if (primitiveBC.GetPrimitive() is Asn1OctetString) {
-                return new ASN1OctetStringBC((Asn1OctetString)primitiveBC.GetPrimitive());
+                return new Asn1OctetStringBC((Asn1OctetString)primitiveBC.GetPrimitive());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1OctetString CreateASN1OctetString(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IAsn1OctetString CreateASN1OctetString(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is Asn1OctetString) {
-                return new ASN1OctetStringBC((Asn1OctetString)encodableBC.GetEncodable());
+                return new Asn1OctetStringBC((Asn1OctetString)encodableBC.GetEncodable());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1OctetString CreateASN1OctetString(IASN1TaggedObject taggedObject, bool b) {
-            return new ASN1OctetStringBC(taggedObject, b);
+        public virtual IAsn1OctetString CreateASN1OctetString(IAsn1TaggedObject taggedObject, bool b) {
+            return new Asn1OctetStringBC(taggedObject, b);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1OctetString CreateASN1OctetString(byte[] bytes) {
-            return new ASN1OctetStringBC(Asn1OctetString.GetInstance(bytes));
+        public virtual IAsn1OctetString CreateASN1OctetString(byte[] bytes) {
+            return new Asn1OctetStringBC(Asn1OctetString.GetInstance(bytes));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Sequence CreateASN1Sequence(Object @object) {
+        public virtual IAsn1Sequence CreateASN1Sequence(Object @object) {
             if (@object is Asn1Sequence) {
-                return new ASN1SequenceBC((Asn1Sequence)@object);
+                return new Asn1SequenceBC((Asn1Sequence)@object);
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Sequence CreateASN1Sequence(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IAsn1Sequence CreateASN1Sequence(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is Asn1Sequence) {
-                return new ASN1SequenceBC((Asn1Sequence)encodableBC.GetEncodable());
+                return new Asn1SequenceBC((Asn1Sequence)encodableBC.GetEncodable());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Sequence CreateASN1Sequence(byte[] array) {
-            return new ASN1SequenceBC((Asn1Sequence)Asn1Sequence.FromByteArray(array));
+        public virtual IAsn1Sequence CreateASN1Sequence(byte[] array) {
+            return new Asn1SequenceBC((Asn1Sequence)Asn1Sequence.FromByteArray(array));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Sequence CreateASN1SequenceInstance(Object @object) {
-            return new ASN1SequenceBC(@object is ASN1EncodableBC ? ((ASN1EncodableBC)@object).GetEncodable() : @object
+        public virtual IAsn1Sequence CreateASN1SequenceInstance(Object @object) {
+            return new Asn1SequenceBC(@object is Asn1EncodableBC ? ((Asn1EncodableBC)@object).GetEncodable() : @object
                 );
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDERSequence CreateDERSequence(IASN1EncodableVector encodableVector) {
-            ASN1EncodableVectorBC vectorBC = (ASN1EncodableVectorBC)encodableVector;
-            return new DERSequenceBC(vectorBC.GetEncodableVector());
+        public virtual IDerSequence CreateDERSequence(IAsn1EncodableVector encodableVector) {
+            Asn1EncodableVectorBC vectorBC = (Asn1EncodableVectorBC)encodableVector;
+            return new DerSequenceBC(vectorBC.GetEncodableVector());
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDERSequence CreateDERSequence(IASN1Primitive primitive) {
-            ASN1PrimitiveBC primitiveBC = (ASN1PrimitiveBC)primitive;
-            return new DERSequenceBC(primitiveBC.GetPrimitive());
+        public virtual IDerSequence CreateDERSequence(IAsn1Object primitive) {
+            Asn1ObjectBC primitiveBC = (Asn1ObjectBC)primitive;
+            return new DerSequenceBC(primitiveBC.GetPrimitive());
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1TaggedObject CreateASN1TaggedObject(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IAsn1TaggedObject CreateASN1TaggedObject(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is Asn1TaggedObject) {
-                return new ASN1TaggedObjectBC((Asn1TaggedObject)encodableBC.GetEncodable());
+                return new Asn1TaggedObjectBC((Asn1TaggedObject)encodableBC.GetEncodable());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Integer CreateASN1Integer(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IDerInteger CreateASN1Integer(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is DerInteger) {
-                return new ASN1IntegerBC((DerInteger)encodableBC.GetEncodable());
+                return new DerIntegerBC((DerInteger)encodableBC.GetEncodable());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Integer CreateASN1Integer(int i) {
-            return new ASN1IntegerBC(i);
+        public virtual IDerInteger CreateASN1Integer(int i) {
+            return new DerIntegerBC(i);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Integer CreateASN1Integer(IBigInteger i) {
-            return new ASN1IntegerBC(i);
+        public virtual IDerInteger CreateASN1Integer(IBigInteger i) {
+            return new DerIntegerBC(i);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Set CreateASN1Set(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IAsn1Set CreateASN1Set(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is Asn1Set) {
-                return new ASN1SetBC((Asn1Set)encodableBC.GetEncodable());
+                return new Asn1SetBC((Asn1Set)encodableBC.GetEncodable());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Set CreateASN1Set(Object encodable) {
-            return encodable is Asn1Set ? new ASN1SetBC((Asn1Set)encodable) : null;
+        public virtual IAsn1Set CreateASN1Set(Object encodable) {
+            return encodable is Asn1Set ? new Asn1SetBC((Asn1Set)encodable) : null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Set CreateASN1Set(IASN1TaggedObject taggedObject, bool b) {
-            ASN1TaggedObjectBC taggedObjectBC = (ASN1TaggedObjectBC)taggedObject;
-            return new ASN1SetBC(taggedObjectBC.GetASN1TaggedObject(), b);
+        public virtual IAsn1Set CreateASN1Set(IAsn1TaggedObject taggedObject, bool b) {
+            Asn1TaggedObjectBC taggedObjectBC = (Asn1TaggedObjectBC)taggedObject;
+            return new Asn1SetBC(taggedObjectBC.GetAsn1TaggedObject(), b);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Set CreateNullASN1Set() {
-            return new ASN1SetBC(null);
+        public virtual IAsn1Set CreateNullASN1Set() {
+            return new Asn1SetBC(null);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1OutputStream CreateASN1OutputStream(Stream stream) {
-            return new ASN1OutputStreamBC(stream);
+        public virtual IDerOutputStream CreateASN1OutputStream(Stream stream) {
+            return new DerOutputStreamBC(stream);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
+        public virtual IDerOutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
             if (Asn1Encodable.Ber.Equals(asn1Encoding)) {
-                return new ASN1OutputStreamBC(new BerOutputStream(outputStream));
+                return new DerOutputStreamBC(new BerOutputStream(outputStream));
             }
-            return new ASN1OutputStreamBC(new DerOutputStream(outputStream));
+            return new DerOutputStreamBC(new DerOutputStream(outputStream));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDEROctetString CreateDEROctetString(byte[] bytes) {
-            return new DEROctetStringBC(bytes);
+        public virtual IDerOctetString CreateDEROctetString(byte[] bytes) {
+            return new DerOctetStringBC(bytes);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDEROctetString CreateDEROctetString(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IDerOctetString CreateDEROctetString(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is DerOctetString) {
-                return new DEROctetStringBC((DerOctetString)encodableBC.GetEncodable());
+                return new DerOctetStringBC((DerOctetString)encodableBC.GetEncodable());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1EncodableVector CreateASN1EncodableVector() {
-            return new ASN1EncodableVectorBC();
+        public virtual IAsn1EncodableVector CreateASN1EncodableVector() {
+            return new Asn1EncodableVectorBC();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDERNull CreateDERNull() {
-            return DERNullBC.INSTANCE;
+        public virtual IDerNull CreateDERNull() {
+            return DerNullBC.INSTANCE;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDERTaggedObject CreateDERTaggedObject(int i, IASN1Primitive primitive) {
-            ASN1PrimitiveBC primitiveBC = (ASN1PrimitiveBC)primitive;
-            return new DERTaggedObjectBC(i, primitiveBC.GetPrimitive());
+        public virtual IDerTaggedObject CreateDERTaggedObject(int i, IAsn1Object primitive) {
+            Asn1ObjectBC primitiveBC = (Asn1ObjectBC)primitive;
+            return new DerTaggedObjectBC(i, primitiveBC.GetPrimitive());
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDERTaggedObject CreateDERTaggedObject(bool b, int i, IASN1Primitive primitive) {
-            ASN1PrimitiveBC primitiveBC = (ASN1PrimitiveBC)primitive;
-            return new DERTaggedObjectBC(b, i, primitiveBC.GetPrimitive());
+        public virtual IDerTaggedObject CreateDERTaggedObject(bool b, int i, IAsn1Object primitive) {
+            Asn1ObjectBC primitiveBC = (Asn1ObjectBC)primitive;
+            return new DerTaggedObjectBC(b, i, primitiveBC.GetPrimitive());
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDERSet CreateDERSet(IASN1EncodableVector encodableVector) {
-            ASN1EncodableVectorBC encodableVectorBC = (ASN1EncodableVectorBC)encodableVector;
-            return new DERSetBC(encodableVectorBC.GetEncodableVector());
+        public virtual IDerSet CreateDERSet(IAsn1EncodableVector encodableVector) {
+            Asn1EncodableVectorBC encodableVectorBC = (Asn1EncodableVectorBC)encodableVector;
+            return new DerSetBC(encodableVectorBC.GetEncodableVector());
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDERSet CreateDERSet(IASN1Primitive primitive) {
-            ASN1PrimitiveBC primitiveBC = (ASN1PrimitiveBC)primitive;
-            return new DERSetBC(primitiveBC.GetPrimitive());
+        public virtual IDerSet CreateDERSet(IAsn1Object primitive) {
+            Asn1ObjectBC primitiveBC = (Asn1ObjectBC)primitive;
+            return new DerSetBC(primitiveBC.GetPrimitive());
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDERSet CreateDERSet(ISignaturePolicyIdentifier identifier) {
+        public virtual IDerSet CreateDERSet(ISignaturePolicyIdentifier identifier) {
             SignaturePolicyIdentifierBC identifierBC = (SignaturePolicyIdentifierBC)identifier;
-            return new DERSetBC(identifierBC.GetSignaturePolicyIdentifier());
+            return new DerSetBC(identifierBC.GetSignaturePolicyIdentifier());
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDERSet CreateDERSet(IRecipientInfo recipientInfo) {
+        public virtual IDerSet CreateDERSet(IRecipientInfo recipientInfo) {
             RecipientInfoBC recipientInfoBC = (RecipientInfoBC)recipientInfo;
-            return new DERSetBC(recipientInfoBC.GetRecipientInfo());
+            return new DerSetBC(recipientInfoBC.GetRecipientInfo());
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Enumerated CreateASN1Enumerated(int i) {
-            return new ASN1EnumeratedBC(i);
+        public virtual IDerEnumerated CreateASN1Enumerated(int i) {
+            return new DerEnumeratedBC(i);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Encoding CreateASN1Encoding() {
+        public virtual IAsn1Encoding CreateASN1Encoding() {
             return ASN1EncodingBC.GetInstance();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IAttributeTable CreateAttributeTable(IASN1Set unat) {
-            ASN1SetBC asn1SetBC = (ASN1SetBC)unat;
-            return new AttributeTableBC(asn1SetBC.GetASN1Set());
+        public virtual IAttributeTable CreateAttributeTable(IAsn1Set unat) {
+            Asn1SetBC asn1SetBC = (Asn1SetBC)unat;
+            return new AttributeTableBC(asn1SetBC.GetAsn1Set());
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IPKCSObjectIdentifiers CreatePKCSObjectIdentifiers() {
-            return PKCSObjectIdentifiersBC.GetInstance();
+        public virtual IPkcsObjectIdentifiers CreatePKCSObjectIdentifiers() {
+            return PkcsObjectIdentifiersBC.GetInstance();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IAttribute CreateAttribute(IASN1ObjectIdentifier attrType, IASN1Set attrValues) {
-            ASN1ObjectIdentifierBC attrTypeBc = (ASN1ObjectIdentifierBC)attrType;
-            ASN1SetBC attrValuesBc = (ASN1SetBC)attrValues;
-            return new AttributeBC(new Org.BouncyCastle.Asn1.Cms.Attribute(attrTypeBc.GetASN1ObjectIdentifier(), attrValuesBc
-                .GetASN1Set()));
+        public virtual IAttribute CreateAttribute(IDerObjectIdentifier attrType, IAsn1Set attrValues) {
+            DerObjectIdentifierBC attrTypeBc = (DerObjectIdentifierBC)attrType;
+            Asn1SetBC attrValuesBc = (Asn1SetBC)attrValues;
+            return new AttributeBC(new Org.BouncyCastle.Asn1.Cms.Attribute(attrTypeBc.GetDerObjectIdentifier(), attrValuesBc
+                .GetAsn1Set()));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IContentInfo CreateContentInfo(IASN1Sequence sequence) {
-            ASN1SequenceBC sequenceBC = (ASN1SequenceBC)sequence;
-            return new ContentInfoBC(ContentInfo.GetInstance(sequenceBC.GetASN1Sequence()));
+        public virtual IContentInfo CreateContentInfo(IAsn1Sequence sequence) {
+            Asn1SequenceBC sequenceBC = (Asn1SequenceBC)sequence;
+            return new ContentInfoBC(ContentInfo.GetInstance(sequenceBC.GetAsn1Sequence()));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IContentInfo CreateContentInfo(IASN1ObjectIdentifier objectIdentifier, IASN1Encodable encodable
+        public virtual IContentInfo CreateContentInfo(IDerObjectIdentifier objectIdentifier, IAsn1Encodable encodable
             ) {
             return new ContentInfoBC(objectIdentifier, encodable);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ISigningCertificate CreateSigningCertificate(IASN1Sequence sequence) {
-            ASN1SequenceBC sequenceBC = (ASN1SequenceBC)sequence;
-            return new SigningCertificateBC(SigningCertificate.GetInstance(sequenceBC.GetASN1Sequence()));
+        public virtual ISigningCertificate CreateSigningCertificate(IAsn1Sequence sequence) {
+            Asn1SequenceBC sequenceBC = (Asn1SequenceBC)sequence;
+            return new SigningCertificateBC(SigningCertificate.GetInstance(sequenceBC.GetAsn1Sequence()));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ISigningCertificateV2 CreateSigningCertificateV2(IASN1Sequence sequence) {
-            ASN1SequenceBC sequenceBC = (ASN1SequenceBC)sequence;
-            return new SigningCertificateV2BC(SigningCertificateV2.GetInstance(sequenceBC.GetASN1Sequence()));
+        public virtual ISigningCertificateV2 CreateSigningCertificateV2(IAsn1Sequence sequence) {
+            Asn1SequenceBC sequenceBC = (Asn1SequenceBC)sequence;
+            return new SigningCertificateV2BC(SigningCertificateV2.GetInstance(sequenceBC.GetAsn1Sequence()));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IBasicOCSPResponse CreateBasicOCSPResponse(IASN1Primitive primitive) {
-            ASN1PrimitiveBC primitiveBC = (ASN1PrimitiveBC)primitive;
-            return new BasicOCSPResponseBC(BasicOcspResponse.GetInstance(primitiveBC.GetPrimitive()));
+        public virtual IBasicOcspResponse CreateBasicOCSPResponse(IAsn1Object primitive) {
+            Asn1ObjectBC primitiveBC = (Asn1ObjectBC)primitive;
+            return new BasicOcspResponseBC(BasicOcspResponse.GetInstance(primitiveBC.GetPrimitive()));
         }
 
         /// <summary><inheritDoc/></summary>
-        public IBasicOCSPResponse CreateBasicOCSPResponse(object response) {
+        public IBasicOcspResponse CreateBasicOCSPResponse(object response) {
             if (response is BasicOcspResponse) {
-                return new BasicOCSPResponseBC((BasicOcspResponse) response);
+                return new BasicOcspResponseBC((BasicOcspResponse) response);
             }
             return null;
             
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPObjectIdentifiers CreateOCSPObjectIdentifiers() {
-            return OCSPObjectIdentifiersBC.GetInstance();
+        public virtual IOcspObjectIdentifiers CreateOCSPObjectIdentifiers() {
+            return OcspObjectIdentifiersBC.GetInstance();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm) {
-            ASN1ObjectIdentifierBC algorithmBc = (ASN1ObjectIdentifierBC)algorithm;
-            return new AlgorithmIdentifierBC(new AlgorithmIdentifier(algorithmBc.GetASN1ObjectIdentifier(), null));
+        public virtual IAlgorithmIdentifier CreateAlgorithmIdentifier(IDerObjectIdentifier algorithm) {
+            DerObjectIdentifierBC algorithmBc = (DerObjectIdentifierBC)algorithm;
+            return new AlgorithmIdentifierBC(new AlgorithmIdentifier(algorithmBc.GetDerObjectIdentifier(), null));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm, IASN1Encodable
+        public virtual IAlgorithmIdentifier CreateAlgorithmIdentifier(IDerObjectIdentifier algorithm, IAsn1Encodable
              parameters) {
-            ASN1ObjectIdentifierBC algorithmBc = (ASN1ObjectIdentifierBC)algorithm;
-            ASN1EncodableBC encodableBc = (ASN1EncodableBC)parameters;
-            return new AlgorithmIdentifierBC(new AlgorithmIdentifier(algorithmBc.GetASN1ObjectIdentifier(), encodableBc
+            DerObjectIdentifierBC algorithmBc = (DerObjectIdentifierBC)algorithm;
+            Asn1EncodableBC encodableBc = (Asn1EncodableBC)parameters;
+            return new AlgorithmIdentifierBC(new AlgorithmIdentifier(algorithmBc.GetDerObjectIdentifier(), encodableBc
                 .GetEncodable()));
         }
         
         /// <summary><inheritDoc/></summary>
-        public virtual IRsassaPssParameters CreateRSASSAPSSParams(IASN1Encodable encodable) {
+        public virtual IRsassaPssParameters CreateRSASSAPSSParams(IAsn1Encodable encodable) {
             if (encodable == null) {
                 throw new ArgumentException("Expected non-null RSASSA-PSS parameter data");
             }
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC) encodable;
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC) encodable;
             return new RsassaPssParametersBC(RsassaPssParameters.GetInstance(encodableBC.GetEncodable()));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IRsassaPssParameters CreateRSASSAPSSParamsWithMGF1(IASN1ObjectIdentifier digestAlgoOid, int saltLen,
+        public virtual IRsassaPssParameters CreateRSASSAPSSParamsWithMGF1(IDerObjectIdentifier digestAlgoOid, int saltLen,
             int trailerField) {
-            DerObjectIdentifier oid = ((ASN1ObjectIdentifierBC) digestAlgoOid).GetASN1ObjectIdentifier();
+            DerObjectIdentifier oid = ((DerObjectIdentifierBC) digestAlgoOid).GetDerObjectIdentifier();
             AlgorithmIdentifier digestAlgo = new AlgorithmIdentifier(oid);
-            AlgorithmIdentifier mgf = new AlgorithmIdentifier(PkcsObjectIdentifiers.IdMgf1, digestAlgo);
+            AlgorithmIdentifier mgf = new AlgorithmIdentifier(Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.IdMgf1, digestAlgo);
             var @params = new RsassaPssParameters(digestAlgo, mgf, new DerInteger(saltLen),
                 new DerInteger(trailerField));
             return new RsassaPssParametersBC(@params);
@@ -449,121 +447,121 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ICertificateID CreateCertificateID() {
-            return CertificateIDBC.GetInstance();
+        public virtual ICertID CreateCertificateID() {
+            return CertIDBC.GetInstance();
         }
 
         /// <summary><inheritDoc/></summary>
-        public IExtensions CreateExtensions(IDictionary objectIdentifier) {
+        public IX509Extensions CreateExtensions(IDictionary objectIdentifier) {
             IDictionary dictionary = new Dictionary<DerObjectIdentifier, X509Extension>();
-            foreach (IASN1ObjectIdentifier key in objectIdentifier.Keys) {
-                dictionary.Add(((ASN1ObjectIdentifierBC)key).GetASN1ObjectIdentifier(), 
-                    ((ExtensionBC)objectIdentifier[key]).GetX509Extension());
+            foreach (IDerObjectIdentifier key in objectIdentifier.Keys) {
+                dictionary.Add(((DerObjectIdentifierBC)key).GetDerObjectIdentifier(), 
+                    ((X509ExtensionBC)objectIdentifier[key]).GetX509Extension());
             }
-            return new ExtensionsBC(new X509Extensions(dictionary));
+            return new X509ExtensionsBC(new X509Extensions(dictionary));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IExtensions CreateExtensions() {
-            return ExtensionsBC.GetInstance();
+        public virtual IX509Extensions CreateExtensions() {
+            return X509ExtensionsBC.GetInstance();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPReqBuilder CreateOCSPReqBuilder() {
+        public virtual IOcspReqGenerator CreateOCSPReqBuilder() {
             return new OCSPReqBuilderBC(new OcspReqGenerator());
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ISigPolicyQualifierInfo CreateSigPolicyQualifierInfo(IASN1ObjectIdentifier objectIdentifier
-            , IDERIA5String @string) {
+        public virtual ISigPolicyQualifierInfo CreateSigPolicyQualifierInfo(IDerObjectIdentifier objectIdentifier
+            , IDerIA5String @string) {
             return new SigPolicyQualifierInfoBC(objectIdentifier, @string);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1String CreateASN1String(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IDerStringBase CreateASN1String(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is DerStringBase) {
-                return new ASN1StringBC((DerStringBase)encodableBC.GetEncodable());
+                return new DerStringBaseBC((DerStringBase)encodableBC.GetEncodable());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Primitive CreateASN1Primitive(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IAsn1Object CreateASN1Primitive(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is Asn1Object) {
-                return new ASN1PrimitiveBC((Asn1Object)encodableBC.GetEncodable());
+                return new Asn1ObjectBC((Asn1Object)encodableBC.GetEncodable());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public IOCSPResponse CreateOCSPResponse(byte[] bytes) {
-            return new OCSPResponseBC(OcspResponse.GetInstance(new Asn1InputStream(bytes).ReadObject()));
+        public IOcspResponse CreateOCSPResponse(byte[] bytes) {
+            return new OcspResponseBC(OcspResponse.GetInstance(new Asn1InputStream(bytes).ReadObject()));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPResponse CreateOCSPResponse() {
-            return OCSPResponseBC.GetInstance();
+        public virtual IOcspResponse CreateOCSPResponse() {
+            return OcspResponseBC.GetInstance();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPResponse CreateOCSPResponse(IOCSPResponseStatus respStatus, IResponseBytes responseBytes) {
-            return new OCSPResponseBC(respStatus, responseBytes);
+        public virtual IOcspResponse CreateOCSPResponse(IOcspResponseStatus respStatus, IResponseBytes responseBytes) {
+            return new OcspResponseBC(respStatus, responseBytes);
         }
 
         /// <summary><inheritDoc/></summary>
-        public IOCSPResponse CreateOCSPResponse(int respStatus, Object response) {
+        public IOcspResponse CreateOCSPResponse(int respStatus, Object response) {
             if (response == null) {
-                return new OCSPResponseBC(new OcspResponse(new OcspResponseStatus(respStatus), null));
+                return new OcspResponseBC(new OcspResponse(new OcspResponseStatus(respStatus), null));
             }
             BasicOcspResponse basicResp = null;
-            if (response is IBasicOCSPResponse) {
-                basicResp = ((BasicOCSPResponseBC)response).GetBasicOCSPResponse();
+            if (response is IBasicOcspResponse) {
+                basicResp = ((BasicOcspResponseBC)response).GetBasicOcspResponse();
                 if (basicResp == null) {
-                    return new OCSPResponseBC(new OcspResponse(new OcspResponseStatus(respStatus), null));
+                    return new OcspResponseBC(new OcspResponse(new OcspResponseStatus(respStatus), null));
                 }
             }
             if (response is BasicOcspResponse) {
                 basicResp = (BasicOcspResponse)response;
             }
             if (basicResp == null) {
-                throw new OCSPExceptionBC(new OcspException("unknown response object"));
+                throw new OcspExceptionBC(new OcspException("unknown response object"));
             }
             Asn1OctetString octs;
             try {
-                octs = new DerOctetString(((BasicOCSPResponseBC)response).GetEncoded());
+                octs = new DerOctetString(((BasicOcspResponseBC)response).GetEncoded());
             } catch (Exception e) {
-                throw new OCSPExceptionBC(new OcspException("can't encode object.", e));
+                throw new OcspExceptionBC(new OcspException("can't encode object.", e));
             }
             ResponseBytes rb = new ResponseBytes(OcspObjectIdentifiers.PkixOcspBasic, octs);
-            return new OCSPResponseBC(new OcspResponse(new OcspResponseStatus(respStatus), rb));
+            return new OcspResponseBC(new OcspResponse(new OcspResponseStatus(respStatus), rb));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IResponseBytes CreateResponseBytes(IASN1ObjectIdentifier asn1ObjectIdentifier, IDEROctetString
+        public virtual IResponseBytes CreateResponseBytes(IDerObjectIdentifier asn1ObjectIdentifier, IDerOctetString
              derOctetString) {
             return new ResponseBytesBC(asn1ObjectIdentifier, derOctetString);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPResponseStatus CreateOCSPResponseStatus(int status) {
-            return new OCSPResponseStatusBC(new OcspResponseStatus(status));
+        public virtual IOcspResponseStatus CreateOCSPResponseStatus(int status) {
+            return new OcspResponseStatusBC(new OcspResponseStatus(status));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPResponseStatus CreateOCSPResponseStatus() {
-            return OCSPResponseStatusBC.GetInstance();
+        public virtual IOcspResponseStatus CreateOCSPResponseStatus() {
+            return OcspResponseStatusBC.GetInstance();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ICertificateStatus CreateCertificateStatus() {
-            return CertificateStatusBC.GetInstance();
+        public virtual ICertStatus CreateCertificateStatus() {
+            return CertStatusBC.GetInstance();
         }
 
         /// <summary><inheritDoc/></summary>
-        public IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus) {
-            CertStatus certStatus = ((CertificateStatusBC) certificateStatus).GetCertificateStatus();
+        public IRevokedCertStatus CreateRevokedStatus(ICertStatus certificateStatus) {
+            CertStatus certStatus = ((CertStatusBC) certificateStatus).GetCertStatus();
             if (certStatus != null && certStatus.TagNo == 1) {
                 return new RevokedStatusBC(certStatus);
             }
@@ -571,29 +569,29 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IRevokedStatus CreateRevokedStatus(DateTime date, int i) {
+        public virtual IRevokedCertStatus CreateRevokedStatus(DateTime date, int i) {
             return new RevokedStatusBC(date, i);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Primitive CreateASN1Primitive(byte[] array) {
-            return new ASN1PrimitiveBC(array);
+        public virtual IAsn1Object CreateASN1Primitive(byte[] array) {
+            return new Asn1ObjectBC(array);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDERIA5String CreateDERIA5String(IASN1TaggedObject taggedObject, bool b) {
-            return new DERIA5StringBC(((DerIA5String)DerIA5String.GetInstance(((ASN1TaggedObjectBC)taggedObject).GetASN1TaggedObject
+        public virtual IDerIA5String CreateDERIA5String(IAsn1TaggedObject taggedObject, bool b) {
+            return new DerIA5StringBC(((DerIA5String)DerIA5String.GetInstance(((Asn1TaggedObjectBC)taggedObject).GetAsn1TaggedObject
                 (), b)));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDERIA5String CreateDERIA5String(String str) {
-            return new DERIA5StringBC(str);
+        public virtual IDerIA5String CreateDERIA5String(String str) {
+            return new DerIA5StringBC(str);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ICRLDistPoint CreateCRLDistPoint(Object @object) {
-            return new CRLDistPointBC(CrlDistPoint.GetInstance(@object is ASN1EncodableBC ? ((ASN1EncodableBC)@object)
+        public virtual ICrlDistPoint CreateCRLDistPoint(Object @object) {
+            return new CrlDistPointBC(CrlDistPoint.GetInstance(@object is Asn1EncodableBC ? ((Asn1EncodableBC)@object)
                 .GetEncodable() : @object));
         }
 
@@ -603,8 +601,8 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IGeneralNames CreateGeneralNames(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IGeneralNames CreateGeneralNames(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is GeneralNames) {
                 return new GeneralNamesBC((GeneralNames)encodableBC.GetEncodable());
             }
@@ -618,18 +616,18 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public virtual IOtherHashAlgAndValue CreateOtherHashAlgAndValue(IAlgorithmIdentifier algorithmIdentifier, 
-            IASN1OctetString octetString) {
+            IAsn1OctetString octetString) {
             return new OtherHashAlgAndValueBC(algorithmIdentifier, octetString);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ISignaturePolicyId CreateSignaturePolicyId(IASN1ObjectIdentifier objectIdentifier, IOtherHashAlgAndValue
+        public virtual ISignaturePolicyId CreateSignaturePolicyId(IDerObjectIdentifier objectIdentifier, IOtherHashAlgAndValue
              algAndValue) {
             return new SignaturePolicyIdBC(objectIdentifier, algAndValue);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ISignaturePolicyId CreateSignaturePolicyId(IASN1ObjectIdentifier objectIdentifier, IOtherHashAlgAndValue
+        public virtual ISignaturePolicyId CreateSignaturePolicyId(IDerObjectIdentifier objectIdentifier, IOtherHashAlgAndValue
              algAndValue, params ISigPolicyQualifierInfo[] policyQualifiers) {
             SigPolicyQualifierInfo[] qualifierInfos = new SigPolicyQualifierInfo[policyQualifiers.Length];
             for (int i = 0; i < qualifierInfos.Length; ++i) {
@@ -644,8 +642,8 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IEnvelopedData CreateEnvelopedData(IOriginatorInfo originatorInfo, IASN1Set set, IEncryptedContentInfo
-             encryptedContentInfo, IASN1Set set1) {
+        public virtual IEnvelopedData CreateEnvelopedData(IOriginatorInfo originatorInfo, IAsn1Set set, IEncryptedContentInfo
+             encryptedContentInfo, IAsn1Set set1) {
             return new EnvelopedDataBC(originatorInfo, set, encryptedContentInfo, set1);
         }
 
@@ -655,14 +653,14 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IEncryptedContentInfo CreateEncryptedContentInfo(IASN1ObjectIdentifier data, IAlgorithmIdentifier
-             algorithmIdentifier, IASN1OctetString octetString) {
+        public virtual IEncryptedContentInfo CreateEncryptedContentInfo(IDerObjectIdentifier data, IAlgorithmIdentifier
+             algorithmIdentifier, IAsn1OctetString octetString) {
             return new EncryptedContentInfoBC(data, algorithmIdentifier, octetString);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ITBSCertificate CreateTBSCertificate(IASN1Encodable encodable) {
-            return new TBSCertificateBC(TbsCertificateStructure.GetInstance(((ASN1EncodableBC)encodable).GetEncodable(
+        public virtual ITbsCertificateStructure CreateTBSCertificate(IAsn1Encodable encodable) {
+            return new TbsCertificateStructureBC(TbsCertificateStructure.GetInstance(((Asn1EncodableBC)encodable).GetEncodable(
                 )));
         }
 
@@ -679,7 +677,7 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public virtual IKeyTransRecipientInfo CreateKeyTransRecipientInfo(IRecipientIdentifier recipientIdentifier
-            , IAlgorithmIdentifier algorithmIdentifier, IASN1OctetString octetString) {
+            , IAlgorithmIdentifier algorithmIdentifier, IAsn1OctetString octetString) {
             return new KeyTransRecipientInfoBC(recipientIdentifier, algorithmIdentifier, octetString);
         }
 
@@ -689,12 +687,12 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ICMSEnvelopedData CreateCMSEnvelopedData(byte[] bytes) {
+        public virtual ICmsEnvelopedData CreateCMSEnvelopedData(byte[] bytes) {
             try {
-                return new CMSEnvelopedDataBC(new CmsEnvelopedData(bytes));
+                return new CmsEnvelopedDataBC(new CmsEnvelopedData(bytes));
             }
             catch (CmsException e) {
-                throw new CMSExceptionBC(e);
+                throw new CmsExceptionBC(e);
             }
         }
 
@@ -713,43 +711,43 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual AbstractOCSPException CreateAbstractOCSPException(Exception e) {
-            return new OCSPExceptionBC(new OcspException(e.Message));
+        public virtual AbstractOcspException CreateAbstractOCSPException(Exception e) {
+            return new OcspExceptionBC(new OcspException(e.Message));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IUnknownStatus CreateUnknownStatus() {
+        public virtual IUnknownCertStatus CreateUnknownStatus() {
             return new UnknownStatusBC();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Dump CreateASN1Dump() {
-            return ASN1DumpBC.GetInstance();
+        public virtual IAsn1Dump CreateASN1Dump() {
+            return Asn1DumpBC.GetInstance();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1BitString CreateASN1BitString(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IDerBitString CreateASN1BitString(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is DerBitString) {
-                return new ASN1BitStringBC((DerBitString)encodableBC.GetEncodable());
+                return new DerBitStringBC((DerBitString)encodableBC.GetEncodable());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1GeneralizedTime CreateASN1GeneralizedTime(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IDerGeneralizedTime CreateASN1GeneralizedTime(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is DerGeneralizedTime) {
-                return new ASN1GeneralizedTimeBC((DerGeneralizedTime)encodableBC.GetEncodable());
+                return new DerGeneralizedTimeBC((DerGeneralizedTime)encodableBC.GetEncodable());
             }
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1UTCTime CreateASN1UTCTime(IASN1Encodable encodable) {
-            ASN1EncodableBC encodableBC = (ASN1EncodableBC)encodable;
+        public virtual IDerUtcTime CreateASN1UTCTime(IAsn1Encodable encodable) {
+            Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is DerUtcTime) {
-                return new ASN1UTCTimeBC((DerUtcTime)encodableBC.GetEncodable());
+                return new DerUtcTimeBC((DerUtcTime)encodableBC.GetEncodable());
             }
             return null;
         }
@@ -775,7 +773,7 @@ namespace iText.Bouncycastle {
         public virtual IX500Name CreateX500Name(IX509Certificate certificate) {
             byte[] tbsCertificate = certificate.GetTbsCertificate();
             if (tbsCertificate.Length != 0) {
-                return new X500NameBC(X509Name.GetInstance(TbsCertificateStructure.GetInstance(Asn1Object.FromByteArray(
+                return new X509NameBC(X509Name.GetInstance(TbsCertificateStructure.GetInstance(Asn1Object.FromByteArray(
                     certificate.GetTbsCertificate())).Subject));
             }
             return null;
@@ -783,7 +781,7 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public virtual IX500Name CreateX500Name(String s) {
-            return new X500NameBC(new X509Name(s));
+            return new X509NameBC(new X509Name(s));
         }
 
         /// <summary><inheritDoc/></summary>
@@ -792,24 +790,24 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IBasicOCSPRespBuilder CreateBasicOCSPRespBuilder(IRespID respID) {
-            return new BasicOCSPRespBuilderBC(respID);
+        public virtual IBasicOcspRespGenerator CreateBasicOCSPRespBuilder(IRespID respID) {
+            return new BasicOcspRespGeneratorBC(respID);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPReq CreateOCSPReq(byte[] requestBytes) {
-            return new OCSPReqBC(new OcspReq(requestBytes));
+        public virtual IOcspRequest CreateOCSPReq(byte[] requestBytes) {
+            return new OcspReqBC(new OcspReq(requestBytes));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IX509v2CRLBuilder CreateX509v2CRLBuilder(IX500Name x500Name, DateTime date) {
-            return new X509v2CRLBuilderBC(x500Name, date);
+        public virtual IX509V2CrlGenerator CreateX509v2CRLBuilder(IX500Name x500Name, DateTime date) {
+            return new X509V2CrlGeneratorBC(x500Name, date);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(IX509Certificate signingCert, 
+        public virtual IX509V3CertificateGenerator CreateJcaX509v3CertificateBuilder(IX509Certificate signingCert, 
             IBigInteger number, DateTime startDate, DateTime endDate, IX500Name subjectDnName, IPublicKey publicKey) {
-            return new JcaX509v3CertificateBuilderBC(signingCert, number, startDate, endDate, subjectDnName, publicKey);
+            return new X509V3CertificateGeneratorBC(signingCert, number, startDate, endDate, subjectDnName, publicKey);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -828,12 +826,12 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IKeyPurposeId CreateKeyPurposeId() {
-            return KeyPurposeIdBC.GetInstance();
+        public virtual IKeyPurposeID CreateKeyPurposeId() {
+            return KeyPurposeIDBC.GetInstance();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeId purposeId) {
+        public virtual IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeID purposeId) {
             return new ExtendedKeyUsageBC(purposeId);
         }
         
@@ -844,21 +842,21 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ICRLReason CreateCRLReason() {
-            return CRLReasonBC.GetInstance();
+        public virtual ICrlReason CreateCRLReason() {
+            return CrlReasonBC.GetInstance();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ITSTInfo CreateTSTInfo(IContentInfo contentInfoTsp) {
+        public virtual ITstInfo CreateTSTInfo(IContentInfo contentInfoTsp) {
             CmsProcessable content = new CmsSignedData(((ContentInfoBC) contentInfoTsp).GetContentInfo()).SignedContent;
             MemoryStream bOut = new MemoryStream();
             content.Write(bOut);
-            return new TSTInfoBC(TstInfo.GetInstance(Asn1Object.FromByteArray(bOut.ToArray())));
+            return new TstInfoBC(TstInfo.GetInstance(Asn1Object.FromByteArray(bOut.ToArray())));
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ISingleResp CreateSingleResp(IBasicOCSPResponse basicResp) {
-            return new SingleRespBC(basicResp);
+        public virtual ISingleResponse CreateSingleResp(IBasicOcspResponse basicResp) {
+            return new SingleResponseBC(basicResp);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -886,28 +884,28 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public IIDigest CreateIDigest(string hashAlgorithm) {
-            return new IDigestBC(DigestUtilities.GetDigest(hashAlgorithm));
+        public IDigest CreateIDigest(string hashAlgorithm) {
+            return new DigestBC(DigestUtilities.GetDigest(hashAlgorithm));
         }
 
         /// <summary><inheritDoc/></summary>
-        public ICertificateID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
-            return new CertificateIDBC(hashAlgorithm, issuerCert, serialNumber);
+        public ICertID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
+            return new CertIDBC(hashAlgorithm, issuerCert, serialNumber);
         }
         
         /// <summary><inheritDoc/></summary>
-        public IX500Name CreateX500NameInstance(IASN1Encodable issuer) {
-            return new X500NameBC(X509Name.GetInstance(((ASN1EncodableBC)issuer).GetEncodable()));
+        public IX500Name CreateX500NameInstance(IAsn1Encodable issuer) {
+            return new X509NameBC(X509Name.GetInstance(((Asn1EncodableBC)issuer).GetEncodable()));
         }
 
         /// <summary><inheritDoc/></summary>
-        public IOCSPReq CreateOCSPReq(ICertificateID certId, byte[] documentId) {
-            return new OCSPReqBC(certId, documentId);
+        public IOcspRequest CreateOCSPReq(ICertID certId, byte[] documentId) {
+            return new OcspReqBC(certId, documentId);
         }
         
         /// <summary><inheritDoc/></summary>
-        public IISigner CreateISigner() {
-            return new ISignerBC(null);
+        public ISigner CreateISigner() {
+            return new SignerBC(null);
         }
         
         /// <summary><inheritDoc/></summary>
@@ -1000,14 +998,14 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public bool IsNullExtension(IExtension ext) {
-            return ((ExtensionBC)ext).GetX509Extension() == null;
+        public bool IsNullExtension(IX509Extension ext) {
+            return ((X509ExtensionBC)ext).GetX509Extension() == null;
         }
         
         /// <summary><inheritDoc/></summary>
-        public IExtension CreateExtension(bool b, IDEROctetString octetString) {
-            return new ExtensionBC(new X509Extension(b, 
-                ((DEROctetStringBC)octetString).GetDEROctetString()));
+        public IX509Extension CreateExtension(bool b, IDerOctetString octetString) {
+            return new X509ExtensionBC(new X509Extension(b, 
+                ((DerOctetStringBC)octetString).GetDerOctetString()));
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1032,7 +1030,7 @@ namespace iText.Bouncycastle {
         }
         
         /// <summary><inheritDoc/></summary>
-        public IPEMParser CreatePEMParser(TextReader reader, char[] password) {
+        public IPemReader CreatePEMParser(TextReader reader, char[] password) {
             return new PEMParserBC(new PemReader(reader, new BouncyCastlePasswordFinder(password)));
         }
 

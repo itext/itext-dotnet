@@ -28,6 +28,7 @@ using Org.BouncyCastle.Tsp;
 using iText.Bouncycastle.Cert;
 using iText.Bouncycastle.Crypto;
 using iText.Bouncycastle.Math;
+using iText.Bouncycastle.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;

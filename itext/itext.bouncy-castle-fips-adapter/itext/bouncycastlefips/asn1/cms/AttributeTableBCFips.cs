@@ -72,9 +72,9 @@ namespace iText.Bouncycastlefips.Asn1.Cms {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IAttribute Get(IASN1ObjectIdentifier oid) {
-            ASN1ObjectIdentifierBCFips asn1ObjectIdentifier = (ASN1ObjectIdentifierBCFips)oid;
-            return new AttributeBCFips(attributeTable[asn1ObjectIdentifier.GetASN1ObjectIdentifier()]);
+        public virtual IAttribute Get(IDerObjectIdentifier oid) {
+            DerObjectIdentifierBCFips asn1ObjectIdentifier = (DerObjectIdentifierBCFips)oid;
+            return new AttributeBCFips(attributeTable[asn1ObjectIdentifier.GetDerObjectIdentifier()]);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

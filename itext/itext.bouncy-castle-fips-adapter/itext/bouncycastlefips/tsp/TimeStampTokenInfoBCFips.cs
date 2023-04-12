@@ -65,8 +65,8 @@ namespace iText.Bouncycastlefips.Tsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ITSTInfo ToASN1Structure() {
-            return new TSTInfoBCFips(timeStampTokenInfo);
+        public virtual ITstInfo ToASN1Structure() {
+            return new TstInfoBCFips(timeStampTokenInfo);
         }
 
         /// <summary><inheritDoc/></summary>

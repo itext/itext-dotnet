@@ -68,8 +68,8 @@ namespace iText.Bouncycastle.Cms {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IRecipientInformation Get(IRecipientId id) {
-            return new RecipientInformationBC(recipientInformationStore[((RecipientIdBC)id).GetRecipientId()]);
+        public virtual IRecipientInformation Get(IRecipientID id) {
+            return new RecipientInformationBC(recipientInformationStore[((RecipientIDBC)id).GetRecipientId()]);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

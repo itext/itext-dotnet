@@ -56,8 +56,8 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ICertificateID GetCertID() {
-            return new CertificateIDBCFips(req.ReqCert);
+        public virtual ICertID GetCertID() {
+            return new CertIDBCFips(req.ReqCert);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

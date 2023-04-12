@@ -116,7 +116,7 @@ namespace iText.Signatures {
                 spqi = FACTORY.CreateSigPolicyQualifierInfo(FACTORY.CreatePKCSObjectIdentifiers().GetIdSpqEtsUri(), FACTORY
                     .CreateDERIA5String(this.policyUri));
             }
-            IASN1ObjectIdentifier identifier = FACTORY.CreateASN1ObjectIdentifierInstance(FACTORY.CreateASN1ObjectIdentifier
+            IDerObjectIdentifier identifier = FACTORY.CreateASN1ObjectIdentifierInstance(FACTORY.CreateASN1ObjectIdentifier
                 (this.policyIdentifier.Replace("urn:oid:", "")));
             IOtherHashAlgAndValue otherHashAlgAndValue = FACTORY.CreateOtherHashAlgAndValue(FACTORY.CreateAlgorithmIdentifier
                 (FACTORY.CreateASN1ObjectIdentifier(algId)), FACTORY.CreateDEROctetString(this.policyHash));

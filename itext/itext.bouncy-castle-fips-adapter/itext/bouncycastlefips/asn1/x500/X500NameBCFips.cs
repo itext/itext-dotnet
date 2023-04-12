@@ -20,6 +20,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 using iText.Commons.Bouncycastle.Asn1.X500;
 using Org.BouncyCastle.Asn1.X500;
 
@@ -28,7 +29,7 @@ namespace iText.Bouncycastlefips.Asn1.X500 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X500.X500Name"/>.
     /// </summary>
-    public class X500NameBCFips : ASN1EncodableBCFips, IX500Name {
+    public class X500NameBCFips : Asn1EncodableBCFips, IX500Name {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.X500.X500Name"/>.

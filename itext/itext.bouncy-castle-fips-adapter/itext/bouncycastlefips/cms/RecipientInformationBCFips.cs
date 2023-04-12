@@ -66,13 +66,13 @@ namespace iText.Bouncycastlefips.Cms {
                     ((PrivateKeyBCFips)key).GetPrivateKey(), new SecureRandom()));
             }
             catch (CmsException e) {
-                throw new CMSExceptionBCFips(e);
+                throw new CmsExceptionBCFips(e);
             }
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IRecipientId GetRID() {
-            return new RecipientIdBCFips((KeyTransRecipientID)recipientInformation.RecipientID);
+        public virtual IRecipientID GetRID() {
+            return new KeyTransRecipientIDBCFips((KeyTransRecipientID)recipientInformation.RecipientID);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

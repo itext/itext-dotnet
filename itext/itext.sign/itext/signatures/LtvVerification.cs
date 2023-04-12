@@ -220,12 +220,12 @@ namespace iText.Signatures {
         }
 
         private static byte[] BuildOCSPResponse(byte[] basicOcspResponse) {
-            IDEROctetString doctet = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(basicOcspResponse);
-            IOCSPResponseStatus respStatus = BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus(BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus
+            IDerOctetString doctet = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(basicOcspResponse);
+            IOcspResponseStatus respStatus = BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus(BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus
                 ().GetSuccessful());
             IResponseBytes responseBytes = BOUNCY_CASTLE_FACTORY.CreateResponseBytes(BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers
                 ().GetIdPkixOcspBasic(), doctet);
-            IOCSPResponse ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(respStatus, responseBytes);
+            IOcspResponse ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(respStatus, responseBytes);
             return ocspResponse.GetEncoded();
         }
 
@@ -235,8 +235,8 @@ namespace iText.Signatures {
             byte[] bc = PdfEncodings.ConvertToBytes(contents.GetValue(), null);
             byte[] bt = null;
             if (PdfName.ETSI_RFC3161.Equals(sig.GetSubFilter())) {
-                using (IASN1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bc))) {
-                    IASN1Primitive pkcs = din.ReadObject();
+                using (IAsn1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bc))) {
+                    IAsn1Object pkcs = din.ReadObject();
                     bc = pkcs.GetEncoded();
                 }
             }
@@ -245,7 +245,7 @@ namespace iText.Signatures {
         }
 
         private static byte[] HashBytesSha1(byte[] b) {
-            IIDigest sh = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA1");
+            IDigest sh = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA1");
             return sh.Digest(b);
         }
 

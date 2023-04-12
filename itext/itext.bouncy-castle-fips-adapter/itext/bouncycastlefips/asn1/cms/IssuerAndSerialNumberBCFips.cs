@@ -32,7 +32,7 @@ namespace iText.Bouncycastlefips.Asn1.Cms {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Cms.IssuerAndSerialNumber"/>.
     /// </summary>
-    public class IssuerAndSerialNumberBCFips : ASN1EncodableBCFips, IIssuerAndSerialNumber {
+    public class IssuerAndSerialNumberBCFips : Asn1EncodableBCFips, IIssuerAndSerialNumber {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Cms.IssuerAndSerialNumber"/>.

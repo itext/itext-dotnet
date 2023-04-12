@@ -27,6 +27,6 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
     /// This interface represents the wrapper for Time that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface ITime : IASN1Encodable {
+    public interface ITime : IAsn1Encodable {
     }
 }

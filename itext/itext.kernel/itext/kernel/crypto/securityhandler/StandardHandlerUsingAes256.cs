@@ -241,7 +241,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         private byte[] ComputeHash(byte[] password, byte[] salt, int saltOffset, int saltLen, byte[] userKey) {
-            IIDigest mdSha256 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-256"
+            IDigest mdSha256 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-256"
                 );
             mdSha256.Update(password);
             mdSha256.Update(salt, saltOffset, saltLen);
@@ -251,9 +251,9 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte[] k = mdSha256.Digest();
             if (isPdf2) {
                 // See 7.6.4.3.3 "Algorithm 2.B"
-                IIDigest mdSha384 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-384"
+                IDigest mdSha384 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-384"
                     );
-                IIDigest mdSha512 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-512"
+                IDigest mdSha512 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-512"
                     );
                 int userKeyLen = userKey != null ? userKey.Length : 0;
                 int passAndUserKeyLen = password.Length + userKeyLen;
@@ -277,7 +277,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                         (k, 16, 32));
                     byte[] e = cipher.ProcessBlock(k1, 0, k1.Length);
                     // c)
-                    IIDigest md = null;
+                    IDigest md = null;
                     IBigInteger i_1 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger(1, 
                         JavaUtil.ArraysCopyOf(e, 16));
                     int remainder = i_1.Remainder(iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger().ValueOf

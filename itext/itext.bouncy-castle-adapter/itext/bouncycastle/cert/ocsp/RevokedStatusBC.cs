@@ -31,7 +31,7 @@ namespace iText.Bouncycastle.Cert.Ocsp {
     /// Wrapper class for revoked
     /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
     /// </summary>
-    public class RevokedStatusBC : CertificateStatusBC, IRevokedStatus {
+    public class RevokedStatusBC : CertStatusBC, IRevokedCertStatus {
         /// <summary>
         /// Creates new wrapper instance for revoked
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
@@ -60,7 +60,7 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
         /// </returns>
         public virtual CertStatus GetRevokedStatus() {
-            return base.GetCertificateStatus();
+            return base.GetCertStatus();
         }
     }
 }

@@ -36,7 +36,6 @@ using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Bouncycastle.Cert.Jcajce;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Crypto;
@@ -53,171 +52,171 @@ namespace iText.Bouncycastleconnector {
     /// Default bouncy-castle factory which is expected to be used when no other factories can be created.
     /// </summary>
     public class BouncyCastleDefaultFactory : IBouncyCastleFactory {
-        public IASN1ObjectIdentifier CreateASN1ObjectIdentifier(IASN1Encodable encodable) {
+        public IDerObjectIdentifier CreateASN1ObjectIdentifier(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1ObjectIdentifier CreateASN1ObjectIdentifier(string str) {
+        public IDerObjectIdentifier CreateASN1ObjectIdentifier(string str) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1ObjectIdentifier CreateASN1ObjectIdentifierInstance(object @object) {
+        public IDerObjectIdentifier CreateASN1ObjectIdentifierInstance(object @object) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1InputStream CreateASN1InputStream(Stream stream) {
+        public IAsn1InputStream CreateASN1InputStream(Stream stream) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1InputStream CreateASN1InputStream(byte[] bytes) {
+        public IAsn1InputStream CreateASN1InputStream(byte[] bytes) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1OctetString CreateASN1OctetString(IASN1Encodable encodable) {
+        public IAsn1OctetString CreateASN1OctetString(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1OctetString CreateASN1OctetString(IASN1TaggedObject taggedObject, bool b) {
+        public IAsn1OctetString CreateASN1OctetString(IAsn1TaggedObject taggedObject, bool b) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1OctetString CreateASN1OctetString(byte[] bytes) {
+        public IAsn1OctetString CreateASN1OctetString(byte[] bytes) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1OctetString CreateASN1OctetString(IASN1Primitive primitive) {
+        public IAsn1OctetString CreateASN1OctetString(IAsn1Object primitive) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Sequence CreateASN1Sequence(object @object) {
+        public IAsn1Sequence CreateASN1Sequence(object @object) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Sequence CreateASN1Sequence(IASN1Encodable encodable) {
+        public IAsn1Sequence CreateASN1Sequence(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Sequence CreateASN1Sequence(byte[] array) {
+        public IAsn1Sequence CreateASN1Sequence(byte[] array) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Sequence CreateASN1SequenceInstance(object @object) {
+        public IAsn1Sequence CreateASN1SequenceInstance(object @object) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDERSequence CreateDERSequence(IASN1EncodableVector encodableVector) {
+        public IDerSequence CreateDERSequence(IAsn1EncodableVector encodableVector) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDERSequence CreateDERSequence(IASN1Primitive primitive) {
+        public IDerSequence CreateDERSequence(IAsn1Object primitive) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1TaggedObject CreateASN1TaggedObject(IASN1Encodable encodable) {
+        public IAsn1TaggedObject CreateASN1TaggedObject(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Integer CreateASN1Integer(IASN1Encodable encodable) {
+        public IDerInteger CreateASN1Integer(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Integer CreateASN1Integer(int i) {
+        public IDerInteger CreateASN1Integer(int i) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Integer CreateASN1Integer(IBigInteger i) {
+        public IDerInteger CreateASN1Integer(IBigInteger i) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Set CreateASN1Set(IASN1Encodable encodable) {
+        public IAsn1Set CreateASN1Set(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Set CreateASN1Set(object encodable) {
+        public IAsn1Set CreateASN1Set(object encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Set CreateASN1Set(IASN1TaggedObject taggedObject, bool b) {
+        public IAsn1Set CreateASN1Set(IAsn1TaggedObject taggedObject, bool b) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Set CreateNullASN1Set() {
+        public IAsn1Set CreateNullASN1Set() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1OutputStream CreateASN1OutputStream(Stream stream) {
+        public IDerOutputStream CreateASN1OutputStream(Stream stream) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1OutputStream CreateASN1OutputStream(Stream outputStream, string asn1Encoding) {
+        public IDerOutputStream CreateASN1OutputStream(Stream outputStream, string asn1Encoding) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDEROctetString CreateDEROctetString(byte[] bytes) {
+        public IDerOctetString CreateDEROctetString(byte[] bytes) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDEROctetString CreateDEROctetString(IASN1Encodable encodable) {
+        public IDerOctetString CreateDEROctetString(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1EncodableVector CreateASN1EncodableVector() {
+        public IAsn1EncodableVector CreateASN1EncodableVector() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDERNull CreateDERNull() {
+        public IDerNull CreateDERNull() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDERTaggedObject CreateDERTaggedObject(int i, IASN1Primitive primitive) {
+        public IDerTaggedObject CreateDERTaggedObject(int i, IAsn1Object primitive) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDERTaggedObject CreateDERTaggedObject(bool b, int i, IASN1Primitive primitive) {
+        public IDerTaggedObject CreateDERTaggedObject(bool b, int i, IAsn1Object primitive) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDERSet CreateDERSet(IASN1EncodableVector encodableVector) {
+        public IDerSet CreateDERSet(IAsn1EncodableVector encodableVector) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDERSet CreateDERSet(IASN1Primitive primitive) {
+        public IDerSet CreateDERSet(IAsn1Object primitive) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDERSet CreateDERSet(ISignaturePolicyIdentifier identifier) {
+        public IDerSet CreateDERSet(ISignaturePolicyIdentifier identifier) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDERSet CreateDERSet(IRecipientInfo recipientInfo) {
+        public IDerSet CreateDERSet(IRecipientInfo recipientInfo) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Enumerated CreateASN1Enumerated(int i) {
+        public IDerEnumerated CreateASN1Enumerated(int i) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Encoding CreateASN1Encoding() {
+        public IAsn1Encoding CreateASN1Encoding() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IAttributeTable CreateAttributeTable(IASN1Set unat) {
+        public IAttributeTable CreateAttributeTable(IAsn1Set unat) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IPKCSObjectIdentifiers CreatePKCSObjectIdentifiers() {
+        public IPkcsObjectIdentifiers CreatePKCSObjectIdentifiers() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IAttribute CreateAttribute(IASN1ObjectIdentifier attrType, IASN1Set attrValues) {
+        public IAttribute CreateAttribute(IDerObjectIdentifier attrType, IAsn1Set attrValues) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IContentInfo CreateContentInfo(IASN1Sequence sequence) {
+        public IContentInfo CreateContentInfo(IAsn1Sequence sequence) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IContentInfo CreateContentInfo(IASN1ObjectIdentifier objectIdentifier, IASN1Encodable encodable) {
+        public IContentInfo CreateContentInfo(IDerObjectIdentifier objectIdentifier, IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -225,40 +224,40 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ISigningCertificate CreateSigningCertificate(IASN1Sequence sequence) {
+        public ISigningCertificate CreateSigningCertificate(IAsn1Sequence sequence) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ISigningCertificateV2 CreateSigningCertificateV2(IASN1Sequence sequence) {
+        public ISigningCertificateV2 CreateSigningCertificateV2(IAsn1Sequence sequence) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IBasicOCSPResponse CreateBasicOCSPResponse(IASN1Primitive primitive) {
+        public IBasicOcspResponse CreateBasicOCSPResponse(IAsn1Object primitive) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IBasicOCSPResponse CreateBasicOCSPResponse(object response) {
+        public IBasicOcspResponse CreateBasicOCSPResponse(object response) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IOCSPObjectIdentifiers CreateOCSPObjectIdentifiers() {
+        public IOcspObjectIdentifiers CreateOCSPObjectIdentifiers() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm) {
+        public IAlgorithmIdentifier CreateAlgorithmIdentifier(IDerObjectIdentifier algorithm) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm, IASN1Encodable encodable) {
+        public IAlgorithmIdentifier CreateAlgorithmIdentifier(IDerObjectIdentifier algorithm, IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IRsassaPssParameters CreateRSASSAPSSParams(IASN1Encodable encodable)
+        public IRsassaPssParameters CreateRSASSAPSSParams(IAsn1Encodable encodable)
         {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IRsassaPssParameters CreateRSASSAPSSParamsWithMGF1(IASN1ObjectIdentifier digestAlgoOid, int saltLen, int trailerField)
+        public IRsassaPssParameters CreateRSASSAPSSParamsWithMGF1(IDerObjectIdentifier digestAlgoOid, int saltLen, int trailerField)
         {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
@@ -267,87 +266,87 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ICertificateID CreateCertificateID() {
+        public ICertID CreateCertificateID() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IExtensions CreateExtensions() {
+        public IX509Extensions CreateExtensions() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IExtensions CreateExtensions(IDictionary objectIdentifier) {
+        public IX509Extensions CreateExtensions(IDictionary objectIdentifier) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IOCSPReqBuilder CreateOCSPReqBuilder() {
+        public IOcspReqGenerator CreateOCSPReqBuilder() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ISigPolicyQualifierInfo CreateSigPolicyQualifierInfo(IASN1ObjectIdentifier objectIdentifier, IDERIA5String @string) {
+        public ISigPolicyQualifierInfo CreateSigPolicyQualifierInfo(IDerObjectIdentifier objectIdentifier, IDerIA5String @string) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1String CreateASN1String(IASN1Encodable encodable) {
+        public IDerStringBase CreateASN1String(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Primitive CreateASN1Primitive(IASN1Encodable encodable) {
+        public IAsn1Object CreateASN1Primitive(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Primitive CreateASN1Primitive(byte[] array) {
+        public IAsn1Object CreateASN1Primitive(byte[] array) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IOCSPResponse CreateOCSPResponse(byte[] bytes) {
+        public IOcspResponse CreateOCSPResponse(byte[] bytes) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IOCSPResponse CreateOCSPResponse() {
+        public IOcspResponse CreateOCSPResponse() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IOCSPResponse CreateOCSPResponse(IOCSPResponseStatus respStatus, IResponseBytes responseBytes) {
+        public IOcspResponse CreateOCSPResponse(IOcspResponseStatus respStatus, IResponseBytes responseBytes) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IResponseBytes CreateResponseBytes(IASN1ObjectIdentifier asn1ObjectIdentifier, IDEROctetString derOctetString) {
+        public IResponseBytes CreateResponseBytes(IDerObjectIdentifier asn1ObjectIdentifier, IDerOctetString derOctetString) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IOCSPResponse CreateOCSPResponse(int respStatus, object ocspRespObject) {
+        public IOcspResponse CreateOCSPResponse(int respStatus, object ocspRespObject) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IOCSPResponseStatus CreateOCSPResponseStatus(int status) {
+        public IOcspResponseStatus CreateOCSPResponseStatus(int status) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IOCSPResponseStatus CreateOCSPResponseStatus() {
+        public IOcspResponseStatus CreateOCSPResponseStatus() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ICertificateStatus CreateCertificateStatus() {
+        public ICertStatus CreateCertificateStatus() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus) {
+        public IRevokedCertStatus CreateRevokedStatus(ICertStatus certificateStatus) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IRevokedStatus CreateRevokedStatus(DateTime date, int i) {
+        public IRevokedCertStatus CreateRevokedStatus(DateTime date, int i) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDERIA5String CreateDERIA5String(IASN1TaggedObject taggedObject, bool b) {
+        public IDerIA5String CreateDERIA5String(IAsn1TaggedObject taggedObject, bool b) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDERIA5String CreateDERIA5String(string str) {
+        public IDerIA5String CreateDERIA5String(string str) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ICRLDistPoint CreateCRLDistPoint(object @object) {
+        public ICrlDistPoint CreateCRLDistPoint(object @object) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -355,7 +354,7 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IGeneralNames CreateGeneralNames(IASN1Encodable encodable) {
+        public IGeneralNames CreateGeneralNames(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -364,15 +363,15 @@ namespace iText.Bouncycastleconnector {
         }
 
         public IOtherHashAlgAndValue
-            CreateOtherHashAlgAndValue(IAlgorithmIdentifier algorithmIdentifier, IASN1OctetString octetString) {
+            CreateOtherHashAlgAndValue(IAlgorithmIdentifier algorithmIdentifier, IAsn1OctetString octetString) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ISignaturePolicyId CreateSignaturePolicyId(IASN1ObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue) {
+        public ISignaturePolicyId CreateSignaturePolicyId(IDerObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ISignaturePolicyId CreateSignaturePolicyId(IASN1ObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue,
+        public ISignaturePolicyId CreateSignaturePolicyId(IDerObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue,
             params ISigPolicyQualifierInfo[] policyQualifiers) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
@@ -381,8 +380,8 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IEnvelopedData CreateEnvelopedData(IOriginatorInfo originatorInfo, IASN1Set set,
-            IEncryptedContentInfo encryptedContentInfo, IASN1Set set1) {
+        public IEnvelopedData CreateEnvelopedData(IOriginatorInfo originatorInfo, IAsn1Set set,
+            IEncryptedContentInfo encryptedContentInfo, IAsn1Set set1) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -390,12 +389,12 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IEncryptedContentInfo CreateEncryptedContentInfo(IASN1ObjectIdentifier data, IAlgorithmIdentifier algorithmIdentifier,
-            IASN1OctetString octetString) {
+        public IEncryptedContentInfo CreateEncryptedContentInfo(IDerObjectIdentifier data, IAlgorithmIdentifier algorithmIdentifier,
+            IAsn1OctetString octetString) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ITBSCertificate CreateTBSCertificate(IASN1Encodable encodable) {
+        public ITbsCertificateStructure CreateTBSCertificate(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -408,7 +407,7 @@ namespace iText.Bouncycastleconnector {
         }
 
         public IKeyTransRecipientInfo CreateKeyTransRecipientInfo(IRecipientIdentifier recipientIdentifier,
-            IAlgorithmIdentifier algorithmIdentifier, IASN1OctetString octetString) {
+            IAlgorithmIdentifier algorithmIdentifier, IAsn1OctetString octetString) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -416,7 +415,7 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ICMSEnvelopedData CreateCMSEnvelopedData(byte[] valueBytes) {
+        public ICmsEnvelopedData CreateCMSEnvelopedData(byte[] valueBytes) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -428,27 +427,27 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public AbstractOCSPException CreateAbstractOCSPException(Exception e) {
+        public AbstractOcspException CreateAbstractOCSPException(Exception e) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IUnknownStatus CreateUnknownStatus() {
+        public IUnknownCertStatus CreateUnknownStatus() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1Dump CreateASN1Dump() {
+        public IAsn1Dump CreateASN1Dump() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1BitString CreateASN1BitString(IASN1Encodable encodable) {
+        public IDerBitString CreateASN1BitString(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1GeneralizedTime CreateASN1GeneralizedTime(IASN1Encodable encodable) {
+        public IDerGeneralizedTime CreateASN1GeneralizedTime(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IASN1UTCTime CreateASN1UTCTime(IASN1Encodable encodable) {
+        public IDerUtcTime CreateASN1UTCTime(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -477,19 +476,19 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IBasicOCSPRespBuilder CreateBasicOCSPRespBuilder(IRespID respID) {
+        public IBasicOcspRespGenerator CreateBasicOCSPRespBuilder(IRespID respID) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IOCSPReq CreateOCSPReq(byte[] requestBytes) {
+        public IOcspRequest CreateOCSPReq(byte[] requestBytes) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IX509v2CRLBuilder CreateX509v2CRLBuilder(IX500Name x500Name, DateTime thisUpdate) {
+        public IX509V2CrlGenerator CreateX509v2CRLBuilder(IX500Name x500Name, DateTime thisUpdate) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(IX509Certificate signingCert,
+        public IX509V3CertificateGenerator CreateJcaX509v3CertificateBuilder(IX509Certificate signingCert,
             IBigInteger certSerialNumber, DateTime startDate, DateTime endDate, IX500Name subjectDnName, IPublicKey publicKey) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
@@ -506,11 +505,11 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IKeyPurposeId CreateKeyPurposeId() {
+        public IKeyPurposeID CreateKeyPurposeId() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeId purposeId) {
+        public IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeID purposeId) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -518,15 +517,15 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ICRLReason CreateCRLReason() {
+        public ICrlReason CreateCRLReason() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ITSTInfo CreateTSTInfo(IContentInfo contentInfo) {
+        public ITstInfo CreateTSTInfo(IContentInfo contentInfo) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ISingleResp CreateSingleResp(IBasicOCSPResponse basicResp) {
+        public ISingleResponse CreateSingleResp(IBasicOcspResponse basicResp) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -538,23 +537,23 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IIDigest CreateIDigest(string hashAlgorithm) {
+        public IDigest CreateIDigest(string hashAlgorithm) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public ICertificateID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
+        public ICertID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IX500Name CreateX500NameInstance(IASN1Encodable issuer) {
+        public IX500Name CreateX500NameInstance(IAsn1Encodable issuer) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IOCSPReq CreateOCSPReq(ICertificateID certId, byte[] documentId) {
+        public IOcspRequest CreateOCSPReq(ICertID certId, byte[] documentId) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IISigner CreateISigner() {
+        public ISigner CreateISigner() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -614,7 +613,7 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IPEMParser CreatePEMParser(TextReader reader, char[] password) {
+        public IPemReader CreatePEMParser(TextReader reader, char[] password) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -630,11 +629,11 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IExtension CreateExtension(bool b, IDEROctetString octetString) {
+        public IX509Extension CreateExtension(bool b, IDerOctetString octetString) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public bool IsNullExtension(IExtension extNonce) {
+        public bool IsNullExtension(IX509Extension extNonce) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 

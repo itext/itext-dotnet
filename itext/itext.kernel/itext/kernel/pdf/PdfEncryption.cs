@@ -328,7 +328,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public static byte[] GenerateNewDocumentId() {
-            IIDigest sha512;
+            IDigest sha512;
             try {
                 sha512 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-512");
             }

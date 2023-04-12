@@ -72,11 +72,11 @@ namespace iText.Signatures {
         }
 
         internal static byte[] GetExtensionValueByOid(IX509Certificate certificate, String oid) {
-            IASN1OctetString extensionValue = certificate.GetExtensionValue(oid);
+            IAsn1OctetString extensionValue = certificate.GetExtensionValue(oid);
             return extensionValue.IsNull() ? null : extensionValue.GetDerEncoded();
         }
 
-        internal static IIDigest GetMessageDigest(String hashAlgorithm) {
+        internal static IDigest GetMessageDigest(String hashAlgorithm) {
             return FACTORY.CreateIDigest(hashAlgorithm);
         }
 
@@ -89,7 +89,7 @@ namespace iText.Signatures {
             return response.GetResponseStream();
         }
 
-        internal static ICertificateID GenerateCertificateId(IX509Certificate issuerCert, IBigInteger serialNumber, String hashAlgorithm) {
+        internal static ICertID GenerateCertificateId(IX509Certificate issuerCert, IBigInteger serialNumber, String hashAlgorithm) {
             return FACTORY.CreateCertificateID(hashAlgorithm, issuerCert, serialNumber);
         }
 
@@ -110,11 +110,11 @@ namespace iText.Signatures {
             return response.GetResponseStream();
         }
 
-        internal static IOCSPReq GenerateOcspRequestWithNonce(ICertificateID id) {
+        internal static IOcspRequest GenerateOcspRequestWithNonce(ICertID id) {
             return FACTORY.CreateOCSPReq(id, PdfEncryption.GenerateNewDocumentId());
         }
 
-        internal static bool IsSignatureValid(IBasicOCSPResponse validator, IX509Certificate certStoreX509) {
+        internal static bool IsSignatureValid(IBasicOcspResponse validator, IX509Certificate certStoreX509) {
             return validator.Verify(certStoreX509);
         }
 
@@ -122,7 +122,7 @@ namespace iText.Signatures {
             validator.Validate(certStoreX509);
         }
 
-        internal static bool CheckIfIssuersMatch(ICertificateID certificateID, IX509Certificate issuerCert) {
+        internal static bool CheckIfIssuersMatch(ICertID certificateID, IX509Certificate issuerCert) {
             return certificateID.MatchesIssuer(issuerCert);
         }
 
@@ -130,7 +130,7 @@ namespace iText.Signatures {
             return date.AddSeconds(180);
         }
 
-        internal static IEnumerable<IX509Certificate> GetCertsFromOcspResponse(IBasicOCSPResponse ocspResp) {
+        internal static IEnumerable<IX509Certificate> GetCertsFromOcspResponse(IBasicOcspResponse ocspResp) {
             return ocspResp.GetCerts();
         }
 
@@ -142,7 +142,7 @@ namespace iText.Signatures {
             return enumerable.First();
         }
 
-        internal static IX500Name GetIssuerX500Principal(IASN1Sequence issuerAndSerialNumber) {
+        internal static IX500Name GetIssuerX500Principal(IAsn1Sequence issuerAndSerialNumber) {
             return FACTORY.CreateX500NameInstance(issuerAndSerialNumber.GetObjectAt(0));
         }
 
@@ -212,12 +212,12 @@ namespace iText.Signatures {
             return false;
         }
 
-        internal static DateTime GetTimeStampDate(ITSTInfo timeStampTokenInfo) {
+        internal static DateTime GetTimeStampDate(ITstInfo timeStampTokenInfo) {
             return timeStampTokenInfo.GetGenTime();
         }
 
-        internal static IISigner GetSignatureHelper(String algorithm) {
-            IISigner signer = FACTORY.CreateISigner();
+        internal static ISigner GetSignatureHelper(String algorithm) {
+            ISigner signer = FACTORY.CreateISigner();
             signer.SetDigestAlgorithm(algorithm);
             return signer;
         }
@@ -236,19 +236,19 @@ namespace iText.Signatures {
             return rootStore;
         }
 
-        internal static void SetRSASSAPSSParamsWithMGF1(IISigner signature, String digestAlgoName, int saltLen, int trailerField)
+        internal static void SetRSASSAPSSParamsWithMGF1(ISigner signature, String digestAlgoName, int saltLen, int trailerField)
         {
          //     var mgf1Spec = new MgfParameters() MGF1ParameterSpec(digestAlgoName);
          //    PSSParameterSpec spec = new Pss  PSSParameterSpec(digestAlgoName, "MGF1", mgf1Spec, saltLen, trailerField);
          // signature.  setParameter(spec);
          }
         
-        internal static void UpdateVerifier(IISigner sig, byte[] digest) {
+        internal static void UpdateVerifier(ISigner sig, byte[] digest) {
             sig.UpdateVerifier(digest);
         }
 
-        public static ICertificateID GenerateCertificateId(IX509Certificate issuerCert, IBigInteger serialNumber, 
-            IASN1ObjectIdentifier hashAlgOid) {
+        public static ICertID GenerateCertificateId(IX509Certificate issuerCert, IBigInteger serialNumber, 
+            IDerObjectIdentifier hashAlgOid) {
             return GenerateCertificateId(issuerCert, serialNumber, hashAlgOid.GetId());
         }
     }

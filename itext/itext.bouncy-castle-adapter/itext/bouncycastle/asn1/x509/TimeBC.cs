@@ -29,7 +29,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.Time"/>.
     /// </summary>
-    public class TimeBC : ASN1EncodableBC, ITime {
+    public class TimeBC : Asn1EncodableBC, ITime {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.X509.Time"/>.

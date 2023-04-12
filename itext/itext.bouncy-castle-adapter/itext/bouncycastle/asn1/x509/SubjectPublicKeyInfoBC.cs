@@ -29,7 +29,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.SubjectPublicKeyInfo"/>.
     /// </summary>
-    public class SubjectPublicKeyInfoBC : ASN1EncodableBC, ISubjectPublicKeyInfo {
+    public class SubjectPublicKeyInfoBC : Asn1EncodableBC, ISubjectPublicKeyInfo {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.X509.SubjectPublicKeyInfo"/>.

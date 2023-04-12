@@ -26,7 +26,7 @@ using iText.Commons.Bouncycastle.Math;
 
 namespace iText.Commons.Bouncycastle.Asn1.Pkcs {
     /// <summary>Wrapper interface for BouncyCastle's representation of RSASSA-PSS parameters in ASN.1.</summary>
-    public interface IRsassaPssParameters : IASN1Encodable {
+    public interface IRsassaPssParameters : IAsn1Encodable {
         /// <summary>
         /// Return the
         /// <see cref="iText.Commons.Bouncycastle.Asn1.X509.IAlgorithmIdentifier"/>
@@ -56,7 +56,7 @@ namespace iText.Commons.Bouncycastle.Asn1.Pkcs {
         /// for API consistency reasons, but typical
         /// values will be small.
         /// </remarks>
-        IASN1Integer GetSaltLength();
+        IDerInteger GetSaltLength();
 
         /// <summary>Return the trailer field parameter.</summary>
         /// <remarks>
@@ -65,6 +65,6 @@ namespace iText.Commons.Bouncycastle.Asn1.Pkcs {
         /// for API consistency reasons, but typical
         /// values will be small.
         /// </remarks>
-        IASN1Integer GetTrailerField();
+        IDerInteger GetTrailerField();
     }
 }

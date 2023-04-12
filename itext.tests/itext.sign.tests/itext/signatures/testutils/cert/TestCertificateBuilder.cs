@@ -27,7 +27,6 @@ using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Bouncycastle.Cert.Jcajce;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
@@ -74,7 +73,7 @@ namespace iText.Signatures.Testutils.Cert {
             IX500Name subjectDnName = FACTORY.CreateX500Name(subjectDN);
             IBigInteger certSerialNumber = FACTORY.CreateBigInteger(Convert.ToString(SystemUtil.GetTimeBasedSeed())); // Using the current timestamp as the certificate serial number
             IContentSigner contentSigner = FACTORY.CreateContentSigner(signatureAlgorithm, signingKey);
-            IJcaX509v3CertificateBuilder certBuilder = FACTORY.CreateJcaX509v3CertificateBuilder(signingCert,
+            IX509V3CertificateGenerator certBuilder = FACTORY.CreateJcaX509v3CertificateBuilder(signingCert,
                 certSerialNumber, startDate, endDate, subjectDnName, publicKey);
 
             // TODO generalize extensions setting
@@ -105,8 +104,8 @@ namespace iText.Signatures.Testutils.Cert {
             return certBuilder.Build(contentSigner);
         }
 
-        private static void AddExtension(IASN1ObjectIdentifier extensionOID, bool critical, IASN1Encodable extensionValue, 
-            IJcaX509v3CertificateBuilder certBuilder) {
+        private static void AddExtension(IDerObjectIdentifier extensionOID, bool critical, IAsn1Encodable extensionValue, 
+            IX509V3CertificateGenerator certBuilder) {
             certBuilder.AddExtension(extensionOID, critical, extensionValue);
         }
     }

@@ -111,19 +111,19 @@ namespace iText.Signatures {
         public virtual void ToSignaturePolicyIdentifierTest() {
             ISignaturePolicyIdentifier actual = new SignaturePolicyInfo(POLICY_IDENTIFIER, POLICY_HASH, POLICY_DIGEST_ALGORITHM
                 , POLICY_URI).ToSignaturePolicyIdentifier();
-            IDERIA5String deria5String = BOUNCY_CASTLE_FACTORY.CreateDERIA5String(POLICY_URI);
+            IDerIA5String deria5String = BOUNCY_CASTLE_FACTORY.CreateDERIA5String(POLICY_URI);
             ISigPolicyQualifierInfo sigPolicyQualifierInfo = BOUNCY_CASTLE_FACTORY.CreateSigPolicyQualifierInfo(BOUNCY_CASTLE_FACTORY
                 .CreatePKCSObjectIdentifiers().GetIdSpqEtsUri(), deria5String);
-            IDEROctetString derOctetString = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(POLICY_HASH);
+            IDerOctetString derOctetString = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(POLICY_HASH);
             String algId = DigestAlgorithms.GetAllowedDigest(POLICY_DIGEST_ALGORITHM);
-            IASN1ObjectIdentifier asn1ObjectIdentifier = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(algId);
+            IDerObjectIdentifier asn1ObjectIdentifier = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(algId);
             IAlgorithmIdentifier algorithmIdentifier = BOUNCY_CASTLE_FACTORY.CreateAlgorithmIdentifier(asn1ObjectIdentifier
                 );
             IOtherHashAlgAndValue otherHashAlgAndValue = BOUNCY_CASTLE_FACTORY.CreateOtherHashAlgAndValue(algorithmIdentifier
                 , derOctetString);
-            IASN1ObjectIdentifier objectIdentifier = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(POLICY_IDENTIFIER
+            IDerObjectIdentifier objectIdentifier = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(POLICY_IDENTIFIER
                 );
-            IASN1ObjectIdentifier objectIdentifierInstance = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(objectIdentifier
+            IDerObjectIdentifier objectIdentifierInstance = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(objectIdentifier
                 );
             ISignaturePolicyId signaturePolicyId = BOUNCY_CASTLE_FACTORY.CreateSignaturePolicyId(objectIdentifierInstance
                 , otherHashAlgAndValue, sigPolicyQualifierInfo);

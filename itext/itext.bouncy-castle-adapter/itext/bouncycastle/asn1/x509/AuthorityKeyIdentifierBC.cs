@@ -29,7 +29,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.AuthorityKeyIdentifier"/>.
     /// </summary>
-    public class AuthorityKeyIdentifierBC : ASN1EncodableBC, IAuthorityKeyIdentifier {
+    public class AuthorityKeyIdentifierBC : Asn1EncodableBC, IAuthorityKeyIdentifier {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.X509.AuthorityKeyIdentifier"/>.

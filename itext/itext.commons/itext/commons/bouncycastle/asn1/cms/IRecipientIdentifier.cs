@@ -27,6 +27,6 @@ namespace iText.Commons.Bouncycastle.Asn1.Cms {
     /// This interface represents the wrapper for RecipientIdentifier that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IRecipientIdentifier : IASN1Encodable {
+    public interface IRecipientIdentifier : IAsn1Encodable {
     }
 }

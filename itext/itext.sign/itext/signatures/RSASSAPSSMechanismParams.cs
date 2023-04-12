@@ -42,7 +42,7 @@ namespace iText.Signatures {
 
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
-        private readonly IASN1ObjectIdentifier digestAlgoOid;
+        private readonly IDerObjectIdentifier digestAlgoOid;
 
         private readonly int saltLen;
 
@@ -55,7 +55,7 @@ namespace iText.Signatures {
         /// <param name="digestAlgoOid">the digest algorithm OID that will be used for both the digest and MGF</param>
         /// <param name="saltLen">the salt length</param>
         /// <param name="trailerField">the trailer field</param>
-        public RSASSAPSSMechanismParams(IASN1ObjectIdentifier digestAlgoOid, int saltLen, int trailerField) {
+        public RSASSAPSSMechanismParams(IDerObjectIdentifier digestAlgoOid, int saltLen, int trailerField) {
             this.digestAlgoOid = digestAlgoOid;
             this.saltLen = saltLen;
             this.trailerField = trailerField;
@@ -66,19 +66,19 @@ namespace iText.Signatures {
         public static iText.Signatures.RSASSAPSSMechanismParams CreateForDigestAlgorithm(String digestAlgorithmName
             ) {
             String oid = DigestAlgorithms.GetAllowedDigest(digestAlgorithmName);
-            IASN1ObjectIdentifier oidWrapper = FACTORY.CreateASN1ObjectIdentifier(oid);
+            IDerObjectIdentifier oidWrapper = FACTORY.CreateASN1ObjectIdentifier(oid);
             int bitLen = DigestAlgorithms.GetOutputBitLength(digestAlgorithmName);
             // default saltLen to the digest algorithm's output length in bytes
             return new iText.Signatures.RSASSAPSSMechanismParams(oidWrapper, bitLen / 8, DEFAULT_TRAILER_FIELD);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Encodable ToEncodable() {
+        public virtual IAsn1Encodable ToEncodable() {
             return FACTORY.CreateRSASSAPSSParamsWithMGF1(this.digestAlgoOid, this.saltLen, this.trailerField);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void Apply(IISigner signature) {
+        public virtual void Apply(ISigner signature) {
             SignUtils.SetRSASSAPSSParamsWithMGF1(signature, DigestAlgorithms.GetDigest(this.digestAlgoOid.GetId()), this
                 .saltLen, this.trailerField);
         }

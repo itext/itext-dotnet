@@ -126,7 +126,7 @@ namespace iText.Signatures {
                 signCerts = certs;
                 signCert = (IX509Certificate)SignUtils.GetFirstElement(certs);
                 crls = new List<IX509Crl>();
-                using (IASN1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(contentsKey))) {
+                using (IAsn1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(contentsKey))) {
                     signatureValue = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(@in.ReadObject()).GetOctets();
                 }
                 sig = SignUtils.GetSignatureHelper("SHA1withRSA");
@@ -152,24 +152,24 @@ namespace iText.Signatures {
                 //
                 // Basic checks to make sure it's a PKCS#7 SignedData Object
                 //
-                IASN1Primitive pkcs;
+                IAsn1Object pkcs;
                 try {
-                    using (IASN1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(contentsKey))) {
+                    using (IAsn1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(contentsKey))) {
                         pkcs = din.ReadObject();
                     }
                 }
                 catch (System.IO.IOException) {
                     throw new ArgumentException(SignExceptionMessageConstant.CANNOT_DECODE_PKCS7_SIGNED_DATA_OBJECT);
                 }
-                IASN1Sequence signedData = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(pkcs);
+                IAsn1Sequence signedData = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(pkcs);
                 if (signedData == null) {
                     throw new ArgumentException(SignExceptionMessageConstant.NOT_A_VALID_PKCS7_OBJECT_NOT_A_SEQUENCE);
                 }
-                IASN1ObjectIdentifier objId = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(signedData.GetObjectAt(0));
+                IDerObjectIdentifier objId = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(signedData.GetObjectAt(0));
                 if (!objId.GetId().Equals(SecurityIDs.ID_PKCS7_SIGNED_DATA)) {
                     throw new ArgumentException(SignExceptionMessageConstant.NOT_A_VALID_PKCS7_OBJECT_NOT_SIGNED_DATA);
                 }
-                IASN1Sequence content = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject
+                IAsn1Sequence content = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject
                     (signedData.GetObjectAt(1)).GetObject());
                 // the positions that we care are:
                 //     0 - version
@@ -183,14 +183,14 @@ namespace iText.Signatures {
                 digestalgos = new HashSet<String>();
                 IEnumerator e_1 = BOUNCY_CASTLE_FACTORY.CreateASN1Set(content.GetObjectAt(1)).GetObjects();
                 while (e_1.MoveNext()) {
-                    IASN1Sequence s = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(e_1.Current);
-                    IASN1ObjectIdentifier o = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(s.GetObjectAt(0));
+                    IAsn1Sequence s = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(e_1.Current);
+                    IDerObjectIdentifier o = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(s.GetObjectAt(0));
                     digestalgos.Add(o.GetId());
                 }
                 // the possible ID_PKCS7_DATA
-                IASN1Sequence encapContentInfo = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(content.GetObjectAt(2));
+                IAsn1Sequence encapContentInfo = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(content.GetObjectAt(2));
                 if (encapContentInfo.Size() > 1) {
-                    IASN1OctetString encapContent = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject
+                    IAsn1OctetString encapContent = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject
                         (encapContentInfo.GetObjectAt(1)).GetObject());
                     this.encapMessageContent = encapContent.GetOctets();
                 }
@@ -201,12 +201,12 @@ namespace iText.Signatures {
                 // the certificates
                 certs = SignUtils.ReadAllCerts(contentsKey);
                 // the signerInfos
-                IASN1Set signerInfos = BOUNCY_CASTLE_FACTORY.CreateASN1Set(content.GetObjectAt(next));
+                IAsn1Set signerInfos = BOUNCY_CASTLE_FACTORY.CreateASN1Set(content.GetObjectAt(next));
                 if (signerInfos.Size() != 1) {
                     throw new ArgumentException(SignExceptionMessageConstant.THIS_PKCS7_OBJECT_HAS_MULTIPLE_SIGNERINFOS_ONLY_ONE_IS_SUPPORTED_AT_THIS_TIME
                         );
                 }
-                IASN1Sequence signerInfo = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(signerInfos.GetObjectAt(0));
+                IAsn1Sequence signerInfo = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(signerInfos.GetObjectAt(0));
                 // the positions that we care are
                 //     0 - version
                 //     1 - the signing certificate issuer and serial number
@@ -216,7 +216,7 @@ namespace iText.Signatures {
                 signerversion = BOUNCY_CASTLE_FACTORY.CreateASN1Integer(signerInfo.GetObjectAt(0)).GetValue().GetIntValue(
                     );
                 // Get the signing certificate
-                IASN1Sequence issuerAndSerialNumber = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(signerInfo.GetObjectAt(1));
+                IAsn1Sequence issuerAndSerialNumber = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(signerInfo.GetObjectAt(1));
                 IX500Name issuer = SignUtils.GetIssuerX500Principal(issuerAndSerialNumber);
                 IBigInteger serialNumber = BOUNCY_CASTLE_FACTORY.CreateASN1Integer(issuerAndSerialNumber.GetObjectAt(1)).GetValue
                     ();
@@ -236,44 +236,44 @@ namespace iText.Signatures {
                     (signerInfo.GetObjectAt(2)).GetObjectAt(0)).GetId();
                 next = 3;
                 bool foundCades = false;
-                IASN1TaggedObject tagsig = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(signerInfo.GetObjectAt(next));
+                IAsn1TaggedObject tagsig = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(signerInfo.GetObjectAt(next));
                 if (tagsig != null) {
-                    IASN1Set sseq = BOUNCY_CASTLE_FACTORY.CreateASN1Set(tagsig, false);
+                    IAsn1Set sseq = BOUNCY_CASTLE_FACTORY.CreateASN1Set(tagsig, false);
                     sigAttr = sseq.GetEncoded();
                     // maybe not necessary, but we use the following line as fallback:
                     sigAttrDer = sseq.GetEncoded(BOUNCY_CASTLE_FACTORY.CreateASN1Encoding().GetDer());
                     for (int k = 0; k < sseq.Size(); ++k) {
-                        IASN1Sequence seq2 = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(sseq.GetObjectAt(k));
+                        IAsn1Sequence seq2 = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(sseq.GetObjectAt(k));
                         String idSeq2 = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(seq2.GetObjectAt(0)).GetId();
                         if (idSeq2.Equals(SecurityIDs.ID_MESSAGE_DIGEST)) {
-                            IASN1Set set = BOUNCY_CASTLE_FACTORY.CreateASN1Set(seq2.GetObjectAt(1));
+                            IAsn1Set set = BOUNCY_CASTLE_FACTORY.CreateASN1Set(seq2.GetObjectAt(1));
                             digestAttr = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(set.GetObjectAt(0)).GetOctets();
                         }
                         else {
                             if (idSeq2.Equals(SecurityIDs.ID_ADBE_REVOCATION)) {
-                                IASN1Set setout = BOUNCY_CASTLE_FACTORY.CreateASN1Set(seq2.GetObjectAt(1));
-                                IASN1Sequence seqout = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(setout.GetObjectAt(0));
+                                IAsn1Set setout = BOUNCY_CASTLE_FACTORY.CreateASN1Set(seq2.GetObjectAt(1));
+                                IAsn1Sequence seqout = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(setout.GetObjectAt(0));
                                 for (int j = 0; j < seqout.Size(); ++j) {
-                                    IASN1TaggedObject tg = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(seqout.GetObjectAt(j));
+                                    IAsn1TaggedObject tg = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(seqout.GetObjectAt(j));
                                     if (tg.GetTagNo() == 0) {
-                                        IASN1Sequence seqin = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tg.GetObject());
+                                        IAsn1Sequence seqin = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tg.GetObject());
                                         FindCRL(seqin);
                                     }
                                     if (tg.GetTagNo() == 1) {
-                                        IASN1Sequence seqin = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tg.GetObject());
+                                        IAsn1Sequence seqin = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tg.GetObject());
                                         FindOcsp(seqin);
                                     }
                                 }
                             }
                             else {
                                 if (isCades && idSeq2.Equals(SecurityIDs.ID_AA_SIGNING_CERTIFICATE_V1)) {
-                                    IASN1Set setout = BOUNCY_CASTLE_FACTORY.CreateASN1Set(seq2.GetObjectAt(1));
-                                    IASN1Sequence seqout = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(setout.GetObjectAt(0));
+                                    IAsn1Set setout = BOUNCY_CASTLE_FACTORY.CreateASN1Set(seq2.GetObjectAt(1));
+                                    IAsn1Sequence seqout = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(setout.GetObjectAt(0));
                                     ISigningCertificate sv2 = BOUNCY_CASTLE_FACTORY.CreateSigningCertificate(seqout);
-                                    IESSCertID[] cerv2m = sv2.GetCerts();
-                                    IESSCertID cerv2 = cerv2m[0];
+                                    IEssCertID[] cerv2m = sv2.GetCerts();
+                                    IEssCertID cerv2 = cerv2m[0];
                                     byte[] enc2 = signCert.GetEncoded();
-                                    IIDigest m2 = SignUtils.GetMessageDigest("SHA-1");
+                                    IDigest m2 = SignUtils.GetMessageDigest("SHA-1");
                                     byte[] signCertHash = m2.Digest(enc2);
                                     byte[] hs2 = cerv2.GetCertHash();
                                     if (!JavaUtil.ArraysEquals(signCertHash, hs2)) {
@@ -283,14 +283,14 @@ namespace iText.Signatures {
                                 }
                                 else {
                                     if (isCades && idSeq2.Equals(SecurityIDs.ID_AA_SIGNING_CERTIFICATE_V2)) {
-                                        IASN1Set setout = BOUNCY_CASTLE_FACTORY.CreateASN1Set(seq2.GetObjectAt(1));
-                                        IASN1Sequence seqout = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(setout.GetObjectAt(0));
+                                        IAsn1Set setout = BOUNCY_CASTLE_FACTORY.CreateASN1Set(seq2.GetObjectAt(1));
+                                        IAsn1Sequence seqout = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(setout.GetObjectAt(0));
                                         ISigningCertificateV2 sv2 = BOUNCY_CASTLE_FACTORY.CreateSigningCertificateV2(seqout);
-                                        IESSCertIDv2[] cerv2m = sv2.GetCerts();
-                                        IESSCertIDv2 cerv2 = cerv2m[0];
+                                        IEssCertIDv2[] cerv2m = sv2.GetCerts();
+                                        IEssCertIDv2 cerv2 = cerv2m[0];
                                         IAlgorithmIdentifier ai2 = cerv2.GetHashAlgorithm();
                                         byte[] enc2 = signCert.GetEncoded();
-                                        IIDigest m2 = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(ai2.GetAlgorithm().GetId()));
+                                        IDigest m2 = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(ai2.GetAlgorithm().GetId()));
                                         byte[] signCertHash = m2.Digest(enc2);
                                         byte[] hs2 = cerv2.GetCertHash();
                                         if (!JavaUtil.ArraysEquals(signCertHash, hs2)) {
@@ -310,7 +310,7 @@ namespace iText.Signatures {
                 if (isCades && !foundCades) {
                     throw new ArgumentException("CAdES ESS information missing.");
                 }
-                IASN1Sequence signatureMechanismInfo = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(signerInfo.GetObjectAt(next
+                IAsn1Sequence signatureMechanismInfo = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(signerInfo.GetObjectAt(next
                     ));
                 ++next;
                 signatureMechanismOid = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(signatureMechanismInfo.GetObjectAt
@@ -321,16 +321,16 @@ namespace iText.Signatures {
                 signatureValue = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(signerInfo.GetObjectAt(next)).GetOctets();
                 ++next;
                 if (next < signerInfo.Size()) {
-                    IASN1TaggedObject taggedObject = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(signerInfo.GetObjectAt(next)
+                    IAsn1TaggedObject taggedObject = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(signerInfo.GetObjectAt(next)
                         );
                     if (taggedObject != null) {
-                        IASN1Set unat = BOUNCY_CASTLE_FACTORY.CreateASN1Set(taggedObject, false);
+                        IAsn1Set unat = BOUNCY_CASTLE_FACTORY.CreateASN1Set(taggedObject, false);
                         IAttributeTable attble = BOUNCY_CASTLE_FACTORY.CreateAttributeTable(unat);
-                        IPKCSObjectIdentifiers ipkcsObjectIdentifiers = BOUNCY_CASTLE_FACTORY.CreatePKCSObjectIdentifiers();
+                        IPkcsObjectIdentifiers ipkcsObjectIdentifiers = BOUNCY_CASTLE_FACTORY.CreatePKCSObjectIdentifiers();
                         IAttribute ts = attble.Get(ipkcsObjectIdentifiers.GetIdAaSignatureTimeStampToken());
                         if (ts != null && ts.GetAttrValues().Size() > 0) {
-                            IASN1Set attributeValues = ts.GetAttrValues();
-                            IASN1Sequence tokenSequence = BOUNCY_CASTLE_FACTORY.CreateASN1SequenceInstance(attributeValues.GetObjectAt
+                            IAsn1Set attributeValues = ts.GetAttrValues();
+                            IAsn1Sequence tokenSequence = BOUNCY_CASTLE_FACTORY.CreateASN1SequenceInstance(attributeValues.GetObjectAt
                                 (0));
                             IContentInfo contentInfo = BOUNCY_CASTLE_FACTORY.CreateContentInfo(tokenSequence);
                             this.timeStampTokenInfo = BOUNCY_CASTLE_FACTORY.CreateTSTInfo(contentInfo);
@@ -447,7 +447,7 @@ namespace iText.Signatures {
         private String digestAlgorithmOid;
 
         /// <summary>The object that will create the digest</summary>
-        private IIDigest messageDigest;
+        private IDigest messageDigest;
 
         /// <summary>The digest algorithms</summary>
         private ICollection<String> digestalgos;
@@ -460,7 +460,7 @@ namespace iText.Signatures {
         /// <summary>The signature algorithm.</summary>
         private String signatureMechanismOid;
 
-        private IASN1Encodable signatureMechanismParameters = null;
+        private IAsn1Encodable signatureMechanismParameters = null;
 
         /// <summary>Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".</summary>
         /// <remarks>
@@ -603,7 +603,7 @@ namespace iText.Signatures {
 
         // The signature is created internally
         /// <summary>Class from the Java SDK that provides the functionality of a digital signature algorithm.</summary>
-        private IISigner sig;
+        private ISigner sig;
 
         /// <summary>The raw signature value as calculated by this class (or extracted from an existing PDF)</summary>
         private byte[] signatureValue;
@@ -612,13 +612,13 @@ namespace iText.Signatures {
         private byte[] encapMessageContent;
 
         // Signing functionality.
-        private IISigner InitSignature(IPrivateKey key) {
-            IISigner signature = SignUtils.GetSignatureHelper(GetSignatureMechanismName());
+        private ISigner InitSignature(IPrivateKey key) {
+            ISigner signature = SignUtils.GetSignatureHelper(GetSignatureMechanismName());
             signature.InitSign(key);
             return signature;
         }
 
-        private IISigner InitSignature(IPublicKey key) {
+        private ISigner InitSignature(IPublicKey key) {
             String signatureMechanism;
             if (PdfName.Adbe_x509_rsa_sha1.Equals(GetFilterSubtype())) {
                 signatureMechanism = "SHA1withRSA";
@@ -626,13 +626,13 @@ namespace iText.Signatures {
             else {
                 signatureMechanism = GetSignatureMechanismName();
             }
-            IISigner signature = SignUtils.GetSignatureHelper(signatureMechanism);
+            ISigner signature = SignUtils.GetSignatureHelper(signatureMechanism);
             ConfigureSignatureMechanismParameters(signature);
             signature.InitVerify(key);
             return signature;
         }
 
-        private void ConfigureSignatureMechanismParameters(IISigner signature) {
+        private void ConfigureSignatureMechanismParameters(ISigner signature) {
             if (SecurityIDs.ID_RSASSA_PSS.Equals(this.signatureMechanismOid)) {
                 IRsassaPssParameters @params = BOUNCY_CASTLE_FACTORY.CreateRSASSAPSSParams(this.signatureMechanismParameters
                     );
@@ -651,7 +651,7 @@ namespace iText.Signatures {
                 }
                 // This is actually morally an IAlgorithmIdentifier too, but since it's pretty much always going to be a
                 // one-element sequence, it's probably not worth putting in a conversion method in the factory interface
-                IASN1Sequence mgfParams = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(@params.GetMaskGenAlgorithm().GetParameters
+                IAsn1Sequence mgfParams = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(@params.GetMaskGenAlgorithm().GetParameters
                     ());
                 String mgfParamDigestAlgoOid = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(mgfParams.GetObjectAt(0)).
                     GetId();
@@ -699,7 +699,7 @@ namespace iText.Signatures {
                     signatureValue = sig.GenerateSignature();
                 }
                 MemoryStream bOut = new MemoryStream();
-                IASN1OutputStream dout = BOUNCY_CASTLE_FACTORY.CreateASN1OutputStream(bOut);
+                IDerOutputStream dout = BOUNCY_CASTLE_FACTORY.CreateASN1OutputStream(bOut);
                 dout.WriteObject(BOUNCY_CASTLE_FACTORY.CreateDEROctetString(signatureValue));
                 dout.Dispose();
                 return bOut.ToArray();
@@ -774,33 +774,33 @@ namespace iText.Signatures {
                     }
                 }
                 // Create the set of Hash algorithms
-                IASN1EncodableVector digestAlgorithms = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                IAsn1EncodableVector digestAlgorithms = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                 foreach (Object element in digestalgos) {
-                    IASN1EncodableVector algos = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                    IAsn1EncodableVector algos = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                     algos.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier((String)element));
                     algos.Add(BOUNCY_CASTLE_FACTORY.CreateDERNull());
                     digestAlgorithms.Add(BOUNCY_CASTLE_FACTORY.CreateDERSequence(algos));
                 }
                 // Create the contentInfo.
-                IASN1EncodableVector v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                IAsn1EncodableVector v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                 v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_PKCS7_DATA));
                 if (encapMessageContent != null) {
                     v.Add(BOUNCY_CASTLE_FACTORY.CreateDERTaggedObject(0, BOUNCY_CASTLE_FACTORY.CreateDEROctetString(encapMessageContent
                         )));
                 }
-                IDERSequence contentinfo = BOUNCY_CASTLE_FACTORY.CreateDERSequence(v);
+                IDerSequence contentinfo = BOUNCY_CASTLE_FACTORY.CreateDERSequence(v);
                 // Get all the certificates
                 //
                 v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                 foreach (Object element in certs) {
-                    using (IASN1InputStream tempstream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(BOUNCY_CASTLE_FACTORY
+                    using (IAsn1InputStream tempstream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(BOUNCY_CASTLE_FACTORY
                         .CreateX509Certificate(element).GetEncoded()))) {
                         v.Add(tempstream.ReadObject());
                     }
                 }
-                IDERSet dercertificates = BOUNCY_CASTLE_FACTORY.CreateDERSet(v);
+                IDerSet dercertificates = BOUNCY_CASTLE_FACTORY.CreateDERSet(v);
                 // Create signerinfo structure.
-                IASN1EncodableVector signerinfo = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                IAsn1EncodableVector signerinfo = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                 // Add the signerInfo version
                 signerinfo.Add(BOUNCY_CASTLE_FACTORY.CreateASN1Integer(signerversion));
                 v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
@@ -836,7 +836,7 @@ namespace iText.Signatures {
                     byte[] tsImprint = tsaClient.GetMessageDigest().Digest(signatureValue);
                     byte[] tsToken = tsaClient.GetTimeStampToken(tsImprint);
                     if (tsToken != null) {
-                        IASN1EncodableVector unauthAttributes = BuildUnauthenticatedAttributes(tsToken);
+                        IAsn1EncodableVector unauthAttributes = BuildUnauthenticatedAttributes(tsToken);
                         if (unauthAttributes != null) {
                             signerinfo.Add(BOUNCY_CASTLE_FACTORY.CreateDERTaggedObject(false, 1, BOUNCY_CASTLE_FACTORY.CreateDERSet(unauthAttributes
                                 )));
@@ -844,7 +844,7 @@ namespace iText.Signatures {
                     }
                 }
                 // Finally build the body out of all the components above
-                IASN1EncodableVector body = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                IAsn1EncodableVector body = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                 body.Add(BOUNCY_CASTLE_FACTORY.CreateASN1Integer(version));
                 body.Add(BOUNCY_CASTLE_FACTORY.CreateDERSet(digestAlgorithms));
                 body.Add(contentinfo);
@@ -854,11 +854,11 @@ namespace iText.Signatures {
                 // Now we have the body, wrap it in it's PKCS7Signed shell
                 // and return it
                 //
-                IASN1EncodableVector whole = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                IAsn1EncodableVector whole = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                 whole.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_PKCS7_SIGNED_DATA));
                 whole.Add(BOUNCY_CASTLE_FACTORY.CreateDERTaggedObject(0, BOUNCY_CASTLE_FACTORY.CreateDERSequence(body)));
                 MemoryStream bOut = new MemoryStream();
-                IASN1OutputStream dout = BOUNCY_CASTLE_FACTORY.CreateASN1OutputStream(bOut);
+                IDerOutputStream dout = BOUNCY_CASTLE_FACTORY.CreateASN1OutputStream(bOut);
                 dout.WriteObject(BOUNCY_CASTLE_FACTORY.CreateDERSequence(whole));
                 dout.Dispose();
                 return bOut.ToArray();
@@ -881,22 +881,22 @@ namespace iText.Signatures {
         /// <param name="timeStampToken">byte[] - time stamp token, DER encoded signedData</param>
         /// <returns>
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1EncodableVector"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1EncodableVector"/>
         /// </returns>
-        private IASN1EncodableVector BuildUnauthenticatedAttributes(byte[] timeStampToken) {
+        private IAsn1EncodableVector BuildUnauthenticatedAttributes(byte[] timeStampToken) {
             if (timeStampToken == null) {
                 return null;
             }
             // @todo: move this together with the rest of the defintions
             String ID_TIME_STAMP_TOKEN = "1.2.840.113549.1.9.16.2.14";
             // RFC 3161 id-aa-timeStampToken
-            IASN1EncodableVector unauthAttributes = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
-            IASN1EncodableVector v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+            IAsn1EncodableVector unauthAttributes = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+            IAsn1EncodableVector v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
             v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(ID_TIME_STAMP_TOKEN));
             // id-aa-timeStampToken
-            using (IASN1InputStream tempstream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(timeStampToken
+            using (IAsn1InputStream tempstream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(timeStampToken
                 ))) {
-                IASN1Sequence seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tempstream.ReadObject());
+                IAsn1Sequence seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tempstream.ReadObject());
                 v.Add(BOUNCY_CASTLE_FACTORY.CreateDERSet(seq));
             }
             unauthAttributes.Add(BOUNCY_CASTLE_FACTORY.CreateDERSequence(v));
@@ -966,11 +966,11 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="secondDigest">the content digest</param>
         /// <returns>the byte array representation of the authenticatedAttributes ready to be signed</returns>
-        private IDERSet GetAuthenticatedAttributeSet(byte[] secondDigest, ICollection<byte[]> ocsp, ICollection<byte
+        private IDerSet GetAuthenticatedAttributeSet(byte[] secondDigest, ICollection<byte[]> ocsp, ICollection<byte
             []> crlBytes, PdfSigner.CryptoStandard sigtype) {
             try {
-                IASN1EncodableVector attribute = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
-                IASN1EncodableVector v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                IAsn1EncodableVector attribute = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                IAsn1EncodableVector v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                 v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_CONTENT_TYPE));
                 v.Add(BOUNCY_CASTLE_FACTORY.CreateDERSet(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_PKCS7_DATA
                     )));
@@ -991,14 +991,14 @@ namespace iText.Signatures {
                 if (ocsp != null && !ocsp.IsEmpty() || haveCrl) {
                     v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                     v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_ADBE_REVOCATION));
-                    IASN1EncodableVector revocationV = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                    IAsn1EncodableVector revocationV = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                     if (haveCrl) {
-                        IASN1EncodableVector v2 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                        IAsn1EncodableVector v2 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                         foreach (byte[] bCrl in crlBytes) {
                             if (bCrl == null) {
                                 continue;
                             }
-                            using (IASN1InputStream t = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bCrl))) {
+                            using (IAsn1InputStream t = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bCrl))) {
                                 v2.Add(t.ReadObject());
                             }
                         }
@@ -1006,15 +1006,15 @@ namespace iText.Signatures {
                             (v2)));
                     }
                     if (ocsp != null && !ocsp.IsEmpty()) {
-                        IASN1EncodableVector vo1 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                        IAsn1EncodableVector vo1 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                         foreach (byte[] ocspBytes in ocsp) {
-                            IDEROctetString doctet = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(ocspBytes);
-                            IASN1EncodableVector v2 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
-                            IOCSPObjectIdentifiers objectIdentifiers = BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers();
+                            IDerOctetString doctet = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(ocspBytes);
+                            IAsn1EncodableVector v2 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                            IOcspObjectIdentifiers objectIdentifiers = BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers();
                             v2.Add(objectIdentifiers.GetIdPkixOcspBasic());
                             v2.Add(doctet);
-                            IASN1Enumerated den = BOUNCY_CASTLE_FACTORY.CreateASN1Enumerated(0);
-                            IASN1EncodableVector v3 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                            IDerEnumerated den = BOUNCY_CASTLE_FACTORY.CreateASN1Enumerated(0);
+                            IAsn1EncodableVector v3 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                             v3.Add(den);
                             v3.Add(BOUNCY_CASTLE_FACTORY.CreateDERTaggedObject(true, 0, BOUNCY_CASTLE_FACTORY.CreateDERSequence(v2)));
                             vo1.Add(BOUNCY_CASTLE_FACTORY.CreateDERSequence(v3));
@@ -1028,11 +1028,11 @@ namespace iText.Signatures {
                 if (sigtype == PdfSigner.CryptoStandard.CADES) {
                     v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                     v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_AA_SIGNING_CERTIFICATE_V2));
-                    IASN1EncodableVector aaV2 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
+                    IAsn1EncodableVector aaV2 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                     IAlgorithmIdentifier algoId = BOUNCY_CASTLE_FACTORY.CreateAlgorithmIdentifier(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
                         (digestAlgorithmOid));
                     aaV2.Add(algoId);
-                    IIDigest md = SignUtils.GetMessageDigest(GetDigestAlgorithmName());
+                    IDigest md = SignUtils.GetMessageDigest(GetDigestAlgorithmName());
                     byte[] dig = md.Digest(signCert.GetEncoded());
                     aaV2.Add(BOUNCY_CASTLE_FACTORY.CreateDEROctetString(dig));
                     v.Add(BOUNCY_CASTLE_FACTORY.CreateDERSet(BOUNCY_CASTLE_FACTORY.CreateDERSequence(BOUNCY_CASTLE_FACTORY.CreateDERSequence
@@ -1040,7 +1040,7 @@ namespace iText.Signatures {
                     attribute.Add(BOUNCY_CASTLE_FACTORY.CreateDERSequence(v));
                 }
                 if (signaturePolicyIdentifier != null) {
-                    IPKCSObjectIdentifiers ipkcsObjectIdentifiers = BOUNCY_CASTLE_FACTORY.CreatePKCSObjectIdentifiers();
+                    IPkcsObjectIdentifiers ipkcsObjectIdentifiers = BOUNCY_CASTLE_FACTORY.CreatePKCSObjectIdentifiers();
                     IAttribute attr = BOUNCY_CASTLE_FACTORY.CreateAttribute(ipkcsObjectIdentifiers.GetIdAaEtsSigPolicyId(), BOUNCY_CASTLE_FACTORY
                         .CreateDERSet(signaturePolicyIdentifier));
                     attribute.Add(attr);
@@ -1062,7 +1062,7 @@ namespace iText.Signatures {
         private byte[] sigAttrDer;
 
         /// <summary>encrypted digest</summary>
-        private IIDigest encContDigest;
+        private IDigest encContDigest;
 
         // Stefan Santesson
         /// <summary>Indicates if a signature has already been verified</summary>
@@ -1130,7 +1130,7 @@ namespace iText.Signatures {
         }
 
         private bool VerifySigAttributes(byte[] attr) {
-            IISigner signature = InitSignature(signCert.GetPublicKey());
+            ISigner signature = InitSignature(signCert.GetPublicKey());
             SignUtils.UpdateVerifier(signature, attr);
             return signature.VerifySignature(signatureValue);
         }
@@ -1228,7 +1228,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Helper method that tries to construct the CRLs.</summary>
-        internal virtual void FindCRL(IASN1Sequence seq) {
+        internal virtual void FindCRL(IAsn1Sequence seq) {
             try {
                 crls = new List<IX509Crl>();
                 for (int k = 0; k < seq.Size(); ++k) {
@@ -1245,11 +1245,11 @@ namespace iText.Signatures {
         // ignore
         // Online Certificate Status Protocol
         /// <summary>BouncyCastle IBasicOCSPResponse</summary>
-        internal IBasicOCSPResponse basicResp;
+        internal IBasicOcspResponse basicResp;
 
         /// <summary>Gets the OCSP basic response if there is one.</summary>
         /// <returns>the OCSP basic response or null</returns>
-        public virtual IBasicOCSPResponse GetOcsp() {
+        public virtual IBasicOcspResponse GetOcsp() {
             return basicResp;
         }
 
@@ -1264,12 +1264,11 @@ namespace iText.Signatures {
             }
             try {
                 IX509Certificate[] cs = (IX509Certificate[])GetSignCertificateChain();
-                ISingleResp sr = BOUNCY_CASTLE_FACTORY.CreateSingleResp(basicResp);
-                ICertificateID cid = sr.GetCertID();
+                ISingleResponse sr = BOUNCY_CASTLE_FACTORY.CreateSingleResp(basicResp);
+                ICertID cid = sr.GetCertID();
                 IX509Certificate sigcer = GetSigningCertificate();
                 IX509Certificate isscer = cs[1];
-                ICertificateID tis = SignUtils.GenerateCertificateId(isscer, sigcer.GetSerialNumber(), cid.GetHashAlgOID()
-                    );
+                ICertID tis = SignUtils.GenerateCertificateId(isscer, sigcer.GetSerialNumber(), cid.GetHashAlgOID());
                 return tis.Equals(cid);
             }
             catch (Exception) {
@@ -1279,26 +1278,26 @@ namespace iText.Signatures {
 
         /// <summary>Helper method that creates the IBasicOCSPResp object.</summary>
         /// <param name="seq"/>
-        private void FindOcsp(IASN1Sequence seq) {
+        private void FindOcsp(IAsn1Sequence seq) {
             basicResp = null;
             bool ret = false;
             while (true) {
-                IASN1ObjectIdentifier objectIdentifier = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(seq.GetObjectAt(
-                    0));
-                IOCSPObjectIdentifiers ocspObjectIdentifiers = BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers();
+                IDerObjectIdentifier objectIdentifier = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(seq.GetObjectAt(0
+                    ));
+                IOcspObjectIdentifiers ocspObjectIdentifiers = BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers();
                 if (objectIdentifier != null && objectIdentifier.GetId().Equals(ocspObjectIdentifiers.GetIdPkixOcspBasic()
                     .GetId())) {
                     break;
                 }
                 ret = true;
                 for (int k = 0; k < seq.Size(); ++k) {
-                    IASN1Sequence nextSeq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(seq.GetObjectAt(k));
+                    IAsn1Sequence nextSeq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(seq.GetObjectAt(k));
                     if (nextSeq != null) {
                         seq = nextSeq;
                         ret = false;
                         break;
                     }
-                    IASN1TaggedObject tag = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(seq.GetObjectAt(k));
+                    IAsn1TaggedObject tag = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(seq.GetObjectAt(k));
                     if (tag != null) {
                         nextSeq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tag.GetObject());
                         if (nextSeq != null) {
@@ -1315,8 +1314,8 @@ namespace iText.Signatures {
                     return;
                 }
             }
-            IASN1OctetString os = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(seq.GetObjectAt(1));
-            using (IASN1InputStream inp = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(os.GetOctets())) {
+            IAsn1OctetString os = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(seq.GetObjectAt(1));
+            using (IAsn1InputStream inp = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(os.GetOctets())) {
                 basicResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(inp.ReadObject());
             }
         }
@@ -1329,7 +1328,7 @@ namespace iText.Signatures {
         private bool isCades;
 
         /// <summary>BouncyCastle TSTInfo.</summary>
-        private ITSTInfo timeStampTokenInfo;
+        private ITstInfo timeStampTokenInfo;
 
         /// <summary>Check if it's a PAdES-LTV time stamp.</summary>
         /// <returns>true if it's a PAdES-LTV time stamp, false otherwise</returns>
@@ -1339,7 +1338,7 @@ namespace iText.Signatures {
 
         /// <summary>Gets the timestamp token info if there is one.</summary>
         /// <returns>the timestamp token info or null</returns>
-        public virtual ITSTInfo GetTimeStampTokenInfo() {
+        public virtual ITstInfo GetTimeStampTokenInfo() {
             return timeStampTokenInfo;
         }
 

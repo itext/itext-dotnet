@@ -193,7 +193,7 @@ namespace iText.Signatures {
         /// <param name="ocsp">the OCSP response</param>
         /// <param name="keystore">the <c>KeyStore</c></param>
         /// <returns><c>true</c> is a certificate was found</returns>
-        public static bool VerifyOcspCertificates(IBasicOCSPResponse ocsp, List<IX509Certificate> keystore) {
+        public static bool VerifyOcspCertificates(IBasicOcspResponse ocsp, List<IX509Certificate> keystore) {
             IList<Exception> exceptionsThrown = new List<Exception>();
             try {
                 foreach (IX509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {

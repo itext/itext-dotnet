@@ -73,7 +73,7 @@ namespace iText.Signatures.Testutils
             return Array.Empty<byte>();
         }
 
-        public IASN1OctetString GetExtensionValue(string oid)
+        public IAsn1OctetString GetExtensionValue(string oid)
         {
             throw new NotImplementedException();
         }

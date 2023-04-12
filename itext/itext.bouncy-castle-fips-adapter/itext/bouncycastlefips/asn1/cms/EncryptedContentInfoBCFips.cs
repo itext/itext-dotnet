@@ -32,7 +32,7 @@ namespace iText.Bouncycastlefips.Asn1.Cms {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Cms.EncryptedContentInfo"/>.
     /// </summary>
-    public class EncryptedContentInfoBCFips : ASN1EncodableBCFips, IEncryptedContentInfo {
+    public class EncryptedContentInfoBCFips : Asn1EncodableBCFips, IEncryptedContentInfo {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Cms.EncryptedContentInfo"/>.
@@ -53,10 +53,10 @@ namespace iText.Bouncycastlefips.Asn1.Cms {
         /// <param name="data">ASN1ObjectIdentifier wrapper</param>
         /// <param name="algorithmIdentifier">AlgorithmIdentifier wrapper</param>
         /// <param name="octetString">ASN1OctetString wrapper</param>
-        public EncryptedContentInfoBCFips(IASN1ObjectIdentifier data, IAlgorithmIdentifier algorithmIdentifier, IASN1OctetString
+        public EncryptedContentInfoBCFips(IDerObjectIdentifier data, IAlgorithmIdentifier algorithmIdentifier, IAsn1OctetString
              octetString)
-            : base(new EncryptedContentInfo(((ASN1ObjectIdentifierBCFips)data).GetASN1ObjectIdentifier(), ((AlgorithmIdentifierBCFips
-                )algorithmIdentifier).GetAlgorithmIdentifier(), ((ASN1OctetStringBCFips)octetString).GetOctetString())
+            : base(new EncryptedContentInfo(((DerObjectIdentifierBCFips)data).GetDerObjectIdentifier(), ((AlgorithmIdentifierBCFips
+                )algorithmIdentifier).GetAlgorithmIdentifier(), ((Asn1OctetStringBCFips)octetString).GetOctetString())
                 ) {
         }
 

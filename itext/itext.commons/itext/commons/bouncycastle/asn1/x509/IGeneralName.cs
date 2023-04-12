@@ -27,7 +27,7 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
     /// This interface represents the wrapper for GeneralName that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IGeneralName : IASN1Encodable {
+    public interface IGeneralName : IAsn1Encodable {
         /// <summary>
         /// Calls actual
         /// <c>getTagNo</c>

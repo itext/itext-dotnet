@@ -70,9 +70,9 @@ namespace iText.Bouncycastle.Tsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ITimeStampRequest Generate(IASN1ObjectIdentifier objectIdentifier, byte[] imprint, IBigInteger
+        public virtual ITimeStampRequest Generate(IDerObjectIdentifier objectIdentifier, byte[] imprint, IBigInteger
              nonce) {
-            return new TimeStampRequestBC(requestGenerator.Generate(((ASN1ObjectIdentifierBC)objectIdentifier).GetASN1ObjectIdentifier
+            return new TimeStampRequestBC(requestGenerator.Generate(((DerObjectIdentifierBC)objectIdentifier).GetDerObjectIdentifier
                 (), imprint, ((BigIntegerBC) nonce).GetBigInteger()));
         }
 

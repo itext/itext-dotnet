@@ -30,7 +30,7 @@ namespace iText.Bouncycastle.Asn1.Cms {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Cms.ContentInfo"/>.
     /// </summary>
-    public class ContentInfoBC : ASN1EncodableBC, IContentInfo {
+    public class ContentInfoBC : Asn1EncodableBC, IContentInfo {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Cms.ContentInfo"/>.
@@ -50,8 +50,8 @@ namespace iText.Bouncycastle.Asn1.Cms {
         /// </summary>
         /// <param name="objectIdentifier">ASN1ObjectIdentifier wrapper</param>
         /// <param name="encodable">ASN1Encodable wrapper</param>
-        public ContentInfoBC(IASN1ObjectIdentifier objectIdentifier, IASN1Encodable encodable)
-            : base(new ContentInfo(((ASN1ObjectIdentifierBC)objectIdentifier).GetASN1ObjectIdentifier(), ((ASN1EncodableBC
+        public ContentInfoBC(IDerObjectIdentifier objectIdentifier, IAsn1Encodable encodable)
+            : base(new ContentInfo(((DerObjectIdentifierBC)objectIdentifier).GetDerObjectIdentifier(), ((Asn1EncodableBC
                 )encodable).GetEncodable())) {
         }
 

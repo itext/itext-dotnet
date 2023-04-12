@@ -30,7 +30,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.DistributionPointName"/>.
     /// </summary>
-    public class DistributionPointNameBC : ASN1EncodableBC, IDistributionPointName {
+    public class DistributionPointNameBC : Asn1EncodableBC, IDistributionPointName {
         private static readonly iText.Bouncycastle.Asn1.X509.DistributionPointNameBC INSTANCE = new iText.Bouncycastle.Asn1.X509.DistributionPointNameBC
             (null);
 
@@ -74,8 +74,8 @@ namespace iText.Bouncycastle.Asn1.X509 {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Encodable GetName() {
-            return new ASN1EncodableBC(GetDistributionPointName().Name);
+        public virtual IAsn1Encodable GetName() {
+            return new Asn1EncodableBC(GetDistributionPointName().Name);
         }
 
         /// <summary><inheritDoc/></summary>

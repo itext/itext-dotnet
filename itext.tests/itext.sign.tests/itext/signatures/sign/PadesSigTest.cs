@@ -90,13 +90,13 @@ namespace iText.Signatures.Sign {
         [NUnit.Framework.Test]
         public virtual void PadesEpesProfileTest01() {
             String notExistingSignaturePolicyOid = "2.16.724.631.3.1.124.2.29.9";
-            IASN1ObjectIdentifier asn1PolicyOid = FACTORY.CreateASN1ObjectIdentifierInstance(FACTORY.CreateASN1ObjectIdentifier
+            IDerObjectIdentifier asn1PolicyOid = FACTORY.CreateASN1ObjectIdentifierInstance(FACTORY.CreateASN1ObjectIdentifier
                 (notExistingSignaturePolicyOid));
             IAlgorithmIdentifier hashAlg = FACTORY.CreateAlgorithmIdentifier(FACTORY.CreateASN1ObjectIdentifier(DigestAlgorithms
                 .GetAllowedDigest("SHA1")));
             // indicate that the policy hash value is not known; see ETSI TS 101 733 V2.2.1, 5.8.1
             byte[] zeroSigPolicyHash = new byte[] { 0 };
-            IDEROctetString hash = FACTORY.CreateDEROctetString(zeroSigPolicyHash);
+            IDerOctetString hash = FACTORY.CreateDEROctetString(zeroSigPolicyHash);
             ISignaturePolicyId signaturePolicyId = FACTORY.CreateSignaturePolicyId(asn1PolicyOid, FACTORY.CreateOtherHashAlgAndValue
                 (hashAlg, hash));
             ISignaturePolicyIdentifier sigPolicyIdentifier = FACTORY.CreateSignaturePolicyIdentifier(signaturePolicyId

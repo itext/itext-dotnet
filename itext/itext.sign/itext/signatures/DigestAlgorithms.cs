@@ -179,14 +179,14 @@ namespace iText.Signatures {
         /// <summary>Get a digest algorithm.</summary>
         /// <param name="digestOid">oid of the digest algorithm</param>
         /// <returns>MessageDigest object</returns>
-        public static IIDigest GetMessageDigestFromOid(String digestOid) {
+        public static IDigest GetMessageDigestFromOid(String digestOid) {
             return GetMessageDigest(GetDigest(digestOid));
         }
 
         /// <summary>Creates a MessageDigest object that can be used to create a hash.</summary>
         /// <param name="hashAlgorithm">the algorithm you want to use to create a hash</param>
         /// <returns>a MessageDigest object</returns>
-        public static IIDigest GetMessageDigest(String hashAlgorithm) {
+        public static IDigest GetMessageDigest(String hashAlgorithm) {
             return SignUtils.GetMessageDigest(hashAlgorithm);
         }
 
@@ -195,7 +195,7 @@ namespace iText.Signatures {
         /// <param name="hashAlgorithm">the algorithm used to create the hash</param>
         /// <returns>the hash</returns>
         public static byte[] Digest(Stream data, String hashAlgorithm) {
-            IIDigest messageDigest = GetMessageDigest(hashAlgorithm);
+            IDigest messageDigest = GetMessageDigest(hashAlgorithm);
             return Digest(data, messageDigest);
         }
 
@@ -203,7 +203,7 @@ namespace iText.Signatures {
         /// <param name="data">data to be digested</param>
         /// <param name="messageDigest">algorithm to be used</param>
         /// <returns>digest of the data</returns>
-        public static byte[] Digest(Stream data, IIDigest messageDigest) {
+        public static byte[] Digest(Stream data, IDigest messageDigest) {
             byte[] buf = new byte[8192];
             int n;
             while ((n = data.Read(buf)) > 0) {

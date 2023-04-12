@@ -155,7 +155,7 @@ namespace iText.Signatures {
         /// <summary><inheritDoc/></summary>
         public virtual byte[] Sign(byte[] message) {
             String algorithm = GetSignatureMechanismName();
-            IISigner sig = SignUtils.GetSignatureHelper(algorithm);
+            ISigner sig = SignUtils.GetSignatureHelper(algorithm);
             if (parameters != null) {
                 parameters.Apply(sig);
             }

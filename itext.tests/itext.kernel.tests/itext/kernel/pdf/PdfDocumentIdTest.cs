@@ -68,7 +68,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ChangeIdTest02() {
             MemoryStream baos = new MemoryStream();
-            IIDigest md5;
+            IDigest md5;
             try {
                 md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }
@@ -95,7 +95,7 @@ namespace iText.Kernel.Pdf {
         public virtual void ChangeIdTest03() {
             MemoryStream baosInitial = new MemoryStream();
             MemoryStream baosModified = new MemoryStream();
-            IIDigest md5;
+            IDigest md5;
             try {
                 md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }
@@ -139,7 +139,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void FetchReaderIdTest() {
             MemoryStream baos = new MemoryStream();
-            IIDigest md5;
+            IDigest md5;
             try {
                 md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }
@@ -166,7 +166,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void WriterPropertiesPriorityTest() {
             MemoryStream baos = new MemoryStream();
-            IIDigest md5;
+            IDigest md5;
             try {
                 md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }

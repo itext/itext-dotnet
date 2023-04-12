@@ -103,11 +103,11 @@ namespace iText.Bouncycastlefips.Tsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IPKIFailureInfo GetFailInfo() {
+        public virtual IPkiFailureInfo GetFailInfo() {
             if (timeStampResponse.Status.FailInfo == null) {
-                return new PKIFailureInfoBCFips(null);
+                return new PkiFailureInfoBCFips(null);
             }
-            return new PKIFailureInfoBCFips(new PkiFailureInfo(timeStampResponse.Status.FailInfo));
+            return new PkiFailureInfoBCFips(new PkiFailureInfo(timeStampResponse.Status.FailInfo));
         }
 
         /// <summary><inheritDoc/></summary>

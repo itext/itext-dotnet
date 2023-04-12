@@ -27,6 +27,6 @@ namespace iText.Commons.Bouncycastle.Asn1.Esf {
     /// This interface represents the wrapper for OtherHashAlgAndValue that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IOtherHashAlgAndValue : IASN1Encodable {
+    public interface IOtherHashAlgAndValue : IAsn1Encodable {
     }
 }

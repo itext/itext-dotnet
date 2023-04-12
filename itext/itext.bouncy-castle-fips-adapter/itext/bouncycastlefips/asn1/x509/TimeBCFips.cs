@@ -29,7 +29,7 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.Time"/>.
     /// </summary>
-    public class TimeBCFips : ASN1EncodableBCFips, ITime {
+    public class TimeBCFips : Asn1EncodableBCFips, ITime {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.X509.Time"/>.

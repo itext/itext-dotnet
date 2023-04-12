@@ -127,7 +127,7 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsNull(pkcs7.GetCRLs());
             // it's tested here that ocsp and time stamp token were found while
             // constructing PdfPKCS7 instance
-            ITSTInfo timeStampTokenInfo = pkcs7.GetTimeStampTokenInfo();
+            ITstInfo timeStampTokenInfo = pkcs7.GetTimeStampTokenInfo();
             NUnit.Framework.Assert.IsNotNull(timeStampTokenInfo);
             // The number corresponds to 3 September, 2021 13:32:33.
             double expectedMillis = (double)1630675953000L;
@@ -235,8 +235,8 @@ namespace iText.Signatures {
             PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
             byte[] bytes = pkcs7.GetEncodedPKCS1();
             byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "cmpBytesPkcs1.txt"));
-            IASN1OctetString outOctetString = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(bytes);
-            IASN1OctetString cmpOctetString = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(cmpBytes);
+            IAsn1OctetString outOctetString = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(bytes);
+            IAsn1OctetString cmpOctetString = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(cmpBytes);
             NUnit.Framework.Assert.AreEqual(outOctetString, cmpOctetString);
         }
 
@@ -264,8 +264,8 @@ namespace iText.Signatures {
             PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
             byte[] bytes = pkcs7.GetEncodedPKCS7();
             byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "cmpBytesPkcs7.txt"));
-            IASN1Primitive outStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(bytes);
-            IASN1Primitive cmpStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(cmpBytes);
+            IAsn1Object outStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(bytes);
+            IAsn1Object cmpStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(cmpBytes);
             NUnit.Framework.Assert.AreEqual("SHA256withRSA", pkcs7.GetSignatureMechanismName());
             NUnit.Framework.Assert.AreEqual(outStream, cmpStream);
         }

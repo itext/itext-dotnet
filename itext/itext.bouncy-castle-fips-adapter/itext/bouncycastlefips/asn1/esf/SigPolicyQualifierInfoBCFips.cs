@@ -30,7 +30,7 @@ namespace iText.Bouncycastlefips.Asn1.Esf {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Esf.SigPolicyQualifierInfo"/>.
     /// </summary>
-    public class SigPolicyQualifierInfoBCFips : ASN1EncodableBCFips, ISigPolicyQualifierInfo {
+    public class SigPolicyQualifierInfoBCFips : Asn1EncodableBCFips, ISigPolicyQualifierInfo {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Esf.SigPolicyQualifierInfo"/>.
@@ -50,9 +50,9 @@ namespace iText.Bouncycastlefips.Asn1.Esf {
         /// </summary>
         /// <param name="objectIdentifier">ASN1ObjectIdentifier wrapper</param>
         /// <param name="string">DERIA5String wrapper</param>
-        public SigPolicyQualifierInfoBCFips(IASN1ObjectIdentifier objectIdentifier, IDERIA5String @string)
-            : this(new SigPolicyQualifierInfo(((ASN1ObjectIdentifierBCFips)objectIdentifier).GetASN1ObjectIdentifier()
-                , ((DERIA5StringBCFips)@string).GetDerIA5String())) {
+        public SigPolicyQualifierInfoBCFips(IDerObjectIdentifier objectIdentifier, IDerIA5String @string)
+            : this(new SigPolicyQualifierInfo(((DerObjectIdentifierBCFips)objectIdentifier).GetDerObjectIdentifier(), 
+                ((DerIA5StringBCFips)@string).GetDerIA5String())) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

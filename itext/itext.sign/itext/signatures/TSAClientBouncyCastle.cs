@@ -148,7 +148,7 @@ namespace iText.Signatures {
 
         /// <summary>Gets the MessageDigest to digest the data imprint</summary>
         /// <returns>the digest algorithm name</returns>
-        public virtual IIDigest GetMessageDigest() {
+        public virtual IDigest GetMessageDigest() {
             return SignUtils.GetMessageDigest(digestAlgorithm);
         }
 
@@ -179,7 +179,7 @@ namespace iText.Signatures {
             ITimeStampResponse response = BOUNCY_CASTLE_FACTORY.CreateTimeStampResponse(respBytes);
             // validate communication level attributes (RFC 3161 PKIStatus)
             response.Validate(request);
-            IPKIFailureInfo failure = response.GetFailInfo();
+            IPkiFailureInfo failure = response.GetFailInfo();
             int value = failure.IsNull() ? 0 : failure.IntValue();
             if (value != 0) {
                 // @todo: Translate value of 15 error codes defined by PKIFailureInfo to string

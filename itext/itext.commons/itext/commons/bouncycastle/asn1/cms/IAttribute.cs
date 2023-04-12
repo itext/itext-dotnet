@@ -27,7 +27,7 @@ namespace iText.Commons.Bouncycastle.Asn1.Cms {
     /// This interface represents the wrapper for Attribute that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IAttribute : IASN1Encodable {
+    public interface IAttribute : IAsn1Encodable {
         /// <summary>
         /// Calls actual
         /// <c>getAttrValues</c>
@@ -35,9 +35,9 @@ namespace iText.Commons.Bouncycastle.Asn1.Cms {
         /// </summary>
         /// <returns>
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1Set"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Set"/>
         /// wrapped attribute values.
         /// </returns>
-        IASN1Set GetAttrValues();
+        IAsn1Set GetAttrValues();
     }
 }

@@ -41,7 +41,7 @@ namespace iText.Kernel.Utils {
         
         private static IPrivateKey ReadPrivateKey(Stream pemFile, char[] keyPass) {
             using (TextReader file = new StreamReader(pemFile)) {
-                IPEMParser parser = FACTORY.CreatePEMParser(file, keyPass);
+                IPemReader parser = FACTORY.CreatePEMParser(file, keyPass);
                 Object readObject = parser.ReadObject();
                 while (!(readObject is IPrivateKey) && readObject != null) {
                     readObject = parser.ReadObject();

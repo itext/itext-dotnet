@@ -23,6 +23,7 @@
 using System;
 using iText.Bouncycastle.Cert;
 using iText.Bouncycastle.Crypto;
+using iText.Bouncycastle.X509;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
@@ -35,7 +36,7 @@ namespace iText.Bouncycastle.Openssl {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Openssl.PEMParser"/>.
     /// </summary>
-    public class PEMParserBC : IPEMParser {
+    public class PEMParserBC : IPemReader {
         private readonly PemReader parser;
 
         /// <summary>

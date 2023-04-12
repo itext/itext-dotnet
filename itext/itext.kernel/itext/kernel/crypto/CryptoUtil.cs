@@ -50,7 +50,7 @@ namespace iText.Kernel.Crypto {
         /// <param name="asn1Encoding">ASN1 encoding that will be used for writing. Only DER and BER are allowed as values.</param>
         /// <returns>a <see cref="DerOutputStream"/> instance. Exact stream implementation is chosen based on passed encoding.</returns>
         /// <exception cref="NotSupportedException"></exception>
-        public static IASN1OutputStream CreateAsn1OutputStream(Stream outputStream, String asn1Encoding) {
+        public static IDerOutputStream CreateAsn1OutputStream(Stream outputStream, String asn1Encoding) {
             if (FACTORY.CreateASN1Encoding().GetBer().Equals(asn1Encoding) || 
                 FACTORY.CreateASN1Encoding().GetDer().Equals(asn1Encoding)) {
                 return FACTORY.CreateASN1OutputStream(outputStream, asn1Encoding);

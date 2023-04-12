@@ -34,7 +34,7 @@ namespace iText.Signatures.Testutils.Builder {
         private const String SIGN_ALG = "SHA256withRSA";
 
         private readonly IPrivateKey issuerPrivateKey;
-        private readonly IX509v2CRLBuilder crlBuilder;
+        private readonly IX509V2CrlGenerator crlBuilder;
 
         private DateTime nextUpdate = DateTimeUtil.GetCurrentUtcTime().AddDays(30);
 

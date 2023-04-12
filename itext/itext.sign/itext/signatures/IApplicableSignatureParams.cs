@@ -28,18 +28,18 @@ namespace iText.Signatures {
     /// <see cref="ISignatureMechanismParams"/>
     /// that also supports applying the parameters to
     /// a
-    /// <see cref="iText.Commons.Bouncycastle.Crypto.IISigner"/>.
+    /// <see cref="iText.Commons.Bouncycastle.Crypto.ISigner"/>.
     /// </summary>
     public interface IApplicableSignatureParams : ISignatureMechanismParams {
         /// <summary>
         /// Apply the parameters to a
-        /// <see cref="iText.Commons.Bouncycastle.Crypto.IISigner"/>.
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.ISigner"/>.
         /// </summary>
         /// <param name="signature">
         /// an uninitialised
-        /// <see cref="iText.Commons.Bouncycastle.Crypto.IISigner"/>
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.ISigner"/>
         /// object
         /// </param>
-        void Apply(IISigner signature);
+        void Apply(ISigner signature);
     }
 }

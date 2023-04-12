@@ -122,7 +122,7 @@ namespace iText.Signatures {
             int tokenSizeEstimate = 4096;
             TSAClientBouncyCastle tsaClientBouncyCastle = new TSAClientBouncyCastle(url, userName, password, tokenSizeEstimate
                 , digestAlgorithm);
-            IIDigest digest = tsaClientBouncyCastle.GetMessageDigest();
+            IDigest digest = tsaClientBouncyCastle.GetMessageDigest();
             NUnit.Framework.Assert.IsNotNull(digest);
             NUnit.Framework.Assert.AreEqual(digestAlgorithm, digest.GetAlgorithmName());
         }

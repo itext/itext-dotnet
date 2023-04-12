@@ -54,7 +54,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         protected internal virtual byte[] ComputeGlobalKey(String messageDigestAlgorithm, bool encryptMetadata) {
-            IIDigest md;
+            IDigest md;
             byte[] encodedRecipient;
             try {
                 md = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(messageDigestAlgorithm
@@ -83,7 +83,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             }
             byte[] envelopedData = EncryptionUtils.FetchEnvelopedData(certificateKey, certificate, recipients);
             byte[] encryptionKey;
-            IIDigest md;
+            IDigest md;
             try {
                 md = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(digestAlgorithm);
                 md.Update(envelopedData, 0, 20);
@@ -194,9 +194,9 @@ namespace iText.Kernel.Crypto.Securityhandler {
             pkcs7input[22] = two;
             pkcs7input[23] = one;
             MemoryStream baos = new MemoryStream();
-            using (IASN1OutputStream k = CryptoUtil.CreateAsn1OutputStream(baos, BOUNCY_CASTLE_FACTORY.CreateASN1Encoding
+            using (IDerOutputStream k = CryptoUtil.CreateAsn1OutputStream(baos, BOUNCY_CASTLE_FACTORY.CreateASN1Encoding
                 ().GetDer())) {
-                IASN1Primitive obj = CreateDERForRecipient(pkcs7input, (IX509Certificate)certificate);
+                IAsn1Object obj = CreateDERForRecipient(pkcs7input, (IX509Certificate)certificate);
                 k.WriteObject(obj);
             }
             cms = baos.ToArray();
@@ -225,11 +225,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return EncodedRecipients;
         }
 
-        private IASN1Primitive CreateDERForRecipient(byte[] @in, IX509Certificate cert) {
+        private IAsn1Object CreateDERForRecipient(byte[] @in, IX509Certificate cert) {
             EncryptionUtils.DERForRecipientParams parameters = EncryptionUtils.CalculateDERForRecipientParams(@in);
             IKeyTransRecipientInfo keytransrecipientinfo = ComputeRecipientInfo(cert, parameters.abyte0);
-            IDEROctetString deroctetstring = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(parameters.abyte1);
-            IDERSet derset = BOUNCY_CASTLE_FACTORY.CreateDERSet(BOUNCY_CASTLE_FACTORY.CreateRecipientInfo(keytransrecipientinfo
+            IDerOctetString deroctetstring = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(parameters.abyte1);
+            IDerSet derset = BOUNCY_CASTLE_FACTORY.CreateDERSet(BOUNCY_CASTLE_FACTORY.CreateRecipientInfo(keytransrecipientinfo
                 ));
             IEncryptedContentInfo encryptedcontentinfo = BOUNCY_CASTLE_FACTORY.CreateEncryptedContentInfo(BOUNCY_CASTLE_FACTORY
                 .CreatePKCSObjectIdentifiers().GetData(), parameters.algorithmIdentifier, deroctetstring);
@@ -241,8 +241,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         private IKeyTransRecipientInfo ComputeRecipientInfo(IX509Certificate x509Certificate, byte[] abyte0) {
-            ITBSCertificate tbsCertificate;
-            using (IASN1InputStream asn1InputStream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(x509Certificate
+            ITbsCertificateStructure tbsCertificate;
+            using (IAsn1InputStream asn1InputStream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(x509Certificate
                 .GetTbsCertificate()))) {
                 tbsCertificate = BOUNCY_CASTLE_FACTORY.CreateTBSCertificate(asn1InputStream.ReadObject());
             }
@@ -250,7 +250,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             IIssuerAndSerialNumber issuerAndSerialNumber = BOUNCY_CASTLE_FACTORY.CreateIssuerAndSerialNumber(tbsCertificate
                 .GetIssuer(), tbsCertificate.GetSerialNumber().GetValue());
             byte[] cipheredBytes = EncryptionUtils.CipherBytes(x509Certificate, abyte0, algorithmIdentifier);
-            IDEROctetString derOctetString = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(cipheredBytes);
+            IDerOctetString derOctetString = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(cipheredBytes);
             IRecipientIdentifier recipId = BOUNCY_CASTLE_FACTORY.CreateRecipientIdentifier(issuerAndSerialNumber);
             return BOUNCY_CASTLE_FACTORY.CreateKeyTransRecipientInfo(recipId, algorithmIdentifier, derOctetString);
         }

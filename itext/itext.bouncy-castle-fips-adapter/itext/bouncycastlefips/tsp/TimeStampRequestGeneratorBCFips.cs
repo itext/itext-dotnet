@@ -77,8 +77,8 @@ namespace iText.Bouncycastlefips.Tsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual ITimeStampRequest Generate(IASN1ObjectIdentifier objectIdentifier, byte[] digest, IBigInteger nonceWrapper) {
-            var digestAlgorithmOid = ((ASN1ObjectIdentifierBCFips)objectIdentifier).GetASN1ObjectIdentifier().Id;
+        public virtual ITimeStampRequest Generate(IDerObjectIdentifier objectIdentifier, byte[] digest, IBigInteger nonceWrapper) {
+            var digestAlgorithmOid = ((DerObjectIdentifierBCFips)objectIdentifier).GetDerObjectIdentifier().Id;
             if (digestAlgorithmOid == null) {
                 throw new ArgumentException("No digest algorithm specified");
             }

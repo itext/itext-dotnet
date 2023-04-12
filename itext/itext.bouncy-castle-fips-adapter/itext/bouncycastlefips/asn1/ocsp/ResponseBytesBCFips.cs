@@ -30,7 +30,7 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Ocsp.ResponseBytes"/>.
     /// </summary>
-    public class ResponseBytesBCFips : ASN1EncodableBCFips, IResponseBytes {
+    public class ResponseBytesBCFips : Asn1EncodableBCFips, IResponseBytes {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.ResponseBytes"/>.
@@ -50,9 +50,9 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
         /// </summary>
         /// <param name="asn1ObjectIdentifier">ASN1ObjectIdentifier wrapper</param>
         /// <param name="derOctetString">DEROctetString wrapper</param>
-        public ResponseBytesBCFips(IASN1ObjectIdentifier asn1ObjectIdentifier, IDEROctetString derOctetString)
-            : base(new ResponseBytes(((ASN1ObjectIdentifierBCFips)asn1ObjectIdentifier).GetASN1ObjectIdentifier(), ((DEROctetStringBCFips
-                )derOctetString).GetDEROctetString())) {
+        public ResponseBytesBCFips(IDerObjectIdentifier asn1ObjectIdentifier, IDerOctetString derOctetString)
+            : base(new ResponseBytes(((DerObjectIdentifierBCFips)asn1ObjectIdentifier).GetDerObjectIdentifier(), ((DerOctetStringBCFips
+                )derOctetString).GetDerOctetString())) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

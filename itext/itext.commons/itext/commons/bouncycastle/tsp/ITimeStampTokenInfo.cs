@@ -49,10 +49,10 @@ namespace iText.Commons.Bouncycastle.Tsp {
         /// </summary>
         /// <returns>
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.Tsp.ITSTInfo"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Tsp.ITstInfo"/>
         /// TSTInfo wrapper.
         /// </returns>
-        ITSTInfo ToASN1Structure();
+        ITstInfo ToASN1Structure();
 
         /// <summary>
         /// Calls actual

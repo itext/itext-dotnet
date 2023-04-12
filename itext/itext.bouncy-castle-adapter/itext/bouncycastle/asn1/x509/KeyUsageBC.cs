@@ -29,7 +29,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.KeyUsage"/>.
     /// </summary>
-    public class KeyUsageBC : ASN1EncodableBC, IKeyUsage {
+    public class KeyUsageBC : Asn1EncodableBC, IKeyUsage {
         private static readonly iText.Bouncycastle.Asn1.X509.KeyUsageBC INSTANCE = new iText.Bouncycastle.Asn1.X509.KeyUsageBC
             (null);
 

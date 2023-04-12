@@ -55,7 +55,7 @@ namespace iText.Signatures.Testutils.Client {
         public virtual byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
             byte[] bytes = null;
             try {
-                ICertificateID id = SignTestPortUtil.GenerateCertificateId(issuerCert, checkCert.GetSerialNumber(), BOUNCY_CASTLE_FACTORY
+                ICertID id = SignTestPortUtil.GenerateCertificateId(issuerCert, checkCert.GetSerialNumber(), BOUNCY_CASTLE_FACTORY
                     .CreateCertificateID().GetHashSha1());
                 TestOcspResponseBuilder builder = issuerIdToResponseBuilder.Get(issuerCert.GetSerialNumber().ToString(16));
                 if (builder == null) {

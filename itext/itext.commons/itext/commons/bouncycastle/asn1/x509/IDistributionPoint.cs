@@ -27,7 +27,7 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
     /// This interface represents the wrapper for DistributionPoint that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IDistributionPoint : IASN1Encodable {
+    public interface IDistributionPoint : IAsn1Encodable {
         /// <summary>
         /// Calls actual
         /// <c>getDistributionPoints</c>

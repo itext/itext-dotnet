@@ -29,7 +29,7 @@ namespace iText.Bouncycastle.Asn1.Esf {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Esf.SignaturePolicyIdentifier"/>.
     /// </summary>
-    public class SignaturePolicyIdentifierBC : ASN1EncodableBC, ISignaturePolicyIdentifier {
+    public class SignaturePolicyIdentifierBC : Asn1EncodableBC, ISignaturePolicyIdentifier {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Esf.SignaturePolicyIdentifier"/>.

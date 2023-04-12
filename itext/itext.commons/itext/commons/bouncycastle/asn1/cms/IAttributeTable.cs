@@ -39,6 +39,6 @@ namespace iText.Commons.Bouncycastle.Asn1.Cms {
         /// <see cref="IAttribute"/>
         /// wrapper for the received Attribute object.
         /// </returns>
-        IAttribute Get(IASN1ObjectIdentifier oid);
+        IAttribute Get(IDerObjectIdentifier oid);
     }
 }

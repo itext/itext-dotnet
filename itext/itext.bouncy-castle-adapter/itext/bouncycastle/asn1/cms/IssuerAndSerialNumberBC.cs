@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using Org.BouncyCastle.Asn1.Cms;
 using Org.BouncyCastle.Math;
 using iText.Bouncycastle.Asn1;
-using iText.Bouncycastle.Asn1.X500;
+using iText.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Asn1.Cms;
 using iText.Commons.Bouncycastle.Asn1.X500;
 
@@ -32,7 +32,7 @@ namespace iText.Bouncycastle.Asn1.Cms {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Cms.IssuerAndSerialNumber"/>.
     /// </summary>
-    public class IssuerAndSerialNumberBC : ASN1EncodableBC, IIssuerAndSerialNumber {
+    public class IssuerAndSerialNumberBC : Asn1EncodableBC, IIssuerAndSerialNumber {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Cms.IssuerAndSerialNumber"/>.
@@ -59,7 +59,7 @@ namespace iText.Bouncycastle.Asn1.Cms {
         /// <see cref="Org.BouncyCastle.Asn1.Cms.IssuerAndSerialNumber"/>
         /// </param>
         public IssuerAndSerialNumberBC(IX500Name issuer, BigInteger value)
-            : base(new IssuerAndSerialNumber(((X500NameBC)issuer).GetX500Name(), value)) {
+            : base(new IssuerAndSerialNumber(((X509NameBC)issuer).GetX509Name(), value)) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

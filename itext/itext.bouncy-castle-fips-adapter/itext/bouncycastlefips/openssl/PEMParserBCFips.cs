@@ -39,7 +39,7 @@ namespace iText.Bouncycastlefips.Openssl {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.OpenSsl.OpenSslPemReader"/>.
     /// </summary>
-    public class PEMParserBCFips : IPEMParser {
+    public class PEMParserBCFips : IPemReader {
         private readonly OpenSslPemReader parser;
 
         private readonly char[] password;

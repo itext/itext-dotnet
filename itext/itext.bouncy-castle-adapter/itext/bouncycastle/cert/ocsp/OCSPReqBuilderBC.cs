@@ -32,7 +32,7 @@ namespace iText.Bouncycastle.Cert.Ocsp {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Ocsp.OcspReqGenerator"/>.
     /// </summary>
-    public class OCSPReqBuilderBC : IOCSPReqBuilder {
+    public class OCSPReqBuilderBC : IOcspReqGenerator {
         private readonly OcspReqGenerator reqBuilder;
 
         /// <summary>
@@ -58,23 +58,23 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPReqBuilder SetRequestExtensions(IExtensions extensions) {
-            reqBuilder.SetRequestExtensions(((ExtensionsBC)extensions).GetX509Extensions());
+        public virtual IOcspReqGenerator SetRequestExtensions(IX509Extensions extensions) {
+            reqBuilder.SetRequestExtensions(((X509ExtensionsBC)extensions).GetX509Extensions());
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPReqBuilder AddRequest(ICertificateID certificateID) {
-            reqBuilder.AddRequest(new CertificateID(((CertificateIDBC)certificateID).GetCertificateID()));
+        public virtual IOcspReqGenerator AddRequest(ICertID certificateID) {
+            reqBuilder.AddRequest(new CertificateID(((CertIDBC)certificateID).GetCertID()));
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPReq Build() {
+        public virtual IOcspRequest Build() {
             try {
-                return new OCSPReqBC(reqBuilder.Generate());
+                return new OcspReqBC(reqBuilder.Generate());
             } catch (OcspException e) {
-                throw new OCSPExceptionBC(e);
+                throw new OcspExceptionBC(e);
             }
         }
 

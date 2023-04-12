@@ -67,8 +67,8 @@ namespace iText.Bouncycastlefips.Cms {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IRecipientInformation Get(IRecipientId id) {
-            return new RecipientInformationBCFips(recipientInformationStore[((RecipientIdBCFips)id).GetRecipientId
+        public virtual IRecipientInformation Get(IRecipientID id) {
+            return new RecipientInformationBCFips(recipientInformationStore[((KeyTransRecipientIDBCFips)id).GetRecipientId
                 ()]);
         }
 

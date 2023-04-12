@@ -32,7 +32,7 @@ namespace iText.Bouncycastle.Asn1.Esf {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Esf.OtherHashAlgAndValue"/>.
     /// </summary>
-    public class OtherHashAlgAndValueBC : ASN1EncodableBC, IOtherHashAlgAndValue {
+    public class OtherHashAlgAndValueBC : Asn1EncodableBC, IOtherHashAlgAndValue {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Esf.OtherHashAlgAndValue"/>.
@@ -52,9 +52,9 @@ namespace iText.Bouncycastle.Asn1.Esf {
         /// </summary>
         /// <param name="algorithmIdentifier">AlgorithmIdentifier wrapper</param>
         /// <param name="octetString">ASN1OctetString wrapper</param>
-        public OtherHashAlgAndValueBC(IAlgorithmIdentifier algorithmIdentifier, IASN1OctetString octetString)
-            : this(new OtherHashAlgAndValue(((AlgorithmIdentifierBC)algorithmIdentifier).GetAlgorithmIdentifier(), ((ASN1OctetStringBC
-                )octetString).GetASN1OctetString())) {
+        public OtherHashAlgAndValueBC(IAlgorithmIdentifier algorithmIdentifier, IAsn1OctetString octetString)
+            : this(new OtherHashAlgAndValue(((AlgorithmIdentifierBC)algorithmIdentifier).GetAlgorithmIdentifier(), ((Asn1OctetStringBC
+                )octetString).GetAsn1OctetString())) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

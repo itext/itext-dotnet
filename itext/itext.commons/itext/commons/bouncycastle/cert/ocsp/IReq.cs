@@ -33,9 +33,9 @@ namespace iText.Commons.Bouncycastle.Cert.Ocsp {
         /// </summary>
         /// <returns>
         /// 
-        /// <see cref="ICertificateID"/>
+        /// <see cref="ICertID"/>
         /// the wrapper for the received CertificateID.
         /// </returns>
-        ICertificateID GetCertID();
+        ICertID GetCertID();
     }
 }

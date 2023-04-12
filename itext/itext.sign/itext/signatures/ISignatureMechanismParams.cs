@@ -33,14 +33,14 @@ namespace iText.Signatures {
     public interface ISignatureMechanismParams {
         /// <summary>
         /// Represent the parameters as an
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1Encodable"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Encodable"/>
         /// for inclusion in a signature object.
         /// </summary>
         /// <returns>
         /// an
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1Encodable"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Encodable"/>
         /// object
         /// </returns>
-        IASN1Encodable ToEncodable();
+        IAsn1Encodable ToEncodable();
     }
 }

@@ -30,7 +30,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.AlgorithmIdentifier"/>.
     /// </summary>
-    public class AlgorithmIdentifierBC : ASN1EncodableBC, IAlgorithmIdentifier {
+    public class AlgorithmIdentifierBC : Asn1EncodableBC, IAlgorithmIdentifier {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.X509.AlgorithmIdentifier"/>.
@@ -54,13 +54,13 @@ namespace iText.Bouncycastle.Asn1.X509 {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1ObjectIdentifier GetAlgorithm() {
-            return new ASN1ObjectIdentifierBC(GetAlgorithmIdentifier().Algorithm);
+        public virtual IDerObjectIdentifier GetAlgorithm() {
+            return new DerObjectIdentifierBC(GetAlgorithmIdentifier().Algorithm);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IASN1Encodable GetParameters() {
-            return new ASN1EncodableBC(GetAlgorithmIdentifier().Parameters);
+        public virtual IAsn1Encodable GetParameters() {
+            return new Asn1EncodableBC(GetAlgorithmIdentifier().Parameters);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace iText.Commons.Bouncycastle.Asn1.Tsp {
     /// This interface represents the wrapper for MessageImprint that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IMessageImprint : IASN1Encodable {
+    public interface IMessageImprint : IAsn1Encodable {
         /// <summary>
         /// Calls actual
         /// <c>getHashedMessage</c>

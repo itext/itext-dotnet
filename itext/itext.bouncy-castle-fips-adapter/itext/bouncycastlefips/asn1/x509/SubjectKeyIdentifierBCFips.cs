@@ -29,7 +29,7 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.SubjectKeyIdentifier"/>.
     /// </summary>
-    public class SubjectKeyIdentifierBCFips : ASN1EncodableBCFips, ISubjectKeyIdentifier {
+    public class SubjectKeyIdentifierBCFips : Asn1EncodableBCFips, ISubjectKeyIdentifier {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.X509.SubjectKeyIdentifier"/>.

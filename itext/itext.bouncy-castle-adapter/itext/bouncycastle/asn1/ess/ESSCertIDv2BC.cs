@@ -31,7 +31,7 @@ namespace iText.Bouncycastle.Asn1.Ess {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Ess.EssCertIDv2"/>.
     /// </summary>
-    public class ESSCertIDv2BC : ASN1EncodableBC, IESSCertIDv2 {
+    public class ESSCertIDv2BC : Asn1EncodableBC, IEssCertIDv2 {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Ess.EssCertIDv2"/>.

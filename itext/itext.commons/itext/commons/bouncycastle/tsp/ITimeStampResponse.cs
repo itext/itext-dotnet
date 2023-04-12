@@ -44,10 +44,10 @@ namespace iText.Commons.Bouncycastle.Tsp {
         /// </summary>
         /// <returns>
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.Cmp.IPKIFailureInfo"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Cmp.IPkiFailureInfo"/>
         /// the wrapper for the received PKIFailureInfo object.
         /// </returns>
-        IPKIFailureInfo GetFailInfo();
+        IPkiFailureInfo GetFailInfo();
 
         /// <summary>
         /// Calls actual

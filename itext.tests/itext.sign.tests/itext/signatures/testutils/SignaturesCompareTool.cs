@@ -56,7 +56,7 @@ namespace iText.Signatures.Testutils {
 
         private const String OID_OCSP_NONCE_EXTENSION = "1.3.6.1.5.5.7.48.1.2";
 
-        private static readonly IASN1Dump DUMP = BOUNCY_CASTLE_FACTORY.CreateASN1Dump();
+        private static readonly IAsn1Dump DUMP = BOUNCY_CASTLE_FACTORY.CreateASN1Dump();
 
         private static readonly ICollection<String> IGNORED_OIDS;
 
@@ -88,9 +88,9 @@ namespace iText.Signatures.Testutils {
                         }
                         IList<String> signatures = cmpSigUtil.GetSignatureNames();
                         foreach (String sig in signatures) {
-                            IASN1Sequence outSignedData = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(GetSignatureContent(sig, outSigUtil
+                            IAsn1Sequence outSignedData = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(GetSignatureContent(sig, outSigUtil
                                 ));
-                            IASN1Sequence cmpSignedData = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(GetSignatureContent(sig, cmpSigUtil
+                            IAsn1Sequence cmpSignedData = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(GetSignatureContent(sig, cmpSigUtil
                                 ));
                             bool isEqual = CompareSignedData(outSignedData, cmpSignedData, errorText);
                             if (!isEqual) {
@@ -107,7 +107,7 @@ namespace iText.Signatures.Testutils {
             return String.IsNullOrEmpty(errorText.ToString()) ? null : errorText.ToString();
         }
 
-        private static void CreateTxtFilesFromAsn1Sequences(IASN1Sequence outSignedData, IASN1Sequence cmpSignedData
+        private static void CreateTxtFilesFromAsn1Sequences(IAsn1Sequence outSignedData, IAsn1Sequence cmpSignedData
             , String dest, String sig, StringBuilder errorText) {
             String sigFileName = dest.JSubstring(0, dest.LastIndexOf("."));
             String outSigFile = sigFileName + "_" + sig + "_out.txt";
@@ -164,8 +164,8 @@ namespace iText.Signatures.Testutils {
                     AddError(errorText, errorMessage);
                     return false;
                 }
-                IASN1Sequence outDecodedItem = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(outDssEntryItem.GetBytes());
-                IASN1Sequence cmpDecodedItem = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(cmpDssEntryItem.GetBytes());
+                IAsn1Sequence outDecodedItem = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(outDssEntryItem.GetBytes());
+                IAsn1Sequence cmpDecodedItem = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(cmpDssEntryItem.GetBytes());
                 if (!comparator(outDecodedItem, cmpDecodedItem, errorText)) {
                     CreateTxtFilesFromAsn1Sequences(outDecodedItem, cmpDecodedItem, dest, "DSS_" + entryName.GetValue() + "_" 
                         + i, errorText);
@@ -175,18 +175,18 @@ namespace iText.Signatures.Testutils {
             return true;
         }
 
-        private static bool CompareOcspResponses(IASN1Encodable[] outOcspResponse, IASN1Encodable[] cmpOcspResponse
+        private static bool CompareOcspResponses(IAsn1Encodable[] outOcspResponse, IAsn1Encodable[] cmpOcspResponse
             , StringBuilder errorText) {
             if (outOcspResponse.Length != 2 || cmpOcspResponse.Length != 2) {
                 AddError(errorText, "OCSP response has unexpected structure");
             }
-            IASN1OctetString outResponseString = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(outOcspResponse[1]);
-            IASN1OctetString cmpResponseString = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(cmpOcspResponse[1]);
+            IAsn1OctetString outResponseString = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(outOcspResponse[1]);
+            IAsn1OctetString cmpResponseString = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(cmpOcspResponse[1]);
             if (outResponseString.Equals(cmpResponseString)) {
                 return true;
             }
-            IASN1Sequence parsedOutResponse = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(outResponseString.GetOctets());
-            IASN1Sequence parsedCmpResponse = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(cmpResponseString.GetOctets());
+            IAsn1Sequence parsedOutResponse = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(outResponseString.GetOctets());
+            IAsn1Sequence parsedCmpResponse = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(cmpResponseString.GetOctets());
             return CompareSequencesWithSignatureValue(parsedOutResponse, parsedCmpResponse, errorText);
         }
 
@@ -199,25 +199,25 @@ namespace iText.Signatures.Testutils {
         /// <param name="cmpSignedData">reference signed data used for comparison as a ground truth</param>
         /// <param name="errorText">string builder in order to accumulate errors</param>
         /// <returns>true if signed data objects are the similar, false otherwise</returns>
-        private static bool CompareSignedData(IASN1Sequence outSignedData, IASN1Sequence cmpSignedData, StringBuilder
+        private static bool CompareSignedData(IAsn1Sequence outSignedData, IAsn1Sequence cmpSignedData, StringBuilder
              errorText) {
             if (outSignedData.Size() != cmpSignedData.Size() || outSignedData.Size() != 2) {
                 AddError(errorText, "Signature top level elements count is incorrect (should be exactly 2):", outSignedData
                     .Size().ToString(), cmpSignedData.Size().ToString());
                 return false;
             }
-            IASN1ObjectIdentifier outObjId = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(outSignedData.GetObjectAt
+            IDerObjectIdentifier outObjId = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(outSignedData.GetObjectAt
                 (0));
-            IASN1ObjectIdentifier cmpObjId = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(cmpSignedData.GetObjectAt
+            IDerObjectIdentifier cmpObjId = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(cmpSignedData.GetObjectAt
                 (0));
             if (!outObjId.Equals(cmpObjId) || !outObjId.GetId().Equals(OID_SIGNED_DATA)) {
                 AddError(errorText, "Signatures object identifier is incorrect (should be " + OID_SIGNED_DATA + ")", outObjId
                     .GetId().ToString(), cmpObjId.GetId().ToString());
                 return false;
             }
-            IASN1Sequence outContent = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject
+            IAsn1Sequence outContent = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject
                 (outSignedData.GetObjectAt(1)).GetObject());
-            IASN1Sequence cmpContent = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject
+            IAsn1Sequence cmpContent = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject
                 (cmpSignedData.GetObjectAt(1)).GetObject());
             if (outContent.Size() != cmpContent.Size()) {
                 AddError(errorText, "Signatures base elements counts are different", outContent.Size().ToString(), cmpContent
@@ -244,8 +244,8 @@ namespace iText.Signatures.Testutils {
                     return false;
                 }
             }
-            IASN1Set cmpSignerInfos = BOUNCY_CASTLE_FACTORY.CreateASN1Set(cmpContent.GetObjectAt(signerInfoIndex));
-            IASN1Set outSignerInfos = BOUNCY_CASTLE_FACTORY.CreateASN1Set(outContent.GetObjectAt(signerInfoIndex));
+            IAsn1Set cmpSignerInfos = BOUNCY_CASTLE_FACTORY.CreateASN1Set(cmpContent.GetObjectAt(signerInfoIndex));
+            IAsn1Set outSignerInfos = BOUNCY_CASTLE_FACTORY.CreateASN1Set(outContent.GetObjectAt(signerInfoIndex));
             // Currently, iText signature validation mechanism do not support signatures,
             // containing more than one SignerInfo entry. However, it is still valid signature.
             if (cmpSignerInfos.Size() != outSignerInfos.Size() || cmpSignerInfos.Size() != 1) {
@@ -253,12 +253,12 @@ namespace iText.Signatures.Testutils {
                     .Size().ToString());
                 return false;
             }
-            IASN1Sequence outSignerInfo = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(outSignerInfos.GetObjectAt(0));
-            IASN1Sequence cmpSignerInfo = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(cmpSignerInfos.GetObjectAt(0));
+            IAsn1Sequence outSignerInfo = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(outSignerInfos.GetObjectAt(0));
+            IAsn1Sequence cmpSignerInfo = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(cmpSignerInfos.GetObjectAt(0));
             return CompareSequencesWithSignatureValue(outSignerInfo, cmpSignerInfo, errorText);
         }
 
-        private static bool CompareSequencesWithSignatureValue(IASN1Sequence outSequence, IASN1Sequence cmpSequence
+        private static bool CompareSequencesWithSignatureValue(IAsn1Sequence outSequence, IAsn1Sequence cmpSequence
             , StringBuilder errorText) {
             if (cmpSequence.Size() != outSequence.Size()) {
                 AddError(errorText, "Incorrect SignerInfo entries count", outSequence.Size().ToString(), cmpSequence.Size(
@@ -286,8 +286,7 @@ namespace iText.Signatures.Testutils {
             return true;
         }
 
-        private static bool CompareAsn1Structures(IASN1Primitive @out, IASN1Primitive cmp, StringBuilder errorText
-            ) {
+        private static bool CompareAsn1Structures(IAsn1Object @out, IAsn1Object cmp, StringBuilder errorText) {
             if (!@out.GetType().Equals(cmp.GetType())) {
                 AddError(errorText, "ASN1 objects types are different", @out.GetType().FullName, cmp.GetType().FullName);
                 return false;
@@ -331,7 +330,7 @@ namespace iText.Signatures.Testutils {
             return true;
         }
 
-        private static bool CompareContainers(IASN1Encodable[] outArray, IASN1Encodable[] cmpArray, StringBuilder 
+        private static bool CompareContainers(IAsn1Encodable[] outArray, IAsn1Encodable[] cmpArray, StringBuilder 
             errorText) {
             if (cmpArray.Length != outArray.Length) {
                 AddError(errorText, "Container lengths are different", JavaUtil.IntegerToString(outArray.Length), JavaUtil.IntegerToString
@@ -369,7 +368,7 @@ namespace iText.Signatures.Testutils {
         /// <param name="cmp">cmp signature revocation info attribute value</param>
         /// <param name="errorText">string builder in order to accumulate errors</param>
         /// <returns>true if signed data objects are the similar, false otherwise</returns>
-        private static bool CompareRevocationInfoArchivalAttribute(IASN1Encodable[] @out, IASN1Encodable[] cmp, StringBuilder
+        private static bool CompareRevocationInfoArchivalAttribute(IAsn1Encodable[] @out, IAsn1Encodable[] cmp, StringBuilder
              errorText) {
             String structureIsInvalidError = "Signature revocation info archival attribute structure is invalid";
             if (!IsExpectedRevocationInfoArchivalAttributeStructure(@out) || !IsExpectedRevocationInfoArchivalAttributeStructure
@@ -379,9 +378,9 @@ namespace iText.Signatures.Testutils {
                     DumpAsString(e)).ToList()));
                 return false;
             }
-            IASN1Sequence outSequence = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(BOUNCY_CASTLE_FACTORY.CreateASN1Set(@out
+            IAsn1Sequence outSequence = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(BOUNCY_CASTLE_FACTORY.CreateASN1Set(@out
                 [1]).GetObjectAt(0).ToASN1Primitive());
-            IASN1Sequence cmpSequence = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(BOUNCY_CASTLE_FACTORY.CreateASN1Set(cmp
+            IAsn1Sequence cmpSequence = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(BOUNCY_CASTLE_FACTORY.CreateASN1Set(cmp
                 [1]).GetObjectAt(0).ToASN1Primitive());
             if (outSequence.Size() != cmpSequence.Size()) {
                 AddError(errorText, "Signature revocation info archival attributes have different sets of revocation info types "
@@ -396,9 +395,9 @@ namespace iText.Signatures.Testutils {
                         DumpAsString(e)).ToList()));
                     return false;
                 }
-                IASN1TaggedObject outTaggedObject = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(outSequence.GetObjectAt(i
+                IAsn1TaggedObject outTaggedObject = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(outSequence.GetObjectAt(i
                     ));
-                IASN1TaggedObject cmpTaggedObject = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(cmpSequence.GetObjectAt(i
+                IAsn1TaggedObject cmpTaggedObject = BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject(cmpSequence.GetObjectAt(i
                     ));
                 if (outTaggedObject.GetTagNo() != cmpTaggedObject.GetTagNo()) {
                     AddError(errorText, "Signature revocation info archival attributes have different tagged objects tag numbers"
@@ -413,8 +412,8 @@ namespace iText.Signatures.Testutils {
                     return false;
                 }
                 // revocation entries can be either CRLs or OCSPs in most cases
-                IASN1Sequence outRevocationEntries = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(outTaggedObject.GetObject());
-                IASN1Sequence cmpRevocationEntries = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(cmpTaggedObject.GetObject());
+                IAsn1Sequence outRevocationEntries = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(outTaggedObject.GetObject());
+                IAsn1Sequence cmpRevocationEntries = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(cmpTaggedObject.GetObject());
                 if (outRevocationEntries.Size() != cmpRevocationEntries.Size()) {
                     AddError(errorText, "Signature revocation info archival attributes have different number of entries", outRevocationEntries
                         .Size().ToString(), cmpRevocationEntries.Size().ToString());
@@ -448,19 +447,19 @@ namespace iText.Signatures.Testutils {
             return true;
         }
 
-        private static bool IsExpectedRevocationInfoArchivalAttributeStructure(IASN1Encodable[] container) {
+        private static bool IsExpectedRevocationInfoArchivalAttributeStructure(IAsn1Encodable[] container) {
             return container.Length == 2 && BOUNCY_CASTLE_FACTORY.CreateASN1Set(container[1]) != null && BOUNCY_CASTLE_FACTORY
                 .CreateASN1Set(container[1]).Size() == 1 && BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(BOUNCY_CASTLE_FACTORY
                 .CreateASN1Set(container[1]).GetObjectAt(0).ToASN1Primitive()) != null;
         }
 
-        private static bool CompareTimestampAttributes(IASN1Encodable[] @out, IASN1Encodable[] cmp, StringBuilder 
+        private static bool CompareTimestampAttributes(IAsn1Encodable[] @out, IAsn1Encodable[] cmp, StringBuilder 
             errorText) {
             if (cmp.Length == 2) {
                 if (BOUNCY_CASTLE_FACTORY.CreateASN1Set(cmp[1]) != null && BOUNCY_CASTLE_FACTORY.CreateASN1Set(@out[1]) !=
                      null) {
-                    IASN1Primitive outSequence = BOUNCY_CASTLE_FACTORY.CreateASN1Set(@out[1]).GetObjectAt(0).ToASN1Primitive();
-                    IASN1Primitive cmpSequence = BOUNCY_CASTLE_FACTORY.CreateASN1Set(cmp[1]).GetObjectAt(0).ToASN1Primitive();
+                    IAsn1Object outSequence = BOUNCY_CASTLE_FACTORY.CreateASN1Set(@out[1]).GetObjectAt(0).ToASN1Primitive();
+                    IAsn1Object cmpSequence = BOUNCY_CASTLE_FACTORY.CreateASN1Set(cmp[1]).GetObjectAt(0).ToASN1Primitive();
                     if (BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(outSequence) != null && BOUNCY_CASTLE_FACTORY.CreateASN1Sequence
                         (cmpSequence) != null) {
                         return CompareSignedData(BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(outSequence), BOUNCY_CASTLE_FACTORY.CreateASN1Sequence
@@ -474,7 +473,7 @@ namespace iText.Signatures.Testutils {
             return false;
         }
 
-        private static int GetSignerInfoIndex(IASN1Sequence baseElement) {
+        private static int GetSignerInfoIndex(IAsn1Sequence baseElement) {
             for (int i = 3; i < baseElement.Size(); i++) {
                 if (BOUNCY_CASTLE_FACTORY.CreateASN1Set(baseElement.GetObjectAt(i)) != null) {
                     return i;
@@ -483,7 +482,7 @@ namespace iText.Signatures.Testutils {
             throw new InvalidOperationException("SignerInfo entry has not been found.");
         }
 
-        private static String GetASN1ObjectId(IASN1Primitive primitive) {
+        private static String GetASN1ObjectId(IAsn1Object primitive) {
             if (BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(primitive) != null) {
                 return GetASN1ObjectId(BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(primitive).ToArray());
             }
@@ -493,17 +492,17 @@ namespace iText.Signatures.Testutils {
             return null;
         }
 
-        private static String GetASN1ObjectId(IASN1Encodable[] primitives) {
+        private static String GetASN1ObjectId(IAsn1Encodable[] primitives) {
             if (primitives.Length != 0 && BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(primitives[0]) != null) {
                 return BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(primitives[0]).GetId();
             }
             return null;
         }
 
-        private static IASN1Primitive GetSignatureContent(String signatureName, SignatureUtil util) {
+        private static IAsn1Object GetSignatureContent(String signatureName, SignatureUtil util) {
             PdfSignature signature = util.GetSignature(signatureName);
             byte[] contents = signature.GetContents().GetValueBytes();
-            IASN1InputStream inputStream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(contents));
+            IAsn1InputStream inputStream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(contents));
             return inputStream.ReadObject();
         }
 
@@ -528,7 +527,7 @@ namespace iText.Signatures.Testutils {
             errorBuilder.Append("\n\n");
         }
 
-        internal delegate bool SequenceComparator(IASN1Sequence outSequence, IASN1Sequence cmpSequence, StringBuilder
+        internal delegate bool SequenceComparator(IAsn1Sequence outSequence, IAsn1Sequence cmpSequence, StringBuilder
              errorText);
     }
 }

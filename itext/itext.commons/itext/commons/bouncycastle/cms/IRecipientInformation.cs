@@ -44,9 +44,9 @@ namespace iText.Commons.Bouncycastle.Cms {
         /// </summary>
         /// <returns>
         /// 
-        /// <see cref="IRecipientId"/>
+        /// <see cref="IRecipientID"/>
         /// the wrapper for received RecipientId object.
         /// </returns>
-        IRecipientId GetRID();
+        IRecipientID GetRID();
     }
 }

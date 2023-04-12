@@ -63,13 +63,13 @@ namespace iText.Bouncycastle.Cms {
                 return recipientInformation.GetContent(((PrivateKeyBC)key).GetPrivateKey());
             }
             catch (CmsException e) {
-                throw new CMSExceptionBC(e);
+                throw new CmsExceptionBC(e);
             }
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IRecipientId GetRID() {
-            return new RecipientIdBC(recipientInformation.RecipientID);
+        public virtual IRecipientID GetRID() {
+            return new RecipientIDBC(recipientInformation.RecipientID);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

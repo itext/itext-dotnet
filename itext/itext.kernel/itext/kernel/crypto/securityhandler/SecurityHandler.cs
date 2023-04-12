@@ -60,7 +60,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// </summary>
         protected internal int nextObjectKeySize;
 
-        protected internal IIDigest md5;
+        protected internal IDigest md5;
 
         /// <summary>Work area to prepare the object/generation bytes</summary>
         protected internal byte[] extra = new byte[5];

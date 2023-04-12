@@ -27,7 +27,7 @@ namespace iText.Commons.Bouncycastle.Asn1.Ess {
     /// This interface represents the wrapper for SigningCertificateV2 that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface ISigningCertificateV2 : IASN1Encodable {
+    public interface ISigningCertificateV2 : IAsn1Encodable {
         /// <summary>
         /// Calls actual
         /// <c>getCerts</c>
@@ -35,8 +35,8 @@ namespace iText.Commons.Bouncycastle.Asn1.Ess {
         /// </summary>
         /// <returns>
         /// array of wrapped certificates
-        /// <see cref="IESSCertIDv2"/>.
+        /// <see cref="IEssCertIDv2"/>.
         /// </returns>
-        IESSCertIDv2[] GetCerts();
+        IEssCertIDv2[] GetCerts();
     }
 }

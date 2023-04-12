@@ -30,7 +30,7 @@ namespace iText.Bouncycastlefips.Asn1.Cms {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Cms.EnvelopedData"/>.
     /// </summary>
-    public class EnvelopedDataBCFips : ASN1EncodableBCFips, IEnvelopedData {
+    public class EnvelopedDataBCFips : Asn1EncodableBCFips, IEnvelopedData {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Cms.EnvelopedData"/>.
@@ -64,11 +64,11 @@ namespace iText.Bouncycastlefips.Asn1.Cms {
         /// ASN1Set wrapper to create
         /// <see cref="Org.BouncyCastle.Asn1.Cms.EnvelopedData"/>
         /// </param>
-        public EnvelopedDataBCFips(IOriginatorInfo originatorInfo, IASN1Set set, IEncryptedContentInfo encryptedContentInfo
-            , IASN1Set set1)
-            : base(new EnvelopedData(((OriginatorInfoBCFips)originatorInfo).GetOriginatorInfo(), ((ASN1SetBCFips)set).
-                GetASN1Set(), ((EncryptedContentInfoBCFips)encryptedContentInfo).GetEncryptedContentInfo(), ((ASN1SetBCFips
-                )set1).GetASN1Set())) {
+        public EnvelopedDataBCFips(IOriginatorInfo originatorInfo, IAsn1Set set, IEncryptedContentInfo encryptedContentInfo
+            , IAsn1Set set1)
+            : base(new EnvelopedData(((OriginatorInfoBCFips)originatorInfo).GetOriginatorInfo(), ((Asn1SetBCFips)set).
+                GetAsn1Set(), ((EncryptedContentInfoBCFips)encryptedContentInfo).GetEncryptedContentInfo(), ((Asn1SetBCFips
+                )set1).GetAsn1Set())) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

@@ -27,6 +27,6 @@ namespace iText.Commons.Bouncycastle.Asn1.Cms {
     /// This interface represents the wrapper for OriginatorInfo that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IOriginatorInfo : IASN1Encodable {
+    public interface IOriginatorInfo : IAsn1Encodable {
     }
 }

@@ -34,7 +34,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <summary>
     /// Wrapper class for OCSPReqBuilder"/>.
     /// </summary>
-    public class OCSPReqBuilderBCFips : IOCSPReqBuilder {
+    public class OCSPReqBuilderBCFips : IOcspReqGenerator {
         private IList list = new ArrayList();
         private GeneralName requestorName = null;
         private X509Extensions requestExtensions;
@@ -76,29 +76,29 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         }
         
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPReqBuilder SetRequestExtensions(IExtensions extensions) {
-            requestExtensions = ((ExtensionsBCFips)extensions).GetX509Extensions();
+        public virtual IOcspReqGenerator SetRequestExtensions(IX509Extensions extensions) {
+            requestExtensions = ((X509ExtensionsBCFips)extensions).GetX509Extensions();
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPReqBuilder AddRequest(ICertificateID certificateID) {
-            list.Add(new Request(((CertificateIDBCFips)certificateID).GetCertificateID(), null));
+        public virtual IOcspReqGenerator AddRequest(ICertID certificateID) {
+            list.Add(new Request(((CertIDBCFips)certificateID).GetCertificateID(), null));
             return this;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IOCSPReq Build() {
+        public virtual IOcspRequest Build() {
             Asn1EncodableVector requests = new Asn1EncodableVector();
             foreach (Request reqObj in list) {
                 try {
                     requests.Add(reqObj);
                 } catch (Exception e) {
-                    throw new OCSPExceptionBCFips("exception creating Request");
+                    throw new OcspExceptionBCFips("exception creating Request");
                 }
             }
             TbsRequest tbsReq = new TbsRequest(requestorName, new DerSequence(requests), requestExtensions);
-            return new OCSPReqBCFips(new OcspRequest(tbsReq, null));
+            return new OcspRequestBCFips(new OcspRequest(tbsReq, null));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

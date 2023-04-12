@@ -27,7 +27,7 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
     /// This interface represents the wrapper for DistributionPointName that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IDistributionPointName : IASN1Encodable {
+    public interface IDistributionPointName : IAsn1Encodable {
         /// <summary>
         /// Calls actual
         /// <c>getType</c>
@@ -43,10 +43,10 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
         /// </summary>
         /// <returns>
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1Encodable"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Encodable"/>
         /// ASN1Encodable wrapper.
         /// </returns>
-        IASN1Encodable GetName();
+        IAsn1Encodable GetName();
 
         /// <summary>
         /// Gets

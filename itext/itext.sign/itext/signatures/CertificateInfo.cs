@@ -44,55 +44,55 @@ namespace iText.Signatures {
         /// <summary>Class that holds an X509 name.</summary>
         public class X500Name {
             /// <summary>Country code - StringType(SIZE(2)).</summary>
-            public static readonly IASN1ObjectIdentifier C = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.6"
+            public static readonly IDerObjectIdentifier C = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.6"
                 );
 
             /// <summary>Organization - StringType(SIZE(1..64)).</summary>
-            public static readonly IASN1ObjectIdentifier O = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.10"
+            public static readonly IDerObjectIdentifier O = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.10"
                 );
 
             /// <summary>Organizational unit name - StringType(SIZE(1..64)).</summary>
-            public static readonly IASN1ObjectIdentifier OU = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.11"
+            public static readonly IDerObjectIdentifier OU = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.11"
                 );
 
             /// <summary>Title.</summary>
-            public static readonly IASN1ObjectIdentifier T = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.12"
+            public static readonly IDerObjectIdentifier T = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.12"
                 );
 
             /// <summary>Common name - StringType(SIZE(1..64)).</summary>
-            public static readonly IASN1ObjectIdentifier CN = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.3"
+            public static readonly IDerObjectIdentifier CN = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.3"
                 );
 
             /// <summary>Device serial number name - StringType(SIZE(1..64)).</summary>
-            public static readonly IASN1ObjectIdentifier SN = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.5"
+            public static readonly IDerObjectIdentifier SN = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.5"
                 );
 
             /// <summary>Locality name - StringType(SIZE(1..64)).</summary>
-            public static readonly IASN1ObjectIdentifier L = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.7"
+            public static readonly IDerObjectIdentifier L = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.7"
                 );
 
             /// <summary>State, or province name - StringType(SIZE(1..64)).</summary>
-            public static readonly IASN1ObjectIdentifier ST = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.8"
+            public static readonly IDerObjectIdentifier ST = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.8"
                 );
 
             /// <summary>Naming attribute of type X520name.</summary>
-            public static readonly IASN1ObjectIdentifier SURNAME = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.4"
+            public static readonly IDerObjectIdentifier SURNAME = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.4"
                 );
 
             /// <summary>Naming attribute of type X520name.</summary>
-            public static readonly IASN1ObjectIdentifier GIVENNAME = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(
-                "2.5.4.42");
-
-            /// <summary>Naming attribute of type X520name.</summary>
-            public static readonly IASN1ObjectIdentifier INITIALS = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.43"
+            public static readonly IDerObjectIdentifier GIVENNAME = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.42"
                 );
 
             /// <summary>Naming attribute of type X520name.</summary>
-            public static readonly IASN1ObjectIdentifier GENERATION = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
-                ("2.5.4.44");
+            public static readonly IDerObjectIdentifier INITIALS = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("2.5.4.43"
+                );
 
             /// <summary>Naming attribute of type X520name.</summary>
-            public static readonly IASN1ObjectIdentifier UNIQUE_IDENTIFIER = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
+            public static readonly IDerObjectIdentifier GENERATION = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(
+                "2.5.4.44");
+
+            /// <summary>Naming attribute of type X520name.</summary>
+            public static readonly IDerObjectIdentifier UNIQUE_IDENTIFIER = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
                 ("2.5.4.45");
 
             /// <summary>Email address (RSA PKCS#9 extension) - IA5String.</summary>
@@ -101,22 +101,22 @@ namespace iText.Signatures {
             /// <para />
             /// Note: if you're trying to be ultra orthodox, don't use this! It shouldn't be in here.
             /// </remarks>
-            public static readonly IASN1ObjectIdentifier EmailAddress = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
+            public static readonly IDerObjectIdentifier EmailAddress = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
                 ("1.2.840.113549.1.9.1");
 
             /// <summary>Email address in Verisign certificates.</summary>
-            public static readonly IASN1ObjectIdentifier E = EmailAddress;
+            public static readonly IDerObjectIdentifier E = EmailAddress;
 
             /// <summary>Object identifier.</summary>
-            public static readonly IASN1ObjectIdentifier DC = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("0.9.2342.19200300.100.1.25"
+            public static readonly IDerObjectIdentifier DC = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("0.9.2342.19200300.100.1.25"
                 );
 
             /// <summary>LDAP User id.</summary>
-            public static readonly IASN1ObjectIdentifier UID = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("0.9.2342.19200300.100.1.1"
+            public static readonly IDerObjectIdentifier UID = BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier("0.9.2342.19200300.100.1.1"
                 );
 
             /// <summary>A Map with default symbols.</summary>
-            public static readonly IDictionary<IASN1ObjectIdentifier, String> DefaultSymbols = new Dictionary<IASN1ObjectIdentifier
+            public static readonly IDictionary<IDerObjectIdentifier, String> DefaultSymbols = new Dictionary<IDerObjectIdentifier
                 , String>();
 
             static X500Name() {
@@ -142,12 +142,12 @@ namespace iText.Signatures {
 
             /// <summary>Constructs an X509 name.</summary>
             /// <param name="seq">an ASN1 Sequence</param>
-            public X500Name(IASN1Sequence seq) {
+            public X500Name(IAsn1Sequence seq) {
                 IEnumerator e = seq.GetObjects();
                 while (e.MoveNext()) {
-                    IASN1Set set = BOUNCY_CASTLE_FACTORY.CreateASN1Set(e.Current);
+                    IAsn1Set set = BOUNCY_CASTLE_FACTORY.CreateASN1Set(e.Current);
                     for (int i = 0; i < set.Size(); i++) {
-                        IASN1Sequence s = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(set.GetObjectAt(i));
+                        IAsn1Sequence s = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(set.GetObjectAt(i));
                         String id = DefaultSymbols.Get(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(s.GetObjectAt(0)));
                         if (id != null) {
                             IList<String> vs = values.Get(id);
@@ -303,10 +303,10 @@ namespace iText.Signatures {
         /// <summary>Get the "issuer" from the TBSCertificate bytes that are passed in.</summary>
         /// <param name="enc">a TBSCertificate in a byte array</param>
         /// <returns>an IASN1Primitive</returns>
-        public static IASN1Primitive GetIssuer(byte[] enc) {
+        public static IAsn1Object GetIssuer(byte[] enc) {
             try {
-                IASN1Sequence seq;
-                using (IASN1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(enc))) {
+                IAsn1Sequence seq;
+                using (IAsn1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(enc))) {
                     seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(@in.ReadObject());
                 }
                 return BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(seq.GetObjectAt(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject
@@ -337,10 +337,10 @@ namespace iText.Signatures {
         /// <summary>Get the "subject" from the TBSCertificate bytes that are passed in.</summary>
         /// <param name="enc">A TBSCertificate in a byte array</param>
         /// <returns>a IASN1Primitive</returns>
-        public static IASN1Primitive GetSubject(byte[] enc) {
+        public static IAsn1Object GetSubject(byte[] enc) {
             try {
-                IASN1Sequence seq;
-                using (IASN1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(enc))) {
+                IAsn1Sequence seq;
+                using (IAsn1InputStream @in = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(enc))) {
                     seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(@in.ReadObject());
                 }
                 return BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(seq.GetObjectAt(BOUNCY_CASTLE_FACTORY.CreateASN1TaggedObject

@@ -28,7 +28,7 @@ using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     internal class SmartModePdfObjectsSerializer {
-        private IIDigest sha512;
+        private IDigest sha512;
 
         private Dictionary<SerializedObjectContent, PdfIndirectReference> serializedContentToObj = new Dictionary<
             SerializedObjectContent, PdfIndirectReference>();

@@ -29,7 +29,7 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.BasicConstraints"/>.
     /// </summary>
-    public class BasicConstraintsBCFips : ASN1EncodableBCFips, IBasicConstraints {
+    public class BasicConstraintsBCFips : Asn1EncodableBCFips, IBasicConstraints {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.X509.BasicConstraints"/>.

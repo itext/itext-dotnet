@@ -31,7 +31,7 @@ namespace iText.Bouncycastle.Asn1.Tsp {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Tsp.MessageImprint"/>.
     /// </summary>
-    public class MessageImprintBC : ASN1EncodableBC, IMessageImprint {
+    public class MessageImprintBC : Asn1EncodableBC, IMessageImprint {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Tsp.MessageImprint"/>.

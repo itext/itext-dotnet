@@ -159,8 +159,8 @@ namespace iText.Signatures.Verify {
             IX509Certificate rootCert = rootRsaOcspBuilder.GetIssuerCert();
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(rootCert, rootRsaOcspBuilder);
             byte[] basicOcspRespBytes = ocspClient.GetEncoded(checkCert, rootCert, null);
-            IASN1Primitive var2 = FACTORY.CreateASN1Primitive(basicOcspRespBytes);
-            IBasicOCSPResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(var2);
+            IAsn1Object var2 = FACTORY.CreateASN1Primitive(basicOcspRespBytes);
+            IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(var2);
             OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
             return ocspVerifier.Verify(basicOCSPResp, checkCert, rootCert, checkDate);
         }
@@ -184,8 +184,8 @@ namespace iText.Signatures.Verify {
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(ocspResponderCert, ocspRespPrivateKey);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
             byte[] basicOcspRespBytes = ocspClient.GetEncoded(checkCert, caCert, null);
-            IASN1Primitive var2 = FACTORY.CreateASN1Primitive(basicOcspRespBytes);
-            IBasicOCSPResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(var2);
+            IAsn1Object var2 = FACTORY.CreateASN1Primitive(basicOcspRespBytes);
+            IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(var2);
             OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
             return ocspVerifier.Verify(basicOCSPResp, checkCert, caCert, checkDate);
         }

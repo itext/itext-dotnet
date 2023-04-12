@@ -20,7 +20,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-﻿namespace iText.Commons.Bouncycastle.Crypto {
+namespace iText.Commons.Bouncycastle.Crypto {
     public interface ICipherCBCnoPad {
         /// <summary>
         /// Processes data block using created cipher.

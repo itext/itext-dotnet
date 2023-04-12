@@ -47,6 +47,6 @@ namespace iText.Commons.Bouncycastle.Cms {
         /// <see cref="IRecipientInformation"/>
         /// the wrapper for received RecipientInformation object.
         /// </returns>
-        IRecipientInformation Get(IRecipientId var1);
+        IRecipientInformation Get(IRecipientID var1);
     }
 }

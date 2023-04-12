@@ -27,7 +27,7 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
     /// This interface represents the wrapper for AlgorithmIdentifier that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IAlgorithmIdentifier : IASN1Encodable {
+    public interface IAlgorithmIdentifier : IAsn1Encodable {
         /// <summary>
         /// Calls actual
         /// <c>getAlgorithm</c>
@@ -35,10 +35,10 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
         /// </summary>
         /// <returns>
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1ObjectIdentifier"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IDerObjectIdentifier"/>
         /// wrapped algorithm ASN1ObjectIdentifier.
         /// </returns>
-        IASN1ObjectIdentifier GetAlgorithm();
+        IDerObjectIdentifier GetAlgorithm();
 
         /// <summary>
         /// Calls actual
@@ -47,9 +47,9 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
         /// </summary>
         /// <returns>
         /// 
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.IASN1Encodable"/>
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Encodable"/>
         /// wrapped algorithm parameters.
         /// </returns>
-        IASN1Encodable GetParameters();
+        IAsn1Encodable GetParameters();
     }
 }

@@ -578,7 +578,7 @@ namespace iText.Signatures {
             exc.Put(PdfName.Contents, contentEstimated * 2 + 2);
             PreClose(exc);
             Stream data = GetRangeStream();
-            IIDigest messageDigest = tsa.GetMessageDigest();
+            IDigest messageDigest = tsa.GetMessageDigest();
             byte[] buf = new byte[4096];
             int n;
             while ((n = data.Read(buf)) > 0) {

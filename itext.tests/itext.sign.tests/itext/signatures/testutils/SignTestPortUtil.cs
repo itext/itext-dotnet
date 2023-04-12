@@ -36,12 +36,12 @@ namespace iText.Signatures.Testutils {
     public class SignTestPortUtil {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
-        public static ICertificateID GenerateCertificateId(IX509Certificate issuerCert, IBigInteger serialNumber, String hashAlgorithm) {
+        public static ICertID GenerateCertificateId(IX509Certificate issuerCert, IBigInteger serialNumber, String hashAlgorithm) {
             return FACTORY.CreateCertificateID(hashAlgorithm, issuerCert, serialNumber);
         }
 
-        public static IOCSPReq GenerateOcspRequestWithNonce(ICertificateID id) {
-            IOCSPReqBuilder gen = FACTORY.CreateOCSPReqBuilder();
+        public static IOcspRequest GenerateOcspRequestWithNonce(ICertID id) {
+            IOcspReqGenerator gen = FACTORY.CreateOCSPReqBuilder();
             gen.AddRequest(id);
 
             // create details for nonce extension
@@ -54,7 +54,7 @@ namespace iText.Signatures.Testutils {
             return gen.Build();
         }
 
-        public static IIDigest GetMessageDigest(String hashAlgorithm) {
+        public static IDigest GetMessageDigest(String hashAlgorithm) {
             return FACTORY.CreateIDigest(hashAlgorithm);
         }
 

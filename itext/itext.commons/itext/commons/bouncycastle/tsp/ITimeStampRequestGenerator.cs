@@ -59,6 +59,6 @@ namespace iText.Commons.Bouncycastle.Tsp {
         /// <see cref="ITimeStampRequest"/>
         /// the wrapper for generated TimeStampRequest object.
         /// </returns>
-        ITimeStampRequest Generate(IASN1ObjectIdentifier objectIdentifier, byte[] imprint, IBigInteger nonce);
+        ITimeStampRequest Generate(IDerObjectIdentifier objectIdentifier, byte[] imprint, IBigInteger nonce);
     }
 }

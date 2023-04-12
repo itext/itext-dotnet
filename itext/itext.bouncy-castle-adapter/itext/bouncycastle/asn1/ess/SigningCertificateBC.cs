@@ -29,7 +29,7 @@ namespace iText.Bouncycastle.Asn1.Ess {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Ess.SigningCertificate"/>.
     /// </summary>
-    public class SigningCertificateBC : ASN1EncodableBC, ISigningCertificate {
+    public class SigningCertificateBC : Asn1EncodableBC, ISigningCertificate {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Ess.SigningCertificate"/>.
@@ -53,9 +53,9 @@ namespace iText.Bouncycastle.Asn1.Ess {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IESSCertID[] GetCerts() {
+        public virtual IEssCertID[] GetCerts() {
             EssCertID[] certs = GetSigningCertificate().GetCerts();
-            IESSCertID[] certsBC = new IESSCertID[certs.Length];
+            IEssCertID[] certsBC = new IEssCertID[certs.Length];
             for (int i = 0; i < certsBC.Length; i++) {
                 certsBC[i] = new ESSCertIDBC(certs[i]);
             }

@@ -92,12 +92,12 @@ namespace iText.Bouncycastlefips.Cert {
         }
         
         /// <summary><inheritDoc/></summary>
-        public IASN1OctetString GetExtensionValue(string oid) {
+        public IAsn1OctetString GetExtensionValue(string oid) {
             byte[] extensionValue = certificate.GetExtensionValue(new DerObjectIdentifier(oid));
             if (extensionValue == null) {
-                return new ASN1OctetStringBCFips(null);
+                return new Asn1OctetStringBCFips(null);
             }
-            return new ASN1OctetStringBCFips(new DerOctetString(extensionValue));
+            return new Asn1OctetStringBCFips(new DerOctetString(extensionValue));
         }
 
         /// <summary><inheritDoc/></summary>

@@ -290,8 +290,8 @@ namespace iText.Signatures {
 
         /// <summary>Gets OCSP responses from the Document Security Store.</summary>
         /// <returns>a list of IBasicOCSPResp objects</returns>
-        public virtual IList<IBasicOCSPResponse> GetOCSPResponsesFromDSS() {
-            IList<IBasicOCSPResponse> ocsps = new List<IBasicOCSPResponse>();
+        public virtual IList<IBasicOcspResponse> GetOCSPResponsesFromDSS() {
+            IList<IBasicOcspResponse> ocsps = new List<IBasicOcspResponse>();
             if (dss == null) {
                 return ocsps;
             }
@@ -301,7 +301,7 @@ namespace iText.Signatures {
             }
             for (int i = 0; i < ocsparray.Size(); i++) {
                 PdfStream stream = ocsparray.GetAsStream(i);
-                IOCSPResponse ocspResponse;
+                IOcspResponse ocspResponse;
                 try {
                     ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(stream.GetBytes());
                 }
@@ -313,7 +313,7 @@ namespace iText.Signatures {
                     try {
                         ocsps.Add(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(ocspResponse.GetResponseObject()));
                     }
-                    catch (AbstractOCSPException e) {
+                    catch (AbstractOcspException e) {
                         throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
                             .ToString());
                     }

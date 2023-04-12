@@ -30,7 +30,7 @@ namespace iText.Bouncycastlefips.Asn1 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Asn1Encodable"/>.
     /// </summary>
-    public class ASN1EncodingBCFips : IASN1Encoding {
+    public class ASN1EncodingBCFips : IAsn1Encoding {
         private static readonly iText.Bouncycastlefips.Asn1.ASN1EncodingBCFips INSTANCE = new iText.Bouncycastlefips.Asn1.ASN1EncodingBCFips
             (null);
 

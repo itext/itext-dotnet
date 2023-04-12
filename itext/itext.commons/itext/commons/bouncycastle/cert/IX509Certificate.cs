@@ -81,7 +81,7 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <param name="oid">string oid value</param>
         /// <returns>extension value wrapper.</returns>
-        IASN1OctetString GetExtensionValue(string oid);
+        IAsn1OctetString GetExtensionValue(string oid);
 
         /// <summary>
         /// Calls actual

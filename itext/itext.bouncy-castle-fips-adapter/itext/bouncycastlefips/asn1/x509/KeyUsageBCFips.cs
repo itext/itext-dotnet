@@ -29,7 +29,7 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.KeyUsage"/>.
     /// </summary>
-    public class KeyUsageBCFips : ASN1EncodableBCFips, IKeyUsage {
+    public class KeyUsageBCFips : Asn1EncodableBCFips, IKeyUsage {
         private static readonly iText.Bouncycastlefips.Asn1.X509.KeyUsageBCFips INSTANCE = new iText.Bouncycastlefips.Asn1.X509.KeyUsageBCFips
             (null);
 

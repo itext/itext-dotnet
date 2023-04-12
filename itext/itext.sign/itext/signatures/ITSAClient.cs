@@ -47,15 +47,15 @@ namespace iText.Signatures {
 
         /// <summary>
         /// Returns the
-        /// <see cref="iText.Commons.Bouncycastle.Crypto.IIDigest"/>
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.IDigest"/>
         /// to digest the data imprint
         /// </summary>
         /// <returns>
         /// The
-        /// <see cref="iText.Commons.Bouncycastle.Crypto.IIDigest"/>
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.IDigest"/>
         /// object.
         /// </returns>
-        IIDigest GetMessageDigest();
+        IDigest GetMessageDigest();
 
         /// <summary>Returns RFC 3161 timeStampToken.</summary>
         /// <param name="imprint">byte[] - data imprint to be time-stamped</param>

@@ -29,7 +29,7 @@ namespace iText.Bouncycastlefips.Asn1.Ess {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Ess.SigningCertificateV2"/>.
     /// </summary>
-    public class SigningCertificateV2BCFips : ASN1EncodableBCFips, ISigningCertificateV2 {
+    public class SigningCertificateV2BCFips : Asn1EncodableBCFips, ISigningCertificateV2 {
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Ess.SigningCertificateV2"/>.
@@ -53,9 +53,9 @@ namespace iText.Bouncycastlefips.Asn1.Ess {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IESSCertIDv2[] GetCerts() {
+        public virtual IEssCertIDv2[] GetCerts() {
             EssCertIDv2[] certs = GetSigningCertificateV2().GetCerts();
-            IESSCertIDv2[] certsBCFips = new IESSCertIDv2[certs.Length];
+            IEssCertIDv2[] certsBCFips = new IEssCertIDv2[certs.Length];
             for (int i = 0; i < certsBCFips.Length; i++) {
                 certsBCFips[i] = new ESSCertIDv2BCFips(certs[i]);
             }

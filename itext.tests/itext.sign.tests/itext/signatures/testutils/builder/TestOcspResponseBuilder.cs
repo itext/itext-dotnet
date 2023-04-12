@@ -38,19 +38,19 @@ namespace iText.Signatures.Testutils.Builder {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
         private const String SIGN_ALG = "SHA256withRSA";
 
-        private IBasicOCSPRespBuilder responseBuilder;
+        private IBasicOcspRespGenerator responseBuilder;
 
         private IX509Certificate issuerCert;
         private IPrivateKey issuerPrivateKey;
 
-        private ICertificateStatus certificateStatus;
+        private ICertStatus certificateStatus;
 
         private DateTime thisUpdate = DateTimeUtil.GetCurrentTime();
 
         private DateTime nextUpdate = DateTimeUtil.GetCurrentTime();
 
         public TestOcspResponseBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey,
-            ICertificateStatus certificateStatus)
+            ICertStatus certificateStatus)
         {
             this.issuerCert = issuerCert;
             this.issuerPrivateKey = issuerPrivateKey;
@@ -70,7 +70,7 @@ namespace iText.Signatures.Testutils.Builder {
             return issuerCert;
         }
 
-        public virtual void SetCertificateStatus(ICertificateStatus certificateStatus) {
+        public virtual void SetCertificateStatus(ICertStatus certificateStatus) {
             this.certificateStatus = certificateStatus;
         }
 
@@ -83,19 +83,19 @@ namespace iText.Signatures.Testutils.Builder {
         }
 
         public virtual byte[] MakeOcspResponse(byte[] requestBytes) {
-            IBasicOCSPResponse ocspResponse = MakeOcspResponseObject(requestBytes);
+            IBasicOcspResponse ocspResponse = MakeOcspResponseObject(requestBytes);
             return ocspResponse.GetEncoded();
         }
         
-        public virtual IBasicOCSPResponse MakeOcspResponseObject(byte[] requestBytes) {
-            IOCSPReq ocspRequest = FACTORY.CreateOCSPReq(requestBytes);
+        public virtual IBasicOcspResponse MakeOcspResponseObject(byte[] requestBytes) {
+            IOcspRequest ocspRequest = FACTORY.CreateOCSPReq(requestBytes);
             IReq[] requestList = ocspRequest.GetRequestList();
 
-            IExtension extNonce = ocspRequest.GetExtension(FACTORY.CreateOCSPObjectIdentifiers()
+            IX509Extension extNonce = ocspRequest.GetExtension(FACTORY.CreateOCSPObjectIdentifiers()
                 .GetIdPkixOcspNonce());
             if (!FACTORY.IsNullExtension(extNonce)) {
                 // TODO ensure
-                IExtensions responseExtensions = FACTORY.CreateExtensions(new Dictionary<IASN1ObjectIdentifier, IExtension>() {
+                IX509Extensions responseExtensions = FACTORY.CreateExtensions(new Dictionary<IDerObjectIdentifier, IX509Extension>() {
                 {
                     FACTORY.CreateOCSPObjectIdentifiers().GetIdPkixOcspNonce(), extNonce
                 }});

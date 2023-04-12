@@ -164,7 +164,7 @@ namespace iText.Bouncycastlefips.Tsp {
         /// <summary><inheritDoc/></summary>
         public virtual void Validate(IX509Certificate certificate) {
 	        X509Certificate cert = ((X509CertificateBCFips)certificate).GetCertificate();
-	        byte[] hash = new IDigestBCFips(certID.GetHashAlgorithmName()).Digest(cert.GetEncoded());
+	        byte[] hash = new DigestBCFips(certID.GetHashAlgorithmName()).Digest(cert.GetEncoded());
 
 	        if (!Arrays.ConstantTimeAreEqual(certID.GetCertHash(), hash)) {
 		        throw new CertificateException("certificate hash does not match certID hash.");

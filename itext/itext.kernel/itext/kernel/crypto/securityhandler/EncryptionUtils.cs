@@ -52,7 +52,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             for (int i = 0; i < recipients.Size(); i++) {
                 try {
                     PdfString recipient = recipients.GetAsString(i);
-                    ICMSEnvelopedData data = FACTORY.CreateCMSEnvelopedData(recipient.GetValueBytes());
+                    ICmsEnvelopedData data = FACTORY.CreateCMSEnvelopedData(recipient.GetValueBytes());
                     foreach (IRecipientInformation recipientInfo in data.GetRecipientInfos().GetRecipients()) {
                         if (recipientInfo.GetRID().Match(certificate) && !foundRecipient) { 
                             envelopedData = recipientInfo.GetContent(certificateKey); 
@@ -96,7 +96,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         internal static DERForRecipientParams CalculateDERForRecipientParams(byte[] @in) {
             DERForRecipientParams parameters = new DERForRecipientParams();
 
-            IASN1ObjectIdentifier derob = FACTORY.CreateASN1ObjectIdentifier(ENVELOPE_ENCRYPTION_ALGORITHM_OID);
+            IDerObjectIdentifier derob = FACTORY.CreateASN1ObjectIdentifier(ENVELOPE_ENCRYPTION_ALGORITHM_OID);
 
             RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
             byte[] abyte0 = new byte[ENVELOPE_ENCRYPTION_KEY_LENGTH / 8];
@@ -108,7 +108,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte[] abyte1 = encryptor.TransformFinalBlock(@in, 0, @in.Length);
 
             // AES-256-CBC takes an octet string with the IV in the parameters field
-            IASN1Encodable envelopeAlgoParams = FACTORY.CreateDEROctetString(iv);
+            IAsn1Encodable envelopeAlgoParams = FACTORY.CreateDEROctetString(iv);
             parameters.abyte0 = abyte0;
             parameters.abyte1 = abyte1;
             parameters.algorithmIdentifier = FACTORY.CreateAlgorithmIdentifier(derob, envelopeAlgoParams);

@@ -34,7 +34,6 @@ using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Bouncycastle.Cert.Jcajce;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Crypto;
@@ -47,6 +46,7 @@ using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle.X509;
 
 namespace iText.Commons.Bouncycastle {
+    
     /// <summary>
     /// <see cref="IBouncyCastleFactory"/>
     /// contains methods required for bouncy-classes objects creation.
@@ -60,7 +60,7 @@ namespace iText.Commons.Bouncycastle {
         /// <summary>Cast ASN1 encodable wrapper to the ASN1 object identifier wrapper.</summary>
         /// <param name="encodable">wrapper to be cast</param>
         /// <returns>casted wrapper</returns>
-        IASN1ObjectIdentifier CreateASN1ObjectIdentifier(IASN1Encodable encodable);
+        IDerObjectIdentifier CreateASN1ObjectIdentifier(IAsn1Encodable encodable);
 
         /// <summary>
         /// Create ASN1 Object identifier wrapper from
@@ -72,7 +72,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create object identifier from
         /// </param>
         /// <returns>created object identifier</returns>
-        IASN1ObjectIdentifier CreateASN1ObjectIdentifier(String str);
+        IDerObjectIdentifier CreateASN1ObjectIdentifier(String str);
 
         /// <summary>
         /// Create ASN1 Object identifier wrapper from
@@ -87,7 +87,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create object identifier from
         /// </param>
         /// <returns>created object identifier</returns>
-        IASN1ObjectIdentifier CreateASN1ObjectIdentifierInstance(Object @object);
+        IDerObjectIdentifier CreateASN1ObjectIdentifierInstance(Object @object);
 
         /// <summary>
         /// Create ASN1 Input stream wrapper from
@@ -99,7 +99,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Input stream from
         /// </param>
         /// <returns>created ASN1 Input stream</returns>
-        IASN1InputStream CreateASN1InputStream(Stream stream);
+        IAsn1InputStream CreateASN1InputStream(Stream stream);
 
         /// <summary>
         /// Create ASN1 Input stream wrapper from
@@ -111,12 +111,12 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Input stream from
         /// </param>
         /// <returns>created ASN1 Input stream</returns>
-        IASN1InputStream CreateASN1InputStream(byte[] bytes);
+        IAsn1InputStream CreateASN1InputStream(byte[] bytes);
 
         /// <summary>Cast ASN1 Encodable wrapper to the ASN1 Octet string wrapper.</summary>
         /// <param name="encodable">to be casted to ASN1 Octet string wrapper</param>
         /// <returns>casted ASN1 Octet string wrapper</returns>
-        IASN1OctetString CreateASN1OctetString(IASN1Encodable encodable);
+        IAsn1OctetString CreateASN1OctetString(IAsn1Encodable encodable);
 
         /// <summary>
         /// Create ASN1 Octet string wrapper from ASN1 Tagged object wrapper and
@@ -126,7 +126,7 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="taggedObject">ASN1 Tagged object wrapper to create ASN1 Octet string wrapper from</param>
         /// <param name="b">boolean to create ASN1 Octet string wrapper</param>
         /// <returns>created ASN1 Octet string wrapper</returns>
-        IASN1OctetString CreateASN1OctetString(IASN1TaggedObject taggedObject, bool b);
+        IAsn1OctetString CreateASN1OctetString(IAsn1TaggedObject taggedObject, bool b);
 
         /// <summary>
         /// Create ASN1 Octet string wrapper from
@@ -138,7 +138,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Octet string wrapper from
         /// </param>
         /// <returns>created ASN1 Octet string wrapper</returns>
-        IASN1OctetString CreateASN1OctetString(byte[] bytes);
+        IAsn1OctetString CreateASN1OctetString(byte[] bytes);
 
         /// <summary>
         /// Create ASN1 Octet string wrapper from ASN1 Primitive wrapper.
@@ -147,7 +147,7 @@ namespace iText.Commons.Bouncycastle {
         /// ASN1 Primitive wrapper to create ASN1 Octet string wrapper from
         /// </param>
         /// <returns>created ASN1 Octet string wrapper</returns>
-        IASN1OctetString CreateASN1OctetString(IASN1Primitive primitive);
+        IAsn1OctetString CreateASN1OctetString(IAsn1Object primitive);
 
         /// <summary>
         /// Cast
@@ -160,12 +160,12 @@ namespace iText.Commons.Bouncycastle {
         /// to be cast. Must be instance of ASN1 Sequence
         /// </param>
         /// <returns>casted ASN1 Sequence wrapper</returns>
-        IASN1Sequence CreateASN1Sequence(Object @object);
+        IAsn1Sequence CreateASN1Sequence(Object @object);
 
         /// <summary>Cast ASN1 encodable wrapper to the ASN1 Sequence wrapper.</summary>
         /// <param name="encodable">to be casted to ASN1 Sequence wrapper</param>
         /// <returns>casted ASN1 Sequence wrapper</returns>
-        IASN1Sequence CreateASN1Sequence(IASN1Encodable encodable);
+        IAsn1Sequence CreateASN1Sequence(IAsn1Encodable encodable);
 
         /// <summary>
         /// Create ASN1 Sequence wrapper from
@@ -177,7 +177,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Sequence wrapper from
         /// </param>
         /// <returns>created ASN1 Sequence wrapper</returns>
-        IASN1Sequence CreateASN1Sequence(byte[] array);
+        IAsn1Sequence CreateASN1Sequence(byte[] array);
 
         /// <summary>
         /// Create ASN1 Sequence wrapper from
@@ -192,27 +192,27 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Sequence wrapper from
         /// </param>
         /// <returns>created ASN1 Sequence wrapper</returns>
-        IASN1Sequence CreateASN1SequenceInstance(Object @object);
+        IAsn1Sequence CreateASN1SequenceInstance(Object @object);
 
         /// <summary>Create DER Sequence wrapper from ASN1 Encodable vector wrapper.</summary>
         /// <param name="encodableVector">ASN1 Encodable vector wrapper to create DER Sequence wrapper from</param>
         /// <returns>created DER Sequence wrapper</returns>
-        IDERSequence CreateDERSequence(IASN1EncodableVector encodableVector);
+        IDerSequence CreateDERSequence(IAsn1EncodableVector encodableVector);
 
         /// <summary>Create DER Sequence wrapper from ASN1 Primitive wrapper.</summary>
         /// <param name="primitive">ASN1 Primitive wrapper to create DER Sequence wrapper from</param>
         /// <returns>created DER Sequence wrapper</returns>
-        IDERSequence CreateDERSequence(IASN1Primitive primitive);
+        IDerSequence CreateDERSequence(IAsn1Object primitive);
 
         /// <summary>Create ASN1 Tagged object wrapper from ASN1 Encodable wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable vector to create ASN1 Tagged object wrapper from</param>
         /// <returns>created ASN1 Tagged object wrapper</returns>
-        IASN1TaggedObject CreateASN1TaggedObject(IASN1Encodable encodable);
+        IAsn1TaggedObject CreateASN1TaggedObject(IAsn1Encodable encodable);
 
         /// <summary>Cast ASN1 Encodable wrapper to ASN1 Integer wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to be cast</param>
         /// <returns>casted ASN1 Integer</returns>
-        IASN1Integer CreateASN1Integer(IASN1Encodable encodable);
+        IDerInteger CreateASN1Integer(IAsn1Encodable encodable);
 
         /// <summary>
         /// Create ASN1 Integer wrapper from
@@ -224,7 +224,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Integer wrapper from
         /// </param>
         /// <returns>created ASN1 Integer wrapper</returns>
-        IASN1Integer CreateASN1Integer(int i);
+        IDerInteger CreateASN1Integer(int i);
 
         /// <summary>
         /// Create ASN1 Integer wrapper from
@@ -236,12 +236,12 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Integer wrapper from
         /// </param>
         /// <returns>created ASN1 Integer wrapper</returns>
-        IASN1Integer CreateASN1Integer(IBigInteger i);
+        IDerInteger CreateASN1Integer(IBigInteger i);
 
         /// <summary>Cast ASN1 Encodable wrapper to ASN1 Set wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to be cast</param>
         /// <returns>casted ASN1 Set</returns>
-        IASN1Set CreateASN1Set(IASN1Encodable encodable);
+        IAsn1Set CreateASN1Set(IAsn1Encodable encodable);
 
         /// <summary>
         /// Create ASN1 Set wrapper from
@@ -253,7 +253,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Set wrapper from. Must be instance of ASN1 Set
         /// </param>
         /// <returns>created ASN1 Set wrapper</returns>
-        IASN1Set CreateASN1Set(Object encodable);
+        IAsn1Set CreateASN1Set(Object encodable);
 
         /// <summary>
         /// Create ASN1 Set wrapper from ASN1 Tagged object wrapper and
@@ -263,7 +263,7 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="taggedObject">ASN1 Tagged object wrapper to create ASN1 Set wrapper from</param>
         /// <param name="b">boolean to create ASN1 Set wrapper</param>
         /// <returns>created ASN1 Set wrapper</returns>
-        IASN1Set CreateASN1Set(IASN1TaggedObject taggedObject, bool b);
+        IAsn1Set CreateASN1Set(IAsn1TaggedObject taggedObject, bool b);
 
         /// <summary>
         /// Create ASN1 Set wrapper which will store
@@ -274,7 +274,7 @@ namespace iText.Commons.Bouncycastle {
         /// <see langword="null"/>
         /// value
         /// </returns>
-        IASN1Set CreateNullASN1Set();
+        IAsn1Set CreateNullASN1Set();
 
         /// <summary>
         /// Create ASN1 Output stream wrapper from
@@ -286,7 +286,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Output stream wrapper from
         /// </param>
         /// <returns>created ASN1 Output stream wrapper</returns>
-        IASN1OutputStream CreateASN1OutputStream(Stream stream);
+        IDerOutputStream CreateASN1OutputStream(Stream stream);
 
         /// <summary>
         /// Create ASN1 Output stream wrapper from
@@ -300,7 +300,7 @@ namespace iText.Commons.Bouncycastle {
         /// </param>
         /// <param name="asn1Encoding">ASN1 Encoding to be used</param>
         /// <returns>created ASN1 Output stream wrapper</returns>
-        IASN1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding);
+        IDerOutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding);
 
         /// <summary>
         /// Create DER Octet string wrapper from
@@ -312,20 +312,20 @@ namespace iText.Commons.Bouncycastle {
         /// to create DER Octet string wrapper from
         /// </param>
         /// <returns>created DER Octet string wrapper</returns>
-        IDEROctetString CreateDEROctetString(byte[] bytes);
+        IDerOctetString CreateDEROctetString(byte[] bytes);
 
         /// <summary>Cast ASN1 Encodable wrapper to DER Octet string wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to be casted</param>
         /// <returns>DER Octet string wrapper</returns>
-        IDEROctetString CreateDEROctetString(IASN1Encodable encodable);
+        IDerOctetString CreateDEROctetString(IAsn1Encodable encodable);
 
         /// <summary>Create ASN1 Encodable wrapper without parameters.</summary>
         /// <returns>created ASN1 Encodable wrapper</returns>
-        IASN1EncodableVector CreateASN1EncodableVector();
+        IAsn1EncodableVector CreateASN1EncodableVector();
 
         /// <summary>Create DER Null wrapper without parameters.</summary>
         /// <returns>created DER Null wrapper</returns>
-        IDERNull CreateDERNull();
+        IDerNull CreateDERNull();
 
         /// <summary>
         /// Create DER Tagged object wrapper from
@@ -339,7 +339,7 @@ namespace iText.Commons.Bouncycastle {
         /// </param>
         /// <param name="primitive">ASN1 Primitive wrapper to create DER Tagged object wrapper from</param>
         /// <returns>created DER Tagged object wrapper</returns>
-        IDERTaggedObject CreateDERTaggedObject(int i, IASN1Primitive primitive);
+        IDerTaggedObject CreateDERTaggedObject(int i, IAsn1Object primitive);
 
         /// <summary>
         /// Create DER Tagged object wrapper from
@@ -360,27 +360,27 @@ namespace iText.Commons.Bouncycastle {
         /// </param>
         /// <param name="primitive">ASN1 Primitive wrapper to create DER Tagged object wrapper from</param>
         /// <returns>created DER Tagged object wrapper</returns>
-        IDERTaggedObject CreateDERTaggedObject(bool b, int i, IASN1Primitive primitive);
+        IDerTaggedObject CreateDERTaggedObject(bool b, int i, IAsn1Object primitive);
 
         /// <summary>Create DER Set wrapper from ASN1 Encodable vector wrapper.</summary>
         /// <param name="encodableVector">ASN1 Encodable vector wrapper to create DER Set wrapper from</param>
         /// <returns>created DER Set wrapper</returns>
-        IDERSet CreateDERSet(IASN1EncodableVector encodableVector);
+        IDerSet CreateDERSet(IAsn1EncodableVector encodableVector);
 
         /// <summary>Create DER Set wrapper from ASN1 Primitive wrapper.</summary>
         /// <param name="primitive">ASN1 Primitive wrapper to create DER Set wrapper from</param>
         /// <returns>created DER Set wrapper</returns>
-        IDERSet CreateDERSet(IASN1Primitive primitive);
+        IDerSet CreateDERSet(IAsn1Object primitive);
 
         /// <summary>Create DER Set wrapper from signature policy identifier wrapper.</summary>
         /// <param name="identifier">signature policy identifier wrapper to create DER Set wrapper from</param>
         /// <returns>created DER Set wrapper</returns>
-        IDERSet CreateDERSet(ISignaturePolicyIdentifier identifier);
+        IDerSet CreateDERSet(ISignaturePolicyIdentifier identifier);
 
         /// <summary>Create DER Set wrapper from recipient info wrapper.</summary>
         /// <param name="recipientInfo">recipient info wrapper to create DER Set wrapper from</param>
         /// <returns>created DER Set wrapper</returns>
-        IDERSet CreateDERSet(IRecipientInfo recipientInfo);
+        IDerSet CreateDERSet(IRecipientInfo recipientInfo);
 
         /// <summary>
         /// Create ASN1 Enumerated wrapper from
@@ -393,37 +393,37 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Enumerated wrapper from
         /// </param>
         /// <returns>created ASN1 Enumerated wrapper</returns>
-        IASN1Enumerated CreateASN1Enumerated(int i);
+        IDerEnumerated CreateASN1Enumerated(int i);
 
         /// <summary>Create ASN1 Encoding without parameters.</summary>
         /// <returns>created ASN1 Encoding</returns>
-        IASN1Encoding CreateASN1Encoding();
+        IAsn1Encoding CreateASN1Encoding();
 
         /// <summary>Create attribute table wrapper from ASN1 Set wrapper.</summary>
         /// <param name="unat">ASN1 Set wrapper to create attribute table wrapper from</param>
         /// <returns>created attribute table wrapper</returns>
-        IAttributeTable CreateAttributeTable(IASN1Set unat);
+        IAttributeTable CreateAttributeTable(IAsn1Set unat);
 
         /// <summary>Create PKCS Object identifiers wrapper without parameters.</summary>
         /// <returns>created PKCS Object identifiers</returns>
-        IPKCSObjectIdentifiers CreatePKCSObjectIdentifiers();
+        IPkcsObjectIdentifiers CreatePKCSObjectIdentifiers();
 
         /// <summary>Create attribute wrapper from ASN1 Object identifier wrapper and ASN1 Set wrapper.</summary>
         /// <param name="attrType">ASN1 Object identifier wrapper to create attribute wrapper from</param>
         /// <param name="attrValues">ASN1 Object identifier wrapper to create attribute wrapper from</param>
         /// <returns>created attribute wrapper</returns>
-        IAttribute CreateAttribute(IASN1ObjectIdentifier attrType, IASN1Set attrValues);
+        IAttribute CreateAttribute(IDerObjectIdentifier attrType, IAsn1Set attrValues);
 
         /// <summary>Create content info wrapper from ASN1 Sequence wrapper.</summary>
         /// <param name="sequence">ASN1 Sequence wrapper to create content info wrapper from</param>
         /// <returns>created content info wrapper</returns>
-        IContentInfo CreateContentInfo(IASN1Sequence sequence);
+        IContentInfo CreateContentInfo(IAsn1Sequence sequence);
 
         /// <summary>Create content info wrapper from ASN1 Object identifier wrapper and ASN1 Encodable wrapper.</summary>
         /// <param name="objectIdentifier">ASN1 Object identifier wrapper to create content info wrapper from</param>
         /// <param name="encodable">ASN1 Encodable wrapper to create content info wrapper from</param>
         /// <returns>created content info wrapper</returns>
-        IContentInfo CreateContentInfo(IASN1ObjectIdentifier objectIdentifier, IASN1Encodable encodable);
+        IContentInfo CreateContentInfo(IDerObjectIdentifier objectIdentifier, IAsn1Encodable encodable);
 
         /// <summary>Create timestamp token wrapper from content info wrapper.</summary>
         /// <param name="contentInfo">content info wrapper to create timestamp token wrapper from</param>
@@ -433,17 +433,17 @@ namespace iText.Commons.Bouncycastle {
         /// <summary>Create signing certificate wrapper from ASN1 Sequence wrapper.</summary>
         /// <param name="sequence">ASN1 Sequence wrapper to create signing certificate wrapper from</param>
         /// <returns>created signing certificate wrapper</returns>
-        ISigningCertificate CreateSigningCertificate(IASN1Sequence sequence);
+        ISigningCertificate CreateSigningCertificate(IAsn1Sequence sequence);
 
         /// <summary>Create signing certificate version 2 wrapper from ASN1 Sequence wrapper.</summary>
         /// <param name="sequence">ASN1 Sequence wrapper to create signing certificate version 2 wrapper from</param>
         /// <returns>created signing certificate version 2 wrapper</returns>
-        ISigningCertificateV2 CreateSigningCertificateV2(IASN1Sequence sequence);
+        ISigningCertificateV2 CreateSigningCertificateV2(IAsn1Sequence sequence);
 
         /// <summary>Create basic OCSP Response wrapper from ASN1 Primitive wrapper.</summary>
         /// <param name="primitive">ASN1 Primitive wrapper to create basic OCSP response wrapper from</param>
         /// <returns>created basic OCSP response wrapper</returns>
-        IBasicOCSPResponse CreateBasicOCSPResponse(IASN1Primitive primitive);
+        IBasicOcspResponse CreateBasicOCSPResponse(IAsn1Object primitive);
 
         /// <summary>
         /// Create basic OCSP Resp wrapper from
@@ -455,29 +455,29 @@ namespace iText.Commons.Bouncycastle {
         /// to create basic OCSP Resp wrapper from. Must be actual basic OCSP Resp instance
         /// </param>
         /// <returns>created basic OCSP Resp wrapper</returns>
-        IBasicOCSPResponse CreateBasicOCSPResponse(Object response);
+        IBasicOcspResponse CreateBasicOCSPResponse(Object response);
 
         /// <summary>Create OCSP Object identifiers wrapper without parameters.</summary>
         /// <returns>created OCSP Object identifiers wrapper</returns>
-        IOCSPObjectIdentifiers CreateOCSPObjectIdentifiers();
+        IOcspObjectIdentifiers CreateOCSPObjectIdentifiers();
 
         /// <summary>Create algorithm identifier wrapper from ASN1 Object identifier wrapper.</summary>
         /// <param name="algorithm">ASN1 Object identifier wrapper to create algorithm identifier wrapper from</param>
         /// <returns>created algorithm identifier wrapper</returns>
-        IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm);
+        IAlgorithmIdentifier CreateAlgorithmIdentifier(IDerObjectIdentifier algorithm);
 
         /// <summary>Create algorithm identifier wrapper from ASN1 Object identifier wrapper and ASN1 Encodable wrapper.
         ///     </summary>
         /// <param name="algorithm">ASN1 Object identifier wrapper to create algorithm identifier wrapper from</param>
         /// <param name="encodable">ASN1 Encodable wrapper to create algorithm identifier wrapper from</param>
         /// <returns>created algorithm identifier wrapper</returns>
-        IAlgorithmIdentifier CreateAlgorithmIdentifier(IASN1ObjectIdentifier algorithm, IASN1Encodable parameters);
+        IAlgorithmIdentifier CreateAlgorithmIdentifier(IDerObjectIdentifier algorithm, IAsn1Encodable parameters);
 
         /// <summary>Create a RSASSA-PSS params wrapper from an ASN1 Encodable wrapper.
         ///     </summary>
         /// <param name="encodable"> ASN1 Encodable wrapper to create RSASSA-PSS params wrapper from</param>
         /// <returns>created RSASSA-PSS params wrapper</returns>
-        IRsassaPssParameters CreateRSASSAPSSParams(IASN1Encodable encodable);
+        IRsassaPssParameters CreateRSASSAPSSParams(IAsn1Encodable encodable);
      
         /// <summary> Create a RSASSA-PSS params wrapper from a digest algorithm OID, a salt length and a trailer field length.
         /// The mask generation function will be set to MGF1, and the same digest algorithm will be used to populate the
@@ -487,7 +487,7 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="saltLen">        salt length value</param>
         /// <param name="trailerField">   trailer field value</param>
         /// <returns><see cref="IRsassaPssParameters"/> object initialised with the parameters supplied
-        IRsassaPssParameters CreateRSASSAPSSParamsWithMGF1(IASN1ObjectIdentifier digestAlgoOid, int saltLen, int trailerField);
+        IRsassaPssParameters CreateRSASSAPSSParamsWithMGF1(IDerObjectIdentifier digestAlgoOid, int saltLen, int trailerField);
 
         /// <summary>
         /// Get
@@ -503,22 +503,22 @@ namespace iText.Commons.Bouncycastle {
 
         /// <summary>Create certificate ID wrapper without parameters.</summary>
         /// <returns>created certificate ID wrapper</returns>
-        ICertificateID CreateCertificateID();
+        ICertID CreateCertificateID();
 
         /// <summary>Create extensions wrapper without parameters.</summary>
         /// <returns>created extensions wrapper</returns>
-        IExtensions CreateExtensions();
+        IX509Extensions CreateExtensions();
         
         /// <summary>
         /// Create extensions wrapper from
         /// <see cref="System.Collections.IDictionary"/>.
         /// </summary>
         /// <returns>created extensions wrapper</returns>
-        IExtensions CreateExtensions(IDictionary objectIdentifier);
+        IX509Extensions CreateExtensions(IDictionary objectIdentifier);
 
         /// <summary>Create OCSP Req builder wrapper without parameters.</summary>
         /// <returns>created OCSP Req builder wrapper</returns>
-        IOCSPReqBuilder CreateOCSPReqBuilder();
+        IOcspReqGenerator CreateOCSPReqBuilder();
 
         /// <summary>Create sig policy qualifier info wrapper from ASN1 Object identifier wrapper and DERIA5 String wrapper.
         ///     </summary>
@@ -526,18 +526,18 @@ namespace iText.Commons.Bouncycastle {
         ///     </param>
         /// <param name="string">DERIA5 String wrapper to create sig policy qualifier info wrapper from</param>
         /// <returns>created sig policy qualifier info wrapper</returns>
-        ISigPolicyQualifierInfo CreateSigPolicyQualifierInfo(IASN1ObjectIdentifier objectIdentifier, IDERIA5String
+        ISigPolicyQualifierInfo CreateSigPolicyQualifierInfo(IDerObjectIdentifier objectIdentifier, IDerIA5String
              @string);
 
         /// <summary>Cast ASN1 Encodable wrapper to ASN1 String wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to be cast</param>
         /// <returns>casted ASN1 String wrapper</returns>
-        IASN1String CreateASN1String(IASN1Encodable encodable);
+        IDerStringBase CreateASN1String(IAsn1Encodable encodable);
 
         /// <summary>Cast ASN1 Encodable wrapper to ASN1 Primitive wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to be cast</param>
         /// <returns>casted ASN1 Primitive wrapper</returns>
-        IASN1Primitive CreateASN1Primitive(IASN1Encodable encodable);
+        IAsn1Object CreateASN1Primitive(IAsn1Encodable encodable);
 
         /// <summary>
         /// Create ASN1 Primitive wrapper from
@@ -550,7 +550,7 @@ namespace iText.Commons.Bouncycastle {
         /// value to create ASN1 Primitive wrapper from
         /// </param>
         /// <returns>created ASN1 Primitive wrapper</returns>
-        IASN1Primitive CreateASN1Primitive(byte[] array);
+        IAsn1Object CreateASN1Primitive(byte[] array);
 
         /// <summary>
         /// Create OCSP Resp wrapper from
@@ -563,23 +563,23 @@ namespace iText.Commons.Bouncycastle {
         /// value to create OCSP Resp wrapper from
         /// </param>
         /// <returns>created OCSP Resp wrapper</returns>
-        IOCSPResponse CreateOCSPResponse(byte[] bytes);
+        IOcspResponse CreateOCSPResponse(byte[] bytes);
 
         /// <summary>Create OCSP Resp wrapper without parameters.</summary>
         /// <returns>created OCSP Resp wrapper</returns>
-        IOCSPResponse CreateOCSPResponse();
+        IOcspResponse CreateOCSPResponse();
 
         /// <summary>Create OCSP Response wrapper from OCSP Response status wrapper and response bytes wrapper.</summary>
         /// <param name="respStatus">OCSP Response status wrapper to create OCSP Response wrapper from</param>
         /// <param name="responseBytes">response bytes wrapper to create OCSP Response wrapper from</param>
         /// <returns>created OCSP Response wrapper</returns>
-        IOCSPResponse CreateOCSPResponse(IOCSPResponseStatus respStatus, IResponseBytes responseBytes);
+        IOcspResponse CreateOCSPResponse(IOcspResponseStatus respStatus, IResponseBytes responseBytes);
 
         /// <summary>Create response bytes wrapper from ASN1 Object identifier wrapper and DER Octet string wrapper.</summary>
         /// <param name="asn1ObjectIdentifier">ASN1 Object identifier wrapper to create response bytes wrapper from</param>
         /// <param name="derOctetString">DER Octet string wrapper to create response bytes wrapper from</param>
         /// <returns>created response bytes wrapper</returns>
-        IResponseBytes CreateResponseBytes(IASN1ObjectIdentifier asn1ObjectIdentifier, IDEROctetString derOctetString
+        IResponseBytes CreateResponseBytes(IDerObjectIdentifier asn1ObjectIdentifier, IDerOctetString derOctetString
             );
         
         /// <summary>
@@ -599,7 +599,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create OCSP Response wrapper from
         /// </param>
         /// <returns>created OCSP Response wrapper</returns>
-        IOCSPResponse CreateOCSPResponse(int respStatus, Object ocspRespObject);
+        IOcspResponse CreateOCSPResponse(int respStatus, Object ocspRespObject);
 
         /// <summary>
         /// Create OCSP Response status wrapper from
@@ -612,20 +612,20 @@ namespace iText.Commons.Bouncycastle {
         /// value to create OCSP Response status wrapper from
         /// </param>
         /// <returns>created OCSP Response status wrapper</returns>
-        IOCSPResponseStatus CreateOCSPResponseStatus(int status);
+        IOcspResponseStatus CreateOCSPResponseStatus(int status);
 
         /// <summary>Create OCSP Response status wrapper without parameters.</summary>
         /// <returns>created OCSP Response status wrapper</returns>
-        IOCSPResponseStatus CreateOCSPResponseStatus();
+        IOcspResponseStatus CreateOCSPResponseStatus();
 
         /// <summary>Create certificate status wrapper without parameters.</summary>
         /// <returns>created certificate status wrapper</returns>
-        ICertificateStatus CreateCertificateStatus();
+        ICertStatus CreateCertificateStatus();
 
         /// <summary>Create revoked status wrapper from certificate status wrapper.</summary>
         /// <param name="certificateStatus">certificate status wrapper to create revoked status wrapper from</param>
         /// <returns>created revoked status wrapper</returns>
-        IRevokedStatus CreateRevokedStatus(ICertificateStatus certificateStatus);
+        IRevokedCertStatus CreateRevokedStatus(ICertStatus certificateStatus);
 
         /// <summary>
         /// Create revoked status wrapper from
@@ -645,7 +645,7 @@ namespace iText.Commons.Bouncycastle {
         /// value to create revoked status wrapper from
         /// </param>
         /// <returns>created revoked status wrapper</returns>
-        IRevokedStatus CreateRevokedStatus(DateTime date, int i);
+        IRevokedCertStatus CreateRevokedStatus(DateTime date, int i);
 
         /// <summary>
         /// Create DERIA5 String wrapper from ASN1 Tagged object wrapper and
@@ -659,7 +659,7 @@ namespace iText.Commons.Bouncycastle {
         /// value to create DERIA5 String wrapper from
         /// </param>
         /// <returns>created DERIA5 String wrapper</returns>
-        IDERIA5String CreateDERIA5String(IASN1TaggedObject taggedObject, bool b);
+        IDerIA5String CreateDERIA5String(IAsn1TaggedObject taggedObject, bool b);
 
         /// <summary>
         /// Create DERIA5 String wrapper from
@@ -672,7 +672,7 @@ namespace iText.Commons.Bouncycastle {
         /// value to create DERIA5 String wrapper from
         /// </param>
         /// <returns>created DERIA5 String wrapper</returns>
-        IDERIA5String CreateDERIA5String(String str);
+        IDerIA5String CreateDERIA5String(String str);
 
         /// <summary>
         /// Create CRL Dist point wrapper from
@@ -684,7 +684,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create CRL Dist point wrapper from
         /// </param>
         /// <returns>created CRL Dist point wrapper</returns>
-        ICRLDistPoint CreateCRLDistPoint(Object @object);
+        ICrlDistPoint CreateCRLDistPoint(Object @object);
 
         /// <summary>Create distribution point name wrapper without parameters.</summary>
         /// <returns>created distribution point name wrapper</returns>
@@ -693,7 +693,7 @@ namespace iText.Commons.Bouncycastle {
         /// <summary>Cast ASN1 Encodable wrapper to general names wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to be cast</param>
         /// <returns>casted general names wrapper</returns>
-        IGeneralNames CreateGeneralNames(IASN1Encodable encodable);
+        IGeneralNames CreateGeneralNames(IAsn1Encodable encodable);
 
         /// <summary>Create general name wrapper without parameters.</summary>
         /// <returns>created general name wrapper</returns>
@@ -705,7 +705,7 @@ namespace iText.Commons.Bouncycastle {
         ///     </param>
         /// <param name="octetString">ASN1 Octet string wrapper to create other hash alg and value wrapper from</param>
         /// <returns>created other hash alg and value wrapper</returns>
-        IOtherHashAlgAndValue CreateOtherHashAlgAndValue(IAlgorithmIdentifier algorithmIdentifier, IASN1OctetString
+        IOtherHashAlgAndValue CreateOtherHashAlgAndValue(IAlgorithmIdentifier algorithmIdentifier, IAsn1OctetString
              octetString);
 
         /// <summary>Create signature policy id wrapper from ASN1 Object identifier wrapper and other hash alg and value wrapper.
@@ -713,7 +713,7 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="objectIdentifier">ASN1 Object identifier wrapper to create signature policy id wrapper from</param>
         /// <param name="algAndValue">other hash alg and value wrapper to create signature policy id wrapper from</param>
         /// <returns>created signature policy id wrapper</returns>
-        ISignaturePolicyId CreateSignaturePolicyId(IASN1ObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue
+        ISignaturePolicyId CreateSignaturePolicyId(IDerObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue
             );
 
         /// <summary>
@@ -725,7 +725,7 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="policyQualifiers">sig policy qualifier info wrappers to create signature policy id wrapper from
         ///     </param>
         /// <returns>created signature policy id wrapper</returns>
-        ISignaturePolicyId CreateSignaturePolicyId(IASN1ObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue
+        ISignaturePolicyId CreateSignaturePolicyId(IDerObjectIdentifier objectIdentifier, IOtherHashAlgAndValue algAndValue
             , params ISigPolicyQualifierInfo[] policyQualifiers);
 
         /// <summary>Create signature policy identifier wrapper from signature policy id wrapper.</summary>
@@ -742,8 +742,8 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="encryptedContentInfo">encrypted content info wrapper to create enveloped data wrapper from</param>
         /// <param name="set1">ASN1 Set wrapper to create enveloped data wrapper from</param>
         /// <returns>created enveloped data wrapper</returns>
-        IEnvelopedData CreateEnvelopedData(IOriginatorInfo originatorInfo, IASN1Set set, IEncryptedContentInfo encryptedContentInfo
-            , IASN1Set set1);
+        IEnvelopedData CreateEnvelopedData(IOriginatorInfo originatorInfo, IAsn1Set set, IEncryptedContentInfo encryptedContentInfo
+            , IAsn1Set set1);
 
         /// <summary>Create recipient info wrapper from key trans recipient info wrapper.</summary>
         /// <param name="keyTransRecipientInfo">key trans recipient info wrapper to create recipient info wrapper from
@@ -760,13 +760,13 @@ namespace iText.Commons.Bouncycastle {
         ///     </param>
         /// <param name="octetString">ASN1 Octet string wrapper to create encrypted content info wrapper from</param>
         /// <returns>created encrypted content info wrapper</returns>
-        IEncryptedContentInfo CreateEncryptedContentInfo(IASN1ObjectIdentifier data, IAlgorithmIdentifier algorithmIdentifier
-            , IASN1OctetString octetString);
+        IEncryptedContentInfo CreateEncryptedContentInfo(IDerObjectIdentifier data, IAlgorithmIdentifier algorithmIdentifier
+            , IAsn1OctetString octetString);
 
         /// <summary>Create TBS Certificate wrapper from ASN1 Encodable wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to create TBS Certificate wrapper from</param>
         /// <returns>created TBS Certificate wrapper</returns>
-        ITBSCertificate CreateTBSCertificate(IASN1Encodable encodable);
+        ITbsCertificateStructure CreateTBSCertificate(IAsn1Encodable encodable);
 
         /// <summary>
         /// Create issuer and serial number wrapper from X500 Name wrapper and
@@ -798,7 +798,7 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="octetString">ASN1 Octet string wrapper to create key trans recipient info wrapper from</param>
         /// <returns>created key trans recipient info wrapper</returns>
         IKeyTransRecipientInfo CreateKeyTransRecipientInfo(IRecipientIdentifier recipientIdentifier, IAlgorithmIdentifier
-             algorithmIdentifier, IASN1OctetString octetString);
+             algorithmIdentifier, IAsn1OctetString octetString);
 
         /// <summary>
         /// Create originator info wrapper with
@@ -819,7 +819,7 @@ namespace iText.Commons.Bouncycastle {
         /// value to create CMS enveloped data from
         /// </param>
         /// <returns>created CMS enveloped data</returns>
-        ICMSEnvelopedData CreateCMSEnvelopedData(byte[] valueBytes);
+        ICmsEnvelopedData CreateCMSEnvelopedData(byte[] valueBytes);
 
         /// <summary>Create timestamp request generator wrapper without parameters.</summary>
         /// <returns>created timestamp request generator wrapper</returns>
@@ -848,30 +848,30 @@ namespace iText.Commons.Bouncycastle {
         /// to create OCSP Exception wrapper from
         /// </param>
         /// <returns>created OCSP Exception wrapper</returns>
-        AbstractOCSPException CreateAbstractOCSPException(Exception e);
+        AbstractOcspException CreateAbstractOCSPException(Exception e);
 
         /// <summary>Create unknown status wrapper without parameters.</summary>
         /// <returns>created unknown status wrapper</returns>
-        IUnknownStatus CreateUnknownStatus();
+        IUnknownCertStatus CreateUnknownStatus();
 
         /// <summary>Create ASN1 Dump wrapper without parameters.</summary>
         /// <returns>created ASN1 Dump wrapper</returns>
-        IASN1Dump CreateASN1Dump();
+        IAsn1Dump CreateASN1Dump();
 
         /// <summary>Cast ASN1 Encodable wrapper to ASN1 Bit string wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to be cast</param>
         /// <returns>casted ASN1 Bit string wrapper</returns>
-        IASN1BitString CreateASN1BitString(IASN1Encodable encodable);
+        IDerBitString CreateASN1BitString(IAsn1Encodable encodable);
 
         /// <summary>Cast ASN1 Encodable wrapper to ASN1 Generalized time wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to be cast</param>
         /// <returns>casted ASN1 Generalized time wrapper</returns>
-        IASN1GeneralizedTime CreateASN1GeneralizedTime(IASN1Encodable encodable);
+        IDerGeneralizedTime CreateASN1GeneralizedTime(IAsn1Encodable encodable);
 
         /// <summary>Cast ASN1 Encodable wrapper to ASN1 UTC Time wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to be cast</param>
         /// <returns>casted ASN1 UTC Time wrapper</returns>
-        IASN1UTCTime CreateASN1UTCTime(IASN1Encodable encodable);
+        IDerUtcTime CreateASN1UTCTime(IAsn1Encodable encodable);
 
         /// <summary>
         /// Create timestamp response generator wrapper from private key wrapper, X509 Certificate wrapper, 
@@ -956,7 +956,7 @@ namespace iText.Commons.Bouncycastle {
         /// <summary>Create basic OCSP Resp builder wrapper from resp ID wrapper.</summary>
         /// <param name="respID">resp ID wrapper to create basic OCSP Resp builder wrapper from</param>
         /// <returns>created basic OCSP Resp builder wrapper</returns>
-        IBasicOCSPRespBuilder CreateBasicOCSPRespBuilder(IRespID respID);
+        IBasicOcspRespGenerator CreateBasicOCSPRespBuilder(IRespID respID);
 
         /// <summary>
         /// Create OCSP Req wrapper from
@@ -968,7 +968,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create OCSP Req wrapper from
         /// </param>
         /// <returns>created OCSP Req wrapper</returns>
-        IOCSPReq CreateOCSPReq(byte[] requestBytes);
+        IOcspRequest CreateOCSPReq(byte[] requestBytes);
 
         /// <summary>
         /// Create X509 Version 2 CRL Builder wrapper from X500 Name wrapper and
@@ -981,7 +981,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create X509 Version 2 CRL Builder wrapper from
         /// </param>
         /// <returns>created X509 Version 2 CRL Builder wrapper</returns>
-        IX509v2CRLBuilder CreateX509v2CRLBuilder(IX500Name x500Name, DateTime thisUpdate);
+        IX509V2CrlGenerator CreateX509v2CRLBuilder(IX500Name x500Name, DateTime thisUpdate);
 
         /// <summary>
         /// Create Jca X509 Version 3 certificate builder wrapper from
@@ -1023,7 +1023,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create Jca X509 Version 3 certificate builder wrapper from
         /// </param>
         /// <returns>created Jca X509 Version 3 certificate builder wrapper</returns>
-        IJcaX509v3CertificateBuilder CreateJcaX509v3CertificateBuilder(IX509Certificate signingCert, IBigInteger certSerialNumber
+        IX509V3CertificateGenerator CreateJcaX509v3CertificateBuilder(IX509Certificate signingCert, IBigInteger certSerialNumber
             , DateTime startDate, DateTime endDate, IX500Name subjectDnName, IPublicKey publicKey);
 
         /// <summary>
@@ -1058,12 +1058,12 @@ namespace iText.Commons.Bouncycastle {
 
         /// <summary>Create key purpose id wrapper without parameters.</summary>
         /// <returns>created key purpose id wrapper</returns>
-        IKeyPurposeId CreateKeyPurposeId();
+        IKeyPurposeID CreateKeyPurposeId();
 
         /// <summary>Create extended key usage wrapper from key purpose id wrapper.</summary>
         /// <param name="purposeId">key purpose id wrapper to create extended key usage wrapper from</param>
         /// <returns>created extended key usage wrapper</returns>
-        IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeId purposeId);
+        IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeID purposeId);
 
         /// <summary>
         /// Create subject public key info wrapper from public key wrapper
@@ -1078,17 +1078,17 @@ namespace iText.Commons.Bouncycastle {
 
         /// <summary>Create CRL Reason wrapper without parameters.</summary>
         /// <returns>created CRL Reason wrapper</returns>
-        ICRLReason CreateCRLReason();
+        ICrlReason CreateCRLReason();
 
         /// <summary>Create TST Info wrapper from content info wrapper.</summary>
         /// <param name="contentInfo">content info wrapper to create TST Info wrapper from</param>
         /// <returns>created TST Info wrapper</returns>
-        ITSTInfo CreateTSTInfo(IContentInfo contentInfo);
+        ITstInfo CreateTSTInfo(IContentInfo contentInfo);
 
         /// <summary>Create single resp wrapper from basic OCSP Response wrapper.</summary>
         /// <param name="basicResp">basic OCSP Response wrapper to create single resp wrapper from</param>
         /// <returns>created single resp wrapper</returns>
-        ISingleResp CreateSingleResp(IBasicOCSPResponse basicResp);
+        ISingleResponse CreateSingleResp(IBasicOcspResponse basicResp);
         
         /// <summary>
         /// Create X509 Certificate wrapper from
@@ -1125,7 +1125,7 @@ namespace iText.Commons.Bouncycastle {
         /// hash algorithm to create digest wrapper from
         /// </param>
         /// <returns>created digest wrapper</returns>
-        IIDigest CreateIDigest(string hashAlgorithm);
+        IDigest CreateIDigest(string hashAlgorithm);
         
         /// <summary>
         /// Create certificate ID wrapper from
@@ -1140,12 +1140,12 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="issuerCert">X509 Certificate wrapper to create certificate ID wrapper from</param>
         /// <param name="serialNumber">big integer wrapper to create certificate ID wrapper from</param>
         /// <returns>created certificate ID wrapper</returns>
-        ICertificateID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber);
+        ICertID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber);
         
         /// <summary>Create X500 Name wrapper from ASN1 Encodable wrapper using getInstance call.</summary>
         /// <param name="issuer">ASN1 Encodable wrapper to create X500 Name wrapper from</param>
         /// <returns>created X500 Name wrapper</returns>
-        IX500Name CreateX500NameInstance(IASN1Encodable issuer);
+        IX500Name CreateX500NameInstance(IAsn1Encodable issuer);
         
         /// <summary>
         /// Create OCSP Req wrapper from certificate ID wrapper and
@@ -1159,11 +1159,11 @@ namespace iText.Commons.Bouncycastle {
         /// document id to create OCSP Req wrapper from
         /// </param>
         /// <returns>created OCSP Req wrapper</returns>
-        IOCSPReq CreateOCSPReq(ICertificateID certId, byte[] documentId);
+        IOcspRequest CreateOCSPReq(ICertID certId, byte[] documentId);
         
         /// <summary>Create signer wrapper without parameters.</summary>
         /// <returns>created signer wrapper</returns>
-        IISigner CreateISigner();
+        ISigner CreateISigner();
 
         /// <summary>Create X509 Certificate parser wrapper without parameters.</summary>
         /// <returns>created X509 Certificate parser wrapper</returns>
@@ -1382,7 +1382,7 @@ namespace iText.Commons.Bouncycastle {
         /// password to read pem file
         /// </param>
         /// <returns>created PEM Parser wrapper</returns>
-        IPEMParser CreatePEMParser(TextReader reader, char[] password);
+        IPemReader CreatePEMParser(TextReader reader, char[] password);
         
         /// <summary>
         /// Create content signer wrapper from
@@ -1426,7 +1426,7 @@ namespace iText.Commons.Bouncycastle {
         /// </param>
         /// <param name="octetString">DER Octet string wrapper to create extension wrapper from</param>
         /// <returns>created extension wrapper</returns>
-        IExtension CreateExtension(bool b, IDEROctetString octetString);
+        IX509Extension CreateExtension(bool b, IDerOctetString octetString);
 
         /// <summary>
         /// Checks if provided extension wrapper wraps
@@ -1442,7 +1442,7 @@ namespace iText.Commons.Bouncycastle {
         /// <see langword="false"/>
         /// otherwise
         /// </returns>
-        bool IsNullExtension(IExtension extNonce);
+        bool IsNullExtension(IX509Extension extNonce);
         
         /// <summary>
         /// Create

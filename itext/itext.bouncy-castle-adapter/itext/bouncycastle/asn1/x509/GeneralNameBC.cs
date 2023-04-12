@@ -29,7 +29,7 @@ namespace iText.Bouncycastle.Asn1.X509 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.X509.GeneralName"/>.
     /// </summary>
-    public class GeneralNameBC : ASN1EncodableBC, IGeneralName {
+    public class GeneralNameBC : Asn1EncodableBC, IGeneralName {
         private static readonly iText.Bouncycastle.Asn1.X509.GeneralNameBC INSTANCE = new iText.Bouncycastle.Asn1.X509.GeneralNameBC
             (null);
 

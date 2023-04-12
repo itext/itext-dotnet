@@ -27,7 +27,7 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
     /// This interface represents the wrapper for KeyUsage that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IKeyUsage : IASN1Encodable {
+    public interface IKeyUsage : IAsn1Encodable {
         /// <summary>
         /// Gets
         /// <c>digitalSignature</c>

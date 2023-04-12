@@ -68,8 +68,8 @@ namespace iText.Bouncycastle.Tsp {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IPKIFailureInfo GetFailInfo() {
-            return new PKIFailureInfoBC(timeStampResponse.GetFailInfo());
+        public virtual IPkiFailureInfo GetFailInfo() {
+            return new PkiFailureInfoBC(timeStampResponse.GetFailInfo());
         }
 
         /// <summary><inheritDoc/></summary>

@@ -23,6 +23,7 @@
 using System;
 using iText.Bouncycastle.Asn1.Tsp;
 using iText.Bouncycastle.Cert;
+using iText.Bouncycastle.X509;
 using Org.BouncyCastle.Tsp;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Cert;

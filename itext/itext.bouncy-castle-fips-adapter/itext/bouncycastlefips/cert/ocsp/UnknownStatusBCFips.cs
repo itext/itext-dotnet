@@ -29,7 +29,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// Wrapper class for unknown
     /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
     /// </summary>
-    public class UnknownStatusBCFips : CertificateStatusBCFips, IUnknownStatus {
+    public class UnknownStatusBCFips : CertStatusBCFips, IUnknownCertStatus {
         /// <summary>
         /// Creates new wrapper instance for unknown
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
@@ -57,7 +57,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertStatus"/>.
         /// </returns>
         public virtual CertStatus GetUnknownStatus() {
-            return base.GetCertificateStatus();
+            return base.GetCertStatus();
         }
     }
 }

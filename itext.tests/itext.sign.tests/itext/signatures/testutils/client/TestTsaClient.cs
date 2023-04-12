@@ -53,7 +53,7 @@ namespace iText.Signatures.Testutils.Client {
             return 4096;
         }
 
-        public virtual IIDigest GetMessageDigest() {
+        public virtual IDigest GetMessageDigest() {
             return SignTestPortUtil.GetMessageDigest(DIGEST_ALG);
         }
 
