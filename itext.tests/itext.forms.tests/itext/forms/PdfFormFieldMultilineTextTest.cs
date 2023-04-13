@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.IO.Font;
 using iText.Kernel.Colors;
@@ -42,19 +41,13 @@ namespace iText.Forms {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfFormFieldMultilineTextTest/";
 
-        private static bool experimentalRenderingPreviousValue;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            // TODO: DEVSIX-7441 - remove flag
-            experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = false;
             CreateDestinationFolder(destinationFolder);
         }
 
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
         }
 
         [NUnit.Framework.Test]

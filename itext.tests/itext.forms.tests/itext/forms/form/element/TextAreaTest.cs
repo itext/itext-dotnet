@@ -184,6 +184,15 @@ namespace iText.Forms.Form.Element {
                 textArea.SetFontSize(0);
                 textArea.SetHeight(75);
                 document.Add(textArea);
+                document.Add(new Div().SetBackgroundColor(ColorConstants.RED).SetHeight(695));
+                TextArea flattenTextArea = new TextArea("text area");
+                flattenTextArea.SetInteractive(false);
+                flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will \nbe approximated\nbased on the content"
+                    );
+                flattenTextArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                flattenTextArea.SetFontSize(0);
+                flattenTextArea.SetHeight(75);
+                document.Add(flattenTextArea);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
@@ -195,12 +204,43 @@ namespace iText.Forms.Form.Element {
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 TextArea textArea = new TextArea("text area");
                 textArea.SetInteractive(true);
-                textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will not \nbe approximated\nbased on the content"
+                textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will \nbe approximated\nbased on the content"
                     );
                 textArea.SetProperty(Property.BORDER, new SolidBorder(1f));
                 textArea.SetFontSize(0);
                 textArea.SetHeight(75);
                 document.Add(textArea);
+                TextArea flattenTextArea = new TextArea("text area");
+                flattenTextArea.SetInteractive(false);
+                flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will \nbe approximated\nbased on the content"
+                    );
+                flattenTextArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                flattenTextArea.SetFontSize(0);
+                flattenTextArea.SetHeight(75);
+                document.Add(flattenTextArea);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextAreaWith0FontSizeWithoutHeightTest() {
+            String outPdf = DESTINATION_FOLDER + "textAreaWith0FontSizeWithoutHeight.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWith0FontSizeWithoutHeight.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                TextArea textArea = new TextArea("text area");
+                textArea.SetInteractive(true);
+                textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will not " + "\nbe approximated\nbased on the content\nbecause height is not set"
+                    );
+                textArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                textArea.SetFontSize(0);
+                document.Add(textArea);
+                TextArea flattenTextArea = new TextArea("text area");
+                flattenTextArea.SetInteractive(false);
+                flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will not " + 
+                    "\nbe approximated\nbased on the content\nbecause height is not set");
+                flattenTextArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                flattenTextArea.SetFontSize(0);
+                document.Add(flattenTextArea);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }

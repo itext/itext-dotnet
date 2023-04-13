@@ -84,7 +84,7 @@ namespace iText.Forms.Form.Renderer {
                 return ((InputField)modelElement).GetPlaceholder().CreateRendererSubTree();
             }
             if (String.IsNullOrEmpty(defaultValue)) {
-                defaultValue = "\u00A0";
+                defaultValue = "\u00a0";
             }
             Text text = new Text(defaultValue);
             FormFieldValueNonTrimmingTextRenderer nextRenderer = new FormFieldValueNonTrimmingTextRenderer(text);

@@ -57,7 +57,7 @@ namespace iText.Forms.Form.Renderer {
         /// <returns>the renderer</returns>
         internal virtual IRenderer CreateParagraphRenderer(String defaultValue) {
             if (String.IsNullOrEmpty(defaultValue.Trim())) {
-                defaultValue = "\u00A0";
+                defaultValue = "\u00a0";
             }
             Paragraph paragraph = new Paragraph(defaultValue).SetMargin(0);
             return paragraph.CreateRendererSubTree();
@@ -144,8 +144,10 @@ namespace iText.Forms.Form.Renderer {
         /// <param name="height">the desired height of content</param>
         internal virtual void AdjustNumberOfContentLines(IList<LineRenderer> lines, Rectangle bBox, float height) {
             float averageLineHeight = bBox.GetHeight() / lines.Count;
-            int visibleLinesNumber = (int)Math.Ceiling(height / averageLineHeight);
-            AdjustNumberOfContentLines(lines, bBox, visibleLinesNumber, height);
+            if (averageLineHeight > EPS) {
+                int visibleLinesNumber = (int)Math.Ceiling(height / averageLineHeight);
+                AdjustNumberOfContentLines(lines, bBox, visibleLinesNumber, height);
+            }
         }
 
         private static void AdjustNumberOfContentLines(IList<LineRenderer> lines, Rectangle bBox, int linesNumber, 

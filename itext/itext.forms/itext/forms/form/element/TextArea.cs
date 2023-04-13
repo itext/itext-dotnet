@@ -38,7 +38,7 @@ namespace iText.Forms.Form.Element {
     /// </summary>
     public class TextArea : FormField<iText.Forms.Form.Element.TextArea>, IPlaceholderable {
         /// <summary>Default padding X offset.</summary>
-        private const float X_OFFSET = 1;
+        private const float X_OFFSET = 3;
 
         /// <summary>The placeholder paragraph.</summary>
         private Paragraph placeholder;
@@ -118,8 +118,6 @@ namespace iText.Forms.Form.Element {
             SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(X_OFFSET));
             SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
             SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 1));
-            SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
-            SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.HIDDEN);
         }
     }
 }

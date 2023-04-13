@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Logs;
 using iText.Kernel.Colors;
@@ -84,23 +83,15 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void MultiLineFormFieldClippingTest() {
-            // TODO: DEVSIX-7441 - remove flag
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = false;
-            try {
-                String src = sourceFolder + "multiLineFormFieldClippingTest.pdf";
-                String dest = destinationFolder + "multiLineFormFieldClippingTest_flattened.pdf";
-                String cmp = sourceFolder + "cmp_multiLineFormFieldClippingTest_flattened.pdf";
-                PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-                form.GetField("Text1").SetValue("Tall letters: T I J L R E F");
-                form.FlattenFields();
-                doc.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            String src = sourceFolder + "multiLineFormFieldClippingTest.pdf";
+            String dest = destinationFolder + "multiLineFormFieldClippingTest_flattened.pdf";
+            String cmp = sourceFolder + "cmp_multiLineFormFieldClippingTest_flattened.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            form.GetField("Text1").SetValue("Tall letters: T I J L R E F");
+            form.FlattenFields();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -154,29 +145,13 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void FieldsJustificationTest01() {
-            // TODO: DEVSIX-7441 - remove flag
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = false;
-            try {
-                FillTextFieldsThenFlattenThenCompare("fieldsJustificationTest01");
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            FillTextFieldsThenFlattenThenCompare("fieldsJustificationTest01");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(FormsLogMessageConstants.ANNOTATION_IN_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void FieldsJustificationTest02() {
-            // TODO: DEVSIX-7441 - remove flag
-            bool experimentalRenderingPreviousValue = ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = false;
-            try {
-                FillTextFieldsThenFlattenThenCompare("fieldsJustificationTest02");
-            }
-            finally {
-                ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING = experimentalRenderingPreviousValue;
-            }
+            FillTextFieldsThenFlattenThenCompare("fieldsJustificationTest02");
         }
 
         private static void FillTextFieldsThenFlattenThenCompare(String testName) {

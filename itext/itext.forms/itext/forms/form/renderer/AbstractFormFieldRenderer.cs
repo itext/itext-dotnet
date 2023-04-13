@@ -61,7 +61,6 @@ namespace iText.Forms.Form.Renderer {
         /// <summary>Checks if form fields need to be flattened.</summary>
         /// <returns>true, if fields need to be flattened</returns>
         public virtual bool IsFlatten() {
-            bool? flatten;
             if (parent != null) {
                 // First check parent. This is a workaround for the case when some fields are inside other fields
                 // either directly or via other elements (input text field inside div inside input button field). In this
@@ -74,7 +73,7 @@ namespace iText.Forms.Form.Renderer {
                     nextParent = nextParent.GetParent();
                 }
             }
-            flatten = GetPropertyAsBoolean(FormProperty.FORM_FIELD_FLATTEN);
+            bool? flatten = GetPropertyAsBoolean(FormProperty.FORM_FIELD_FLATTEN);
             return flatten == null ? (bool)modelElement.GetDefaultProperty<bool>(FormProperty.FORM_FIELD_FLATTEN) : (bool
                 )flatten;
         }
@@ -95,8 +94,12 @@ namespace iText.Forms.Form.Renderer {
             float parentWidth = layoutContext.GetArea().GetBBox().GetWidth();
             float parentHeight = layoutContext.GetArea().GetBBox().GetHeight();
             IRenderer renderer = CreateFlatRenderer();
-            renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
-            renderer.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            if (renderer.GetOwnProperty<OverflowPropertyValue?>(Property.OVERFLOW_X) == null) {
+                renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            }
+            if (renderer.GetOwnProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y) == null) {
+                renderer.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            }
             AddChild(renderer);
             Rectangle bBox = layoutContext.GetArea().GetBBox().Clone().MoveDown(INF - parentHeight).SetHeight(INF);
             layoutContext.GetArea().SetBBox(bBox);
