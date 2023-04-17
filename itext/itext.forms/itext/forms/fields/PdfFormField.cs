@@ -79,9 +79,6 @@ namespace iText.Forms.Fields {
         /// <summary>List of all allowable keys in form fields.</summary>
         private static readonly ICollection<PdfName> FORM_FIELD_KEYS = new HashSet<PdfName>();
 
-        private static readonly String[] CHECKBOX_TYPE_ZAPFDINGBATS_CODE = new String[] { "4", "l", "8", "u", "n", 
-            "H" };
-
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField)
             );
 
@@ -1190,7 +1187,6 @@ namespace iText.Forms.Fields {
                 checkType = CheckBoxType.CROSS;
             }
             this.checkType = checkType;
-            text = CHECKBOX_TYPE_ZAPFDINGBATS_CODE[(int)(checkType)];
             if (GetPdfAConformanceLevel() != null) {
                 return this;
             }

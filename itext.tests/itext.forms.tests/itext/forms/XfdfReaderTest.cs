@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using iText.Commons.Utils;
 using iText.Forms.Xfdf;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -41,19 +40,6 @@ namespace iText.Forms {
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
-        }
-
-        private bool experimentalCheckboxRendering;
-
-        [NUnit.Framework.SetUp]
-        public virtual void Before() {
-            experimentalCheckboxRendering = ExperimentalFeatures.ENABLE_EXPERIMENTAL_CHECKBOX_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_CHECKBOX_RENDERING = false;
-        }
-
-        [NUnit.Framework.TearDown]
-        public virtual void After() {
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_CHECKBOX_RENDERING = experimentalCheckboxRendering;
         }
 
         [NUnit.Framework.Test]

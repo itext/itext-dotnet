@@ -27,7 +27,6 @@ namespace iText.Commons.Utils {
     public class ExperimentalFeaturesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestDefaults() {
-            NUnit.Framework.Assert.IsFalse(ExperimentalFeatures.ENABLE_EXPERIMENTAL_CHECKBOX_RENDERING);
             NUnit.Framework.Assert.IsTrue(ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING);
         }
     }

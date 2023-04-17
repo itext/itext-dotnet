@@ -22,7 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Utils;
+using System.IO;
+using iText.Forms;
+using iText.Forms.Fields;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form.Renderer;
 using iText.Forms.Form.Renderer.Checkboximpl;
@@ -48,22 +50,16 @@ namespace iText.Forms.Form.Element {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/form/element/CheckBoxTest/";
 
-        private bool experimental = false;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void BeforeTest() {
-            experimental = ExperimentalFeatures.ENABLE_EXPERIMENTAL_CHECKBOX_RENDERING;
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_CHECKBOX_RENDERING = true;
-        }
+        private int counter = 0;
 
-        [NUnit.Framework.TearDown]
-        public virtual void AfterTest() {
-            ExperimentalFeatures.ENABLE_EXPERIMENTAL_CHECKBOX_RENDERING = experimental;
+        [NUnit.Framework.SetUp]
+        public virtual void Before() {
+            counter = 0;
         }
 
         [NUnit.Framework.Test]
@@ -189,6 +185,12 @@ namespace iText.Forms.Form.Element {
                 checkBoxset.SetBorder(new SolidBorder(ColorConstants.RED, 1));
                 checkBoxset.SetChecked(true);
                 document.Add(checkBoxset);
+                CheckBox checkBoxsetAndInteractive = new CheckBox("test3");
+                checkBoxsetAndInteractive.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                checkBoxsetAndInteractive.SetBorder(new SolidBorder(ColorConstants.RED, 1));
+                checkBoxsetAndInteractive.SetChecked(true);
+                checkBoxsetAndInteractive.SetInteractive(true);
+                document.Add(checkBoxsetAndInteractive);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
@@ -269,11 +271,11 @@ namespace iText.Forms.Form.Element {
                 GenerateCheckBoxes(document, (checkBox) => {
                     checkBox.SetSize(0);
                 }
-                , 0);
+                );
                 GenerateCheckBoxes(document, (checkBox) => {
                     checkBox.SetSize(-1);
                 }
-                , 1);
+                );
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
@@ -313,6 +315,32 @@ namespace iText.Forms.Form.Element {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SetBorderTestSmallDefaultsToMinValue() {
+            String outPdf = DESTINATION_FOLDER + "checkBox_setSmallBorder.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_checkBox_setSmallBorder.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                float?[] i = new float?[] { .1f };
+                document.Add(new Paragraph("Non interactive"));
+                for (int j = 0; j < 30; j++) {
+                    i[0] += .05f;
+                    CheckBox checkBox = new CheckBox("test" + j);
+                    checkBox.SetBorder(new SolidBorder(ColorConstants.GREEN, (float)i[0]));
+                    document.Add(checkBox);
+                }
+                float?[] k = new float?[] { .1f };
+                document.Add(new Paragraph("Interactive"));
+                for (int j = 0; j < 30; j++) {
+                    k[0] += .05f;
+                    CheckBox checkBox = new CheckBox("test" + j);
+                    checkBox.SetInteractive(true);
+                    checkBox.SetBorder(new SolidBorder(ColorConstants.RED, (float)k[0]));
+                    document.Add(checkBox);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CheckBoxSetCheckTypes() {
             String outPdf = DESTINATION_FOLDER + "checkBox_setCheckType.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBox_setCheckType.pdf";
@@ -321,12 +349,12 @@ namespace iText.Forms.Form.Element {
                     GenerateCheckBoxes(document, (checkBox) => {
                         checkBox.SetCheckBoxType(enumConstant);
                     }
-                    , 0);
+                    );
                     GenerateCheckBoxes(document, (checkBox) => {
                         checkBox.SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
                         checkBox.SetCheckBoxType(enumConstant);
                     }
-                    , 0);
+                    );
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -343,51 +371,76 @@ namespace iText.Forms.Form.Element {
                         checkBox.SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_3B);
                         checkBox.SetCheckBoxType(enumConstant);
                     }
-                    , 0);
+                    );
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
 
-        private static void GenerateCheckBoxesForAllRenderingModes(Document document, Action<CheckBox> alterFunction
-            ) {
+        [NUnit.Framework.Test]
+        public virtual void RemovingFormFieldsLeavesNoVisualTrace() {
+            String outPdf = DESTINATION_FOLDER + "checkBox_removeFormField.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_checkBox_removeFormField.pdf";
+            MemoryStream baos = new MemoryStream();
+            using (Document document = new Document(new PdfDocument(new PdfWriter(baos)))) {
+                GenerateCheckBoxesForAllRenderingModes(document, (checkBox) => {
+                    checkBox.SetBorder(new SolidBorder(ColorConstants.GREEN, 1f));
+                    checkBox.SetBackgroundColor(ColorConstants.CYAN);
+                }
+                );
+            }
+            MemoryStream bais = new MemoryStream(baos.ToArray());
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(bais), new PdfWriter(outPdf));
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
+                String key = entry.Key;
+                acroForm.RemoveField(key);
+            }
+            pdfDocument.Close();
+            // all non flattend acroform fields should be removed
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        private void GenerateCheckBoxesForAllRenderingModes(Document document, Action<CheckBox> alterFunction) {
             document.Add(new Paragraph("Normal rendering mode"));
-            int ctr = 0;
             GenerateCheckBoxes(document, (checkBox) => {
                 checkBox.SetProperty(Property.RENDERING_MODE, RenderingMode.DEFAULT_LAYOUT_MODE);
                 alterFunction(checkBox);
             }
-            , ctr++);
+            );
             document.Add(new Paragraph("Pdfa rendering mode"));
             GenerateCheckBoxes(document, (checkBox) => {
                 checkBox.SetProperty(Property.RENDERING_MODE, RenderingMode.DEFAULT_LAYOUT_MODE);
                 checkBox.SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
                 alterFunction(checkBox);
             }
-            , ctr++);
+            );
             document.Add(new Paragraph("Html rendering mode"));
             GenerateCheckBoxes(document, (checkBox) => {
                 checkBox.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                 alterFunction(checkBox);
             }
-            , ctr++);
+            );
         }
 
-        private static IList<CheckBox> GenerateCheckBoxes(Document document, Action<CheckBox> alterFunction, int i
-            ) {
+        private IList<CheckBox> GenerateCheckBoxes(Document document, Action<CheckBox> alterFunction) {
             IList<CheckBox> checkBoxList = new List<CheckBox>();
-            CheckBox formCheckbox = new CheckBox("checkbox_interactive_off_" + i);
+            CheckBox formCheckbox = new CheckBox("checkbox_interactive_off_" + this.counter);
             formCheckbox.SetInteractive(true);
             checkBoxList.Add(formCheckbox);
-            CheckBox flattenCheckbox = new CheckBox("checkbox_flatten_off_" + i);
+            this.counter++;
+            CheckBox flattenCheckbox = new CheckBox("checkbox_flatten_off_" + this.counter);
             checkBoxList.Add(flattenCheckbox);
-            CheckBox formCheckboxChecked = new CheckBox("checkbox_interactive_checked_" + i);
+            this.counter++;
+            CheckBox formCheckboxChecked = new CheckBox("checkbox_interactive_checked_" + this.counter);
             formCheckboxChecked.SetInteractive(true);
             formCheckboxChecked.SetChecked(true);
             checkBoxList.Add(formCheckboxChecked);
-            CheckBox flattenCheckboxChecked = new CheckBox("checkbox_flatten_checked_" + i);
+            this.counter++;
+            CheckBox flattenCheckboxChecked = new CheckBox("checkbox_flatten_checked_" + this.counter);
             flattenCheckboxChecked.SetChecked(true);
             checkBoxList.Add(flattenCheckboxChecked);
+            this.counter++;
             foreach (CheckBox checkBox in checkBoxList) {
                 alterFunction(checkBox);
                 document.Add(checkBox);
