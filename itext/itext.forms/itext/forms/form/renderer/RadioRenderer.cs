@@ -149,6 +149,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
+            DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             String groupName = this.GetProperty<String>(FormProperty.FORM_FIELD_RADIO_GROUP_NAME);
             if (groupName == null || String.IsNullOrEmpty(groupName)) {
@@ -169,11 +170,8 @@ namespace iText.Forms.Form.Renderer {
             if (background != null) {
                 radio.SetBackgroundColor(background.GetColor());
             }
-            Border border = this.GetProperty<Border>(Property.BORDER);
-            if (border != null) {
-                radio.SetBorderColor(border.GetColor());
-                radio.SetBorderWidth(border.GetWidth());
-            }
+            ApplyBorderProperty(radio);
+            radio.SetFormFieldElement((Radio)modelElement);
             radioGroup.AddKid(radio);
             if (addNew) {
                 form.AddField(radioGroup, page);

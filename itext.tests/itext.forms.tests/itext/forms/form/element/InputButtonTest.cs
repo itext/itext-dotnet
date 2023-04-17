@@ -165,5 +165,30 @@ namespace iText.Forms.Form.Element {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void InputButtonWithMarginsPaddingsTest() {
+            String outPdf = DESTINATION_FOLDER + "inputButtonWithMarginsPaddings.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_inputButtonWithMarginsPaddings.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                Div div = new Div().SetBackgroundColor(ColorConstants.PINK);
+                Button formInputButton = new Button("button");
+                formInputButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
+                formInputButton.SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(20));
+                formInputButton.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(20));
+                formInputButton.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(20));
+                formInputButton.SetProperty(Property.PADDING_RIGHT, UnitValue.CreatePointValue(20));
+                formInputButton.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(20));
+                formInputButton.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(20));
+                formInputButton.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(20));
+                formInputButton.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(20));
+                formInputButton.SetBorder(new SolidBorder(ColorConstants.DARK_GRAY, 20));
+                formInputButton.SetFontSize(20);
+                formInputButton.SetSingleLineValue("Caption");
+                div.Add(formInputButton);
+                document.Add(div);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
     }
 }

@@ -63,26 +63,30 @@ namespace iText.Forms.Form.Element {
             return (T)(Object)this;
         }
 
-        /// <summary>Set the form field's width.</summary>
-        /// <param name="width">form field's width</param>
+        /// <summary><inheritDoc/></summary>
+        /// <param name="width">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
         /// <returns>
-        /// this
-        /// <see cref="FormField{T}"/>
-        /// element.
+        /// 
+        /// <inheritDoc/>
         /// </returns>
-        public virtual T SetWidth(float width) {
+        public virtual IFormField SetWidth(float width) {
             SetProperty(Property.WIDTH, UnitValue.CreatePointValue(width));
             return (T)(Object)this;
         }
 
-        /// <summary>Set the form field's height.</summary>
-        /// <param name="height">form field's height</param>
+        /// <summary><inheritDoc/></summary>
+        /// <param name="height">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
         /// <returns>
-        /// this
-        /// <see cref="FormField{T}"/>
-        /// element.
+        /// 
+        /// <inheritDoc/>
         /// </returns>
-        public virtual T SetHeight(float height) {
+        public virtual IFormField SetHeight(float height) {
             SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(height));
             return (T)(Object)this;
         }

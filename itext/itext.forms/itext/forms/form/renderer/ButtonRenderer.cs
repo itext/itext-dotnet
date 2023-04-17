@@ -242,6 +242,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = GetOccupiedArea().GetBBox().Clone();
             ApplyMargins(area, false);
+            DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             // Background is light gray by default, but can be set to null by user.
@@ -261,11 +262,6 @@ namespace iText.Forms.Form.Renderer {
             button.SetFont(font).SetFontSize(fontSizeValue);
             button.GetFirstFormAnnotation().SetBackgroundColor(backgroundColor);
             ApplyDefaultFieldProperties(button);
-            Border border = GetBorders()[0];
-            if (border != null) {
-                button.GetFirstFormAnnotation().SetBorderColor(border.GetColor());
-                button.GetFirstFormAnnotation().SetBorderWidth(border.GetWidth());
-            }
             button.GetFirstFormAnnotation().SetFormFieldElement((Button)modelElement);
             PdfAcroForm forms = PdfAcroForm.GetAcroForm(doc, true);
             // Fields can be already added on split, e.g. when button split into multiple pages. But now we merge fields

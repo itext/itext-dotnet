@@ -401,6 +401,87 @@ namespace iText.Forms.Form.Element {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CheckBoxWithMarginsTest() {
+            String outPdf = DESTINATION_FOLDER + "checkBoxWithMargins.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_checkBoxWithMargins.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                Div div = new Div().SetBackgroundColor(ColorConstants.PINK);
+                CheckBox checkBox = new CheckBox("check");
+                checkBox.SetInteractive(true);
+                checkBox.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(20));
+                checkBox.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(20));
+                checkBox.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(20));
+                checkBox.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(20));
+                checkBox.SetBorder(new SolidBorder(ColorConstants.DARK_GRAY, 20)).SetBackgroundColor(ColorConstants.LIGHT_GRAY
+                    ).SetSize(100).SetChecked(true);
+                div.Add(checkBox);
+                document.Add(div);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BorderBoxesTest() {
+            String outPdf = DESTINATION_FOLDER + "borderBoxes.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_borderBoxes.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                // BORDER_BOX
+                CheckBox interactiveCheckBox1 = new CheckBox("checkBox1").SetBorder(new SolidBorder(ColorConstants.PINK, 10
+                    )).SetSize(50).SetChecked(false);
+                interactiveCheckBox1.SetInteractive(true);
+                interactiveCheckBox1.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+                document.Add(interactiveCheckBox1);
+                // CONTENT_BOX
+                CheckBox interactiveCheckBox2 = new CheckBox("checkBox2").SetBorder(new SolidBorder(ColorConstants.YELLOW, 
+                    10)).SetSize(50).SetChecked(true);
+                interactiveCheckBox2.SetInteractive(true);
+                interactiveCheckBox2.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
+                document.Add(interactiveCheckBox2);
+                // BORDER_BOX
+                CheckBox flattenCheckBox1 = new CheckBox("checkBox3").SetBorder(new SolidBorder(ColorConstants.PINK, 10)).
+                    SetSize(50).SetChecked(true);
+                flattenCheckBox1.SetInteractive(false);
+                flattenCheckBox1.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+                document.Add(flattenCheckBox1);
+                // CONTENT_BOX
+                CheckBox flattenCheckBox2 = new CheckBox("checkBox4").SetBorder(new SolidBorder(ColorConstants.YELLOW, 10)
+                    ).SetSize(50).SetChecked(false);
+                flattenCheckBox2.SetInteractive(false);
+                flattenCheckBox2.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
+                document.Add(flattenCheckBox2);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddFieldWithTwoWidgetsTest() {
+            String outPdf = DESTINATION_FOLDER + "fieldWithTwoWidgets.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_fieldWithTwoWidgets.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                // Create checkboxes using html element.
+                CheckBox checkBox1 = new CheckBox("checkbox");
+                checkBox1.SetInteractive(true);
+                checkBox1.SetSize(100);
+                checkBox1.SetBackgroundColor(ColorConstants.YELLOW);
+                checkBox1.SetBorder(new SolidBorder(ColorConstants.PINK, 5));
+                checkBox1.SetChecked(true);
+                document.Add(checkBox1);
+                // Add break to the end of the page.
+                document.Add(new AreaBreak());
+                // Note that fields with the same fully qualified field name shall have the same
+                // field type, value, and default value.
+                CheckBox checkBox2 = new CheckBox("checkbox");
+                checkBox2.SetInteractive(true);
+                checkBox2.SetSize(200);
+                checkBox2.SetBackgroundColor(ColorConstants.PINK);
+                checkBox2.SetBorder(new SolidBorder(ColorConstants.YELLOW, 10));
+                checkBox2.SetChecked(true);
+                document.Add(checkBox2);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
         private void GenerateCheckBoxesForAllRenderingModes(Document document, Action<CheckBox> alterFunction) {
             document.Add(new Paragraph("Normal rendering mode"));
             GenerateCheckBoxes(document, (checkBox) => {

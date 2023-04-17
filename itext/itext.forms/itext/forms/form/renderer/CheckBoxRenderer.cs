@@ -171,6 +171,7 @@ namespace iText.Forms.Form.Renderer {
             String name = GetModelId();
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
+            DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
                 (this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
@@ -178,12 +179,7 @@ namespace iText.Forms.Form.Renderer {
                 builder.SetCheckType((CheckBoxType)this.GetProperty<CheckBoxType?>(FormProperty.FORM_CHECKBOX_TYPE));
             }
             PdfButtonFormField checkBox = builder.CreateCheckBox();
-            checkBox.GetFirstFormAnnotation().SetRenderingMode(this.GetRenderingMode());
-            Border border = this.GetProperty<Border>(Property.BORDER);
-            if (border != null) {
-                checkBox.GetFirstFormAnnotation().SetBorderColor(border.GetColor());
-                checkBox.GetFirstFormAnnotation().SetBorderWidth(border.GetWidth());
-            }
+            ApplyBorderProperty(checkBox.GetFirstFormAnnotation());
             Background background = this.modelElement.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
                 checkBox.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
@@ -192,6 +188,7 @@ namespace iText.Forms.Form.Renderer {
             if (!IsBoxChecked()) {
                 checkBox.SetValue(PdfFormAnnotation.OFF_STATE_VALUE);
             }
+            checkBox.GetFirstFormAnnotation().SetFormFieldElement((CheckBox)modelElement);
             PdfAcroForm.GetAcroForm(doc, true).AddField(checkBox, page);
             WriteAcroFormFieldLangAttribute(doc);
         }

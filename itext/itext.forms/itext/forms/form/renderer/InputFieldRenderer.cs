@@ -142,8 +142,13 @@ namespace iText.Forms.Form.Renderer {
             }
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = this.GetOccupiedArea().GetBBox().Clone();
+            ApplyMargins(area, false);
+            DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             float fontSizeValue = fontSize.GetValue();
+            // Default html2pdf input field appearance differs from the default one for form fields.
+            // That's why we got rid of several properties we set by default during InputField instance creation.
+            modelElement.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
             PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateText().SetValue
                 (value);
             inputField.SetFont(font).SetFontSize(fontSizeValue);
@@ -158,6 +163,7 @@ namespace iText.Forms.Form.Renderer {
                 inputField.GetFirstFormAnnotation().SetRotation(rotation);
             }
             ApplyDefaultFieldProperties(inputField);
+            inputField.GetFirstFormAnnotation().SetFormFieldElement((InputField)modelElement);
             PdfAcroForm.GetAcroForm(doc, true).AddField(inputField, page);
             WriteAcroFormFieldLangAttribute(doc);
         }

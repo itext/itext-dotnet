@@ -128,6 +128,9 @@ namespace iText.Forms.Form.Renderer {
                 flatBBox.SetHeight(0);
             }
             else {
+                if (!HasOwnOrModelProperty(FormProperty.FORM_FIELD_ROWS)) {
+                    SetProperty(FormProperty.FORM_FIELD_ROWS, flatLines.Count);
+                }
                 CropContentLines(flatLines, flatBBox);
             }
             flatBBox.SetWidth((float)RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth()));
@@ -171,14 +174,20 @@ namespace iText.Forms.Form.Renderer {
             }
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = GetOccupiedArea().GetBBox().Clone();
+            ApplyMargins(area, false);
+            DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             float fontSizeValue = fontSize.GetValue();
             PdfString defaultValue = new PdfString(GetDefaultValue());
+            // Default html2pdf text area appearance differs from the default one for form fields.
+            // That's why we got rid of several properties we set by default during TextArea instance creation.
+            modelElement.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
             PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateMultilineText
                 ().SetValue(value);
             inputField.SetFont(font).SetFontSize(fontSizeValue);
             inputField.SetDefaultValue(defaultValue);
             ApplyDefaultFieldProperties(inputField);
+            inputField.GetFirstFormAnnotation().SetFormFieldElement((TextArea)modelElement);
             PdfAcroForm.GetAcroForm(doc, true).AddField(inputField, page);
             WriteAcroFormFieldLangAttribute(doc);
         }

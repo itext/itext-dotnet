@@ -58,5 +58,23 @@ namespace iText.Forms.Form.Element {
         /// <summary>Gets the id.</summary>
         /// <returns>the id.</returns>
         String GetId();
+
+        /// <summary>Set the form field's width.</summary>
+        /// <param name="width">form field's width.</param>
+        /// <returns>
+        /// this
+        /// <see cref="FormField{T}"/>
+        /// element.
+        /// </returns>
+        IFormField SetWidth(float width);
+
+        /// <summary>Set the form field's height.</summary>
+        /// <param name="height">form field's height.</param>
+        /// <returns>
+        /// this
+        /// <see cref="FormField{T}"/>
+        /// element.
+        /// </returns>
+        IFormField SetHeight(float height);
     }
 }

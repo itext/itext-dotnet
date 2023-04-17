@@ -227,29 +227,87 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "rotationTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_rotationTest.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                InputField inputField = new InputField("1");
-                inputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "Long long text");
-                inputField.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(0));
-                inputField.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(0));
-                inputField.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(0));
-                inputField.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(0));
-                inputField.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(50));
-                inputField.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
-                inputField.SetInteractive(true);
-                inputField.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
-                document.Add(inputField);
-                inputField.SetRotation(90);
-                document.Add(inputField);
-                inputField.SetRotation(180);
-                document.Add(inputField);
-                inputField.SetRotation(270);
-                document.Add(inputField);
-                Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => inputField.SetRotation
+                String value = "Long long text";
+                Border border = new SolidBorder(ColorConstants.BLUE, 1);
+                InputField inputField0 = new InputField("1");
+                inputField0.SetValue(value);
+                inputField0.SetHeight(50);
+                inputField0.SetWidth(100);
+                inputField0.SetBorder(border);
+                inputField0.SetInteractive(true);
+                document.Add(inputField0);
+                InputField inputField90 = new InputField("1");
+                inputField90.SetValue(value);
+                inputField90.SetHeight(50);
+                inputField90.SetWidth(100);
+                inputField90.SetBorder(border);
+                inputField90.SetInteractive(true);
+                inputField90.SetRotation(90);
+                document.Add(inputField90);
+                InputField inputField180 = new InputField("1");
+                inputField180.SetValue(value);
+                inputField180.SetHeight(50);
+                inputField180.SetWidth(100);
+                inputField180.SetBorder(border);
+                inputField180.SetInteractive(true);
+                inputField180.SetRotation(180);
+                document.Add(inputField180);
+                InputField inputField270 = new InputField("1");
+                inputField270.SetValue(value);
+                inputField270.SetHeight(50);
+                inputField270.SetWidth(100);
+                inputField270.SetBorder(border);
+                inputField270.SetInteractive(true);
+                inputField270.SetRotation(270);
+                document.Add(inputField270);
+                InputField inputField45 = new InputField("1");
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => inputField45.SetRotation
                     (45));
                 NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.INVALID_ROTATION_VALUE, exception.Message);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff"
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BorderBoxesTest() {
+            String outPdf = DESTINATION_FOLDER + "borderBoxes.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_borderBoxes.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                // BORDER_BOX
+                InputField interactiveInputField = new InputField("interactiveInputField").SetBorder(new SolidBorder(ColorConstants
+                    .PINK, 10));
+                interactiveInputField.SetWidth(200);
+                interactiveInputField.SetInteractive(true);
+                interactiveInputField.SetValue("interactive border box");
+                interactiveInputField.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+                document.Add(interactiveInputField);
+                // CONTENT_BOX
+                InputField interactiveInputField2 = new InputField("interactiveInputField2").SetBorder(new SolidBorder(ColorConstants
+                    .YELLOW, 10));
+                interactiveInputField2.SetWidth(200);
+                interactiveInputField2.SetInteractive(true);
+                interactiveInputField2.SetValue("interactive content box");
+                interactiveInputField2.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
+                document.Add(interactiveInputField2);
+                // BORDER_BOX
+                InputField flattenInputField = new InputField("flattenInputField").SetBorder(new SolidBorder(ColorConstants
+                    .PINK, 10));
+                flattenInputField.SetWidth(200);
+                flattenInputField.SetInteractive(false);
+                flattenInputField.SetValue("content box");
+                flattenInputField.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+                document.Add(flattenInputField);
+                // CONTENT_BOX
+                InputField flattenInputField2 = new InputField("flattenInputField2").SetBorder(new SolidBorder(ColorConstants
+                    .YELLOW, 10));
+                flattenInputField2.SetWidth(200);
+                flattenInputField2.SetInteractive(false);
+                flattenInputField2.SetValue("content box");
+                flattenInputField2.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
+                document.Add(flattenInputField2);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
     }
 }

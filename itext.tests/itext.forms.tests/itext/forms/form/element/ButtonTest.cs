@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.Forms.Fields.Borders;
 using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
 using iText.IO.Image;
@@ -31,6 +32,7 @@ using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
@@ -139,6 +141,86 @@ namespace iText.Forms.Form.Element {
                 button.GetFirstFormAnnotation().SetBorderWidth(1).SetBorderColor(ColorConstants.MAGENTA).SetBackgroundColor
                     (ColorConstants.PINK).SetVisibility(PdfFormAnnotation.VISIBLE);
                 form.AddField(button);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BorderBoxesTest() {
+            String outPdf = DESTINATION_FOLDER + "borderBoxes.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_borderBoxes.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                // BORDER_BOX
+                Button interactiveButton = new Button("interactiveButton").SetBorder(new SolidBorder(ColorConstants.PINK, 
+                    10));
+                interactiveButton.SetWidth(200);
+                interactiveButton.SetInteractive(true);
+                interactiveButton.SetValue("interactive border box");
+                interactiveButton.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+                document.Add(interactiveButton);
+                // CONTENT_BOX
+                Button interactiveButton2 = new Button("interactiveButton").SetBorder(new SolidBorder(ColorConstants.YELLOW
+                    , 10));
+                interactiveButton2.SetWidth(200);
+                interactiveButton2.SetInteractive(true);
+                interactiveButton2.SetValue("interactive content box");
+                interactiveButton2.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
+                document.Add(interactiveButton2);
+                // BORDER_BOX
+                Button flattenButton = new Button("flattenButton").SetBorder(new SolidBorder(ColorConstants.PINK, 10));
+                flattenButton.SetWidth(200);
+                flattenButton.SetInteractive(false);
+                flattenButton.SetValue("flatten border box");
+                flattenButton.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+                document.Add(flattenButton);
+                // CONTENT_BOX
+                Button flattenButton2 = new Button("flattenButton").SetBorder(new SolidBorder(ColorConstants.YELLOW, 10));
+                flattenButton2.SetWidth(200);
+                flattenButton2.SetInteractive(false);
+                flattenButton2.SetValue("flatten content box");
+                flattenButton2.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
+                document.Add(flattenButton2);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BorderTypesTest() {
+            String outPdf = DESTINATION_FOLDER + "borderTypes.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_borderTypes.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                // DASHED
+                Button button = new Button("button").SetBorder(new DashedBorder(ColorConstants.PINK, 10)).SetBackgroundColor
+                    (ColorConstants.YELLOW);
+                button.SetWidth(100);
+                button.SetInteractive(true);
+                button.SetValue("dashed");
+                document.Add(button);
+                PdfDictionary bs = new PdfDictionary();
+                // UNDERLINE
+                bs.Put(PdfName.S, PdfAnnotation.STYLE_UNDERLINE);
+                Button button2 = new Button("button2").SetBorder(FormBorderFactory.GetBorder(bs, 10f, ColorConstants.YELLOW
+                    , ColorConstants.ORANGE)).SetBackgroundColor(ColorConstants.PINK);
+                button2.SetSize(100);
+                button2.SetInteractive(true);
+                button2.SetValue("underline");
+                document.Add(button2);
+                // INSET
+                bs.Put(PdfName.S, PdfAnnotation.STYLE_INSET);
+                Button button3 = new Button("button3").SetBorder(FormBorderFactory.GetBorder(bs, 10f, ColorConstants.PINK, 
+                    ColorConstants.RED)).SetBackgroundColor(ColorConstants.YELLOW);
+                button3.SetSize(100);
+                button3.SetInteractive(true);
+                button3.SetValue("inset");
+                document.Add(button3);
+                // BEVELLED
+                bs.Put(PdfName.S, PdfAnnotation.STYLE_BEVELED);
+                Button button4 = new Button("button4").SetBorder(FormBorderFactory.GetBorder(bs, 10f, ColorConstants.YELLOW
+                    , ColorConstants.ORANGE)).SetBackgroundColor(ColorConstants.PINK);
+                button4.SetSize(100);
+                button4.SetInteractive(true);
+                button4.SetValue("bevelled");
+                document.Add(button4);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }

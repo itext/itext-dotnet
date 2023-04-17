@@ -31,6 +31,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
+using iText.Layout.Element;
 using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Test;
@@ -231,6 +232,25 @@ namespace iText.Forms.Form.Element {
                     .BLUE, 1), ColorConstants.GREEN, true, true);
                 flattenRadio1.SetSize(825f);
                 document.Add(flattenRadio1);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RadioWithMarginsTest() {
+            String outPdf = DESTINATION_FOLDER + "radioWithMargins.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_radioWithMargins.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                Div div = new Div().SetBackgroundColor(ColorConstants.PINK);
+                Radio radio = CreateRadioButton("radio", "form radio group", new SolidBorder(ColorConstants.DARK_GRAY, 20)
+                    , ColorConstants.WHITE, true, false);
+                radio.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(20));
+                radio.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(20));
+                radio.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(20));
+                radio.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(20));
+                radio.SetSize(100);
+                div.Add(radio);
+                document.Add(div);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
