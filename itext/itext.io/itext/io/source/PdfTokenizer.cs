@@ -580,7 +580,8 @@ namespace iText.IO.Source {
             ByteBuffer buffer = new ByteBuffer(to - from + 1);
             // <6954657874ae...>
             if (hexWriting) {
-                for (int i = from; i <= to; ) {
+                int i = from;
+                while (i <= to) {
                     int v1 = ByteBuffer.GetHex(content[i++]);
                     if (i > to) {
                         buffer.Append(v1 << 4);
@@ -593,7 +594,8 @@ namespace iText.IO.Source {
             }
             else {
                 // ((iText\( some version)...)
-                for (int i = from; i <= to; ) {
+                int i = from;
+                while (i <= to) {
                     int ch = content[i++];
                     if (ch == '\\') {
                         bool lineBreak = false;
@@ -648,19 +650,17 @@ namespace iText.IO.Source {
                                     break;
                                 }
                                 int octal = ch - '0';
-                                ch = content[i++];
-                                if (ch < '0' || ch > '7') {
-                                    i--;
+                                if (i > to) {
                                     ch = octal;
                                     break;
                                 }
+                                ch = content[i++];
                                 octal = (octal << 3) + ch - '0';
-                                ch = content[i++];
-                                if (ch < '0' || ch > '7') {
-                                    i--;
+                                if (ch < '0' || ch > '7' || i > to) {
                                     ch = octal;
                                     break;
                                 }
+                                ch = content[i++];
                                 octal = (octal << 3) + ch - '0';
                                 ch = octal & 0xff;
                                 break;

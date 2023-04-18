@@ -383,6 +383,30 @@ namespace iText.IO.Source {
                 ()));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void OctalNumberLong1Test() {
+            // 49 equal to string "1", octal 1 equals to 1 in decimal
+            byte[] bytes = new byte[] { 92, 49 };
+            byte[] result = PdfTokenizer.DecodeStringContent(bytes, false);
+            NUnit.Framework.Assert.AreEqual(new byte[] { 1 }, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OctalNumberLong2Test() {
+            // 49 50 equal to string "12", octal 12 equals to 10 in decimal
+            byte[] bytes = new byte[] { 92, 49, 50 };
+            byte[] result = PdfTokenizer.DecodeStringContent(bytes, false);
+            NUnit.Framework.Assert.AreEqual(new byte[] { 10 }, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OctalNumberLong3Test() {
+            // 49 50 51 equal to string "123", octal 123 equals to 83 in decimal
+            byte[] bytes = new byte[] { 92, 49, 50, 51 };
+            byte[] result = PdfTokenizer.DecodeStringContent(bytes, false);
+            NUnit.Framework.Assert.AreEqual(new byte[] { 83 }, result);
+        }
+
         private void CheckTokenTypes(String data, params PdfTokenizer.TokenType[] expectedTypes) {
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
