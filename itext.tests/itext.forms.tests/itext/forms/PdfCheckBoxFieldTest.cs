@@ -188,7 +188,7 @@ namespace iText.Forms {
             }
             using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc_1, true);
-                form.GetField("checkField").SetValue("Yes", false);
+                form.GetField("checkField").SetValue("Yes");
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
                 ));

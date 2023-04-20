@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using iText.Commons.Utils;
+using iText.Commons.Datastructures;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form.Renderer;
 using iText.Forms.Logs;
@@ -41,17 +40,16 @@ namespace iText.Forms.Form.Renderer.Checkboximpl {
     /// <summary>This class is used to draw a checkBox icon in PDF mode this is the default strategy for drawing a checkBox.
     ///     </summary>
     public sealed class PdfCheckBoxRenderingStrategy : ICheckBoxRenderingStrategy {
-        public static readonly IDictionary<CheckBoxType, String> CHECKBOX_TYPE_ZAPFDINGBATS_CODE;
+        public static readonly BiMap<CheckBoxType, String> ZAPFDINGBATS_CHECKBOX_MAPPING;
 
         static PdfCheckBoxRenderingStrategy() {
-            IDictionary<CheckBoxType, String> initialMap = new Dictionary<CheckBoxType, String>();
-            initialMap.Put(CheckBoxType.CHECK, "4");
-            initialMap.Put(CheckBoxType.CIRCLE, "l");
-            initialMap.Put(CheckBoxType.CROSS, "8");
-            initialMap.Put(CheckBoxType.DIAMOND, "u");
-            initialMap.Put(CheckBoxType.SQUARE, "n");
-            initialMap.Put(CheckBoxType.STAR, "H");
-            CHECKBOX_TYPE_ZAPFDINGBATS_CODE = JavaCollectionsUtil.UnmodifiableMap(initialMap);
+            ZAPFDINGBATS_CHECKBOX_MAPPING = new BiMap<CheckBoxType, String>();
+            ZAPFDINGBATS_CHECKBOX_MAPPING.Put(CheckBoxType.CHECK, "4");
+            ZAPFDINGBATS_CHECKBOX_MAPPING.Put(CheckBoxType.CIRCLE, "l");
+            ZAPFDINGBATS_CHECKBOX_MAPPING.Put(CheckBoxType.CROSS, "8");
+            ZAPFDINGBATS_CHECKBOX_MAPPING.Put(CheckBoxType.DIAMOND, "u");
+            ZAPFDINGBATS_CHECKBOX_MAPPING.Put(CheckBoxType.SQUARE, "n");
+            ZAPFDINGBATS_CHECKBOX_MAPPING.Put(CheckBoxType.STAR, "H");
         }
 
         /// <summary>
@@ -87,7 +85,7 @@ namespace iText.Forms.Form.Renderer.Checkboximpl {
                 DrawingUtil.DrawCross(canvas, rectangle.GetWidth(), rectangle.GetHeight(), customBorderWidth);
             }
             else {
-                String text = CHECKBOX_TYPE_ZAPFDINGBATS_CODE.Get(checkBoxType);
+                String text = ZAPFDINGBATS_CHECKBOX_MAPPING.GetByKey(checkBoxType);
                 PdfFont fontContainingSymbols = LoadFontContainingSymbols();
                 float fontSize = CalculateFontSize(checkBoxRenderer, fontContainingSymbols, text, rectangle, borderWidth);
                 DrawZapfdingbatsIcon(fontContainingSymbols, text, fontSize, rectangle, canvas);

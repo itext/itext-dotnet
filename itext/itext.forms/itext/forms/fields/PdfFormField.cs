@@ -26,6 +26,7 @@ using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Logs;
@@ -88,7 +89,7 @@ namespace iText.Forms.Fields {
 
         protected internal PdfFormXObject form;
 
-        protected internal CheckBoxType checkType = CheckBoxType.CROSS;
+        protected internal NullableContainer<CheckBoxType> checkType = null;
 
         private String displayValue;
 
@@ -1186,7 +1187,7 @@ namespace iText.Forms.Fields {
             if (checkType == null) {
                 checkType = CheckBoxType.CROSS;
             }
-            this.checkType = checkType;
+            this.checkType = new NullableContainer<CheckBoxType>(checkType);
             if (GetPdfAConformanceLevel() != null) {
                 return this;
             }

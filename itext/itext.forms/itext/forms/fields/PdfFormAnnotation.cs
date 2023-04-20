@@ -24,8 +24,10 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Forms.Fields.Borders;
+using iText.Forms.Fields.Properties;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Forms.Form.Renderer;
@@ -1199,6 +1201,7 @@ namespace iText.Forms.Fields {
             if (rect == null) {
                 return;
             }
+            ReconstructCheckBoxType();
             CreateCheckBox();
             if (GetWidget().GetNormalAppearanceObject() == null) {
                 GetWidget().SetNormalAppearance(new PdfDictionary());
@@ -1226,8 +1229,8 @@ namespace iText.Forms.Fields {
             PdfDictionary mk = new PdfDictionary();
             // We put the zapfDingbats code of the checkbox in the MK dictionary to make sure there is a way
             // to retrieve the checkbox type even if the appearance is not present.
-            mk.Put(PdfName.CA, new PdfString(PdfCheckBoxRenderingStrategy.CHECKBOX_TYPE_ZAPFDINGBATS_CODE.Get(parent.checkType
-                )));
+            mk.Put(PdfName.CA, new PdfString(PdfCheckBoxRenderingStrategy.ZAPFDINGBATS_CHECKBOX_MAPPING.GetByKey(parent
+                .checkType.GetValue())));
             GetWidget().Put(PdfName.MK, mk);
             SetCheckBoxAppearanceState(onStateName);
         }
@@ -1243,6 +1246,28 @@ namespace iText.Forms.Fields {
             }
         }
 
+        private void ReconstructCheckBoxType() {
+            // if checkbox type is null it means we are reading from a document and we need to retrieve the type from the
+            // mk dictionary in the ca
+            if (parent.checkType == null) {
+                PdfDictionary oldMk = GetWidget().GetAppearanceCharacteristics();
+                if (oldMk != null) {
+                    PdfString oldCa = oldMk.GetAsString(PdfName.CA);
+                    if (oldCa != null && PdfCheckBoxRenderingStrategy.ZAPFDINGBATS_CHECKBOX_MAPPING.ContainsValue(oldCa.GetValue
+                        ())) {
+                        parent.checkType = new NullableContainer<CheckBoxType>(PdfCheckBoxRenderingStrategy.ZAPFDINGBATS_CHECKBOX_MAPPING
+                            .GetByValue(oldCa.GetValue()));
+                        // we need to set the font size to 0 to make sure the font size is recalculated
+                        fontSize = 0;
+                    }
+                }
+            }
+            // if its still null default to default value
+            if (parent.checkType == null) {
+                parent.checkType = new NullableContainer<CheckBoxType>(CheckBoxType.CROSS);
+            }
+        }
+
         private void CreateCheckBox() {
             if (!(formFieldElement is CheckBox)) {
                 // Create it one time and re-set properties during each widget regeneration.
@@ -1252,7 +1277,7 @@ namespace iText.Forms.Fields {
             formFieldElement.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(GetFontSize()));
             SetModelElementProperties(GetRect(GetPdfObject()));
             ((CheckBox)formFieldElement).SetPdfAConformanceLevel(GetPdfAConformanceLevel());
-            ((CheckBox)formFieldElement).SetCheckBoxType(parent.checkType);
+            ((CheckBox)formFieldElement).SetCheckBoxType(parent.checkType.GetValue());
         }
 
         private void SetModelElementProperties(Rectangle rectangle) {
