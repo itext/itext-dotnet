@@ -174,6 +174,27 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        public virtual void KeepCheckTypeTest() {
+            String srcPdf = destinationFolder + "keepCheckTypeTestInput.pdf";
+            String outPdf = destinationFolder + "keepCheckTypeTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_keepCheckTypeTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(srcPdf))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfButtonFormField checkField = new CheckBoxFormFieldBuilder(pdfDoc, "checkField").SetWidgetRectangle(new 
+                    Rectangle(100, 600, 100, 100)).SetCheckType(CheckBoxType.CHECK).CreateCheckBox();
+                checkField.SetValue("Off");
+                checkField.SetFontSizeAutoScale();
+                form.AddField(checkField);
+            }
+            using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc_1, true);
+                form.GetField("checkField").SetValue("Yes", false);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void AppearanceRegenerationTest() {
             String outPdf = destinationFolder + "appearanceRegenerationTest.pdf";
             String cmpPdf = sourceFolder + "cmp_appearanceRegenerationTest.pdf";
