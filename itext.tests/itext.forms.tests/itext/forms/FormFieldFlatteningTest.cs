@@ -203,7 +203,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 5)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 4)]
         public virtual void FlattenReadOnly() {
             //Logging is expected since there are duplicate field names
             PdfWriter writer = new PdfWriter(new MemoryStream());

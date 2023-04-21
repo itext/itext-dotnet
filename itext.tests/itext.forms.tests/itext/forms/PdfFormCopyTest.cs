@@ -42,7 +42,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 32)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 14)]
         public virtual void CopyFieldsTest01() {
             String srcFilename1 = sourceFolder + "appearances1.pdf";
             String srcFilename2 = sourceFolder + "fieldsOn2-sPage.pdf";
@@ -132,7 +132,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 12)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 9)]
         public virtual void CopyMultipleSubfieldsTest01() {
             String srcFilename = sourceFolder + "copyMultipleSubfieldsTest01.pdf";
             String destFilename = destinationFolder + "copyMultipleSubfieldsTest01.pdf";
@@ -195,7 +195,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 12)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 9)]
         public virtual void CopyMultipleSubfieldsSmartModeTest01() {
             String srcFilename = sourceFolder + "copyMultipleSubfieldsSmartModeTest01.pdf";
             String destFilename = destinationFolder + "copyMultipleSubfieldsSmartModeTest01.pdf";
@@ -218,7 +218,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 14)]
         public virtual void CopyFieldsTest06() {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFields06.pdf";
@@ -236,7 +236,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 14)]
         public virtual void CopyFieldsTest07() {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFields07.pdf";
@@ -254,7 +254,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 32)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 14)]
         public virtual void CopyFieldsTest08() {
             String srcFilename1 = sourceFolder + "appearances1.pdf";
             String srcFilename2 = sourceFolder + "fieldsOn2-sPage.pdf";
@@ -349,7 +349,6 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD)]
         public virtual void CopyFieldsTest13() {
             String srcFilename = sourceFolder + "copyFields13.pdf";
             String destFilename = destinationFolder + "copyFields13.pdf";
@@ -393,7 +392,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 45)]
         public virtual void CopyAndEditTextFields() {
             String srcFileName = sourceFolder + "checkPdfFormCopy_Source.pdf";
             String destFilename = destinationFolder + "copyAndEditTextFields.pdf";
@@ -417,7 +416,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 45)]
         public virtual void CopyAndEditCheckboxes() {
             String srcFileName = sourceFolder + "checkPdfFormCopy_Source.pdf";
             String destFilename = destinationFolder + "copyAndEditCheckboxes.pdf";
@@ -439,7 +438,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 45)]
         public virtual void CopyAndEditRadioButtons() {
             String srcFileName = sourceFolder + "checkPdfFormCopy_Source.pdf";
             String destFilename = destinationFolder + "copyAndEditRadioButtons.pdf";
@@ -481,7 +480,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 1)]
         public virtual void MergeMergedFieldAndTwoWidgetsTest() {
             String srcFileName1 = sourceFolder + "fieldMergedWithWidget.pdf";
             String srcFileName2 = sourceFolder + "fieldTwoWidgets.pdf";
@@ -535,6 +534,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD)]
         public virtual void MergeTwoWidgetsAndTwoWidgetsTest() {
             String srcFileName2 = sourceFolder + "fieldTwoWidgets.pdf";
             String destFilename = destinationFolder + "mergeTwoWidgetsAndTwoWidgetsTest.pdf";
@@ -549,6 +549,23 @@ namespace iText.Forms {
                             sourceDoc2.CopyPagesTo(1, sourceDoc2.GetNumberOfPages(), resultPdfDocument, formCopier);
                         }
                     }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 2)]
+        public virtual void ComplexFieldsHierarchyTest() {
+            String srcFileName = sourceFolder + "complexFieldsHierarchyTest.pdf";
+            String destFilename = destinationFolder + "complexFieldsHierarchyTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_complexFieldsHierarchyTest.pdf";
+            using (PdfDocument pdfDocMerged = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(destFilename))
+                ) {
+                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcFileName))) {
+                    pdfDoc.CopyPagesTo(1, pdfDoc.GetNumberOfPages(), pdfDocMerged, new PdfPageFormCopier());
+                    pdfDoc.CopyPagesTo(1, pdfDoc.GetNumberOfPages(), pdfDocMerged, new PdfPageFormCopier());
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFileName, destinationFolder

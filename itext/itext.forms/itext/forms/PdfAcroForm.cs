@@ -225,32 +225,8 @@ namespace iText.Forms {
         /// <see cref="iText.Kernel.Pdf.PdfPage"/>
         /// on which to add the field
         /// </param>
-        /// <param name="replaceExisted">
-        /// if true then the existed form field will be replaced by a new one
-        /// in case they have the same names
-        /// </param>
-        public virtual void AddField(PdfFormField field, PdfPage page, bool replaceExisted) {
-            if (!field.GetPdfObject().ContainsKey(PdfName.T)) {
-                throw new PdfException(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME);
-            }
-            if (!replaceExisted) {
-                PdfFormFieldMergeUtil.MergeKidsWithSameNames(field, true);
-            }
-            PdfDictionary fieldDict = field.GetPdfObject();
-            // PdfPageFormCopier expects that we replace existed field by a new one in case they have the same names.
-            String fieldName = field.GetFieldName().ToUnicodeString();
-            if (replaceExisted || !fields.ContainsKey(fieldName) || !PdfFormFieldMergeUtil.MergeTwoFieldsWithTheSameNames
-                (fields.Get(fieldName), field, true)) {
-                PdfArray fieldsArray = GetFields();
-                fieldsArray.Add(fieldDict);
-                fieldsArray.SetModified();
-                fields.Put(fieldName, field);
-            }
-            ProcessKids(fields.Get(fieldName), page);
-            if (fieldDict.ContainsKey(PdfName.Subtype) && page != null) {
-                DefineWidgetPageAndAddToIt(page, fieldDict, false);
-            }
-            SetModified();
+        public virtual void AddField(PdfFormField field, PdfPage page) {
+            AddField(field, page, true);
         }
 
         /// <summary>This method adds the field to a specific page.</summary>
@@ -264,8 +240,33 @@ namespace iText.Forms {
         /// <see cref="iText.Kernel.Pdf.PdfPage"/>
         /// on which to add the field
         /// </param>
-        public virtual void AddField(PdfFormField field, PdfPage page) {
-            AddField(field, page, false);
+        /// <param name="throwExceptionOnError">true if the exception is expected to be thrown in case of error.</param>
+        public virtual void AddField(PdfFormField field, PdfPage page, bool throwExceptionOnError) {
+            if (!field.GetPdfObject().ContainsKey(PdfName.T)) {
+                if (throwExceptionOnError) {
+                    throw new PdfException(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME);
+                }
+                else {
+                    LOGGER.LogWarning(FormsLogMessageConstants.FORM_FIELD_MUST_HAVE_A_NAME);
+                    return;
+                }
+            }
+            PdfFormFieldMergeUtil.MergeKidsWithSameNames(field, throwExceptionOnError);
+            PdfDictionary fieldDict = field.GetPdfObject();
+            // PdfPageFormCopier expects that we replace existed field by a new one in case they have the same names.
+            String fieldName = field.GetFieldName().ToUnicodeString();
+            if (!fields.ContainsKey(fieldName) || !PdfFormFieldMergeUtil.MergeTwoFieldsWithTheSameNames(fields.Get(fieldName
+                ), field, throwExceptionOnError)) {
+                PdfArray fieldsArray = GetFields();
+                fieldsArray.Add(fieldDict);
+                fieldsArray.SetModified();
+                fields.Put(fieldName, field);
+            }
+            ProcessKids(fields.Get(fieldName), page);
+            if (fieldDict.ContainsKey(PdfName.Subtype) && page != null) {
+                DefineWidgetPageAndAddToIt(page, fieldDict, false);
+            }
+            SetModified();
         }
 
         /// <summary>

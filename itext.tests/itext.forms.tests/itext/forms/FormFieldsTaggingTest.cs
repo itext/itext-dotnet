@@ -151,6 +151,33 @@ namespace iText.Forms {
             CompareOutput(outFileName, cmpFileName);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void MergeFieldTaggingTest08() {
+            String outFileName = destinationFolder + "mergeFieldTaggingTest08.pdf";
+            String cmpFileName = sourceFolder + "cmp_mergeFieldTaggingTest08.pdf";
+            String srcFileName = sourceFolder + "mergeFieldTaggingTest08.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+                pdfDoc.SetTagged();
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                AddFormFieldsToDocument(pdfDoc, form);
+            }
+            CompareOutput(outFileName, cmpFileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeFieldTaggingTest09() {
+            String outFileName = destinationFolder + "mergeFieldTaggingTest09.pdf";
+            String cmpFileName = sourceFolder + "cmp_mergeFieldTaggingTest09.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                pdfDoc.SetTagged();
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                AddFormFieldsToDocument(pdfDoc, form);
+                AddFormFieldsToDocument(pdfDoc, form);
+            }
+            CompareOutput(outFileName, cmpFileName);
+            CompareOutput(outFileName, sourceFolder + "cmp_mergeFieldTaggingTest08.pdf");
+        }
+
         private void AddFormFieldsToDocument(PdfDocument pdfDoc, PdfAcroForm acroForm) {
             Rectangle rect = new Rectangle(36, 700, 20, 20);
             Rectangle rect1 = new Rectangle(36, 680, 20, 20);

@@ -89,11 +89,13 @@ namespace iText.Forms.Fields {
             throwExceptionOnError) {
             PdfName firstFieldFormType = firstField.GetFormType();
             PdfObject firstFieldValue = firstField.GetValue();
+            PdfObject secondFieldValue = secondField.GetValue();
             PdfObject firstFieldDefaultValue = firstField.GetDefaultValue();
             PdfObject secondFieldDefaultValue = secondField.GetDefaultValue();
             if ((firstFieldFormType == null || firstFieldFormType.Equals(secondField.GetFormType())) && (firstFieldValue
-                 == null || firstFieldValue.Equals(secondField.GetValue())) && (firstFieldDefaultValue == null || secondFieldDefaultValue
-                 == null || firstFieldDefaultValue.Equals(secondFieldDefaultValue))) {
+                 == null || secondFieldValue == null || firstFieldValue.Equals(secondFieldValue)) && (firstFieldDefaultValue
+                 == null || secondFieldDefaultValue == null || firstFieldDefaultValue.Equals(secondFieldDefaultValue))
+                ) {
                 MergeFormFields(firstField, secondField, throwExceptionOnError);
             }
             else {
@@ -150,8 +152,7 @@ namespace iText.Forms.Fields {
             foreach (PdfFormField field in parentField.GetChildFormFields()) {
                 PdfDictionary formDict = field.GetPdfObject();
                 // Process form fields without PdfName.Widget having only annotations as children
-                if (!PdfFormAnnotationUtil.IsPureWidgetOrMergedField(formDict) && field.GetChildFields().Count > 0 && field
-                    .GetChildFormFields().Count == 0) {
+                if (field.GetChildFields().Count > 0 && field.GetChildFormFields().Count == 0) {
                     bool shouldBeMerged = true;
                     // If parent is radio button we don't care about field related keys, always merge
                     // If not - go over all fields to compare with parent's fields
@@ -186,9 +187,6 @@ namespace iText.Forms.Fields {
             PdfFormAnnotationUtil.SeparateWidgetAndField(secondField);
             PdfDictionary firstFieldDict = firstField.GetPdfObject();
             PdfDictionary secondFieldDict = secondField.GetPdfObject();
-            // Sometimes we merge field with its merged widget annotation, so secondField's /Parent is firstField.
-            // It can be a problem in case firstField is a root field, that's why secondField's /Parent is removed.
-            secondFieldDict.Remove(PdfName.Parent);
             foreach (PdfName key in new List<PdfName>(secondFieldDict.KeySet())) {
                 if (PdfName.Kids.Equals(key)) {
                     // Merge kids
@@ -197,9 +195,14 @@ namespace iText.Forms.Fields {
                     }
                 }
                 else {
-                    if (!firstFieldDict.ContainsKey(key)) {
-                        // Add all unique keys from the second field into the first field
-                        firstField.Put(key, secondFieldDict.Get(key));
+                    if (PdfName.Parent.Equals(key)) {
+                    }
+                    else {
+                        // Never copy parent
+                        if (!firstFieldDict.ContainsKey(key)) {
+                            // Add all unique keys from the second field into the first field
+                            firstField.Put(key, secondFieldDict.Get(key));
+                        }
                     }
                 }
             }

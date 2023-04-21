@@ -262,6 +262,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(FormsLogMessageConstants.FORM_FIELD_MUST_HAVE_A_NAME)]
         public virtual void NamelessFieldTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
@@ -275,6 +276,7 @@ namespace iText.Forms {
                 PdfPage page = outputDoc.GetLastPage();
                 e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => acroForm.AddField(field, page));
                 NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME, e.Message);
+                acroForm.AddField(field, page, false);
                 NUnit.Framework.Assert.AreEqual(0, acroForm.GetDirectFormFields().Count);
             }
         }

@@ -99,6 +99,7 @@ namespace iText.Forms.Fields {
                     field.GetPdfObject().MergeDifferent(kidDict);
                     field.RemoveChildren();
                     field.SetChildField(PdfFormAnnotation.MakeFormAnnotation(field.GetPdfObject(), field.GetDocument()));
+                    ReplaceAnnotationOnPage(kidDict, field.GetPdfObject());
                 }
             }
         }
@@ -131,26 +132,26 @@ namespace iText.Forms.Fields {
             }
         }
 
-        private static void ReplaceAnnotationOnPage(PdfDictionary fieldDict, PdfDictionary widgetDict) {
+        private static void ReplaceAnnotationOnPage(PdfDictionary oldAnnotDict, PdfDictionary newAnnotDict) {
             // Get page for the old annotation
-            PdfAnnotation oldAnnot = PdfAnnotation.MakeAnnotation(fieldDict);
+            PdfAnnotation oldAnnot = PdfAnnotation.MakeAnnotation(oldAnnotDict);
             PdfPage page = oldAnnot.GetPage();
             // Remove old annotation and add new
             if (page != null) {
                 int annotIndex = -1;
                 PdfArray annots = page.GetPdfObject().GetAsArray(PdfName.Annots);
                 if (annots != null) {
-                    annotIndex = annots.IndexOf(fieldDict);
+                    annotIndex = annots.IndexOf(oldAnnotDict);
                 }
                 page.RemoveAnnotation(oldAnnot, true);
-                fieldDict.Remove(PdfName.P);
+                oldAnnotDict.Remove(PdfName.P);
                 if (annotIndex >= page.GetAnnotsSize()) {
                     annotIndex = -1;
                 }
-                if (widgetDict.Get(PdfName.P) == null) {
-                    widgetDict.Put(PdfName.P, page.GetPdfObject());
+                if (newAnnotDict.Get(PdfName.P) == null) {
+                    newAnnotDict.Put(PdfName.P, page.GetPdfObject());
                 }
-                AddNewWidgetToPage(page, widgetDict, annotIndex);
+                AddNewWidgetToPage(page, newAnnotDict, annotIndex);
             }
         }
 

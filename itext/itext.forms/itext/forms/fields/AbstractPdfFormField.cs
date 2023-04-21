@@ -516,5 +516,22 @@ namespace iText.Forms.Fields {
             }
             return null;
         }
+
+        /// <summary>Indicate whether some other object is "equal to" this one.</summary>
+        /// <remarks>Indicate whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
+        public override bool Equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || GetType() != o.GetType()) {
+                return false;
+            }
+            return GetPdfObject() == ((iText.Forms.Fields.AbstractPdfFormField)o).GetPdfObject();
+        }
+
+        /// <summary>Generate a hash code for this object.</summary>
+        public override int GetHashCode() {
+            return GetPdfObject().GetHashCode();
+        }
     }
 }
