@@ -35,6 +35,7 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.X500;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Ocsp;
 
 namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <summary>
@@ -44,7 +45,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
     public class CertIDBCFips : ICertID {
         private static readonly CertIDBCFips INSTANCE = new CertIDBCFips(null);
 
-        private static readonly string HASH_SHA1 = CryptoConfig.MapNameToOID("SHA1");
+        private static readonly string HASH_SHA1 = CertificateID.HashSha1.Algorithm.Id;
 
         private readonly CertID certificateID;
 
