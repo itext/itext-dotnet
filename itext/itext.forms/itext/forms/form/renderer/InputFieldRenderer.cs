@@ -33,7 +33,6 @@ using iText.Forms.Form.Element;
 using iText.Forms.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -56,9 +55,7 @@ namespace iText.Forms.Form.Renderer {
             : base(modelElement) {
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.layout.renderer.IRenderer#getNextRenderer()
-        */
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Forms.Form.Renderer.InputFieldRenderer((InputField)modelElement);
         }
@@ -78,25 +75,18 @@ namespace iText.Forms.Form.Renderer {
                 ) : (bool)password;
         }
 
+        /// <summary><inheritDoc/></summary>
         internal override IRenderer CreateParagraphRenderer(String defaultValue) {
             if (String.IsNullOrEmpty(defaultValue) && null != ((InputField)modelElement).GetPlaceholder() && !((InputField
                 )modelElement).GetPlaceholder().IsEmpty()) {
                 return ((InputField)modelElement).GetPlaceholder().CreateRendererSubTree();
             }
-            if (String.IsNullOrEmpty(defaultValue)) {
-                defaultValue = "\u00a0";
-            }
-            Text text = new Text(defaultValue);
-            FormFieldValueNonTrimmingTextRenderer nextRenderer = new FormFieldValueNonTrimmingTextRenderer(text);
-            text.SetNextRenderer(nextRenderer);
-            IRenderer flatRenderer = new Paragraph(text).SetMargin(0).CreateRendererSubTree();
+            IRenderer flatRenderer = base.CreateParagraphRenderer(defaultValue);
             flatRenderer.SetProperty(Property.NO_SOFT_WRAP_INLINE, true);
             return flatRenderer;
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.attach.impl.layout.form.renderer.AbstractFormFieldRenderer#adjustFieldLayout()
-        */
+        /// <summary><inheritDoc/></summary>
         protected internal override void AdjustFieldLayout(LayoutContext layoutContext) {
             IList<LineRenderer> flatLines = ((ParagraphRenderer)flatRenderer).GetLines();
             Rectangle flatBBox = flatRenderer.GetOccupiedArea().GetBBox();
@@ -113,9 +103,7 @@ namespace iText.Forms.Form.Renderer {
             flatBBox.SetWidth((float)RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth()));
         }
 
-        /* (non-Javadoc)
-        * @see AbstractFormFieldRenderer#createFlatRenderer()
-        */
+        /// <summary><inheritDoc/></summary>
         protected internal override IRenderer CreateFlatRenderer() {
             String defaultValue = GetDefaultValue();
             bool flatten = IsFlatten();
@@ -126,9 +114,7 @@ namespace iText.Forms.Form.Renderer {
             return CreateParagraphRenderer(defaultValue);
         }
 
-        /* (non-Javadoc)
-        * @see AbstractFormFieldRenderer#applyAcroField(com.itextpdf.layout.renderer.DrawContext)
-        */
+        /// <summary><inheritDoc/></summary>
         protected internal override void ApplyAcroField(DrawContext drawContext) {
             font.SetSubset(false);
             bool password = IsPassword();
@@ -168,6 +154,7 @@ namespace iText.Forms.Form.Renderer {
             WriteAcroFormFieldLangAttribute(doc);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override T1 GetProperty<T1>(int key) {
             if (key == Property.WIDTH) {
                 T1 width = base.GetProperty<T1>(Property.WIDTH);
@@ -187,17 +174,7 @@ namespace iText.Forms.Form.Renderer {
             return base.GetProperty<T1>(key);
         }
 
-        public override void Draw(DrawContext drawContext) {
-            if (flatRenderer != null) {
-                if (IsFlatten()) {
-                    base.Draw(drawContext);
-                }
-                else {
-                    DrawChildren(drawContext);
-                }
-            }
-        }
-
+        /// <summary><inheritDoc/></summary>
         protected override bool SetMinMaxWidthBasedOnFixedWidth(MinMaxWidth minMaxWidth) {
             bool result = false;
             if (HasRelativeUnitValue(Property.WIDTH)) {

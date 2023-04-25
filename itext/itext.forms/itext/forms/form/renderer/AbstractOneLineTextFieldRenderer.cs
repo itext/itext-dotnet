@@ -28,7 +28,7 @@ using iText.Layout.Renderer;
 namespace iText.Forms.Form.Renderer {
     /// <summary>
     /// Abstract
-    /// <see cref="iText.Layout.Renderer.BlockRenderer"/>
+    /// <see cref="AbstractTextFieldRenderer"/>
     /// for a single line of text content in a form field.
     /// </summary>
     public abstract class AbstractOneLineTextFieldRenderer : AbstractTextFieldRenderer {
@@ -74,7 +74,7 @@ namespace iText.Forms.Form.Renderer {
         /// <summary>Sets the content height.</summary>
         /// <param name="flatRenderer">the flat renderer</param>
         /// <param name="height">the height</param>
-        private void SetContentHeight(IRenderer flatRenderer, float height) {
+        internal virtual void SetContentHeight(IRenderer flatRenderer, float height) {
             Rectangle bBox = flatRenderer.GetOccupiedArea().GetBBox();
             float dy = (height - bBox.GetHeight()) / 2;
             bBox.MoveDown(dy);

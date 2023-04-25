@@ -43,10 +43,10 @@ using iText.Layout.Renderer;
 namespace iText.Forms.Form.Renderer {
     /// <summary>
     /// The
-    /// <see cref="AbstractOneLineTextFieldRenderer"/>
+    /// <see cref="AbstractTextFieldRenderer"/>
     /// implementation for buttons.
     /// </summary>
-    public class ButtonRenderer : AbstractTextFieldRenderer {
+    public class ButtonRenderer : AbstractOneLineTextFieldRenderer {
         /// <summary>Default padding Y offset for an input button.</summary>
         private const float DEFAULT_Y_OFFSET = 4;
 
@@ -113,22 +113,6 @@ namespace iText.Forms.Form.Renderer {
                     if (deltaY > 0) {
                         flatRenderer.Move(0, -deltaY / 2);
                     }
-                }
-            }
-        }
-
-        /// <summary><inheritDoc/></summary>
-        /// <param name="drawContext">
-        /// 
-        /// <inheritDoc/>
-        /// </param>
-        public override void Draw(DrawContext drawContext) {
-            if (flatRenderer != null) {
-                if (IsFlatten()) {
-                    base.Draw(drawContext);
-                }
-                else {
-                    DrawChildren(drawContext);
                 }
             }
         }
@@ -270,34 +254,8 @@ namespace iText.Forms.Form.Renderer {
             WriteAcroFormFieldLangAttribute(doc);
         }
 
-        /// <summary>Crops the content lines.</summary>
-        /// <param name="lines">a list of lines</param>
-        /// <param name="bBox">the bounding box</param>
-        private void CropContentLines(IList<LineRenderer> lines, Rectangle bBox) {
-            AdjustNumberOfContentLines(lines, bBox, 1);
-            float? height = RetrieveHeight();
-            float? minHeight = RetrieveMinHeight();
-            float? maxHeight = RetrieveMaxHeight();
-            float originalHeight = flatRenderer.GetOccupiedArea().GetBBox().GetHeight();
-            if (height != null && (float)height > 0) {
-                SetContentHeight(flatRenderer, (float)height);
-            }
-            else {
-                if (minHeight != null && (float)minHeight > originalHeight) {
-                    SetContentHeight(flatRenderer, (float)minHeight);
-                }
-                else {
-                    if (maxHeight != null && (float)maxHeight > 0 && (float)maxHeight < originalHeight) {
-                        SetContentHeight(flatRenderer, (float)maxHeight);
-                    }
-                }
-            }
-        }
-
-        /// <summary>Sets the content height.</summary>
-        /// <param name="flatRenderer">the flat renderer</param>
-        /// <param name="height">the height</param>
-        private void SetContentHeight(IRenderer flatRenderer, float height) {
+        /// <summary><inheritDoc/></summary>
+        internal override void SetContentHeight(IRenderer flatRenderer, float height) {
             Rectangle bBox = flatRenderer.GetOccupiedArea().GetBBox();
             Border border = GetBorders()[0];
             if (border != null) {

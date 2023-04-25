@@ -34,7 +34,7 @@ using iText.Layout.Renderer;
 namespace iText.Forms.Form.Renderer {
     /// <summary>
     /// Abstract
-    /// <see cref="iText.Layout.Renderer.BlockRenderer"/>
+    /// <see cref="AbstractFormFieldRenderer"/>
     /// for form fields with text content.
     /// </summary>
     public abstract class AbstractTextFieldRenderer : AbstractFormFieldRenderer {
@@ -55,11 +55,13 @@ namespace iText.Forms.Form.Renderer {
         /// <param name="defaultValue">the default value</param>
         /// <returns>the renderer</returns>
         internal virtual IRenderer CreateParagraphRenderer(String defaultValue) {
-            if (String.IsNullOrEmpty(defaultValue.Trim())) {
+            if (String.IsNullOrEmpty(defaultValue)) {
                 defaultValue = "\u00a0";
             }
-            Paragraph paragraph = new Paragraph(defaultValue).SetMargin(0);
-            return paragraph.CreateRendererSubTree();
+            Text text = new Text(defaultValue);
+            FormFieldValueNonTrimmingTextRenderer nextRenderer = new FormFieldValueNonTrimmingTextRenderer(text);
+            text.SetNextRenderer(nextRenderer);
+            return new Paragraph(text).SetMargin(0).CreateRendererSubTree();
         }
 
         /// <summary>Applies the default field properties.</summary>

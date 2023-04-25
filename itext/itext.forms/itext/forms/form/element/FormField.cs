@@ -74,7 +74,7 @@ namespace iText.Forms.Form.Element {
         /// </returns>
         public virtual IFormField SetWidth(float width) {
             SetProperty(Property.WIDTH, UnitValue.CreatePointValue(width));
-            return (T)(Object)this;
+            return this;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -88,7 +88,7 @@ namespace iText.Forms.Form.Element {
         /// </returns>
         public virtual IFormField SetHeight(float height) {
             SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(height));
-            return (T)(Object)this;
+            return this;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -102,7 +102,7 @@ namespace iText.Forms.Form.Element {
         /// </returns>
         public virtual IFormField SetValue(String value) {
             SetProperty(FormProperty.FORM_FIELD_VALUE, value);
-            return (T)(Object)this;
+            return this;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -150,7 +150,7 @@ namespace iText.Forms.Form.Element {
         /// </returns>
         public virtual IFormField SetInteractive(bool interactive) {
             SetProperty(FormProperty.FORM_FIELD_FLATTEN, !interactive);
-            return (T)(Object)this;
+            return this;
         }
     }
 }

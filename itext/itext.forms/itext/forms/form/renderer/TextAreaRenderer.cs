@@ -32,7 +32,6 @@ using iText.Forms.Form.Element;
 using iText.Forms.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -45,12 +44,6 @@ namespace iText.Forms.Form.Renderer {
     /// implementation for text area fields.
     /// </summary>
     public class TextAreaRenderer : AbstractTextFieldRenderer {
-        /// <summary>Minimal size of text in form fields.</summary>
-        private const int MIN_FONT_SIZE = 4;
-
-        /// <summary>Size of text in form fields when font size is not explicitly set.</summary>
-        private const int DEFAULT_FONT_SIZE = 12;
-
         /// <summary>
         /// Creates a new
         /// <see cref="TextAreaRenderer"/>
@@ -81,17 +74,6 @@ namespace iText.Forms.Form.Renderer {
             return (int)modelElement.GetDefaultProperty<int>(FormProperty.FORM_FIELD_ROWS);
         }
 
-        public override void Draw(DrawContext drawContext) {
-            if (flatRenderer != null) {
-                if (IsFlatten()) {
-                    base.Draw(drawContext);
-                }
-                else {
-                    DrawChildren(drawContext);
-                }
-            }
-        }
-
         protected override float? GetLastYLineRecursively() {
             if (occupiedArea != null && occupiedArea.GetBBox() != null) {
                 return occupiedArea.GetBBox().GetBottom();
@@ -99,13 +81,12 @@ namespace iText.Forms.Form.Renderer {
             return null;
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.layout.renderer.IRenderer#getNextRenderer()
-        */
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Forms.Form.Renderer.TextAreaRenderer((TextArea)GetModelElement());
         }
 
+        /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             UnitValue fontSize = GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (fontSize != null && fontSize.GetValue() < EPS) {
@@ -114,9 +95,31 @@ namespace iText.Forms.Form.Renderer {
             return base.Layout(layoutContext);
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.html2pdf.attach.impl.layout.form.renderer.AbstractFormFieldRenderer#adjustFieldLayout()
-        */
+        /// <summary><inheritDoc/></summary>
+        public override T1 GetProperty<T1>(int key) {
+            if (key == Property.WIDTH) {
+                T1 width = base.GetProperty<T1>(Property.WIDTH);
+                if (width == null) {
+                    UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
+                    if (!fontSize.IsPointValue()) {
+                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.TextAreaRenderer));
+                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                            , Property.FONT_SIZE));
+                    }
+                    float fontSizeValue = fontSize.GetValue();
+                    if (fontSizeValue < EPS) {
+                        fontSizeValue = AbstractPdfFormField.DEFAULT_FONT_SIZE;
+                    }
+                    int cols = GetCols();
+                    return (T1)(Object)UnitValue.CreatePointValue(UpdateHtmlColsSizeBasedWidth(fontSizeValue * (cols * 0.5f + 
+                        2) + 2));
+                }
+                return width;
+            }
+            return base.GetProperty<T1>(key);
+        }
+
+        /// <summary><inheritDoc/></summary>
         protected internal override void AdjustFieldLayout(LayoutContext layoutContext) {
             IList<LineRenderer> flatLines = ((ParagraphRenderer)flatRenderer).GetLines();
             UpdatePdfFont((ParagraphRenderer)flatRenderer);
@@ -136,32 +139,12 @@ namespace iText.Forms.Form.Renderer {
             flatBBox.SetWidth((float)RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth()));
         }
 
-        /* (non-Javadoc)
-        * @see AbstractFormFieldRenderer#createFlatRenderer()
-        */
+        /// <summary><inheritDoc/></summary>
         protected internal override IRenderer CreateFlatRenderer() {
             return CreateParagraphRenderer(GetDefaultValue());
         }
 
-        internal override IRenderer CreateParagraphRenderer(String defaultValue) {
-            if (String.IsNullOrEmpty(defaultValue) && null != ((TextArea)modelElement).GetPlaceholder() && !((TextArea
-                )modelElement).GetPlaceholder().IsEmpty()) {
-                return ((TextArea)modelElement).GetPlaceholder().CreateRendererSubTree();
-            }
-            if (String.IsNullOrEmpty(defaultValue)) {
-                defaultValue = "\u00a0";
-            }
-            Text text = new Text(defaultValue);
-            FormFieldValueNonTrimmingTextRenderer nextRenderer = new FormFieldValueNonTrimmingTextRenderer(text);
-            text.SetNextRenderer(nextRenderer);
-            IRenderer flatRenderer = new Paragraph(text).SetMargin(0).CreateRendererSubTree();
-            flatRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
-            return flatRenderer;
-        }
-
-        /* (non-Javadoc)
-        * @see AbstractFormFieldRenderer#applyAcroField(com.itextpdf.layout.renderer.DrawContext)
-        */
+        /// <summary><inheritDoc/></summary>
         protected internal override void ApplyAcroField(DrawContext drawContext) {
             font.SetSubset(false);
             String value = GetDefaultValue();
@@ -192,29 +175,7 @@ namespace iText.Forms.Form.Renderer {
             WriteAcroFormFieldLangAttribute(doc);
         }
 
-        public override T1 GetProperty<T1>(int key) {
-            if (key == Property.WIDTH) {
-                T1 width = base.GetProperty<T1>(Property.WIDTH);
-                if (width == null) {
-                    UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
-                    if (!fontSize.IsPointValue()) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.TextAreaRenderer));
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
-                            , Property.FONT_SIZE));
-                    }
-                    float fontSizeValue = fontSize.GetValue();
-                    if (fontSizeValue < EPS) {
-                        fontSizeValue = DEFAULT_FONT_SIZE;
-                    }
-                    int cols = GetCols();
-                    return (T1)(Object)UnitValue.CreatePointValue(UpdateHtmlColsSizeBasedWidth(fontSizeValue * (cols * 0.5f + 
-                        2) + 2));
-                }
-                return width;
-            }
-            return base.GetProperty<T1>(key);
-        }
-
+        /// <summary><inheritDoc/></summary>
         protected override bool SetMinMaxWidthBasedOnFixedWidth(MinMaxWidth minMaxWidth) {
             if (!HasAbsoluteUnitValue(Property.WIDTH)) {
                 UnitValue width = this.GetProperty<UnitValue>(Property.WIDTH);
@@ -230,6 +191,16 @@ namespace iText.Forms.Form.Renderer {
                 return result;
             }
             return base.SetMinMaxWidthBasedOnFixedWidth(minMaxWidth);
+        }
+
+        internal override IRenderer CreateParagraphRenderer(String defaultValue) {
+            if (String.IsNullOrEmpty(defaultValue) && null != ((TextArea)modelElement).GetPlaceholder() && !((TextArea
+                )modelElement).GetPlaceholder().IsEmpty()) {
+                return ((TextArea)modelElement).GetPlaceholder().CreateRendererSubTree();
+            }
+            IRenderer flatRenderer = base.CreateParagraphRenderer(defaultValue);
+            flatRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+            return flatRenderer;
         }
 
         private void CropContentLines(IList<LineRenderer> lines, Rectangle bBox) {
@@ -260,20 +231,21 @@ namespace iText.Forms.Form.Renderer {
             IRenderer flatRenderer = CreateFlatRenderer();
             flatRenderer.SetParent(this);
             TextArea modelElement = (TextArea)this.GetModelElement();
-            float lFontSize = MIN_FONT_SIZE;
-            float rFontSize = DEFAULT_FONT_SIZE;
-            flatRenderer.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(DEFAULT_FONT_SIZE));
+            float lFontSize = AbstractPdfFormField.MIN_FONT_SIZE;
+            float rFontSize = AbstractPdfFormField.DEFAULT_FONT_SIZE;
+            flatRenderer.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(AbstractPdfFormField.DEFAULT_FONT_SIZE
+                ));
             float? areaWidth = RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth());
             float? areaHeight = RetrieveHeight();
             LayoutContext newLayoutContext;
             if (areaWidth == null || areaHeight == null) {
-                modelElement.SetFontSize(DEFAULT_FONT_SIZE);
+                modelElement.SetFontSize(AbstractPdfFormField.DEFAULT_FONT_SIZE);
                 return;
             }
             newLayoutContext = new LayoutContext(new LayoutArea(1, new Rectangle((float)areaWidth, (float)areaHeight))
                 );
             if (flatRenderer.Layout(newLayoutContext).GetStatus() == LayoutResult.FULL) {
-                lFontSize = DEFAULT_FONT_SIZE;
+                lFontSize = AbstractPdfFormField.DEFAULT_FONT_SIZE;
             }
             else {
                 int numberOfIterations = 6;

@@ -88,9 +88,7 @@ namespace iText.Forms.Form.Renderer {
             return defaultValue == null ? modelElement.GetDefaultProperty<String>(FormProperty.FORM_FIELD_VALUE) : defaultValue;
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.layout.renderer.BlockRenderer#layout(com.itextpdf.layout.layout.LayoutContext)
-        */
+        /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             childRenderers.Clear();
             flatRenderer = null;
@@ -151,18 +149,19 @@ namespace iText.Forms.Form.Renderer {
                 (occupiedArea.GetBBox().GetWidth(), occupiedArea.GetBBox().GetWidth(), 0));
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.layout.renderer.BlockRenderer#draw(com.itextpdf.layout.renderer.DrawContext)
-        */
+        /// <summary><inheritDoc/></summary>
         public override void Draw(DrawContext drawContext) {
             if (flatRenderer != null) {
-                base.Draw(drawContext);
+                if (IsFlatten()) {
+                    base.Draw(drawContext);
+                }
+                else {
+                    DrawChildren(drawContext);
+                }
             }
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.layout.renderer.AbstractRenderer#drawChildren(com.itextpdf.layout.renderer.DrawContext)
-        */
+        /// <summary><inheritDoc/></summary>
         public override void DrawChildren(DrawContext drawContext) {
             drawContext.GetCanvas().SaveState();
             bool flatten = IsFlatten();
@@ -176,9 +175,7 @@ namespace iText.Forms.Form.Renderer {
             drawContext.GetCanvas().RestoreState();
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.layout.renderer.BlockRenderer#getMinMaxWidth(float)
-        */
+        /// <summary><inheritDoc/></summary>
         public override MinMaxWidth GetMinMaxWidth() {
             childRenderers.Clear();
             flatRenderer = null;
@@ -225,6 +222,12 @@ namespace iText.Forms.Form.Renderer {
             return this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
         }
 
+        /// <summary>Determines, whether the layout is based in the renderer itself or flat renderer.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if layout is based on flat renderer, false otherwise
+        /// </returns>
         protected internal virtual bool IsLayoutBasedOnFlatRenderer() {
             return true;
         }

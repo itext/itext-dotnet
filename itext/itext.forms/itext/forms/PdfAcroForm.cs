@@ -312,18 +312,13 @@ namespace iText.Forms {
             }
         }
 
-        /// <summary>
-        /// Gets the high-level
-        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
-        /// s as a
-        /// <see cref="System.Collections.IDictionary{K, V}"/>.
-        /// </summary>
+        /// <summary>Gets root fields (i.e. direct children of Acroform dictionary).</summary>
         /// <returns>
         /// a map of field names and their associated
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
         /// objects
         /// </returns>
-        public virtual IDictionary<String, PdfFormField> GetDirectFormFields() {
+        public virtual IDictionary<String, PdfFormField> GetRootFormFields() {
             if (fields.Count == 0) {
                 fields = PopulateFormFieldsMap();
             }
@@ -1242,7 +1237,7 @@ namespace iText.Forms {
             }
         }
 
-        /// <summary>Put a key/value pair in the  dictionary and overwrites the previous value if it already exists.</summary>
+        /// <summary>Put a key/value pair in the dictionary and overwrite previous value if it already exists.</summary>
         /// <param name="key">the key as pdf name</param>
         /// <param name="value">the value as pdf object</param>
         /// <returns>

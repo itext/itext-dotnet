@@ -38,7 +38,7 @@ using iText.Layout.Renderer;
 namespace iText.Forms.Form.Renderer {
     /// <summary>
     /// The
-    /// <see cref="AbstractOneLineTextFieldRenderer"/>
+    /// <see cref="AbstractFormFieldRenderer"/>
     /// implementation for checkboxes.
     /// </summary>
     public class CheckBoxRenderer : AbstractFormFieldRenderer {
@@ -59,9 +59,7 @@ namespace iText.Forms.Form.Renderer {
             this.SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.MIDDLE);
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.layout.renderer.IRenderer#getNextRenderer()
-        */
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Forms.Form.Renderer.CheckBoxRenderer((CheckBox)modelElement);
         }
@@ -110,14 +108,17 @@ namespace iText.Forms.Form.Renderer {
             return renderingStrategy;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void DrawBackground(DrawContext drawContext) {
         }
 
-        // draw background in child
+        // Do not draw background here. It will be drawn in flat renderer.
+        /// <summary><inheritDoc/></summary>
         public override void DrawBorder(DrawContext drawContext) {
         }
 
-        //draw border in child
+        // Do not draw border here. It will be drawn in flat renderer.
+        /// <summary><inheritDoc/></summary>
         protected override Rectangle ApplyBorderBox(Rectangle rect, Border[] borders, bool reverse) {
             // Do not apply borders here, they will be applied in flat renderer
             return rect;
@@ -134,7 +135,7 @@ namespace iText.Forms.Form.Renderer {
         protected internal override void AdjustFieldLayout(LayoutContext layoutContext) {
         }
 
-        //we don't need any layout adjustments
+        // We don't need any layout adjustments
         /// <summary>Creates a flat renderer for the checkbox.</summary>
         /// <returns>an IRenderer object for the flat renderer</returns>
         protected internal override IRenderer CreateFlatRenderer() {
@@ -167,6 +168,7 @@ namespace iText.Forms.Form.Renderer {
             return new CheckBoxRenderer.FlatParagraphRenderer(this, paragraph);
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override void ApplyAcroField(DrawContext drawContext) {
             String name = GetModelId();
             PdfDocument doc = drawContext.GetDocument();
@@ -193,6 +195,7 @@ namespace iText.Forms.Form.Renderer {
             WriteAcroFormFieldLangAttribute(doc);
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override bool IsLayoutBasedOnFlatRenderer() {
             return false;
         }
@@ -210,6 +213,7 @@ namespace iText.Forms.Form.Renderer {
                 this._enclosing = _enclosing;
             }
 
+            /// <summary><inheritDoc/></summary>
             public override void DrawChildren(DrawContext drawContext) {
                 Rectangle rectangle = this.GetInnerAreaBBox().Clone();
                 this._enclosing.CreateCheckBoxRenderStrategy().DrawCheckBoxContent(drawContext, this._enclosing, rectangle

@@ -30,19 +30,16 @@ using iText.Forms.Fields.Borders;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
-using iText.Forms.Form.Renderer;
 using iText.Forms.Form.Renderer.Checkboximpl;
 using iText.Forms.Logs;
 using iText.Forms.Util;
 using iText.Kernel.Colors;
-using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
-using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
@@ -77,9 +74,6 @@ namespace iText.Forms.Fields {
 
         /// <summary>Value which represents "on" state of form field.</summary>
         public const String ON_STATE_VALUE = "Yes";
-
-        /// <summary>Default padding X offset.</summary>
-        internal const float X_OFFSET = 2;
 
         protected internal float borderWidth = 1;
 
@@ -218,6 +212,12 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+        /// <summary>Get rotation property specified in this form annotation.</summary>
+        /// <returns>
+        /// 
+        /// <c>int</c>
+        /// value which represents field's rotation
+        /// </returns>
         public virtual int GetRotation() {
             PdfDictionary mk = GetWidget().GetAppearanceCharacteristics();
             return mk == null || mk.GetAsInt(PdfName.R) == null ? 0 : (int)mk.GetAsInt(PdfName.R);
@@ -533,89 +533,6 @@ namespace iText.Forms.Fields {
             return rect == null ? null : rect.ToRectangle();
         }
 
-        /// <summary>Draws the visual appearance of text in a form field.</summary>
-        /// <param name="rect">The location on the page for the list field.</param>
-        /// <param name="font">
-        /// a
-        /// <see cref="iText.Kernel.Font.PdfFont"/>.
-        /// </param>
-        /// <param name="fontSize">The size of the font.</param>
-        /// <param name="value">The initial value.</param>
-        /// <param name="appearance">The appearance.</param>
-        protected internal virtual void DrawTextAppearance(Rectangle rect, PdfFont font, float fontSize, String value
-            , PdfFormXObject appearance) {
-            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
-            PdfResources resources = appearance.GetResources();
-            PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
-            float height = rect.GetHeight();
-            float width = rect.GetWidth();
-            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
-            DrawBorder(canvas, xObject, width, height);
-            if (parent.IsPassword()) {
-                value = ObfuscatePassword(value);
-            }
-            canvas.BeginVariableText().SaveState().EndPath();
-            TextAlignment? textAlignment = parent.GetJustification() == null ? TextAlignment.LEFT : parent.GetJustification
-                ();
-            float x = 0;
-            if (textAlignment == TextAlignment.RIGHT) {
-                x = rect.GetWidth();
-            }
-            else {
-                if (textAlignment == TextAlignment.CENTER) {
-                    x = rect.GetWidth() / 2;
-                }
-            }
-            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, new Rectangle(0, -height, 0, 2 * height)
-                );
-            modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
-            SetMetaInfoToCanvas(modelCanvas);
-            Style paragraphStyle = new Style().SetFont(font).SetFontSize(fontSize);
-            paragraphStyle.SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 1));
-            paragraphStyle.SetFontColor(GetColor());
-            modelCanvas.ShowTextAligned(CreateParagraphForTextFieldValue(value).AddStyle(paragraphStyle).SetPaddings(0
-                , X_OFFSET, 0, X_OFFSET), x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
-            canvas.RestoreState().EndVariableText();
-            appearance.GetPdfObject().SetData(stream.GetBytes());
-        }
-
-        protected internal virtual void DrawMultiLineTextAppearance(Rectangle rect, PdfFont font, String value, PdfFormXObject
-             appearance) {
-            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
-            PdfResources resources = appearance.GetResources();
-            PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
-            float width = rect.GetWidth();
-            float height = rect.GetHeight();
-            DrawBorder(canvas, appearance, width, height);
-            canvas.BeginVariableText();
-            Rectangle areaRect = new Rectangle(0, 0, width, height);
-            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, areaRect);
-            modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
-            SetMetaInfoToCanvas(modelCanvas);
-            Paragraph paragraph = CreateParagraphForTextFieldValue(value).SetFont(font).SetMargin(0).SetPadding(3).SetMultipliedLeading
-                (1);
-            if (GetFontSize() == 0) {
-                paragraph.SetFontSize(FontSizeUtil.ApproximateFontSizeToFitMultiLine(paragraph, areaRect, modelCanvas.GetRenderer
-                    ()));
-            }
-            else {
-                paragraph.SetFontSize(GetFontSize());
-            }
-            paragraph.SetProperty(Property.FORCED_PLACEMENT, true);
-            paragraph.SetTextAlignment(parent.GetJustification());
-            if (GetColor() != null) {
-                paragraph.SetFontColor(GetColor());
-            }
-            // here we subtract an epsilon to make sure that element won't be split but overflown
-            paragraph.SetHeight(height - 0.00001f);
-            paragraph.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
-            paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
-            paragraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.HIDDEN);
-            modelCanvas.Add(paragraph);
-            canvas.EndVariableText();
-            appearance.GetPdfObject().SetData(stream.GetBytes());
-        }
-
         /// <summary>Draws a border using the borderWidth and borderColor of the form field.</summary>
         /// <param name="canvas">
         /// The
@@ -738,6 +655,7 @@ namespace iText.Forms.Fields {
             PdfFormXObject xObjectOff = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth(), rectangle.GetHeight
                 ()));
             iText.Layout.Canvas canvasOff = new iText.Layout.Canvas(xObjectOff, this.GetDocument());
+            SetMetaInfoToCanvas(canvasOff);
             canvasOff.Add(formFieldElement);
             PdfDictionary normalAppearance = new PdfDictionary();
             normalAppearance.Put(new PdfName(OFF_STATE_VALUE), xObjectOff.GetPdfObject());
@@ -748,6 +666,7 @@ namespace iText.Forms.Fields {
                 PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth(), rectangle.GetHeight(
                     )));
                 iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, this.GetDocument());
+                SetMetaInfoToCanvas(canvas);
                 canvas.Add(formFieldElement);
                 normalAppearance.Put(new PdfName(value), xObject.GetPdfObject());
             }
@@ -798,6 +717,7 @@ namespace iText.Forms.Fields {
                 xObject.Put(PdfName.Matrix, matrix);
             }
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, this.GetDocument());
+            SetMetaInfoToCanvas(canvas);
             canvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             canvas.Add(formFieldElement);
             GetWidget().SetNormalAppearance(xObject.GetPdfObject());
@@ -822,118 +742,6 @@ namespace iText.Forms.Fields {
             }
         }
 
-        internal virtual bool RegenerateTextAndChoiceField() {
-            String value = parent.GetDisplayValue();
-            PdfName type = parent.GetFormType();
-            PdfPage page = PdfAnnotation.MakeAnnotation(GetPdfObject()).GetPage();
-            PdfArray bBox = GetPdfObject().GetAsArray(PdfName.Rect);
-            //Apply Page rotation
-            int pageRotation = 0;
-            if (page != null) {
-                pageRotation = page.GetRotation();
-                //Clockwise, so negative
-                pageRotation *= -1;
-            }
-            PdfArray matrix;
-            if (pageRotation % 90 == 0) {
-                //Cast angle to [-360, 360]
-                double angle = pageRotation % 360;
-                //Get angle in radians
-                angle = DegreeToRadians(angle);
-                Rectangle initialBboxRectangle = bBox.ToRectangle();
-                //rotate the bounding box
-                Rectangle rect = initialBboxRectangle.Clone();
-                //Calculate origin offset
-                double translationWidth = 0;
-                double translationHeight = 0;
-                if (angle >= -1 * Math.PI && angle <= -1 * Math.PI / 2) {
-                    translationWidth = rect.GetWidth();
-                }
-                if (angle <= -1 * Math.PI) {
-                    translationHeight = rect.GetHeight();
-                }
-                //Store rotation and translation in the matrix
-                matrix = new PdfArray(new double[] { Math.Cos(angle), -Math.Sin(angle), Math.Sin(angle), Math.Cos(angle), 
-                    translationWidth, translationHeight });
-                // If the angle is a multiple of 90 and not a multiple of 180, height and width of the bounding box
-                // need to be switched
-                if (angle % (Math.PI / 2) == 0 && angle % (Math.PI) != 0) {
-                    rect.SetWidth(initialBboxRectangle.GetHeight());
-                    rect.SetHeight(initialBboxRectangle.GetWidth());
-                }
-                // Adapt origin
-                rect.SetX(rect.GetX() + (float)translationWidth);
-                rect.SetY(rect.GetY() + (float)translationHeight);
-                //Copy Bounding box
-                bBox = new PdfArray(rect);
-            }
-            else {
-                //Avoid NPE when handling corrupt pdfs
-                LOGGER.LogError(FormsLogMessageConstants.INCORRECT_PAGE_ROTATION);
-                matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
-            }
-            //Apply field rotation
-            float fieldRotation = 0;
-            if (this.GetPdfObject().GetAsDictionary(PdfName.MK) != null && this.GetPdfObject().GetAsDictionary(PdfName
-                .MK).Get(PdfName.R) != null) {
-                fieldRotation = (float)this.GetPdfObject().GetAsDictionary(PdfName.MK).GetAsFloat(PdfName.R);
-                //Get relative field rotation
-                fieldRotation += pageRotation;
-            }
-            if (fieldRotation % 90 == 0) {
-                Rectangle initialBboxRectangle = bBox.ToRectangle();
-                //Cast angle to [-360, 360]
-                double angle = fieldRotation % 360;
-                //Get angle in radians
-                angle = DegreeToRadians(angle);
-                //Calculate origin offset
-                double translationWidth = CalculateTranslationWidthAfterFieldRot(initialBboxRectangle, DegreeToRadians(pageRotation
-                    ), angle);
-                double translationHeight = CalculateTranslationHeightAfterFieldRot(initialBboxRectangle, DegreeToRadians(pageRotation
-                    ), angle);
-                //Concatenate rotation and translation into the matrix
-                Matrix currentMatrix = new Matrix(matrix.GetAsNumber(0).FloatValue(), matrix.GetAsNumber(1).FloatValue(), 
-                    matrix.GetAsNumber(2).FloatValue(), matrix.GetAsNumber(3).FloatValue(), matrix.GetAsNumber(4).FloatValue
-                    (), matrix.GetAsNumber(5).FloatValue());
-                Matrix toConcatenate = new Matrix((float)Math.Cos(angle), (float)(-Math.Sin(angle)), (float)(Math.Sin(angle
-                    )), (float)(Math.Cos(angle)), (float)translationWidth, (float)translationHeight);
-                currentMatrix = currentMatrix.Multiply(toConcatenate);
-                matrix = new PdfArray(new float[] { currentMatrix.Get(0), currentMatrix.Get(1), currentMatrix.Get(3), currentMatrix
-                    .Get(4), currentMatrix.Get(6), currentMatrix.Get(7) });
-                // Construct bounding box
-                Rectangle rect = initialBboxRectangle.Clone();
-                // If the angle is a multiple of 90 and not a multiple of 180, height and width of the bounding box
-                // need to be switched
-                if (angle % (Math.PI / 2) == 0 && angle % (Math.PI) != 0) {
-                    rect.SetWidth(initialBboxRectangle.GetHeight());
-                    rect.SetHeight(initialBboxRectangle.GetWidth());
-                }
-                rect.SetX(rect.GetX() + (float)translationWidth);
-                rect.SetY(rect.GetY() + (float)translationHeight);
-                // Copy Bounding box
-                bBox = new PdfArray(rect);
-            }
-            // Create appearance
-            Rectangle bboxRectangle = bBox.ToRectangle();
-            PdfFormXObject appearance = new PdfFormXObject(new Rectangle(0, 0, bboxRectangle.GetWidth(), bboxRectangle
-                .GetHeight()));
-            appearance.Put(PdfName.Matrix, matrix);
-            //Create text appearance
-            if (PdfName.Tx.Equals(type)) {
-                if (parent.IsMultiline()) {
-                    DrawMultiLineTextAppearance(bboxRectangle, GetFont(), value, appearance);
-                }
-                else {
-                    DrawTextAppearance(bboxRectangle, GetFont(), GetFontSize(bBox, value), value, appearance);
-                }
-            }
-            PdfDictionary ap = new PdfDictionary();
-            ap.Put(PdfName.N, appearance.GetPdfObject());
-            ap.SetModified();
-            Put(PdfName.AP, ap);
-            return true;
-        }
-
         internal virtual bool RegenerateWidget() {
             if (parent == null) {
                 return true;
@@ -944,13 +752,8 @@ namespace iText.Forms.Fields {
             }
             else {
                 if (PdfName.Tx.Equals(type)) {
-                    if (ExperimentalFeatures.ENABLE_EXPERIMENTAL_TEXT_FORM_RENDERING) {
-                        DrawTextFormFieldAndSaveAppearance();
-                        return true;
-                    }
-                    else {
-                        return RegenerateTextAndChoiceField();
-                    }
+                    DrawTextFormFieldAndSaveAppearance();
+                    return true;
                 }
                 else {
                     if (PdfName.Btn.Equals(type)) {
@@ -999,16 +802,6 @@ namespace iText.Forms.Fields {
             return GetFontSize();
         }
 
-        private static double DegreeToRadians(double angle) {
-            return Math.PI * angle / 180.0;
-        }
-
-        private static Paragraph CreateParagraphForTextFieldValue(String value) {
-            Text text = new Text(value);
-            text.SetNextRenderer(new FormFieldValueNonTrimmingTextRenderer(text));
-            return new Paragraph(text);
-        }
-
         private bool IsCombTextFormField() {
             PdfName type = parent.GetFormType();
             if (PdfName.Tx.Equals(type) && parent.GetFieldFlag(PdfTextFormField.FF_COMB)) {
@@ -1030,114 +823,6 @@ namespace iText.Forms.Fields {
                 }
             }
             return null;
-        }
-
-        /// <summary>
-        /// Calculate the necessary height offset after applying field rotation
-        /// so that the origin of the bounding box is the lower left corner with respect to the field text.
-        /// </summary>
-        /// <param name="bBox">bounding box rectangle before rotation</param>
-        /// <param name="pageRotation">rotation of the page</param>
-        /// <param name="relFieldRotation">rotation of the field relative to the page</param>
-        /// <returns>translation value for height</returns>
-        private static float CalculateTranslationHeightAfterFieldRot(Rectangle bBox, double pageRotation, double relFieldRotation
-            ) {
-            if (relFieldRotation == 0) {
-                return 0.0f;
-            }
-            if (pageRotation == 0) {
-                if (relFieldRotation == Math.PI / 2) {
-                    return bBox.GetHeight();
-                }
-                if (relFieldRotation == Math.PI) {
-                    return bBox.GetHeight();
-                }
-            }
-            if (pageRotation == -Math.PI / 2) {
-                if (relFieldRotation == -Math.PI / 2) {
-                    return bBox.GetWidth() - bBox.GetHeight();
-                }
-                if (relFieldRotation == Math.PI / 2) {
-                    return bBox.GetHeight();
-                }
-                if (relFieldRotation == Math.PI) {
-                    return bBox.GetWidth();
-                }
-            }
-            if (pageRotation == -Math.PI) {
-                if (relFieldRotation == -1 * Math.PI) {
-                    return bBox.GetHeight();
-                }
-                if (relFieldRotation == -1 * Math.PI / 2) {
-                    return bBox.GetHeight() - bBox.GetWidth();
-                }
-                if (relFieldRotation == Math.PI / 2) {
-                    return bBox.GetWidth();
-                }
-            }
-            if (pageRotation == -3 * Math.PI / 2) {
-                if (relFieldRotation == -3 * Math.PI / 2) {
-                    return bBox.GetWidth();
-                }
-                if (relFieldRotation == -Math.PI) {
-                    return bBox.GetWidth();
-                }
-            }
-            return 0.0f;
-        }
-
-        /// <summary>
-        /// Calculate the necessary width offset after applying field rotation
-        /// so that the origin of the bounding box is the lower left corner with respect to the field text.
-        /// </summary>
-        /// <param name="bBox">bounding box rectangle before rotation</param>
-        /// <param name="pageRotation">rotation of the page</param>
-        /// <param name="relFieldRotation">rotation of the field relative to the page</param>
-        /// <returns>translation value for width</returns>
-        private static float CalculateTranslationWidthAfterFieldRot(Rectangle bBox, double pageRotation, double relFieldRotation
-            ) {
-            if (relFieldRotation == 0) {
-                return 0.0f;
-            }
-            if (pageRotation == 0 && (relFieldRotation == Math.PI || relFieldRotation == 3 * Math.PI / 2)) {
-                return bBox.GetWidth();
-            }
-            if (pageRotation == -Math.PI / 2) {
-                if (relFieldRotation == -Math.PI / 2 || relFieldRotation == Math.PI) {
-                    return bBox.GetHeight();
-                }
-            }
-            if (pageRotation == -Math.PI) {
-                if (relFieldRotation == -1 * Math.PI) {
-                    return bBox.GetWidth();
-                }
-                if (relFieldRotation == -1 * Math.PI / 2) {
-                    return bBox.GetHeight();
-                }
-                if (relFieldRotation == Math.PI / 2) {
-                    return -1 * (bBox.GetHeight() - bBox.GetWidth());
-                }
-            }
-            if (pageRotation == -3 * Math.PI / 2) {
-                if (relFieldRotation == -3 * Math.PI / 2) {
-                    return -1 * (bBox.GetWidth() - bBox.GetHeight());
-                }
-                if (relFieldRotation == -Math.PI) {
-                    return bBox.GetHeight();
-                }
-                if (relFieldRotation == -Math.PI / 2) {
-                    return bBox.GetWidth();
-                }
-            }
-            return 0.0f;
-        }
-
-        private static String ObfuscatePassword(String text) {
-            char[] pchar = new char[text.Length];
-            for (int i = 0; i < text.Length; i++) {
-                pchar[i] = '*';
-            }
-            return new String(pchar);
         }
 
         private static PdfArray GetRotationMatrix(int rotation, float height, float width) {
@@ -1210,6 +895,7 @@ namespace iText.Forms.Fields {
             ((CheckBox)formFieldElement).SetChecked(false);
             PdfFormXObject xObjectOff = new PdfFormXObject(new Rectangle(0, 0, rect.GetWidth(), rect.GetHeight()));
             iText.Layout.Canvas canvasOff = new iText.Layout.Canvas(xObjectOff, GetDocument());
+            SetMetaInfoToCanvas(canvasOff);
             canvasOff.Add(formFieldElement);
             if (GetPdfAConformanceLevel() == null) {
                 xObjectOff.GetResources().AddFont(GetDocument(), GetFont());
@@ -1223,6 +909,7 @@ namespace iText.Forms.Fields {
             ((CheckBox)formFieldElement).SetChecked(true);
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rect.GetWidth(), rect.GetHeight()));
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, this.GetDocument());
+            SetMetaInfoToCanvas(canvas);
             canvas.Add(formFieldElement);
             normalAppearance.Put(new PdfName(onStateNameForAp), xObject.GetPdfObject());
             GetWidget().SetNormalAppearance(normalAppearance);

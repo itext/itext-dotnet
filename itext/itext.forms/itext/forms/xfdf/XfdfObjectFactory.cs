@@ -47,7 +47,7 @@ namespace iText.Forms.Xfdf {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(document, false);
             XfdfObject resultXfdf = new XfdfObject();
             FieldsObject xfdfFields = new FieldsObject();
-            if (form != null && form.GetDirectFormFields() != null && !form.GetDirectFormFields().IsEmpty()) {
+            if (form != null && form.GetRootFormFields() != null && !form.GetRootFormFields().IsEmpty()) {
                 foreach (String fieldName in form.GetAllFormFields().Keys) {
                     String delims = ".";
                     StringTokenizer st = new StringTokenizer(fieldName, delims);

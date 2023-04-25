@@ -35,9 +35,7 @@ namespace iText.Forms.Form.Renderer {
     /// Custom implementation for rendering form field values. It makes sure that text value
     /// trimming strategy matches Acrobat's behavior
     /// </remarks>
-    public class FormFieldValueNonTrimmingTextRenderer : TextRenderer {
-        // Temporarily public, make it package private on cleanup of PdfFormAnnotation
-        // TODO DEVSIX-7385 Finalize code related to form fields renderers separation
+    internal class FormFieldValueNonTrimmingTextRenderer : TextRenderer {
         // Determines whether we want to trim leading space. In particular we don't want to trim
         // the very first leading spaces of the text value. When text overflows to the next lines,
         // whether we should trim the text depends on why the overflow happened

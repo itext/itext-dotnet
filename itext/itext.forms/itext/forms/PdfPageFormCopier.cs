@@ -81,7 +81,7 @@ namespace iText.Forms {
             if (fieldsFrom.Count <= 0) {
                 return;
             }
-            IDictionary<String, PdfFormField> fieldsTo = formTo.GetDirectFormFields();
+            IDictionary<String, PdfFormField> fieldsTo = formTo.GetRootFormFields();
             IList<PdfAnnotation> annots = toPage.GetAnnotations();
             try {
                 foreach (PdfAnnotation annot in annots) {

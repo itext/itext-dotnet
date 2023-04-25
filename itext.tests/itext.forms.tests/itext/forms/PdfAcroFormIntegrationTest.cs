@@ -47,7 +47,7 @@ namespace iText.Forms {
         public virtual void OrphanedNamelessFormFieldTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "orphanedFormField.pdf"))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                NUnit.Framework.Assert.AreEqual(3, form.GetDirectFormFields().Count);
+                NUnit.Framework.Assert.AreEqual(3, form.GetRootFormFields().Count);
             }
         }
 

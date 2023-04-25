@@ -21,13 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Forms.Fields;
 using iText.IO.Font;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
-using iText.Layout.Element;
-using iText.Layout.Layout;
-using iText.Layout.Renderer;
 
 namespace iText.Forms.Util {
     /// <summary>Utility class for font size calculations.</summary>
@@ -36,38 +32,6 @@ namespace iText.Forms.Util {
         }
 
         //utility class
-        /// <summary>Calculates the font size that will fit the text in the given rectangle.</summary>
-        /// <param name="paragraph">the paragraph to be fitted</param>
-        /// <param name="rect">the rectangle to fit the text in</param>
-        /// <param name="parentRenderer">the parent renderer</param>
-        /// <returns>the font size that will fit the text in the given rectangle</returns>
-        public static float ApproximateFontSizeToFitMultiLine(Paragraph paragraph, Rectangle rect, IRenderer parentRenderer
-            ) {
-            IRenderer renderer = paragraph.CreateRendererSubTree().SetParent(parentRenderer);
-            LayoutContext layoutContext = new LayoutContext(new LayoutArea(1, rect));
-            float lFontSize = AbstractPdfFormField.MIN_FONT_SIZE;
-            float rFontSize = AbstractPdfFormField.DEFAULT_FONT_SIZE;
-            paragraph.SetFontSize(AbstractPdfFormField.DEFAULT_FONT_SIZE);
-            if (renderer.Layout(layoutContext).GetStatus() != LayoutResult.FULL) {
-                int numberOfIterations = 6;
-                for (int i = 0; i < numberOfIterations; i++) {
-                    float mFontSize = (lFontSize + rFontSize) / 2;
-                    paragraph.SetFontSize(mFontSize);
-                    LayoutResult result = renderer.Layout(layoutContext);
-                    if (result.GetStatus() == LayoutResult.FULL) {
-                        lFontSize = mFontSize;
-                    }
-                    else {
-                        rFontSize = mFontSize;
-                    }
-                }
-            }
-            else {
-                lFontSize = AbstractPdfFormField.DEFAULT_FONT_SIZE;
-            }
-            return lFontSize;
-        }
-
         /// <summary>Calculates the font size that will fit the text in the given rectangle.</summary>
         /// <param name="localFont">the font to be used</param>
         /// <param name="bBox">the bounding box of the field</param>

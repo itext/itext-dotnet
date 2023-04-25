@@ -41,7 +41,7 @@ using iText.Layout.Renderer;
 namespace iText.Forms.Form.Renderer {
     /// <summary>
     /// The
-    /// <see cref="AbstractOneLineTextFieldRenderer"/>
+    /// <see cref="AbstractFormFieldRenderer"/>
     /// implementation for radio buttons.
     /// </summary>
     public class RadioRenderer : AbstractFormFieldRenderer {
@@ -65,9 +65,7 @@ namespace iText.Forms.Form.Renderer {
             SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.MIDDLE);
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.layout.renderer.IRenderer#getNextRenderer()
-        */
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Forms.Form.Renderer.RadioRenderer((Radio)modelElement);
         }
@@ -112,6 +110,7 @@ namespace iText.Forms.Form.Renderer {
             return rect;
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override IRenderer CreateFlatRenderer() {
             UnitValue heightUV = GetPropertyAsUnitValue(Property.HEIGHT);
             UnitValue widthUV = GetPropertyAsUnitValue(Property.WIDTH);
@@ -130,21 +129,18 @@ namespace iText.Forms.Form.Renderer {
             return new RadioRenderer.FlatParagraphRenderer(this, paragraph);
         }
 
-        /* (non-Javadoc)
-        * @see AbstractFormFieldRenderer#adjustFieldLayout()
-        */
+        /// <summary><inheritDoc/></summary>
         protected internal override void AdjustFieldLayout(LayoutContext layoutContext) {
         }
 
+        // We don't need any adjustments (even default ones) for radio button.
         /// <summary>Defines whether the radio is checked or not.</summary>
         /// <returns>the default value of the radio field</returns>
         public virtual bool IsBoxChecked() {
             return true.Equals(this.GetProperty<bool?>(FormProperty.FORM_FIELD_CHECKED));
         }
 
-        /* (non-Javadoc)
-        * @see AbstractFormFieldRenderer#applyAcroField(com.itextpdf.layout.renderer.DrawContext)
-        */
+        /// <summary><inheritDoc/></summary>
         protected internal override void ApplyAcroField(DrawContext drawContext) {
             PdfDocument doc = drawContext.GetDocument();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
@@ -182,6 +178,7 @@ namespace iText.Forms.Form.Renderer {
             WriteAcroFormFieldLangAttribute(doc);
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override bool IsLayoutBasedOnFlatRenderer() {
             return false;
         }
