@@ -196,19 +196,19 @@
     <EmbeddedResource Include="UniKS-UTF8-V" />
     <EmbeddedResource Include="V" />
     <EmbeddedResource Include="WP-Symbol" />
-    <EmbeddedResource Include="toUnicode\Adobe-CNS1-UCS2" >
+    <EmbeddedResource Include="toUnicode\Adobe-CNS1-UCS2">
       <LogicalName>iText.IO.Font.Cmap.ToUnicode.Adobe-CNS1-UCS2</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="toUnicode\Adobe-GB1-UCS2" >
+    <EmbeddedResource Include="toUnicode\Adobe-GB1-UCS2">
       <LogicalName>iText.IO.Font.Cmap.ToUnicode.Adobe-GB1-UCS2</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="toUnicode\Adobe-Japan1-UCS2" >
+    <EmbeddedResource Include="toUnicode\Adobe-Japan1-UCS2">
       <LogicalName>iText.IO.Font.Cmap.ToUnicode.Adobe-Japan1-UCS2</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="toUnicode\Adobe-Korea1-UCS2" >
+    <EmbeddedResource Include="toUnicode\Adobe-Korea1-UCS2">
       <LogicalName>iText.IO.Font.Cmap.ToUnicode.Adobe-Korea1-UCS2</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="toUnicode\Adobe-KR-UCS2" >
+    <EmbeddedResource Include="toUnicode\Adobe-KR-UCS2">
       <LogicalName>iText.IO.Font.Cmap.ToUnicode.Adobe-KR-UCS2</LogicalName>
     </EmbeddedResource>
 
