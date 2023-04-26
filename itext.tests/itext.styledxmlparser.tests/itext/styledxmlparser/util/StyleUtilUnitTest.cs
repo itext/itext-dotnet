@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -79,24 +79,6 @@ namespace iText.StyledXmlParser.Util {
             String parentFontSize = "16";
             IDictionary<String, String> expectedStyles = new Dictionary<String, String>();
             expectedStyles.Put(styleProperty, "9.6pt");
-            styles = StyleUtil.MergeParentStyleDeclaration(styles, styleProperty, parentPropValue, parentFontSize, inheritanceRules
-                );
-            bool equal = styles.Count == expectedStyles.Count;
-            foreach (KeyValuePair<String, String> kvp in expectedStyles) {
-                equal &= kvp.Value.Equals(styles.Get(kvp.Key));
-            }
-            NUnit.Framework.Assert.IsTrue(equal);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void MergeParentDeclarationsTextDecorationsTest() {
-            IDictionary<String, String> styles = new Dictionary<String, String>();
-            String styleProperty = "text-decoration-line";
-            styles.Put(styleProperty, "line-through");
-            String parentPropValue = "underline";
-            String parentFontSize = "0";
-            IDictionary<String, String> expectedStyles = new Dictionary<String, String>();
-            expectedStyles.Put(styleProperty, "line-through underline");
             styles = StyleUtil.MergeParentStyleDeclaration(styles, styleProperty, parentPropValue, parentFontSize, inheritanceRules
                 );
             bool equal = styles.Count == expectedStyles.Count;

@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -64,7 +64,7 @@ namespace iText.Kernel.Actions.Events {
             if (events == null || events.IsEmpty()) {
                 ProductData productData = ITextCoreProductData.GetInstance();
                 String noEventProducer = "iText\u00ae \u00a9" + productData.GetSinceCopyrightYear() + "-" + productData.GetToCopyrightYear
-                    () + " iText Group NV (no registered products)";
+                    () + " Apryse Group NV (no registered products)";
                 pdfDocument.GetDocumentInfo().SetProducer(noEventProducer);
                 return;
             }

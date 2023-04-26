@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -21,26 +21,30 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Org.BouncyCastle.Asn1;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Crypto {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class CryptoUtilTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         [NUnit.Framework.Test]
         public virtual void CreateBerStreamTest() {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            DerOutputStream stream = CryptoUtil.CreateAsn1OutputStream(baos, Org.BouncyCastle.Asn1.Asn1Encodable.Ber);
+            IDerOutputStream stream = CryptoUtil.CreateAsn1OutputStream(baos, FACTORY.CreateASN1Encoding().GetBer());
             NUnit.Framework.Assert.IsNotNull(stream);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDerStreamTest() {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            DerOutputStream stream = CryptoUtil.CreateAsn1OutputStream(baos, Org.BouncyCastle.Asn1.Asn1Encodable.Der);
+            IDerOutputStream stream = CryptoUtil.CreateAsn1OutputStream(baos, FACTORY.CreateASN1Encoding().GetDer());
             NUnit.Framework.Assert.IsNotNull(stream);
         }
 

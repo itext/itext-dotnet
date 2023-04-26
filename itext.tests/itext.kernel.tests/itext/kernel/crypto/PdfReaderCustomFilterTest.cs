@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Utils;
 using iText.Kernel.Crypto.Securityhandler;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -37,7 +38,7 @@ namespace iText.Kernel.Crypto {
             using (PdfReader reader = new PdfReader(sourceFolder + "customSecurityHandler.pdf")) {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedSecurityHandlerException), () => new PdfDocument
                     (reader));
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(UnsupportedSecurityHandlerException.UnsupportedSecurityHandler
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNSUPPORTED_SECURITY_HANDLER
                     , "/Standart"), e.Message);
             }
         }

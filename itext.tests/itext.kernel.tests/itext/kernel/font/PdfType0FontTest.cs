@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -102,6 +102,18 @@ namespace iText.Kernel.Font {
             NUnit.Framework.Assert.AreEqual("UniGB-UTF16-V", PdfType0Font.GetUniMapFromOrdering("GB1", false));
             NUnit.Framework.Assert.AreEqual("Identity-H", PdfType0Font.GetUniMapFromOrdering("Identity", true));
             NUnit.Framework.Assert.AreEqual("Identity-V", PdfType0Font.GetUniMapFromOrdering("Identity", false));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DescendantCidFontWithoutOrderingTest() {
+            PdfDictionary fontDict = new PdfDictionary();
+            PdfArray descendantFonts = new PdfArray();
+            PdfDictionary descendantFont = new PdfDictionary();
+            descendantFont.Put(PdfName.CIDSystemInfo, new PdfDictionary());
+            descendantFonts.Add(descendantFont);
+            fontDict.Put(PdfName.DescendantFonts, descendantFonts);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfType0Font(fontDict));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.ORDERING_SHOULD_BE_DETERMINED, e.Message);
         }
     }
 }

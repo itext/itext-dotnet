@@ -1,45 +1,24 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -406,7 +385,28 @@ namespace iText.Kernel.Pdf {
                 extensions = new PdfDictionary();
                 Put(PdfName.Extensions, extensions);
             }
+            if (extension.IsMultiValued()) {
+                // for multivalued extensions, we only check whether one of the same level is present or not
+                // (main use case: ISO extensions)
+                PdfArray existingExtensionArray = extensions.GetAsArray(extension.GetPrefix());
+                if (existingExtensionArray == null) {
+                    existingExtensionArray = new PdfArray();
+                    extensions.Put(extension.GetPrefix(), existingExtensionArray);
+                }
+                else {
+                    for (int i = 0; i < existingExtensionArray.Size(); i++) {
+                        PdfDictionary pdfDict = existingExtensionArray.GetAsDictionary(i);
+                        // for array-based extensions, we check for membership only, since comparison doesn't make sense
+                        if (pdfDict.GetAsNumber(PdfName.ExtensionLevel).IntValue() == extension.GetExtensionLevel()) {
+                            return;
+                        }
+                    }
+                }
+                existingExtensionArray.Add(extension.GetDeveloperExtensions());
+                existingExtensionArray.SetModified();
+            }
             else {
+                // for single-valued extensions, we compare against the existing extension level
                 PdfDictionary existingExtensionDict = extensions.GetAsDictionary(extension.GetPrefix());
                 if (existingExtensionDict != null) {
                     int diff = extension.GetBaseVersion().CompareTo(existingExtensionDict.GetAsName(PdfName.BaseVersion));
@@ -419,8 +419,8 @@ namespace iText.Kernel.Pdf {
                         return;
                     }
                 }
+                extensions.Put(extension.GetPrefix(), extension.GetDeveloperExtensions());
             }
-            extensions.Put(extension.GetPrefix(), extension.GetDeveloperExtensions());
         }
 
         /// <summary>
@@ -508,7 +508,7 @@ namespace iText.Kernel.Pdf {
         /// An object destination refers to. Must be an array or a dictionary with key /D and array.
         /// See ISO 32000-1 12.3.2.3 for more info.
         /// </param>
-        internal virtual void AddNamedDestination(String key, PdfObject value) {
+        internal virtual void AddNamedDestination(PdfString key, PdfObject value) {
             AddNameToNameTree(key, value, PdfName.Dests);
         }
 
@@ -518,7 +518,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="key">key in the name tree</param>
         /// <param name="value">value in the name tree</param>
         /// <param name="treeType">type of the tree (Dests, AP, EmbeddedFiles etc).</param>
-        internal virtual void AddNameToNameTree(String key, PdfObject value, PdfName treeType) {
+        internal virtual void AddNameToNameTree(PdfString key, PdfObject value, PdfName treeType) {
             GetNameTree(treeType).AddEntry(key, value);
         }
 
@@ -551,7 +551,7 @@ namespace iText.Kernel.Pdf {
                 outlines = new PdfOutline(GetDocument());
             }
             else {
-                ConstructOutlines(outlineRoot, destsTree.GetNames());
+                ConstructOutlines(outlineRoot, destsTree);
             }
             return outlines;
         }
@@ -628,7 +628,7 @@ namespace iText.Kernel.Pdf {
         /// root.
         /// </param>
         /// <param name="names">map containing the PdfObjects stored in the tree.</param>
-        internal virtual void ConstructOutlines(PdfDictionary outlineRoot, IDictionary<String, PdfObject> names) {
+        internal virtual void ConstructOutlines(PdfDictionary outlineRoot, IPdfNameTreeAccess names) {
             if (outlineRoot == null) {
                 return;
             }
@@ -722,8 +722,8 @@ namespace iText.Kernel.Pdf {
             else {
                 if (dest.IsString() || dest.IsName()) {
                     PdfNameTree destsTree = GetNameTree(PdfName.Dests);
-                    IDictionary<String, PdfObject> dests = destsTree.GetNames();
-                    String srcDestName = dest.IsString() ? ((PdfString)dest).ToUnicodeString() : ((PdfName)dest).GetValue();
+                    IDictionary<PdfString, PdfObject> dests = destsTree.GetNames();
+                    PdfString srcDestName = dest.IsString() ? (PdfString)dest : new PdfString(((PdfName)dest).GetValue());
                     PdfArray srcDestArray = (PdfArray)dests.Get(srcDestName);
                     if (srcDestArray != null) {
                         PdfObject pageObject = srcDestArray.Get(0);
@@ -766,7 +766,7 @@ namespace iText.Kernel.Pdf {
             return GetPdfObject().GetAsDictionary(PdfName.OCProperties);
         }
 
-        private bool IsEqualSameNameDestExist(IDictionary<PdfPage, PdfPage> page2page, PdfDocument toDocument, String
+        private bool IsEqualSameNameDestExist(IDictionary<PdfPage, PdfPage> page2page, PdfDocument toDocument, PdfString
              srcDestName, PdfArray srcDestArray, PdfPage oldPage) {
             PdfArray sameNameDest = (PdfArray)toDocument.GetCatalog().GetNameTree(PdfName.Dests).GetNames().Get(srcDestName
                 );
@@ -784,7 +784,7 @@ namespace iText.Kernel.Pdf {
             return equalSameNameDestExists;
         }
 
-        private void AddOutlineToPage(PdfOutline outline, IDictionary<String, PdfObject> names) {
+        private void AddOutlineToPage(PdfOutline outline, IPdfNameTreeAccess names) {
             PdfObject pageObj = outline.GetDestination().GetDestinationPage(names);
             if (pageObj is PdfNumber) {
                 int pageNumber = ((PdfNumber)pageObj).IntValue() + 1;
@@ -807,8 +807,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private void AddOutlineToPage(PdfOutline outline, PdfDictionary item, IDictionary<String, PdfObject> names
-            ) {
+        private void AddOutlineToPage(PdfOutline outline, PdfDictionary item, IPdfNameTreeAccess names) {
             PdfObject dest = item.Get(PdfName.Dest);
             if (dest != null) {
                 PdfDestination destination = PdfDestination.MakeDestination(dest);

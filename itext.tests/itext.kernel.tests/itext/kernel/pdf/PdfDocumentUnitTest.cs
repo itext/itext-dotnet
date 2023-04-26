@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -28,13 +28,14 @@ using iText.IO.Font;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Layer;
 using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class PdfDocumentUnitTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfDocumentUnitTest/";
@@ -393,6 +394,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void CannotSetEncryptedPayloadToEncryptedDocTest() {
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.SetStandardEncryption(new byte[] {  }, new byte[] {  }, 1, 1);

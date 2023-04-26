@@ -1,45 +1,24 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections;
@@ -241,8 +220,8 @@ namespace iText.Layout.Renderer {
             if (RenderingMode.HTML_MODE.Equals(mode)) {
                 currentLineAscender = ascenderDescender[0];
                 currentLineDescender = ascenderDescender[1];
-                currentLineHeight = (currentLineAscender - currentLineDescender) * fontSize.GetValue() / TEXT_SPACE_COEFF 
-                    + textRise;
+                currentLineHeight = (currentLineAscender - currentLineDescender) * FontProgram.ConvertTextSpaceToGlyphSpace
+                    (fontSize.GetValue()) + textRise;
             }
             savedWordBreakAtLineEnding = null;
             Glyph wordBreakGlyphAtLineEnding = null;
@@ -332,11 +311,11 @@ namespace iText.Layout.Renderer {
                         tabAnchorCharacterPosition = currentLineWidth + nonBreakablePartFullWidth;
                         tabAnchorCharacter = null;
                     }
-                    float glyphWidth = GetCharWidth(currentGlyph, fontSize.GetValue(), hScale, characterSpacing, wordSpacing) 
-                        / TEXT_SPACE_COEFF;
+                    float glyphWidth = FontProgram.ConvertTextSpaceToGlyphSpace(GetCharWidth(currentGlyph, fontSize.GetValue()
+                        , hScale, characterSpacing, wordSpacing));
                     float xAdvance = previousCharPos != -1 ? text.Get(previousCharPos).GetXAdvance() : 0;
                     if (xAdvance != 0) {
-                        xAdvance = ScaleXAdvance(xAdvance, fontSize.GetValue(), hScale) / TEXT_SPACE_COEFF;
+                        xAdvance = FontProgram.ConvertTextSpaceToGlyphSpace(ScaleXAdvance(xAdvance, fontSize.GetValue(), hScale));
                     }
                     float potentialWidth = nonBreakablePartFullWidth + glyphWidth + xAdvance + italicSkewAddition + boldSimulationAddition;
                     bool symbolNotFitOnLine = potentialWidth > layoutBox.GetWidth() - currentLineWidth + EPS;
@@ -377,8 +356,8 @@ namespace iText.Layout.Renderer {
                     nonBreakablePartFullWidth += glyphWidth + xAdvance;
                     nonBreakablePartMaxAscender = Math.Max(nonBreakablePartMaxAscender, ascender);
                     nonBreakablePartMaxDescender = Math.Min(nonBreakablePartMaxDescender, descender);
-                    nonBreakablePartMaxHeight = (nonBreakablePartMaxAscender - nonBreakablePartMaxDescender) * fontSize.GetValue
-                        () / TEXT_SPACE_COEFF + textRise;
+                    nonBreakablePartMaxHeight = FontProgram.ConvertTextSpaceToGlyphSpace((nonBreakablePartMaxAscender - nonBreakablePartMaxDescender
+                        ) * fontSize.GetValue()) + textRise;
                     previousCharPos = ind;
                     if (!noSoftWrap && symbolNotFitOnLine && (0 == nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.end ||
                          !GlyphBelongsToNonBreakingHyphenRelatedChunk(text, ind + 1))) {
@@ -570,10 +549,10 @@ namespace iText.Layout.Renderer {
                                 // process empty line (e.g. '\n')
                                 currentLineAscender = ascender;
                                 currentLineDescender = descender;
-                                currentLineHeight = (currentLineAscender - currentLineDescender) * fontSize.GetValue() / TEXT_SPACE_COEFF 
-                                    + textRise;
-                                currentLineWidth += GetCharWidth(line.Get(line.start), fontSize.GetValue(), hScale, characterSpacing, wordSpacing
-                                    ) / TEXT_SPACE_COEFF;
+                                currentLineHeight = FontProgram.ConvertTextSpaceToGlyphSpace((currentLineAscender - currentLineDescender) 
+                                    * fontSize.GetValue()) + textRise;
+                                currentLineWidth += FontProgram.ConvertTextSpaceToGlyphSpace(GetCharWidth(line.Get(line.start), fontSize.GetValue
+                                    (), hScale, characterSpacing, wordSpacing));
                             }
                         }
                         if (line.end <= line.start) {
@@ -606,7 +585,7 @@ namespace iText.Layout.Renderer {
                     isPlacingForcedWhileNothing = true;
                 }
             }
-            yLineOffset = currentLineAscender * fontSize.GetValue() / TEXT_SPACE_COEFF;
+            yLineOffset = FontProgram.ConvertTextSpaceToGlyphSpace(currentLineAscender * fontSize.GetValue());
             occupiedArea.GetBBox().MoveDown(currentLineHeight);
             occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + currentLineHeight);
             occupiedArea.GetBBox().SetWidth(Math.Max(occupiedArea.GetBBox().GetWidth(), currentLineWidth));
@@ -885,8 +864,8 @@ namespace iText.Layout.Renderer {
                         // For PdfType0Font we must add word manually with glyph offsets
                         for (int gInd = line.start; gInd < line.end; gInd++) {
                             if (iText.IO.Util.TextUtil.IsUni0020(line.Get(gInd))) {
-                                short advance = (short)(iText.Layout.Renderer.TextRenderer.TEXT_SPACE_COEFF * (float)wordSpacing / fontSize
-                                    .GetValue());
+                                short advance = (short)(FontProgram.ConvertGlyphSpaceToTextSpace((float)wordSpacing) / fontSize.GetValue()
+                                    );
                                 Glyph copy = new Glyph(line.Get(gInd));
                                 copy.SetXAdvance(advance);
                                 line.Set(gInd, copy);
@@ -1015,10 +994,10 @@ namespace iText.Layout.Renderer {
                     break;
                 }
                 SaveWordBreakIfNotYetSaved(currentGlyph);
-                float currentCharWidth = GetCharWidth(currentGlyph, fontSize.GetValue(), hScale, characterSpacing, wordSpacing
-                    ) / TEXT_SPACE_COEFF;
-                float xAdvance = firstNonSpaceCharIndex > line.start ? ScaleXAdvance(line.Get(firstNonSpaceCharIndex - 1).
-                    GetXAdvance(), fontSize.GetValue(), hScale) / TEXT_SPACE_COEFF : 0;
+                float currentCharWidth = FontProgram.ConvertTextSpaceToGlyphSpace(GetCharWidth(currentGlyph, fontSize.GetValue
+                    (), hScale, characterSpacing, wordSpacing));
+                float xAdvance = firstNonSpaceCharIndex > line.start ? FontProgram.ConvertTextSpaceToGlyphSpace(ScaleXAdvance
+                    (line.Get(firstNonSpaceCharIndex - 1).GetXAdvance(), fontSize.GetValue(), hScale)) : 0;
                 trimmedSpace += currentCharWidth - xAdvance;
                 occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() - currentCharWidth);
                 firstNonSpaceCharIndex--;
@@ -1706,10 +1685,10 @@ namespace iText.Layout.Renderer {
             }
             float resultWidth = g.GetWidth() * fontSize * (float)hScale;
             if (characterSpacing != null) {
-                resultWidth += (float)characterSpacing * (float)hScale * TEXT_SPACE_COEFF;
+                resultWidth += FontProgram.ConvertGlyphSpaceToTextSpace((float)characterSpacing * (float)hScale);
             }
             if (wordSpacing != null && g.GetUnicode() == ' ') {
-                resultWidth += (float)wordSpacing * (float)hScale * TEXT_SPACE_COEFF;
+                resultWidth += FontProgram.ConvertGlyphSpaceToTextSpace((float)wordSpacing * (float)hScale);
             }
             return resultWidth;
         }
@@ -1730,7 +1709,7 @@ namespace iText.Layout.Renderer {
                     width += xAdvance;
                 }
             }
-            return width / TEXT_SPACE_COEFF;
+            return FontProgram.ConvertTextSpaceToGlyphSpace(width);
         }
 
         private int[] GetWordBoundsForHyphenation(GlyphLine text, int leftTextPos, int rightTextPos, int wordMiddleCharPos

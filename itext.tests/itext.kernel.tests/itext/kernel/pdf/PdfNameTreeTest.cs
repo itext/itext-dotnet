@@ -1,44 +1,24 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -71,9 +51,9 @@ namespace iText.Kernel.Pdf {
         public virtual void EmbeddedFileAndJavascriptTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "FileWithSingleAttachment.pdf"));
             PdfNameTree embeddedFilesNameTree = pdfDocument.GetCatalog().GetNameTree(PdfName.EmbeddedFiles);
-            IDictionary<String, PdfObject> objs = embeddedFilesNameTree.GetNames();
+            IDictionary<PdfString, PdfObject> objs = embeddedFilesNameTree.GetNames();
             PdfNameTree javascript = pdfDocument.GetCatalog().GetNameTree(PdfName.JavaScript);
-            IDictionary<String, PdfObject> objs2 = javascript.GetNames();
+            IDictionary<PdfString, PdfObject> objs2 = javascript.GetNames();
             pdfDocument.Close();
             NUnit.Framework.Assert.AreEqual(1, objs.Count);
             NUnit.Framework.Assert.AreEqual(1, objs2.Count);
@@ -109,9 +89,9 @@ namespace iText.Kernel.Pdf {
             PdfReader finalReader = new PdfReader(new MemoryStream(boasAppend.ToArray()));
             PdfDocument finalDoc = new PdfDocument(finalReader);
             PdfNameTree embeddedFilesNameTree = finalDoc.GetCatalog().GetNameTree(PdfName.EmbeddedFiles);
-            IDictionary<String, PdfObject> embeddedFilesMap = embeddedFilesNameTree.GetNames();
+            IDictionary<PdfString, PdfObject> embeddedFilesMap = embeddedFilesNameTree.GetNames();
             NUnit.Framework.Assert.IsTrue(embeddedFilesMap.Count > 0);
-            NUnit.Framework.Assert.IsTrue(embeddedFilesMap.ContainsKey("Test File"));
+            NUnit.Framework.Assert.IsTrue(embeddedFilesMap.ContainsKey(new PdfString("Test File")));
         }
 
         [NUnit.Framework.Test]
@@ -133,7 +113,7 @@ namespace iText.Kernel.Pdf {
             dictionary.Put(PdfName.AP, dict);
             pdfDocument.GetCatalog().GetPdfObject().Put(PdfName.Names, dictionary);
             PdfNameTree appearance = pdfDocument.GetCatalog().GetNameTree(PdfName.AP);
-            IDictionary<String, PdfObject> objs = appearance.GetNames();
+            IDictionary<PdfString, PdfObject> objs = appearance.GetNames();
             pdfDocument.Close();
             NUnit.Framework.Assert.AreEqual(1, objs.Count);
         }
@@ -159,8 +139,11 @@ namespace iText.Kernel.Pdf {
             expectedNames.Add("Destination_5");
             System.Console.Out.WriteLine("Expected names: " + expectedNames);
             for (int i = 0; i < 10; i++) {
-                IDictionary<String, PdfObject> names = doc.GetCatalog().GetNameTree(PdfName.Dests).GetNames();
-                IList<String> actualNames = new List<String>(names.Keys);
+                IPdfNameTreeAccess names = doc.GetCatalog().GetNameTree(PdfName.Dests);
+                IList<String> actualNames = new List<String>();
+                foreach (PdfString name in names.GetKeys()) {
+                    actualNames.Add(name.ToUnicodeString());
+                }
                 System.Console.Out.WriteLine("Actual names:   " + actualNames);
                 NUnit.Framework.Assert.AreEqual(expectedNames, actualNames);
             }
@@ -168,15 +151,16 @@ namespace iText.Kernel.Pdf {
         }
 
         private static void TestSetModified(bool isAppendMode) {
-            String[] expectedKeys = new String[] { "new_key1", "new_key2", "new_key3" };
+            PdfString[] expectedKeys = new PdfString[] { new PdfString("new_key1"), new PdfString("new_key2"), new PdfString
+                ("new_key3") };
             MemoryStream sourceFile = CreateDocumentInMemory();
             MemoryStream modifiedFile = new MemoryStream();
             PdfReader reader = new PdfReader(new MemoryStream(sourceFile.ToArray()));
             PdfDocument pdfDoc = isAppendMode ? new PdfDocument(reader, new PdfWriter(modifiedFile), new StampingProperties
                 ().UseAppendMode()) : new PdfDocument(reader, new PdfWriter(modifiedFile));
             PdfNameTree nameTree = pdfDoc.GetCatalog().GetNameTree(PdfName.Dests);
-            IDictionary<String, PdfObject> names = nameTree.GetNames();
-            List<String> keys = new List<String>(names.Keys);
+            IDictionary<PdfString, PdfObject> names = nameTree.GetNames();
+            IList<PdfString> keys = new List<PdfString>(names.Keys);
             for (int i = 0; i < keys.Count; i++) {
                 names.Put(expectedKeys[i], names.Get(keys[i]));
                 names.JRemove(keys[i]);
@@ -186,7 +170,7 @@ namespace iText.Kernel.Pdf {
             reader = new PdfReader(new MemoryStream(modifiedFile.ToArray()));
             pdfDoc = new PdfDocument(reader);
             nameTree = pdfDoc.GetCatalog().GetNameTree(PdfName.Dests);
-            ICollection<String> actualKeys = nameTree.GetNames().Keys;
+            ICollection<PdfString> actualKeys = nameTree.GetNames().Keys;
             NUnit.Framework.Assert.AreEqual(expectedKeys, actualKeys.ToArray());
         }
 

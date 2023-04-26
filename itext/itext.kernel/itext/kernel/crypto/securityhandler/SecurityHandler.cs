@@ -1,55 +1,43 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
+using Microsoft.Extensions.Logging;
+using iText.Bouncycastleconnector;
+using iText.Commons;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     public abstract class SecurityHandler {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Crypto.Securityhandler.SecurityHandler
+            ));
+
         /// <summary>The global encryption key</summary>
         protected internal byte[] mkey = new byte[0];
 
@@ -58,7 +46,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// The encryption key for a particular object/generation.
         /// It is recalculated with
         /// <see cref="SetHashKeyForNextObject(int, int)"/>
-        /// for every object individually based in its object/generation.
+        /// for every object individually based in its
+        /// object/generation.
         /// </remarks>
         protected internal byte[] nextObjectKey;
 
@@ -66,7 +55,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// The encryption key length for a particular object/generation
         /// It is recalculated with
         /// <see cref="SetHashKeyForNextObject(int, int)"/>
-        /// for every object individually based in its object/generation.
+        /// for every object individually based in its
+        /// object/generation.
         /// </summary>
         protected internal int nextObjectKeySize;
 
@@ -108,7 +98,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         private void SafeInitMessageDigest() {
             try {
-                md5 = DigestUtilities.GetDigest("MD5");
+                md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
+                if (FACTORY.IsInApprovedOnlyMode()) {
+                    LOGGER.LogWarning(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT);
+                }
             }
             catch (Exception e) {
                 throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);

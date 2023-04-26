@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -52,6 +52,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void GetFileNamesFromEmptyZipTest() {
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6906 fix different behavior of ZipFileWriter\Reader)
             using (ZipFileReader fileReader = new ZipFileReader(SOURCE_FOLDER + "emptyZip.zip")) {
                 ICollection<String> nameSet = fileReader.GetFileNames();
                 NUnit.Framework.Assert.IsTrue(nameSet.IsEmpty());

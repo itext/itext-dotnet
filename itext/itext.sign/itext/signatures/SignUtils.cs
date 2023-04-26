@@ -1,90 +1,56 @@
 /*
+    This file is part of the iText (R) project.
+    Copyright (c) 1998-2023 Apryse Group NV
+    Authors: Apryse Software.
 
-This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+    This program is offered under a commercial and under the AGPL license.
+    For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+    AGPL licensing:
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
-You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
-*/
-
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Asn1.Tsp;
+using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
+using iText.Commons.Bouncycastle.Tsp;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Security.Certificates;
-using Org.BouncyCastle.Tsp;
-using Org.BouncyCastle.Utilities.Collections;
-using Org.BouncyCastle.X509;
-using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
-using X509Extension = Org.BouncyCastle.Asn1.X509.X509Extension;
 
 namespace iText.Signatures {
     internal sealed class SignUtils {
-        internal static String GetPrivateKeyAlgorithm(ICipherParameters cp) {
-            String algorithm;
-            if (cp is RsaKeyParameters) {
-                algorithm = "RSA";
-            } else if (cp is DsaKeyParameters) {
-                algorithm = "DSA";
-            } else if (cp is ECKeyParameters) {
-                algorithm = ((ECKeyParameters) cp).AlgorithmName;
-                if (algorithm == "EC") {
-                    algorithm = "ECDSA";
-                }
-            } else {
-                throw new PdfException(SignExceptionMessageConstant.UNKNOWN_KEY_ALGORITHM).SetMessageParams(cp.ToString());
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        internal static String GetPrivateKeyAlgorithm(IPrivateKey privateKey) {
+            String algorithm = privateKey.GetAlgorithm();
+            if (algorithm == null) {
+                throw new PdfException(SignExceptionMessageConstant.COULD_NOT_DETERMINE_SIGNATURE_MECHANISM_OID).SetMessageParams(algorithm, privateKey.GetHashCode());
             }
 
             return algorithm;
@@ -95,26 +61,23 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="input">The input Stream holding the unparsed CRL.</param>
         /// <returns>The parsed CRL object.</returns>
-        internal static X509Crl ParseCrlFromStream(Stream input) {
-            return new X509CrlParser().ReadCrl(input);
+        internal static IX509Crl ParseCrlFromStream(Stream input) {
+            return FACTORY.CreateX509Crl(input);
         }
 
-        internal static X509Crl ParseCrlFromUrl(String crlurl) {
-            X509CrlParser crlParser = new X509CrlParser();
+        internal static IX509Crl ParseCrlFromUrl(String crlurl) {
             // Creates the CRL
             Stream url = WebRequest.Create(crlurl).GetResponse().GetResponseStream();
-            return crlParser.ReadCrl(url);
+            return ParseCrlFromStream(url);
         }
 
-        internal static byte[] GetExtensionValueByOid(X509Certificate certificate, String oid) {
-            Asn1OctetString extensionValue = certificate.GetExtensionValue(oid);
-            return extensionValue != null ? extensionValue.GetDerEncoded() : null;
-            
-            
+        internal static byte[] GetExtensionValueByOid(IX509Certificate certificate, String oid) {
+            IAsn1OctetString extensionValue = certificate.GetExtensionValue(oid);
+            return extensionValue.IsNull() ? null : extensionValue.GetDerEncoded();
         }
 
         internal static IDigest GetMessageDigest(String hashAlgorithm) {
-            return DigestUtilities.GetDigest(hashAlgorithm);
+            return FACTORY.CreateIDigest(hashAlgorithm);
         }
 
         internal static Stream GetHttpResponse(Uri urlt) {
@@ -126,8 +89,8 @@ namespace iText.Signatures {
             return response.GetResponseStream();
         }
 
-        internal static CertificateID GenerateCertificateId(X509Certificate issuerCert, BigInteger serialNumber, String hashAlgorithm) {
-            return new CertificateID(hashAlgorithm, issuerCert, serialNumber);
+        internal static ICertID GenerateCertificateId(IX509Certificate issuerCert, IBigInteger serialNumber, String hashAlgorithm) {
+            return FACTORY.CreateCertificateID(hashAlgorithm, issuerCert, serialNumber);
         }
 
         internal static Stream GetHttpResponseForOcspRequest(byte[] request, Uri urlt) {
@@ -147,55 +110,40 @@ namespace iText.Signatures {
             return response.GetResponseStream();
         }
 
-        internal static OcspReq GenerateOcspRequestWithNonce(CertificateID id) {
-            OcspReqGenerator gen = new OcspReqGenerator();
-            gen.AddRequest(id);
-
-            // create details for nonce extension
-            IDictionary extensions = new Hashtable();
-            DerOctetString derOctetString = new DerOctetString(new DerOctetString(PdfEncryption.GenerateNewDocumentId()).GetEncoded());
-            extensions[OcspObjectIdentifiers.PkixOcspNonce] = new X509Extension(false, derOctetString);
-
-            gen.SetRequestExtensions(new X509Extensions(extensions));
-            return gen.Generate();
+        internal static IOcspRequest GenerateOcspRequestWithNonce(ICertID id) {
+            return FACTORY.CreateOCSPReq(id, PdfEncryption.GenerateNewDocumentId());
         }
 
-        internal static bool IsSignatureValid(BasicOcspResp validator, X509Certificate certStoreX509) {
-            return validator.Verify(certStoreX509.GetPublicKey());
+        internal static bool IsSignatureValid(IBasicOcspResponse validator, IX509Certificate certStoreX509) {
+            return validator.Verify(certStoreX509);
         }
 
-        internal static void IsSignatureValid(TimeStampToken validator, X509Certificate certStoreX509) {
+        internal static void IsSignatureValid(ITimeStampToken validator, IX509Certificate certStoreX509) {
             validator.Validate(certStoreX509);
         }
 
-        internal static bool CheckIfIssuersMatch(CertificateID certID, X509Certificate issuerCert) {
-            return certID.MatchesIssuer(issuerCert);
+        internal static bool CheckIfIssuersMatch(ICertID certificateID, IX509Certificate issuerCert) {
+            return certificateID.MatchesIssuer(issuerCert);
         }
 
         internal static DateTime Add180Sec(DateTime date) {
             return date.AddSeconds(180);
         }
 
-        internal static IEnumerable<X509Certificate> GetCertsFromOcspResponse(BasicOcspResp ocspResp) {
+        internal static IEnumerable<IX509Certificate> GetCertsFromOcspResponse(IBasicOcspResponse ocspResp) {
             return ocspResp.GetCerts();
         }
 
-        internal static List<X509Certificate> ReadAllCerts(byte[] contentsKey) {
-            X509CertificateParser cf = new X509CertificateParser();
-            List<X509Certificate> certs = new List<X509Certificate>();
-
-            foreach (X509Certificate cc in cf.ReadCertificates(contentsKey)) {
-                certs.Add(cc);
-            }
-            return certs;
+        internal static List<IX509Certificate> ReadAllCerts(byte[] contentsKey) {
+            return FACTORY.CreateX509CertificateParser().ReadAllCerts(contentsKey);
         }
 
         internal static T GetFirstElement<T>(IEnumerable<T> enumerable) {
             return enumerable.First();
         }
 
-        internal static X509Name GetIssuerX509Name(Asn1Sequence issuerAndSerialNumber) {
-            return X509Name.GetInstance(issuerAndSerialNumber[0]);
+        internal static IX500Name GetIssuerX500Principal(IAsn1Sequence issuerAndSerialNumber) {
+            return FACTORY.CreateX500NameInstance(issuerAndSerialNumber.GetObjectAt(0));
         }
 
         internal static String DateToString(DateTime signDate) {
@@ -244,14 +192,14 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="cert"></param>
         /// <returns></returns>
-        /// TODO DEVSIX-2534
+        /// TODO DEVSIX-2634
         [Obsolete]
-        internal static bool HasUnsupportedCriticalExtension(X509Certificate cert) {
+        internal static bool HasUnsupportedCriticalExtension(IX509Certificate cert) {
             if ( cert == null ) {
                 throw new ArgumentException("X509Certificate can't be null.");
             }
 
-            ISet criticalExtensionsSet = cert.GetCriticalExtensionOids();
+            ISet<string> criticalExtensionsSet = cert.GetCriticalExtensionOids();
             if (criticalExtensionsSet != null) {
                 foreach (String oid in criticalExtensionsSet) {
                     if (OID.X509Extensions.SUPPORTED_CRITICAL_EXTENSIONS.Contains(oid)) {
@@ -264,19 +212,17 @@ namespace iText.Signatures {
             return false;
         }
 
-        internal static IEnumerable CreateSigPolicyQualifiers(params SigPolicyQualifierInfo[] sigPolicyQualifierInfo) {
-            return sigPolicyQualifierInfo;
-        }
-
-        internal static DateTime GetTimeStampDate(TimeStampToken timeStampToken) {
-            return timeStampToken.TimeStampInfo.GenTime;
+        internal static DateTime GetTimeStampDate(ITstInfo timeStampTokenInfo) {
+            return timeStampTokenInfo.GetGenTime();
         }
 
         internal static ISigner GetSignatureHelper(String algorithm) {
-            return SignerUtilities.GetSigner(algorithm);
+            ISigner signer = FACTORY.CreateISigner();
+            signer.SetDigestAlgorithm(algorithm);
+            return signer;
         }
 
-        internal static bool VerifyCertificateSignature(X509Certificate certificate, AsymmetricKeyParameter issuerPublicKey) {
+        internal static bool VerifyCertificateSignature(IX509Certificate certificate, IPublicKey issuerPublicKey) {
             bool res = false;
             try {
                 certificate.Verify(issuerPublicKey);
@@ -286,8 +232,24 @@ namespace iText.Signatures {
             return res;
         }
 
-        internal static IEnumerable<X509Certificate> GetCertificates(List<X509Certificate> rootStore) {
+        internal static IEnumerable<IX509Certificate> GetCertificates(List<IX509Certificate> rootStore) {
             return rootStore;
+        }
+
+        internal static void SetRSASSAPSSParamsWithMGF1(ISigner signature, String digestAlgoName, int saltLen, int trailerField)
+        {
+         //     var mgf1Spec = new MgfParameters() MGF1ParameterSpec(digestAlgoName);
+         //    PSSParameterSpec spec = new Pss  PSSParameterSpec(digestAlgoName, "MGF1", mgf1Spec, saltLen, trailerField);
+         // signature.  setParameter(spec);
+         }
+        
+        internal static void UpdateVerifier(ISigner sig, byte[] digest) {
+            sig.UpdateVerifier(digest);
+        }
+
+        public static ICertID GenerateCertificateId(IX509Certificate issuerCert, IBigInteger serialNumber, 
+            IDerObjectIdentifier hashAlgOid) {
+            return GenerateCertificateId(issuerCert, serialNumber, hashAlgOid.GetId());
         }
     }
 }

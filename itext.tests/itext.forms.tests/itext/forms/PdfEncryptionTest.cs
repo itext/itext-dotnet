@@ -1,54 +1,36 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Forms.Fields;
 using iText.Kernel.Geom;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Forms {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfEncryptionTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfEncryptionTest/";
@@ -73,6 +55,7 @@ namespace iText.Forms {
         internal const String customInfoEntryValue = "String";
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptedDocumentWithFormFields() {
             PdfReader reader = new PdfReader(sourceFolder + "encryptedDocumentWithFormFields.pdf", new ReaderProperties
                 ().SetPassword("12345".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1)));
@@ -83,6 +66,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256Pdf2PermissionsTest01() {
             String filename = "encryptAes256Pdf2PermissionsTest01.pdf";
             int permissions = EncryptionConstants.ALLOW_FILL_IN | EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants
@@ -92,15 +76,22 @@ namespace iText.Forms {
                 )));
             pdfDoc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfTextFormField textField1 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 600, 200, 30), "Name", "Enter your name"
-                );
+            PdfTextFormField textField1 = new TextFormFieldBuilder(pdfDoc, "Name").SetWidgetRectangle(new Rectangle(100
+                , 600, 200, 30)).CreateText();
+            textField1.SetValue("Enter your name");
             form.AddField(textField1);
-            PdfTextFormField textField2 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 550, 200, 30), "Surname", 
-                "Enter your surname");
+            PdfTextFormField textField2 = new TextFormFieldBuilder(pdfDoc, "Surname").SetWidgetRectangle(new Rectangle
+                (100, 550, 200, 30)).CreateText();
+            textField2.SetValue("Enter your surname");
             form.AddField(textField2);
-            PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdfDoc, "Sex", "Male");
-            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(100, 530, 10, 10), group, "Male");
-            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(120, 530, 10, 10), group, "Female");
+            String sexFormFieldName = "Sex";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, sexFormFieldName);
+            PdfButtonFormField group = builder.CreateRadioGroup();
+            group.SetValue("Male");
+            PdfFormAnnotation radio1 = builder.CreateRadioButton("Male", new Rectangle(100, 530, 10, 10));
+            PdfFormAnnotation radio2 = builder.CreateRadioButton("Female", new Rectangle(120, 530, 10, 10));
+            group.AddKid(radio1);
+            group.AddKid(radio2);
             form.AddField(group);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
@@ -112,6 +103,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256Pdf2PermissionsTest02() {
             String filename = "encryptAes256Pdf2PermissionsTest02.pdf";
             // This test differs from the previous one (encryptAes256Pdf2PermissionsTest01) only in permissions.
@@ -122,15 +114,24 @@ namespace iText.Forms {
                 )));
             pdfDoc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfTextFormField textField1 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 600, 200, 30), "Name", "Enter your name"
-                );
+            PdfTextFormField textField1 = new TextFormFieldBuilder(pdfDoc, "Name").SetWidgetRectangle(new Rectangle(100
+                , 600, 200, 30)).CreateText();
+            textField1.SetValue("Enter your name");
             form.AddField(textField1);
-            PdfTextFormField textField2 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 550, 200, 30), "Surname", 
-                "Enter your surname");
+            PdfTextFormField textField2 = new TextFormFieldBuilder(pdfDoc, "Surname").SetWidgetRectangle(new Rectangle
+                (100, 550, 200, 30)).CreateText();
+            textField2.SetValue("Enter your surname");
             form.AddField(textField2);
-            PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdfDoc, "Sex", "Male");
-            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(100, 530, 10, 10), group, "Male");
-            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(120, 530, 10, 10), group, "Female");
+            String sexFormFieldName = "Sex";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, sexFormFieldName);
+            PdfButtonFormField group = builder.CreateRadioGroup();
+            group.SetValue("Male");
+            PdfFormAnnotation radio1 = new RadioFormFieldBuilder(pdfDoc, sexFormFieldName).CreateRadioButton("Male", new 
+                Rectangle(100, 530, 10, 10));
+            PdfFormAnnotation radio2 = new RadioFormFieldBuilder(pdfDoc, sexFormFieldName).CreateRadioButton("Female", 
+                new Rectangle(120, 530, 10, 10));
+            group.AddKid(radio1);
+            group.AddKid(radio2);
             form.AddField(group);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();

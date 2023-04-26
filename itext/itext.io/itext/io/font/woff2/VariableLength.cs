@@ -54,11 +54,11 @@ namespace iText.IO.Font.Woff2 {
                 code = buf.ReadByte();
                 // Leading zeros are invalid.
                 if (i == 0 && JavaUnsignedUtil.AsU8(code) == 0x80) {
-                    throw new FontCompressionException(FontCompressionException.READ_BASE_128_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.READ_BASE_128_FAILED);
                 }
                 // If any of the top seven bits are set then we're about to overflow.
                 if ((result & unchecked((int)(0xfe000000))) != 0) {
-                    throw new FontCompressionException(FontCompressionException.READ_BASE_128_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.READ_BASE_128_FAILED);
                 }
                 result = (result << 7) | (code & 0x7f);
                 if ((code & 0x80) == 0) {
@@ -66,7 +66,7 @@ namespace iText.IO.Font.Woff2 {
                 }
             }
             // Make sure not to exceed the size bound
-            throw new FontCompressionException(FontCompressionException.READ_BASE_128_FAILED);
+            throw new FontCompressionException(IoExceptionMessageConstant.READ_BASE_128_FAILED);
         }
     }
 }

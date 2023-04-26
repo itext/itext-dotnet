@@ -1,53 +1,31 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Asn1.Esf;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Asn1.Esf;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -317,12 +295,9 @@ namespace iText.Signatures {
         /// <param name="fieldName">The name indicating the field to be signed.</param>
         public virtual void SetFieldName(String fieldName) {
             if (fieldName != null) {
-                if (fieldName.IndexOf('.') >= 0) {
-                    throw new ArgumentException(SignExceptionMessageConstant.FIELD_NAMES_CANNOT_CONTAIN_A_DOT);
-                }
                 PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
-                if (acroForm.GetField(fieldName) != null) {
-                    PdfFormField field = acroForm.GetField(fieldName);
+                PdfFormField field = acroForm.GetField(fieldName);
+                if (field != null) {
                     if (!PdfName.Sig.Equals(field.GetFormType())) {
                         throw new ArgumentException(SignExceptionMessageConstant.FIELD_TYPE_IS_NOT_A_SIGNATURE_FIELD_TYPE);
                     }
@@ -335,6 +310,13 @@ namespace iText.Signatures {
                         PdfWidgetAnnotation widget = widgets[0];
                         appearance.SetPageRect(GetWidgetRectangle(widget));
                         appearance.SetPageNumber(GetWidgetPageNumber(widget));
+                    }
+                }
+                else {
+                    // Do not allow dots for new fields
+                    // For existing fields dots are allowed because there it might be fully qualified name
+                    if (fieldName.IndexOf('.') >= 0) {
+                        throw new ArgumentException(SignExceptionMessageConstant.FIELD_NAMES_CANNOT_CONTAIN_A_DOT);
                     }
                 }
                 this.fieldName = fieldName;
@@ -394,10 +376,10 @@ namespace iText.Signatures {
         /// <param name="tsaClient">the Timestamp client</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
-        public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate[] chain, ICollection
+        public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
              sigtype) {
-            SignDetached(externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype, (SignaturePolicyIdentifier
+            SignDetached(externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype, (ISignaturePolicyIdentifier
                 )null);
         }
 
@@ -416,7 +398,7 @@ namespace iText.Signatures {
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <param name="signaturePolicy">the signature policy (for EPES signatures)</param>
-        public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate[] chain, ICollection
+        public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
              sigtype, SignaturePolicyInfo signaturePolicy) {
             SignDetached(externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype, signaturePolicy
@@ -438,9 +420,9 @@ namespace iText.Signatures {
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <param name="signaturePolicy">the signature policy (for EPES signatures)</param>
-        public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate[] chain, ICollection
+        public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
-             sigtype, SignaturePolicyIdentifier signaturePolicy) {
+             sigtype, ISignaturePolicyIdentifier signaturePolicy) {
             if (closed) {
                 throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
@@ -474,7 +456,16 @@ namespace iText.Signatures {
             if (sigtype == PdfSigner.CryptoStandard.CADES && !IsDocumentPdf2()) {
                 AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
             }
-            String hashAlgorithm = externalSignature.GetHashAlgorithm();
+            if (externalSignature.GetSignatureAlgorithmName().StartsWith("Ed")) {
+                AddDeveloperExtension(PdfDeveloperExtension.ISO_32002);
+            }
+            // Note: at this level of abstraction, we have no easy way of determining whether we are signing using a
+            // specific ECDSA curve, so we can't auto-declare the extension safely, since we don't know whether
+            // the curve is on the ISO/TS 32002 allowed curves list. That responsibility is delegated to the user.
+            String hashAlgorithm = externalSignature.GetDigestAlgorithmName();
+            if (hashAlgorithm.StartsWith("SHA3-") || hashAlgorithm.Equals(DigestAlgorithms.SHAKE256)) {
+                AddDeveloperExtension(PdfDeveloperExtension.ISO_32001);
+            }
             PdfSignature dic = new PdfSignature(PdfName.Adobe_PPKLite, sigtype == PdfSigner.CryptoStandard.CADES ? PdfName
                 .ETSI_CAdES_DETACHED : PdfName.Adbe_pkcs7_detached);
             dic.SetReason(appearance.GetReason());
@@ -487,7 +478,7 @@ namespace iText.Signatures {
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
             exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
             PreClose(exc);
-            PdfPKCS7 sgn = new PdfPKCS7((ICipherParameters)null, chain, hashAlgorithm, false);
+            PdfPKCS7 sgn = new PdfPKCS7((IPrivateKey)null, chain, hashAlgorithm, false);
             if (signaturePolicy != null) {
                 sgn.SetSignaturePolicy(signaturePolicy);
             }
@@ -496,7 +487,7 @@ namespace iText.Signatures {
             IList<byte[]> ocspList = new List<byte[]>();
             if (chain.Length > 1 && ocspClient != null) {
                 for (int j = 0; j < chain.Length - 1; ++j) {
-                    byte[] ocsp = ocspClient.GetEncoded((X509Certificate)chain[j], (X509Certificate)chain[j + 1], null);
+                    byte[] ocsp = ocspClient.GetEncoded((IX509Certificate)chain[j], (IX509Certificate)chain[j + 1], null);
                     if (ocsp != null) {
                         ocspList.Add(ocsp);
                     }
@@ -504,7 +495,8 @@ namespace iText.Signatures {
             }
             byte[] sh = sgn.GetAuthenticatedAttributeBytes(hash, sigtype, ocspList, crlBytes);
             byte[] extSignature = externalSignature.Sign(sh);
-            sgn.SetExternalDigest(extSignature, null, externalSignature.GetEncryptionAlgorithm());
+            sgn.SetExternalSignatureValue(extSignature, null, externalSignature.GetSignatureAlgorithmName(), externalSignature
+                .GetSignatureMechanismParameters());
             byte[] encodedSig = sgn.GetEncodedPKCS7(hash, sigtype, tsaClient, ocspList, crlBytes);
             if (estimatedSize < encodedSig.Length) {
                 throw new System.IO.IOException("Not enough space");
@@ -598,7 +590,8 @@ namespace iText.Signatures {
                 tsToken = tsa.GetTimeStampToken(tsImprint);
             }
             catch (Exception e) {
-                throw new GeneralSecurityException(e.Message, e);
+                throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
+                    .Message, e);
             }
             if (contentEstimated + 2 < tsToken.Length) {
                 throw new System.IO.IOException("Not enough space");
@@ -666,7 +659,7 @@ namespace iText.Signatures {
         ///     </param>
         /// <param name="crlList">a list of CrlClient implementations</param>
         /// <returns>a collection of CRL bytes that can be embedded in a PDF</returns>
-        protected internal virtual ICollection<byte[]> ProcessCrl(X509Certificate cert, ICollection<ICrlClient> crlList
+        protected internal virtual ICollection<byte[]> ProcessCrl(IX509Certificate cert, ICollection<ICrlClient> crlList
             ) {
             if (crlList == null) {
                 return null;
@@ -676,7 +669,7 @@ namespace iText.Signatures {
                 if (cc == null) {
                     continue;
                 }
-                ICollection<byte[]> b = cc.GetEncoded((X509Certificate)cert, null);
+                ICollection<byte[]> b = cc.GetEncoded((IX509Certificate)cert, null);
                 if (b == null) {
                     continue;
                 }
@@ -875,8 +868,7 @@ namespace iText.Signatures {
         protected internal virtual PdfSigFieldLock CreateNewSignatureFormField(PdfAcroForm acroForm, String name) {
             PdfWidgetAnnotation widget = new PdfWidgetAnnotation(appearance.GetPageRect());
             widget.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.LOCKED);
-            PdfSignatureFormField sigField = PdfFormField.CreateSignature(document);
-            sigField.SetFieldName(name);
+            PdfSignatureFormField sigField = new SignatureFormFieldBuilder(document, name).CreateSignature();
             sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
             sigField.AddKid(widget);
             PdfSigFieldLock sigFieldLock = sigField.GetSigFieldLockDictionary();
@@ -1077,7 +1069,7 @@ namespace iText.Signatures {
             }
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, false);
             if (acroForm != null) {
-                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
+                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
                     PdfDictionary fieldDict = entry.Value.GetPdfObject();
                     if (!PdfName.Sig.Equals(fieldDict.Get(PdfName.FT))) {
                         continue;

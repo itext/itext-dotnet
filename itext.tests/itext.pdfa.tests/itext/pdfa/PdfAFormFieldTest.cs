@@ -1,50 +1,31 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.Forms.Fields.Properties;
 using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
@@ -64,6 +45,7 @@ using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAFormFieldTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -78,7 +60,9 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-6319")]
         public virtual void PdfAButtonFieldTest() {
+            // TODO DEVSIX-6319 Radio buttons shall be widgets instead of form fields
             PdfDocument pdf;
             Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 );
@@ -91,7 +75,9 @@ namespace iText.Pdfa {
             PdfFontFactory.Register(SOURCE_FOLDER + "FreeSans.ttf", SOURCE_FOLDER + "FreeSans.ttf");
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
                 PREFER_EMBEDDED);
-            PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdf, "group", "", PdfAConformanceLevel.PDF_A_1B);
+            PdfButtonFormField group = new RadioFormFieldBuilder(pdf, "group").SetConformanceLevel(PdfAConformanceLevel
+                .PDF_A_1B).CreateRadioGroup();
+            group.SetValue("");
             group.SetReadOnly(true);
             Paragraph p = new Paragraph();
             Text t = new Text("supported");
@@ -137,19 +123,20 @@ namespace iText.Pdfa {
                 Rectangle bbox = GetInnerAreaBBox();
                 PdfDocument pdf = context.GetDocument();
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdf, true);
-                PdfFormField chk = PdfFormField.CreateRadioButton(pdf, bbox, _group, _value, PdfAConformanceLevel.PDF_A_1B
-                    );
+                PdfFormAnnotation chk = new RadioFormFieldBuilder(pdf, "").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B
+                    ).CreateRadioButton(_value, bbox);
+                _group.AddKid(chk);
                 chk.SetPage(pageNumber);
-                chk.SetVisibility(PdfFormField.VISIBLE);
+                chk.SetVisibility(PdfFormAnnotation.VISIBLE);
                 chk.SetBorderColor(ColorConstants.BLACK);
                 chk.SetBackgroundColor(ColorConstants.WHITE);
-                chk.SetReadOnly(true);
+                _group.SetReadOnly(true);
                 PdfFormXObject appearance = new PdfFormXObject(bbox);
                 PdfCanvas canvas = new PdfCanvas(appearance, pdf);
                 canvas.SaveState().MoveTo(bbox.GetLeft(), bbox.GetBottom()).LineTo(bbox.GetRight(), bbox.GetBottom()).LineTo
                     (bbox.GetRight(), bbox.GetTop()).LineTo(bbox.GetLeft(), bbox.GetTop()).LineTo(bbox.GetLeft(), bbox.GetBottom
                     ()).SetLineWidth(1f).Stroke().RestoreState();
-                form.AddFieldAppearanceToPage(chk, pdf.GetPage(pageNumber));
+                //form.addFieldAppearanceToPage(chk, pdf.getPage(pageNumber));
                 //appearance stream was set, while AS has kept as is, i.e. in Off state.
                 chk.SetAppearance(PdfName.N, "v1".Equals(_value) ? _value : "Off", appearance.GetPdfObject());
             }
@@ -161,6 +148,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1ButtonFieldTest() {
+            // TODO: DEVSIX-3913 update this test after the ticket will be resolved
             String name = "pdfA1DocWithPdfA1ButtonField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ButtonField.pdf";
@@ -170,13 +158,15 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfFormField emptyField = PdfFormField.CreateEmptyField(pdfDoc, conformanceLevel).SetFieldName("empty");
-            emptyField.AddKid(PdfFormField.CreateButton(pdfDoc, new Rectangle(36, 756, 20, 20), PdfAnnotation.PRINT, conformanceLevel
-                ).SetFieldName("button").SetValue("hello"));
+            PdfFormField emptyField = new NonTerminalFormFieldBuilder(pdfDoc, "empty").SetConformanceLevel(conformanceLevel
+                ).CreateNonTerminalFormField();
+            emptyField.AddKid(new PushButtonFormFieldBuilder(pdfDoc, "button").SetWidgetRectangle(new Rectangle(36, 756
+                , 20, 20)).SetConformanceLevel(conformanceLevel).CreatePushButton().SetFieldFlags(PdfAnnotation.PRINT)
+                .SetFieldName("button").SetValue("hello"));
             form.AddField(emptyField);
-            pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Helvetica"), exception.Message);
         }
 
         [NUnit.Framework.Test]
@@ -190,16 +180,19 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            form.AddField(PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(36, 726, 20, 20), "checkBox", "1", PdfFormField
-                .TYPE_STAR, conformanceLevel));
+            form.AddField(new CheckBoxFormFieldBuilder(pdfDoc, "checkBox").SetWidgetRectangle(new Rectangle(36, 726, 20
+                , 20)).SetCheckType(CheckBoxType.STAR).SetConformanceLevel(conformanceLevel).CreateCheckBox().SetValue
+                ("1"));
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY)]
         public virtual void PdfA1DocWithPdfA1ChoiceFieldTest() {
+            // TODO: DEVSIX-3913 update this test after the ticket will be resolved
             String name = "pdfA1DocWithPdfA1ChoiceField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ChoiceField.pdf";
@@ -214,15 +207,19 @@ namespace iText.Pdfa {
             PdfArray options = new PdfArray();
             options.Add(new PdfString("Name"));
             options.Add(new PdfString("Surname"));
-            form.AddField(PdfFormField.CreateChoice(pdfDoc, new Rectangle(36, 696, 100, 70), "choice", "1", options, 0
-                , fontFreeSans, conformanceLevel));
-            pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+            PdfFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, "choice").SetWidgetRectangle(new Rectangle
+                (36, 696, 100, 70)).SetOptions(options).SetConformanceLevel(conformanceLevel).CreateList().SetValue("1"
+                , true);
+            choiceFormField.SetFont(fontFreeSans);
+            form.AddField(choiceFormField);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Helvetica"), exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1ComboBoxFieldTest() {
+            // TODO: DEVSIX-3913 update this test after the ticket will be resolved
             String name = "pdfA1DocWithPdfA1ComboBoxField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ComboBoxField.pdf";
@@ -234,16 +231,20 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            form.AddField(PdfFormField.CreateComboBox(pdfDoc, new Rectangle(156, 616, 70, 70), "combo", "用", new String
-                [] { "用", "规", "表" }, fontCJK, conformanceLevel));
-            pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+            PdfFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, "combo").SetWidgetRectangle(new Rectangle
+                (156, 616, 70, 70)).SetOptions(new String[] { "用", "规", "表" }).SetConformanceLevel(conformanceLevel).CreateComboBox
+                ().SetValue("用");
+            choiceFormField.SetFont(fontCJK);
+            form.AddField(choiceFormField);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Helvetica"), exception.Message);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD)]
         public virtual void PdfA1DocWithPdfA1ListFieldTest() {
+            // TODO: DEVSIX-3913 update this test after the ticket will be resolved
             String name = "pdfA1DocWithPdfA1ListField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ListField.pdf";
@@ -255,19 +256,22 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfChoiceFormField f = PdfFormField.CreateList(pdfDoc, new Rectangle(86, 556, 50, 200), "list", "9", new String
-                [] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" }, fontFreeSans, conformanceLevel);
+            PdfChoiceFormField f = new ChoiceFormFieldBuilder(pdfDoc, "list").SetWidgetRectangle(new Rectangle(86, 556
+                , 50, 200)).SetOptions(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" }).SetConformanceLevel
+                (conformanceLevel).CreateList();
+            f.SetValue("9").SetFont(fontFreeSans);
             f.SetValue("4");
             f.SetTopIndex(2);
             f.SetListSelected(new String[] { "3", "5" });
             form.AddField(f);
-            pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Helvetica"), exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1PushButtonFieldTest() {
+            // TODO: DEVSIX-3913 update this test after the ticket will be resolved
             String name = "pdfA1DocWithPdfA1PushButtonField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1PushButtonField.pdf";
@@ -279,11 +283,14 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            form.AddField(PdfFormField.CreatePushButton(pdfDoc, new Rectangle(36, 526, 100, 20), "push button", "Push"
-                , fontFreeSans, 12, conformanceLevel));
-            pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+            PdfFormField pushButtonFormField = new PushButtonFormFieldBuilder(pdfDoc, "push button").SetWidgetRectangle
+                (new Rectangle(36, 526, 100, 20)).SetCaption("Push").SetConformanceLevel(conformanceLevel).CreatePushButton
+                ();
+            pushButtonFormField.SetFont(fontFreeSans).SetFontSize(12);
+            form.AddField(pushButtonFormField);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Helvetica"), exception.Message);
         }
 
         [NUnit.Framework.Test]
@@ -297,19 +304,27 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfButtonFormField radioGroup = PdfFormField.CreateRadioGroup(pdfDoc, "radio group", "", conformanceLevel);
-            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(36, 496, 20, 20), radioGroup, "1", conformanceLevel).
-                SetBorderWidth(2).SetBorderColor(ColorConstants.ORANGE);
-            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(66, 496, 20, 20), radioGroup, "2", conformanceLevel).
-                SetBorderWidth(2).SetBorderColor(ColorConstants.ORANGE);
+            String pdfFormFieldName = "radio group";
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, pdfFormFieldName).SetConformanceLevel(conformanceLevel
+                );
+            PdfButtonFormField radioGroup = builder.SetConformanceLevel(conformanceLevel).CreateRadioGroup();
+            radioGroup.SetValue("");
+            PdfFormAnnotation radio1 = builder.CreateRadioButton("1", new Rectangle(36, 496, 20, 20)).SetBorderWidth(2
+                ).SetBorderColor(ColorConstants.ORANGE);
+            PdfFormAnnotation radio2 = builder.CreateRadioButton("2", new Rectangle(66, 496, 20, 20)).SetBorderWidth(2
+                ).SetBorderColor(ColorConstants.ORANGE);
+            radioGroup.AddKid(radio1);
+            radioGroup.AddKid(radio2);
             form.AddField(radioGroup);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1TextFieldTest() {
+            // TODO: DEVSIX-3913 update this test after the ticket will be resolved
             String name = "pdfA1DocWithPdfA1TextField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1TextField.pdf";
@@ -322,11 +337,14 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            form.AddField(PdfFormField.CreateText(pdfDoc, new Rectangle(36, 466, 90, 20), "text", "textField", fontFreeSans
-                , 12, false, conformanceLevel).SetValue("iText"));
-            pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+            PdfFormField textFormField = new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(36, 
+                466, 90, 20)).SetConformanceLevel(conformanceLevel).CreateText().SetValue("textField").SetValue("iText"
+                );
+            textFormField.SetFont(fontFreeSans).SetFontSize(12);
+            form.AddField(textFormField);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Helvetica"), exception.Message);
         }
 
         [NUnit.Framework.Test]
@@ -343,16 +361,19 @@ namespace iText.Pdfa {
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            form.AddField(PdfFormField.CreateSignature(pdfDoc, conformanceLevel).SetFieldName("signature").SetFont(fontFreeSans
-                ).SetFontSize(20));
+            PdfFormField signFormField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetConformanceLevel(conformanceLevel
+                ).CreateSignature();
+            signFormField.SetFont(fontFreeSans).SetFontSize(20);
+            form.AddField(signFormField);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, DESTINATION_FOLDER));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-3913 update this test after the ticket will be resolved")]
         public virtual void MergePdfADocWithFormTest() {
-            // TODO: DEVSIX-3913 update this test after the ticket will be resolved
             String fileName = DESTINATION_FOLDER + "pdfADocWithTextFormField.pdf";
             String mergedDocFileName = DESTINATION_FOLDER + "mergedPdfADoc.pdf";
             using (Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
@@ -363,12 +384,17 @@ namespace iText.Pdfa {
                         PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfEncodings.WINANSI);
                         doc.Add(new Paragraph(new Text("Some text").SetFont(font).SetFontSize(10)));
                         PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-                        form.AddField(PdfFormField.CreateText(pdfDoc, new Rectangle(150, 100, 100, 20), "text", "textField", font, 
-                            10, false, PdfAConformanceLevel.PDF_A_1B).SetFieldName("text").SetPage(1), pdfDoc.GetPage(1));
+                        PdfFormField field = new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(150, 100, 100
+                            , 20)).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateText().SetValue("textField").SetFieldName
+                            ("text");
+                        field.SetFont(font).SetFontSize(10);
+                        field.GetFirstFormAnnotation().SetPage(1);
+                        form.AddField(field, pdfDoc.GetPage(1));
                     }
                 }
             }
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             PdfADocument pdfDocToMerge;
             using (Stream is_1 = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 )) {

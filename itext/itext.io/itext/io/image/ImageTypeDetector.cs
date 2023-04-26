@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.IO.Exceptions;
 using iText.IO.Util;
 
 namespace iText.IO.Image {
@@ -151,7 +152,7 @@ namespace iText.IO.Image {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
             }
         }
 
@@ -162,7 +163,7 @@ namespace iText.IO.Image {
                 return bytes;
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IoException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
             }
         }
 

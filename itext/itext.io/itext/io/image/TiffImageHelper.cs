@@ -1,50 +1,30 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
 using iText.IO.Codec;
 using iText.IO.Colors;
+using iText.IO.Exceptions;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -85,7 +65,7 @@ namespace iText.IO.Image {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TiffImageException, e);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TIFF_IMAGE_EXCEPTION, e);
             }
         }
 
@@ -94,12 +74,12 @@ namespace iText.IO.Image {
             int page = tiff.image.GetPage();
             bool direct = tiff.image.IsDirect();
             if (page < 1) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PageNumberMustBeGtEq1);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PAGE_NUMBER_MUST_BE_GT_EQ_1);
             }
             try {
                 TIFFDirectory dir = new TIFFDirectory(s, page - 1);
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_TILEWIDTH)) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TilesAreNotSupported);
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TILES_ARE_NOT_SUPPORTED);
                 }
                 int compression = TIFFConstants.COMPRESSION_NONE;
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_COMPRESSION)) {
@@ -315,7 +295,7 @@ namespace iText.IO.Image {
                 }
             }
             catch (Exception) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotReadTiffImage);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.CANNOT_READ_TIFF_IMAGE);
             }
         }
 
@@ -340,7 +320,7 @@ namespace iText.IO.Image {
                     }
 
                     default: {
-                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Compression1IsNotSupported).SetMessageParams
+                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.COMPRESSION_IS_NOT_SUPPORTED).SetMessageParams
                             (compression);
                     }
                 }
@@ -356,7 +336,7 @@ namespace iText.IO.Image {
 
                     default: {
                         if (compression != TIFFConstants.COMPRESSION_OJPEG && compression != TIFFConstants.COMPRESSION_JPEG) {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.Photometric1IsNotSupported).SetMessageParams
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PHOTOMETRIC_IS_NOT_SUPPORTED).SetMessageParams
                                 (photometric);
                         }
                         break;
@@ -381,7 +361,7 @@ namespace iText.IO.Image {
                 }
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_PLANARCONFIG) && dir.GetFieldAsLong(TIFFConstants.TIFFTAG_PLANARCONFIG
                     ) == TIFFConstants.PLANARCONFIG_SEPARATE) {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.PlanarImagesAreNotSupported);
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PLANAR_IMAGES_ARE_NOT_SUPPORTED);
                 }
                 int extraSamples = 0;
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_EXTRASAMPLES)) {
@@ -405,7 +385,7 @@ namespace iText.IO.Image {
                     }
 
                     default: {
-                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.BitsPerSample1IsNotSupported).SetMessageParams
+                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.BITS_PER_SAMPLE_0_IS_NOT_SUPPORTED).SetMessageParams
                             (bitsPerSample);
                     }
                 }
@@ -446,11 +426,11 @@ namespace iText.IO.Image {
                     if (predictorField != null) {
                         predictor = predictorField.GetAsInt(0);
                         if (predictor != 1 && predictor != 2) {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.IllegalValueForPredictorInTiffFile
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.ILLEGAL_VALUE_FOR_PREDICTOR_IN_TIFF_FILE
                                 );
                         }
                         if (predictor == 2 && bitsPerSample != 8) {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException._1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.BIT_SAMPLES_ARE_NOT_SUPPORTED_FOR_HORIZONTAL_DIFFERENCING_PREDICTOR
                                 ).SetMessageParams(bitsPerSample);
                         }
                     }
@@ -481,7 +461,7 @@ namespace iText.IO.Image {
                     // Assume that the TIFFTAG_JPEGIFBYTECOUNT tag is optional, since it's obsolete and
                     // is often missing
                     if ((!dir.IsTagPresent(TIFFConstants.TIFFTAG_JPEGIFOFFSET))) {
-                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.MissingTagsForOjpegCompression);
+                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.MISSING_TAGS_FOR_OJPEG_COMPRESSION);
                     }
                     int jpegOffset = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_JPEGIFOFFSET);
                     int jpegLength = (int)s.Length() - jpegOffset;
@@ -501,7 +481,7 @@ namespace iText.IO.Image {
                 else {
                     if (compression == TIFFConstants.COMPRESSION_JPEG) {
                         if (size.Length > 1) {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CompressionJpegIsOnlySupportedWithASingleStripThisImageHas1Strips
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.COMPRESSION_JPEG_IS_ONLY_SUPPORTED_WITH_A_SINGLE_STRIP_THIS_IMAGE_HAS_STRIPS
                                 ).SetMessageParams(size.Length);
                         }
                         byte[] jpeg = new byte[(int)size[0]];
@@ -669,7 +649,7 @@ namespace iText.IO.Image {
                 }
             }
             catch (Exception) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.CannotGetTiffImageColor);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.CANNOT_GET_TIFF_IMAGE_COLOR);
             }
         }
 
@@ -712,7 +692,7 @@ namespace iText.IO.Image {
                 mzip.Write(mask, 0, mptr);
             }
             else {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ExtraSamplesAreNotSupported);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.EXTRA_SAMPLES_ARE_NOT_SUPPORTED);
             }
         }
 

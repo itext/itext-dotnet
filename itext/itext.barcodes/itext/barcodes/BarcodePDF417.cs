@@ -1,45 +1,24 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -581,15 +560,15 @@ namespace iText.Barcodes {
             int pad;
             if ((options & PDF417_USE_RAW_CODEWORDS) != 0) {
                 if (lenCodewords > MAX_DATA_CODEWORDS || lenCodewords < 1 || lenCodewords != codewords[0]) {
-                    throw new PdfException(BarcodeExceptionMessageConstant.INVALID_CODEWORD_SIZE);
+                    throw new PdfException(BarcodesExceptionMessageConstant.INVALID_CODEWORD_SIZE);
                 }
             }
             else {
                 if (code == null) {
-                    throw new PdfException(BarcodeExceptionMessageConstant.TEXT_CANNOT_BE_NULL);
+                    throw new PdfException(BarcodesExceptionMessageConstant.TEXT_CANNOT_BE_NULL);
                 }
                 if (code.Length > ABSOLUTE_MAX_TEXT_SIZE) {
-                    throw new PdfException(BarcodeExceptionMessageConstant.TEXT_IS_TOO_BIG);
+                    throw new PdfException(BarcodesExceptionMessageConstant.TEXT_IS_TOO_BIG);
                 }
                 segmentList = new BarcodePDF417.SegmentList();
                 BreakString();
@@ -753,6 +732,8 @@ namespace iText.Barcodes {
             return xObject;
         }
 
+        // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
+        // Android-Conversion-Skip-Block-End
         /// <summary>Gets the raw image bits of the barcode.</summary>
         /// <remarks>
         /// Gets the raw image bits of the barcode. The image will have to
@@ -1176,7 +1157,7 @@ namespace iText.Barcodes {
             int j;
             int size = length / 6 * 5 + length % 6;
             if (size + cwPtr > MAX_DATA_CODEWORDS) {
-                throw new PdfException(BarcodeExceptionMessageConstant.TEXT_IS_TOO_BIG);
+                throw new PdfException(BarcodesExceptionMessageConstant.TEXT_IS_TOO_BIG);
             }
             length += start;
             for (k = start; k < length; k += 6) {
@@ -1374,7 +1355,7 @@ namespace iText.Barcodes {
                 size = full + size / 3 + 1;
             }
             if (size + cwPtr > MAX_DATA_CODEWORDS) {
-                throw new PdfException(BarcodeExceptionMessageConstant.TEXT_IS_TOO_BIG);
+                throw new PdfException(BarcodesExceptionMessageConstant.TEXT_IS_TOO_BIG);
             }
             length += start;
             for (k = start; k < length; k += 44) {
@@ -1385,13 +1366,13 @@ namespace iText.Barcodes {
 
         private void MacroCodes() {
             if (macroSegmentId < 0) {
-                throw new PdfException(BarcodeExceptionMessageConstant.MACRO_SEGMENT_ID_MUST_BE_GT_OR_EQ_ZERO);
+                throw new PdfException(BarcodesExceptionMessageConstant.MACRO_SEGMENT_ID_MUST_BE_GT_OR_EQ_ZERO);
             }
             if (macroSegmentId >= macroSegmentCount) {
-                throw new PdfException(BarcodeExceptionMessageConstant.MACRO_SEGMENT_ID_MUST_BE_LT_MACRO_SEGMENT_COUNT);
+                throw new PdfException(BarcodesExceptionMessageConstant.MACRO_SEGMENT_ID_MUST_BE_LT_MACRO_SEGMENT_COUNT);
             }
             if (macroSegmentCount < 1) {
-                throw new PdfException(BarcodeExceptionMessageConstant.MACRO_SEGMENT_ID_MUST_BE_GT_ZERO);
+                throw new PdfException(BarcodesExceptionMessageConstant.MACRO_SEGMENT_ID_MUST_BE_GT_ZERO);
             }
             macroIndex = cwPtr;
             codewords[cwPtr++] = MACRO_SEGMENT_ID;
@@ -1579,7 +1560,7 @@ namespace iText.Barcodes {
             }
             size = (ptr + fullBytes) / 2;
             if (size + cwPtr > MAX_DATA_CODEWORDS) {
-                throw new PdfException(BarcodeExceptionMessageConstant.TEXT_IS_TOO_BIG);
+                throw new PdfException(BarcodesExceptionMessageConstant.TEXT_IS_TOO_BIG);
             }
             length = ptr;
             ptr = 0;

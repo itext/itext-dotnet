@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("iText.Svg")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("iText Group NV")]
+[assembly: AssemblyCompany("Apryse Group NV")]
 [assembly: AssemblyProduct("iText")]
-[assembly: AssemblyCopyright("Copyright (c) 1998-2023 iText Group NV")]
+[assembly: AssemblyCopyright("Copyright (c) 1998-2023 Apryse Group NV")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("itext.svg.tests,PublicKey=0024000004800000940000000602000000240000525" +
@@ -21,6 +21,6 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("ff6ba09d-3655-466a-8c17-a7bfd3479ca1")]
 
-[assembly: AssemblyVersion("7.2.5.0")]
-[assembly: AssemblyFileVersion("7.2.5.0")]
-[assembly: AssemblyInformationalVersion("7.2.5")]
+[assembly: AssemblyVersion("8.0.0.0")]
+[assembly: AssemblyFileVersion("8.0.0.0")]
+[assembly: AssemblyInformationalVersion("8.0.0")]

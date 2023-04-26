@@ -47,7 +47,7 @@ namespace iText.Kernel.XMP.Options {
         /// <summary>Return just the leaf part of the path, default is the full path.</summary>
         public const int JUST_LEAFNAME = 0x0400;
 
-        //	/** Include aliases, default is just actual properties. <em>Note:</em> Not supported. 
+        //	/** Include aliases, default is just actual properties. <em>Note:</em> Not supported.
         //	 *  @deprecated it is commonly preferred to work with the base properties */
         //	public static final int INCLUDE_ALIASES = 0x0800;
         /// <summary>Omit all qualifiers.</summary>

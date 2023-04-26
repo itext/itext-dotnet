@@ -1,44 +1,24 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
@@ -51,8 +31,10 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Pdfa.Exceptions;
 using iText.Test;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAFontTest : ExtendedITextTest {
         internal static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -196,18 +178,7 @@ namespace iText.Pdfa {
         public virtual void CidFontCheckTest1() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest1.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA2b_cidFontCheckTest1.pdf";
-            PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-            PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfPage page = doc.AddNewPage();
-            // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
-                .FORCE_EMBEDDED);
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
-                ).RestoreState();
-            doc.Close();
+            GenerateAndValidatePdfA2WithCidFont("FreeSans.ttf", outPdf);
             CompareResult(outPdf, cmpPdf);
         }
 
@@ -215,18 +186,8 @@ namespace iText.Pdfa {
         public virtual void CidFontCheckTest2() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest2.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA2b_cidFontCheckTest2.pdf";
-            PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-            PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfPage page = doc.AddNewPage();
-            // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Puritan2.otf", "Identity-H", PdfFontFactory.EmbeddingStrategy
-                .FORCE_EMBEDDED);
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
-                ).RestoreState();
-            doc.Close();
+            String expectedVeraPdfWarning = "The following warnings and errors were logged during validation:\n" + "WARNING: The Top DICT does not begin with ROS operator";
+            GenerateAndValidatePdfA2WithCidFont("Puritan2.otf", outPdf, expectedVeraPdfWarning);
             CompareResult(outPdf, cmpPdf);
         }
 
@@ -234,18 +195,7 @@ namespace iText.Pdfa {
         public virtual void CidFontCheckTest3() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest3.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA2b_cidFontCheckTest3.pdf";
-            PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-            PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfPage page = doc.AddNewPage();
-            // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", "Identity-H", PdfFontFactory.EmbeddingStrategy
-                .FORCE_EMBEDDED);
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
-                ).RestoreState();
-            doc.Close();
+            GenerateAndValidatePdfA2WithCidFont("NotoSansCJKtc-Light.otf", outPdf);
             CompareResult(outPdf, cmpPdf);
         }
 
@@ -328,5 +278,30 @@ namespace iText.Pdfa {
                 NUnit.Framework.Assert.Fail(result);
             }
         }
+
+        private void GenerateAndValidatePdfA2WithCidFont(String fontFile, String outPdf) {
+            GenerateAndValidatePdfA2WithCidFont(fontFile, outPdf, null);
+        }
+
+        private void GenerateAndValidatePdfA2WithCidFont(String fontFile, String outPdf, String expectedVeraPdfWarning
+            ) {
+            using (PdfWriter writer = new PdfWriter(outPdf)) {
+                using (Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                    )) {
+                    using (PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom"
+                        , "", "http://www.color.org", "sRGB IEC61966-2.1", @is))) {
+                        PdfPage page = doc.AddNewPage();
+                        // Identity-H must be embedded
+                        PdfFont font = PdfFontFactory.CreateFont(sourceFolder + fontFile, "Identity-H", PdfFontFactory.EmbeddingStrategy
+                            .FORCE_EMBEDDED);
+                        PdfCanvas canvas = new PdfCanvas(page);
+                        canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
+                            ).RestoreState();
+                    }
+                }
+            }
+            NUnit.Framework.Assert.AreEqual(expectedVeraPdfWarning, new VeraPdfValidator().Validate(outPdf));
+        }
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     }
 }

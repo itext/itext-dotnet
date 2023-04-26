@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -205,6 +205,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String END_OF_CONTENT_STREAM_REACHED_BEFORE_END_OF_IMAGE_DATA = "End of content stream " + "reached before end of image data.";
 
+        public const String ERROR_WHILE_INITIALIZING_AES_CIPHER = "Exception initializing AES cipher.";
+
         public const String ERROR_WHILE_READING_OBJECT_STREAM = "Error while reading Object Stream.";
 
         public const String ENCRYPTED_PAYLOAD_FILE_SPEC_DOES_NOT_HAVE_ENCRYPTED_PAYLOAD_DICTIONARY = "Encrypted " 
@@ -255,6 +257,8 @@ namespace iText.Kernel.Exceptions {
         public const String FORM_XOBJECT_MUST_HAVE_BBOX = "Form XObject must have BBox.";
 
         public const String FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE = "Function is not compatible with " + "ColorSpace.";
+
+        public const String NO_SUCH_ALGORITHM_FOR_PROVIDER_BCFIPS = "no such algorithm: {0} for provider BCFIPS";
 
         public const String ILLEGAL_CHARACTER_IN_ASCIIHEXDECODE = "illegal character in ASCIIHexDecode.";
 
@@ -376,6 +380,8 @@ namespace iText.Kernel.Exceptions {
         public const String OPERATOR_EI_NOT_FOUND_AFTER_END_OF_IMAGE_DATA = "Operator EI not found after the end "
              + "of image data.";
 
+        public const String ORDERING_SHOULD_BE_DETERMINED = "Ordering should be determined for CIDFont of Type0 font.";
+
         public const String PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT = "The passed page belongs to document {0} (page {1} of the document) and therefore cannot be added "
              + "to this document ({2}).";
 
@@ -490,15 +496,9 @@ namespace iText.Kernel.Exceptions {
 
         public const String UNEXPECTED_CHARACTER_FOUND_AFTER_ID_IN_INLINE_IMAGE = "Unexpected character {0} " + "found after ID in inline image.";
 
-        [Obsolete]
-        public const String UNEXPECTED_CLOSE_BRACKET = "Unexpected close bracket.";
-
         public const String UNEXPECTED_COLOR_SPACE = "Unexpected ColorSpace: {0}.";
 
         public const String UNEXPECTED_END_OF_FILE = "Unexpected end of file.";
-
-        [Obsolete]
-        public const String UNEXPECTED_GT_GT = "unexpected >>.";
 
         public const String UNEXPECTED_TOKEN = "unexpected {0} was encountered.";
 
@@ -594,6 +594,8 @@ namespace iText.Kernel.Exceptions {
         public const String FUCTIONFACTORY_INVALID_OBJECT_TYPE_TYPE4 = "Invalid object type, a function type 4 requires a stream object";
 
         public const String FUCTIONFACTORY_INVALID_OBJECT_TYPE_TYPE0 = "Invalid object type, a function type 0 requires a stream object";
+
+        public const String UNSUPPORTED_SECURITY_HANDLER = "Failed to open the document. Security handler {0} is not supported";
 
         private KernelExceptionMessageConstant() {
         }

@@ -68,11 +68,11 @@ namespace iText.IO.Font.Woff2 {
 
         public virtual void Read(byte[] data, int data_offset, int n_bytes) {
             if (offset + n_bytes > length || offset > length - n_bytes) {
-                throw new FontCompressionException(FontCompressionException.BUFFER_READ_FAILED);
+                throw new FontCompressionException(IoExceptionMessageConstant.BUFFER_READ_FAILED);
             }
             if (data != null) {
                 if (data_offset + n_bytes > data.Length || data_offset > data.Length - n_bytes) {
-                    throw new FontCompressionException(FontCompressionException.BUFFER_READ_FAILED);
+                    throw new FontCompressionException(IoExceptionMessageConstant.BUFFER_READ_FAILED);
                 }
                 Array.Copy(this.data, initial_offset + offset, data, data_offset, n_bytes);
             }

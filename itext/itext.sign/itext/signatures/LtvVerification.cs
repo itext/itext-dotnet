@@ -1,57 +1,36 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
+using iText.Bouncycastleconnector;
 using iText.Commons;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.IO.Font;
@@ -63,6 +42,9 @@ namespace iText.Signatures {
     /// <summary>Add verification according to PAdES-LTV (part 4).</summary>
     /// <author>Paulo Soares</author>
     public class LtvVerification {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         private ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.LtvVerification));
 
         private PdfDocument document;
@@ -139,13 +121,14 @@ namespace iText.Signatures {
             }
             PdfPKCS7 pk = sgnUtil.ReadSignatureData(signatureName);
             LOGGER.LogInformation("Adding verification for " + signatureName);
-            X509Certificate[] xc = pk.GetCertificates();
-            X509Certificate cert;
-            X509Certificate signingCert = pk.GetSigningCertificate();
+            IX509Certificate[] xc = pk.GetCertificates();
+            IX509Certificate cert;
+            IX509Certificate signingCert = pk.GetSigningCertificate();
             LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
-            for (int k = 0; k < xc.Length; ++k) {
-                cert = (X509Certificate)xc[k];
-                LOGGER.LogInformation("Certificate: " + cert.SubjectDN);
+            foreach (IX509Certificate certificate in xc) {
+                cert = (IX509Certificate)certificate;
+                LOGGER.LogInformation(MessageFormatUtil.Format("Certificate: {0}", BOUNCY_CASTLE_FACTORY.CreateX500Name(cert
+                    )));
                 if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert)) {
                     continue;
                 }
@@ -187,28 +170,6 @@ namespace iText.Signatures {
             return true;
         }
 
-        /// <summary>Get the issuing certificate for a child certificate.</summary>
-        /// <param name="cert">the certificate for which we search the parent</param>
-        /// <param name="certs">an array with certificates that contains the parent</param>
-        /// <returns>the parent certificate</returns>
-        private X509Certificate GetParent(X509Certificate cert, X509Certificate[] certs) {
-            X509Certificate parent;
-            for (int i = 0; i < certs.Length; i++) {
-                parent = (X509Certificate)certs[i];
-                if (!cert.IssuerDN.Equals(parent.SubjectDN)) {
-                    continue;
-                }
-                try {
-                    cert.Verify(parent.GetPublicKey());
-                    return parent;
-                }
-                catch (Exception) {
-                }
-            }
-            // do nothing
-            return null;
-        }
-
         /// <summary>Adds verification to the signature.</summary>
         /// <param name="signatureName">name of the signature</param>
         /// <param name="ocsps">collection of DER-encoded BasicOCSPResponses</param>
@@ -227,26 +188,45 @@ namespace iText.Signatures {
                 }
             }
             if (crls != null) {
-                foreach (byte[] crl in crls) {
-                    vd.crls.Add(crl);
-                }
+                vd.crls.AddAll(crls);
             }
             if (certs != null) {
-                foreach (byte[] cert in certs) {
-                    vd.certs.Add(cert);
-                }
+                vd.certs.AddAll(certs);
             }
             validated.Put(GetSignatureHashKey(signatureName), vd);
             return true;
         }
 
+        /// <summary>Get the issuing certificate for a child certificate.</summary>
+        /// <param name="cert">the certificate for which we search the parent</param>
+        /// <param name="certs">an array with certificates that contains the parent</param>
+        /// <returns>the parent certificate</returns>
+        internal virtual IX509Certificate GetParent(IX509Certificate cert, IX509Certificate[] certs) {
+            IX509Certificate parent;
+            foreach (IX509Certificate certificate in certs) {
+                parent = (IX509Certificate)certificate;
+                if (!cert.GetIssuerDN().Equals(parent.GetSubjectDN())) {
+                    continue;
+                }
+                try {
+                    cert.Verify(parent.GetPublicKey());
+                    return parent;
+                }
+                catch (Exception) {
+                }
+            }
+            // do nothing
+            return null;
+        }
+
         private static byte[] BuildOCSPResponse(byte[] basicOcspResponse) {
-            DerOctetString doctet = new DerOctetString(basicOcspResponse);
-            OcspResponseStatus respStatus = new OcspResponseStatus(Org.BouncyCastle.Asn1.Ocsp.OcspResponseStatus.Successful
-                );
-            ResponseBytes responseBytes = new ResponseBytes(OcspObjectIdentifiers.PkixOcspBasic, doctet);
-            OcspResponse ocspResponse = new OcspResponse(respStatus, responseBytes);
-            return new OcspResp(ocspResponse).GetEncoded();
+            IDerOctetString doctet = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(basicOcspResponse);
+            IOcspResponseStatus respStatus = BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus(BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus
+                ().GetSuccessful());
+            IResponseBytes responseBytes = BOUNCY_CASTLE_FACTORY.CreateResponseBytes(BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers
+                ().GetIdPkixOcspBasic(), doctet);
+            IOcspResponse ocspResponse = BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(respStatus, responseBytes);
+            return ocspResponse.GetEncoded();
         }
 
         private PdfName GetSignatureHashKey(String signatureName) {
@@ -255,16 +235,17 @@ namespace iText.Signatures {
             byte[] bc = PdfEncodings.ConvertToBytes(contents.GetValue(), null);
             byte[] bt = null;
             if (PdfName.ETSI_RFC3161.Equals(sig.GetSubFilter())) {
-                Asn1InputStream din = new Asn1InputStream(new MemoryStream(bc));
-                Asn1Object pkcs = din.ReadObject();
-                bc = pkcs.GetEncoded();
+                using (IAsn1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bc))) {
+                    IAsn1Object pkcs = din.ReadObject();
+                    bc = pkcs.GetEncoded();
+                }
             }
             bt = HashBytesSha1(bc);
             return new PdfName(ConvertToHex(bt));
         }
 
         private static byte[] HashBytesSha1(byte[] b) {
-            IDigest sh = DigestUtilities.GetDigest("SHA1");
+            IDigest sh = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA1");
             return sh.Digest(b);
         }
 
@@ -420,7 +401,6 @@ namespace iText.Signatures {
             public IList<byte[]> certs = new List<byte[]>();
         }
 
-        // TODO: Refactor. Copied from itext5 Utilities
         /// <summary>Converts an array of bytes to a String of hexadecimal values</summary>
         /// <param name="bytes">a byte array</param>
         /// <returns>the same bytes expressed as hexadecimal values</returns>

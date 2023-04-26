@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -20,11 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using iText.Commons.Actions.Contexts;
-using iText.Forms.Exceptions;
 using iText.IO.Source;
-using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -39,33 +36,29 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CannotGetRectangleIfKidsIsNullTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfDictionary pdfDictionary = new PdfDictionary();
             PdfFormField pdfFormField = new PdfFormField(pdfDocument);
-            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfFormField.GetRect(pdfDictionary
-                ));
-            NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.WRONG_FORM_FIELD_ADD_ANNOTATION_TO_THE_FIELD
-                , exception.Message);
+            NUnit.Framework.Assert.IsNull(pdfFormField.GetFirstFormAnnotation());
         }
 
         [NUnit.Framework.Test]
         public virtual void SetMetaInfoToCanvasMetaInfoUsedTest() {
             Canvas canvas = CreateCanvas();
-            MetaInfoContainer metaInfoContainer = new MetaInfoContainer(new _IMetaInfo_62());
-            FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(metaInfoContainer, () => PdfFormField.SetMetaInfoToCanvas
+            MetaInfoContainer metaInfoContainer = new MetaInfoContainer(new _IMetaInfo_56());
+            FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(metaInfoContainer, () => PdfFormAnnotation.SetMetaInfoToCanvas
                 (canvas));
             NUnit.Framework.Assert.AreSame(metaInfoContainer, canvas.GetProperty<MetaInfoContainer>(Property.META_INFO
                 ));
         }
 
-        private sealed class _IMetaInfo_62 : IMetaInfo {
-            public _IMetaInfo_62() {
+        private sealed class _IMetaInfo_56 : IMetaInfo {
+            public _IMetaInfo_56() {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void SetMetaInfoToCanvasMetaInfoNotUsedTest() {
             Canvas canvas = CreateCanvas();
-            PdfFormField.SetMetaInfoToCanvas(canvas);
+            PdfFormAnnotation.SetMetaInfoToCanvas(canvas);
             NUnit.Framework.Assert.IsNull(canvas.GetProperty<MetaInfoContainer>(Property.META_INFO));
         }
 

@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -33,6 +33,14 @@ namespace iText.Commons.Utils {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/commons/utils/JsonUtilTest/";
 
+        private static bool isRunOnJava = false;
+
+        static JsonUtilTest() {
+            // Android-Conversion-Skip-Block-Start (cutting area is used to understand whether code is running on Android or not)
+            isRunOnJava = true;
+        }
+
+        // Android-Conversion-Skip-Block-End
         [NUnit.Framework.Test]
         public virtual void Utf8CharsetStringTest() {
             NUnit.Framework.Assert.AreEqual("\"©\"", JsonUtil.SerializeToString("©"));
@@ -56,8 +64,16 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeInstanceWithEnumStreamTest() {
-            String path = SOURCE_FOLDER + "classWithEnum.json";
-            using (Stream inputStream = FileUtil.GetInputStreamForFile(path)) {
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
+            String cmp;
+            if (isRunOnJava) {
+                cmp = SOURCE_FOLDER + "classWithEnum.json";
+            }
+            else {
+                // Test is run on Android, so field order will be different from Java.
+                cmp = SOURCE_FOLDER + "classWithEnumAndroid.json";
+            }
+            using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
                         JsonUtil.SerializeToStream(serializationResult, CreateClassWithEnumObject());
@@ -79,8 +95,16 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeToMinimalInstanceWithEnumStreamTest() {
-            String path = SOURCE_FOLDER + "minimalClassWithEnum.json";
-            using (Stream inputStream = FileUtil.GetInputStreamForFile(path)) {
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
+            String cmp;
+            if (isRunOnJava) {
+                cmp = SOURCE_FOLDER + "minimalClassWithEnum.json";
+            }
+            else {
+                // Test is run on Android, so field order will be different from Java.
+                cmp = SOURCE_FOLDER + "minimalClassWithEnumAndroid.json";
+            }
+            using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
                         JsonUtil.SerializeToMinimalStream(serializationResult, CreateClassWithEnumObject());
@@ -146,8 +170,16 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeComplexStructureStreamTest() {
-            String path = SOURCE_FOLDER + "complexStructure.json";
-            using (Stream inputStream = FileUtil.GetInputStreamForFile(path)) {
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
+            String cmp;
+            if (isRunOnJava) {
+                cmp = SOURCE_FOLDER + "complexStructure.json";
+            }
+            else {
+                // Test is run on Android, so field order will be different from Java.
+                cmp = SOURCE_FOLDER + "complexStructureAndroid.json";
+            }
+            using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
                         JsonUtil.SerializeToStream(serializationResult, CreateComplexStructureObject());
@@ -169,8 +201,16 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeToMinimalComplexStructureStreamTest() {
-            String path = SOURCE_FOLDER + "minimalComplexStructure.json";
-            using (Stream inputStream = FileUtil.GetInputStreamForFile(path)) {
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
+            String cmp;
+            if (isRunOnJava) {
+                cmp = SOURCE_FOLDER + "minimalComplexStructure.json";
+            }
+            else {
+                // Test is run on Android, so field order will be different from Java.
+                cmp = SOURCE_FOLDER + "minimalComplexStructureAndroid.json";
+            }
+            using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
                         JsonUtil.SerializeToMinimalStream(serializationResult, CreateComplexStructureObject());

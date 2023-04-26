@@ -1,45 +1,24 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -74,6 +53,10 @@ using iText.Kernel.XMP.Options;
 namespace iText.Kernel.Pdf {
     /// <summary>Main enter point to work with PDF document.</summary>
     public class PdfDocument : IEventDispatcher, IDisposable {
+        //
+        private static readonly PdfName[] PDF_NAMES_TO_REMOVE_FROM_ORIGINAL_TRAILER = new PdfName[] { PdfName.Encrypt
+            , PdfName.Size, PdfName.Prev, PdfName.Root, PdfName.Info, PdfName.ID, PdfName.XRefStm };
+
         private static readonly IPdfPageFactory pdfPageFactory = new PdfPageFactory();
 
         protected internal readonly StampingProperties properties;
@@ -1207,7 +1190,7 @@ namespace iText.Kernel.Pdf {
             bool insertInBetween = insertBeforePage < toDocument.GetNumberOfPages() + 1;
             foreach (int? pageNum in pagesToCopy) {
                 PdfPage page = GetPage((int)pageNum);
-                PdfPage newPage = page.CopyTo(toDocument, copier);
+                PdfPage newPage = page.CopyTo(toDocument, copier, true, insertInBetween ? pageInsertIndex : -1);
                 copiedPages.Add(newPage);
                 page2page.Put(page, newPage);
                 if (lastCopiedPageNum >= pageNum) {
@@ -1215,12 +1198,6 @@ namespace iText.Kernel.Pdf {
                 }
                 int lastRangeInd = rangesOfPagesWithIncreasingNumbers.Count - 1;
                 rangesOfPagesWithIncreasingNumbers[lastRangeInd].Put(page, newPage);
-                if (insertInBetween) {
-                    toDocument.AddPage(pageInsertIndex, newPage);
-                }
-                else {
-                    toDocument.AddPage(newPage);
-                }
                 pageInsertIndex++;
                 if (toDocument.HasOutlines()) {
                     IList<PdfOutline> pageOutlines = page.GetOutlines(false);
@@ -1467,6 +1444,18 @@ namespace iText.Kernel.Pdf {
         /// See ISO 32000-1 12.3.2.3 for more info.
         /// </param>
         public virtual void AddNamedDestination(String key, PdfObject value) {
+            AddNamedDestination(new PdfString(key), value);
+        }
+
+        /// <summary>This methods adds new name in the Dests NameTree.</summary>
+        /// <remarks>This methods adds new name in the Dests NameTree. It throws an exception, if the name already exists.
+        ///     </remarks>
+        /// <param name="key">Name of the destination.</param>
+        /// <param name="value">
+        /// An object destination refers to. Must be an array or a dictionary with key /D and array.
+        /// See ISO 32000-1 12.3.2.3 for more info.
+        /// </param>
+        public virtual void AddNamedDestination(PdfString key, PdfObject value) {
             CheckClosingStatus();
             if (value.IsArray() && ((PdfArray)value).Get(0).IsNumber()) {
                 ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument)).LogWarning(iText.IO.Logs.IoLogMessageConstant
@@ -1575,7 +1564,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public virtual void AddFileAttachment(String key, PdfFileSpec fs) {
             CheckClosingStatus();
-            catalog.AddNameToNameTree(key, fs.GetPdfObject(), PdfName.EmbeddedFiles);
+            catalog.AddNameToNameTree(new PdfString(key), fs.GetPdfObject(), PdfName.EmbeddedFiles);
         }
 
         /// <summary>Adds file associated with PDF document as a whole and identifies the relationship between them.</summary>
@@ -1629,8 +1618,7 @@ namespace iText.Kernel.Pdf {
             if (collection != null && collection.IsViewHidden()) {
                 PdfString documentName = collection.GetInitialDocument();
                 PdfNameTree embeddedFiles = GetCatalog().GetNameTree(PdfName.EmbeddedFiles);
-                String documentNameUnicode = documentName.ToUnicodeString();
-                PdfObject fileSpecObject = embeddedFiles.GetNames().Get(documentNameUnicode);
+                PdfObject fileSpecObject = embeddedFiles.GetNames().Get(documentName);
                 if (fileSpecObject != null && fileSpecObject.IsDictionary()) {
                     try {
                         PdfFileSpec fileSpec = PdfEncryptedPayloadFileSpecFactory.Wrap((PdfDictionary)fileSpecObject);
@@ -1641,6 +1629,7 @@ namespace iText.Kernel.Pdf {
                                 stream = embeddedDictionary.GetAsStream(PdfName.F);
                             }
                             if (stream != null) {
+                                String documentNameUnicode = documentName.ToUnicodeString();
                                 return new PdfEncryptedPayloadDocument(stream, fileSpec, documentNameUnicode);
                             }
                         }
@@ -1950,26 +1939,6 @@ namespace iText.Kernel.Pdf {
             tagStructureContext = new TagStructureContext(this);
         }
 
-        /// <summary>Save the link annotation in a temporary storage for further copying.</summary>
-        /// <remarks>
-        /// Save the link annotation in a temporary storage for further copying.
-        /// Save destinations in a temporary storage for further copying.
-        /// </remarks>
-        /// <param name="page">
-        /// just copied
-        /// <see cref="PdfPage"/>
-        /// link annotation belongs to.
-        /// </param>
-        /// <param name="annotation">
-        /// 
-        /// <see cref="iText.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
-        /// itself.
-        /// </param>
-        [System.ObsoleteAttribute(@"will be removed in next major version, it is being replaced with storeDestinationToReaddress"
-            )]
-        protected internal virtual void StoreLinkAnnotation(PdfPage page, PdfLinkAnnotation annotation) {
-        }
-
         /// <summary>Save destinations in a temporary storage for further copying.</summary>
         /// <param name="destination">
         /// the
@@ -2093,7 +2062,16 @@ namespace iText.Kernel.Pdf {
                         info = new PdfDocumentInfo(this).AddCreationDate();
                     }
                     GetDocumentInfo().AddModDate();
-                    trailer = new PdfDictionary();
+                    if (trailer == null) {
+                        trailer = new PdfDictionary();
+                    }
+                    // We keep the original trailer of the document to preserve the original document keys,
+                    // but we have to remove all standard keys that can occur in the trailer to avoid invalid pdfs
+                    if (trailer.Size() > 0) {
+                        foreach (PdfName key in iText.Kernel.Pdf.PdfDocument.PDF_NAMES_TO_REMOVE_FROM_ORIGINAL_TRAILER) {
+                            trailer.Remove(key);
+                        }
+                    }
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
                     trailer.Put(PdfName.Info, GetDocumentInfo().GetPdfObject().GetIndirectReference());
                     if (reader != null) {

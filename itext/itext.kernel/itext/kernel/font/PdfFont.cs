@@ -1,45 +1,24 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -210,7 +189,7 @@ namespace iText.Kernel.Font {
         /// <param name="fontSize">the font size.</param>
         /// <returns>a width in points.</returns>
         public virtual float GetWidth(int unicode, float fontSize) {
-            return GetWidth(unicode) * fontSize / FontProgram.UNITS_NORMALIZATION;
+            return FontProgram.ConvertTextSpaceToGlyphSpace(GetWidth(unicode) * fontSize);
         }
 
         /// <summary>Returns the width of a string of this font in 1000 normalized units.</summary>
@@ -248,7 +227,7 @@ namespace iText.Kernel.Font {
         /// <param name="fontSize">the font size</param>
         /// <returns>the width in points</returns>
         public virtual float GetWidth(String text, float fontSize) {
-            return GetWidth(text) * fontSize / FontProgram.UNITS_NORMALIZATION;
+            return FontProgram.ConvertTextSpaceToGlyphSpace(GetWidth(text) * fontSize);
         }
 
         /// <summary>
@@ -260,7 +239,7 @@ namespace iText.Kernel.Font {
         /// Gets the descent of a
         /// <c>String</c>
         /// in points. The descent will always be
-        /// less than or equal to zero even if all the characters have an higher descent.
+        /// less than or equal to zero even if all the characters have a higher descent.
         /// </remarks>
         /// <param name="text">
         /// the
@@ -269,7 +248,7 @@ namespace iText.Kernel.Font {
         /// </param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the descent in points</returns>
-        public virtual int GetDescent(String text, float fontSize) {
+        public virtual float GetDescent(String text, float fontSize) {
             int min = 0;
             for (int k = 0; k < text.Length; ++k) {
                 int ch;
@@ -293,18 +272,18 @@ namespace iText.Kernel.Font {
                     }
                 }
             }
-            return (int)(min * fontSize / FontProgram.UNITS_NORMALIZATION);
+            return FontProgram.ConvertTextSpaceToGlyphSpace(min * fontSize);
         }
 
         /// <summary>Gets the descent of a char code in points.</summary>
         /// <remarks>
         /// Gets the descent of a char code in points. The descent will always be
-        /// less than or equal to zero even if all the characters have an higher descent.
+        /// less than or equal to zero even if all the characters have a higher descent.
         /// </remarks>
         /// <param name="unicode">the char code to get the descent of</param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the descent in points</returns>
-        public virtual int GetDescent(int unicode, float fontSize) {
+        public virtual float GetDescent(int unicode, float fontSize) {
             int min = 0;
             Glyph glyph = GetGlyph(unicode);
             if (glyph == null) {
@@ -319,7 +298,7 @@ namespace iText.Kernel.Font {
                     min = GetFontProgram().GetFontMetrics().GetTypoDescender();
                 }
             }
-            return (int)(min * fontSize / FontProgram.UNITS_NORMALIZATION);
+            return FontProgram.ConvertTextSpaceToGlyphSpace(min * fontSize);
         }
 
         /// <summary>
@@ -340,7 +319,7 @@ namespace iText.Kernel.Font {
         /// </param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the ascent in points</returns>
-        public virtual int GetAscent(String text, float fontSize) {
+        public virtual float GetAscent(String text, float fontSize) {
             int max = 0;
             for (int k = 0; k < text.Length; ++k) {
                 int ch;
@@ -364,7 +343,7 @@ namespace iText.Kernel.Font {
                     }
                 }
             }
-            return (int)(max * fontSize / FontProgram.UNITS_NORMALIZATION);
+            return FontProgram.ConvertTextSpaceToGlyphSpace(max * fontSize);
         }
 
         /// <summary>Gets the ascent of a char code in normalized 1000 units.</summary>
@@ -375,7 +354,7 @@ namespace iText.Kernel.Font {
         /// <param name="unicode">the char code to get the ascent of</param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the ascent in points</returns>
-        public virtual int GetAscent(int unicode, float fontSize) {
+        public virtual float GetAscent(int unicode, float fontSize) {
             int max = 0;
             Glyph glyph = GetGlyph(unicode);
             if (glyph == null) {
@@ -390,7 +369,7 @@ namespace iText.Kernel.Font {
                     max = GetFontProgram().GetFontMetrics().GetTypoAscender();
                 }
             }
-            return (int)(max * fontSize / FontProgram.UNITS_NORMALIZATION);
+            return FontProgram.ConvertTextSpaceToGlyphSpace(max * fontSize);
         }
 
         public virtual FontProgram GetFontProgram() {

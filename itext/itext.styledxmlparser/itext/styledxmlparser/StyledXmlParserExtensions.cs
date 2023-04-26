@@ -1,7 +1,7 @@
 /*
     This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-    Authors: iText Software.
+    Copyright (c) 1998-2023 Apryse Group NV
+    Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
     For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -20,7 +20,7 @@ Copyright (c) 1998-2023 iText Group NV
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-﻿using System;
+using System;
 using System.Text;
 
 namespace iText.StyledXmlParser

@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -48,7 +48,7 @@ namespace iText.Forms {
             String outPdf = destinationFolder + "fillingFormWithKidsTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
-            IDictionary<String, PdfFormField> formFields = acroForm.GetFormFields();
+            IDictionary<String, PdfFormField> formFields = acroForm.GetAllFormFields();
             foreach (String key in formFields.Keys) {
                 PdfFormField field = acroForm.GetField(key);
                 field.SetValue(key);
@@ -67,13 +67,13 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "autosizeInheritedDAFormFields.pdf"), new 
                 PdfWriter(inPdf));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             fields.Get("field_1").SetValue("1111 2222 3333 4444");
             fields.Get("field_2").SetValue("1111 2222 3333 4444");
             fields.Get("field_3").SetValue("surname surname surname surname surname surname");
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(inPdf, sourceFolder + "cmp_autosizeInheritedDAFormFields.pdf"
-                , inPdf, "diff_"));
+                , destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -82,12 +82,11 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "autosizeInheritedDAFormFieldsWithKids.pdf"
                 ), new PdfWriter(inPdf));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
-            fields.Get("root.child.text1").SetValue("surname surname surname surname surname");
-            fields.Get("root.child.text2").SetValue("surname surname surname surname surname");
+            form.GetField("root.child.text1").SetValue("surname surname surname surname surname");
+            form.GetField("root.child.text2").SetValue("surname surname surname surname surname");
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(inPdf, sourceFolder + "cmp_autosizeInheritedDAFormFieldsWithKids.pdf"
-                , inPdf));
+                , destinationFolder, inPdf));
         }
 
         [NUnit.Framework.Test]
@@ -97,7 +96,7 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + name + ".pdf"), new PdfWriter(fileName));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             form.SetGenerateAppearance(false);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             fields.Get("root").SetValue("Deutschland");
             form.FlattenFields();
             pdfDoc.Close();

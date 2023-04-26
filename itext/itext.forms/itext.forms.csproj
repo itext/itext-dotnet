@@ -29,5 +29,6 @@
     <ProjectReference Include="..\itext.io\itext.io.csproj" />
     <ProjectReference Include="..\itext.kernel\itext.kernel.csproj" />
     <ProjectReference Include="..\itext.layout\itext.layout.csproj" />
+    <ProjectReference Include="..\itext.commons\itext.commons.csproj" />
   </ItemGroup>
 </Project>

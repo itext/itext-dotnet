@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Forms.Fields;
 using iText.IO.Font;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -52,7 +53,7 @@ namespace iText.Forms {
             String cmpPdf = sourceFolder + "cmp_fillFormWithAutosizeTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(inPdf), new PdfWriter(outPdf));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             fields.Get("First field").SetValue("name name name ");
             fields.Get("Second field").SetValue("surname surname surname surname surname surname");
             pdfDoc.Close();
@@ -136,6 +137,25 @@ namespace iText.Forms {
                 );
             document.Close();
             ExtendedITextTest.PrintOutputPdfNameAndDir(destinationFolder + filename);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LineEndingsTest() {
+            String destFilename = destinationFolder + "lineEndingsTest.pdf";
+            String cmpFilename = sourceFolder + "cmp_lineEndingsTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destFilename))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "single").SetWidgetRectangle(new Rectangle(50, 700
+                    , 500, 120)).CreateText();
+                field.SetValue("Line 1\nLine 2\rLine 3\r\nLine 4");
+                form.AddField(field);
+                PdfTextFormField field2 = new TextFormFieldBuilder(pdfDoc, "multi").SetWidgetRectangle(new Rectangle(50, 500
+                    , 500, 120)).CreateMultilineText();
+                field2.SetValue("Line 1\nLine 2\rLine 3\r\nLine 4");
+                form.AddField(field2);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFilename, destinationFolder
+                , "diff_"));
         }
     }
 }

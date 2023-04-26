@@ -43,6 +43,8 @@
 * use in the design, construction, operation or maintenance of any
 * nuclear facility.
 */
+using iText.IO.Exceptions;
+
 namespace iText.IO.Codec {
     /// <summary>Class that can decode TIFF files.</summary>
     public class TIFFFaxDecoder {
@@ -670,12 +672,12 @@ namespace iText.IO.Codec {
                     else {
                         // ERROR
                         if (bits == 0) {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidCodeEncountered);
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_CODE_ENCOUNTERED);
                         }
                         else {
                             // EOL
                             if (bits == 15) {
-                                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.EolCodeWordEncounteredInWhiteRun
+                                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.EOL_CODE_WORD_ENCOUNTERED_IN_WHITE_RUN
                                     );
                             }
                             else {
@@ -729,7 +731,7 @@ namespace iText.IO.Codec {
                         else {
                             if (bits == 15) {
                                 // EOL code
-                                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.EolCodeWordEncounteredInWhiteRun
+                                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.EOL_CODE_WORD_ENCOUNTERED_IN_WHITE_RUN
                                     );
                             }
                             else {
@@ -803,7 +805,7 @@ namespace iText.IO.Codec {
             fillBits = (int)((tiffT4Options & 0x04) >> 2);
             // The data must start with an EOL code
             if (ReadEOL() != 1) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.FirstScanlineMustBe1dEncoded);
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.FIRST_SCANLINE_MUST_BE_1D_ENCODED);
             }
             int lineOffset = 0;
             int bitOffset;
@@ -888,7 +890,7 @@ namespace iText.IO.Codec {
                                     UpdatePointer(7 - bits);
                                 }
                                 else {
-                                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidCodeEncounteredWhileDecoding2dGroup3CompressedData
+                                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_CODE_ENCOUNTERED_WHILE_DECODING_2D_GROUP_3_COMPRESSED_DATA
                                         );
                                 }
                             }
@@ -958,7 +960,7 @@ namespace iText.IO.Codec {
                     if (bitPointer > 0) {
                         int bitsLeft = 8 - bitPointer;
                         if (NextNBits(bitsLeft) != 0) {
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.ExpectedTrailingZeroBitsForByteAlignedLines
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.EXPECTED_TRAILING_ZERO_BITS_FOR_BYTE_ALIGNED_LINES
                                 );
                         }
                     }
@@ -1034,7 +1036,7 @@ namespace iText.IO.Codec {
                             else {
                                 if (code == 11) {
                                     if (NextLesserThan8Bits(3) != 7) {
-                                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidCodeEncounteredWhileDecoding2dGroup4CompressedData
+                                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_CODE_ENCOUNTERED_WHILE_DECODING_2D_GROUP_4_COMPRESSED_DATA
                                             );
                                     }
                                     int zeros = 0;
@@ -1185,7 +1187,7 @@ escape_break: ;
                 else {
                     // ERROR
                     if (bits == 0) {
-                        throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.InvalidCodeEncountered);
+                        throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INVALID_CODE_ENCOUNTERED);
                     }
                     else {
                         // EOL
@@ -1194,7 +1196,7 @@ escape_break: ;
                                 isWhite = false;
                             }
                             else {
-                                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.EolCodeWordEncounteredInWhiteRun
+                                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.EOL_CODE_WORD_ENCOUNTERED_IN_WHITE_RUN
                                     );
                             }
                         }
@@ -1251,7 +1253,7 @@ escape_break: ;
                     else {
                         if (bits == 15) {
                             // EOL code
-                            throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.EolCodeWordEncounteredInBlackRun
+                            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.EOL_CODE_WORD_ENCOUNTERED_IN_BLACK_RUN
                                 );
                         }
                         else {
@@ -1293,7 +1295,7 @@ escape_break: ;
             UpdatePointer(12);
             int next12Bits = NextNBits(12);
             if (next12Bits != 1) {
-                throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.AllFillBitsPrecedingEolCodeMustBe0
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.ALL_FILL_BITS_PRECEDING_EOL_CODE_MUST_BE_0
                     );
             }
             // If one dimensional encoding mode, then always return 1
@@ -1379,7 +1381,7 @@ escape_break: ;
                     }
                 }
                 else {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TiffFillOrderTagMustBeEither1Or2
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TIFF_FILL_ORDER_TAG_MUST_BE_EITHER_1_OR_2
                         );
                 }
             }
@@ -1443,7 +1445,7 @@ escape_break: ;
                     }
                 }
                 else {
-                    throw new iText.IO.Exceptions.IOException(iText.IO.Exceptions.IOException.TiffFillOrderTagMustBeEither1Or2
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TIFF_FILL_ORDER_TAG_MUST_BE_EITHER_1_OR_2
                         );
                 }
             }

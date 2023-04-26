@@ -1,10 +1,10 @@
-**[iText 7 Community for .NET][itext]** (former iTextSharp) consists of several dlls.
+**[iText Community for .NET][itext]** (former iTextSharp) consists of several dlls.
 
-The **iText 7 Core/Community** release contains:
+The **iText Core/Community** release contains:
 
 - ```kernel.dll```: low-level functionality
 - ```io.dll```:  low-level functionality
-- ```layout.dll```: high-level functionality
+- ```layout.dll```: high-level functionality. For more information see [layout overview][layoutMd].
 - ```forms.dll```: AcroForms
 - ```pdfa.dll```: PDF/A-specific functionality
 - ```pdftest.dll```: test helper classes
@@ -15,24 +15,27 @@ The **iText 7 Core/Community** release contains:
 - ```styled-xml-parser.dll```: use this if you need support for SVG or html2pdf
 - ```svg.dll```: SVG support
 - ```commons.dll```: commons module
+- ```bouncy-castle-connector.dll```: auxiliary internal module
+- ```bouncy-castle-adapter.dll```: use this to apply BouncyCastle as low-level cryptography library
+- ```bouncy-castle-fips-adapter.dll```: use this to apply BouncyCastle FIPS as low-level cryptography library
 
-The **iText 7 Community** source code is hosted on [Github][github], where you can also [download the latest releases][latest].
+The **iText Community** source code is hosted on [Github][github], where you can also [download the latest releases][latest].
 
-*We strongly recommend that you use [NuGet][nuget] to add **iText 7 Community** to your project:*
+*We strongly recommend that you use [NuGet][nuget] to add **iText Community** to your project:*
 
     Install-Package itext7
 
-You can also [build iText 7 Community from source][building].
+You can also [build iText  Community from source][building].
 
 We also provide opensource add-ons and tools to complement the core functionality:
 - [pdfHTML][pdfhtml] — allows you to easily convert HTML to PDF or iText objects
 - [pdfSweep][pdfsweep] — a highly efficient PDF tool to merge, split and redact data
 - [RUPS][rups] — a Java tool that can help you debug PDFs
 
-If you have an idea on how to improve **iText 7 Community** and you want to submit code,
+If you have an idea on how to improve **iText Community** and you want to submit code,
 please read our [Contribution Guidelines][contributing].
 
-**iText 7** is dual licensed as [AGPL][agpl]/[Commercial software][sales].
+**iText** is dual licensed as [AGPL][agpl]/[Commercial software][sales].
 
 AGPL is a free / open source software license.
 
@@ -52,6 +55,7 @@ Contact [sales] for more info.
 [agpl]: LICENSE.md
 [building]: BUILDING.md
 [contributing]: CONTRIBUTING.md
+[layoutMd]: itext/itext.layout/MODULE_OVERVIEW.md
 [itext]: https://itextpdf.com/
 [github]: https://github.com/itext/itext7-dotnet
 [latest]: https://github.com/itext/itext7-dotnet/releases/latest

@@ -1,55 +1,35 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Cmp;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Tsp;
+using iText.Bouncycastleconnector;
 using iText.Commons;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.Cmp;
+using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
+using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
@@ -67,6 +47,9 @@ namespace iText.Signatures {
     /// for ease of subclassing.
     /// </remarks>
     public class TSAClientBouncyCastle : ITSAClient {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         /// <summary>The default value for the hash algorithm</summary>
         public const String DEFAULTHASHALGORITHM = "SHA-256";
 
@@ -179,24 +162,25 @@ namespace iText.Signatures {
         public virtual byte[] GetTimeStampToken(byte[] imprint) {
             byte[] respBytes = null;
             // Setup the time stamp request
-            TimeStampRequestGenerator tsqGenerator = new TimeStampRequestGenerator();
+            ITimeStampRequestGenerator tsqGenerator = BOUNCY_CASTLE_FACTORY.CreateTimeStampRequestGenerator();
             tsqGenerator.SetCertReq(true);
             if (tsaReqPolicy != null && tsaReqPolicy.Length > 0) {
                 tsqGenerator.SetReqPolicy(tsaReqPolicy);
             }
             // tsqGenerator.setReqPolicy("1.3.6.1.4.1.601.10.3.1");
-            BigInteger nonce = BigInteger.ValueOf(SystemUtil.GetTimeBasedSeed());
-            TimeStampRequest request = tsqGenerator.Generate(new DerObjectIdentifier(DigestAlgorithms.GetAllowedDigest
-                (digestAlgorithm)), imprint, nonce);
+            IBigInteger nonce = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger().ValueOf
+                (SystemUtil.GetTimeBasedSeed());
+            ITimeStampRequest request = tsqGenerator.Generate(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(DigestAlgorithms
+                .GetAllowedDigest(digestAlgorithm)), imprint, nonce);
             byte[] requestBytes = request.GetEncoded();
             // Call the communications layer
             respBytes = GetTSAResponse(requestBytes);
             // Handle the TSA response
-            TimeStampResponse response = new TimeStampResponse(respBytes);
+            ITimeStampResponse response = BOUNCY_CASTLE_FACTORY.CreateTimeStampResponse(respBytes);
             // validate communication level attributes (RFC 3161 PKIStatus)
             response.Validate(request);
-            PkiFailureInfo failure = response.GetFailInfo();
-            int value = (failure == null) ? 0 : failure.IntValue;
+            IPkiFailureInfo failure = response.GetFailInfo();
+            int value = failure.IsNull() ? 0 : failure.IntValue();
             if (value != 0) {
                 // @todo: Translate value of 15 error codes defined by PKIFailureInfo to string
                 throw new PdfException(SignExceptionMessageConstant.INVALID_TSA_RESPONSE).SetMessageParams(tsaURL, value.ToString
@@ -205,15 +189,15 @@ namespace iText.Signatures {
             // @todo: validate the time stap certificate chain (if we want
             //        assure we do not sign using an invalid timestamp).
             // extract just the time stamp token (removes communication status info)
-            TimeStampToken tsToken = response.TimeStampToken;
+            ITimeStampToken tsToken = response.GetTimeStampToken();
             if (tsToken == null) {
                 throw new PdfException(SignExceptionMessageConstant.THIS_TSA_FAILED_TO_RETURN_TIME_STAMP_TOKEN).SetMessageParams
                     (tsaURL, response.GetStatusString());
             }
-            TimeStampTokenInfo tsTokenInfo = tsToken.TimeStampInfo;
+            ITimeStampTokenInfo tsTokenInfo = tsToken.GetTimeStampInfo();
             // to view details
             byte[] encoded = tsToken.GetEncoded();
-            LOGGER.LogInformation("Timestamp generated: " + tsTokenInfo.GenTime);
+            LOGGER.LogInformation("Timestamp generated: " + tsTokenInfo.GetGenTime());
             if (tsaInfo != null) {
                 tsaInfo.InspectTimeStampTokenInfo(tsTokenInfo);
             }

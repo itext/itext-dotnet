@@ -1,45 +1,24 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Pdf.Canvas;
@@ -83,54 +62,119 @@ namespace iText.Forms.Util {
             canvas.RestoreState();
         }
 
+        /// <summary>Draws a PDF A compliant check mark in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
         public static void DrawPdfACheck(PdfCanvas canvas, float width, float height, float moveX, float moveY) {
             DrawPdfAAppearanceString(canvas, width, height, moveX, moveY, check);
         }
 
+        /// <summary>Draws a PDF A compliant check mark in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
         public static void DrawPdfACheck(PdfCanvas canvas, float width, float height) {
             DrawPdfAAppearanceString(canvas, width, height, 0, 0, check);
         }
 
+        /// <summary>Draws a PDF A compliant circle in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
         public static void DrawPdfACircle(PdfCanvas canvas, float width, float height, float moveX, float moveY) {
             DrawPdfAAppearanceString(canvas, width, height, moveX, moveY, circle);
         }
 
+        /// <summary>Draws a PDF A compliant circle in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
         public static void DrawPdfACircle(PdfCanvas canvas, float width, float height) {
             DrawPdfAAppearanceString(canvas, width, height, 0, 0, circle);
         }
 
+        /// <summary>Draws a PDF A compliant cross in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
         public static void DrawPdfACross(PdfCanvas canvas, float width, float height, float moveX, float moveY) {
             DrawPdfAAppearanceString(canvas, width, height, moveX, moveY, cross);
         }
 
+        /// <summary>Draws a PDF A compliant cross in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
         public static void DrawPdfACross(PdfCanvas canvas, float width, float height) {
             DrawPdfAAppearanceString(canvas, width, height, 0, 0, cross);
         }
 
+        /// <summary>Draws a PDF A compliant diamond in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
         public static void DrawPdfADiamond(PdfCanvas canvas, float width, float height, float moveX, float moveY) {
             DrawPdfAAppearanceString(canvas, width, height, moveX, moveY, diamond);
         }
 
+        /// <summary>Draws a PDF A compliant diamond in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
         public static void DrawPdfADiamond(PdfCanvas canvas, float width, float height) {
             DrawPdfAAppearanceString(canvas, width, height, 0, 0, diamond);
         }
 
+        /// <summary>Draws a PDF A compliant square in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
         public static void DrawPdfASquare(PdfCanvas canvas, float width, float height, float moveX, float moveY) {
             DrawPdfAAppearanceString(canvas, width, height, moveX, moveY, square);
         }
 
+        /// <summary>Draws a PDF A compliant square in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
         public static void DrawPdfASquare(PdfCanvas canvas, float width, float height) {
             DrawPdfAAppearanceString(canvas, width, height, 0, 0, square);
         }
 
+        /// <summary>Draws a PDF A compliant star in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
         public static void DrawPdfAStar(PdfCanvas canvas, float width, float height, float moveX, float moveY) {
             DrawPdfAAppearanceString(canvas, width, height, moveX, moveY, star);
         }
 
+        /// <summary>Draws a PDF A compliant star in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
         public static void DrawPdfAStar(PdfCanvas canvas, float width, float height) {
             DrawPdfAAppearanceString(canvas, width, height, 0, 0, star);
         }
 
+        /// <summary>Draws a cross with the specified width and height.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="borderWidth">the width of the border</param>
         public static void DrawCross(PdfCanvas canvas, float width, float height, float borderWidth) {
             float offset = borderWidth * 2;
             canvas.MoveTo((width - height) / 2 + offset, height - offset).LineTo((width + height) / 2 - offset, offset
@@ -138,6 +182,11 @@ namespace iText.Forms.Util {
                 .Stroke();
         }
 
+        /// <summary>Draws a circle with the specified radius.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="centerX">the x coordinate of the center of the circle</param>
+        /// <param name="centerY">the y coordinate of the center of the circle</param>
+        /// <param name="radius">the radius of the circle</param>
         public static void DrawCircle(PdfCanvas canvas, float centerX, float centerY, float radius) {
             canvas.Circle(centerX, centerY, radius).Fill();
         }

@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -20,6 +20,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
@@ -34,13 +38,13 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            ListRenderer listRenderer = new _ListRenderer_52(new List());
+            ListRenderer listRenderer = new _ListRenderer_57(new List());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(ListRenderer), listRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _ListRenderer_52 : ListRenderer {
-            public _ListRenderer_52(List baseArg1)
+        private sealed class _ListRenderer_57 : ListRenderer {
+            public _ListRenderer_57(List baseArg1)
                 : base(baseArg1) {
             }
         }
@@ -73,6 +77,31 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(1, invocationsCounter.GetInvocationsCount());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SymbolPositioningInsideAfterPagebreakTest() {
+            // TODO: DEVSIX-6982 update this test after the ticket will be resolved
+            List modelElement = new List();
+            modelElement.SetNextRenderer(new ListRenderer(modelElement));
+            for (int i = 0; i < 25; i++) {
+                String s = "listitem " + i;
+                ListItem listItem = (ListItem)new ListItem().Add(new Paragraph(s));
+                modelElement.Add(listItem);
+            }
+            modelElement.SetProperty(Property.LIST_SYMBOL_POSITION, ListSymbolPosition.INSIDE);
+            modelElement.SetFontSize(30);
+            IRenderer listRenderer = modelElement.CreateRendererSubTree();
+            Document document = CreateDummyDocument();
+            listRenderer.SetParent(document.GetRenderer());
+            LayoutContext layoutContext = CreateLayoutContext(595, 842);
+            LayoutResult result = listRenderer.Layout(layoutContext);
+            result.GetOverflowRenderer().Layout(layoutContext);
+            Regex regex = iText.Commons.Utils.StringUtil.RegexCompile("^.-.*?-.*$");
+            IList<IRenderer> childRenderers = listRenderer.GetChildRenderers();
+            // Assertion needs to be changed to assertEquals after fix.
+            NUnit.Framework.Assert.AreNotEqual(childRenderers.Where((listitem) => iText.Commons.Utils.Matcher.Match(regex
+                , listitem.ToString()).Matches()).ToList().Count, 0);
+        }
+
         private class ListRendererCreatingNotifyingListSymbols : ListRenderer {
             private ListRendererUnitTest.InvocationsCounter counter;
 
@@ -83,7 +112,7 @@ namespace iText.Layout.Renderer {
             }
 
             protected internal override IRenderer MakeListSymbolRenderer(int index, IRenderer renderer) {
-                return new ListRendererUnitTest.NotifyingListSymbolRenderer(new Text("-"), counter);
+                return new ListRendererUnitTest.NotifyingListSymbolRenderer(new iText.Layout.Element.Text("-"), counter);
             }
 
             public override IRenderer GetNextRenderer() {
@@ -94,7 +123,8 @@ namespace iText.Layout.Renderer {
         private class NotifyingListSymbolRenderer : TextRenderer {
             private ListRendererUnitTest.InvocationsCounter counter;
 
-            public NotifyingListSymbolRenderer(Text textElement, ListRendererUnitTest.InvocationsCounter counter)
+            public NotifyingListSymbolRenderer(iText.Layout.Element.Text textElement, ListRendererUnitTest.InvocationsCounter
+                 counter)
                 : base(textElement) {
                 this.counter = counter;
             }

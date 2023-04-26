@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -249,12 +249,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void Traverse() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            doc.Select("div").First().Traverse(new _NodeVisitor_273(accum));
+            doc.Select("div").First().Traverse(new _NodeVisitor_290(accum));
             NUnit.Framework.Assert.AreEqual("<div><p><#text></#text></p></div>", accum.ToString());
         }
 
-        private sealed class _NodeVisitor_273 : NodeVisitor {
-            public _NodeVisitor_273(StringBuilder accum) {
+        private sealed class _NodeVisitor_290 : NodeVisitor {
+            public _NodeVisitor_290(StringBuilder accum) {
                 this.accum = accum;
             }
 

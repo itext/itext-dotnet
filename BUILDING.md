@@ -1,4 +1,4 @@
-To build **iText 7 Community**, you need to build `itextsharp/itextcore/iTextCore.sln`.
+To build **iText Community**, you need to build `itextsharp/itextcore/iTextCore.sln`.
 To run tests, [Ghostscript][1] and [Imagemagick][2] must be installed.  
 Some of the tests compare generated PDF files with template files that show the correct results, and these tools are used to
 visually compare PDF files. Ghostscript is required to render PDF files into images and Imagemagick is used to compare image data. 

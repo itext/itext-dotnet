@@ -1,45 +1,24 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -655,7 +634,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
                     );
             }
-            float fontSize = currentGs.GetFontSize() / 1000f;
+            float fontSize = FontProgram.ConvertTextSpaceToGlyphSpace(currentGs.GetFontSize());
             float charSpacing = currentGs.GetCharSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
             IList<GlyphLine.GlyphLinePart> glyphLineParts = EnumeratorToList(iterator);
@@ -764,7 +743,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// XAdvance is not taken into account neither before `from` nor after `to` glyphs.
         /// </remarks>
         private float GetSubrangeWidth(GlyphLine text, int from, int to) {
-            float fontSize = currentGs.GetFontSize() / 1000f;
+            float fontSize = FontProgram.ConvertTextSpaceToGlyphSpace(currentGs.GetFontSize());
             float charSpacing = currentGs.GetCharSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
             float width = 0;
@@ -781,7 +760,7 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         private float GetSubrangeYDelta(GlyphLine text, int from, int to) {
-            float fontSize = currentGs.GetFontSize() / 1000f;
+            float fontSize = FontProgram.ConvertTextSpaceToGlyphSpace(currentGs.GetFontSize());
             float yDelta = 0;
             for (int iter = from; iter < to; iter++) {
                 yDelta += text.Get(iter).GetYAdvance() * fontSize;
@@ -1856,37 +1835,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>
         /// Adds
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
-        /// to the specified position in the case of
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
-        /// or moves to the specified offset in the case of
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
-        /// </summary>
-        /// <param name="xObject">the xObject to add</param>
-        /// <param name="x">the horizontal offset of the formXObject position or the horizontal position of the imageXObject
-        ///     </param>
-        /// <param name="y">the vertical offset of the formXObject position or the vertical position of the imageXObject
-        ///     </param>
-        /// <returns>the current canvas</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddXObjectAt(iText.Kernel.Pdf.Xobject.PdfXObject, float, float) instead"
-            )]
-        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, float x, float y) {
-            //TODO DEVSIX-5729 Remove deprecated api in PdfCanvas
-            if (xObject is PdfFormXObject) {
-                return AddForm((PdfFormXObject)xObject, x, y);
-            }
-            else {
-                if (xObject is PdfImageXObject) {
-                    return AddImageAt((PdfImageXObject)xObject, x, y);
-                }
-                else {
-                    throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Adds
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
         /// fitted into specific rectangle on canvas.
         /// </summary>
         /// <param name="xObject">the xObject to add</param>
@@ -2192,22 +2140,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 , bBoxMax);
             return AddFormWithTransformationMatrix(form, result[0], result[1], result[2], result[3], result[4], result
                 [5], false);
-        }
-
-        /// <summary>
-        /// Adds
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// to the canvas and moves to the specified offset.
-        /// </summary>
-        /// <param name="form">the formXObject to add</param>
-        /// <param name="x">the horizontal offset of the formXObject position</param>
-        /// <param name="y">the vertical offset of the formXObject position</param>
-        /// <returns>the current canvas</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddFormAt(iText.Kernel.Pdf.Xobject.PdfFormXObject, float, float) instead"
-            )]
-        private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float x, float y) {
-            //TODO DEVSIX-5729 Remove deprecated api in PdfCanvas
-            return AddFormWithTransformationMatrix(form, 1, 0, 0, 1, x, y, true);
         }
 
         /// <summary>

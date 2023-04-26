@@ -1,45 +1,24 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 
@@ -70,13 +49,6 @@ namespace iText.IO.Logs {
 
         public const String CANNOT_ADD_HINTS_TO_FINISHED_PARENT = "Layout tagging hints addition failed: cannot add new kid hints to a parent which hint is already marked "
              + "as finished. Consider using com.itextpdf.layout.tagging.LayoutTaggingHelper#replaceKidHint " + "method for replacing not yet finished kid hint of a finished parent hint.";
-
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String CANNOT_ADD_KID_HINT_WHICH_IS_ALREADY_ADDED_TO_ANOTHER_PARENT = "Layout tagging hints addition failed: cannot add a kid hint to a new parent if it is already added to "
-             + "another parent. Consider using com.itextpdf.layout.tagging.LayoutTaggingHelper#moveHint method " +
-             "instead.";
-
-        public const String CANNOT_CREATE_FORMFIELD = "Cannot create form field from a given PDF object: {0}";
 
         public const String CANNOT_MOVE_FINISHED_HINT = "Layout tagging hints modification failed: cannot move kid hint for which both itself and it's parent are"
              + " already marked as finished.";
@@ -136,18 +108,12 @@ namespace iText.IO.Logs {
 
         public const String DOCUMENT_IDS_ARE_CORRUPTED = "The document original and/or modified id is corrupted";
 
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String DOCUMENT_SERIALIZATION_EXCEPTION_RAISED = "Unhandled exception while serialization";
-
         public const String DOCUMENT_VERSION_IN_CATALOG_CORRUPTED = "The document version specified in catalog is "
              + "corrupted";
 
         public const String DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED = "During the construction of the ICC"
              + " profile, the {0} error with message \"{1}\" occurred, the ICC profile will not be installed in the "
              + "image.";
-
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
 
         public const String ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED = "Element was placed in a forced way. Keep with next property will be ignored";
 
@@ -199,8 +165,6 @@ namespace iText.IO.Logs {
 
         public const String FORBID_RELEASE_IS_SET = "ForbidRelease flag is set and release is called. Releasing will not be performed.";
 
-        public const String FORM_FIELD_WAS_FLUSHED = "A form field was flushed. There's no way to create this field in the AcroForm dictionary.";
-
         public const String GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN = "If a renderer overflows, " + "iText uses this method to create another renderer for the overflow part. So if one wants "
              + "to extend the renderer, one should override this method: otherwise the default method " + "will be used and thus the default rather than the custom renderer will be created.";
 
@@ -237,16 +201,10 @@ namespace iText.IO.Logs {
 
         public const String IMAGE_SIZE_CANNOT_BE_MORE_4KB = "Inline image size cannot be more than 4KB. It will be added as an ImageXObject";
 
-        public const String INCORRECT_PAGEROTATION = "Encounterd a page rotation that was not a multiple of 90°/ (Pi/2) when generating default appearances "
-             + "for form fields";
-
         public const String INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE = "An attempt is made to free an indirect reference which was already used in the flushed object. Indirect "
              + "reference wasn't freed.";
 
         public const String INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED = "Inline block element does not fit into parent element and will be clipped";
-
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String INPUT_STREAM_CONTENT_IS_LOST_ON_PDFSTREAM_SERIALIZATION = "PdfStream contains not null input stream. It's content will be lost in serialized object.";
 
         public const String INVALID_DISTRIBUTION_POINT = "Skipped CRL: {0}";
 
@@ -277,12 +235,7 @@ namespace iText.IO.Logs {
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged "
              + "content.";
 
-        public const String NO_FIELDS_IN_ACROFORM = "Required AcroForm entry /Fields does not exist in the document. Empty array /Fields will be created.";
-
         public const String NUM_TREE_SHALL_NOT_END_WITH_KEY = "Number tree ends with a key which is invalid according to the PDF specification.";
-
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY = "\\N entry is required to be present in an appearance dictionary.";
 
         public const String OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED = "Occupied area has not been initialized. {0}";
 
@@ -293,8 +246,6 @@ namespace iText.IO.Logs {
         public const String OCSP_STATUS_IS_UNKNOWN = "OCSP status is unknown.";
 
         public const String ONE_OF_GROUPED_SOURCES_CLOSING_FAILED = "Closing of one of the grouped sources failed.";
-
-        public const String ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE = "Only one of artbox or trimbox can exist on the page. The trimbox will be deleted";
 
         public const String OPENTYPE_GDEF_TABLE_ERROR = "OpenType GDEF table error: {0}";
 
@@ -363,13 +314,6 @@ namespace iText.IO.Logs {
 
         public const String TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH = "Table width is more than expected due to min width of cell(s).";
 
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String TAGGING_HINT_NOT_FINISHED_BEFORE_CLOSE = "Tagging hint wasn't finished before closing.";
-
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String TAG_STRUCTURE_CONTEXT_WILL_BE_REINITIALIZED_ON_SERIALIZATION = "Tag structure context is not null and will be reinitialized in the copy of document. The copy may lose "
-             + "some data";
-
         public const String TAG_STRUCTURE_INIT_FAILED = "Tag structure initialization failed, tag structure is ignored, it might be corrupted.";
 
         public const String TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED = "ToUnicode CMap more than 2 bytes not supported.";
@@ -386,21 +330,8 @@ namespace iText.IO.Logs {
              + "this means that element was added to the Canvas instance that was created not with constructor " +
              "taking PdfPage as argument. Not processed property: {0}";
 
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String UNABLE_TO_INTERRUPT_THREAD = "Unable to interrupt a thread";
-
         public const String UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION = "Unable to invert gradient transformation, "
              + "ignoring it";
-
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to register event data handler shutdown hook because of security reasons.";
-
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String UNABLE_TO_SEARCH_FOR_EVENT_CONTEXT = "It is impossible to retrieve event context because of the security reasons. Event counting may behave in "
-             + "unexpected way";
-
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String UNABLE_TO_UNREGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to unregister event data handler shutdown hook because of security permissions";
 
         public const String UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING = "Unexpected behaviour during table row collapsing. Calculated rowspan was less then 1.";
 
@@ -410,12 +341,7 @@ namespace iText.IO.Logs {
 
         public const String UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB = "Unknown color format: must be rgb or rrggbb.";
 
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String UNKNOWN_DIGEST_METHOD = "Unknown digest method. Valid values are MD5, SHA1 SHA256, SHA384, SHA512 and RIPEMD160.";
-
         public const String UNKNOWN_ERROR_WHILE_PROCESSING_CMAP = "Unknown error while processing CMap.";
-
-        public const String UNSUPPORTED_COLOR_IN_DA = "Unsupported color in FormField's DA";
 
         public const String VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY = "\"{0}\" entry in the \"{1}\" dictionary is a {2} and higher version feature. It is meaningless for the "
              + "current {3} version.";
@@ -438,9 +364,6 @@ namespace iText.IO.Logs {
         public const String XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT = "Xfdf no such field in pdf document!";
 
         public const String XFDF_NO_F_OBJECT_TO_COMPARE = "Xfdf no f object to compare.";
-
-        [System.ObsoleteAttribute(@"Unused constant. Will be removed in 7.3")]
-        public const String XFDF_OUTPUT_STREAM_CORRUPTED = "Xfdf output stream is corrupted.";
 
         public const String XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE = "Xfdf unsupported attribute type";
 

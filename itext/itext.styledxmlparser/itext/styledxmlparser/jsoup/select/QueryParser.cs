@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
@@ -446,7 +446,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         }
 
         //pseudo selectors :first-child, :last-child, :nth-child, ...
-        private static readonly Regex NTH_AB = iText.Commons.Utils.StringUtil.RegexCompile("(([+-])?(\\d+)?)n(\\s*([+-])?\\s*\\d+)?"
+        private static readonly Regex NTH_AB = iText.Commons.Utils.StringUtil.RegexCompile("(([+-])?(\\d+)?)n(([+-])?\\d+)?"
             , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
         private static readonly Regex NTH_B = iText.Commons.Utils.StringUtil.RegexCompile("([+-])?(\\d+)");

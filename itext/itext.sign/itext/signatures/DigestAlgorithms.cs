@@ -1,50 +1,29 @@
 /*
-*
-* This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-* Authors: Bruno Lowagie, Paulo Soares, et al.
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3
-* as published by the Free Software Foundation with the addition of the
-* following permission added to Section 15 as permitted in Section 7(a):
-* FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-* ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-* OF THIRD PARTY RIGHTS
-*
-* This program is distributed in the hope that it will be useful, but
-* WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-* or FITNESS FOR A PARTICULAR PURPOSE.
-* See the GNU Affero General Public License for more details.
-* You should have received a copy of the GNU Affero General Public License
-* along with this program; if not, see http://www.gnu.org/licenses or write to
-* the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-* Boston, MA, 02110-1301 USA, or download the license from the following URL:
-* http://itextpdf.com/terms-of-use/
-*
-* The interactive user interfaces in modified source and object code versions
-* of this program must display Appropriate Legal Notices, as required under
-* Section 5 of the GNU Affero General Public License.
-*
-* In accordance with Section 7(b) of the GNU Affero General Public License,
-* a covered work must retain the producer line in every PDF that is created
-* or manipulated using iText.
-*
-* You can be released from the requirements of the license by purchasing
-* a commercial license. Buying such a license is mandatory as soon as you
-* develop commercial activities involving the iText software without
-* disclosing the source code of your own applications.
-* These activities include: offering paid services to customers as an ASP,
-* serving PDFs on the fly in a web application, shipping iText with a closed
-* source product.
-*
-* For more information, please contact iText Software Corp. at this
-* address: sales@itextpdf.com
+This file is part of the iText (R) project.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
+
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
+
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Org.BouncyCastle.Crypto;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
@@ -65,6 +44,36 @@ namespace iText.Signatures {
         /// <summary>Algorithm available for signatures since PDF 1.7.</summary>
         public const String RIPEMD160 = "RIPEMD160";
 
+        /// <summary>
+        /// Algorithm available for signatures since PDF 2.0
+        /// extended by ISO/TS 32001.
+        /// </summary>
+        public const String SHA3_256 = "SHA3-256";
+
+        /// <summary>
+        /// Algorithm available for signatures since PDF 2.0
+        /// extended by ISO/TS 32001.
+        /// </summary>
+        public const String SHA3_512 = "SHA3-512";
+
+        /// <summary>
+        /// Algorithm available for signatures since PDF 2.0
+        /// extended by ISO/TS 32001.
+        /// </summary>
+        public const String SHA3_384 = "SHA3-384";
+
+        /// <summary>
+        /// Algorithm available for signatures since PDF 2.0
+        /// extended by ISO/TS 32001.
+        /// </summary>
+        /// <remarks>
+        /// Algorithm available for signatures since PDF 2.0
+        /// extended by ISO/TS 32001.
+        /// <para />
+        /// The output length is fixed at 512 bits (64 bytes).
+        /// </remarks>
+        public const String SHAKE256 = "SHAKE256";
+
         /// <summary>Maps the digest IDs with the human-readable name of the digest algorithm.</summary>
         private static readonly IDictionary<String, String> digestNames = new Dictionary<String, String>();
 
@@ -73,6 +82,9 @@ namespace iText.Signatures {
 
         /// <summary>Maps the name of a digest algorithm with its ID.</summary>
         private static readonly IDictionary<String, String> allowedDigests = new Dictionary<String, String>();
+
+        /// <summary>Maps algorithm names to output lengths in bits.</summary>
+        private static readonly IDictionary<String, int?> bitLengths = new Dictionary<String, int?>();
 
         static DigestAlgorithms() {
             digestNames.Put("1.2.840.113549.2.5", "MD5");
@@ -103,6 +115,11 @@ namespace iText.Signatures {
             digestNames.Put("1.3.36.3.3.1.2", "RIPEMD160");
             digestNames.Put("1.3.36.3.3.1.4", "RIPEMD256");
             digestNames.Put("1.2.643.2.2.9", "GOST3411");
+            digestNames.Put("2.16.840.1.101.3.4.2.7", "SHA3-224");
+            digestNames.Put("2.16.840.1.101.3.4.2.8", "SHA3-256");
+            digestNames.Put("2.16.840.1.101.3.4.2.9", "SHA3-384");
+            digestNames.Put("2.16.840.1.101.3.4.2.10", "SHA3-512");
+            digestNames.Put("2.16.840.1.101.3.4.2.12", "SHAKE256");
             fixNames.Put("SHA256", SHA256);
             fixNames.Put("SHA384", SHA384);
             fixNames.Put("SHA512", SHA512);
@@ -127,6 +144,36 @@ namespace iText.Signatures {
             allowedDigests.Put("RIPEMD256", "1.3.36.3.2.3");
             allowedDigests.Put("RIPEMD-256", "1.3.36.3.2.3");
             allowedDigests.Put("GOST3411", "1.2.643.2.2.9");
+            allowedDigests.Put("SHA3-224", "2.16.840.1.101.3.4.2.7");
+            allowedDigests.Put("SHA3-256", "2.16.840.1.101.3.4.2.8");
+            allowedDigests.Put("SHA3-384", "2.16.840.1.101.3.4.2.9");
+            allowedDigests.Put("SHA3-512", "2.16.840.1.101.3.4.2.10");
+            allowedDigests.Put("SHAKE256", "2.16.840.1.101.3.4.2.12");
+            bitLengths.Put("MD2", 128);
+            bitLengths.Put("MD-2", 128);
+            bitLengths.Put("MD5", 128);
+            bitLengths.Put("MD-5", 128);
+            bitLengths.Put("SHA1", 160);
+            bitLengths.Put("SHA-1", 160);
+            bitLengths.Put("SHA224", 224);
+            bitLengths.Put("SHA-224", 224);
+            bitLengths.Put("SHA256", 256);
+            bitLengths.Put("SHA-256", 256);
+            bitLengths.Put("SHA384", 384);
+            bitLengths.Put("SHA-384", 384);
+            bitLengths.Put("SHA512", 512);
+            bitLengths.Put("SHA-512", 512);
+            bitLengths.Put("RIPEMD128", 128);
+            bitLengths.Put("RIPEMD-128", 128);
+            bitLengths.Put("RIPEMD160", 160);
+            bitLengths.Put("RIPEMD-160", 160);
+            bitLengths.Put("RIPEMD256", 256);
+            bitLengths.Put("RIPEMD-256", 256);
+            bitLengths.Put("SHA3-224", 224);
+            bitLengths.Put("SHA3-256", 256);
+            bitLengths.Put("SHA3-384", 384);
+            bitLengths.Put("SHA3-512", 512);
+            bitLengths.Put("SHAKE256", 512);
         }
 
         /// <summary>Get a digest algorithm.</summary>
@@ -189,6 +236,16 @@ namespace iText.Signatures {
                 throw new ArgumentException(SignExceptionMessageConstant.THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL);
             }
             return allowedDigests.Get(name.ToUpperInvariant());
+        }
+
+        /// <summary>Retrieve the output length in bits of the given digest algorithm.</summary>
+        /// <param name="name">the name of the digest algorithm</param>
+        /// <returns>the length of the output of the algorithm in bits</returns>
+        public static int GetOutputBitLength(String name) {
+            if (name == null) {
+                throw new ArgumentException(SignExceptionMessageConstant.THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL);
+            }
+            return bitLengths.Get(name).Value;
         }
     }
 }

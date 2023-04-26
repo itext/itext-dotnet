@@ -27,6 +27,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\itext.forms\itext.forms.csproj" />
     <ProjectReference Include="..\itext.io\itext.io.csproj" />
     <ProjectReference Include="..\itext.kernel\itext.kernel.csproj" />
   </ItemGroup>
