@@ -33,7 +33,7 @@ namespace iText.Commons.Actions.Data {
 
         internal const String COMMONS_PRODUCT_NAME = "commons";
 
-        internal const String COMMONS_VERSION = "8.0.0-SNAPSHOT";
+        internal const String COMMONS_VERSION = "8.0.1-SNAPSHOT";
 
         internal const int COMMONS_COPYRIGHT_SINCE = 2000;
 
