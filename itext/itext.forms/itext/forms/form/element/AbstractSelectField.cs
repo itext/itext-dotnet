@@ -62,6 +62,25 @@ namespace iText.Forms.Form.Element {
             return options;
         }
 
+        /// <summary>
+        /// Get an option
+        /// <see cref="SelectFieldItem"/>
+        /// by its string value.
+        /// </summary>
+        /// <param name="value">string value to find an option by.</param>
+        /// <returns>
+        /// a
+        /// <see cref="SelectFieldItem"/>.
+        /// </returns>
+        public virtual SelectFieldItem GetOption(String value) {
+            foreach (SelectFieldItem option in options) {
+                if (option.GetExportValue().Equals(value)) {
+                    return option;
+                }
+            }
+            return null;
+        }
+
         /// <summary>Gets a list of containers with option(s).</summary>
         /// <remarks>Gets a list of containers with option(s). Every container might be a container for options group.
         ///     </remarks>

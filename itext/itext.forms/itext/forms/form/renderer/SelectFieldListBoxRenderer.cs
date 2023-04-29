@@ -22,12 +22,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
+using iText.Forms;
+using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -139,15 +147,56 @@ namespace iText.Forms.Form.Renderer {
                 }
             }
             else {
-                calculatedHeight = actualHeight;
+                calculatedHeight = height.Value;
             }
             return base.GetFinalSelectFieldHeight(availableHeight, calculatedHeight, isClippedHeight);
         }
 
         protected internal override void ApplyAcroField(DrawContext drawContext) {
+            // Retrieve font properties
+            Object retrievedFont = this.GetProperty<Object>(Property.FONT);
+            PdfFont font = retrievedFont is PdfFont ? (PdfFont)retrievedFont : null;
+            UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
+            if (!fontSize.IsPointValue()) {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.SelectFieldListBoxRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.FONT_SIZE));
+            }
+            PdfDocument doc = drawContext.GetDocument();
+            Rectangle area = this.GetOccupiedArea().GetBBox().Clone();
+            PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
+            // Some properties are set to the HtmlDocumentRenderer, which is root renderer for this ButtonRenderer, but
+            // in forms logic root renderer is CanvasRenderer, and these properties will have default values. So
+            // we get them from renderer and set these properties to model element, which will be passed to forms logic.
+            modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
+            modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
+                ));
+            ListBoxField lbModelElement = (ListBoxField)modelElement;
+            IList<String> options = lbModelElement.GetStrings();
+            IList<String> selectedOptions = lbModelElement.GetSelectedStrings();
+            PdfChoiceFormField choiceField = new ChoiceFormFieldBuilder(doc, GetModelId()).SetWidgetRectangle(area).SetOptions
+                (options.ToArray(new String[options.Count])).CreateList();
+            if (font != null) {
+                choiceField.SetFont(font);
+            }
+            choiceField.SetFontSize(fontSize.GetValue());
+            choiceField.SetMultiSelect(IsMultiple());
+            choiceField.SetListSelected(selectedOptions.ToArray(new String[selectedOptions.Count]));
+            TransparentColor color = GetPropertyAsTransparentColor(Property.FONT_COLOR);
+            if (color != null) {
+                choiceField.SetColor(color.GetColor());
+            }
+            choiceField.SetJustification(this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT));
+            AbstractFormFieldRenderer.ApplyBorderProperty(this, choiceField.GetFirstFormAnnotation());
+            Background background = this.GetProperty<Background>(Property.BACKGROUND);
+            if (background != null) {
+                choiceField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
+            }
+            choiceField.GetFirstFormAnnotation().SetFormFieldElement(lbModelElement);
+            PdfAcroForm.GetAcroForm(doc, true).AddField(choiceField, page);
+            WriteAcroFormFieldLangAttribute(doc);
         }
 
-        // TODO DEVSIX-1901
         private float GetCalculatedHeight(IRenderer flatRenderer) {
             int? sizeProp = this.GetProperty<int?>(FormProperty.FORM_FIELD_SIZE);
             int size;

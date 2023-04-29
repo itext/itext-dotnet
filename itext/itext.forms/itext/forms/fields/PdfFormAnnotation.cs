@@ -673,7 +673,50 @@ namespace iText.Forms.Fields {
             GetWidget().SetNormalAppearance(normalAppearance);
         }
 
-        /// <summary>Draws the appearance of a text form field with and saves it into an appearance stream.</summary>
+        /// <summary>Draws the appearance of a list box form field and saves it into an appearance stream.</summary>
+        protected internal virtual void DrawListFormFieldAndSaveAppearance() {
+            Rectangle rectangle = GetRect(this.GetPdfObject());
+            if (rectangle == null) {
+                return;
+            }
+            if (!(formFieldElement is ListBoxField)) {
+                // Create it once and reset properties during each widget regeneration.
+                formFieldElement = new ListBoxField("", 0, parent.GetFieldFlag(PdfChoiceFormField.FF_MULTI_SELECT));
+            }
+            formFieldElement.SetProperty(FormProperty.FORM_FIELD_MULTIPLE, parent.GetFieldFlag(PdfChoiceFormField.FF_MULTI_SELECT
+                ));
+            PdfArray indices = GetParent().GetAsArray(PdfName.I);
+            PdfArray options = parent.GetOptions();
+            for (int index = 0; index < options.Size(); ++index) {
+                String optionValue = options.Get(index).ToString();
+                bool selected = indices == null ? false : indices.Contains(new PdfNumber(index));
+                SelectFieldItem existingItem = ((ListBoxField)formFieldElement).GetOption(optionValue);
+                if (existingItem == null) {
+                    existingItem = new SelectFieldItem(optionValue);
+                    ((ListBoxField)formFieldElement).AddOption(existingItem);
+                }
+                existingItem.GetElement().SetProperty(Property.TEXT_ALIGNMENT, parent.GetJustification());
+                existingItem.GetElement().SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+                existingItem.GetElement().SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+                existingItem.GetElement().SetProperty(FormProperty.FORM_FIELD_SELECTED, selected);
+            }
+            formFieldElement.SetProperty(Property.FONT, GetFont());
+            if (GetColor() != null) {
+                formFieldElement.SetProperty(Property.FONT_COLOR, new TransparentColor(GetColor()));
+            }
+            SetModelElementProperties(rectangle);
+            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth(), rectangle.GetHeight(
+                )));
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, this.GetDocument());
+            SetMetaInfoToCanvas(canvas);
+            canvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
+            canvas.GetPdfCanvas().BeginVariableText().SaveState().EndPath();
+            canvas.Add(formFieldElement);
+            canvas.GetPdfCanvas().RestoreState().EndVariableText();
+            GetWidget().SetNormalAppearance(xObject.GetPdfObject());
+        }
+
+        /// <summary>Draws the appearance of a text form field and saves it into an appearance stream.</summary>
         protected internal virtual void DrawTextFormFieldAndSaveAppearance() {
             Rectangle rectangle = GetRect(this.GetPdfObject());
             if (rectangle == null) {
@@ -747,28 +790,40 @@ namespace iText.Forms.Fields {
                 return true;
             }
             PdfName type = parent.GetFormType();
-            if (PdfName.Ch.Equals(type) || this.IsCombTextFormField()) {
+            if ((PdfName.Ch.Equals(type) && parent.GetFieldFlag(PdfChoiceFormField.FF_COMBO)) || this.IsCombTextFormField
+                ()) {
                 return TextAndChoiceLegacyDrawer.RegenerateTextAndChoiceField(this);
             }
             else {
-                if (PdfName.Tx.Equals(type)) {
-                    DrawTextFormFieldAndSaveAppearance();
-                    return true;
+                if (PdfName.Ch.Equals(type) && !parent.GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
+                    if (formFieldElement != null) {
+                        DrawListFormFieldAndSaveAppearance();
+                        return true;
+                    }
+                    else {
+                        return TextAndChoiceLegacyDrawer.RegenerateTextAndChoiceField(this);
+                    }
                 }
                 else {
-                    if (PdfName.Btn.Equals(type)) {
-                        if (parent.GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
-                            DrawPushButtonFieldAndSaveAppearance();
-                        }
-                        else {
-                            if (parent.GetFieldFlag(PdfButtonFormField.FF_RADIO)) {
-                                DrawRadioButtonAndSaveAppearance(GetRadioButtonValue());
+                    if (PdfName.Tx.Equals(type)) {
+                        DrawTextFormFieldAndSaveAppearance();
+                        return true;
+                    }
+                    else {
+                        if (PdfName.Btn.Equals(type)) {
+                            if (parent.GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
+                                DrawPushButtonFieldAndSaveAppearance();
                             }
                             else {
-                                DrawCheckBoxAndSaveAppearance(parent.GetValueAsString());
+                                if (parent.GetFieldFlag(PdfButtonFormField.FF_RADIO)) {
+                                    DrawRadioButtonAndSaveAppearance(GetRadioButtonValue());
+                                }
+                                else {
+                                    DrawCheckBoxAndSaveAppearance(parent.GetValueAsString());
+                                }
                             }
+                            return true;
                         }
-                        return true;
                     }
                 }
             }

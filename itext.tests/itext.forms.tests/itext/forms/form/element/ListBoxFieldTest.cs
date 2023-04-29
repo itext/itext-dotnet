@@ -22,8 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Forms.Form;
-using iText.Forms.Logs;
+using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
@@ -61,34 +62,29 @@ namespace iText.Forms.Form.Element {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(FormsLogMessageConstants.ACROFORM_NOT_SUPPORTED_FOR_SELECT)]
         public virtual void BasicListBoxFieldTest() {
             String outPdf = DESTINATION_FOLDER + "basicListBoxField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicListBoxField.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 ListBoxField formListBoxField = new ListBoxField("form list box field", 2, false);
-                formListBoxField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
-                Paragraph option1 = new Paragraph("option 1");
-                option1.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 1");
-                formListBoxField.AddOption(option1);
-                Paragraph option2 = new Paragraph("option 2");
-                option2.SetProperty(FormProperty.FORM_FIELD_SELECTED, true);
-                option2.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 2");
-                formListBoxField.AddOption(option2);
+                formListBoxField.SetInteractive(true);
+                formListBoxField.AddOption("option 1", false);
+                formListBoxField.AddOption("option 2", true);
                 document.Add(formListBoxField);
                 ListBoxField flattenListBoxField = new ListBoxField("flatten list box field", 2, false);
                 flattenListBoxField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-                flattenListBoxField.AddOption(option1);
-                flattenListBoxField.AddOption(option2);
+                flattenListBoxField.AddOption("option 1", false);
+                flattenListBoxField.AddOption("option 2", true);
                 document.Add(flattenListBoxField);
                 Paragraph option3 = new Paragraph("option 3");
                 option3.SetProperty(FormProperty.FORM_FIELD_SELECTED, true);
-                option3.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 3");
+                option3.SetMargin(0);
+                option3.SetMultipliedLeading(2);
                 ListBoxField flattenListBoxFieldWithMultipleSelection = new ListBoxField("flatten list box field with multiple selection"
                     , 3, true);
-                flattenListBoxFieldWithMultipleSelection.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-                flattenListBoxFieldWithMultipleSelection.AddOption(option1);
-                flattenListBoxFieldWithMultipleSelection.AddOption(option2);
+                flattenListBoxFieldWithMultipleSelection.SetInteractive(false);
+                flattenListBoxFieldWithMultipleSelection.AddOption("option 1", false);
+                flattenListBoxFieldWithMultipleSelection.AddOption("option 2", true);
                 flattenListBoxFieldWithMultipleSelection.AddOption(option3);
                 document.Add(flattenListBoxFieldWithMultipleSelection);
             }
@@ -97,49 +93,63 @@ namespace iText.Forms.Form.Element {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 22)]
-        public virtual void ListBoxFieldWithoutSelectionTest() {
-            String outPdf = DESTINATION_FOLDER + "listBoxFieldWithoutSelection.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithoutSelection.pdf";
+        public virtual void ListBoxFieldWithFontSizeTest() {
+            String outPdf = DESTINATION_FOLDER + "listBoxFieldWithFontSize.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithFontSize.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                Paragraph option1 = new Paragraph("option 1");
-                option1.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 1");
-                Paragraph option2 = new Paragraph("option 2");
-                option2.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 2");
+                ListBoxField formListBoxFieldWithFont = new ListBoxField("flatten list box field with font", 0, false);
+                formListBoxFieldWithFont.SetInteractive(true);
+                formListBoxFieldWithFont.SetBackgroundColor(ColorConstants.RED);
+                formListBoxFieldWithFont.AddOption("option 1");
+                formListBoxFieldWithFont.AddOption("option 2");
+                formListBoxFieldWithFont.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
+                formListBoxFieldWithFont.SetFontSize(6);
+                document.Add(formListBoxFieldWithFont);
+                document.Add(new Paragraph("line break"));
                 ListBoxField flattenListBoxFieldWithFont = new ListBoxField("flatten list box field with font", 0, false);
-                flattenListBoxFieldWithFont.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
+                flattenListBoxFieldWithFont.SetInteractive(false);
                 flattenListBoxFieldWithFont.SetBackgroundColor(ColorConstants.RED);
-                flattenListBoxFieldWithFont.AddOption(option1);
-                flattenListBoxFieldWithFont.AddOption(option2);
+                flattenListBoxFieldWithFont.AddOption("option 1");
+                flattenListBoxFieldWithFont.AddOption("option 2");
+                flattenListBoxFieldWithFont.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
+                flattenListBoxFieldWithFont.SetFontSize(6);
                 document.Add(flattenListBoxFieldWithFont);
+                document.Add(new Paragraph("line break"));
                 ListBoxField flattenListBoxFieldWithPercentFont = new ListBoxField("flatten list box field with percent font"
                     , 0, false);
-                flattenListBoxFieldWithPercentFont.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
+                flattenListBoxFieldWithFont.SetInteractive(false);
                 flattenListBoxFieldWithPercentFont.SetBackgroundColor(ColorConstants.RED);
-                flattenListBoxFieldWithPercentFont.AddOption(option1);
-                flattenListBoxFieldWithPercentFont.AddOption(option2);
-                flattenListBoxFieldWithPercentFont.SetProperty(Property.FONT_SIZE, UnitValue.CreatePercentValue(10));
+                flattenListBoxFieldWithPercentFont.AddOption("option 1");
+                flattenListBoxFieldWithPercentFont.AddOption("option 2");
+                flattenListBoxFieldWithPercentFont.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
+                flattenListBoxFieldWithPercentFont.SetProperty(Property.FONT_SIZE, UnitValue.CreatePercentValue(6));
                 document.Add(flattenListBoxFieldWithPercentFont);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
-        public virtual void ListBoxFieldWithOverflowTest() {
-            String outPdf = DESTINATION_FOLDER + "listBoxFieldWithOverflow.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithOverflow.pdf";
+        public virtual void ListBoxFieldWithMarginsTest() {
+            String outPdf = DESTINATION_FOLDER + "listBoxFieldWithMargins.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithMargins.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 Paragraph option1 = new Paragraph("option 1");
                 option1.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 1");
+                option1.SetMargin(4);
                 Paragraph option2 = new Paragraph("option 2");
                 option2.SetProperty(FormProperty.FORM_FIELD_SELECTED, true);
                 option2.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 2");
-                ListBoxField flattenListBoxField = new ListBoxField("flatten list box field with overflow", 0, false);
-                flattenListBoxField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-                flattenListBoxField.SetBackgroundColor(ColorConstants.RED);
-                flattenListBoxField.AddOption(option1);
-                flattenListBoxField.AddOption(option2);
-                flattenListBoxField.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.HIDDEN);
-                document.Add(flattenListBoxField);
+                option2.SetMargin(4);
+                ListBoxField listBoxField = new ListBoxField("list box field with margins", 1, false);
+                listBoxField.SetInteractive(false);
+                listBoxField.SetBackgroundColor(ColorConstants.RED);
+                listBoxField.AddOption(option1);
+                listBoxField.AddOption(option2);
+                document.Add(listBoxField);
+                document.Add(new Paragraph("line break"));
+                document.Add(listBoxField);
+                document.Add(new Paragraph("line break"));
+                document.Add(listBoxField.SetInteractive(true));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
@@ -149,18 +159,15 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldWithHeight.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithHeight.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                Paragraph option1 = new Paragraph("option 1");
-                option1.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 1");
-                Paragraph option2 = new Paragraph("option 2");
-                option2.SetProperty(FormProperty.FORM_FIELD_SELECTED, true);
-                option2.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 2");
-                ListBoxField flattenListBoxField = new ListBoxField("flatten list box field with height", 0, false);
-                flattenListBoxField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-                flattenListBoxField.SetBackgroundColor(ColorConstants.RED);
-                flattenListBoxField.AddOption(option1);
-                flattenListBoxField.AddOption(option2);
-                flattenListBoxField.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100));
-                document.Add(flattenListBoxField);
+                ListBoxField listBoxField = new ListBoxField("list box field with height", 0, false);
+                listBoxField.SetInteractive(false);
+                listBoxField.SetBackgroundColor(ColorConstants.RED);
+                listBoxField.AddOption("option 1");
+                listBoxField.AddOption("option 2", true);
+                listBoxField.SetHeight(100);
+                document.Add(listBoxField);
+                document.Add(new Paragraph("line break"));
+                document.Add(listBoxField.SetInteractive(true));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
@@ -170,40 +177,34 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldWithMinHeight.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithMinHeight.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                Paragraph option1 = new Paragraph("option 1");
-                option1.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 1");
-                Paragraph option2 = new Paragraph("option 2");
-                option2.SetProperty(FormProperty.FORM_FIELD_SELECTED, true);
-                option2.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 2");
-                ListBoxField flattenListBoxField = new ListBoxField("flatten list box field with min height", 0, false);
-                flattenListBoxField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-                flattenListBoxField.SetBackgroundColor(ColorConstants.RED);
-                flattenListBoxField.AddOption(option1);
-                flattenListBoxField.AddOption(option2);
-                flattenListBoxField.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(100));
-                document.Add(flattenListBoxField);
+                ListBoxField listBoxField = new ListBoxField("list box field with height", 0, false);
+                listBoxField.SetInteractive(false);
+                listBoxField.SetBackgroundColor(ColorConstants.RED);
+                listBoxField.AddOption("option 1");
+                listBoxField.AddOption("option 2", true);
+                listBoxField.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(100));
+                document.Add(listBoxField);
+                document.Add(new Paragraph("line break"));
+                document.Add(listBoxField.SetInteractive(true));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void ListBoxFieldWithMaxHeightTest() {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldWithMaxHeight.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithMaxHeight.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                Paragraph option1 = new Paragraph("option 1");
-                option1.SetProperty(FormProperty.FORM_FIELD_SELECTED, true);
-                option1.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 1");
-                Paragraph option2 = new Paragraph("option 2");
-                option2.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 2");
-                ListBoxField flattenListBoxField = new ListBoxField("flatten list box field with max height", 0, false);
-                flattenListBoxField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-                flattenListBoxField.SetBackgroundColor(ColorConstants.RED);
-                flattenListBoxField.AddOption(option1);
-                flattenListBoxField.AddOption(option2);
-                flattenListBoxField.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePointValue(40));
-                document.Add(flattenListBoxField);
+                ListBoxField listBoxField = new ListBoxField("list box field with height", 0, false);
+                listBoxField.SetInteractive(false);
+                listBoxField.SetBackgroundColor(ColorConstants.RED);
+                listBoxField.AddOption("option 1", false);
+                listBoxField.AddOption("option 2", true);
+                listBoxField.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePointValue(25));
+                document.Add(listBoxField);
+                document.Add(new Paragraph("line break"));
+                document.Add(listBoxField.SetInteractive(true));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
@@ -218,17 +219,12 @@ namespace iText.Forms.Form.Element {
                 div.SetHeight(UnitValue.CreatePointValue(740));
                 div.SetBackgroundColor(ColorConstants.PINK);
                 document.Add(div);
-                Paragraph option1 = new Paragraph("option 1");
-                option1.SetProperty(FormProperty.FORM_FIELD_SELECTED, true);
-                option1.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 1");
-                Paragraph option2 = new Paragraph("option 2");
-                option2.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 2");
-                ListBoxField flattenListBoxField = new ListBoxField("flatten list box field cannot fit", 0, false);
-                flattenListBoxField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-                flattenListBoxField.SetBackgroundColor(ColorConstants.RED);
-                flattenListBoxField.AddOption(option1);
-                flattenListBoxField.AddOption(option2);
-                document.Add(flattenListBoxField);
+                ListBoxField listBoxField = new ListBoxField("list box field cannot fit", 0, false);
+                listBoxField.SetInteractive(true);
+                listBoxField.SetBackgroundColor(ColorConstants.RED);
+                listBoxField.AddOption("option 1", true);
+                listBoxField.AddOption("option 2");
+                document.Add(listBoxField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
@@ -243,15 +239,16 @@ namespace iText.Forms.Form.Element {
                 option1.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 1");
                 Paragraph option2 = new Paragraph("option 2");
                 option2.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 2");
-                ListBoxField flattenListBoxField = new ListBoxField("flatten list box field cannot fit by width", 0, false
-                    );
-                flattenListBoxField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-                flattenListBoxField.SetBackgroundColor(ColorConstants.RED);
-                flattenListBoxField.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(600));
-                flattenListBoxField.SetBorder(new SolidBorder(20));
-                flattenListBoxField.AddOption(option1);
-                flattenListBoxField.AddOption(option2);
-                document.Add(flattenListBoxField);
+                ListBoxField listBoxField = new ListBoxField("list box field cannot fit by width", 0, false);
+                listBoxField.SetInteractive(false);
+                listBoxField.SetBackgroundColor(ColorConstants.RED);
+                listBoxField.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(600));
+                listBoxField.SetBorder(new SolidBorder(20));
+                listBoxField.AddOption(option1);
+                listBoxField.AddOption(option2);
+                document.Add(listBoxField);
+                document.Add(new Paragraph("Line break"));
+                document.Add(listBoxField.SetInteractive(true));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
@@ -261,18 +258,96 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldWithLang.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithLang.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                Paragraph option1 = new Paragraph("option 1");
-                option1.SetProperty(FormProperty.FORM_FIELD_SELECTED, true);
-                option1.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 1");
-                Paragraph option2 = new Paragraph("option 2");
-                option2.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 2");
-                ListBoxField flattenListBoxField = new ListBoxField("flatten list box field with lang", 0, false);
-                flattenListBoxField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-                flattenListBoxField.SetBackgroundColor(ColorConstants.RED);
-                flattenListBoxField.AddOption(option1);
-                flattenListBoxField.AddOption(option2);
-                flattenListBoxField.SetProperty(FormProperty.FORM_ACCESSIBILITY_LANGUAGE, "random_lang");
-                document.Add(flattenListBoxField);
+                document.GetPdfDocument().SetTagged();
+                ListBoxField listBoxField = new ListBoxField("list box field with lang", 0, false);
+                listBoxField.SetInteractive(false);
+                listBoxField.SetBackgroundColor(ColorConstants.RED);
+                listBoxField.AddOption("option 1");
+                listBoxField.AddOption("option 2");
+                listBoxField.SetProperty(FormProperty.FORM_ACCESSIBILITY_LANGUAGE, "random_lang");
+                document.Add(listBoxField);
+                document.Add(new Paragraph("Line break"));
+                document.Add(listBoxField.SetInteractive(true));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorsBordersTest() {
+            String outPdf = DESTINATION_FOLDER + "colorsBorders.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_colorsBorders.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                ListBoxField listBoxField = new ListBoxField("coloured list box field with borders", 0, false);
+                listBoxField.SetInteractive(false);
+                listBoxField.SetBackgroundColor(ColorConstants.RED);
+                listBoxField.AddOption("option 1");
+                listBoxField.AddOption("option 2", true);
+                listBoxField.SetBorder(new DashedBorder(ColorConstants.BLUE, 3));
+                listBoxField.SetFontColor(ColorConstants.GREEN);
+                document.Add(listBoxField);
+                document.Add(new Paragraph("Line break"));
+                document.Add(listBoxField.SetInteractive(true));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongListTest() {
+            String outPdf = DESTINATION_FOLDER + "longList.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_longList.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                ListBoxField listBoxField = new ListBoxField("long list box field", 4, true);
+                listBoxField.SetInteractive(false);
+                listBoxField.AddOption("option 1");
+                listBoxField.AddOption("option 2");
+                listBoxField.AddOption("option 3");
+                listBoxField.AddOption("option 4");
+                listBoxField.AddOption("option 5");
+                listBoxField.AddOption("option 6", true);
+                listBoxField.AddOption("option 7");
+                listBoxField.AddOption("option 8");
+                listBoxField.AddOption("option 9");
+                listBoxField.AddOption("very very very long long long option 10", true);
+                listBoxField.AddOption("option 11");
+                document.Add(listBoxField);
+                document.Add(new Paragraph("Line break"));
+                document.Add(listBoxField.SetInteractive(true));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void JustificationTest() {
+            String outPdf = DESTINATION_FOLDER + "justification.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_justification.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                ListBoxField listBoxField = new ListBoxField("left box field", 0, false);
+                listBoxField.SetInteractive(false);
+                listBoxField.SetWidth(200);
+                listBoxField.SetTextAlignment(TextAlignment.LEFT);
+                listBoxField.AddOption("option 1");
+                listBoxField.AddOption("option 2", true);
+                document.Add(listBoxField);
+                document.Add(new Paragraph("Line break"));
+                document.Add(listBoxField.SetInteractive(true));
+                ListBoxField centerListBoxField = new ListBoxField("center box field", 0, false);
+                centerListBoxField.SetInteractive(false);
+                centerListBoxField.SetWidth(200);
+                centerListBoxField.SetTextAlignment(TextAlignment.CENTER);
+                centerListBoxField.AddOption("option 1");
+                centerListBoxField.AddOption("option 2", true);
+                document.Add(centerListBoxField);
+                document.Add(new Paragraph("Line break"));
+                document.Add(centerListBoxField.SetInteractive(true));
+                ListBoxField rightListBoxField = new ListBoxField("right box field", 0, false);
+                rightListBoxField.SetInteractive(false);
+                rightListBoxField.SetWidth(200);
+                rightListBoxField.SetTextAlignment(TextAlignment.RIGHT);
+                rightListBoxField.AddOption("option 1");
+                rightListBoxField.AddOption("option 2", true);
+                document.Add(rightListBoxField);
+                document.Add(new Paragraph("Line break"));
+                document.Add(rightListBoxField.SetInteractive(true));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
