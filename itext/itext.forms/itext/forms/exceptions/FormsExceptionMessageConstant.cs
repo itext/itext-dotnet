@@ -50,6 +50,10 @@ namespace iText.Forms.Exceptions {
 
         public const String INVALID_ROTATION_VALUE = "Invalid rotation. Rotation must be a multiple of 90 degrees.";
 
+        public const String OPTION_ELEMENT_SHALL_NOT_BE_NULL = "Option element shall not be null.";
+
+        public const String VALUE_SHALL_NOT_BE_NULL = "Value <{0}> shall not be null";
+
         private FormsExceptionMessageConstant() {
         }
     }
