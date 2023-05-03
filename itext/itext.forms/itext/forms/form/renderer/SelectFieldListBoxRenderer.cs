@@ -172,10 +172,10 @@ namespace iText.Forms.Form.Renderer {
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
                 ));
             ListBoxField lbModelElement = (ListBoxField)modelElement;
-            IList<String> options = lbModelElement.GetStrings();
             IList<String> selectedOptions = lbModelElement.GetSelectedStrings();
-            PdfChoiceFormField choiceField = new ChoiceFormFieldBuilder(doc, GetModelId()).SetWidgetRectangle(area).SetOptions
-                (options.ToArray(new String[options.Count])).CreateList();
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, GetModelId()).SetWidgetRectangle(area);
+            SetupBuilderValues(builder, lbModelElement);
+            PdfChoiceFormField choiceField = builder.CreateList();
             if (font != null) {
                 choiceField.SetFont(font);
             }

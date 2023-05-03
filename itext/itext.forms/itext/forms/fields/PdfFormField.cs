@@ -1354,8 +1354,8 @@ namespace iText.Forms.Fields {
                 }
                 else {
                     if (obj.IsArray()) {
-                        PdfObject element = ((PdfArray)obj).Get(1);
-                        if (element.IsString()) {
+                        PdfObject element = ((PdfArray)obj).Size() > 1 ? ((PdfArray)obj).Get(1) : null;
+                        if (element != null && element.IsString()) {
                             sb.Append(((PdfString)element).ToUnicodeString()).Append('\n');
                         }
                     }

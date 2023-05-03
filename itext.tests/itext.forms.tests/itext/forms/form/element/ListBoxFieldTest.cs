@@ -21,10 +21,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
+using iText.Forms;
+using iText.Forms.Exceptions;
+using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
@@ -350,6 +355,86 @@ namespace iText.Forms.Form.Element {
                 document.Add(rightListBoxField.SetInteractive(true));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExportValueTest() {
+            String outPdf = DESTINATION_FOLDER + "exportValue.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_exportValue.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                ListBoxField listBoxField = new ListBoxField("export value field", 0, true);
+                listBoxField.SetInteractive(false);
+                listBoxField.SetWidth(200);
+                listBoxField.AddOption(new SelectFieldItem("English"));
+                listBoxField.AddOption(new SelectFieldItem("German", "Deutch"), true);
+                listBoxField.AddOption(new SelectFieldItem("Italian", "Italiano"), true);
+                document.Add(listBoxField);
+                document.Add(new Paragraph("Line break"));
+                document.Add(listBoxField.SetInteractive(true));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidOptionsTest() {
+            String outPdf = DESTINATION_FOLDER + "invalidOptions.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_invalidOptions.pdf";
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+                ListBoxField listBoxField = new ListBoxField("invalid", 0, true);
+                listBoxField.SetInteractive(true);
+                listBoxField.SetWidth(200);
+                // Invalid options array here
+                PdfArray option1 = new PdfArray();
+                option1.Add(new PdfString("English"));
+                option1.Add(new PdfString("English"));
+                option1.Add(new PdfString("English3"));
+                PdfArray option2 = new PdfArray();
+                option2.Add(new PdfString("German"));
+                option2.Add(new PdfString("Deutch"));
+                PdfArray option3 = new PdfArray();
+                option3.Add(new PdfString("Italian"));
+                PdfArray options = new PdfArray();
+                options.Add(option1);
+                options.Add(option2);
+                options.Add(option3);
+                options.Add(new PdfArray());
+                PdfChoiceFormField field = new ChoiceFormFieldBuilder(doc, "invalid").SetWidgetRectangle(new Rectangle(100
+                    , 500, 100, 100)).CreateList();
+                field.SetOptions(options);
+                field.GetFirstFormAnnotation().SetFormFieldElement(listBoxField);
+                PdfAcroForm.GetAcroForm(doc, true).AddField(field);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidOptionsExceptionTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, "invalid").SetWidgetRectangle(new Rectangle
+                    (100, 500, 100, 100));
+                PdfArray option1 = new PdfArray();
+                option1.Add(new PdfString("English"));
+                option1.Add(new PdfString("English"));
+                option1.Add(new PdfString("English3"));
+                PdfArray options = new PdfArray();
+                options.Add(option1);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => builder.SetOptions(options));
+                NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.INNER_ARRAY_SHALL_HAVE_TWO_ELEMENTS, e.Message
+                    );
+                options.Clear();
+                option1 = new PdfArray();
+                option1.Add(new PdfString("English"));
+                option1.Add(new PdfNumber(1));
+                options.Add(option1);
+                e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => builder.SetOptions(options));
+                NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.OPTION_ELEMENT_MUST_BE_STRING_OR_ARRAY, e.Message
+                    );
+                PdfArray options2 = new PdfArray();
+                options2.Add(new PdfNumber(1));
+                e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => builder.SetOptions(options2));
+                NUnit.Framework.Assert.AreEqual(FormsExceptionMessageConstant.OPTION_ELEMENT_MUST_BE_STRING_OR_ARRAY, e.Message
+                    );
+            }
         }
     }
 }

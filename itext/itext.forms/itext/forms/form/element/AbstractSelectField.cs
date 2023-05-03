@@ -53,6 +53,23 @@ namespace iText.Forms.Form.Element {
             options.Add(option);
         }
 
+        /// <summary>Add an option to the element.</summary>
+        /// <param name="option">
+        /// a
+        /// <see cref="SelectFieldItem"/>.
+        /// </param>
+        /// <param name="selected">
+        /// 
+        /// <see langword="true"/>
+        /// is the option if selected,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </param>
+        public virtual void AddOption(SelectFieldItem option, bool selected) {
+            option.GetElement().SetProperty(FormProperty.FORM_FIELD_SELECTED, selected);
+            options.Add(option);
+        }
+
         /// <summary>
         /// Get a list of
         /// <see cref="SelectFieldItem"/>.

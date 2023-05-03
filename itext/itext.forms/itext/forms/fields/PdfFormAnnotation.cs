@@ -688,11 +688,28 @@ namespace iText.Forms.Fields {
             PdfArray indices = GetParent().GetAsArray(PdfName.I);
             PdfArray options = parent.GetOptions();
             for (int index = 0; index < options.Size(); ++index) {
-                String optionValue = options.Get(index).ToString();
+                PdfObject option = options.Get(index);
+                String exportValue = null;
+                String displayValue = null;
+                if (option.IsString()) {
+                    exportValue = option.ToString();
+                }
+                else {
+                    if (option.IsArray()) {
+                        PdfArray optionArray = (PdfArray)option;
+                        if (optionArray.Size() > 1) {
+                            exportValue = optionArray.Get(0).ToString();
+                            displayValue = optionArray.Get(1).ToString();
+                        }
+                    }
+                }
+                if (exportValue == null) {
+                    continue;
+                }
                 bool selected = indices == null ? false : indices.Contains(new PdfNumber(index));
-                SelectFieldItem existingItem = ((ListBoxField)formFieldElement).GetOption(optionValue);
+                SelectFieldItem existingItem = ((ListBoxField)formFieldElement).GetOption(exportValue);
                 if (existingItem == null) {
-                    existingItem = new SelectFieldItem(optionValue);
+                    existingItem = new SelectFieldItem(exportValue, displayValue);
                     ((ListBoxField)formFieldElement).AddOption(existingItem);
                 }
                 existingItem.GetElement().SetProperty(Property.TEXT_ALIGNMENT, parent.GetJustification());

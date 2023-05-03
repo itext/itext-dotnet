@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Forms.Logs;
@@ -155,6 +156,51 @@ namespace iText.Forms.Form.Renderer {
         /// <returns>the model id</returns>
         protected internal virtual String GetModelId() {
             return ((IFormField)GetModelElement()).GetId();
+        }
+
+        /// <summary>
+        /// Retrieve the options from select field (can be combo box or list box field) and set them
+        /// to the form field builder.
+        /// </summary>
+        /// <param name="builder">
+        /// 
+        /// <see cref="iText.Forms.Fields.ChoiceFormFieldBuilder"/>
+        /// to set options to.
+        /// </param>
+        /// <param name="field">
+        /// 
+        /// <see cref="iText.Forms.Form.Element.AbstractSelectField"/>
+        /// to retrieve the options from.
+        /// </param>
+        protected internal virtual void SetupBuilderValues(ChoiceFormFieldBuilder builder, AbstractSelectField field
+            ) {
+            IList<SelectFieldItem> options = field.GetItems();
+            if (options.IsEmpty()) {
+                builder.SetOptions(new String[0]);
+                return;
+            }
+            bool supportExportValueAndDisplayValue = field.HasExportAndDisplayValues();
+            // If one element has export value and display value, then all elements must have export value and display value
+            if (supportExportValueAndDisplayValue) {
+                String[][] exportValuesAndDisplayValues = new String[options.Count][];
+                for (int i = 0; i < options.Count; i++) {
+                    SelectFieldItem option = options[i];
+                    String[] exportValues = new String[2];
+                    exportValues[0] = option.GetExportValue();
+                    exportValues[1] = option.GetDisplayValue();
+                    exportValuesAndDisplayValues[i] = exportValues;
+                }
+                builder.SetOptions(exportValuesAndDisplayValues);
+            }
+            else {
+                // In normal case we just use display values as this will correctly give the one value that we need
+                String[] displayValues = new String[options.Count];
+                for (int i = 0; i < options.Count; i++) {
+                    SelectFieldItem option = options[i];
+                    displayValues[i] = option.GetDisplayValue();
+                }
+                builder.SetOptions(displayValues);
+            }
         }
 
         protected internal virtual float GetFinalSelectFieldHeight(float availableHeight, float actualHeight, bool

@@ -124,12 +124,12 @@ namespace iText.Forms.Form.Element {
         }
 
         /// <summary>Get a list of selected options.</summary>
-        /// <returns>a list of selected options.</returns>
+        /// <returns>a list of display values of selected options.</returns>
         public virtual IList<String> GetSelectedStrings() {
             IList<String> selectedStrings = new List<String>();
             foreach (SelectFieldItem option in options) {
                 if (true.Equals(option.GetElement().GetProperty<bool?>(FormProperty.FORM_FIELD_SELECTED))) {
-                    selectedStrings.Add(option.GetExportValue());
+                    selectedStrings.Add(option.GetDisplayValue());
                 }
             }
             return selectedStrings;
