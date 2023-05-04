@@ -1232,6 +1232,9 @@ namespace iText.Kernel.Pdf {
                         throw new PdfException(KernelExceptionMessageConstant.TAG_STRUCTURE_COPYING_FAILED_IT_MIGHT_BE_CORRUPTED_IN_ONE_OF_THE_DOCUMENTS
                             , ex);
                     }
+                    if (copier is IPdfPageFormCopier) {
+                        ((IPdfPageFormCopier)copier).RecreateAcroformToProcessCopiedFields(toDocument);
+                    }
                 }
                 else {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));

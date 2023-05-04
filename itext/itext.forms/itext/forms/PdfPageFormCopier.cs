@@ -43,7 +43,7 @@ namespace iText.Forms {
     /// it is still worth to know that PdfPageFormCopier uses some caching logic which can potentially improve performance
     /// in case of the reusing of the same instance.
     /// </remarks>
-    public class PdfPageFormCopier : IPdfPageExtraCopier {
+    public class PdfPageFormCopier : IPdfPageFormCopier {
         private PdfAcroForm formFrom;
 
         private PdfAcroForm formTo;
@@ -90,26 +90,24 @@ namespace iText.Forms {
                     }
                     CopyField(fieldsFrom, fieldsTo, annot);
                 }
-                foreach (PdfObject fieldObject in collectedFieldObjects) {
-                    PdfFormField field = PdfFormField.MakeFormField(fieldObject, documentTo);
-                    String fieldName = field.GetFieldName().ToUnicodeString();
-                    if (field.Equals(fieldsTo.Get(fieldName))) {
-                        // Here the 'field' might wrap the same pdfObject as fieldsTo.get(fieldName).
-                        // But fieldsTo.get(fieldName) might have less childFields attached
-                        // (and the same amount of Kids in pdf object it wraps, see createParentFieldCopy
-                        // where we work with the Kids array directly). Our merge logic doesn't work
-                        // with such not synchronised fields. So that we replace it with newly created field
-                        // which contains all childFields.
-                        formTo.ReplaceField(fieldName, field);
-                    }
-                    else {
-                        formTo.AddField(field, toPage, false);
-                    }
+                // Add collected field objects to the acroform PDF object.
+                PdfArray fieldsArray = formTo.GetFields();
+                fieldsArray.AddAll(collectedFieldObjects);
+                fieldsArray.SetModified();
+                if (!documentFrom.IsTagged() || !documentTo.IsTagged()) {
+                    // It makes sense to create the Acroform only after copying the tag structure,
+                    // so fields with the same names will be merged ang tag structure will be correct,
+                    // but when the document is not tagged we can re-create Acroform with added fields right away.
+                    PdfAcroForm.GetAcroForm(documentTo, true);
                 }
             }
             finally {
                 collectedFieldObjects.Clear();
             }
+        }
+
+        public virtual void RecreateAcroformToProcessCopiedFields(PdfDocument documentTo) {
+            PdfAcroForm.GetAcroForm(documentTo, true);
         }
 
         private AbstractPdfFormField MakeFormField(PdfObject fieldDict) {

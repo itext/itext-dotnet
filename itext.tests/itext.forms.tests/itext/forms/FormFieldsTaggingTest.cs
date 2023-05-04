@@ -28,6 +28,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Forms {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -176,6 +177,24 @@ namespace iText.Forms {
             }
             CompareOutput(outFileName, cmpFileName);
             CompareOutput(outFileName, sourceFolder + "cmp_mergeFieldTaggingTest08.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 2)]
+        public virtual void FormFieldTaggingTest10() {
+            String outFileName = destinationFolder + "taggedPdfWithForms10.pdf";
+            String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms10.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            pdfDoc.SetTagged();
+            pdfDoc.InitializeOutlines();
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            acroForm.AddField(new CheckBoxFormFieldBuilder(pdfDoc, "TestCheck").SetWidgetRectangle(new Rectangle(36, 560
+                , 20, 20)).CreateCheckBox().SetValue("1", true));
+            PdfDocument docToCopyFrom = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms07.pdf"));
+            docToCopyFrom.CopyPagesTo(1, docToCopyFrom.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
+            docToCopyFrom.CopyPagesTo(1, docToCopyFrom.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
+            pdfDoc.Close();
+            CompareOutput(outFileName, cmpFileName);
         }
 
         private void AddFormFieldsToDocument(PdfDocument pdfDoc, PdfAcroForm acroForm) {
