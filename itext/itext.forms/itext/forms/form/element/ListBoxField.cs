@@ -113,16 +113,6 @@ namespace iText.Forms.Form.Element {
             return this;
         }
 
-        /// <summary>Get a list of options.</summary>
-        /// <returns>a list of options.</returns>
-        public virtual IList<String> GetStrings() {
-            IList<String> stringOptions = new List<String>();
-            foreach (SelectFieldItem option in options) {
-                stringOptions.Add(option.GetExportValue());
-            }
-            return stringOptions;
-        }
-
         /// <summary>Get a list of selected options.</summary>
         /// <returns>a list of display values of selected options.</returns>
         public virtual IList<String> GetSelectedStrings() {

@@ -22,11 +22,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
+using iText.Forms;
+using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -49,6 +58,7 @@ namespace iText.Forms.Form.Renderer {
         /// <param name="modelElement">the model element</param>
         public SelectFieldComboBoxRenderer(AbstractSelectField modelElement)
             : base(modelElement) {
+            SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
             SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.MIDDLE);
             SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);
             SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.HIDDEN);
@@ -72,20 +82,83 @@ namespace iText.Forms.Form.Renderer {
             return true;
         }
 
-        protected internal override void ApplyAcroField(DrawContext drawContext) {
-        }
-
-        // TODO DEVSIX-1901
         protected internal override IRenderer CreateFlatRenderer() {
             return CreateFlatRenderer(false);
         }
 
+        protected internal override void ApplyAcroField(DrawContext drawContext) {
+            ComboBoxField comboBoxFieldModelElement = (ComboBoxField)this.modelElement;
+            String name = GetModelId();
+            PdfDocument doc = drawContext.GetDocument();
+            Rectangle area = GetOccupiedAreaBBox();
+            PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
+                (this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
+            modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
+            modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
+                ));
+            SetupBuilderValues(builder, comboBoxFieldModelElement);
+            PdfChoiceFormField comboBoxField = builder.CreateComboBox();
+            Background background = this.modelElement.GetProperty<Background>(Property.BACKGROUND);
+            if (background != null) {
+                comboBoxField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
+            }
+            AbstractFormFieldRenderer.ApplyBorderProperty(this, comboBoxField.GetFirstFormAnnotation());
+            PdfFont font = GetRetrievedFont();
+            if (font != null) {
+                comboBoxField.SetFont(font);
+            }
+            UnitValue fontSize = GetFontSize();
+            if (fontSize != null) {
+                comboBoxField.SetFontSize(fontSize.GetValue());
+            }
+            SelectFieldItem selectedLabel = comboBoxFieldModelElement.GetSelectedOption();
+            if (selectedLabel != null) {
+                comboBoxField.SetValue(selectedLabel.GetDisplayValue());
+            }
+            else {
+                String exportValue = comboBoxFieldModelElement.GetSelectedExportValue();
+                if (exportValue == null) {
+                    RenderingMode? renderingMode = comboBoxFieldModelElement.GetProperty<RenderingMode?>(Property.RENDERING_MODE
+                        );
+                    if (RenderingMode.HTML_MODE == renderingMode && comboBoxFieldModelElement.HasOptions()) {
+                        comboBoxFieldModelElement.SetSelected(0);
+                        comboBoxField.SetValue(comboBoxFieldModelElement.GetSelectedExportValue());
+                    }
+                }
+                else {
+                    comboBoxField.SetValue(comboBoxFieldModelElement.GetSelectedExportValue());
+                }
+            }
+            comboBoxField.GetFirstFormAnnotation().SetFormFieldElement(comboBoxFieldModelElement);
+            PdfAcroForm.GetAcroForm(doc, true).AddField(comboBoxField, page);
+            WriteAcroFormFieldLangAttribute(doc);
+        }
+
+        private PdfFont GetRetrievedFont() {
+            Object retrievedFont = this.GetProperty<Object>(Property.FONT);
+            return retrievedFont is PdfFont ? (PdfFont)retrievedFont : null;
+        }
+
+        private UnitValue GetFontSize() {
+            if (!this.HasProperty(Property.FONT_SIZE)) {
+                return null;
+            }
+            UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
+            if (!fontSize.IsPointValue()) {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.SelectFieldComboBoxRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    , Property.FONT_SIZE));
+            }
+            return fontSize;
+        }
+
         private IRenderer CreateFlatRenderer(bool addAllOptionsToChildren) {
             AbstractSelectField selectField = (AbstractSelectField)modelElement;
-            IList<IBlockElement> options = selectField.GetOptions();
+            IList<SelectFieldItem> options = selectField.GetItems();
             Div pseudoContainer = new Div();
-            foreach (IBlockElement option in options) {
-                pseudoContainer.Add(option);
+            foreach (SelectFieldItem option in options) {
+                pseudoContainer.Add(option.GetElement());
             }
             IList<Paragraph> allOptions;
             IRenderer pseudoRendererSubTree = pseudoContainer.CreateRendererSubTree();
@@ -129,6 +202,20 @@ namespace iText.Forms.Form.Renderer {
                 ProcessLangAttribute(p, selectedOption);
                 selectedOptionFlatRendererList.Add(p);
             }
+            else {
+                ComboBoxField modelElement = (ComboBoxField)GetModelElement();
+                SelectFieldItem selectedOptionItem = modelElement.GetSelectedOption();
+                String label = modelElement.GetSelectedExportValue();
+                if (selectedOptionItem != null) {
+                    label = selectedOptionItem.GetDisplayValue();
+                }
+                if (label != null) {
+                    Paragraph p = CreateComboBoxOptionFlatElement(label, false);
+                    p.SetProperty(FormProperty.FORM_FIELD_SELECTED, true);
+                    ProcessLangAttribute(p, p.GetRenderer());
+                    selectedOptionFlatRendererList.Add(p);
+                }
+            }
             return selectedOptionFlatRendererList;
         }
 
@@ -165,11 +252,22 @@ namespace iText.Forms.Form.Renderer {
             return options;
         }
 
-        private static Paragraph CreateComboBoxOptionFlatElement() {
+        private void ProcessLangAttribute(Paragraph optionFlatElement, IRenderer originalOptionRenderer) {
+            IPropertyContainer propertyContainer = originalOptionRenderer.GetModelElement();
+            if (propertyContainer is IAccessibleElement) {
+                String lang = ((IAccessibleElement)propertyContainer).GetAccessibilityProperties().GetLanguage();
+                AccessibilityProperties properties = ((IAccessibleElement)optionFlatElement).GetAccessibilityProperties();
+                if (properties.GetLanguage() == null) {
+                    properties.SetLanguage(lang);
+                }
+            }
+        }
+
+        private Paragraph CreateComboBoxOptionFlatElement() {
             return CreateComboBoxOptionFlatElement(null, false);
         }
 
-        private static Paragraph CreateComboBoxOptionFlatElement(String label, bool simulateOptGroupMargin) {
+        private Paragraph CreateComboBoxOptionFlatElement(String label, bool simulateOptGroupMargin) {
             Paragraph paragraph = new Paragraph().SetMargin(0);
             if (simulateOptGroupMargin) {
                 paragraph.Add("\u200d    ");
@@ -180,24 +278,25 @@ namespace iText.Forms.Form.Renderer {
             paragraph.Add(label);
             paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             paragraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
-            // These constants are defined according to values in default.css.
-            // At least in Chrome paddings of options in comboboxes cannot be altered through css styles.
-            float leftRightPaddingVal = 2 * 0.75f;
-            float bottomPaddingVal = 0.75f;
-            float topPaddingVal = 0;
-            paragraph.SetPaddings(topPaddingVal, leftRightPaddingVal, bottomPaddingVal, leftRightPaddingVal);
-            return paragraph;
-        }
-
-        private void ProcessLangAttribute(Paragraph optionFlatElement, IRenderer originalOptionRenderer) {
-            IPropertyContainer propertyContainer = originalOptionRenderer.GetModelElement();
-            if (propertyContainer is IAccessibleElement) {
-                String lang = ((IAccessibleElement)propertyContainer).GetAccessibilityProperties().GetLanguage();
-                AccessibilityProperties properties = ((IAccessibleElement)optionFlatElement).GetAccessibilityProperties();
-                if (properties.GetLanguage() == null) {
-                    properties.SetLanguage(lang);
-                }
+            paragraph.SetFontColor(modelElement.GetProperty<TransparentColor>(Property.FONT_COLOR));
+            UnitValue fontSize = modelElement.GetProperty<UnitValue>(Property.FONT_SIZE);
+            if (fontSize != null) {
+                paragraph.SetFontSize(fontSize.GetValue());
             }
+            PdfFont font = GetRetrievedFont();
+            if (font != null) {
+                paragraph.SetFont(font);
+            }
+            float paddingTop = 0f;
+            float paddingBottom = 0.75f;
+            float paddingLeft = 1.5f;
+            float paddingRight = 1.5f;
+            if (!IsFlatten()) {
+                float extraPaddingChrome = 10f;
+                paddingRight += extraPaddingChrome;
+            }
+            paragraph.SetPaddings(paddingTop, paddingRight, paddingBottom, paddingLeft);
+            return paragraph;
         }
     }
 }

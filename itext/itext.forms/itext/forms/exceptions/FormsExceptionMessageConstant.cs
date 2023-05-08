@@ -56,6 +56,8 @@ namespace iText.Forms.Exceptions {
 
         public const String VALUE_SHALL_NOT_BE_NULL = "Value <{0}> shall not be null";
 
+        public const String INDEX_OUT_OF_BOUNDS = "Index: {0}, Size: {1}";
+
         private FormsExceptionMessageConstant() {
         }
     }

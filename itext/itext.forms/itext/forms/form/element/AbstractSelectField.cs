@@ -79,6 +79,18 @@ namespace iText.Forms.Form.Element {
             return options;
         }
 
+        /// <summary>Gets the total amount of options available.</summary>
+        /// <returns>the number of options in the element.</returns>
+        public virtual int OptionsCount() {
+            return this.GetItems().Count;
+        }
+
+        /// <summary>Checks if the element has any options.</summary>
+        /// <returns>true if the element has options, false otherwise.</returns>
+        public virtual bool HasOptions() {
+            return OptionsCount() > 0;
+        }
+
         /// <summary>
         /// Get an option
         /// <see cref="SelectFieldItem"/>
@@ -111,13 +123,14 @@ namespace iText.Forms.Form.Element {
             return blockElements;
         }
 
-        /// <summary>Clear all options.</summary>
-        /// <returns>this element.</returns>
-        public virtual iText.Forms.Form.Element.AbstractSelectField Clear() {
-            options.Clear();
-            return this;
-        }
-
+        /// <summary>Checks if the field has options with export and display values.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the field has options with export and display values,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
         public virtual bool HasExportAndDisplayValues() {
             foreach (SelectFieldItem option in options) {
                 if (option.HasExportAndDisplayValues()) {

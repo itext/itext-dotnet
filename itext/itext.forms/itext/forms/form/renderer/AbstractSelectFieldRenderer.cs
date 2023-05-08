@@ -22,12 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
-using iText.Forms.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
@@ -52,12 +49,6 @@ namespace iText.Forms.Form.Renderer {
         protected internal AbstractSelectFieldRenderer(AbstractSelectField modelElement)
             : base(modelElement) {
             AddChild(CreateFlatRenderer());
-            if (!IsFlatten() && this is SelectFieldComboBoxRenderer) {
-                // TODO DEVSIX-1901
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.AbstractSelectFieldRenderer));
-                logger.LogWarning(FormsLogMessageConstants.ACROFORM_NOT_SUPPORTED_FOR_SELECT);
-                SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-            }
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
@@ -231,6 +222,15 @@ namespace iText.Forms.Form.Renderer {
             return selectedOptions;
         }
 
+        internal static bool IsOptGroupRenderer(IRenderer renderer) {
+            return renderer.HasProperty(FormProperty.FORM_FIELD_LABEL) && !renderer.HasProperty(FormProperty.FORM_FIELD_SELECTED
+                );
+        }
+
+        internal static bool IsOptionRenderer(IRenderer child) {
+            return child.HasProperty(FormProperty.FORM_FIELD_SELECTED);
+        }
+
         private LayoutResult MakeLayoutResultFull(LayoutArea layoutArea, LayoutResult layoutResult) {
             IRenderer splitRenderer = layoutResult.GetSplitRenderer() == null ? this : layoutResult.GetSplitRenderer();
             if (occupiedArea == null) {
@@ -239,15 +239,6 @@ namespace iText.Forms.Form.Renderer {
             }
             layoutResult = new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null);
             return layoutResult;
-        }
-
-        internal static bool IsOptGroupRenderer(IRenderer renderer) {
-            return renderer.HasProperty(FormProperty.FORM_FIELD_LABEL) && !renderer.HasProperty(FormProperty.FORM_FIELD_SELECTED
-                );
-        }
-
-        internal static bool IsOptionRenderer(IRenderer child) {
-            return child.HasProperty(FormProperty.FORM_FIELD_SELECTED);
         }
     }
 }
