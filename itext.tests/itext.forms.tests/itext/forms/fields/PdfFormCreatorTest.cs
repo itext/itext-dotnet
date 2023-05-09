@@ -1,3 +1,25 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
+
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
+
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 using iText.Forms;
 using iText.IO.Source;
 using iText.Kernel.Colors;
@@ -11,7 +33,7 @@ namespace iText.Forms.Fields {
     public class PdfFormCreatorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetAcroFormTest() {
-            PdfFormFactory customFactory = new _PdfFormFactory_21();
+            PdfFormFactory customFactory = new _PdfFormFactory_43();
             // Never create new acroform.
             PdfFormCreator.SetFactory(customFactory);
             try {
@@ -25,8 +47,8 @@ namespace iText.Forms.Fields {
             }
         }
 
-        private sealed class _PdfFormFactory_21 : PdfFormFactory {
-            public _PdfFormFactory_21() {
+        private sealed class _PdfFormFactory_43 : PdfFormFactory {
+            public _PdfFormFactory_43() {
             }
 
             public override PdfAcroForm GetAcroForm(PdfDocument document, bool createIfNotExist) {
@@ -36,7 +58,7 @@ namespace iText.Forms.Fields {
 
         [NUnit.Framework.Test]
         public virtual void CreateTextFormFieldTest() {
-            PdfFormFactory customFactory = new _PdfFormFactory_41();
+            PdfFormFactory customFactory = new _PdfFormFactory_63();
             // All text is read by default.
             PdfFormCreator.SetFactory(customFactory);
             try {
@@ -51,8 +73,8 @@ namespace iText.Forms.Fields {
             }
         }
 
-        private sealed class _PdfFormFactory_41 : PdfFormFactory {
-            public _PdfFormFactory_41() {
+        private sealed class _PdfFormFactory_63 : PdfFormFactory {
+            public _PdfFormFactory_63() {
             }
 
             public override PdfTextFormField CreateTextFormField(PdfWidgetAnnotation widgetAnnotation, PdfDocument document
