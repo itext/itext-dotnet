@@ -54,7 +54,7 @@ namespace iText.Forms {
         public virtual void MultilineFormFieldTest() {
             String filename = destinationFolder + "multilineFormFieldTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfTextFormField name = new TextFormFieldBuilder(pdfDoc, "fieldName").SetWidgetRectangle(new Rectangle(150
                 , 600, 277, 44)).CreateMultilineText();
             name.SetValue("").SetFont(null).SetFontSize(0);
@@ -78,7 +78,7 @@ namespace iText.Forms {
             String outPdf = destinationFolder + "multilineTextFieldWithAlignment.pdf";
             String cmpPdf = sourceFolder + "cmp_multilineTextFieldWithAlignment.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             Rectangle rect = new Rectangle(210, 600, 150, 100);
             PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "fieldName").SetWidgetRectangle(rect).CreateMultilineText
                 ();
@@ -102,7 +102,7 @@ namespace iText.Forms {
             PdfWriter writer = new PdfWriter(outPdf);
             PdfReader reader = new PdfReader(srcPdf);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             fields.Get("BEMERKUNGEN").SetValue("First line\n\n\nFourth line");
             pdfDoc.Close();
@@ -122,7 +122,7 @@ namespace iText.Forms {
             PdfWriter writer = new PdfWriter(outPdf);
             PdfReader reader = new PdfReader(srcPdf);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfTextFormField info = (PdfTextFormField)form.GetField("info");
             info.SetValue("A\n\nE");
             pdfDoc.Close();
@@ -137,7 +137,7 @@ namespace iText.Forms {
         public virtual void NotFittingByHeightTest() {
             String filename = "notFittingByHeightTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             for (int i = 15; i <= 50; i += 15) {
                 PdfFormField[] fields = new PdfFormField[] { new TextFormFieldBuilder(pdfDoc, "multi " + i).SetWidgetRectangle
                     (new Rectangle(100, 800 - i * 4, 150, i)).CreateMultilineText().SetValue("MULTI"), new TextFormFieldBuilder
@@ -162,7 +162,7 @@ namespace iText.Forms {
         public virtual void BorderWidthIndentMultilineTest() {
             String filename = destinationFolder + "borderWidthIndentMultilineTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "multi").SetWidgetRectangle(new Rectangle(100, 500
                 , 400, 300)).CreateMultilineText();
             field.SetValue("Does this text overlap the border? Well it shouldn't!");
@@ -193,7 +193,7 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "formFieldWithStringTest.pdf"));
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", PdfEncodings.IDENTITY_H
                 );
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfFormField form = new TextFormFieldBuilder(pdfDoc, "field").SetWidgetRectangle(new Rectangle(59, 715, 127
                 , 69)).CreateMultilineText().SetValue("");
             form.SetFont(font).SetFontSize(10f);
@@ -210,7 +210,7 @@ namespace iText.Forms {
             String filename = destinationFolder + "multilineTextFieldLeadingSpacesAreNotTrimmed.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             pdfDoc.AddNewPage();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfPage page = pdfDoc.GetFirstPage();
             Rectangle rect = new Rectangle(210, 490, 300, 200);
             PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "TestField").SetWidgetRectangle(rect).CreateMultilineText
@@ -231,7 +231,7 @@ namespace iText.Forms {
             String filename = destinationFolder + "multilineTextFieldRedundantSpacesAreTrimmedTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             pdfDoc.AddNewPage();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfPage page = pdfDoc.GetFirstPage();
             Rectangle rect = new Rectangle(210, 490, 90, 200);
             PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "TestField").SetWidgetRectangle(rect).CreateMultilineText

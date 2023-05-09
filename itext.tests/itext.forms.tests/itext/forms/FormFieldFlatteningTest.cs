@@ -50,7 +50,7 @@ namespace iText.Forms {
             String outPdfName = destinationFolder + "flattenedFormField.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "formFieldFile.pdf"), new PdfWriter(outPdfName
                 ));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, false);
             NUnit.Framework.Assert.AreEqual(0, form.GetFieldsForFlattening().Count);
             form.PartialFormFlattening("radioName");
             form.PartialFormFlattening("Text1");
@@ -62,7 +62,7 @@ namespace iText.Forms {
             form.FlattenFields();
             pdfDoc.Close();
             PdfDocument outPdfDoc = new PdfDocument(new PdfReader(outPdfName));
-            PdfAcroForm outPdfForm = PdfAcroForm.GetAcroForm(outPdfDoc, false);
+            PdfAcroForm outPdfForm = PdfFormCreator.GetAcroForm(outPdfDoc, false);
             NUnit.Framework.Assert.AreEqual(2, outPdfForm.GetAllFormFields().Count);
             outPdfDoc.Close();
         }
@@ -87,7 +87,7 @@ namespace iText.Forms {
             String dest = destinationFolder + "multiLineFormFieldClippingTest_flattened.pdf";
             String cmp = sourceFolder + "cmp_multiLineFormFieldClippingTest_flattened.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             form.GetField("Text1").SetValue("Tall letters: T I J L R E F");
             form.FlattenFields();
             doc.Close();
@@ -133,7 +133,7 @@ namespace iText.Forms {
             PdfReader reader = new PdfReader(sourceFolder + srcFile);
             PdfWriter writer = new PdfWriter(destinationFolder + outFile);
             PdfDocument document = new PdfDocument(reader, writer);
-            PdfAcroForm.GetAcroForm(document, false).FlattenFields();
+            PdfFormCreator.GetAcroForm(document, false).FlattenFields();
             document.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(destinationFolder + outFile, sourceFolder + "cmp_" + outFile
@@ -159,7 +159,7 @@ namespace iText.Forms {
             String dest = destinationFolder + testName + ".pdf";
             String cmp = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             foreach (PdfFormField field in form.GetAllFormFields().Values) {
                 if (field is PdfTextFormField) {
                     String newValue;
@@ -216,7 +216,7 @@ namespace iText.Forms {
             pdfInnerDoc = new PdfDocument(reader);
             pdfInnerDoc.CopyPagesTo(1, pdfInnerDoc.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
             pdfInnerDoc.Close();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, false);
             bool isReadOnly = true;
             foreach (PdfFormField field in form.GetAllFormFields().Values) {
                 isReadOnly = (isReadOnly && field.IsReadOnly());

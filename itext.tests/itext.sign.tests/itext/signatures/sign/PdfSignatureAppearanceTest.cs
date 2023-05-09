@@ -28,6 +28,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
+using iText.Forms.Fields;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -370,9 +371,9 @@ namespace iText.Signatures.Sign {
             ITextTest.PrintOutCmpPdfNameAndDir(outPdf, cmpPdf);
             using (PdfDocument outDoc = new PdfDocument(new PdfReader(outPdf))) {
                 using (PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpPdf))) {
-                    PdfDictionary outN = (PdfDictionary)PdfAcroForm.GetAcroForm(outDoc, false).GetField("Signature1").GetPdfObject
+                    PdfDictionary outN = (PdfDictionary)PdfFormCreator.GetAcroForm(outDoc, false).GetField("Signature1").GetPdfObject
                         ().GetAsDictionary(PdfName.AP).Get(PdfName.N).GetIndirectReference().GetRefersTo();
-                    PdfDictionary cmpN = (PdfDictionary)PdfAcroForm.GetAcroForm(cmpDoc, false).GetField("Signature1").GetPdfObject
+                    PdfDictionary cmpN = (PdfDictionary)PdfFormCreator.GetAcroForm(cmpDoc, false).GetField("Signature1").GetPdfObject
                         ().GetAsDictionary(PdfName.AP).Get(PdfName.N).GetIndirectReference().GetRefersTo();
                     NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(outN, cmpN));
                 }
@@ -425,7 +426,7 @@ namespace iText.Signatures.Sign {
 
         private static void AssertAppearanceFontSize(String filename, float expectedFontSize) {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(filename));
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDocument, false);
             PdfStream stream = acroForm.GetField("Signature1").GetWidgets()[0].GetNormalAppearanceObject().GetAsDictionary
                 (PdfName.Resources).GetAsDictionary(PdfName.XObject).GetAsStream(new PdfName("FRM")).GetAsDictionary(PdfName
                 .Resources).GetAsDictionary(PdfName.XObject).GetAsStream(new PdfName("n2"));

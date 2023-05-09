@@ -145,7 +145,7 @@ namespace iText.Forms {
             String outPdf = destinationFolder + "checkBoxToggleTest01.pdf";
             String cmpPdf = sourceFolder + "cmp_checkBoxToggleTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfFormField checkBox = form.GetField("cb_fs_6_7_7");
             checkBox.SetValue("Off");
             pdfDoc.Close();
@@ -162,7 +162,7 @@ namespace iText.Forms {
             String outPdf = destinationFolder + "checkBoxToggleTest02.pdf";
             String cmpPdf = sourceFolder + "cmp_checkBoxToggleTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfFormField checkBox = form.GetField("cb_fs_6_7_7");
             checkBox.SetValue("Off", false);
             pdfDoc.Close();
@@ -179,7 +179,7 @@ namespace iText.Forms {
             String outPdf = destinationFolder + "keepCheckTypeTest.pdf";
             String cmpPdf = sourceFolder + "cmp_keepCheckTypeTest.pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(srcPdf))) {
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField checkField = new CheckBoxFormFieldBuilder(pdfDoc, "checkField").SetWidgetRectangle(new 
                     Rectangle(100, 600, 100, 100)).SetCheckType(CheckBoxType.CHECK).CreateCheckBox();
                 checkField.SetValue("Off");
@@ -187,7 +187,7 @@ namespace iText.Forms {
                 form.AddField(checkField);
             }
             using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf))) {
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc_1, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc_1, true);
                 form.GetField("checkField").SetValue("Yes");
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
@@ -199,7 +199,7 @@ namespace iText.Forms {
             String outPdf = destinationFolder + "appearanceRegenerationTest.pdf";
             String cmpPdf = sourceFolder + "cmp_appearanceRegenerationTest.pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf))) {
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField checkBox1 = new CheckBoxFormFieldBuilder(pdfDoc, "checkbox1").SetWidgetRectangle(new Rectangle
                     (10, 650, 40, 20)).CreateCheckBox();
                 checkBox1.SetValue("My_Value");
@@ -226,7 +226,7 @@ namespace iText.Forms {
         private void AddCheckBox(PdfDocument pdfDoc, float fontSize, float yPos, float checkBoxW, PdfFormField checkBox
             ) {
             PdfPage page = pdfDoc.GetFirstPage();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             if (fontSize >= 0) {
                 checkBox.SetFontSize(fontSize);
             }

@@ -80,7 +80,7 @@ namespace iText.Signatures {
                 );
             signer.cryptoDictionary = new PdfSignature();
             signer.appearance.SetPageRect(new Rectangle(100, 100, 0, 0));
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(signer.document, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signer.document, true);
             signer.CreateNewSignatureFormField(acroForm, signer.fieldName);
             PdfFormField formField = acroForm.GetField(signer.fieldName);
             PdfDictionary formFieldDictionary = formField.GetPdfObject();
@@ -98,7 +98,7 @@ namespace iText.Signatures {
             signer.appearance.SetPageRect(new Rectangle(100, 100, 10, 10));
             PdfSigFieldLock fieldLock = new PdfSigFieldLock();
             signer.fieldLock = fieldLock;
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(signer.document, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signer.document, true);
             NUnit.Framework.Assert.AreEqual(fieldLock, signer.CreateNewSignatureFormField(acroForm, signer.fieldName));
             PdfFormField formField = acroForm.GetField(signer.fieldName);
             PdfDictionary formFieldDictionary = formField.GetPdfObject();
@@ -158,7 +158,7 @@ namespace iText.Signatures {
             signer.cryptoDictionary = new PdfSignature();
             signer.appearance.SetPageRect(new Rectangle(100, 100, 0, 0));
             widgetAnnotation = (PdfWidgetAnnotation)signer.document.GetPage(1).GetAnnotations()[0];
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(signer.document, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signer.document, true);
             PdfFormField formField = new PdfSignerUnitTest.ExtendedPdfSignatureFormField(widgetAnnotation, signer.document
                 );
             formField.SetFieldName(signer.fieldName);
@@ -187,7 +187,7 @@ namespace iText.Signatures {
             signer.fieldLock = fieldLock;
             signer.appearance.SetPageRect(new Rectangle(100, 100, 10, 10));
             widgetAnnotation = (PdfWidgetAnnotation)signer.document.GetPage(1).GetAnnotations()[0];
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(signer.document, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signer.document, true);
             PdfFormField formField = new PdfSignerUnitTest.ExtendedPdfSignatureFormField(widgetAnnotation, signer.document
                 );
             formField.SetFieldName(signer.fieldName);
@@ -371,7 +371,7 @@ namespace iText.Signatures {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputStream));
             PdfFormField formField = new NonTerminalFormFieldBuilder(pdfDocument, "test_field").CreateNonTerminalFormField
                 ();
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDocument, true);
             acroForm.AddField(formField);
             pdfDocument.Close();
             return outputStream.ToArray();
@@ -382,7 +382,7 @@ namespace iText.Signatures {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputStream));
             PdfFormField formField = new SignatureFormFieldBuilder(pdfDocument, fieldName).CreateSignature().SetValue(
                 fieldValue);
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDocument, true);
             acroForm.AddField(formField);
             pdfDocument.Close();
             return outputStream.ToArray();
@@ -392,7 +392,7 @@ namespace iText.Signatures {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputStream));
             PdfFormField formField = new SignatureFormFieldBuilder(pdfDocument, fieldName).CreateSignature();
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDocument, true);
             acroForm.AddField(formField);
             pdfDocument.Close();
             return outputStream.ToArray();

@@ -107,7 +107,7 @@ namespace iText.Forms.Form.Element {
                 formInputButton.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
                 document.Add(formInputButton);
                 // Create push button using form field
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(document.GetPdfDocument(), true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(document.GetPdfDocument(), true);
                 PdfButtonFormField button = new PushButtonFormFieldBuilder(document.GetPdfDocument(), "push").SetWidgetRectangle
                     (new Rectangle(36, 700, 94, 40)).SetCaption("form input button").CreatePushButton();
                 button.SetFontSizeAutoScale().SetColor(ColorConstants.RED);

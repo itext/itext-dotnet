@@ -25,7 +25,7 @@ using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Security;
-using iText.Forms;
+using iText.Forms.Fields;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -186,7 +186,7 @@ namespace iText.Signatures.Sign {
         internal static void ValidateTemplateForSignedDeferredResult(String output, String sigFieldName, PdfName filter
             , PdfName subFilter, int estimatedSize) {
             PdfDocument outDocument = new PdfDocument(new PdfReader(output));
-            PdfObject outSigDictObj = PdfAcroForm.GetAcroForm(outDocument, false).GetField(sigFieldName).GetValue();
+            PdfObject outSigDictObj = PdfFormCreator.GetAcroForm(outDocument, false).GetField(sigFieldName).GetValue();
             NUnit.Framework.Assert.IsTrue(outSigDictObj.IsDictionary());
             PdfDictionary outSigDict = (PdfDictionary)outSigDictObj;
             PdfArray byteRange = outSigDict.GetAsArray(PdfName.ByteRange);

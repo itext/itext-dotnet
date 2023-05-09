@@ -101,7 +101,7 @@ namespace iText.Pdfa {
             doc.Add(p2);
             //set generateAppearance param to false to retain custom appearance
             group.SetValue("v1", false);
-            PdfAcroForm.GetAcroForm(pdf, true).AddField(group);
+            PdfFormCreator.GetAcroForm(pdf, true).AddField(group);
             pdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_"
                  + file, DESTINATION_FOLDER, "diff_"));
@@ -122,7 +122,7 @@ namespace iText.Pdfa {
                 int pageNumber = GetOccupiedArea().GetPageNumber();
                 Rectangle bbox = GetInnerAreaBBox();
                 PdfDocument pdf = context.GetDocument();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdf, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdf, true);
                 PdfFormAnnotation chk = new RadioFormFieldBuilder(pdf, "").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B
                     ).CreateRadioButton(_value, bbox);
                 _group.AddKid(chk);
@@ -157,7 +157,7 @@ namespace iText.Pdfa {
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfFormField emptyField = new NonTerminalFormFieldBuilder(pdfDoc, "empty").SetConformanceLevel(conformanceLevel
                 ).CreateNonTerminalFormField();
             emptyField.AddKid(new PushButtonFormFieldBuilder(pdfDoc, "button").SetWidgetRectangle(new Rectangle(36, 756
@@ -179,7 +179,7 @@ namespace iText.Pdfa {
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             form.AddField(new CheckBoxFormFieldBuilder(pdfDoc, "checkBox").SetWidgetRectangle(new Rectangle(36, 726, 20
                 , 20)).SetCheckType(CheckBoxType.STAR).SetConformanceLevel(conformanceLevel).CreateCheckBox().SetValue
                 ("1"));
@@ -203,7 +203,7 @@ namespace iText.Pdfa {
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfArray options = new PdfArray();
             options.Add(new PdfString("Name"));
             options.Add(new PdfString("Surname"));
@@ -230,7 +230,7 @@ namespace iText.Pdfa {
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, "combo").SetWidgetRectangle(new Rectangle
                 (156, 616, 70, 70)).SetOptions(new String[] { "用", "规", "表" }).SetConformanceLevel(conformanceLevel).CreateComboBox
                 ().SetValue("用");
@@ -255,7 +255,7 @@ namespace iText.Pdfa {
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfChoiceFormField f = new ChoiceFormFieldBuilder(pdfDoc, "list").SetWidgetRectangle(new Rectangle(86, 556
                 , 50, 200)).SetOptions(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" }).SetConformanceLevel
                 (conformanceLevel).CreateList();
@@ -282,7 +282,7 @@ namespace iText.Pdfa {
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfFormField pushButtonFormField = new PushButtonFormFieldBuilder(pdfDoc, "push button").SetWidgetRectangle
                 (new Rectangle(36, 526, 100, 20)).SetCaption("Push").SetConformanceLevel(conformanceLevel).CreatePushButton
                 ();
@@ -303,7 +303,7 @@ namespace iText.Pdfa {
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             String pdfFormFieldName = "radio group";
             RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, pdfFormFieldName).SetConformanceLevel(conformanceLevel
                 );
@@ -336,7 +336,7 @@ namespace iText.Pdfa {
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfFormField textFormField = new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(36, 
                 466, 90, 20)).SetConformanceLevel(conformanceLevel).CreateText().SetValue("textField").SetValue("iText"
                 );
@@ -360,7 +360,7 @@ namespace iText.Pdfa {
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfFormField signFormField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetConformanceLevel(conformanceLevel
                 ).CreateSignature();
             signFormField.SetFont(fontFreeSans).SetFontSize(20);
@@ -383,7 +383,7 @@ namespace iText.Pdfa {
                     using (Document doc = new Document(pdfDoc)) {
                         PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfEncodings.WINANSI);
                         doc.Add(new Paragraph(new Text("Some text").SetFont(font).SetFontSize(10)));
-                        PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                        PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                         PdfFormField field = new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(150, 100, 100
                             , 20)).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateText().SetValue("textField").SetFieldName
                             ("text");

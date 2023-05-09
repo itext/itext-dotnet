@@ -47,7 +47,7 @@ namespace iText.Forms.Fields {
             String cmpPdf = SOURCE_FOLDER + "cmp_addFormXObjectToPushButton.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "addFormXObjectToPushButton.pdf"), new 
                 PdfWriter(outPdf));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfPage page = pdfDoc.GetPage(2);
             PdfFormXObject xObject = page.CopyAsFormXObject(pdfDoc);
             ((PdfButtonFormField)form.GetField("pushButton")).SetImageAsForm(xObject);

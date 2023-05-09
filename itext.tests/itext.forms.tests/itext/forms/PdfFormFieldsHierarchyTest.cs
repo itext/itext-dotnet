@@ -47,7 +47,7 @@ namespace iText.Forms {
             String cmpPdf = sourceFolder + "cmp_fillingFormWithKidsTest.pdf";
             String outPdf = destinationFolder + "fillingFormWithKidsTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDocument, false);
             IDictionary<String, PdfFormField> formFields = acroForm.GetAllFormFields();
             foreach (String key in formFields.Keys) {
                 PdfFormField field = acroForm.GetField(key);
@@ -66,7 +66,7 @@ namespace iText.Forms {
             String inPdf = destinationFolder + "autosizeInheritedDAFormFields.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "autosizeInheritedDAFormFields.pdf"), new 
                 PdfWriter(inPdf));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             fields.Get("field_1").SetValue("1111 2222 3333 4444");
             fields.Get("field_2").SetValue("1111 2222 3333 4444");
@@ -81,7 +81,7 @@ namespace iText.Forms {
             String inPdf = destinationFolder + "autosizeInheritedDAFormFieldsWithKids.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "autosizeInheritedDAFormFieldsWithKids.pdf"
                 ), new PdfWriter(inPdf));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             form.GetField("root.child.text1").SetValue("surname surname surname surname surname");
             form.GetField("root.child.text2").SetValue("surname surname surname surname surname");
             pdfDoc.Close();
@@ -94,7 +94,7 @@ namespace iText.Forms {
             String name = "alignmentInheritanceInFields";
             String fileName = destinationFolder + name + ".pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + name + ".pdf"), new PdfWriter(fileName));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             form.SetGenerateAppearance(false);
             IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             fields.Get("root").SetValue("Deutschland");

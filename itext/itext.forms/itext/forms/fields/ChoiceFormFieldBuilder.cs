@@ -118,14 +118,14 @@ namespace iText.Forms.Fields {
             PdfChoiceFormField field;
             PdfWidgetAnnotation annotation = null;
             if (GetWidgetRectangle() == null) {
-                field = new PdfChoiceFormField(GetDocument());
+                field = PdfFormCreator.CreateChoiceFormField(GetDocument());
             }
             else {
                 annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
                 if (null != GetConformanceLevel()) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
-                field = new PdfChoiceFormField(annotation, GetDocument());
+                field = PdfFormCreator.CreateChoiceFormField(annotation, GetDocument());
             }
             field.pdfAConformanceLevel = GetConformanceLevel();
             field.SetFieldFlags(flags);

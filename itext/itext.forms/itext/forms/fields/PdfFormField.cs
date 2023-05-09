@@ -248,23 +248,23 @@ namespace iText.Forms.Fields {
             iText.Forms.Fields.PdfFormField field;
             PdfName formType = dictionary.GetAsName(PdfName.FT);
             if (PdfName.Tx.Equals(formType)) {
-                field = new PdfTextFormField(dictionary);
+                field = PdfFormCreator.CreateTextFormField(dictionary);
             }
             else {
                 if (PdfName.Btn.Equals(formType)) {
-                    field = new PdfButtonFormField(dictionary);
+                    field = PdfFormCreator.CreateButtonFormField(dictionary);
                 }
                 else {
                     if (PdfName.Ch.Equals(formType)) {
-                        field = new PdfChoiceFormField(dictionary);
+                        field = PdfFormCreator.CreateChoiceFormField(dictionary);
                     }
                     else {
                         if (PdfName.Sig.Equals(formType)) {
-                            field = new PdfSignatureFormField(dictionary);
+                            field = PdfFormCreator.CreateSignatureFormField(dictionary);
                         }
                         else {
                             // No form type but still a form field
-                            field = new iText.Forms.Fields.PdfFormField(dictionary);
+                            field = PdfFormCreator.CreateFormField(dictionary);
                         }
                     }
                 }
@@ -631,7 +631,7 @@ namespace iText.Forms.Fields {
             kid.SetParent(GetPdfObject());
             PdfDictionary pdfObject = kid.GetPdfObject();
             pdfObject.MakeIndirect(this.GetDocument());
-            AbstractPdfFormField field = new PdfFormAnnotation(pdfObject);
+            AbstractPdfFormField field = PdfFormCreator.CreateFormAnnotation(pdfObject);
             return AddKid(field);
         }
 
@@ -807,8 +807,8 @@ namespace iText.Forms.Fields {
         public virtual iText.Forms.Fields.PdfFormField SetFieldFlags(int flags) {
             int oldFlags = GetFieldFlags();
             Put(PdfName.Ff, new PdfNumber(flags));
-            if (((oldFlags ^ flags) & PdfTextFormField.FF_COMB) != 0 && PdfName.Tx.Equals(GetFormType()) && new PdfTextFormField
-                (GetPdfObject()).GetMaxLen() != 0) {
+            if (((oldFlags ^ flags) & PdfTextFormField.FF_COMB) != 0 && PdfName.Tx.Equals(GetFormType()) && PdfFormCreator
+                .CreateTextFormField(GetPdfObject()).GetMaxLen() != 0) {
                 RegenerateField();
             }
             return this;
@@ -1504,7 +1504,7 @@ namespace iText.Forms.Fields {
                         ((PdfChoiceFormField)this).SetListSelected(new String[] { value }, false);
                     }
                     else {
-                        PdfChoiceFormField choice = new PdfChoiceFormField(this.GetPdfObject());
+                        PdfChoiceFormField choice = PdfFormCreator.CreateChoiceFormField(this.GetPdfObject());
                         choice.SetListSelected(new String[] { value }, false);
                     }
                 }

@@ -117,7 +117,7 @@ namespace iText.Forms.Fields {
         /// must be an indirect object.
         /// </remarks>
         /// <param name="pdfObject">the dictionary to be wrapped, must have an indirect reference.</param>
-        internal PdfFormAnnotation(PdfDictionary pdfObject)
+        protected internal PdfFormAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
@@ -155,8 +155,8 @@ namespace iText.Forms.Fields {
             PdfName subType = dictionary.GetAsName(PdfName.Subtype);
             // If widget annotation
             if (PdfName.Widget.Equals(subType)) {
-                field = new iText.Forms.Fields.PdfFormAnnotation((PdfWidgetAnnotation)PdfAnnotation.MakeAnnotation(dictionary
-                    ), document);
+                field = PdfFormCreator.CreateFormAnnotation((PdfWidgetAnnotation)PdfAnnotation.MakeAnnotation(dictionary), 
+                    document);
             }
             else {
                 return null;
@@ -988,7 +988,7 @@ namespace iText.Forms.Fields {
         private bool IsCombTextFormField() {
             PdfName type = parent.GetFormType();
             if (PdfName.Tx.Equals(type) && parent.GetFieldFlag(PdfTextFormField.FF_COMB)) {
-                int maxLen = new PdfTextFormField(parent.GetPdfObject()).GetMaxLen();
+                int maxLen = PdfFormCreator.CreateTextFormField(parent.GetPdfObject()).GetMaxLen();
                 if (maxLen == 0 || parent.IsMultiline()) {
                     LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
                         ));

@@ -54,7 +54,7 @@ namespace iText.Signatures {
         public SignatureUtil(PdfDocument document) {
             this.document = document;
             // Only create new AcroForm if there is a writer
-            this.acroForm = PdfAcroForm.GetAcroForm(document, document.GetWriter() != null);
+            this.acroForm = PdfFormCreator.GetAcroForm(document, document.GetWriter() != null);
         }
 
         /// <summary>

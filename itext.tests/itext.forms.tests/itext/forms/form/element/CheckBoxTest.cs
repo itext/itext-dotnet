@@ -391,7 +391,7 @@ namespace iText.Forms.Form.Element {
             }
             MemoryStream bais = new MemoryStream(baos.ToArray());
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(bais), new PdfWriter(outPdf));
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDocument, true);
             foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
                 String key = entry.Key;
                 acroForm.RemoveField(key);

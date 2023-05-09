@@ -55,7 +55,7 @@ namespace iText.Forms {
                  + outputFile), new StampingProperties().UseAppendMode());
             PdfFormField field = new CheckBoxFormFieldBuilder(outputDoc, "checkboxname").SetWidgetRectangle(new Rectangle
                 (10, 10, 24, 24)).CreateCheckBox().SetCheckType(CheckBoxType.CHECK).SetValue("On");
-            PdfAcroForm.GetAcroForm(outputDoc, true).AddField(field);
+            PdfFormCreator.GetAcroForm(outputDoc, true).AddField(field);
             outputDoc.Close();
             CompareWithCmp(outputFile);
         }
@@ -65,7 +65,7 @@ namespace iText.Forms {
             String outputFile = "removeFieldTest.pdf";
             PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), new PdfWriter(DESTINATION_DIR
                  + outputFile), new StampingProperties().UseAppendMode());
-            PdfAcroForm.GetAcroForm(outputDoc, true).RemoveField("textfield2");
+            PdfFormCreator.GetAcroForm(outputDoc, true).RemoveField("textfield2");
             outputDoc.Close();
             CompareWithCmp(outputFile);
         }
@@ -79,14 +79,14 @@ namespace iText.Forms {
             PdfFormField root = new NonTerminalFormFieldBuilder(inDoc, "root").CreateNonTerminalFormField();
             PdfFormField child = new NonTerminalFormFieldBuilder(inDoc, "child").CreateNonTerminalFormField();
             root.AddKid(child);
-            PdfAcroForm.GetAcroForm(inDoc, true).AddField(root);
+            PdfFormCreator.GetAcroForm(inDoc, true).AddField(root);
             inDoc.Close();
             // Creating stamping document
             String outputFile = "removeKidTest.pdf";
             PdfReader reader = new PdfReader(DESTINATION_DIR + inputFile);
             PdfWriter writer = new PdfWriter(DESTINATION_DIR + outputFile);
             PdfDocument outputDoc = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode());
-            PdfAcroForm.GetAcroForm(outputDoc, true).RemoveField("root.child");
+            PdfFormCreator.GetAcroForm(outputDoc, true).RemoveField("root.child");
             outputDoc.Close();
             CompareWithCmp(outputFile);
         }
@@ -98,7 +98,7 @@ namespace iText.Forms {
                  + outputFile), new StampingProperties().UseAppendMode());
             PdfFormField newField = new TextFormFieldBuilder(outputDoc, "newfield").SetWidgetRectangle(new Rectangle(20
                 , 160, 100, 20)).CreateText().SetValue("new field");
-            PdfAcroForm.GetAcroForm(outputDoc, true).ReplaceField("textfield1", newField);
+            PdfFormCreator.GetAcroForm(outputDoc, true).ReplaceField("textfield1", newField);
             outputDoc.Close();
             CompareWithCmp(outputFile);
         }
@@ -111,7 +111,7 @@ namespace iText.Forms {
             PdfFormField field = new CheckBoxFormFieldBuilder(document, "checkboxname").SetWidgetRectangle(new Rectangle
                 (10, 10, 24, 24)).CreateCheckBox().SetCheckType(CheckBoxType.CHECK).SetValue("On");
             // Get an existing acroform and add new field to it
-            PdfAcroForm.GetAcroForm(document, false).AddField(field);
+            PdfFormCreator.GetAcroForm(document, false).AddField(field);
             document.Close();
             CompareWithCmp(outputFile);
         }
@@ -121,7 +121,7 @@ namespace iText.Forms {
             String outputFile = "removeFieldFromIndirectFieldsArrayTest.pdf";
             PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_INDIRECT_FIELDS_ARRAY), new PdfWriter
                 (DESTINATION_DIR + outputFile), new StampingProperties().UseAppendMode());
-            PdfAcroForm.GetAcroForm(outputDoc, true).RemoveField("textfield2");
+            PdfFormCreator.GetAcroForm(outputDoc, true).RemoveField("textfield2");
             outputDoc.Close();
             CompareWithCmp(outputFile);
         }
@@ -136,15 +136,15 @@ namespace iText.Forms {
             PdfFormField root = new NonTerminalFormFieldBuilder(inDoc, "root").CreateNonTerminalFormField();
             PdfFormField child = new NonTerminalFormFieldBuilder(inDoc, "child").CreateNonTerminalFormField();
             root.AddKid(child);
-            PdfAcroForm.GetAcroForm(inDoc, true).AddField(root);
+            PdfFormCreator.GetAcroForm(inDoc, true).AddField(root);
             // make kids array indirect
-            PdfAcroForm.GetAcroForm(inDoc, true).GetField("root").GetKids().MakeIndirect(inDoc);
+            PdfFormCreator.GetAcroForm(inDoc, true).GetField("root").GetKids().MakeIndirect(inDoc);
             inDoc.Close();
             // Creating stamping document
             PdfReader reader = new PdfReader(DESTINATION_DIR + inputFile);
             PdfWriter writer = new PdfWriter(DESTINATION_DIR + outputFile);
             PdfDocument outputDoc = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode());
-            PdfAcroForm.GetAcroForm(outputDoc, true).RemoveField("root.child");
+            PdfFormCreator.GetAcroForm(outputDoc, true).RemoveField("root.child");
             outputDoc.Close();
             CompareWithCmp(outputFile);
         }
@@ -157,7 +157,7 @@ namespace iText.Forms {
                 ), new StampingProperties().UseAppendMode());
             PdfFormField field = new CheckBoxFormFieldBuilder(outputDoc, "checkboxname").SetWidgetRectangle(new Rectangle
                 (10, 10, 24, 24)).CreateCheckBox().SetCheckType(CheckBoxType.CHECK).SetValue("On");
-            PdfAcroForm.GetAcroForm(outputDoc, true).AddField(field);
+            PdfFormCreator.GetAcroForm(outputDoc, true).AddField(field);
             outputDoc.Close();
             CompareWithCmp(outputFile);
         }

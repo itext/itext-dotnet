@@ -46,7 +46,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void OrphanedNamelessFormFieldTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "orphanedFormField.pdf"))) {
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 NUnit.Framework.Assert.AreEqual(3, form.GetRootFormFields().Count);
             }
         }
@@ -57,7 +57,7 @@ namespace iText.Forms {
             String cmpFileName = SOURCE_FOLDER + "cmp_mergeMergedFieldsWithTheSameNames.pdf";
             String outFileName = DESTINATION_FOLDER + "mergeMergedFieldsWithTheSameNames.pdf";
             using (PdfDocument sourceDoc = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(sourceDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(sourceDoc, true);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
                 NUnit.Framework.Assert.IsNull(acroForm.GetField("Field").GetKids());
                 PdfFormField field = acroForm.CopyField("Field");
@@ -77,7 +77,7 @@ namespace iText.Forms {
             String outFileName = DESTINATION_FOLDER + "fieldsWithTheSameNamesButDifferentValues.pdf";
             using (PdfDocument outputDoc = new PdfDocument(new PdfWriter(outFileName))) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField root = new TextFormFieldBuilder(outputDoc, "root").CreateText();
                 PdfFormField firstField = new TextFormFieldBuilder(outputDoc, "field").CreateText().SetValue("first");
                 PdfFormField secondField = new TextFormFieldBuilder(outputDoc, "field").CreateText().SetValue("second");
@@ -95,12 +95,12 @@ namespace iText.Forms {
         public virtual void ProcessFieldsWithTheSameNamesButDifferentValuesInReadingModeTest() {
             String srcFileName = SOURCE_FOLDER + "cmp_fieldsWithTheSameNamesButDifferentValues.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName))) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
                 PdfFormField root = acroForm.GetField("root");
                 NUnit.Framework.Assert.AreEqual(2, root.GetKids().Size());
                 root.GetChildField("field").SetValue("field");
-                PdfAcroForm.GetAcroForm(document, true);
+                PdfFormCreator.GetAcroForm(document, true);
                 // Check that fields weren't merged
                 NUnit.Framework.Assert.AreEqual(2, root.GetKids().Size());
             }
@@ -112,12 +112,12 @@ namespace iText.Forms {
             String srcFileName = SOURCE_FOLDER + "cmp_fieldsWithTheSameNamesButDifferentValues.pdf";
             String outFileName = DESTINATION_FOLDER + "processFieldsWithTheSameNamesInWritingMode.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
                 PdfFormField root = acroForm.GetField("root");
                 NUnit.Framework.Assert.AreEqual(2, root.GetKids().Size());
                 root.GetChildField("field").SetValue("field");
-                PdfAcroForm.GetAcroForm(document, true);
+                PdfFormCreator.GetAcroForm(document, true);
                 // Check that fields were merged
                 NUnit.Framework.Assert.AreEqual(1, root.GetKids().Size());
             }

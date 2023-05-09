@@ -39,7 +39,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void SetSignatureFlagsTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 acroForm.SetSignatureFlags(65);
                 bool isModified = acroForm.GetPdfObject().IsModified();
                 bool isReleaseForbidden = acroForm.GetPdfObject().IsReleaseForbidden();
@@ -54,7 +54,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void AddChildToFormFieldTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField field = new TextFormFieldBuilder(outputDoc, "text1").SetWidgetRectangle(new Rectangle(100, 700
                     , 200, 20)).CreateText();
                 acroForm.AddField(field);
@@ -73,7 +73,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void AddChildToWidgetTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfArray options = new PdfArray();
                 options.Add(new PdfString("1"));
                 options.Add(new PdfString("2"));
@@ -92,7 +92,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void GetFormFieldChildTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField field = new TextFormFieldBuilder(outputDoc, "text1").SetWidgetRectangle(new Rectangle(100, 700
                     , 200, 20)).CreateText();
                 acroForm.AddField(field);
@@ -110,7 +110,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void GetFormFieldWithEqualChildNamesTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField field = new TextFormFieldBuilder(outputDoc, "text1").SetWidgetRectangle(new Rectangle(100, 700
                     , 200, 20)).CreateText();
                 acroForm.AddField(field);
@@ -134,7 +134,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void ChangeFieldNameTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField field = new TextFormFieldBuilder(outputDoc, "text1").SetWidgetRectangle(new Rectangle(100, 700
                     , 200, 20)).CreateText();
                 acroForm.AddField(field);
@@ -145,7 +145,7 @@ namespace iText.Forms {
                 root.AddKid(child);
                 acroForm.AddField(root);
                 acroForm.GetField("root").SetFieldName("diff");
-                PdfFormField childField = PdfAcroForm.GetAcroForm(outputDoc, true).GetField("diff.child");
+                PdfFormField childField = PdfFormCreator.GetAcroForm(outputDoc, true).GetField("diff.child");
                 NUnit.Framework.Assert.AreEqual("diff.child", childField.GetFieldName().ToString());
             }
         }
@@ -154,7 +154,7 @@ namespace iText.Forms {
         public virtual void RemoveChildFromFormFieldTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField field = new TextFormFieldBuilder(outputDoc, "text1").SetWidgetRectangle(new Rectangle(100, 700
                     , 200, 20)).CreateText().SetValue("text1");
                 acroForm.AddField(field);
@@ -180,7 +180,7 @@ namespace iText.Forms {
         public virtual void GetChildFromFormFieldWithDifferentAmountOfChildrenTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField field = new TextFormFieldBuilder(outputDoc, "text1").SetWidgetRectangle(new Rectangle(100, 700
                     , 200, 20)).CreateText().SetValue("text1");
                 acroForm.AddField(field);
@@ -216,7 +216,7 @@ namespace iText.Forms {
         public virtual void CheckFormFieldsSizeTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 NUnit.Framework.Assert.AreEqual(0, acroForm.GetAllFormFields().Count);
                 NUnit.Framework.Assert.AreEqual(0, acroForm.GetAllFormFieldsAndAnnotations().Count);
                 PdfDictionary fieldDict = new PdfDictionary();
@@ -238,7 +238,7 @@ namespace iText.Forms {
         public virtual void FieldKidsWithTheSameNamesTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField root = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
                 PdfFormField child = new TextFormFieldBuilder(outputDoc, "child").CreateText().SetValue("child");
                 PdfFormField sameChild = new TextFormFieldBuilder(outputDoc, "child").CreateText().SetValue("child");
@@ -266,7 +266,7 @@ namespace iText.Forms {
         public virtual void NamelessFieldTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfDictionary fieldDict = new PdfDictionary();
                 fieldDict.Put(PdfName.FT, PdfName.Tx);
                 PdfFormField field = PdfFormField.MakeFormField(fieldDict.MakeIndirect(outputDoc), outputDoc);
@@ -285,7 +285,7 @@ namespace iText.Forms {
         public virtual void AddRootFieldsWithTheSameNamesTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField root = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
                 PdfFormField sameRoot = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
                 PdfFormField child1 = new TextFormFieldBuilder(outputDoc, "aaaaa").SetWidgetRectangle(new Rectangle(100, 400
@@ -305,7 +305,7 @@ namespace iText.Forms {
         public virtual void AddMergedRootFieldsWithTheSameNamesTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField firstField = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100
                     , 400, 200, 20)).CreateText().SetValue("root");
                 PdfFormField secondField = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100
@@ -322,7 +322,7 @@ namespace iText.Forms {
         public virtual void AddFieldsWithTheSameNamesButDifferentValuesTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField firstField = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("first");
                 PdfFormField secondField = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("second");
                 acroForm.AddField(firstField);
@@ -336,7 +336,7 @@ namespace iText.Forms {
         public virtual void AddRootFieldWithMergedFieldKidTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField firstField = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
                 PdfFormField mergedField = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100
                     , 500, 200, 30)).CreateText();
@@ -355,7 +355,7 @@ namespace iText.Forms {
         public virtual void AddRootFieldWithDirtyNamedAnnotationsTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField rootField = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
                 PdfFormField firstDirtyAnnot = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle
                     (100, 500, 200, 30)).CreateText();
@@ -379,7 +379,7 @@ namespace iText.Forms {
         public virtual void AddRootFieldWithDirtyUnnamedAnnotationsTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField rootField = new TextFormFieldBuilder(outputDoc, "root").CreateText().SetValue("root");
                 PdfFormField firstDirtyAnnot = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle
                     (100, 500, 200, 30)).CreateText();
@@ -409,7 +409,7 @@ namespace iText.Forms {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField firstField = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100
                     , 400, 200, 20)).SetPage(1).CreateText().SetValue("root");
                 PdfFormField secondField = new TextFormFieldBuilder(outputDoc, "root").SetWidgetRectangle(new Rectangle(100
@@ -421,7 +421,7 @@ namespace iText.Forms {
                 // flush first page, also first widget will be flushed
                 outputDoc.GetPage(1).Flush();
                 // recreate acroform and add field
-                acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 acroForm.AddField(thirdField);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
                 NUnit.Framework.Assert.AreEqual(3, acroForm.GetField("root").GetKids().Size());
@@ -433,7 +433,7 @@ namespace iText.Forms {
         public virtual void AddMergedRootFieldTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 PdfPage page = outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField mergedField = new TextFormFieldBuilder(outputDoc, "root").SetPage(page).SetWidgetRectangle(new 
                     Rectangle(100, 500, 200, 30)).CreateText().SetValue("root");
                 NUnit.Framework.Assert.AreEqual(0, page.GetAnnotsSize());
@@ -450,7 +450,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void SetCalculationOrderTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfArray calculationOrderArray = new PdfArray(new int[] { 1, 0 });
                 acroForm.SetCalculationOrder(calculationOrderArray);
                 bool isModified = acroForm.GetPdfObject().IsModified();
@@ -466,7 +466,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void SetDefaultAppearanceTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 acroForm.SetDefaultAppearance("default appearance");
                 bool isModified = acroForm.GetPdfObject().IsModified();
                 bool isReleaseForbidden = acroForm.GetPdfObject().IsReleaseForbidden();
@@ -481,7 +481,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void SetDefaultJustificationTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 acroForm.SetDefaultJustification(14);
                 bool isModified = acroForm.GetPdfObject().IsModified();
                 bool isReleaseForbidden = acroForm.GetPdfObject().IsReleaseForbidden();
@@ -496,9 +496,9 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void SetDefaultResourcesTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfDictionary dictionary = new PdfDictionary();
-                PdfAcroForm.GetAcroForm(outputDoc, true).SetDefaultResources(dictionary);
+                PdfFormCreator.GetAcroForm(outputDoc, true).SetDefaultResources(dictionary);
                 bool isModified = acroForm.GetPdfObject().IsModified();
                 bool isReleaseForbidden = acroForm.GetPdfObject().IsReleaseForbidden();
                 PdfObject defaultResourcesDict = acroForm.GetPdfObject().Get(PdfName.DR);
@@ -512,7 +512,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void SetNeedAppearancesTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 acroForm.SetNeedAppearances(false);
                 bool isModified = acroForm.GetPdfObject().IsModified();
                 bool isReleaseForbidden = acroForm.GetPdfObject().IsReleaseForbidden();
@@ -530,7 +530,7 @@ namespace iText.Forms {
             PdfDocument outputDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream(), new WriterProperties().
                 SetPdfVersion(PdfVersion.PDF_2_0)));
             outputDoc.AddNewPage();
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
             acroForm.SetNeedAppearances(false);
             bool isModified = acroForm.GetPdfObject().IsModified();
             bool isReleaseForbidden = acroForm.GetPdfObject().IsReleaseForbidden();
@@ -544,7 +544,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void SetGenerateAppearanceTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 acroForm.SetNeedAppearances(false);
                 acroForm.SetGenerateAppearance(true);
                 bool isModified = acroForm.GetPdfObject().IsModified();
@@ -562,7 +562,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void SetXFAResourcePdfArrayTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfArray array = new PdfArray();
                 acroForm.SetXFAResource(array);
                 bool isModified = acroForm.GetPdfObject().IsModified();
@@ -578,7 +578,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void SetXFAResourcePdfStreamTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfStream stream = new PdfStream();
                 acroForm.SetXFAResource(stream);
                 bool isModified = acroForm.GetPdfObject().IsModified();
@@ -595,7 +595,7 @@ namespace iText.Forms {
         public virtual void ReplaceFormFieldRootLevelReplacesExistingFieldTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfDictionary fieldDict = new PdfDictionary();
                 fieldDict.Put(PdfName.FT, PdfName.Tx);
                 fieldDict.Put(PdfName.T, new PdfString("field1"));
@@ -619,7 +619,7 @@ namespace iText.Forms {
         public virtual void ReplaceWithNullNameLogsErrorTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfDictionary fieldDict = new PdfDictionary();
                 fieldDict.Put(PdfName.FT, PdfName.Tx);
                 fieldDict.Put(PdfName.T, new PdfString("field1"));
@@ -641,7 +641,7 @@ namespace iText.Forms {
         public virtual void ReplaceFormFieldOneDeepReplacesExistingFieldTest() {
             using (PdfDocument outputDoc = CreateDocument()) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfDictionary fieldDict = new PdfDictionary();
                 fieldDict.Put(PdfName.FT, PdfName.Tx);
                 fieldDict.Put(PdfName.T, new PdfString("field1"));

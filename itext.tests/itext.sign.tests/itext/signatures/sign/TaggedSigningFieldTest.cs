@@ -43,7 +43,7 @@ namespace iText.Signatures.Sign {
                 Rectangle rect = new Rectangle(36, 648, 200, 100);
                 PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(rect).CreateSignature
                     ();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 form.AddField(signField);
                 TagTreePointer tagPointer = new TagTreePointer(pdfDoc);
                 NUnit.Framework.Assert.IsNotNull(tagPointer.MoveToKid(StandardRoles.FORM));
@@ -58,7 +58,7 @@ namespace iText.Signatures.Sign {
                 Rectangle rect = new Rectangle(36, 648, 0, 0);
                 PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(rect).CreateSignature
                     ();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 form.AddField(signField);
                 TagTreePointer tagPointer = new TagTreePointer(pdfDoc);
                 NUnit.Framework.Assert.IsNotNull(tagPointer.MoveToKid(StandardRoles.FORM));
@@ -73,7 +73,7 @@ namespace iText.Signatures.Sign {
                 Rectangle rect = new Rectangle(36, 648, 200, 100);
                 PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(rect).CreateSignature
                     ();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 form.AddField(signField);
                 IList<PdfAnnotation> annotations = page.GetAnnotations();
                 annotations[0].SetFlag(PdfAnnotation.PRINT);
@@ -90,7 +90,7 @@ namespace iText.Signatures.Sign {
                 Rectangle rect = new Rectangle(36, 648, 200, 100);
                 PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(rect).CreateSignature
                     ();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 form.AddField(signField);
                 IList<PdfAnnotation> annotations = page.GetAnnotations();
                 annotations[0].SetFlag(PdfAnnotation.HIDDEN);
@@ -107,7 +107,7 @@ namespace iText.Signatures.Sign {
                 Rectangle rect = new Rectangle(36, 648, 200, 100);
                 PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(rect).CreateSignature
                     ();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 form.AddField(signField);
                 IList<PdfAnnotation> annotations = page.GetAnnotations();
                 annotations[0].SetFlag(PdfAnnotation.NO_VIEW);
@@ -124,7 +124,7 @@ namespace iText.Signatures.Sign {
                 Rectangle rect = new Rectangle(36, 648, 200, 100);
                 PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(rect).CreateSignature
                     ();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 form.AddField(signField);
                 IList<PdfAnnotation> annotations = page.GetAnnotations();
                 annotations[0].SetFlag(PdfAnnotation.INVISIBLE);
@@ -141,7 +141,7 @@ namespace iText.Signatures.Sign {
                 Rectangle rect = new Rectangle(-150, -150, 100, 100);
                 PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(rect).CreateSignature
                     ();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 form.AddField(signField);
                 TagTreePointer tagPointer = new TagTreePointer(pdfDoc);
                 NUnit.Framework.Assert.IsNotNull(tagPointer.MoveToKid(StandardRoles.FORM));
@@ -156,7 +156,7 @@ namespace iText.Signatures.Sign {
                 Rectangle rect = new Rectangle(-150, -150, 200, 100);
                 PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(rect).CreateSignature
                     ();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 form.AddField(signField);
                 IList<PdfAnnotation> annotations = page.GetAnnotations();
                 annotations[0].SetFlag(PdfAnnotation.HIDDEN);

@@ -40,7 +40,7 @@ namespace iText.Forms.Fields {
         public virtual void Init() {
             outputDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
             outputDoc.AddNewPage();
-            acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+            acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
         }
 
         [NUnit.Framework.TearDown]
@@ -494,7 +494,7 @@ namespace iText.Forms.Fields {
             MemoryStream f = new MemoryStream();
             PdfDocument originalDoc = new PdfDocument(new PdfWriter(f));
             originalDoc.AddNewPage();
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
             PdfFormField root = AddDefaultTextFormField(outputDoc, "root");
             PdfFormField child1 = AddDefaultTextFormField(outputDoc, "");
             root.AddKid(child1);
@@ -505,7 +505,7 @@ namespace iText.Forms.Fields {
             using (PdfDocument newDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
                 loaded.CopyPagesTo(1, 1, newDoc, pdfPageFormCopier);
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(outputDoc, false);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(outputDoc, false);
                 NUnit.Framework.Assert.IsNotNull(form);
                 NUnit.Framework.Assert.AreEqual(2, form.GetAllFormFields().Count);
                 NUnit.Framework.Assert.IsNotNull(form.GetField("root."));
@@ -518,7 +518,7 @@ namespace iText.Forms.Fields {
             MemoryStream f = new MemoryStream();
             PdfDocument originalDoc = new PdfDocument(new PdfWriter(f));
             originalDoc.AddNewPage();
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
             PdfFormField root = AddDefaultTextFormField(outputDoc, "");
             PdfFormField child1 = AddDefaultTextFormField(outputDoc, "");
             root.AddKid(child1);
@@ -529,7 +529,7 @@ namespace iText.Forms.Fields {
             using (PdfDocument newDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
                 loaded.CopyPagesTo(1, 1, newDoc, pdfPageFormCopier);
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(outputDoc, false);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(outputDoc, false);
                 NUnit.Framework.Assert.IsNotNull(form);
                 NUnit.Framework.Assert.AreEqual(2, form.GetAllFormFields().Count);
                 NUnit.Framework.Assert.IsNotNull(form.GetField("."));
@@ -542,7 +542,7 @@ namespace iText.Forms.Fields {
             MemoryStream f = new MemoryStream();
             PdfDocument originalDoc = new PdfDocument(new PdfWriter(f));
             originalDoc.AddNewPage();
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
             PdfFormField root = AddDefaultTextFormField(outputDoc, "root");
             PdfFormField child1 = AddDefaultTextFormField(outputDoc, "");
             PdfFormField child2 = AddDefaultTextFormField(outputDoc, "");
@@ -555,7 +555,7 @@ namespace iText.Forms.Fields {
             using (PdfDocument newDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
                 loaded.CopyPagesTo(1, 1, newDoc, pdfPageFormCopier);
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(outputDoc, false);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(outputDoc, false);
                 NUnit.Framework.Assert.IsNotNull(form);
                 NUnit.Framework.Assert.AreEqual(2, form.GetAllFormFields().Count);
                 NUnit.Framework.Assert.IsNotNull(form.GetField("root."));

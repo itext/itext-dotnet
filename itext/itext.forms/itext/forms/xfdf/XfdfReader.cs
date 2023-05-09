@@ -54,7 +54,7 @@ namespace iText.Forms.Xfdf {
                 logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE);
             }
             //TODO DEVSIX-4026 check for ids original/modified compatability with those in pdf document
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDocument, false);
             if (form != null) {
                 MergeFields(xfdfObject.GetFields(), form);
                 MergeAnnotations(xfdfObject.GetAnnots(), pdfDocument);

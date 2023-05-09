@@ -59,7 +59,7 @@ namespace iText.Pdfa {
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(CheckBoxType.CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateCheckBox
                 ().SetValue("Off");
@@ -82,7 +82,7 @@ namespace iText.Pdfa {
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
                 , 50)).SetCheckType(CheckBoxType.CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateCheckBox
                 ().SetValue("On");

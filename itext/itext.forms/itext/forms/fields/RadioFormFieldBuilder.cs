@@ -44,7 +44,7 @@ namespace iText.Forms.Fields {
         /// instance
         /// </returns>
         public virtual PdfButtonFormField CreateRadioGroup() {
-            PdfButtonFormField radioGroup = new PdfButtonFormField(GetDocument());
+            PdfButtonFormField radioGroup = PdfFormCreator.CreateButtonFormField(GetDocument());
             radioGroup.pdfAConformanceLevel = GetConformanceLevel();
             radioGroup.SetFieldName(GetFormFieldName());
             radioGroup.SetFieldFlags(PdfButtonFormField.FF_RADIO);
@@ -72,7 +72,7 @@ namespace iText.Forms.Fields {
             if (GetConformanceLevel() != null) {
                 annotation.SetFlag(PdfAnnotation.PRINT);
             }
-            PdfFormAnnotation radio = new PdfFormAnnotation(annotation, GetDocument());
+            PdfFormAnnotation radio = PdfFormCreator.CreateFormAnnotation(annotation, GetDocument());
             SetPageToField(radio);
             radio.pdfAConformanceLevel = GetConformanceLevel();
             return radio;

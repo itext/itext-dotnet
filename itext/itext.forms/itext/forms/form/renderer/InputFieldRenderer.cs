@@ -26,7 +26,6 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
-using iText.Forms;
 using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
@@ -150,7 +149,7 @@ namespace iText.Forms.Form.Renderer {
             }
             ApplyDefaultFieldProperties(inputField);
             inputField.GetFirstFormAnnotation().SetFormFieldElement((InputField)modelElement);
-            PdfAcroForm.GetAcroForm(doc, true).AddField(inputField, page);
+            PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);
             WriteAcroFormFieldLangAttribute(doc);
         }
 

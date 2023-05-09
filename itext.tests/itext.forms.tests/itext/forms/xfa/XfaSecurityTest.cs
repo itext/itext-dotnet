@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using iText.Forms;
+using iText.Forms.Fields;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -66,8 +66,8 @@ namespace iText.Forms.Xfa {
             String inFileName = SOURCE_FOLDER + "xfaExternalFile.pdf";
             XmlProcessorCreator.SetXmlParserFactory(new SecurityTestXmlParserFactory());
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inFileName), new PdfWriter(new MemoryStream()))) {
-                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfAcroForm.GetAcroForm(pdfDoc, true
-                    ));
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFormCreator.GetAcroForm(pdfDoc, 
+                    true));
                 NUnit.Framework.Assert.AreEqual(ExceptionTestUtil.GetXxeTestMessage(), e.Message);
             }
         }
@@ -102,8 +102,8 @@ namespace iText.Forms.Xfa {
         private void XfaSecurityExceptionTest(String inputFileName) {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFileName), new PdfWriter(new MemoryStream()
                 ))) {
-                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfAcroForm.GetAcroForm(pdfDoc, true
-                    ));
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFormCreator.GetAcroForm(pdfDoc, 
+                    true));
                 NUnit.Framework.Assert.AreEqual(DTD_EXCEPTION_MESSAGE, e.Message);
             }
         }

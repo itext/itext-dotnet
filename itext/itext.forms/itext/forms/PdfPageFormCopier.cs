@@ -59,7 +59,7 @@ namespace iText.Forms {
         public virtual void Copy(PdfPage fromPage, PdfPage toPage) {
             if (documentFrom != fromPage.GetDocument()) {
                 documentFrom = fromPage.GetDocument();
-                formFrom = PdfAcroForm.GetAcroForm(documentFrom, false);
+                formFrom = PdfFormCreator.GetAcroForm(documentFrom, false);
             }
             if (documentTo != toPage.GetDocument()) {
                 documentTo = toPage.GetDocument();
@@ -67,7 +67,7 @@ namespace iText.Forms {
             // We should always regenerate the acroform if we expect the same result when the old or new
             // PdfPageFormCopier instance is used because getAcroForm changes the fields structure,
             // e.g. removes wrong field keys from the pure widget annotations dictionaries.
-            formTo = PdfAcroForm.GetAcroForm(documentTo, true);
+            formTo = PdfFormCreator.GetAcroForm(documentTo, true);
             if (formFrom == null) {
                 return;
             }
@@ -98,7 +98,7 @@ namespace iText.Forms {
                     // It makes sense to create the Acroform only after copying the tag structure,
                     // so fields with the same names will be merged ang tag structure will be correct,
                     // but when the document is not tagged we can re-create Acroform with added fields right away.
-                    PdfAcroForm.GetAcroForm(documentTo, true);
+                    PdfFormCreator.GetAcroForm(documentTo, true);
                 }
             }
             finally {
@@ -107,7 +107,7 @@ namespace iText.Forms {
         }
 
         public virtual void RecreateAcroformToProcessCopiedFields(PdfDocument documentTo) {
-            PdfAcroForm.GetAcroForm(documentTo, true);
+            PdfFormCreator.GetAcroForm(documentTo, true);
         }
 
         private AbstractPdfFormField MakeFormField(PdfObject fieldDict) {

@@ -36,7 +36,7 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CannotGetRectangleIfKidsIsNullTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfFormField pdfFormField = new PdfFormField(pdfDocument);
+            PdfFormField pdfFormField = PdfFormCreator.CreateFormField(pdfDocument);
             NUnit.Framework.Assert.IsNull(pdfFormField.GetFirstFormAnnotation());
         }
 

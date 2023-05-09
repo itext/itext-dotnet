@@ -45,7 +45,7 @@ namespace iText.Forms.Fields {
         /// instance
         /// </returns>
         public virtual PdfFormField CreateNonTerminalFormField() {
-            PdfFormField field = new PdfFormField(GetDocument());
+            PdfFormField field = PdfFormCreator.CreateFormField(GetDocument());
             field.pdfAConformanceLevel = GetConformanceLevel();
             field.SetFieldName(GetFormFieldName());
             return field;

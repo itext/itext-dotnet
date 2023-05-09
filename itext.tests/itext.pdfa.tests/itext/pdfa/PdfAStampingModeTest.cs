@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Forms;
+using iText.Forms.Fields;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -49,7 +50,7 @@ namespace iText.Pdfa {
             String fileName = "pdfA1FieldStampingModeTest01.pdf";
             PdfADocument pdfDoc = new PdfADocument(new PdfReader(sourceFolder + "pdfs/pdfA1DocumentWithPdfA1Fields01.pdf"
                 ), new PdfWriter(destinationFolder + fileName));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, false);
             form.GetField("checkBox").SetValue("0");
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
@@ -66,7 +67,7 @@ namespace iText.Pdfa {
             String fileName = "pdfA2FieldStampingModeTest01.pdf";
             PdfADocument pdfDoc = new PdfADocument(new PdfReader(sourceFolder + "pdfs/pdfA2DocumentWithPdfA2Fields01.pdf"
                 ), new PdfWriter(destinationFolder + fileName));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, false);
             form.GetField("checkBox").SetValue("0");
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();

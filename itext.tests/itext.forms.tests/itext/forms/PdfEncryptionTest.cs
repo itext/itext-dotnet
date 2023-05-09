@@ -60,7 +60,7 @@ namespace iText.Forms {
             PdfReader reader = new PdfReader(sourceFolder + "encryptedDocumentWithFormFields.pdf", new ReaderProperties
                 ().SetPassword("12345".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1)));
             PdfDocument pdfDocument = new PdfDocument(reader);
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDocument, false);
             acroForm.GetField("personal.name").GetPdfObject();
             pdfDocument.Close();
         }
@@ -75,7 +75,7 @@ namespace iText.Forms {
                 (PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants.ENCRYPTION_AES_256
                 )));
             pdfDoc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfTextFormField textField1 = new TextFormFieldBuilder(pdfDoc, "Name").SetWidgetRectangle(new Rectangle(100
                 , 600, 200, 30)).CreateText();
             textField1.SetValue("Enter your name");
@@ -113,7 +113,7 @@ namespace iText.Forms {
                 (PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants.ENCRYPTION_AES_256
                 )));
             pdfDoc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfTextFormField textField1 = new TextFormFieldBuilder(pdfDoc, "Name").SetWidgetRectangle(new Rectangle(100
                 , 600, 200, 30)).CreateText();
             textField1.SetValue("Enter your name");

@@ -63,7 +63,7 @@ namespace iText.Pdfa {
             doc.SetTagged();
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             Rectangle rect = new Rectangle(36, 626, 100, 40);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
@@ -91,7 +91,7 @@ namespace iText.Pdfa {
             doc.SetTagged();
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             Rectangle rect = new Rectangle(36, 626, 100, 40);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
@@ -120,7 +120,7 @@ namespace iText.Pdfa {
             doc.SetTagged();
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             Rectangle rect = new Rectangle(36, 626, 100, 40);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);

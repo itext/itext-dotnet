@@ -143,7 +143,7 @@ namespace iText.Forms.Form.Renderer {
         /// <summary><inheritDoc/></summary>
         protected internal override void ApplyAcroField(DrawContext drawContext) {
             PdfDocument doc = drawContext.GetDocument();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
             DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());

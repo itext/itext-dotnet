@@ -69,7 +69,7 @@ namespace iText.Forms.Fields {
         public virtual PdfButtonFormField CreateCheckBox() {
             PdfButtonFormField check;
             if (GetWidgetRectangle() == null) {
-                check = new PdfButtonFormField(GetDocument());
+                check = PdfFormCreator.CreateButtonFormField(GetDocument());
             }
             else {
                 PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
@@ -77,7 +77,7 @@ namespace iText.Forms.Fields {
                 if (GetConformanceLevel() != null) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
-                check = new PdfButtonFormField(annotation, GetDocument());
+                check = PdfFormCreator.CreateButtonFormField(annotation, GetDocument());
             }
             check.pdfAConformanceLevel = GetConformanceLevel();
             check.SetCheckType(checkType);

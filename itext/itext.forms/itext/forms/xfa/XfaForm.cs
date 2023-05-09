@@ -27,6 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using iText.Forms.Fields;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -145,7 +146,7 @@ namespace iText.Forms.Xfa
 	    /// <param name="form">the data</param>
 	    /// <param name="pdfDocument">pdfDocument</param>
 	    public static void SetXfaForm(XfaForm form, PdfDocument pdfDocument) {
-	        PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+	        PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDocument, true);
 	        SetXfaForm(form, acroForm);
 	    }
 

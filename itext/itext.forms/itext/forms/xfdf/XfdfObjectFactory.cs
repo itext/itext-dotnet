@@ -28,6 +28,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Forms;
+using iText.Forms.Fields;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
@@ -44,7 +45,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="filename">The name od pdf document for data extraction.</param>
         /// <returns>XfdfObject containing data from pdf forms and annotations.</returns>
         public virtual XfdfObject CreateXfdfObject(PdfDocument document, String filename) {
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(document, false);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(document, false);
             XfdfObject resultXfdf = new XfdfObject();
             FieldsObject xfdfFields = new FieldsObject();
             if (form != null && form.GetRootFormFields() != null && !form.GetRootFormFields().IsEmpty()) {

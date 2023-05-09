@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Forms;
 using iText.Forms.Fields;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form;
@@ -191,7 +190,7 @@ namespace iText.Forms.Form.Renderer {
                 checkBox.SetValue(PdfFormAnnotation.OFF_STATE_VALUE);
             }
             checkBox.GetFirstFormAnnotation().SetFormFieldElement((CheckBox)modelElement);
-            PdfAcroForm.GetAcroForm(doc, true).AddField(checkBox, page);
+            PdfFormCreator.GetAcroForm(doc, true).AddField(checkBox, page);
             WriteAcroFormFieldLangAttribute(doc);
         }
 

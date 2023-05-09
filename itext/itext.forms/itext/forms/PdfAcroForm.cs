@@ -1043,7 +1043,8 @@ namespace iText.Forms {
         public virtual PdfFormField CopyField(String name) {
             PdfFormField oldField = GetField(name);
             if (oldField != null) {
-                return new PdfFormField((PdfDictionary)oldField.GetPdfObject().Clone().MakeIndirect(document));
+                return PdfFormCreator.CreateFormField((PdfDictionary)oldField.GetPdfObject().Clone().MakeIndirect(document
+                    ));
             }
             return null;
         }

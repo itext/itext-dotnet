@@ -69,7 +69,7 @@ namespace iText.Forms.Fields {
             builder.SetPage(5);
             PdfFormAnnotation formFieldAnnot = new _PdfFormAnnotation_79((PdfDictionary)new PdfDictionary().MakeIndirect
                 (DUMMY_DOCUMENT));
-            PdfFormField formField = new PdfFormField(DUMMY_DOCUMENT).AddKid(formFieldAnnot);
+            PdfFormField formField = PdfFormCreator.CreateFormField(DUMMY_DOCUMENT).AddKid(formFieldAnnot);
             builder.SetPageToField(formField);
         }
 

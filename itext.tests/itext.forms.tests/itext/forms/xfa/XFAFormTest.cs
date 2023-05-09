@@ -25,6 +25,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using iText.Forms;
+using iText.Forms.Fields;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -88,14 +89,14 @@ namespace iText.Forms.Xfa {
         public virtual void ReadXFAFormTest() {
             String inFileName = sourceFolder + "formTemplate.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            Assert.DoesNotThrow(() => PdfAcroForm.GetAcroForm(pdfDocument, true));
+            Assert.DoesNotThrow(() => PdfFormCreator.GetAcroForm(pdfDocument, true));
         }
 
         [NUnit.Framework.Test]
         public virtual void FindFieldName() {
             String inFileName = sourceFolder + "TextField1.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDocument, true);
             XfaForm xfaForm = acroForm.GetXfaForm();
             xfaForm.FindFieldName("TextField1");
             String secondRun = xfaForm.FindFieldName("TextField1");
@@ -106,7 +107,7 @@ namespace iText.Forms.Xfa {
         public virtual void FindFieldNameWithoutDataSet() {
             String inFileName = sourceFolder + "TextField1_empty.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDocument, true);
             XfaForm xfaForm = acroForm.GetXfaForm();
             String name = xfaForm.FindFieldName("TextField1");
             NUnit.Framework.Assert.IsNull(name);
