@@ -86,6 +86,16 @@ namespace iText.Forms.Form.Element {
             return this;
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override T1 GetProperty<T1>(int property) {
+            // Paddings do not make sense for radio buttons
+            if (property == Property.PADDING_LEFT || property == Property.PADDING_RIGHT || property == Property.PADDING_TOP
+                 || property == Property.PADDING_BOTTOM) {
+                return (T1)(Object)UnitValue.CreatePointValue(0);
+            }
+            return base.GetProperty<T1>(property);
+        }
+
         /* (non-Javadoc)
         * @see com.itextpdf.layout.element.AbstractElement#makeNewRenderer()
         */
