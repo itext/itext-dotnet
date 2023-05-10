@@ -109,11 +109,13 @@ namespace iText.Test {
         private void Init(ITest testDetails) {
             TEST_LOGGER_FACTORY.Dispose();
             LogMessageAttribute[] attributes = LogListenerHelper.GetTestAttributes<LogMessageAttribute>(testDetails);
-            if (attributes.Length > 0) {
-                HashSet<String> expectedTemplates = new HashSet<string>();
+            if (attributes.Length > 0)
+            {
+                Dictionary<String, Boolean> expectedTemplates = new Dictionary<string, bool>();
+
                 for (int i = 0; i < attributes.Length; i++) {
                     LogMessageAttribute logMessage = attributes[i];
-                    expectedTemplates.Add(logMessage.GetMessageTemplate());
+                    expectedTemplates.Add(logMessage.GetMessageTemplate(), logMessage.QuietMode);
                 }
                 TEST_LOGGER_FACTORY.SetExpectedTemplates(expectedTemplates);
             }
