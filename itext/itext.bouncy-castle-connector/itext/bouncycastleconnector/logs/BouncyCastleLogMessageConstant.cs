@@ -29,6 +29,9 @@ namespace iText.Bouncycastleconnector.Logs {
         }
 
         // Empty constructor.
-        public const String BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT = "Either itext7.bouncy-castle-adapter or itext7.bouncy-castle-fips-adapter dependency must be added in order to use BouncyCastleFactoryCreator";
+        public const String BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT = "Either com.itextpdf:bouncy-castle-adapter or com.itextpdf:bouncy-castle-fips-adapter "
+             + 
+                // Android-Conversion-Replace "com.itextpdf.android:bouncy-castle-adapter-android "
+                "dependency must be added in order to use BouncyCastleFactoryCreator";
     }
 }
