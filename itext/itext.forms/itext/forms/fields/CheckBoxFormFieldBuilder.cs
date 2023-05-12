@@ -82,6 +82,8 @@ namespace iText.Forms.Fields {
             check.pdfAConformanceLevel = GetConformanceLevel();
             check.SetCheckType(checkType);
             check.SetFieldName(GetFormFieldName());
+            // the default behavior is to automatically calculate the fontsize
+            check.SetFontSize(0);
             check.Put(PdfName.V, new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
             if (GetWidgetRectangle() != null) {
                 check.GetFirstFormAnnotation().DrawCheckBoxAndSaveAppearance(PdfFormAnnotation.ON_STATE_VALUE);

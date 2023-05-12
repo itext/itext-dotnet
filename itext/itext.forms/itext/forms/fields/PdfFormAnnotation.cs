@@ -1046,7 +1046,6 @@ namespace iText.Forms.Fields {
                 // Create it one time and re-set properties during each widget regeneration.
                 formFieldElement = new CheckBox("");
             }
-            // Make font size auto calculated
             formFieldElement.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(GetFontSize()));
             SetModelElementProperties(GetRect(GetPdfObject()));
             ((CheckBox)formFieldElement).SetPdfAConformanceLevel(GetPdfAConformanceLevel());
