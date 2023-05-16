@@ -175,6 +175,7 @@ namespace iText.Forms.Form.Renderer {
             ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, GetModelId()).SetWidgetRectangle(area);
             SetupBuilderValues(builder, lbModelElement);
             PdfChoiceFormField choiceField = builder.CreateList();
+            choiceField.DisableFieldRegeneration();
             if (font != null) {
                 choiceField.SetFont(font);
             }
@@ -192,6 +193,7 @@ namespace iText.Forms.Form.Renderer {
                 choiceField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
             }
             choiceField.GetFirstFormAnnotation().SetFormFieldElement(lbModelElement);
+            choiceField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(choiceField, page);
             WriteAcroFormFieldLangAttribute(doc);
         }

@@ -203,7 +203,7 @@ namespace iText.Forms.Fields {
         /// <inheritDoc/>
         /// </returns>
         public override bool RegenerateField() {
-            if (parent != null) {
+            if (parent != null && parent.IsFieldRegenerationEnabled()) {
                 parent.UpdateDefaultAppearance();
             }
             return RegenerateWidget();
@@ -234,6 +234,9 @@ namespace iText.Forms.Fields {
                 Color extractedBorderColor = AppearancePropToColor(appearanceCharacteristics, PdfName.BC);
                 if (extractedBorderColor != null) {
                     borderColor = extractedBorderColor;
+                }
+                if (parent != null) {
+                    parent.text = AppearancePropToCaption(appearanceCharacteristics);
                 }
             }
         }
@@ -268,6 +271,52 @@ namespace iText.Forms.Fields {
             }
             kid.SetAppearanceCharacteristics(mk);
             RegenerateField();
+            return this;
+        }
+
+        /// <summary>Basic setter for the push button caption.</summary>
+        /// <remarks>Basic setter for the push button caption. Regenerates the field appearance after setting the new caption.
+        ///     </remarks>
+        /// <param name="caption">button caption to be set.</param>
+        /// <returns>
+        /// The edited
+        /// <see cref="PdfFormAnnotation"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfFormAnnotation SetCaption(String caption) {
+            return SetCaption(caption, true);
+        }
+
+        /// <summary>Basic setter for the push button caption.</summary>
+        /// <remarks>
+        /// Basic setter for the push button caption. Regenerates the field appearance after setting the new caption
+        /// if corresponding parameter is specified.
+        /// </remarks>
+        /// <param name="caption">button caption to be set.</param>
+        /// <param name="regenerateField">true if field should be regenerated, false otherwise.</param>
+        /// <returns>
+        /// The edited
+        /// <see cref="PdfFormAnnotation"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfFormAnnotation SetCaption(String caption, bool regenerateField) {
+            if (parent != null) {
+                parent.text = caption;
+            }
+            PdfDictionary mk;
+            PdfWidgetAnnotation kid = GetWidget();
+            mk = kid.GetAppearanceCharacteristics();
+            if (mk == null) {
+                mk = new PdfDictionary();
+            }
+            if (caption == null) {
+                mk.Remove(PdfName.CA);
+            }
+            else {
+                mk.Put(PdfName.CA, new PdfString(caption));
+            }
+            kid.SetAppearanceCharacteristics(mk);
+            if (regenerateField) {
+                RegenerateField();
+            }
             return this;
         }
 
@@ -910,10 +959,14 @@ namespace iText.Forms.Fields {
         }
 
         internal virtual bool RegenerateWidget() {
+            if (!IsFieldRegenerationEnabled()) {
+                return false;
+            }
             if (parent == null) {
                 return true;
             }
             PdfName type = parent.GetFormType();
+            RetrieveStyles();
             if ((PdfName.Ch.Equals(type) && parent.GetFieldFlag(PdfChoiceFormField.FF_COMBO)) || this.IsCombTextFormField
                 ()) {
                 if (parent.GetFieldFlag(PdfChoiceFormField.FF_COMBO) && formFieldElement != null) {
@@ -961,7 +1014,7 @@ namespace iText.Forms.Fields {
         internal virtual void CreateInputButton() {
             if (!(formFieldElement is Button)) {
                 // Create it one time and re-set properties during each widget regeneration.
-                formFieldElement = new Button(parent.GetFieldName().ToUnicodeString());
+                formFieldElement = new Button(parent.GetPartialFieldName().ToUnicodeString());
             }
             ((Button)formFieldElement).SetFont(GetFont());
             ((Button)formFieldElement).SetFontSize(GetFontSize(GetPdfObject().GetAsArray(PdfName.Rect), parent.GetDisplayValue
@@ -1119,6 +1172,14 @@ namespace iText.Forms.Fields {
                         return new DeviceCmyk(backgroundFloat[0], backgroundFloat[1], backgroundFloat[2], backgroundFloat[3]);
                     }
                 }
+            }
+            return null;
+        }
+
+        private static String AppearancePropToCaption(PdfDictionary appearanceCharacteristics) {
+            PdfString captionData = appearanceCharacteristics.GetAsString(PdfName.CA);
+            if (captionData != null) {
+                return captionData.GetValue();
             }
             return null;
         }

@@ -1207,7 +1207,12 @@ namespace iText.Forms.Fields {
         /// </returns>
         public override bool RegenerateField() {
             bool result = true;
-            UpdateDefaultAppearance();
+            if (IsFieldRegenerationEnabled()) {
+                UpdateDefaultAppearance();
+            }
+            else {
+                result = false;
+            }
             foreach (AbstractPdfFormField child in childFields) {
                 if (child is PdfFormAnnotation) {
                     PdfFormAnnotation annotation = (PdfFormAnnotation)child;
@@ -1478,7 +1483,15 @@ namespace iText.Forms.Fields {
                         img = ImageDataFactory.Create(Convert.FromBase64String(value));
                     }
                     catch (Exception) {
-                        text = value;
+                        if (generateAppearance) {
+                            // Display value.
+                            foreach (PdfFormAnnotation annot in GetChildFormAnnotations()) {
+                                annot.SetCaption(value, false);
+                            }
+                        }
+                        else {
+                            text = value;
+                        }
                     }
                 }
                 else {

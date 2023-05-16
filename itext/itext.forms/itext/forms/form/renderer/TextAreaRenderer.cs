@@ -165,11 +165,14 @@ namespace iText.Forms.Form.Renderer {
             // That's why we got rid of several properties we set by default during TextArea instance creation.
             modelElement.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
             PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateMultilineText
-                ().SetValue(value);
+                ();
+            inputField.DisableFieldRegeneration();
+            inputField.SetValue(value);
             inputField.SetFont(font).SetFontSize(fontSizeValue);
             inputField.SetDefaultValue(defaultValue);
             ApplyDefaultFieldProperties(inputField);
             inputField.GetFirstFormAnnotation().SetFormFieldElement((TextArea)modelElement);
+            inputField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);
             WriteAcroFormFieldLangAttribute(doc);
         }

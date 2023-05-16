@@ -32,6 +32,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Layout;
@@ -1402,6 +1403,154 @@ namespace iText.Forms {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
                 form.SetSignatureFlag(1);
                 NUnit.Framework.Assert.AreEqual(1, form.GetSignatureFlags());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisableRegenerationForTheRootFieldTest() {
+            String outPdf = destinationFolder + "disableRegenerationForTheRootField.pdf";
+            String cmpPdf = sourceFolder + "cmp_regenerationEnabled.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(document.GetPdfDocument(), true);
+                PdfFormFieldTest.CustomButtonFormField root = new PdfFormFieldTest.CustomButtonFormField(document.GetPdfDocument
+                    (), "root");
+                PdfFormFieldTest.CustomButtonFormField parent = new PdfFormFieldTest.CustomButtonFormField(document.GetPdfDocument
+                    (), "parent");
+                PdfFormFieldTest.CustomButtonFormField child = new PdfFormFieldTest.CustomButtonFormField(new PdfWidgetAnnotation
+                    (new Rectangle(200, 550, 150, 100)), document.GetPdfDocument(), "child");
+                parent.AddKid(child);
+                root.AddKid(parent);
+                // Disable all fields regeneration
+                root.DisableFieldRegeneration();
+                child.GetFirstFormAnnotation().SetCaption("regenerated button").SetBorderWidth(3).SetBorderColor(ColorConstants
+                    .DARK_GRAY).SetBackgroundColor(ColorConstants.PINK).SetVisibility(PdfFormAnnotation.VISIBLE);
+                NUnit.Framework.Assert.AreEqual(0, root.GetCounter());
+                NUnit.Framework.Assert.AreEqual(0, parent.GetCounter());
+                NUnit.Framework.Assert.AreEqual(0, child.GetCounter());
+                root.EnableFieldRegeneration();
+                NUnit.Framework.Assert.AreEqual(1, root.GetCounter());
+                NUnit.Framework.Assert.AreEqual(1, parent.GetCounter());
+                NUnit.Framework.Assert.AreEqual(1, child.GetCounter());
+                // Disable only root field regeneration
+                root.DisableCurrentFieldRegeneration();
+                root.RegenerateField();
+                NUnit.Framework.Assert.AreEqual(1, root.GetCounter());
+                NUnit.Framework.Assert.AreEqual(2, parent.GetCounter());
+                NUnit.Framework.Assert.AreEqual(2, child.GetCounter());
+                root.EnableCurrentFieldRegeneration();
+                NUnit.Framework.Assert.AreEqual(2, root.GetCounter());
+                NUnit.Framework.Assert.AreEqual(3, parent.GetCounter());
+                NUnit.Framework.Assert.AreEqual(3, child.GetCounter());
+                form.AddField(root);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisableRegenerationForTheMiddleFieldTest() {
+            String outPdf = destinationFolder + "disableRegenerationForTheMiddleField.pdf";
+            String cmpPdf = sourceFolder + "cmp_regenerationEnabled.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(document.GetPdfDocument(), true);
+                PdfFormFieldTest.CustomButtonFormField root = new PdfFormFieldTest.CustomButtonFormField(document.GetPdfDocument
+                    (), "root");
+                PdfFormFieldTest.CustomButtonFormField parent = new PdfFormFieldTest.CustomButtonFormField(document.GetPdfDocument
+                    (), "parent");
+                PdfFormFieldTest.CustomButtonFormField child = new PdfFormFieldTest.CustomButtonFormField(new PdfWidgetAnnotation
+                    (new Rectangle(200, 550, 150, 100)), document.GetPdfDocument(), "child");
+                parent.AddKid(child);
+                root.AddKid(parent);
+                // Disable parent field level regeneration
+                parent.DisableFieldRegeneration();
+                child.GetFirstFormAnnotation().SetCaption("regenerated button").SetBorderWidth(3).SetBorderColor(ColorConstants
+                    .DARK_GRAY).SetBackgroundColor(ColorConstants.PINK).SetVisibility(PdfFormAnnotation.VISIBLE);
+                root.RegenerateField();
+                NUnit.Framework.Assert.AreEqual(1, root.GetCounter());
+                NUnit.Framework.Assert.AreEqual(0, parent.GetCounter());
+                NUnit.Framework.Assert.AreEqual(0, child.GetCounter());
+                parent.EnableFieldRegeneration();
+                NUnit.Framework.Assert.AreEqual(1, root.GetCounter());
+                NUnit.Framework.Assert.AreEqual(1, parent.GetCounter());
+                NUnit.Framework.Assert.AreEqual(1, child.GetCounter());
+                // Disable only parent field regeneration
+                parent.DisableCurrentFieldRegeneration();
+                root.RegenerateField();
+                NUnit.Framework.Assert.AreEqual(2, root.GetCounter());
+                NUnit.Framework.Assert.AreEqual(1, parent.GetCounter());
+                NUnit.Framework.Assert.AreEqual(2, child.GetCounter());
+                parent.EnableCurrentFieldRegeneration();
+                NUnit.Framework.Assert.AreEqual(2, root.GetCounter());
+                NUnit.Framework.Assert.AreEqual(2, parent.GetCounter());
+                NUnit.Framework.Assert.AreEqual(3, child.GetCounter());
+                form.AddField(root);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisableChildRegenerationTest() {
+            String outPdf = destinationFolder + "disableChildRegeneration.pdf";
+            String cmpPdf = sourceFolder + "cmp_regenerationEnabled.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(document.GetPdfDocument(), true);
+                PdfFormFieldTest.CustomButtonFormField root = new PdfFormFieldTest.CustomButtonFormField(document.GetPdfDocument
+                    (), "root");
+                PdfFormFieldTest.CustomButtonFormField parent = new PdfFormFieldTest.CustomButtonFormField(document.GetPdfDocument
+                    (), "parent");
+                PdfFormFieldTest.CustomButtonFormField child = new PdfFormFieldTest.CustomButtonFormField(new PdfWidgetAnnotation
+                    (new Rectangle(200, 550, 150, 100)), document.GetPdfDocument(), "child");
+                parent.AddKid(child);
+                root.AddKid(parent);
+                // Disable child field regeneration
+                child.DisableFieldRegeneration();
+                child.GetFirstFormAnnotation().SetBorderWidth(10).SetBorderColor(ColorConstants.PINK).SetBackgroundColor(ColorConstants
+                    .BLUE);
+                root.RegenerateField();
+                NUnit.Framework.Assert.AreEqual(1, root.GetCounter());
+                NUnit.Framework.Assert.AreEqual(1, parent.GetCounter());
+                NUnit.Framework.Assert.AreEqual(0, child.GetCounter());
+                child.EnableFieldRegeneration();
+                NUnit.Framework.Assert.AreEqual(1, root.GetCounter());
+                NUnit.Framework.Assert.AreEqual(1, parent.GetCounter());
+                NUnit.Framework.Assert.AreEqual(1, child.GetCounter());
+                // Disable only child field regeneration (so widget should be regenerated)
+                child.DisableCurrentFieldRegeneration();
+                child.GetFirstFormAnnotation().SetCaption("regenerated button").SetBorderWidth(3).SetBorderColor(ColorConstants
+                    .DARK_GRAY).SetBackgroundColor(ColorConstants.PINK).SetVisibility(PdfFormAnnotation.VISIBLE);
+                NUnit.Framework.Assert.AreEqual(1, root.GetCounter());
+                NUnit.Framework.Assert.AreEqual(1, parent.GetCounter());
+                NUnit.Framework.Assert.AreEqual(1, child.GetCounter());
+                form.AddField(root);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
+        }
+
+        internal class CustomButtonFormField : PdfButtonFormField {
+            private int counter = 0;
+
+            internal CustomButtonFormField(PdfDocument pdfDocument, String formFieldName)
+                : base(pdfDocument) {
+                SetPushButton(true);
+                SetFieldName(formFieldName);
+            }
+
+            internal CustomButtonFormField(PdfWidgetAnnotation annotation, PdfDocument pdfDocument, String formFieldName
+                )
+                : base(annotation, pdfDocument) {
+                SetPushButton(true);
+                SetFieldName(formFieldName);
+            }
+
+            public virtual int GetCounter() {
+                return counter;
+            }
+
+            public override bool RegenerateField() {
+                bool isRegenerated = base.RegenerateField();
+                if (isRegenerated) {
+                    counter++;
+                }
+                return isRegenerated;
             }
         }
     }

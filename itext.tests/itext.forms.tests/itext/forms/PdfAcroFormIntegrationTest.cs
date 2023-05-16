@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Forms.Fields;
 using iText.Forms.Logs;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -121,6 +122,50 @@ namespace iText.Forms {
                 // Check that fields were merged
                 NUnit.Framework.Assert.AreEqual(1, root.GetKids().Size());
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisableFieldRegenerationTest() {
+            String srcFileName = SOURCE_FOLDER + "borderBoxes.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_disableFieldRegeneration.pdf";
+            String cmpFileName2 = SOURCE_FOLDER + "cmp_disableFieldRegenerationUpdated.pdf";
+            String outFileName = DESTINATION_FOLDER + "disableFieldRegeneration.pdf";
+            String outFileName2 = DESTINATION_FOLDER + "disableFieldRegenerationUpdated.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
+                acroForm.DisableRegenerationForAllFields();
+                foreach (PdfFormField field in acroForm.GetRootFormFields().Values) {
+                    field.SetColor(new DeviceRgb(51, 0, 102));
+                    field.GetFirstFormAnnotation().SetBackgroundColor(new DeviceRgb(229, 204, 255)).SetBorderColor(new DeviceRgb
+                        (51, 0, 102)).SetBorderWidth(5);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_"));
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(cmpFileName), new PdfWriter(outFileName2))) {
+                PdfFormCreator.GetAcroForm(document_1, true).EnableRegenerationForAllFields();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName2, cmpFileName2, DESTINATION_FOLDER
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EnableFieldRegenerationTest() {
+            String srcFileName = SOURCE_FOLDER + "cmp_disableFieldRegeneration.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_enableFieldRegeneration.pdf";
+            String outFileName = DESTINATION_FOLDER + "enableFieldRegeneration.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
+                acroForm.DisableRegenerationForAllFields();
+                foreach (PdfFormField field in acroForm.GetRootFormFields().Values) {
+                    field.SetColor(ColorConstants.DARK_GRAY);
+                    field.GetFirstFormAnnotation().SetBackgroundColor(new DeviceRgb(255, 255, 204)).SetBorderColor(new DeviceRgb
+                        (204, 229, 255)).SetBorderWidth(10);
+                }
+                acroForm.EnableRegenerationForAllFields();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_"));
         }
     }
 }

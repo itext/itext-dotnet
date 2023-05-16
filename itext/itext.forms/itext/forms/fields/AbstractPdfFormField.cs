@@ -73,6 +73,9 @@ namespace iText.Forms.Fields {
         /// <summary>Parent form field.</summary>
         protected internal PdfFormField parent;
 
+        /// <summary>Indicates if the form field appearance stream regeneration is enabled.</summary>
+        private bool enableFieldRegeneration = true;
+
         /// <summary>
         /// Creates a form field as a wrapper object around a
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
@@ -214,6 +217,61 @@ namespace iText.Forms.Fields {
         /// </remarks>
         /// <returns>whether or not the regeneration was successful.</returns>
         public abstract bool RegenerateField();
+
+        /// <summary>This method disables regeneration of the field and its children appearance stream.</summary>
+        /// <remarks>
+        /// This method disables regeneration of the field and its children appearance stream. So all of its children
+        /// in the hierarchy will also not be regenerated.
+        /// <para />
+        /// Note that after this method is called field will be regenerated
+        /// only during
+        /// <see cref="EnableFieldRegeneration()"/>
+        /// call.
+        /// </remarks>
+        public virtual void DisableFieldRegeneration() {
+            this.enableFieldRegeneration = false;
+            if (this is PdfFormField) {
+                foreach (iText.Forms.Fields.AbstractPdfFormField child in ((PdfFormField)this).GetChildFields()) {
+                    child.DisableFieldRegeneration();
+                }
+            }
+        }
+
+        /// <summary>This method enables regeneration of the field appearance stream.</summary>
+        /// <remarks>
+        /// This method enables regeneration of the field appearance stream. Please note that this method enables
+        /// regeneration for the children of the field. Also, appearance will be regenerated during this method call.
+        /// <para />
+        /// Should be called after
+        /// <see cref="DisableFieldRegeneration()"/>
+        /// method call.
+        /// </remarks>
+        public virtual void EnableFieldRegeneration() {
+            this.enableFieldRegeneration = true;
+            if (this is PdfFormField) {
+                foreach (iText.Forms.Fields.AbstractPdfFormField child in ((PdfFormField)this).GetAllChildFields()) {
+                    child.enableFieldRegeneration = true;
+                }
+            }
+            RegenerateField();
+        }
+
+        /// <summary>This method disables regeneration of the current field appearance stream.</summary>
+        public virtual void DisableCurrentFieldRegeneration() {
+            this.enableFieldRegeneration = false;
+        }
+
+        /// <summary>This method enables regeneration of the current field appearance stream and regenerates it.</summary>
+        public virtual void EnableCurrentFieldRegeneration() {
+            this.enableFieldRegeneration = true;
+            RegenerateField();
+        }
+
+        /// <summary>This method checks if field appearance stream regeneration is enabled.</summary>
+        /// <returns>true if regeneration is enabled for this field (and all of its ancestors), false otherwise.</returns>
+        public virtual bool IsFieldRegenerationEnabled() {
+            return this.enableFieldRegeneration;
+        }
 
         /// <summary>Sets the text color and does not regenerate appearance stream.</summary>
         /// <param name="color">the new value for the Color.</param>

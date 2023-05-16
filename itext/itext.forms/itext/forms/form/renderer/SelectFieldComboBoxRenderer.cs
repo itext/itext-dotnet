@@ -98,6 +98,7 @@ namespace iText.Forms.Form.Renderer {
                 ));
             SetupBuilderValues(builder, comboBoxFieldModelElement);
             PdfChoiceFormField comboBoxField = builder.CreateComboBox();
+            comboBoxField.DisableFieldRegeneration();
             Background background = this.modelElement.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
                 comboBoxField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
@@ -130,6 +131,7 @@ namespace iText.Forms.Form.Renderer {
                 }
             }
             comboBoxField.GetFirstFormAnnotation().SetFormFieldElement(comboBoxFieldModelElement);
+            comboBoxField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(comboBoxField, page);
             WriteAcroFormFieldLangAttribute(doc);
         }

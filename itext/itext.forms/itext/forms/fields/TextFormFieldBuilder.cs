@@ -63,10 +63,12 @@ namespace iText.Forms.Fields {
                 field = PdfFormCreator.CreateTextFormField(annotation, GetDocument());
                 SetPageToField(field);
             }
+            field.DisableFieldRegeneration();
             field.pdfAConformanceLevel = GetConformanceLevel();
             field.SetMultiline(multiline);
             field.SetFieldName(GetFormFieldName());
             field.SetValue(TEXT_FORM_FIELD_DEFAULT_VALUE);
+            field.EnableFieldRegeneration();
             return field;
         }
 
