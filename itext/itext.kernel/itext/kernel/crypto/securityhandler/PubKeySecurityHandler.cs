@@ -68,6 +68,9 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     md.Update(new byte[] { (byte)255, (byte)255, (byte)255, (byte)255 });
                 }
             }
+            catch (PdfException pdfException) {
+                throw;
+            }
             catch (Exception e) {
                 throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);
             }

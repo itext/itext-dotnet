@@ -25,6 +25,8 @@ using System;
 namespace iText.Kernel.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class KernelExceptionMessageConstant {
+        public const String ALGORITHM_IS_NOT_SUPPORTED = "Algorithm {0} is not supported.";
+
         public const String AMOUNT_OF_BYTES_LESS_THAN_ZERO = "Amount of bytes in the PDF document cannot be less than zero";
 
         public const String ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE = "Annotation shall have reference to page.";

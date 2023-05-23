@@ -88,6 +88,11 @@ namespace iText.Bouncycastlefips.Openssl {
             if (readObject is X509Certificate) {
                 return new X509CertificateBCFips((X509Certificate)readObject);
             }
+
+            if (readObject is PrivateKeyInfo) {
+                PrivateKeyInfo privateKeyInfo = (PrivateKeyInfo)readObject;
+                return new PrivateKeyBCFips(AsymmetricKeyFactory.CreatePrivateKey(privateKeyInfo.GetEncoded()));
+            }
             if (readObject is Pkcs8EncryptedPrivateKeyInfo) {
                 if (password == null) {
                     return new PrivateKeyBCFips(null);

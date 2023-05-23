@@ -21,6 +21,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Cryptography;
 using iText.Bouncycastleconnector;
@@ -30,6 +32,7 @@ using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
@@ -41,6 +44,13 @@ namespace iText.Kernel.Crypto.Securityhandler {
         public const int ENVELOPE_ENCRYPTION_KEY_LENGTH = 256;
 
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+        
+        private static readonly ICollection<string> UNSUPPORTED_ALGORITHMS = new HashSet<string>();
+
+        static EncryptionUtils() {
+            UNSUPPORTED_ALGORITHMS.Add("1.2.840.10045.2.1");
+            UNSUPPORTED_ALGORITHMS.Add("ECDSA");
+        }
 
         internal static byte[] GenerateSeed(int seedLength) {
             return IVGenerator.GetIV(seedLength);
@@ -49,6 +59,9 @@ namespace iText.Kernel.Crypto.Securityhandler {
         internal static byte[] FetchEnvelopedData(IPrivateKey certificateKey, IX509Certificate certificate, PdfArray recipients) {
             bool foundRecipient = false;
             byte[] envelopedData = null;
+            if (certificateKey != null && UNSUPPORTED_ALGORITHMS.Contains(certificateKey.GetAlgorithm())) {
+                throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.ALGORITHM_IS_NOT_SUPPORTED, certificateKey.GetAlgorithm()));
+            }
             for (int i = 0; i < recipients.Size(); i++) {
                 try {
                     PdfString recipient = recipients.GetAsString(i);
@@ -70,6 +83,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         internal static byte[] CipherBytes(IX509Certificate x509Certificate, byte[] abyte0, IAlgorithmIdentifier algorithmidentifier) {
+            string algorithm = algorithmidentifier.GetAlgorithm().GetId();
+            if (UNSUPPORTED_ALGORITHMS.Contains(algorithm)) {
+                throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.ALGORITHM_IS_NOT_SUPPORTED, algorithm));
+            }
             return FACTORY.CreateCipherBytes(x509Certificate, abyte0, algorithmidentifier);
         }
 
