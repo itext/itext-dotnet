@@ -468,6 +468,52 @@ namespace iText.Kernel.Utils {
                 ));
         }
 
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
+        public virtual void MergePdfWithMissingStructElemBeginningOfTreeTest() {
+            //TODO change assertion after DEVSIX-7478 is fixed
+            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("structParentMissingFirstElement.pdf"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        public virtual void MergePdfWithMissingStructElemEndOfTreeTest() {
+            //TODO change assertion after DEVSIX-7478 is fixed
+            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("structParentMissingLastElement.pdf"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        public virtual void MergePdfAllObjectsMissingStructParentTest() {
+            //TODO change assertion after DEVSIX-7478 is fixed
+            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("allObjectsHaveStructParent.pdf"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
+        public virtual void MergePdfChildObjectsOfSameStructElemMissingStructParentTest() {
+            //TODO change assertion after DEVSIX-7478 is fixed
+            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("SameStructElemNoParent.pdf"));
+        }
+
+        private PdfDictionary MergeSinglePdfAndGetResultingStructTreeRoot(String pathToMerge) {
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(sourceFolder + pathToMerge));
+            String mergedDoc = destinationFolder + pathToMerge;
+            MergePdfs(sources, mergedDoc, true);
+            return GetStructTreeRootOfDocument(mergedDoc);
+        }
+
+        private PdfDictionary GetStructTreeRootOfDocument(String pathToFile) {
+            PdfDocument mergedDocument = new PdfDocument(new PdfReader(pathToFile));
+            return mergedDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot);
+        }
+
         private void MergePdfs(IList<FileInfo> sources, String destination, bool smartMode) {
             PdfDocument mergedDoc = new PdfDocument(new PdfWriter(destination));
             mergedDoc.GetWriter().SetSmartMode(smartMode);
