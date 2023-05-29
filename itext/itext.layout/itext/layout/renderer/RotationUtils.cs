@@ -124,7 +124,8 @@ namespace iText.Layout.Renderer {
                 backup.StoreProperty<UnitValue>(Property.MAX_HEIGHT);
                 backup.StoreBoolProperty(Property.FORCED_PLACEMENT);
                 MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth();
-                //Using this width for initial layout helps in case of small elements. They may have more free spaces but it's more likely they fit.
+                // Using this width for initial layout helps in case of small elements. They may have more free spaces,
+                // but it's more likely they fit.
                 float length = (minMaxWidth.GetMaxWidth() + minMaxWidth.GetMinWidth()) / 2 + MinMaxWidthUtils.GetEps();
                 LayoutResult layoutResult = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(length, AbstractRenderer
                     .INF))));

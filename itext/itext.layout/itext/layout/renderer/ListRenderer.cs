@@ -371,7 +371,6 @@ namespace iText.Layout.Renderer {
                         listSymbolLayoutResult = currentSymbolRenderer.Layout(layoutContext);
                         currentSymbolRenderer.SetParent(null);
                     }
-                    childRenderers[i].SetParent(null);
                     bool isForcedPlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
                     bool listSymbolNotFit = listSymbolLayoutResult != null && listSymbolLayoutResult.GetStatus() != LayoutResult
                         .FULL;
@@ -399,7 +398,6 @@ namespace iText.Layout.Renderer {
                 float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                 listItemNum = 0;
                 foreach (IRenderer childRenderer in childRenderers) {
-                    childRenderer.SetParent(this);
                     // Symbol indent's value should be summed with the margin's value
                     bool isRtl = BaseDirection.RIGHT_TO_LEFT == childRenderer.GetProperty<BaseDirection?>(Property.BASE_DIRECTION
                         );

@@ -24,6 +24,7 @@ using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -228,14 +229,14 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            FlexContainerRenderer flexContainerRenderer = new _FlexContainerRenderer_272(new Div());
+            FlexContainerRenderer flexContainerRenderer = new _FlexContainerRenderer_274(new Div());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(FlexContainerRenderer), flexContainerRenderer.GetNextRenderer().GetType
                 ());
         }
 
-        private sealed class _FlexContainerRenderer_272 : FlexContainerRenderer {
-            public _FlexContainerRenderer_272(Div baseArg1)
+        private sealed class _FlexContainerRenderer_274 : FlexContainerRenderer {
+            public _FlexContainerRenderer_274(Div baseArg1)
                 : base(baseArg1) {
             }
         }
@@ -250,12 +251,49 @@ namespace iText.Layout.Renderer {
             divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(125));
             flexRendererChild.AddChild(divRenderer);
             flexRenderer.AddChild(flexRendererChild);
-            // In general it's possible that we might call layout more than once for 1 renderer
+            // In general, it's possible that we might call layout more than once for 1 renderer
             flexRenderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(100, 0))));
             flexRenderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(200, 0))));
             // Test that hypotheticalCrossSizes can contain more than 1 value
             NUnit.Framework.Assert.IsNotNull(flexRendererChild.GetHypotheticalCrossSize(125F));
             NUnit.Framework.Assert.IsNotNull(flexRendererChild.GetHypotheticalCrossSize(150F));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MinMaxWidthForFlexRendererWithWrapTest() {
+            FlexContainerRenderer flexRenderer = new FlexContainerRenderer(new Div());
+            flexRenderer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+            flexRenderer.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(100));
+            flexRenderer.SetProperty(Property.BORDER, new SolidBorder(5));
+            // line 1
+            DivRenderer divRenderer1 = new DivRenderer(new Div());
+            divRenderer1.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(30));
+            divRenderer1.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(50));
+            DivRenderer divRenderer2 = new DivRenderer(new Div());
+            divRenderer2.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(40));
+            // line 2
+            DivRenderer divRenderer3 = new DivRenderer(new Div());
+            divRenderer3.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(30));
+            DivRenderer divRenderer4 = new DivRenderer(new Div());
+            divRenderer4.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(5));
+            // line 3
+            DivRenderer divRenderer5 = new DivRenderer(new Div());
+            divRenderer5.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(75));
+            flexRenderer.AddChild(divRenderer1);
+            flexRenderer.AddChild(divRenderer2);
+            flexRenderer.AddChild(divRenderer3);
+            flexRenderer.AddChild(divRenderer4);
+            flexRenderer.AddChild(divRenderer5);
+            flexRenderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(100, 100))));
+            MinMaxWidth minMaxWidth = flexRenderer.GetMinMaxWidth();
+            NUnit.Framework.Assert.AreEqual(75F, minMaxWidth.GetChildrenMinWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(85F, minMaxWidth.GetMinWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(100F, minMaxWidth.GetChildrenMaxWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(110F, minMaxWidth.GetMaxWidth(), EPS);
+            flexRenderer.DeleteOwnProperty(Property.MAX_WIDTH);
+            minMaxWidth = flexRenderer.GetMinMaxWidth();
+            NUnit.Framework.Assert.AreEqual(90F, minMaxWidth.GetChildrenMaxWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(100F, minMaxWidth.GetMaxWidth(), EPS);
         }
     }
 }

@@ -91,8 +91,8 @@ namespace iText.Layout.Renderer {
             // performing layout with the used main size and the available space, treating auto as fit-content.
             DetermineHypotheticalCrossSizeForFlexItems(lines);
             // 8. Calculate the cross size of each flex line.
-            IList<float> lineCrossSizes = CalculateCrossSizeOfEachFlexLine(lines, isSingleLine, minCrossSize, crossSize
-                , maxCrossSize);
+            IList<float> lineCrossSizes = CalculateCrossSizeOfEachFlexLine(lines, minCrossSize, crossSize, maxCrossSize
+                );
             // TODO DEVSIX-5003 min/max height calculations are not supported
             // If the flex container is single-line, then clamp the line’s cross-size to be within
             // the container’s computed min and max cross sizes. Note that if CSS 2.1’s definition of min/max-width/height
@@ -370,7 +370,8 @@ namespace iText.Layout.Renderer {
         }
 
         internal static IList<float> CalculateCrossSizeOfEachFlexLine(IList<IList<FlexUtil.FlexItemCalculationInfo
-            >> lines, bool isSingleLine, float? minCrossSize, float? crossSize, float? maxCrossSize) {
+            >> lines, float? minCrossSize, float? crossSize, float? maxCrossSize) {
+            bool isSingleLine = lines.Count == 1;
             IList<float> lineCrossSizes = new List<float>();
             if (isSingleLine && crossSize != null && !lines.IsEmpty()) {
                 lineCrossSizes.Add((float)crossSize);
@@ -476,9 +477,15 @@ namespace iText.Layout.Renderer {
                     float freeSpace = lineCrossSize - itemInfo.GetOuterCrossSize(itemInfo.crossSize);
                     switch (selfAlignment) {
                         case AlignmentPropertyValue.SELF_END:
-                        case AlignmentPropertyValue.END:
-                        case AlignmentPropertyValue.FLEX_END: {
+                        case AlignmentPropertyValue.END: {
                             itemInfo.yShift = freeSpace;
+                            break;
+                        }
+
+                        case AlignmentPropertyValue.FLEX_END: {
+                            if (!renderer.IsWrapReverse()) {
+                                itemInfo.yShift = freeSpace;
+                            }
                             break;
                         }
 
@@ -487,12 +494,18 @@ namespace iText.Layout.Renderer {
                             break;
                         }
 
+                        case AlignmentPropertyValue.FLEX_START: {
+                            if (renderer.IsWrapReverse()) {
+                                itemInfo.yShift = freeSpace;
+                            }
+                            break;
+                        }
+
                         case AlignmentPropertyValue.START:
                         case AlignmentPropertyValue.BASELINE:
                         case AlignmentPropertyValue.SELF_START:
                         case AlignmentPropertyValue.STRETCH:
                         case AlignmentPropertyValue.NORMAL:
-                        case AlignmentPropertyValue.FLEX_START:
                         default: {
                             break;
                         }

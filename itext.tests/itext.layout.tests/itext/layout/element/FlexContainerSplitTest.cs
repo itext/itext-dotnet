@@ -133,6 +133,142 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SimpleWrapTest() {
+            String outFileName = DESTINATION_FOLDER + "simpleWrapTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_simpleWrapTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = CreateDefaultFlexContainerForWrap();
+                flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SimpleWrapStartTest() {
+            String outFileName = DESTINATION_FOLDER + "simpleWrapStartTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_simpleWrapStartTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = CreateDefaultFlexContainerForWrap();
+                flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+                flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_START);
+                flexContainer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_START);
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SimpleWrapEndTest() {
+            String outFileName = DESTINATION_FOLDER + "simpleWrapEndTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_simpleWrapEndTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = CreateDefaultFlexContainerForWrap();
+                flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+                flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_END);
+                flexContainer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_END);
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReverseWrapStartTest() {
+            String outFileName = DESTINATION_FOLDER + "reverseWrapStartTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_reverseWrapStartTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = CreateDefaultFlexContainerForWrap();
+                flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP_REVERSE);
+                flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_START);
+                flexContainer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_START);
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReverseWrapEndTest() {
+            String outFileName = DESTINATION_FOLDER + "reverseWrapEndTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_reverseWrapEndTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = CreateDefaultFlexContainerForWrap();
+                flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP_REVERSE);
+                flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_END);
+                flexContainer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_END);
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReverseWrapStartHeightTest() {
+            String outFileName = DESTINATION_FOLDER + "reverseWrapStartHeightTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_reverseWrapStartHeightTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = CreateDefaultFlexContainerForWrap();
+                flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP_REVERSE);
+                flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_START);
+                flexContainer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_START);
+                flexContainer.SetHeight(1250);
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReverseWrapEndHeightTest() {
+            String outFileName = DESTINATION_FOLDER + "reverseWrapEndHeightTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_reverseWrapEndHeightTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = CreateDefaultFlexContainerForWrap();
+                flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP_REVERSE);
+                flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_END);
+                flexContainer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_END);
+                flexContainer.SetHeight(1250);
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SimpleWrapCenterTest() {
+            String outFileName = DESTINATION_FOLDER + "simpleWrapCenterTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_simpleWrapCenterTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = CreateDefaultFlexContainerForWrap();
+                flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+                flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.CENTER);
+                flexContainer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.CENTER);
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
         private Div CreateDefaultFlexContainer() {
             Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
@@ -147,6 +283,18 @@ namespace iText.Layout.Element {
             p2.SetProperty(Property.FLEX_GROW, 1f);
             p2.SetProperty(Property.FLEX_SHRINK, 1f);
             flexContainer.Add(p2);
+            return flexContainer;
+        }
+
+        private Div CreateDefaultFlexContainerForWrap() {
+            Div flexContainer = new FlexContainer();
+            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
+            Paragraph p1 = new Paragraph(SHORT_TEXT).SetWidth(UnitValue.CreatePercentValue(20)).SetBackgroundColor(ColorConstants
+                .BLUE);
+            Paragraph p2 = new Paragraph(VERY_LONG_TEXT).SetWidth(UnitValue.CreatePercentValue(40)).SetBackgroundColor
+                (ColorConstants.YELLOW);
+            flexContainer.Add(p1).Add(p2).Add(p1).Add(p2).Add(p1).Add(p2).Add(p1).Add(p2);
             return flexContainer;
         }
     }

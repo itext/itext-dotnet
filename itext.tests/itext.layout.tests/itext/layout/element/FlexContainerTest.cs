@@ -49,6 +49,8 @@ namespace iText.Layout.Element {
 
         private JustifyContent justifyContentValue;
 
+        private FlexWrapPropertyValue wrapValue;
+
         private int? comparisonPdfId;
 
         [NUnit.Framework.OneTimeSetUp]
@@ -56,21 +58,32 @@ namespace iText.Layout.Element {
             CreateDestinationFolder(destinationFolder);
         }
 
-        public FlexContainerTest(Object alignItemsValue, Object justifyContentValue, Object comparisonPdfId) {
+        public FlexContainerTest(Object alignItemsValue, Object justifyContentValue, Object wrapValue, Object comparisonPdfId
+            ) {
             this.alignItemsValue = (AlignmentPropertyValue)alignItemsValue;
             this.justifyContentValue = (JustifyContent)justifyContentValue;
+            this.wrapValue = (FlexWrapPropertyValue)wrapValue;
             this.comparisonPdfId = (int?)comparisonPdfId;
         }
 
         public FlexContainerTest(Object[] array)
-            : this(array[0], array[1], array[2]) {
+            : this(array[0], array[1], array[2], array[3]) {
         }
 
         public static IEnumerable<Object[]> AlignItemsAndJustifyContentProperties() {
             return JavaUtil.ArraysAsList(new Object[][] { new Object[] { AlignmentPropertyValue.FLEX_START, JustifyContent
-                .FLEX_START, 1 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent.FLEX_END, 2 }, new Object
-                [] { AlignmentPropertyValue.CENTER, JustifyContent.CENTER, 3 }, new Object[] { AlignmentPropertyValue.
-                STRETCH, JustifyContent.CENTER, 4 } });
+                .FLEX_START, FlexWrapPropertyValue.NOWRAP, 1 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent
+                .FLEX_END, FlexWrapPropertyValue.NOWRAP, 2 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent
+                .CENTER, FlexWrapPropertyValue.NOWRAP, 3 }, new Object[] { AlignmentPropertyValue.STRETCH, JustifyContent
+                .CENTER, FlexWrapPropertyValue.NOWRAP, 4 }, new Object[] { AlignmentPropertyValue.FLEX_START, JustifyContent
+                .FLEX_START, FlexWrapPropertyValue.WRAP, 5 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent
+                .FLEX_END, FlexWrapPropertyValue.WRAP, 6 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent
+                .CENTER, FlexWrapPropertyValue.WRAP, 7 }, new Object[] { AlignmentPropertyValue.STRETCH, JustifyContent
+                .CENTER, FlexWrapPropertyValue.WRAP, 8 }, new Object[] { AlignmentPropertyValue.FLEX_START, JustifyContent
+                .FLEX_START, FlexWrapPropertyValue.WRAP_REVERSE, 9 }, new Object[] { AlignmentPropertyValue.FLEX_END, 
+                JustifyContent.FLEX_END, FlexWrapPropertyValue.WRAP_REVERSE, 10 }, new Object[] { AlignmentPropertyValue
+                .CENTER, JustifyContent.CENTER, FlexWrapPropertyValue.WRAP_REVERSE, 11 }, new Object[] { AlignmentPropertyValue
+                .STRETCH, JustifyContent.CENTER, FlexWrapPropertyValue.WRAP_REVERSE, 12 } });
         }
 
         public static ICollection<NUnit.Framework.TestFixtureData> AlignItemsAndJustifyContentPropertiesTestFixtureData
@@ -131,11 +144,8 @@ namespace iText.Layout.Element {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
-            flexContainer.SetProperty(Property.ALIGN_ITEMS, alignItemsValue);
-            flexContainer.SetProperty(Property.JUSTIFY_CONTENT, justifyContentValue);
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            flexContainer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(500));
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
@@ -156,6 +166,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerHeightClippedTest() {
+            // If height is clipped the behavior strongly depends on the child renderers
+            // and the results are not expected sometimes
             String outFileName = destinationFolder + "flexContainerHeightClippedTest" + comparisonPdfId + ".pdf";
             String cmpFileName = sourceFolder + "cmp_flexContainerHeightClippedTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
@@ -163,7 +175,6 @@ namespace iText.Layout.Element {
             Div flexContainer = CreateFlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            flexContainer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(500));
             flexContainer.SetHeight(250);
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
@@ -256,8 +267,7 @@ namespace iText.Layout.Element {
             Div flexContainer = CreateFlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            flexContainer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(500));
-            flexContainer.SetHeight(400);
+            flexContainer.SetHeight(500);
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
@@ -323,7 +333,6 @@ namespace iText.Layout.Element {
             Div flexContainer = CreateFlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            flexContainer.SetWidth(500);
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
@@ -358,7 +367,6 @@ namespace iText.Layout.Element {
             Div flexContainer = CreateFlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            flexContainer.SetWidth(500);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 }));
             for (int i = 0; i < 2; i++) {
                 table.AddCell("Hello");
@@ -389,7 +397,6 @@ namespace iText.Layout.Element {
             Div flexContainer = CreateFlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            flexContainer.SetWidth(500);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 }));
             for (int i = 0; i < 2; i++) {
                 table.AddCell("Hello");
@@ -667,7 +674,6 @@ namespace iText.Layout.Element {
             Div flexContainer = CreateFlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            flexContainer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(400));
             flexContainer.SetProperty(Property.ROTATION_ANGLE, 20f);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10 }));
             for (int i = 0; i < 3; i++) {
@@ -735,8 +741,8 @@ namespace iText.Layout.Element {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
-            flexContainer.Add(new Div().SetWidth(100).SetBackgroundColor(ColorConstants.BLUE).SetHeight(100));
-            flexContainer.Add(new Div().SetWidth(100).SetBackgroundColor(ColorConstants.YELLOW).SetMinHeight(20));
+            flexContainer.Add(new Div().SetWidth(110).SetBackgroundColor(ColorConstants.BLUE).SetHeight(100));
+            flexContainer.Add(new Div().SetWidth(110).SetBackgroundColor(ColorConstants.YELLOW).SetMinHeight(20));
             document.Add(flexContainer);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -751,8 +757,8 @@ namespace iText.Layout.Element {
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
             flexContainer.SetMinHeight(100);
-            Div child = new Div().SetWidth(100).SetBackgroundColor(ColorConstants.BLUE);
-            child.Add(new Paragraph().SetWidth(100).SetBackgroundColor(ColorConstants.YELLOW));
+            Div child = new Div().SetWidth(110).SetBackgroundColor(ColorConstants.BLUE);
+            child.Add(new Paragraph().SetWidth(110).SetBackgroundColor(ColorConstants.YELLOW));
             flexContainer.Add(child);
             document.Add(flexContainer);
             document.Close();
@@ -903,6 +909,10 @@ namespace iText.Layout.Element {
             FlexContainer flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.ALIGN_ITEMS, alignItemsValue);
             flexContainer.SetProperty(Property.JUSTIFY_CONTENT, justifyContentValue);
+            flexContainer.SetProperty(Property.FLEX_WRAP, wrapValue);
+            if (FlexWrapPropertyValue.NOWRAP != wrapValue) {
+                flexContainer.SetWidth(200);
+            }
             return flexContainer;
         }
 
