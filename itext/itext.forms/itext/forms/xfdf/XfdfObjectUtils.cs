@@ -40,13 +40,14 @@ namespace iText.Forms.Xfdf {
         /// Converts a string containing 2 or 4 float values into a
         /// <see cref="iText.Kernel.Geom.Rectangle"/>.
         /// </summary>
-        /// <remarks>
-        /// Converts a string containing 2 or 4 float values into a
-        /// <see cref="iText.Kernel.Geom.Rectangle"/>.
-        /// If only two coordinates are present, they should represent
+        /// <param name="rectString">
+        /// the annotation rectangle, defining the location of the annotation on the page
+        /// in default user space units. The value is four comma separated real numbers
+        /// which may be positive or negative: (xLeft, yBottom, xRight, yTop). If only two coordinates
+        /// are present, they should represent
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
         /// width and height.
-        /// </remarks>
+        /// </param>
         internal static Rectangle ConvertRectFromString(String rectString) {
             String delims = ",";
             StringTokenizer st = new StringTokenizer(rectString, delims);
@@ -60,9 +61,11 @@ namespace iText.Forms.Xfdf {
             }
             else {
                 if (coordsList.Count == 4) {
-                    return new Rectangle(float.Parse(coordsList[0], System.Globalization.CultureInfo.InvariantCulture), float.Parse
-                        (coordsList[1], System.Globalization.CultureInfo.InvariantCulture), float.Parse(coordsList[2], System.Globalization.CultureInfo.InvariantCulture
-                        ), float.Parse(coordsList[3], System.Globalization.CultureInfo.InvariantCulture));
+                    float xLeft = float.Parse(coordsList[0], System.Globalization.CultureInfo.InvariantCulture);
+                    float yBottom = float.Parse(coordsList[1], System.Globalization.CultureInfo.InvariantCulture);
+                    float width = float.Parse(coordsList[2], System.Globalization.CultureInfo.InvariantCulture) - xLeft;
+                    float height = float.Parse(coordsList[3], System.Globalization.CultureInfo.InvariantCulture) - yBottom;
+                    return new Rectangle(xLeft, yBottom, width, height);
                 }
             }
             return null;
@@ -254,7 +257,7 @@ namespace iText.Forms.Xfdf {
             String colorString = colorHexString.Substring(colorHexString.IndexOf('#') + 1);
             if (colorString.Length == 6) {
                 for (int i = 0; i < 3; i++) {
-                    result[i] = Convert.ToInt32(colorString.JSubstring(i * 2, 2 + i * 2), 16);
+                    result[i] = Convert.ToInt32(colorString.JSubstring(i * 2, 2 + i * 2), 16) / 255f;
                 }
             }
             return result;
