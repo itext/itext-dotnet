@@ -21,8 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
@@ -73,6 +75,18 @@ namespace iText.Layout.Font {
             String text = "here is non-breaking hyphen: <\u2011> text after non-breaking hyphen.";
             Paragraph p = new Paragraph(textParagraph + text).SetFontFamily(font);
             return p;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UtfToGlyphToUtfRountripTest() {
+            // See DEVSIX-4945
+            // this should not throw a null pointer exception
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                using (Document doc = new Document(pdfDoc)) {
+                    doc.SetFont(PdfFontFactory.CreateFont("HeiseiMin-W3", "UniJIS-UCS2-H"));
+                    NUnit.Framework.Assert.DoesNotThrow(() => doc.Add(new Paragraph("\u9F9C")));
+                }
+            }
         }
     }
 }

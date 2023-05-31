@@ -58,5 +58,11 @@ namespace iText.IO.Font.Cmap {
             }
             return uni;
         }
+
+        /// <summary>Returns all mapped code points.</summary>
+        /// <returns>an array containing all mapped code points</returns>
+        public virtual int[] GetCodePoints() {
+            return map.GetKeys();
+        }
     }
 }

@@ -22,9 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Exceptions;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
@@ -280,10 +282,9 @@ namespace iText.Kernel.Font {
             }
         }
 
-        public override byte[] ConvertToBytes(String text) {
+        private byte[] ConvertToBytesUsingCMap(String text) {
             int len = text.Length;
             ByteBuffer buffer = new ByteBuffer();
-            int i = 0;
             if (fontProgram.IsFontSpecific()) {
                 byte[] b = PdfEncodings.ConvertToBytes(text, "symboltt");
                 len = b.Length;
@@ -317,9 +318,44 @@ namespace iText.Kernel.Font {
             return buffer.ToByteArray();
         }
 
+        public override byte[] ConvertToBytes(String text) {
+            CMapCharsetEncoder encoder = StandardCMapCharsets.GetEncoder(cmapEncoding.GetCmapName());
+            if (encoder == null) {
+                return this.ConvertToBytesUsingCMap(text);
+            }
+            else {
+                return ConverToBytesUsingEncoder(text, encoder);
+            }
+        }
+
+        private byte[] ConverToBytesUsingEncoder(String text, CMapCharsetEncoder encoder) {
+            MemoryStream stream = new MemoryStream();
+            int[] codePoints = iText.IO.Util.TextUtil.ConvertToUtf32(text);
+            foreach (int cp in codePoints) {
+                try {
+                    stream.Write(encoder.EncodeUnicodeCodePoint(cp));
+                    Glyph glyph = GetGlyph(cp);
+                    if (glyph.GetCode() > 0) {
+                        usedGlyphs.Add(glyph.GetCode());
+                    }
+                }
+                catch (System.IO.IOException e) {
+                    // can only be thrown when stream is closed
+                    throw new ITextException(e);
+                }
+            }
+            return stream.ToArray();
+        }
+
         public override byte[] ConvertToBytes(GlyphLine glyphLine) {
-            if (glyphLine != null) {
-                // prepare and count total length in bytes
+            if (glyphLine == null) {
+                return new byte[0];
+            }
+            // NOTE: this isn't particularly efficient, but it demonstrates the principle behind CMap-less conversion
+            // (i.e. we only use the CMap's name to derive the correct encoding)
+            // Also, it will yield wrong results when used in an embedded setting where font features have been applied
+            CMapCharsetEncoder encoder = StandardCMapCharsets.GetEncoder(cmapEncoding.GetCmapName());
+            if (encoder == null) {
                 int totalByteCount = 0;
                 for (int i = glyphLine.start; i < glyphLine.end; i++) {
                     totalByteCount += cmapEncoding.GetCmapBytesLength(glyphLine.Get(i).GetCode());
@@ -334,13 +370,33 @@ namespace iText.Kernel.Font {
                 return bytes;
             }
             else {
-                return null;
+                MemoryStream baos = new MemoryStream();
+                for (int i = glyphLine.start; i < glyphLine.end; i++) {
+                    Glyph g = glyphLine.Get(i);
+                    usedGlyphs.Add(g.GetCode());
+                    byte[] encodedBit = encoder.EncodeUnicodeCodePoint(g.GetUnicode());
+                    try {
+                        baos.Write(encodedBit);
+                    }
+                    catch (System.IO.IOException e) {
+                        // could only be thrown when the stream is closed
+                        throw new PdfException(e);
+                    }
+                }
+                return baos.ToArray();
             }
         }
 
         public override byte[] ConvertToBytes(Glyph glyph) {
             usedGlyphs.Add(glyph.GetCode());
-            return cmapEncoding.GetCmapBytes(glyph.GetCode());
+            CMapCharsetEncoder encoder = StandardCMapCharsets.GetEncoder(cmapEncoding.GetCmapName());
+            if (encoder == null) {
+                return cmapEncoding.GetCmapBytes(glyph.GetCode());
+            }
+            else {
+                int cp = glyph.GetUnicode();
+                return encoder.EncodeUnicodeCodePoint(cp);
+            }
         }
 
         public override void WriteText(GlyphLine text, int from, int to, PdfOutputStream stream) {
@@ -672,6 +728,7 @@ namespace iText.Kernel.Font {
         }
 
         private void ConvertToBytes(Glyph glyph, ByteBuffer result) {
+            // NOTE: this should only ever be called with the identity CMap in RES-403
             int code = glyph.GetCode();
             usedGlyphs.Add(code);
             cmapEncoding.FillCmapBytes(code, result);
