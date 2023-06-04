@@ -577,6 +577,22 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+        /// <summary>Sets on state name for the checkbox annotation normal appearance and regenerates widget.</summary>
+        /// <param name="onStateName">the new appearance name representing on state.</param>
+        /// <returns>
+        /// The edited
+        /// <see cref="PdfFormAnnotation"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfFormAnnotation SetCheckBoxAppearanceOnStateName(String onStateName) {
+            if (IsCheckBox() && onStateName != null && !String.IsNullOrEmpty(onStateName) && !iText.Forms.Fields.PdfFormAnnotation
+                .OFF_STATE_VALUE.Equals(onStateName)) {
+                DrawCheckBoxAndSaveAppearance(onStateName);
+                GetWidget().SetAppearanceState(new PdfName(onStateName.Equals(parent.GetValueAsString()) ? onStateName : OFF_STATE_VALUE
+                    ));
+            }
+            return this;
+        }
+
         /// <summary>
         /// Gets a
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
@@ -917,9 +933,6 @@ namespace iText.Forms.Fields {
             }
             ReconstructCheckBoxType();
             CreateCheckBox();
-            if (GetWidget().GetNormalAppearanceObject() == null) {
-                GetWidget().SetNormalAppearance(new PdfDictionary());
-            }
             PdfDictionary normalAppearance = new PdfDictionary();
             ((CheckBox)formFieldElement).SetChecked(false);
             PdfFormXObject xObjectOff = new PdfFormXObject(new Rectangle(0, 0, rect.GetWidth(), rect.GetHeight()));
@@ -948,7 +961,6 @@ namespace iText.Forms.Fields {
             mk.Put(PdfName.CA, new PdfString(PdfCheckBoxRenderingStrategy.ZAPFDINGBATS_CHECKBOX_MAPPING.GetByKey(parent
                 .checkType.GetValue())));
             GetWidget().Put(PdfName.MK, mk);
-            SetCheckBoxAppearanceState(onStateName);
         }
 
         internal static void SetMetaInfoToCanvas(iText.Layout.Canvas canvas) {
@@ -1000,7 +1012,7 @@ namespace iText.Forms.Fields {
                                     DrawRadioButtonAndSaveAppearance(GetRadioButtonValue());
                                 }
                                 else {
-                                    DrawCheckBoxAndSaveAppearance(parent.GetValueAsString());
+                                    DrawCheckBoxAndSaveAppearance(GetCheckBoxValue());
                                 }
                             }
                             return true;
@@ -1061,15 +1073,13 @@ namespace iText.Forms.Fields {
             return null;
         }
 
-        private void SetCheckBoxAppearanceState(String onStateName) {
-            PdfWidgetAnnotation widget = GetWidget();
-            if (widget.GetNormalAppearanceObject() != null && widget.GetNormalAppearanceObject().ContainsKey(new PdfName
-                (onStateName))) {
-                widget.SetAppearanceState(new PdfName(onStateName));
+        private String GetCheckBoxValue() {
+            foreach (String state in GetAppearanceStates()) {
+                if (!OFF_STATE_VALUE.Equals(state)) {
+                    return state;
+                }
             }
-            else {
-                widget.SetAppearanceState(new PdfName(OFF_STATE_VALUE));
-            }
+            return parent.GetValueAsString();
         }
 
         private void ReconstructCheckBoxType() {
@@ -1182,6 +1192,11 @@ namespace iText.Forms.Fields {
                 return captionData.GetValue();
             }
             return null;
+        }
+
+        private bool IsCheckBox() {
+            return parent != null && PdfName.Btn.Equals(parent.GetFormType()) && !parent.GetFieldFlag(PdfButtonFormField
+                .FF_RADIO) && !parent.GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON);
         }
     }
 }

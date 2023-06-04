@@ -1499,6 +1499,11 @@ namespace iText.Forms.Fields {
                     // so we need to get rid of the form fields kids
                     PdfFormFieldMergeUtil.ProcessDirtyAnnotations(this, true);
                     Put(PdfName.V, new PdfName(value));
+                    if (generateAppearance && !GetFieldFlag(PdfButtonFormField.FF_RADIO)) {
+                        if (TryGenerateCheckboxAppearance(value)) {
+                            return this;
+                        }
+                    }
                     foreach (PdfWidgetAnnotation widget in GetWidgets()) {
                         IList<String> states = JavaUtil.ArraysAsList(PdfFormAnnotation.MakeFormAnnotation(widget.GetPdfObject(), GetDocument
                             ()).GetAppearanceStates());
@@ -1530,6 +1535,35 @@ namespace iText.Forms.Fields {
             }
             this.SetModified();
             return this;
+        }
+
+        /// <summary>
+        /// Distinguish mutually exclusive and regular checkboxes: check all the on states of the widgets, if they are
+        /// not all equal, then consider that this checkbox is mutually exclusive and do nothing, otherwise regenerate
+        /// normal appearance with value as on appearance state for all the widgets.
+        /// </summary>
+        /// <param name="value">not empty value different from "Off".</param>
+        private bool TryGenerateCheckboxAppearance(String value) {
+            if (value == null || String.IsNullOrEmpty(value) || PdfFormAnnotation.OFF_STATE_VALUE.Equals(value)) {
+                return false;
+            }
+            ICollection<String> allStates = new HashSet<String>();
+            foreach (PdfFormAnnotation annotation in GetChildFormAnnotations()) {
+                allStates.AddAll(JavaUtil.ArraysAsList(annotation.GetAppearanceStates()));
+                if (allStates.Count > 2) {
+                    return false;
+                }
+            }
+            allStates.Remove(PdfFormAnnotation.OFF_STATE_VALUE);
+            if (allStates.IsEmpty() || allStates.Count == 1 && !value.Equals(allStates.ToArray(new String[allStates.Count
+                ])[0])) {
+                foreach (PdfFormAnnotation annotation in GetChildFormAnnotations()) {
+                    annotation.SetCheckBoxAppearanceOnStateName(value);
+                }
+                UpdateDefaultAppearance();
+                return true;
+            }
+            return false;
         }
 
         private bool MergeKidsIfKidWithSuchNameExists(AbstractPdfFormField newKid, bool throwExceptionOnError) {
