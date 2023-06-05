@@ -551,6 +551,8 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant COLUMN_REVERSE.</summary>
         public const String COLUMN_REVERSE = "column-reverse";
 
+        public const String COLUMN_COUNT = "column-count";
+
         /// <summary>The Constant CONTAIN.</summary>
         public const String CONTAIN = "contain";
 

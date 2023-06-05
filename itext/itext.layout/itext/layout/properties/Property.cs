@@ -101,6 +101,8 @@ namespace iText.Layout.Properties {
 
         public const int COLSPAN = 16;
 
+        public const int COLUMN_COUNT = 138;
+
         public const int DESTINATION = 17;
 
         public const int FILL_AVAILABLE_AREA = 86;
@@ -358,7 +360,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 137;
+        private const int MAX_INHERITED_PROPERTY_ID = 138;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
