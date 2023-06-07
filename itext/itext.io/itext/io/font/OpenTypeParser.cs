@@ -829,7 +829,6 @@ namespace iText.IO.Font {
                 os_2.ulCodePageRange2 = raf.ReadInt();
             }
             if (version > 1) {
-                // todo os_2.sxHeight = raf.readShort();
                 raf.SkipBytes(2);
                 os_2.sCapHeight = raf.ReadShort();
             }

@@ -22,11 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Font;
 using iText.IO.Source;
+using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
     public class CMapContentParser {
@@ -153,7 +153,7 @@ namespace iText.IO.Font.Cmap {
                 }
 
                 case PdfTokenizer.TokenType.Name: {
-                    return new CMapObject(CMapObject.NAME, DecodeName(tokeniser.GetByteContent()));
+                    return new CMapObject(CMapObject.NAME, PdfNameUtil.DecodeName(tokeniser.GetByteContent()));
                 }
 
                 case PdfTokenizer.TokenType.Number: {
@@ -204,25 +204,16 @@ namespace iText.IO.Font.Cmap {
             return false;
         }
 
-        // TODO: Duplicates PdfName.generateValue (REFACTOR)
+        /// <summary>
+        /// Use
+        /// <see cref="iText.IO.Util.PdfNameUtil.DecodeName(byte[])"/>
+        /// instead.
+        /// </summary>
+        /// <param name="content">to decode</param>
+        /// <returns>decoded content</returns>
+        [System.ObsoleteAttribute]
         protected internal static String DecodeName(byte[] content) {
-            StringBuilder buf = new StringBuilder();
-            try {
-                for (int k = 0; k < content.Length; ++k) {
-                    char c = (char)content[k];
-                    if (c == '#') {
-                        byte c1 = content[k + 1];
-                        byte c2 = content[k + 2];
-                        c = (char)((ByteBuffer.GetHex(c1) << 4) + ByteBuffer.GetHex(c2));
-                        k += 2;
-                    }
-                    buf.Append(c);
-                }
-            }
-            catch (IndexOutOfRangeException) {
-            }
-            // empty on purpose
-            return buf.ToString();
+            return PdfNameUtil.DecodeName(content);
         }
 
         private static String ToHex4(int n) {

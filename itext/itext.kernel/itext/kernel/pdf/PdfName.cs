@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using iText.Commons.Utils;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
@@ -1864,23 +1864,7 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal virtual void GenerateValue() {
-            StringBuilder buf = new StringBuilder();
-            try {
-                for (int k = 0; k < content.Length; ++k) {
-                    char c = (char)content[k];
-                    if (c == '#') {
-                        byte c1 = content[k + 1];
-                        byte c2 = content[k + 2];
-                        c = (char)((ByteBuffer.GetHex(c1) << 4) + ByteBuffer.GetHex(c2));
-                        k += 2;
-                    }
-                    buf.Append(c);
-                }
-            }
-            catch (IndexOutOfRangeException) {
-            }
-            // empty on purpose
-            value = buf.ToString();
+            value = PdfNameUtil.DecodeName(content);
         }
 
         protected internal override void GenerateContent() {

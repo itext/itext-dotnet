@@ -354,7 +354,6 @@ namespace iText.IO.Font {
             this.superscriptOffset = (int)(superscriptOffset * normalizationCoef);
         }
 
-        //todo change to protected!
         public virtual void SetStemV(int stemV) {
             this.stemV = stemV;
         }

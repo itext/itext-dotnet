@@ -163,8 +163,6 @@ namespace iText.IO.Font {
             return (int)buf.GetPosition();
         }
 
-        internal int nextIndexOffset;
-
         // read the offsets in the next index
         // data structure, convert to global
         // offsets, and return them.
@@ -177,8 +175,6 @@ namespace iText.IO.Font {
             int[] offsets = new int[count + 1];
             if (count == 0) {
                 offsets[0] = -1;
-                // TODO death store to local var .. should this be this.nextIndexOffset ?
-                nextIndexOffset += 2;
                 return offsets;
             }
             indexOffSize = GetCard8();
@@ -698,7 +694,6 @@ namespace iText.IO.Font {
             int minor = GetCard8();
             int hdrSize = GetCard8();
             int offSize = GetCard8();
-            nextIndexOffset = hdrSize;
             l.AddLast(new CFFFont.RangeItem(buf, 0, hdrSize));
             int nglyphs = -1;
             int nstrings = -1;
