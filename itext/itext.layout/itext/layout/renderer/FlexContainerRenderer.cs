@@ -43,6 +43,8 @@ namespace iText.Layout.Renderer {
 
         private IList<IList<FlexItemInfo>> lines;
 
+        private IFlexItemMainDirector flexItemMainDirector = null;
+
         /// <summary>Creates a FlexContainerRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
         /// the
@@ -83,6 +85,9 @@ namespace iText.Layout.Renderer {
             SetThisAsParent(GetChildRenderers());
             lines = FlexUtil.CalculateChildrenRectangles(layoutContextRectangle, this);
             ApplyWrapReverse();
+            IList<IRenderer> renderers = GetFlexItemMainDirector().ApplyDirection(lines);
+            RemoveAllChildRenderers(GetChildRenderers());
+            AddAllChildRenderers(renderers);
             IList<UnitValue> previousWidths = new List<UnitValue>();
             IList<UnitValue> previousHeights = new List<UnitValue>();
             IList<UnitValue> previousMinHeights = new List<UnitValue>();
@@ -109,6 +114,9 @@ namespace iText.Layout.Renderer {
                     // it is extended to the height predicted by the algo
                     itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
                         .GetHeight()));
+                    // Property.HORIZONTAL_ALIGNMENT mustn't play, in flex container items are aligned
+                    // using justify-content and align-items
+                    itemInfo.GetRenderer().SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
                 }
             }
             LayoutResult result = base.Layout(layoutContext);
@@ -156,6 +164,13 @@ namespace iText.Layout.Renderer {
             return minMaxWidth;
         }
 
+        internal virtual IFlexItemMainDirector GetFlexItemMainDirector() {
+            if (flexItemMainDirector == null) {
+                flexItemMainDirector = CreateMainDirector();
+            }
+            return flexItemMainDirector;
+        }
+
         /// <summary>Check if flex container is wrapped reversely.</summary>
         /// <returns>
         /// 
@@ -164,7 +179,7 @@ namespace iText.Layout.Renderer {
         /// <see langword="false"/>
         /// otherwise.
         /// </returns>
-        public virtual bool IsWrapReverse() {
+        internal virtual bool IsWrapReverse() {
             return FlexWrapPropertyValue.WRAP_REVERSE == this.GetProperty<FlexWrapPropertyValue?>(Property.FLEX_WRAP, 
                 null);
         }
@@ -183,8 +198,14 @@ namespace iText.Layout.Renderer {
                 metChildRenderer = metChildRenderer || isSplitLine;
                 // If the renderer to split is in the current line
                 if (isSplitLine && !forcedPlacement && layoutStatus == LayoutResult.PARTIAL) {
+                    // It has sense to call it also for LayoutResult.NOTHING. And then try to layout remaining renderers
+                    // in line inside fillSplitOverflowRenderersForPartialResult to see if some of them can be left or
+                    // partially left on the first page (in split renderer). But it's not that easy.
+                    // So currently, if the 1st not fully layouted renderer is layouted with LayoutResult.NOTHING,
+                    // the whole line is moved to the next page (overflow renderer).
                     FillSplitOverflowRenderersForPartialResult(splitRenderer, overflowRenderer, line, childRenderer, childResult
                         );
+                    GetFlexItemMainDirector().ApplyDirectionForLine(overflowRenderer.GetChildRenderers());
                 }
                 else {
                     IList<IRenderer> overflowRendererChildren = new List<IRenderer>();
@@ -196,6 +217,7 @@ namespace iText.Layout.Renderer {
                             splitRenderer.AddChildRenderer(itemInfo.GetRenderer());
                         }
                     }
+                    GetFlexItemMainDirector().ApplyDirectionForLine(overflowRendererChildren);
                     // If wrapped reversely we should add a line into beginning to correctly recalculate
                     // and inverse lines while layouting overflowRenderer.
                     if (IsWrapReverse()) {
@@ -405,8 +427,7 @@ namespace iText.Layout.Renderer {
                     }
                     if (childResult.GetOverflowRenderer() != null) {
                         // Get rid of cross alignment for item with partial result
-                        childResult.GetOverflowRenderer().SetProperty(Property.ALIGN_SELF, IsWrapReverse() ? AlignmentPropertyValue
-                            .FLEX_END : AlignmentPropertyValue.FLEX_START);
+                        childResult.GetOverflowRenderer().SetProperty(Property.ALIGN_SELF, AlignmentPropertyValue.START);
                         overflowRenderer.AddChildRenderer(childResult.GetOverflowRenderer());
                     }
                     // Count the height allowed for the items after the one which was partially layouted
@@ -439,8 +460,7 @@ namespace iText.Layout.Renderer {
                         if (neighbourLayoutResult.GetOverflowRenderer() != null) {
                             if (neighbourLayoutResult.GetStatus() == LayoutResult.PARTIAL) {
                                 // Get rid of cross alignment for item with partial result
-                                neighbourLayoutResult.GetOverflowRenderer().SetProperty(Property.ALIGN_SELF, IsWrapReverse() ? AlignmentPropertyValue
-                                    .FLEX_END : AlignmentPropertyValue.FLEX_START);
+                                neighbourLayoutResult.GetOverflowRenderer().SetProperty(Property.ALIGN_SELF, AlignmentPropertyValue.START);
                             }
                             overflowRenderer.AddChildRenderer(neighbourLayoutResult.GetOverflowRenderer());
                         }
@@ -501,6 +521,27 @@ namespace iText.Layout.Renderer {
             }
             minMaxWidthHandler.UpdateMaxChildWidth(maxWidth);
             minMaxWidthHandler.UpdateMinChildWidth(minWidth);
+        }
+
+        /// <summary>Check if flex container direction is row reverse.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if flex-direction property is set to row-reverse,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
+        private bool IsRowReverse() {
+            return FlexDirectionPropertyValue.ROW_REVERSE == this.GetProperty<FlexDirectionPropertyValue?>(Property.FLEX_DIRECTION
+                , null);
+        }
+
+        private IFlexItemMainDirector CreateMainDirector() {
+            bool isRtlDirection = BaseDirection.RIGHT_TO_LEFT == this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION
+                , null);
+            flexItemMainDirector = IsRowReverse() ^ isRtlDirection ? (IFlexItemMainDirector)new RtlFlexItemMainDirector
+                () : new LtrFlexItemMainDirector();
+            return flexItemMainDirector;
         }
     }
 }

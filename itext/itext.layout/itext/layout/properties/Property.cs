@@ -119,6 +119,8 @@ namespace iText.Layout.Properties {
 
         public const int FLEX_WRAP = 128;
 
+        public const int FLEX_DIRECTION = 139;
+
         public const int FLOAT = 99;
 
         public const int FLUSH_ON_DRAW = 19;

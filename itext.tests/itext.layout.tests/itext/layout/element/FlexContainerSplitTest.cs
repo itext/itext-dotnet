@@ -200,6 +200,45 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 556)]
+        public virtual void RowWrapRtlStartTest() {
+            String outFileName = DESTINATION_FOLDER + "rowWrapRtlStartTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_rowWrapRtlStartTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = CreateDefaultFlexContainerForWrap();
+                flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+                flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_START);
+                flexContainer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_START);
+                flexContainer.SetProperty(Property.BASE_DIRECTION, BaseDirection.RIGHT_TO_LEFT);
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 556)]
+        public virtual void ReverseRowWrapRtlStartTest() {
+            String outFileName = DESTINATION_FOLDER + "reverseRowWrapRtlStartTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_reverseRowWrapRtlStartTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = CreateDefaultFlexContainerForWrap();
+                flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+                flexContainer.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.ROW_REVERSE);
+                flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_START);
+                flexContainer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_START);
+                flexContainer.SetProperty(Property.BASE_DIRECTION, BaseDirection.RIGHT_TO_LEFT);
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ReverseWrapEndTest() {
             String outFileName = DESTINATION_FOLDER + "reverseWrapEndTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_reverseWrapEndTest.pdf";

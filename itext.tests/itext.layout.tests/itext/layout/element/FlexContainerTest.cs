@@ -51,6 +51,8 @@ namespace iText.Layout.Element {
 
         private FlexWrapPropertyValue wrapValue;
 
+        private FlexDirectionPropertyValue directionValue;
+
         private int? comparisonPdfId;
 
         [NUnit.Framework.OneTimeSetUp]
@@ -58,32 +60,37 @@ namespace iText.Layout.Element {
             CreateDestinationFolder(destinationFolder);
         }
 
-        public FlexContainerTest(Object alignItemsValue, Object justifyContentValue, Object wrapValue, Object comparisonPdfId
-            ) {
+        public FlexContainerTest(Object alignItemsValue, Object justifyContentValue, Object wrapValue, Object directionValue
+            , Object comparisonPdfId) {
             this.alignItemsValue = (AlignmentPropertyValue)alignItemsValue;
             this.justifyContentValue = (JustifyContent)justifyContentValue;
             this.wrapValue = (FlexWrapPropertyValue)wrapValue;
+            this.directionValue = (FlexDirectionPropertyValue)directionValue;
             this.comparisonPdfId = (int?)comparisonPdfId;
         }
 
         public FlexContainerTest(Object[] array)
-            : this(array[0], array[1], array[2], array[3]) {
+            : this(array[0], array[1], array[2], array[3], array[4]) {
         }
 
         public static IEnumerable<Object[]> AlignItemsAndJustifyContentProperties() {
             return JavaUtil.ArraysAsList(new Object[][] { new Object[] { AlignmentPropertyValue.FLEX_START, JustifyContent
-                .FLEX_START, FlexWrapPropertyValue.NOWRAP, 1 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent
-                .FLEX_END, FlexWrapPropertyValue.NOWRAP, 2 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent
-                .CENTER, FlexWrapPropertyValue.NOWRAP, 3 }, new Object[] { AlignmentPropertyValue.STRETCH, JustifyContent
-                .CENTER, FlexWrapPropertyValue.NOWRAP, 4 }, new Object[] { AlignmentPropertyValue.FLEX_START, JustifyContent
-                .FLEX_START, FlexWrapPropertyValue.WRAP, 5 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent
-                .FLEX_END, FlexWrapPropertyValue.WRAP, 6 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent
-                .CENTER, FlexWrapPropertyValue.WRAP, 7 }, new Object[] { AlignmentPropertyValue.STRETCH, JustifyContent
-                .CENTER, FlexWrapPropertyValue.WRAP, 8 }, new Object[] { AlignmentPropertyValue.FLEX_START, JustifyContent
-                .FLEX_START, FlexWrapPropertyValue.WRAP_REVERSE, 9 }, new Object[] { AlignmentPropertyValue.FLEX_END, 
-                JustifyContent.FLEX_END, FlexWrapPropertyValue.WRAP_REVERSE, 10 }, new Object[] { AlignmentPropertyValue
-                .CENTER, JustifyContent.CENTER, FlexWrapPropertyValue.WRAP_REVERSE, 11 }, new Object[] { AlignmentPropertyValue
-                .STRETCH, JustifyContent.CENTER, FlexWrapPropertyValue.WRAP_REVERSE, 12 } });
+                .FLEX_START, FlexWrapPropertyValue.NOWRAP, FlexDirectionPropertyValue.ROW, 1 }, new Object[] { AlignmentPropertyValue
+                .FLEX_END, JustifyContent.FLEX_END, FlexWrapPropertyValue.NOWRAP, FlexDirectionPropertyValue.ROW, 2 }, 
+                new Object[] { AlignmentPropertyValue.CENTER, JustifyContent.CENTER, FlexWrapPropertyValue.NOWRAP, FlexDirectionPropertyValue
+                .ROW, 3 }, new Object[] { AlignmentPropertyValue.STRETCH, JustifyContent.CENTER, FlexWrapPropertyValue
+                .NOWRAP, FlexDirectionPropertyValue.ROW, 4 }, new Object[] { AlignmentPropertyValue.FLEX_START, JustifyContent
+                .FLEX_START, FlexWrapPropertyValue.WRAP, FlexDirectionPropertyValue.ROW, 5 }, new Object[] { AlignmentPropertyValue
+                .FLEX_END, JustifyContent.FLEX_END, FlexWrapPropertyValue.WRAP, FlexDirectionPropertyValue.ROW_REVERSE
+                , 6 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent.CENTER, FlexWrapPropertyValue.WRAP
+                , FlexDirectionPropertyValue.ROW, 7 }, new Object[] { AlignmentPropertyValue.STRETCH, JustifyContent.CENTER
+                , FlexWrapPropertyValue.WRAP, FlexDirectionPropertyValue.ROW_REVERSE, 8 }, new Object[] { AlignmentPropertyValue
+                .FLEX_START, JustifyContent.FLEX_START, FlexWrapPropertyValue.WRAP_REVERSE, FlexDirectionPropertyValue
+                .ROW_REVERSE, 9 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent.FLEX_END, FlexWrapPropertyValue
+                .WRAP_REVERSE, FlexDirectionPropertyValue.ROW, 10 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent
+                .CENTER, FlexWrapPropertyValue.WRAP_REVERSE, FlexDirectionPropertyValue.ROW_REVERSE, 11 }, new Object[
+                ] { AlignmentPropertyValue.STRETCH, JustifyContent.CENTER, FlexWrapPropertyValue.WRAP_REVERSE, FlexDirectionPropertyValue
+                .ROW, 12 } });
         }
 
         public static ICollection<NUnit.Framework.TestFixtureData> AlignItemsAndJustifyContentPropertiesTestFixtureData
@@ -910,6 +917,7 @@ namespace iText.Layout.Element {
             flexContainer.SetProperty(Property.ALIGN_ITEMS, alignItemsValue);
             flexContainer.SetProperty(Property.JUSTIFY_CONTENT, justifyContentValue);
             flexContainer.SetProperty(Property.FLEX_WRAP, wrapValue);
+            flexContainer.SetProperty(Property.FLEX_DIRECTION, directionValue);
             if (FlexWrapPropertyValue.NOWRAP != wrapValue) {
                 flexContainer.SetWidth(200);
             }

@@ -117,6 +117,7 @@ namespace iText.Layout.Renderer {
             ApplyAlignItemsAndAlignSelf(lines, flexContainerRenderer, lineCrossSizes);
             // 15. Determine the flex container’s used cross size
             // TODO DEVSIX-5164 16. Align all flex lines per align-content.
+            // Convert FlexItemCalculationInfo's into FlexItemInfo's
             IList<IList<FlexItemInfo>> layoutTable = new List<IList<FlexItemInfo>>();
             foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
                 IList<FlexItemInfo> layoutLine = new List<FlexItemInfo>();
@@ -525,34 +526,10 @@ namespace iText.Layout.Renderer {
                     childrenWidth += itemInfo.GetOuterMainSize(itemInfo.mainSize);
                 }
                 float freeSpace = mainSize - childrenWidth;
-                switch (justifyContent) {
-                    case JustifyContent.RIGHT:
-                    case JustifyContent.END:
-                    case JustifyContent.SELF_END:
-                    case JustifyContent.FLEX_END: {
-                        line[0].xShift = freeSpace;
-                        break;
-                    }
-
-                    case JustifyContent.CENTER: {
-                        line[0].xShift = freeSpace / 2;
-                        break;
-                    }
-
-                    case JustifyContent.NORMAL:
-                    case JustifyContent.STRETCH:
-                    case JustifyContent.START:
-                    case JustifyContent.LEFT:
-                    case JustifyContent.SELF_START:
-                    case JustifyContent.FLEX_START:
-                    default: {
-                        break;
-                    }
-                }
+                renderer.GetFlexItemMainDirector().ApplyAlignment(line, justifyContent, freeSpace);
             }
         }
 
-        // We don't need to do anything in these cases
         private static float CalculateFreeSpace(IList<FlexUtil.FlexItemCalculationInfo> line, float initialFreeSpace
             ) {
             float result = initialFreeSpace;
