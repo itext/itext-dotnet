@@ -92,6 +92,9 @@ namespace iText.Layout.Renderer {
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
+            if (true.Equals(this.GetProperty<bool?>(Property.TREAT_AS_CONTINUOUS_CONTAINER))) {
+                ContinuousContainer.SetupContinuousContainer(this);
+            }
             Border[] borders = GetBorders();
             UnitValue[] paddings = GetPaddings();
             ApplyMargins(parentBBox, false);
@@ -355,7 +358,8 @@ namespace iText.Layout.Renderer {
             if (positionedRenderers.Count > 0) {
                 foreach (IRenderer childPositionedRenderer in positionedRenderers) {
                     Rectangle fullBbox = occupiedArea.GetBBox().Clone();
-                    // Use that value so that layout is independent of whether we are in the bottom of the page or in the top of the page
+                    // Use that value so that layout is independent of whether we are in the bottom of the page or in the
+                    // top of the page
                     float layoutMinHeight = 1000;
                     fullBbox.MoveDown(layoutMinHeight).SetHeight(layoutMinHeight + fullBbox.GetHeight());
                     LayoutArea parentArea = new LayoutArea(occupiedArea.GetPageNumber(), occupiedArea.GetBBox().Clone());
@@ -367,6 +371,13 @@ namespace iText.Layout.Renderer {
             }
             if (isPositioned) {
                 CorrectFixedLayout(layoutBox);
+            }
+            ContinuousContainer continuousContainer = this.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
+                );
+            if (continuousContainer != null) {
+                continuousContainer.ReApplyProperties(this);
+                paddings = GetPaddings();
+                borders = GetBorders();
             }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
@@ -571,6 +582,9 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.childRenderers.Add(childResult.GetOverflowRenderer());
             }
             overflowRenderer.childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
+            if (true.Equals(this.GetProperty<bool?>(Property.TREAT_AS_CONTINUOUS_CONTAINER))) {
+                ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
+            }
             if (childResult.GetStatus() == LayoutResult.PARTIAL) {
                 // Apply forced placement only on split renderer
                 overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);

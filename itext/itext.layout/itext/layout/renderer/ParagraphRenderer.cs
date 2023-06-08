@@ -92,6 +92,9 @@ namespace iText.Layout.Renderer {
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
             }
+            if (true.Equals(this.GetProperty<bool?>(Property.TREAT_AS_CONTINUOUS_CONTAINER))) {
+                ContinuousContainer.SetupContinuousContainer(this);
+            }
             OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             bool? nowrapProp = this.GetPropertyAsBoolean(Property.NO_SOFT_WRAP_INLINE);
             currentRenderer.SetProperty(Property.NO_SOFT_WRAP_INLINE, nowrapProp);
@@ -432,6 +435,13 @@ namespace iText.Layout.Renderer {
                 floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
             }
+            ContinuousContainer continuousContainer = this.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
+                );
+            if (continuousContainer != null) {
+                continuousContainer.ReApplyProperties(this);
+                paddings = GetPaddings();
+                borders = GetBorders();
+            }
             CorrectFixedLayout(layoutBox);
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
@@ -588,6 +598,9 @@ namespace iText.Layout.Renderer {
             overflowRenderer.parent = parent;
             FixOverflowRenderer(overflowRenderer);
             overflowRenderer.AddAllProperties(GetOwnProperties());
+            if (true.Equals(this.GetProperty<bool?>(Property.TREAT_AS_CONTINUOUS_CONTAINER))) {
+                ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
+            }
             return overflowRenderer;
         }
 
