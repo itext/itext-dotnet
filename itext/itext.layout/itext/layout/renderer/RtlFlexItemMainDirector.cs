@@ -48,7 +48,7 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void ApplyAlignment(IList<FlexUtil.FlexItemCalculationInfo> line, JustifyContent justifyContent
+        public virtual void ApplyJustifyContent(IList<FlexUtil.FlexItemCalculationInfo> line, JustifyContent justifyContent
             , float freeSpace) {
             switch (justifyContent) {
                 case JustifyContent.RIGHT:

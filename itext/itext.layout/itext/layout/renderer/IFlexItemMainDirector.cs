@@ -45,7 +45,7 @@ namespace iText.Layout.Renderer {
         /// <param name="line">flex line of items to apply alignment to.</param>
         /// <param name="justifyContent">alignment to apply.</param>
         /// <param name="freeSpace">precalculated free space to distribute between flex items in a line.</param>
-        void ApplyAlignment(IList<FlexUtil.FlexItemCalculationInfo> line, JustifyContent justifyContent, float freeSpace
-            );
+        void ApplyJustifyContent(IList<FlexUtil.FlexItemCalculationInfo> line, JustifyContent justifyContent, float
+             freeSpace);
     }
 }

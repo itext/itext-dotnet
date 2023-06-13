@@ -537,11 +537,17 @@ namespace iText.Layout.Renderer {
         }
 
         private IFlexItemMainDirector CreateMainDirector() {
-            bool isRtlDirection = BaseDirection.RIGHT_TO_LEFT == this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION
-                , null);
-            flexItemMainDirector = IsRowReverse() ^ isRtlDirection ? (IFlexItemMainDirector)new RtlFlexItemMainDirector
-                () : new LtrFlexItemMainDirector();
-            return flexItemMainDirector;
+            if (FlexDirectionPropertyValue.COLUMN == this.GetProperty<FlexDirectionPropertyValue?>(Property.FLEX_DIRECTION
+                )) {
+                return new TopToBottomFlexItemMainDirector();
+            }
+            else {
+                bool isRtlDirection = BaseDirection.RIGHT_TO_LEFT == this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION
+                    , null);
+                flexItemMainDirector = IsRowReverse() ^ isRtlDirection ? (IFlexItemMainDirector)new RtlFlexItemMainDirector
+                    () : new LtrFlexItemMainDirector();
+                return flexItemMainDirector;
+            }
         }
     }
 }

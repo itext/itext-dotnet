@@ -48,6 +48,8 @@ namespace iText.Layout.Renderer {
 
         private static readonly Style WRAP_STYLE;
 
+        private static readonly Style COLUMN_STYLE;
+
         private static readonly IList<UnitValue> NULL_FLEX_BASIS_LIST;
 
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -57,6 +59,8 @@ namespace iText.Layout.Renderer {
             DEFAULT_STYLE = new Style().SetWidth(400).SetHeight(100);
             WRAP_STYLE = new Style().SetWidth(400).SetHeight(100);
             WRAP_STYLE.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+            COLUMN_STYLE = new Style().SetWidth(100).SetHeight(400);
+            COLUMN_STYLE.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
             NULL_FLEX_BASIS_LIST = new List<UnitValue>();
             for (int i = 0; i < 3; i++) {
                 NULL_FLEX_BASIS_LIST.Add(null);
@@ -144,6 +148,453 @@ namespace iText.Layout.Renderer {
                     NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis100Grow0Shrink0ColumnTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (100f), UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue(100f)), JavaUtil.ArraysAsList(0f, 
+                0f, 0f), JavaUtil.ArraysAsList(0f, 0f, 0f));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis100Grow1Shrink0ColumnTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (100f), UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue(100f)), JavaUtil.ArraysAsList(1f, 
+                1f, 1f), JavaUtil.ArraysAsList(0f, 0f, 0f));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(133.3333f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis100Grow01Shrink0ColumnTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (100f), UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue(100f)), JavaUtil.ArraysAsList(0.1f
+                , 0.1f, 0.1f), JavaUtil.ArraysAsList(0f, 0f, 0f));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(110.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis200Grow0Shrink1ColumnTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (200f), UnitValue.CreatePointValue(200f), UnitValue.CreatePointValue(200f)), JavaUtil.ArraysAsList(0f, 
+                0f, 0f), JavaUtil.ArraysAsList(1f, 1f, 1f));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(133.33333f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis100Grow0CustomShrinkContainerHeight50ColumnTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(new Style(COLUMN_STYLE).SetHeight(50), JavaUtil.ArraysAsList
+                (UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue(100f)), JavaUtil.ArraysAsList(0f, 0f), JavaUtil.ArraysAsList
+                (1f, 3f));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                }
+            }
+            // Expected because content of the element cannot be less than this value
+            NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[0][0].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[0][1].GetRectangle().GetHeight(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis200Grow0CustomShrinkColumnTest1() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (200f), UnitValue.CreatePointValue(200f), UnitValue.CreatePointValue(200f)), JavaUtil.ArraysAsList(0f, 
+                0f, 0f), JavaUtil.ArraysAsList(0f, 1f, 3f));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                }
+            }
+            NUnit.Framework.Assert.AreEqual(200f, rectangleTable[0][0].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(150f, rectangleTable[0][1].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(50f, rectangleTable[0][2].GetRectangle().GetHeight(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis200Grow0Shrink01ColumnTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (200f), UnitValue.CreatePointValue(200f), UnitValue.CreatePointValue(200f)), JavaUtil.ArraysAsList(0f, 
+                0f, 0f), JavaUtil.ArraysAsList(0.1f, 0.1f, 0.1f));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(180f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis200Height150Grow0Shrink1ColumnTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (200f), UnitValue.CreatePointValue(200f), UnitValue.CreatePointValue(200f)), JavaUtil.ArraysAsList(0f, 
+                0f, 0f), JavaUtil.ArraysAsList(1f, 1f, 1f), new Style().SetHeight(UnitValue.CreatePointValue(150)));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(133.3333f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis100Height150Grow1Shrink0ColumnTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (100f), UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue(100f)), JavaUtil.ArraysAsList(1f, 
+                1f, 1f), JavaUtil.ArraysAsList(0f, 0f, 0f), new Style().SetHeight(UnitValue.CreatePointValue(150)));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(133.3333f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis100Height50Grow1Shrink0ColumnTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (100f), UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue(100f)), JavaUtil.ArraysAsList(1f, 
+                1f, 1f), JavaUtil.ArraysAsList(0f, 0f, 0f), new Style().SetHeight(UnitValue.CreatePointValue(50)));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(133.3333f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis100MaxHeight100Grow1Shrink0ColumnTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (100f), UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue(100f)), JavaUtil.ArraysAsList(1f, 
+                1f, 1f), JavaUtil.ArraysAsList(0f, 0f, 0f), new Style().SetMaxHeight(UnitValue.CreatePointValue(100)));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Basis200MinHeight150Grow0Shrink1ColumnTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (200f), UnitValue.CreatePointValue(200f), UnitValue.CreatePointValue(200f)), JavaUtil.ArraysAsList(0f, 
+                0f, 0f), JavaUtil.ArraysAsList(1f, 1f, 1f), new Style().SetMinHeight(UnitValue.CreatePointValue(150)));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(150f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UsualDirectionColumnWithDefiniteWidthTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (100f), UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue(100f)), JavaUtil.ArraysAsList(1f, 
+                1f, 1f), JavaUtil.ArraysAsList(0f, 0f, 0f), new Style().SetWidth(UnitValue.CreatePointValue(50)));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(133.3333f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UsualDirectionColumnWithDefiniteMaxWidthTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (100f), UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue(100f)), JavaUtil.ArraysAsList(1f, 
+                1f, 1f), JavaUtil.ArraysAsList(0f, 0f, 0f), new Style().SetMaxWidth(UnitValue.CreatePointValue(50)));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(133.3333f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UsualDirectionColumnWithDefiniteMinWidthTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (100f), UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue(100f)), JavaUtil.ArraysAsList(1f, 
+                1f, 1f), JavaUtil.ArraysAsList(0f, 0f, 0f), new Style().SetMinWidth(UnitValue.CreatePointValue(150)));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(150.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(133.3333f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DirectionColumnWithoutBasisWithDefiniteHeightTest() {
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(COLUMN_STYLE, NULL_FLEX_BASIS_LIST, JavaUtil.ArraysAsList
+                (1f, 1f, 1f), JavaUtil.ArraysAsList(0f, 0f, 0f), new Style().SetHeight(UnitValue.CreatePointValue(50))
+                );
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(133.33333f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DirectionColumnWithWrapElementsToGrowTest() {
+            Style columnWrapStyle = new Style(WRAP_STYLE);
+            columnWrapStyle.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(columnWrapStyle, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (75f), UnitValue.CreatePointValue(75f), UnitValue.CreatePointValue(75f)), JavaUtil.ArraysAsList(1f, 1f
+                , 1f), JavaUtil.ArraysAsList(0f, 0f, 0f));
+            // after checks
+            NUnit.Framework.Assert.AreEqual(3, rectangleTable.Count);
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(133.33333f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DirectionColumnWithWrapElementsNotToGrowTest() {
+            Style columnWrapStyle = new Style(WRAP_STYLE);
+            columnWrapStyle.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(columnWrapStyle, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (75f), UnitValue.CreatePointValue(75f), UnitValue.CreatePointValue(75f)), JavaUtil.ArraysAsList(0f, 0f
+                , 0f), JavaUtil.ArraysAsList(0f, 0f, 0f));
+            // after checks
+            NUnit.Framework.Assert.AreEqual(3, rectangleTable.Count);
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(133.33333f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(75.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DirectionColumnWithWrapElementsToShrinkTest() {
+            Style columnWrapStyle = new Style(WRAP_STYLE);
+            columnWrapStyle.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(columnWrapStyle, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (120f), UnitValue.CreatePointValue(120f), UnitValue.CreatePointValue(120f)), JavaUtil.ArraysAsList(0f, 
+                0f, 0f), JavaUtil.ArraysAsList(1f, 1f, 1f));
+            // after checks
+            NUnit.Framework.Assert.AreEqual(3, rectangleTable.Count);
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(133.33333f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DirectionColumnWithWrapElementsNotToShrinkTest() {
+            Style columnWrapStyle = new Style(WRAP_STYLE);
+            columnWrapStyle.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(columnWrapStyle, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (120f), UnitValue.CreatePointValue(120f), UnitValue.CreatePointValue(120f)), JavaUtil.ArraysAsList(0f, 
+                0f, 0f), JavaUtil.ArraysAsList(0f, 0f, 0f));
+            // after checks
+            NUnit.Framework.Assert.AreEqual(3, rectangleTable.Count);
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(133.33333f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(120.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DirectionColumnWithWrapDefiniteWidthAndHeightTest() {
+            Style columnWrapStyle = new Style(WRAP_STYLE);
+            columnWrapStyle.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(columnWrapStyle, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (75f), UnitValue.CreatePointValue(75f), UnitValue.CreatePointValue(75f)), JavaUtil.ArraysAsList(0f, 0f
+                , 0f), JavaUtil.ArraysAsList(0f, 0f, 0f), new Style().SetWidth(100f).SetHeight(120f));
+            // after checks
+            NUnit.Framework.Assert.AreEqual(3, rectangleTable.Count);
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(75.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DirectionColumnWithWrapWithAlignItemsAndJustifyContentTest() {
+            Style columnWrapStyle = new Style(WRAP_STYLE);
+            columnWrapStyle.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
+            columnWrapStyle.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_START);
+            columnWrapStyle.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_END);
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(columnWrapStyle, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (75f), UnitValue.CreatePointValue(75f), UnitValue.CreatePointValue(75f)), JavaUtil.ArraysAsList(0f, 0f
+                , 0f), JavaUtil.ArraysAsList(0f, 0f, 0f));
+            // after checks
+            NUnit.Framework.Assert.AreEqual(3, rectangleTable.Count);
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(6.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(75.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(0.0f, flexItemInfo.GetRectangle().GetX(), EPS);
+                    NUnit.Framework.Assert.AreEqual(25.0f, flexItemInfo.GetRectangle().GetY(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DirectionColumnWithAlignItemsAndJustifyContentTest1() {
+            Style columnWrapStyle = new Style(COLUMN_STYLE);
+            columnWrapStyle.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_START);
+            columnWrapStyle.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_END);
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(columnWrapStyle, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (75f), UnitValue.CreatePointValue(75f), UnitValue.CreatePointValue(75f)), JavaUtil.ArraysAsList(0f, 0f
+                , 0f), JavaUtil.ArraysAsList(0f, 0f, 0f));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(6.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(75.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(0.0f, flexItemInfo.GetRectangle().GetX(), EPS);
+                }
+                NUnit.Framework.Assert.AreEqual(175.0f, line[0].GetRectangle().GetY(), EPS);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DirectionColumnWithAlignItemsAndJustifyContentTest2() {
+            Style columnWrapStyle = new Style(COLUMN_STYLE);
+            columnWrapStyle.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.CENTER);
+            columnWrapStyle.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_START);
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(columnWrapStyle, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (75f), UnitValue.CreatePointValue(75f), UnitValue.CreatePointValue(75f)), JavaUtil.ArraysAsList(0f, 0f
+                , 0f), JavaUtil.ArraysAsList(0f, 0f, 0f));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(6.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(75.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(47.0f, flexItemInfo.GetRectangle().GetX(), EPS);
+                    NUnit.Framework.Assert.AreEqual(0.0f, flexItemInfo.GetRectangle().GetY(), EPS);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DirectionColumnWithAlignItemsAndJustifyContentTest3() {
+            Style columnWrapStyle = new Style(COLUMN_STYLE);
+            columnWrapStyle.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_END);
+            columnWrapStyle.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.CENTER);
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(columnWrapStyle, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
+                (75f), UnitValue.CreatePointValue(75f), UnitValue.CreatePointValue(75f)), JavaUtil.ArraysAsList(0f, 0f
+                , 0f), JavaUtil.ArraysAsList(0f, 0f, 0f));
+            // after checks
+            NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
+            foreach (IList<FlexItemInfo> line in rectangleTable) {
+                foreach (FlexItemInfo flexItemInfo in line) {
+                    NUnit.Framework.Assert.AreEqual(6.0f, flexItemInfo.GetRectangle().GetWidth(), EPS);
+                    NUnit.Framework.Assert.AreEqual(75.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(94.0f, flexItemInfo.GetRectangle().GetX(), EPS);
+                }
+                NUnit.Framework.Assert.AreEqual(87.5f, line[0].GetRectangle().GetY(), EPS);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImgAsFlexItemTest01() {
+            Rectangle bBox = new Rectangle(575, 842);
+            IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
+                (30f));
+            Div div = new Div().SetWidth(100).SetHeight(100);
+            DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
+                ()))));
+            FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
+            flexContainerRenderer.SetParent(documentRenderer);
+            div.SetNextRenderer(flexContainerRenderer);
+            flexContainerRenderer.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
+            for (int i = 0; i < flexBasisValues.Count; i++) {
+                IElement flexItem = (i == 0) ? (IElement)new Image(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg")) : 
+                    (IElement)new Div().Add(new Paragraph(JavaUtil.IntegerToString(i)));
+                flexItem.SetProperty(Property.FLEX_GROW, 0f);
+                flexItem.SetProperty(Property.FLEX_SHRINK, 0f);
+                flexItem.SetProperty(Property.FLEX_BASIS, flexBasisValues[i]);
+                if (i == 0) {
+                    flexItem.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePointValue(40));
+                    div.Add((iText.Layout.Element.Image)flexItem);
+                }
+                else {
+                    div.Add((IBlockElement)flexItem);
+                }
+                AbstractRenderer flexItemRenderer = (AbstractRenderer)flexItem.CreateRendererSubTree().SetParent(flexContainerRenderer
+                    );
+                flexContainerRenderer.AddChild(flexItemRenderer);
+            }
+            IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
+                )div.GetRenderer());
+            NUnit.Framework.Assert.AreEqual(100f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(100f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(40f, rectangleTable[0][0].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(30f, rectangleTable[0][1].GetRectangle().GetHeight(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -866,8 +1317,8 @@ namespace iText.Layout.Renderer {
             flexContainerRenderer.SetParent(documentRenderer);
             div.SetNextRenderer(flexContainerRenderer);
             for (int i = 0; i < flexBasisValues.Count; i++) {
-                IElement flexItem = (0 == i) ? (IElement)new Image(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg")) : 
-                    (IElement)new Div().Add(new Paragraph(JavaUtil.IntegerToString(i)));
+                IElement flexItem = (0 == i) ? (IElement)new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER
+                     + "itis.jpg")) : (IElement)new Div().Add(new Paragraph(JavaUtil.IntegerToString(i)));
                 if (0 == i) {
                     flexItem.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(50f));
                     div.Add((iText.Layout.Element.Image)flexItem);
@@ -1819,7 +2270,7 @@ namespace iText.Layout.Renderer {
         }
 
         private static FlexUtil.FlexItemCalculationInfo CreateFlexItemCalculationInfo(AbstractRenderer renderer) {
-            return new FlexUtil.FlexItemCalculationInfo(renderer, 0, 0, 0, 0, false);
+            return new FlexUtil.FlexItemCalculationInfo(renderer, 0, 0, 0, 0, false, false);
         }
 
         private static IList<IList<FlexItemInfo>> TestFlex(IList<UnitValue> flexBasisValues, IList<float> flexGrowValues
@@ -1829,6 +2280,11 @@ namespace iText.Layout.Renderer {
 
         private static IList<IList<FlexItemInfo>> TestFlex(Style containerStyle, IList<UnitValue> flexBasisValues, 
             IList<float> flexGrowValues, IList<float> flexShrinkValues) {
+            return TestFlex(containerStyle, flexBasisValues, flexGrowValues, flexShrinkValues, null);
+        }
+
+        private static IList<IList<FlexItemInfo>> TestFlex(Style containerStyle, IList<UnitValue> flexBasisValues, 
+            IList<float> flexGrowValues, IList<float> flexShrinkValues, Style elementStyle) {
             System.Diagnostics.Debug.Assert(flexBasisValues.Count == flexGrowValues.Count);
             System.Diagnostics.Debug.Assert(flexBasisValues.Count == flexShrinkValues.Count);
             Rectangle bBox = new Rectangle(PageSize.A4);
@@ -1842,6 +2298,9 @@ namespace iText.Layout.Renderer {
             div.SetNextRenderer(flexContainerRenderer);
             for (int i = 0; i < flexBasisValues.Count; i++) {
                 Div flexItem = new Div().Add(new Paragraph("x"));
+                if (elementStyle != null) {
+                    flexItem.AddStyle(elementStyle);
+                }
                 AbstractRenderer flexItemRenderer = (AbstractRenderer)flexItem.CreateRendererSubTree().SetParent(flexContainerRenderer
                     );
                 UnitValue flexBasis = null == flexBasisValues[i] ? UnitValue.CreatePointValue(flexItemRenderer.GetMinMaxWidth
