@@ -528,7 +528,12 @@ namespace iText.Layout.Renderer {
                     switch (selfAlignment) {
                         case AlignmentPropertyValue.SELF_END:
                         case AlignmentPropertyValue.END: {
-                            itemInfo.yShift = freeSpace;
+                            if (isColumnDirection) {
+                                itemInfo.xShift = freeSpace;
+                            }
+                            else {
+                                itemInfo.yShift = freeSpace;
+                            }
                             break;
                         }
 

@@ -28,6 +28,7 @@ using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using iText.Layout.Renderer;
 using iText.Test;
 
 namespace iText.Layout {
@@ -580,6 +581,85 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FloatPositioningOutsideBlocksTest() {
+            String testName = "floatPositioningOutsideBlocks";
+            String outFileName = destinationFolder + testName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div floatLeft = new Div().SetBorder(new SolidBorder(ColorConstants.GREEN, 3)).SetBackgroundColor(ColorConstants
+                    .GREEN, 0.3f).SetWidth(100).SetHeight(100);
+                floatLeft.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+                floatLeft.Add(new Paragraph("float left"));
+                Div floatRight = new Div().SetBorder(new SolidBorder(ColorConstants.YELLOW, 3)).SetBackgroundColor(ColorConstants
+                    .YELLOW, 0.3f).SetWidth(100).SetHeight(100);
+                floatRight.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+                floatRight.Add(new Paragraph("float right"));
+                Div divWithBfc = new Div().SetBorder(new SolidBorder(ColorConstants.BLUE, 3)).SetBackgroundColor(ColorConstants
+                    .BLUE, 0.3f).SetHeight(100);
+                divWithBfc.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);
+                divWithBfc.Add(new Paragraph("div with own block formatting context"));
+                Div wideDivWithBfc = new Div().SetBorder(new SolidBorder(ColorConstants.CYAN, 3)).SetBackgroundColor(ColorConstants
+                    .CYAN, 0.3f).SetWidth(UnitValue.CreatePercentValue(100));
+                wideDivWithBfc.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);
+                wideDivWithBfc.Add(new Paragraph("wide div with own block formatting context"));
+                Div divWithoutBfc = new Div().SetBorder(new SolidBorder(ColorConstants.PINK, 3)).SetBackgroundColor(ColorConstants
+                    .PINK, 0.3f).SetHeight(100);
+                divWithoutBfc.Add(new Paragraph("div without own block formatting context"));
+                document.Add(floatLeft);
+                document.Add(divWithBfc);
+                document.Add(floatRight);
+                document.Add(divWithBfc);
+                document.Add(floatLeft);
+                document.Add(floatRight);
+                document.Add(divWithBfc);
+                document.Add(floatLeft);
+                document.Add(floatRight);
+                document.Add(divWithoutBfc);
+                document.Add(floatLeft);
+                document.Add(floatRight);
+                document.Add(wideDivWithBfc);
+                document.Add(new Paragraph("Plain text after wide div"));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff01_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FloatPositioningOutsideFlexContainerTest() {
+            String testName = "floatPositioningOutsideFlexContainer";
+            String outFileName = destinationFolder + testName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + testName + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div floatLeft = new Div().SetBorder(new SolidBorder(ColorConstants.GREEN, 1)).SetBackgroundColor(ColorConstants
+                    .GREEN, 0.3f).SetWidth(100).SetHeight(100);
+                floatLeft.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+                floatLeft.Add(new Paragraph("float left"));
+                Div floatRight = new Div().SetBorder(new SolidBorder(ColorConstants.YELLOW, 1)).SetBackgroundColor(ColorConstants
+                    .YELLOW, 0.3f).SetWidth(100).SetHeight(100);
+                floatRight.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+                floatRight.Add(new Paragraph("float right"));
+                Div flexContainer = new Div().SetBorder(new SolidBorder(ColorConstants.BLUE, 1)).SetBackgroundColor(ColorConstants
+                    .BLUE, 0.3f);
+                flexContainer.SetNextRenderer(new FlexContainerRenderer(flexContainer));
+                flexContainer.Add(new Paragraph("flex container"));
+                Div flexContainer2 = new Div().SetBorder(new SolidBorder(ColorConstants.PINK, 1)).SetBackgroundColor(ColorConstants
+                    .PINK, 0.1f).SetWidth(UnitValue.CreatePercentValue(100));
+                flexContainer2.SetNextRenderer(new FlexContainerRenderer(flexContainer2));
+                flexContainer2.Add(new Paragraph("flex container with 100% width"));
+                document.Add(flexContainer);
+                document.Add(floatLeft);
+                document.Add(floatRight);
+                document.Add(flexContainer);
+                document.Add(floatLeft);
+                document.Add(floatRight);
+                document.Add(flexContainer2);
+                document.Add(new Paragraph("Plain text after wide flex container"));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff01_"));
         }
 
         private Div CreateParentDiv(HorizontalAlignment? horizontalAlignment, ClearPropertyValue? clearPropertyValue

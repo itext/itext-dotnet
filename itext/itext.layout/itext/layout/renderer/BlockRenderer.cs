@@ -88,6 +88,11 @@ namespace iText.Layout.Renderer {
                     floatPropertyValue, overflowX);
                 floatRendererAreas = new List<Rectangle>();
             }
+            bool wasHeightDecreased = clearHeightCorrection > 0 && (marginsCollapseHandler == null || FloatingHelper.IsRendererFloating
+                (this));
+            float bfcHeightCorrection = FloatingHelper.AdjustBlockFormattingContextLayoutBox(this, floatRendererAreas, 
+                parentBBox, blockWidth == null ? 0 : (float)blockWidth, wasHeightDecreased ? 0 : clearHeightCorrection
+                );
             bool isCellRenderer = this is CellRenderer;
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
@@ -173,13 +178,15 @@ namespace iText.Layout.Renderer {
                     ApplyMargins(occupiedArea.GetBBox(), true);
                     if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || wasHeightClipped) {
                         LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
-                            (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+                            (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, bfcHeightCorrection, marginsCollapsingEnabled
+                            );
                         return new LayoutResult(LayoutResult.FULL, editedArea, splitRenderer, null, null);
                     }
                     else {
                         if (layoutResult != LayoutResult.NOTHING) {
                             LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
-                                (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+                                (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, bfcHeightCorrection, marginsCollapsingEnabled
+                                );
                             return new LayoutResult(layoutResult, editedArea, splitRenderer, overflowRenderer, null).SetAreaBreak(result
                                 .GetAreaBreak());
                         }
@@ -402,7 +409,8 @@ namespace iText.Layout.Renderer {
             FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
             if (layoutResult_1 != LayoutResult.NOTHING) {
                 LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
-                    (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+                    (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, bfcHeightCorrection, marginsCollapsingEnabled
+                    );
                 return new LayoutResult(layoutResult_1, editedArea, splitRenderer_1, overflowRenderer_1, causeOfNothing);
             }
             else {
