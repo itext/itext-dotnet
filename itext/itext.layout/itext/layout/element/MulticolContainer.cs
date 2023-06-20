@@ -26,19 +26,19 @@ using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
     /// <summary>represents a container of the column objects.</summary>
-    public class ColumnContainer : Div {
+    public class MulticolContainer : Div {
         /// <summary>
         /// Creates new
-        /// <see cref="ColumnContainer"/>
+        /// <see cref="MulticolContainer"/>
         /// instance.
         /// </summary>
-        public ColumnContainer()
+        public MulticolContainer()
             : base() {
         }
 
         /// <summary>
         /// Copies all properties of
-        /// <see cref="ColumnContainer"/>
+        /// <see cref="MulticolContainer"/>
         /// to its child elements.
         /// </summary>
         public virtual void CopyAllPropertiesToChildren() {
@@ -50,7 +50,7 @@ namespace iText.Layout.Element {
         }
 
         protected internal override IRenderer MakeNewRenderer() {
-            return new ColumnContainerRenderer(this);
+            return new MulticolRenderer(this);
         }
     }
 }

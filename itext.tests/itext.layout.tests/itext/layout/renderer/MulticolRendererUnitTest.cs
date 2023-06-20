@@ -20,7 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -32,10 +31,10 @@ using iText.Test;
 
 namespace iText.Layout.Renderer {
     [NUnit.Framework.Category("UnitTest")]
-    public class ColumnContainerRendererUnitTest : ExtendedITextTest {
+    public class MulticolRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SimpleTest() {
-            Div columnContainer = new ColumnContainer();
+            Div columnContainer = new MulticolContainer();
             Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
                  + "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation " 
                 + "ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in "
@@ -43,9 +42,9 @@ namespace iText.Layout.Renderer {
                  + "proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
             columnContainer.Add(FillTextProperties(paragraph));
             columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
-            ColumnContainerRenderer renderer = (ColumnContainerRenderer)columnContainer.CreateRendererSubTree();
+            MulticolRenderer renderer = (MulticolRenderer)columnContainer.CreateRendererSubTree();
             LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(600f, 200.0f))));
-            NUnit.Framework.Assert.IsTrue(result.GetSplitRenderer() is ColumnContainerRenderer);
+            NUnit.Framework.Assert.IsTrue(result.GetSplitRenderer() is MulticolRenderer);
             NUnit.Framework.Assert.AreEqual(3, result.GetSplitRenderer().GetChildRenderers().Count);
             NUnit.Framework.Assert.AreEqual(9, result.GetSplitRenderer().GetChildRenderers()[0].GetChildRenderers().Count
                 );
@@ -53,7 +52,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void KeepTogetherParagraphTest() {
-            Div columnContainer = new ColumnContainer();
+            Div columnContainer = new MulticolContainer();
             Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
                  + "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation " 
                 + "ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in "
@@ -62,14 +61,17 @@ namespace iText.Layout.Renderer {
             paragraph.SetProperty(Property.KEEP_TOGETHER, true);
             columnContainer.Add(FillTextProperties(paragraph));
             columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
-            ColumnContainerRenderer renderer = (ColumnContainerRenderer)columnContainer.CreateRendererSubTree();
-            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => renderer.Layout(new LayoutContext(new 
-                LayoutArea(1, new Rectangle(200f, 20f)))));
+            MulticolRenderer renderer = (MulticolRenderer)columnContainer.CreateRendererSubTree();
+            LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(200f, 20f))));
+            NUnit.Framework.Assert.AreEqual(1, result.GetSplitRenderer().GetChildRenderers().Count);
+            NUnit.Framework.Assert.AreEqual(1236.7692f, result.GetSplitRenderer().GetChildRenderers()[0].GetOccupiedArea
+                ().GetBBox().GetHeight(), 0.0001f);
+            System.Console.Out.WriteLine(result);
         }
 
         [NUnit.Framework.Test]
         public virtual void DivWithNoHeightTest() {
-            Div div = new ColumnContainer();
+            Div div = new MulticolContainer();
             Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
                  + "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation " 
                 + "ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in "
@@ -77,14 +79,14 @@ namespace iText.Layout.Renderer {
                  + "proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
             div.Add(FillTextProperties(paragraph));
             div.SetProperty(Property.COLUMN_COUNT, 3);
-            ColumnContainerRenderer renderer = (ColumnContainerRenderer)div.CreateRendererSubTree();
+            MulticolRenderer renderer = (MulticolRenderer)div.CreateRendererSubTree();
             LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(20.0f, 20.0f))));
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, result.GetStatus());
         }
 
         [NUnit.Framework.Test]
         public virtual void MultipleParagraphsTest() {
-            Div div = new ColumnContainer();
+            Div div = new MulticolContainer();
             Div child = new Div();
             Paragraph firstParagraph = new Paragraph("Lorem ipsum dolor sit");
             Paragraph secondParagraph = new Paragraph("consectetur adipiscing elit");
@@ -94,9 +96,9 @@ namespace iText.Layout.Renderer {
             child.Add(FillTextProperties(thirdParagraph));
             div.Add(child);
             div.SetProperty(Property.COLUMN_COUNT, 3);
-            ColumnContainerRenderer renderer = (ColumnContainerRenderer)div.CreateRendererSubTree();
+            MulticolRenderer renderer = (MulticolRenderer)div.CreateRendererSubTree();
             LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(600f, 30.0f))));
-            NUnit.Framework.Assert.IsTrue(result.GetSplitRenderer() is ColumnContainerRenderer);
+            NUnit.Framework.Assert.IsTrue(result.GetSplitRenderer() is MulticolRenderer);
             NUnit.Framework.Assert.AreEqual(3, result.GetSplitRenderer().GetChildRenderers().Count);
             NUnit.Framework.Assert.AreEqual(1, result.GetSplitRenderer().GetChildRenderers()[0].GetChildRenderers().Count
                 );
