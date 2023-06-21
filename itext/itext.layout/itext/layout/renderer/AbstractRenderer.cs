@@ -1742,7 +1742,10 @@ namespace iText.Layout.Renderer {
                 ].GetValue(), margins[LEFT_SIDE].GetValue(), reverse);
         }
 
-        /// <summary>Returns margins of the renderer</summary>
+        /// <summary>
+        /// Returns margins of the renderer
+        /// [0] - top; [1] - right; [2] - bottom; [3] - left
+        /// </summary>
         /// <returns>
         /// a
         /// <c>float[]</c>
@@ -1752,7 +1755,10 @@ namespace iText.Layout.Renderer {
             return GetMargins(this);
         }
 
-        /// <summary>Returns paddings of the renderer</summary>
+        /// <summary>
+        /// Returns paddings of the renderer
+        /// [0] - top; [1] - right; [2] - bottom; [3] - left
+        /// </summary>
         /// <returns>
         /// a
         /// <c>float[]</c>
@@ -1767,7 +1773,7 @@ namespace iText.Layout.Renderer {
         /// <param name="paddings">the paddings to be applied on the given rectangle</param>
         /// <param name="reverse">
         /// indicates whether paddings will be applied
-        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// inside (in case of false) or outside (in case of true) the rectangle.
         /// </param>
         /// <returns>
         /// a

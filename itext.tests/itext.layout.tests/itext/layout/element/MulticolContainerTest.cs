@@ -163,6 +163,46 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ContinuousColumContainerParagraphAllChildStart() {
+            ExecuteTest("continuousColumContainerParagraphAllChildStart", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.SetMarginTop(DEFAULT_MARGIN);
+                ctx.SetPaddingTop(DEFAULT_PADDING);
+                ctx.SetMarginBottom(DEFAULT_MARGIN);
+                ctx.SetPaddingBottom(DEFAULT_PADDING);
+                Paragraph paragraph = new Paragraph(GenerateLongString(300));
+                paragraph.SetBorder(new SolidBorder(ColorConstants.RED, 2));
+                paragraph.SetMarginTop(200);
+                paragraph.SetPaddingTop(40);
+                paragraph.SetBackgroundColor(ColorConstants.PINK);
+                ctx.Add(paragraph);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContinuousColumContainerParagraphAllChildEnd() {
+            ExecuteTest("continuousColumContainerParagraphAllChildEnd", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.SetMarginTop(DEFAULT_MARGIN);
+                ctx.SetPaddingTop(DEFAULT_PADDING);
+                ctx.SetMarginBottom(DEFAULT_MARGIN);
+                ctx.SetPaddingBottom(DEFAULT_PADDING);
+                Paragraph paragraph = new Paragraph(GenerateLongString(300));
+                paragraph.SetBorder(new SolidBorder(ColorConstants.RED, 2));
+                paragraph.SetMarginBottom(200);
+                paragraph.SetPaddingBottom(40);
+                paragraph.SetBackgroundColor(ColorConstants.PINK);
+                ctx.Add(paragraph);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerParagraphOverflowShouldShow() {
             ExecuteTest("continuousColumContainerParagraphOverflowShouldShow", new MulticolContainer(), (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);

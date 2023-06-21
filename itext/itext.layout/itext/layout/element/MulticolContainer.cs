@@ -20,8 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -34,19 +32,6 @@ namespace iText.Layout.Element {
         /// </summary>
         public MulticolContainer()
             : base() {
-        }
-
-        /// <summary>
-        /// Copies all properties of
-        /// <see cref="MulticolContainer"/>
-        /// to its child elements.
-        /// </summary>
-        public virtual void CopyAllPropertiesToChildren() {
-            foreach (IElement child in this.GetChildren()) {
-                foreach (KeyValuePair<int, Object> entry in this.properties) {
-                    child.SetProperty(entry.Key, entry.Value);
-                }
-            }
         }
 
         protected internal override IRenderer MakeNewRenderer() {

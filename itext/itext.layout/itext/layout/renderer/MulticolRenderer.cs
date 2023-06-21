@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -32,7 +33,7 @@ namespace iText.Layout.Renderer {
     public class MulticolRenderer : AbstractRenderer {
         private const int MAX_RELAYOUT_COUNT = 4;
 
-        private const float ZERO_DELTA = 0.0001f;
+        private const float ZERO_DELTA = 0.0001F;
 
         private BlockRenderer elementRenderer;
 
@@ -52,18 +53,15 @@ namespace iText.Layout.Renderer {
             : base(modelElement) {
         }
 
-        public override IRenderer GetNextRenderer() {
-            LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.MulticolRenderer), this.GetType());
-            return new iText.Layout.Renderer.MulticolRenderer((MulticolContainer)modelElement);
-        }
-
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            ((MulticolContainer)this.GetModelElement()).CopyAllPropertiesToChildren();
             this.SetProperty(Property.TREAT_AS_CONTINUOUS_CONTAINER, true);
-            Rectangle initialBBox = layoutContext.GetArea().GetBBox();
+            Rectangle actualBBox = layoutContext.GetArea().GetBBox().Clone();
+            ApplyPaddings(actualBBox, false);
+            ApplyBorderBox(actualBBox, false);
+            ApplyMargins(actualBBox, false);
             columnCount = (int)this.GetProperty<int?>(Property.COLUMN_COUNT);
-            columnWidth = initialBBox.GetWidth() / columnCount;
+            columnWidth = actualBBox.GetWidth() / columnCount;
             if (this.elementRenderer == null) {
                 // initialize elementRenderer on first layout when first child represents renderer of element which
                 // should be layouted in multicol, because on the next layouts this can have multiple children
@@ -77,7 +75,7 @@ namespace iText.Layout.Renderer {
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this, elementRenderer);
             }
             approximateHeight = prelayoutResult.GetOccupiedArea().GetBBox().GetHeight() / columnCount;
-            IList<IRenderer> container = BalanceContentAndLayoutColumns(layoutContext);
+            IList<IRenderer> container = BalanceContentAndLayoutColumns(layoutContext, actualBBox);
             this.occupiedArea = CalculateContainerOccupiedArea(layoutContext);
             this.SetChildRenderers(container);
             LayoutResult result = new LayoutResult(LayoutResult.FULL, this.occupiedArea, this, null);
@@ -86,12 +84,30 @@ namespace iText.Layout.Renderer {
             return result;
         }
 
-        private IList<IRenderer> BalanceContentAndLayoutColumns(LayoutContext prelayoutContext) {
+        public override IRenderer GetNextRenderer() {
+            LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.MulticolRenderer), this.GetType());
+            return new iText.Layout.Renderer.MulticolRenderer((MulticolContainer)modelElement);
+        }
+
+        private float SafelyRetrieveFloatProperty(int property) {
+            Object value = this.GetProperty<Object>(property);
+            if (value is UnitValue) {
+                return ((UnitValue)value).GetValue();
+            }
+            if (value is Border) {
+                return ((Border)value).GetWidth();
+            }
+            return 0F;
+        }
+
+        private IList<IRenderer> BalanceContentAndLayoutColumns(LayoutContext prelayoutContext, Rectangle actualBBox
+            ) {
             float? additionalHeightPerIteration = null;
             IList<IRenderer> container = new List<IRenderer>();
             int counter = MAX_RELAYOUT_COUNT;
             while (counter-- > 0) {
-                IRenderer overflowRenderer = LayoutColumnsAndReturnOverflowRenderer(prelayoutContext, container);
+                IRenderer overflowRenderer = LayoutColumnsAndReturnOverflowRenderer(prelayoutContext, container, actualBBox
+                    );
                 if (overflowRenderer == null) {
                     return container;
                 }
@@ -110,7 +126,16 @@ namespace iText.Layout.Renderer {
 
         private LayoutArea CalculateContainerOccupiedArea(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea().Clone();
-            area.GetBBox().SetHeight(approximateHeight);
+            float totalHeight = approximateHeight;
+            totalHeight += SafelyRetrieveFloatProperty(Property.PADDING_BOTTOM);
+            totalHeight += SafelyRetrieveFloatProperty(Property.PADDING_TOP);
+            totalHeight += SafelyRetrieveFloatProperty(Property.MARGIN_BOTTOM);
+            totalHeight += SafelyRetrieveFloatProperty(Property.MARGIN_TOP);
+            totalHeight += SafelyRetrieveFloatProperty(Property.BORDER_BOTTOM);
+            totalHeight += SafelyRetrieveFloatProperty(Property.BORDER_TOP);
+            float TOP_AND_BOTTOM = 2;
+            totalHeight += SafelyRetrieveFloatProperty(Property.BORDER) * TOP_AND_BOTTOM;
+            area.GetBBox().SetHeight(totalHeight);
             Rectangle initialBBox = layoutContext.GetArea().GetBBox();
             area.GetBBox().SetY(initialBBox.GetY() + initialBBox.GetHeight() - area.GetBBox().GetHeight());
             return area;
@@ -124,9 +149,9 @@ namespace iText.Layout.Renderer {
         }
 
         private IRenderer LayoutColumnsAndReturnOverflowRenderer(LayoutContext preLayoutContext, IList<IRenderer> 
-            container) {
+            container, Rectangle actualBBox) {
             container.Clear();
-            Rectangle initialBBox = preLayoutContext.GetArea().GetBBox();
+            Rectangle initialBBox = actualBBox.Clone();
             IRenderer renderer = elementRenderer;
             for (int i = 0; i < columnCount && renderer != null; i++) {
                 LayoutArea tempArea = preLayoutContext.GetArea().Clone();
