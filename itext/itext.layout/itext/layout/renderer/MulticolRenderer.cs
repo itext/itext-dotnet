@@ -161,6 +161,7 @@ namespace iText.Layout.Renderer {
                 tempArea.GetBBox().SetY(initialBBox.GetY() + initialBBox.GetHeight() - tempArea.GetBBox().GetHeight());
                 LayoutContext columnContext = new LayoutContext(tempArea, preLayoutContext.GetMarginsCollapseInfo(), preLayoutContext
                     .GetFloatRendererAreas(), preLayoutContext.IsClippedHeight());
+                renderer.SetProperty(Property.COLLAPSING_MARGINS, false);
                 LayoutResult tempResultColumn = renderer.Layout(columnContext);
                 if (tempResultColumn.GetSplitRenderer() == null) {
                     container.Add(renderer);

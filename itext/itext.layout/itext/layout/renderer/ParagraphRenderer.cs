@@ -92,9 +92,7 @@ namespace iText.Layout.Renderer {
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
             }
-            if (true.Equals(this.GetProperty<bool?>(Property.TREAT_AS_CONTINUOUS_CONTAINER))) {
-                ContinuousContainer.SetupContinuousContainer(this);
-            }
+            ContinuousContainer.SetupContinuousContainerIfNeeded(this);
             OverflowPropertyValue? overflowX = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             bool? nowrapProp = this.GetPropertyAsBoolean(Property.NO_SOFT_WRAP_INLINE);
             currentRenderer.SetProperty(Property.NO_SOFT_WRAP_INLINE, nowrapProp);
@@ -437,7 +435,7 @@ namespace iText.Layout.Renderer {
             }
             ContinuousContainer continuousContainer = this.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
                 );
-            if (continuousContainer != null) {
+            if (continuousContainer != null && overflowRenderer == null) {
                 continuousContainer.ReApplyProperties(this);
                 paddings = GetPaddings();
                 borders = GetBorders();
@@ -466,6 +464,7 @@ namespace iText.Layout.Renderer {
             FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
             LayoutArea editedArea_1 = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                 (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
+            ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
             if (null == overflowRenderer) {
                 return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea_1, null, null, null).SetMinMaxWidth(minMaxWidth
                     );
@@ -598,9 +597,7 @@ namespace iText.Layout.Renderer {
             overflowRenderer.parent = parent;
             FixOverflowRenderer(overflowRenderer);
             overflowRenderer.AddAllProperties(GetOwnProperties());
-            if (true.Equals(this.GetProperty<bool?>(Property.TREAT_AS_CONTINUOUS_CONTAINER))) {
-                ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
-            }
+            ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
             return overflowRenderer;
         }
 

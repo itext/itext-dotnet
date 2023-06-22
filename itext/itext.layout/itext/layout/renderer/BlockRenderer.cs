@@ -97,9 +97,7 @@ namespace iText.Layout.Renderer {
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
-            if (true.Equals(this.GetProperty<bool?>(Property.TREAT_AS_CONTINUOUS_CONTAINER))) {
-                ContinuousContainer.SetupContinuousContainer(this);
-            }
+            ContinuousContainer.SetupContinuousContainerIfNeeded(this);
             Border[] borders = GetBorders();
             UnitValue[] paddings = GetPaddings();
             ApplyMargins(parentBBox, false);
@@ -381,7 +379,7 @@ namespace iText.Layout.Renderer {
             }
             ContinuousContainer continuousContainer = this.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
                 );
-            if (continuousContainer != null) {
+            if (continuousContainer != null && overflowRenderer_1 == null) {
                 continuousContainer.ReApplyProperties(this);
                 paddings = GetPaddings();
                 borders = GetBorders();
@@ -407,6 +405,7 @@ namespace iText.Layout.Renderer {
             }
             ApplyVerticalAlignment();
             FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
+            ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer_1);
             if (layoutResult_1 != LayoutResult.NOTHING) {
                 LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                     (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, bfcHeightCorrection, marginsCollapsingEnabled
@@ -590,9 +589,7 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.childRenderers.Add(childResult.GetOverflowRenderer());
             }
             overflowRenderer.childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
-            if (true.Equals(this.GetProperty<bool?>(Property.TREAT_AS_CONTINUOUS_CONTAINER))) {
-                ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
-            }
+            ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
             if (childResult.GetStatus() == LayoutResult.PARTIAL) {
                 // Apply forced placement only on split renderer
                 overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
