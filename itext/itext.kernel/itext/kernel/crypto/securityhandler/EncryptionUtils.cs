@@ -73,6 +73,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
                         }
                     }
                 } catch (Exception f) {
+                    // First check if the feature is supported, it will throw if not
+                    // Exact algorithm doesn't matter currently
+                    BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
+                    // Throw the original exception if the feature is supported
                     throw new PdfException(KernelExceptionMessageConstant.PDF_DECRYPTION, f);
                 }
             }

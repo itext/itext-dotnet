@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.Bouncycastleconnector;
+using iText.Bouncycastlefips;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Openssl;
@@ -91,10 +92,10 @@ namespace iText.Kernel.Crypto {
         public virtual void DecryptDotNetRegularWithCertificateAes256Rsa() {
             IPrivateKey privateKey = ReadPrivateKey("SHA256withRSA.key");
             if ("BCFIPS".Equals(PROVIDER_NAME)) {
-                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
+                Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedEncryptionFeatureException), () =>
                     DecryptWithCertificate("dotnet_regular/withCertificate/aes256Rsa.pdf",
                         "SHA256withRSA.crt", privateKey));
-                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PDF_DECRYPTION, e.Message);
+                NUnit.Framework.Assert.AreEqual(UnsupportedEncryptionFeatureException.ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS, e.Message);
             } else {
                 DecryptWithCertificate("dotnet_regular/withCertificate/aes256Rsa.pdf", "SHA256withRSA.crt", privateKey);
             }
@@ -171,10 +172,10 @@ namespace iText.Kernel.Crypto {
         public virtual void DecryptJavaRegularWithCertificateAes256Rsa() {
             IPrivateKey privateKey = ReadPrivateKey("SHA256withRSA.key");
             if ("BCFIPS".Equals(PROVIDER_NAME)) {
-                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
+                Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedEncryptionFeatureException), () =>
                     DecryptWithCertificate("java_regular/withCertificate/aes256Rsa.pdf",
                         "SHA256withRSA.crt", privateKey));
-                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PDF_DECRYPTION, e.Message);
+                NUnit.Framework.Assert.AreEqual(UnsupportedEncryptionFeatureException.ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS, e.Message);
             } else {
                 DecryptWithCertificate("java_regular/withCertificate/aes256Rsa.pdf", "SHA256withRSA.crt", privateKey);
             }
@@ -218,10 +219,10 @@ namespace iText.Kernel.Crypto {
         public virtual void DecryptJavaWithFipsWithCertificateAes256Rsa() {
             IPrivateKey privateKey = ReadPrivateKey("SHA256withRSA.key");
             if ("BCFIPS".Equals(PROVIDER_NAME)) {
-                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
+                Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedEncryptionFeatureException), () =>
                     DecryptWithCertificate("java_with_fips/withCertificate/aes256Rsa.pdf",
                         "SHA256withRSA.crt", privateKey));
-                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PDF_DECRYPTION, e.Message);
+                NUnit.Framework.Assert.AreEqual(UnsupportedEncryptionFeatureException.ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS, e.Message);
             } else {
                 DecryptWithCertificate("java_with_fips/withCertificate/aes256Rsa.pdf", "SHA256withRSA.crt", privateKey);
             }
@@ -259,11 +260,11 @@ namespace iText.Kernel.Crypto {
         public virtual void DecryptAdobeWithCertificateAes256Rsa() {
             IPrivateKey privateKey = ReadPrivateKey("SHA256withRSA.key");
             if ("BCFIPS".Equals(PROVIDER_NAME)) {
-                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
+                Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedEncryptionFeatureException), () =>
                     DecryptWithCertificate("adobe/withCertificate/aes256Rsa.pdf", "SHA256withRSA.crt",
                         privateKey
                     ));
-                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PDF_DECRYPTION, e.Message);
+                NUnit.Framework.Assert.AreEqual(UnsupportedEncryptionFeatureException.ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS, e.Message);
             } else {
                 DecryptWithCertificate("adobe/withCertificate/aes256Rsa.pdf", "SHA256withRSA.crt", privateKey);
             }

@@ -69,6 +69,7 @@ namespace iText.Kernel.Crypto {
 
         public static readonly char[] PRIVATE_KEY_PASS = "testpassphrase".ToCharArray();
 
+        // There is also test.pfx to add to Acrobat to be able to open result pdf files
         public static readonly String CERT = sourceFolder + "test.cer";
 
         public static readonly String PRIVATE_KEY = sourceFolder + "test.pem";
@@ -228,6 +229,25 @@ namespace iText.Kernel.Crypto {
             else
             {
                 EncryptWithCertificate(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
+            }
+        }
+
+        [Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void OpenEncryptedDocWithWrongPrivateKey() {
+            using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
+                ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), PemFileHelper.ReadPrivateKeyFromPemFile(new 
+                FileStream(sourceFolder + "wrong.pem", FileMode.Open, FileAccess.Read), PRIVATE_KEY_PASS)))) {
+                if ("BCFIPS".Equals(FACTORY.GetProviderName()))
+                {
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedEncryptionFeatureException), () => new PdfDocument(reader));
+                    NUnit.Framework.Assert.AreEqual(UnsupportedEncryptionFeatureException.ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS, e.Message);
+                }
+                else
+                {
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
+                    NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PDF_DECRYPTION, e.Message);
+                }
             }
         }
 
