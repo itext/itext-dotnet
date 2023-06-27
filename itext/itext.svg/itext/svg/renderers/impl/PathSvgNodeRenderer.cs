@@ -379,7 +379,7 @@ namespace iText.Svg.Renderers.Impl {
                     fractionalPartAfterDecimalPoint = true;
                 }
                 else {
-                    if (c == 'e') {
+                    if (char.ToLower(c) == 'e') {
                         exponentSignMagnitude = true;
                     }
                 }

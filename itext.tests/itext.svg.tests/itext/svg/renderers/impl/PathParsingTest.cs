@@ -180,5 +180,14 @@ namespace iText.Svg.Renderers.Impl {
             String actual = path.SeparateDecimalPoints(input);
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ExponentInNumberTest02() {
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String input = "C 268.88888888888886 67.97916666666663e+10 331.1111111111111 -2.842170943040401E-14 393.3333333333333 -2.842170943040401E-14";
+            String expected = "C 268.88888888888886 67.97916666666663e+10 331.1111111111111 -2.842170943040401E-14 393.3333333333333 -2.842170943040401E-14";
+            String actual = path.SeparateDecimalPoints(input);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
     }
 }
