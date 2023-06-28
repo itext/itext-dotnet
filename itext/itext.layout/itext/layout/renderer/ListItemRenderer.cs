@@ -268,8 +268,10 @@ namespace iText.Layout.Renderer {
                                 symbolRenderer.GetChildRenderers()[1].SetProperty(isRtl ? Property.MARGIN_LEFT : Property.MARGIN_RIGHT, UnitValue
                                     .CreatePointValue((float)symbolIndent));
                             }
-                            foreach (IRenderer childRenderer in symbolRenderer.GetChildRenderers()) {
-                                paragraphRenderer.childRenderers.Add(0, childRenderer);
+                            if (!paragraphRenderer.childRenderers.Contains(symbolRenderer.GetChildRenderers()[1])) {
+                                foreach (IRenderer childRenderer in symbolRenderer.GetChildRenderers()) {
+                                    paragraphRenderer.childRenderers.Add(0, childRenderer);
+                                }
                             }
                         }
                         else {
@@ -277,7 +279,9 @@ namespace iText.Layout.Renderer {
                                 symbolRenderer.SetProperty(isRtl ? Property.MARGIN_LEFT : Property.MARGIN_RIGHT, UnitValue.CreatePointValue
                                     ((float)symbolIndent));
                             }
-                            paragraphRenderer.childRenderers.Add(0, symbolRenderer);
+                            if (!paragraphRenderer.childRenderers.Contains(symbolRenderer)) {
+                                paragraphRenderer.childRenderers.Add(0, symbolRenderer);
+                            }
                         }
                         symbolAddedInside = true;
                     }

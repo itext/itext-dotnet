@@ -78,8 +78,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SymbolPositioningInsideAfterPagebreakTest() {
-            // TODO: DEVSIX-6982 update this test after the ticket will be resolved
+        public virtual void SymbolPositioningInsideAfterPageBreakTest() {
             List modelElement = new List();
             modelElement.SetNextRenderer(new ListRenderer(modelElement));
             for (int i = 0; i < 25; i++) {
@@ -97,9 +96,8 @@ namespace iText.Layout.Renderer {
             result.GetOverflowRenderer().Layout(layoutContext);
             Regex regex = iText.Commons.Utils.StringUtil.RegexCompile("^.-.*?-.*$");
             IList<IRenderer> childRenderers = listRenderer.GetChildRenderers();
-            // Assertion needs to be changed to assertEquals after fix.
-            NUnit.Framework.Assert.AreNotEqual(childRenderers.Where((listitem) => iText.Commons.Utils.Matcher.Match(regex
-                , listitem.ToString()).Matches()).ToList().Count, 0);
+            NUnit.Framework.Assert.AreEqual(0, childRenderers.Where((listitem) => iText.Commons.Utils.Matcher.Match(regex
+                , listitem.ToString()).Matches()).Count());
         }
 
         private class ListRendererCreatingNotifyingListSymbols : ListRenderer {
