@@ -159,7 +159,6 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE)]
         public virtual void XfdfAnnotationHighlightedText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationHighlightedText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationHighlightedText.pdf"
@@ -519,7 +518,6 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE)]
         public virtual void XfdfAnnotationReplaceText() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationReplaceText.pdf"
@@ -537,7 +535,7 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 5)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 2)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED)]
         public virtual void XfdfAnnotationArrow() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationArrow.pdf"
@@ -556,7 +554,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationCallout() {
-            //TODO DEVSIX-3215 Support annots
+            //TODO DEVSIX-7600 Support callout annotations
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCallout.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCallout.pdf"
                 , FileMode.Create)));
@@ -572,7 +570,6 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 3)]
         public virtual void XfdfAnnotationCloud() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCloud.pdf"
@@ -590,7 +587,6 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 3)]
         public virtual void XfdfAnnotationCloudNested() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCloudNested.pdf"
@@ -691,7 +687,6 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 4)]
         public virtual void XfdfAnnotationAttrTitle() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationAttrTitle.pdf"
@@ -858,6 +853,69 @@ namespace iText.Forms {
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfDropDown.pdf", sourceFolder
                  + "cmp_xfdfDropDown.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
+        public virtual void XfdfBorderStyleAttributesTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "xfdfAnnotationsTemplate.pdf"), 
+                new PdfWriter(new FileStream(destinationFolder + "xfdfBorderStyleAttributes.pdf", FileMode.Create)))) {
+                String xfdfFilename = sourceFolder + "xfdfBorderStyleAttributes.xfdf";
+                XfdfObjectFactory factory = new XfdfObjectFactory();
+                XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                    ));
+                xfdfObject.MergeToPdf(document, sourceFolder + "xfdfAnnotationsTemplate.pdf");
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfBorderStyleAttributes.pdf"
+                , sourceFolder + "cmp_xfdfBorderStyleAttributes.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
+        public virtual void XfdfAnnotationAttributesTest() {
+            //TODO DEVSIX-7600 update xfdf and cmp files after supporting all the annotation types mentioned in xfdf spec
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "xfdfAnnotationsTemplate.pdf"), 
+                new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationAttributes.pdf", FileMode.Create)))) {
+                String xfdfFilename = sourceFolder + "xfdfAnnotationAttributes.xfdf";
+                XfdfObjectFactory factory = new XfdfObjectFactory();
+                XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                    ));
+                xfdfObject.MergeToPdf(document, sourceFolder + "xfdfAnnotationsTemplate.pdf");
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationAttributes.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationAttributes.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
+        public virtual void XfdfOnlyRequiredAnnotationAttributesTest() {
+            //TODO DEVSIX-7600 update xfdf and src files after supporting all the annotation types mentioned in xfdf spec
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "xfdfAnnotationsTemplate.pdf"), 
+                new PdfWriter(new FileStream(destinationFolder + "xfdfOnlyRequiredAnnotationAttributes.pdf", FileMode.Create
+                )))) {
+                String xfdfFilename = sourceFolder + "xfdfOnlyRequiredAnnotationAttributes.xfdf";
+                XfdfObjectFactory factory = new XfdfObjectFactory();
+                XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                    ));
+                xfdfObject.MergeToPdf(document, sourceFolder + "xfdfAnnotationsTemplate.pdf");
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfOnlyRequiredAnnotationAttributes.pdf"
+                , sourceFolder + "cmp_xfdfOnlyRequiredAnnotationAttributes.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
+        public virtual void XfdfInReplyToTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "xfdfAnnotationHighlightedText.pdf"
+                ), new PdfWriter(new FileStream(destinationFolder + "xfdfInReplyTo.pdf", FileMode.Create)))) {
+                String xfdfFilename = sourceFolder + "xfdfInReplyTo.xfdf";
+                XfdfObjectFactory factory = new XfdfObjectFactory();
+                XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                    ));
+                xfdfObject.MergeToPdf(document, sourceFolder + "xfdfAnnotationHighlightedText.pdf");
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfInReplyTo.pdf", 
+                sourceFolder + "cmp_xfdfInReplyTo.pdf", destinationFolder, "diff_"));
         }
     }
 }

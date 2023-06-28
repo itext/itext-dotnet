@@ -954,5 +954,39 @@ namespace iText.Forms {
                 (namePresent, valueAbsent)));
             NUnit.Framework.Assert.AreEqual(XfdfException.ATTRIBUTE_NAME_OR_VALUE_MISSING, e2.Message);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationAttributesTest() {
+            //TODO DEVSIX-7600 update xfdf and src files after supporting all the annotation types mentioned in xfdf spec
+            String pdfDocumentName = "xfdfAnnotationAttributes.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + pdfDocumentName
+                , FileMode.Open, FileAccess.Read)))) {
+                String xfdfFilename = destinationFolder + "xfdfAnnotationAttributes.xfdf";
+                XfdfObjectFactory factory = new XfdfObjectFactory();
+                XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+                xfdfObject.WriteToFile(xfdfFilename);
+            }
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfAnnotationAttributes.xfdf", sourceFolder + "xfdfAnnotationAttributes.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfOnlyRequiredAnnotationAttributesTest() {
+            //TODO DEVSIX-7600 update xfdf and src files after supporting all the annotation types mentioned in xfdf spec
+            String pdfDocumentName = "xfdfOnlyRequiredAnnotationAttributes.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + pdfDocumentName
+                , FileMode.Open, FileAccess.Read)))) {
+                String xfdfFilename = destinationFolder + "xfdfOnlyRequiredAnnotationAttributes.xfdf";
+                XfdfObjectFactory factory = new XfdfObjectFactory();
+                XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+                xfdfObject.WriteToFile(xfdfFilename);
+            }
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfOnlyRequiredAnnotationAttributes.xfdf", sourceFolder
+                 + "xfdfOnlyRequiredAnnotationAttributes.xfdf")) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
     }
 }

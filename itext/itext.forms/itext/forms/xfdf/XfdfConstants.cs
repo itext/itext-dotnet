@@ -259,6 +259,8 @@ namespace iText.Forms.Xfdf {
 
         public const String DEFAULT_STYLE = "defaultstyle";
 
+        public const String INTENSITY = "intensity";
+
         private XfdfConstants() {
         }
     }

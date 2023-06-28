@@ -77,19 +77,138 @@ namespace iText.Forms.Xfdf {
         /// If the number of floats in the string is not equal to 4, returns and PdfArray with empty values.
         /// </remarks>
         internal static PdfArray ConvertFringeFromString(String fringeString) {
-            String delims = ",";
-            StringTokenizer st = new StringTokenizer(fringeString, delims);
-            IList<String> fringeList = new List<String>();
-            while (st.HasMoreTokens()) {
-                fringeList.Add(st.NextToken());
-            }
+            String[] fringeList = iText.Commons.Utils.StringUtil.Split(fringeString, ",");
             float[] fringe = new float[4];
-            if (fringeList.Count == 4) {
+            if (fringeList.Length == 4) {
                 for (int i = 0; i < 4; i++) {
                     fringe[i] = float.Parse(fringeList[i], System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
             return new PdfArray(fringe);
+        }
+
+        /// <summary>
+        /// Converts a string containing float values into a PdfArray, representing a pattern of dashes and gaps to be used
+        /// in drawing a dashed border.
+        /// </summary>
+        internal static PdfArray ConvertDashesFromString(String dashesString) {
+            String[] dashesList = iText.Commons.Utils.StringUtil.Split(dashesString, ",");
+            float[] dashes = new float[dashesList.Length];
+            for (int i = 0; i < dashesList.Length; i++) {
+                dashes[i] = float.Parse(dashesList[i], System.Globalization.CultureInfo.InvariantCulture);
+            }
+            return new PdfArray(dashes);
+        }
+
+        /// <summary>
+        /// Converts a PdfArray, representing a pattern of dashes and gaps to be used in drawing a dashed border,
+        /// into a string containing float values.
+        /// </summary>
+        internal static PdfString ConvertDashesFromArray(PdfArray dashesArray) {
+            if (dashesArray == null) {
+                return null;
+            }
+            String delims = ",";
+            StringBuilder dashes = new StringBuilder();
+            for (int i = 0; i < dashesArray.Size() - 1; i++) {
+                dashes.Append(ConvertFloatToString(((PdfNumber)dashesArray.Get(i)).FloatValue())).Append(delims);
+            }
+            dashes.Append(ConvertFloatToString(((PdfNumber)dashesArray.Get(dashesArray.Size() - 1)).FloatValue()));
+            return new PdfString(dashes.ToString());
+        }
+
+        /// <summary>
+        /// Converts a string containing justification value into an integer value representing a code specifying
+        /// the form of quadding (justification).
+        /// </summary>
+        internal static int ConvertJustificationFromStringToInteger(String attributeValue) {
+            if ("centered".EqualsIgnoreCase(attributeValue)) {
+                return PdfFreeTextAnnotation.CENTERED;
+            }
+            if ("right".EqualsIgnoreCase(attributeValue)) {
+                return PdfFreeTextAnnotation.RIGHT_JUSTIFIED;
+            }
+            return PdfFreeTextAnnotation.LEFT_JUSTIFIED;
+        }
+
+        /// <summary>
+        /// Converts an integer value representing a code specifying the form of quadding (justification) into a string
+        /// containing justification value.
+        /// </summary>
+        internal static String ConvertJustificationFromIntegerToString(int justification) {
+            if (PdfFreeTextAnnotation.CENTERED == justification) {
+                return "centered";
+            }
+            if (PdfFreeTextAnnotation.RIGHT_JUSTIFIED == justification) {
+                return "right";
+            }
+            return "left";
+        }
+
+        /// <summary>Converts H key value in the link annotation dictionary to Highlight value of xfdf link annotation attribute.
+        ///     </summary>
+        internal static PdfName GetHighlightFullValue(PdfName highlightMode) {
+            if (highlightMode == null) {
+                return null;
+            }
+            switch (highlightMode.ToString().Substring(1)) {
+                case "N": {
+                    return new PdfName("None");
+                }
+
+                case "I": {
+                    return new PdfName("Invert");
+                }
+
+                case "O": {
+                    return new PdfName("Outline");
+                }
+
+                case "P": {
+                    return new PdfName("Push");
+                }
+
+                default: {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>Converts style (S key value) in the pdf annotation dictionary to style value of xfdf annotation attribute.
+        ///     </summary>
+        internal static PdfName GetStyleFullValue(PdfName style) {
+            if (style == null) {
+                return null;
+            }
+            switch (style.ToString().Substring(1)) {
+                case "S": {
+                    return new PdfName("solid");
+                }
+
+                case "D": {
+                    return new PdfName("dash");
+                }
+
+                case "B": {
+                    return new PdfName("bevelled");
+                }
+
+                case "I": {
+                    return new PdfName("inset");
+                }
+
+                case "U": {
+                    return new PdfName("underline");
+                }
+
+                case "C": {
+                    return new PdfName("cloudy");
+                }
+
+                default: {
+                    return null;
+                }
+            }
         }
 
         /// <summary>Converts a Rectangle to a string containing 4 float values.</summary>
@@ -104,10 +223,10 @@ namespace iText.Forms.Xfdf {
                 );
         }
 
-        /// <summary>Converts a string containing 4 float values into a float array, representing quadPoints.</summary>
+        /// <summary>Converts a string containing 8*n float values into a float array, representing quadPoints.</summary>
         /// <remarks>
-        /// Converts a string containing 4 float values into a float array, representing quadPoints.
-        /// If the number of floats in the string is not equal to 8, returns an empty float array.
+        /// Converts a string containing 8*n float values into a float array, representing quadPoints.
+        /// If the number of floats in the string is not a multiple of 8, returns an empty float array.
         /// </remarks>
         internal static float[] ConvertQuadPointsFromCoordsString(String coordsString) {
             String delims = ",";
@@ -116,9 +235,9 @@ namespace iText.Forms.Xfdf {
             while (st.HasMoreTokens()) {
                 quadPointsList.Add(st.NextToken());
             }
-            if (quadPointsList.Count == 8) {
-                float[] quadPoints = new float[8];
-                for (int i = 0; i < 8; i++) {
+            if (quadPointsList.Count % 8 == 0) {
+                float[] quadPoints = new float[quadPointsList.Count];
+                for (int i = 0; i < quadPointsList.Count; i++) {
                     quadPoints[i] = float.Parse(quadPointsList[i], System.Globalization.CultureInfo.InvariantCulture);
                 }
                 return quadPoints;
@@ -126,18 +245,13 @@ namespace iText.Forms.Xfdf {
             return new float[0];
         }
 
-        /// <summary>Converts a float array, representing quadPoints into a string containing 8 float values.</summary>
+        /// <summary>Converts a float array, representing quadPoints into a string containing 8*n float values.</summary>
         internal static String ConvertQuadPointsToCoordsString(float[] quadPoints) {
-            StringBuilder stb = new StringBuilder(FloatToPaddedString(quadPoints[0]));
-            for (int i = 1; i < 8; i++) {
-                stb.Append(", ").Append(FloatToPaddedString(quadPoints[i]));
+            StringBuilder stb = new StringBuilder(ConvertFloatToString(quadPoints[0]));
+            for (int i = 1; i < quadPoints.Length; i++) {
+                stb.Append(", ").Append(ConvertFloatToString(quadPoints[i]));
             }
             return stb.ToString();
-        }
-
-        private static String FloatToPaddedString(float number) {
-            return iText.Commons.Utils.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(number), System.Text.Encoding.
-                UTF8);
         }
 
         /// <summary>
@@ -269,9 +383,9 @@ namespace iText.Forms.Xfdf {
                 return null;
             }
             StringBuilder stb = new StringBuilder();
-            stb.Append(vertices[0]);
+            stb.Append(ConvertFloatToString(vertices[0]));
             for (int i = 1; i < vertices.Length; i++) {
-                stb.Append(", ").Append(vertices[i]);
+                stb.Append(", ").Append(ConvertFloatToString(vertices[i]));
             }
             return stb.ToString();
         }
@@ -286,9 +400,9 @@ namespace iText.Forms.Xfdf {
                 return null;
             }
             StringBuilder stb = new StringBuilder();
-            stb.Append(fringeArray[0]);
+            stb.Append(ConvertFloatToString(fringeArray[0]));
             for (int i = 1; i < 4; i++) {
-                stb.Append(", ").Append(fringeArray[i]);
+                stb.Append(", ").Append(ConvertFloatToString(fringeArray[i]));
             }
             return stb.ToString();
         }
@@ -317,7 +431,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="line">an array of 4 floats representing the line (x_1, y_1, x_2, y_2)</param>
         internal static String ConvertLineStartToString(float[] line) {
             if (line.Length == 4) {
-                return line[0] + "," + line[1];
+                return ConvertFloatToString(line[0]) + "," + ConvertFloatToString(line[1]);
             }
             return null;
         }
@@ -331,7 +445,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="line">an array of 4 floats representing the line (x_1, y_1, x_2, y_2)</param>
         internal static String ConvertLineEndToString(float[] line) {
             if (line.Length == 4) {
-                return line[2] + "," + line[3];
+                return ConvertFloatToString(line[2]) + "," + ConvertFloatToString(line[3]);
             }
             return null;
         }

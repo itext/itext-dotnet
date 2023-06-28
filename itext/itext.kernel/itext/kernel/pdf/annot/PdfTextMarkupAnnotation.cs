@@ -188,7 +188,7 @@ namespace iText.Kernel.Pdf.Annot {
         public override PdfName GetSubtype() {
             PdfName subType = GetPdfObject().GetAsName(PdfName.Subtype);
             if (subType == null) {
-                subType = PdfName.Underline;
+                subType = MarkupUnderline;
             }
             return subType;
         }

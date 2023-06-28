@@ -52,7 +52,7 @@ namespace iText.Kernel.Utils {
             if (element.HasElements) {
                 return new XElement(
                     element.Name,
-                    element.Attributes().Where(a => a.Name.Namespace == XNamespace.Xmlns)
+                    element.Attributes()
                         .OrderBy(a => a.Name.ToString()),
                     element.Elements().OrderBy(a => a.Name.ToString())
                         .Select(e => Normalize(e)));

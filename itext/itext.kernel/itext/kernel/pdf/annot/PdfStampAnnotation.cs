@@ -73,6 +73,16 @@ namespace iText.Kernel.Pdf.Annot {
             return GetPdfObject().GetAsName(PdfName.Name);
         }
 
+        /// <summary>Gets the rotation angle in degrees.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfNumber"/>
+        /// representing the clockwise rotation in degrees.
+        /// </returns>
+        public virtual PdfNumber GetRotation() {
+            return GetPdfObject().GetAsNumber(PdfName.Rotate);
+        }
+
         /// <summary>The name of an icon that is used in displaying the annotation.</summary>
         /// <param name="name">
         /// a
@@ -116,6 +126,18 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfStampAnnotation SetIconName(PdfName name) {
             return (iText.Kernel.Pdf.Annot.PdfStampAnnotation)Put(PdfName.Name, name);
+        }
+
+        /// <summary>Sets the rotation angle in degrees.</summary>
+        /// <param name="degAngle">an integer representing the clockwise rotation in degrees.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfStampAnnotation"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfStampAnnotation SetRotation(int degAngle) {
+            Put(PdfName.Rotate, new PdfNumber(degAngle));
+            return this;
         }
     }
 }
