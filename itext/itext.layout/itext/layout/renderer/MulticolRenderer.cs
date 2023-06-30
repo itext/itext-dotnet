@@ -123,6 +123,7 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>Creates an overflow renderer.</summary>
+        /// <param name="overflowedContentRenderer">an overflowed content renderer</param>
         /// <returns>
         /// a new
         /// <see cref="AbstractRenderer"/>

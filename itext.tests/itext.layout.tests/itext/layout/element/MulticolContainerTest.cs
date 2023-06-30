@@ -367,6 +367,101 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        public virtual void MulticolElementWithKeepTogetherTest() {
+            ExecuteTest("multicolElementWithKeepTogether", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                Div pseudoContainer = new Div();
+                for (int i = 0; i < 30; i++) {
+                    pseudoContainer.Add(new Paragraph("" + i));
+                }
+                ctx.SetProperty(Property.KEEP_TOGETHER, true);
+                ctx.Add(pseudoContainer);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        public virtual void AllChildrenOfMulticolElementWithKeepTogetherTest() {
+            ExecuteTest("allChildrenOfMulticolElementWithKeepTogether", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                Div pseudoContainer = new Div();
+                for (int i = 0; i < 30; i++) {
+                    pseudoContainer.Add(new Paragraph("" + i));
+                }
+                pseudoContainer.SetProperty(Property.KEEP_TOGETHER, true);
+                ctx.Add(pseudoContainer);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChildOfMulticolElementWithKeepTogetherTest() {
+            ExecuteTest("childOfMulticolElementWithKeepTogether", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                Div pseudoContainer = new Div();
+                for (int i = 0; i < 7; i++) {
+                    pseudoContainer.Add(new Paragraph("" + i));
+                }
+                Div temp = new Div();
+                temp.Add(new Paragraph("7 keep"));
+                temp.Add(new Paragraph("8 keep"));
+                temp.Add(new Paragraph("9 keep"));
+                temp.Add(new Paragraph("10 keep"));
+                temp.Add(new Paragraph("11 keep"));
+                temp.SetProperty(Property.KEEP_TOGETHER, true);
+                pseudoContainer.Add(temp);
+                for (int i = 12; i < 30; i++) {
+                    pseudoContainer.Add(new Paragraph("" + i));
+                }
+                ctx.Add(pseudoContainer);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChildrenOfMulticolElementWithKeepTogetherTest() {
+            ExecuteTest("childrenOfMulticolElementWithKeepTogether", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                Div pseudoContainer = new Div();
+                for (int i = 0; i < 7; i++) {
+                    pseudoContainer.Add(new Paragraph("" + i));
+                }
+                Div temp = new Div();
+                temp.Add(new Paragraph("7 keep"));
+                temp.Add(new Paragraph("8 keep"));
+                temp.Add(new Paragraph("9 keep"));
+                temp.Add(new Paragraph("10 keep"));
+                temp.Add(new Paragraph("11 keep"));
+                temp.SetProperty(Property.KEEP_TOGETHER, true);
+                pseudoContainer.Add(temp);
+                for (int i = 12; i < 19; i++) {
+                    pseudoContainer.Add(new Paragraph("" + i));
+                }
+                temp = new Div();
+                temp.Add(new Paragraph("19 keep"));
+                temp.Add(new Paragraph("20 keep"));
+                temp.Add(new Paragraph("21 keep"));
+                temp.Add(new Paragraph("22 keep"));
+                temp.Add(new Paragraph("23 keep"));
+                temp.Add(new Paragraph("24 keep"));
+                temp.Add(new Paragraph("25 keep"));
+                temp.SetProperty(Property.KEEP_TOGETHER, true);
+                pseudoContainer.Add(temp);
+                for (int i = 26; i < 30; i++) {
+                    pseudoContainer.Add(new Paragraph("" + i));
+                }
+                ctx.Add(pseudoContainer);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SingleParagraphMultiPageTest() {
             String outFileName = DESTINATION_FOLDER + "singleParagraphMultiPageTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_singleParagraphMultiPageTest.pdf";
@@ -626,13 +721,11 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
-        private void ExecuteTest<T>(String testName, T container, Action<T> executor)
-            where T : IBlockElement {
+        private void ExecuteTest(String testName, MulticolContainer container, Action<MulticolContainer> executor) {
             String filename = DESTINATION_FOLDER + testName + ".pdf";
             String cmpName = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
                 Document doc = new Document(pdfDoc);
-                container.SetProperty(Property.TREAT_AS_CONTINUOUS_CONTAINER, true);
                 executor(container);
                 doc.Add(new Paragraph("ELEMENT ABOVE").SetBackgroundColor(ColorConstants.YELLOW));
                 doc.Add(container);
