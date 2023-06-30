@@ -45,7 +45,7 @@ namespace iText.Layout.Minmaxwidth {
             return max;
         }
 
-        private static float GetInfHeight() {
+        public static float GetInfHeight() {
             return 1e6f;
         }
 

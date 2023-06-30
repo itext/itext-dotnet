@@ -63,10 +63,7 @@ namespace iText.Layout.Renderer {
             columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
             MulticolRenderer renderer = (MulticolRenderer)columnContainer.CreateRendererSubTree();
             LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(200f, 20f))));
-            NUnit.Framework.Assert.AreEqual(1, result.GetSplitRenderer().GetChildRenderers().Count);
-            NUnit.Framework.Assert.AreEqual(1236.7692f, result.GetSplitRenderer().GetChildRenderers()[0].GetOccupiedArea
-                ().GetBBox().GetHeight(), 0.0001f);
-            System.Console.Out.WriteLine(result);
+            NUnit.Framework.Assert.AreEqual(1, result.GetOverflowRenderer().GetChildRenderers().Count);
         }
 
         [NUnit.Framework.Test]
@@ -102,7 +99,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(3, result.GetSplitRenderer().GetChildRenderers().Count);
             NUnit.Framework.Assert.AreEqual(1, result.GetSplitRenderer().GetChildRenderers()[0].GetChildRenderers().Count
                 );
-            NUnit.Framework.Assert.AreEqual(2, ((ParagraphRenderer)result.GetSplitRenderer().GetChildRenderers()[0].GetChildRenderers
+            NUnit.Framework.Assert.AreEqual(1, ((ParagraphRenderer)result.GetSplitRenderer().GetChildRenderers()[0].GetChildRenderers
                 ()[0]).GetLines().Count);
         }
 

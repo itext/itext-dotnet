@@ -22,13 +22,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Text;
+using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout.Element {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -202,6 +207,7 @@ namespace iText.Layout.Element {
             );
         }
 
+        //TODO: DEVSIX-7626
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerParagraphOverflowShouldShow() {
             ExecuteTest("continuousColumContainerParagraphOverflowShouldShow", new MulticolContainer(), (ctx) => {
@@ -212,6 +218,60 @@ namespace iText.Layout.Element {
                 ctx.SetPaddingTop(DEFAULT_PADDING);
                 ctx.SetMarginBottom(DEFAULT_MARGIN);
                 ctx.SetPaddingBottom(DEFAULT_PADDING);
+                ctx.Add(new Paragraph(GenerateLongString(8000)));
+            }
+            );
+        }
+
+        //TODO: DEVSIX-7626
+        [NUnit.Framework.Test]
+        public virtual void ExtraLargeColumnParagraphTest() {
+            ExecuteTest("extraLargeColumnParagraphTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.SetMarginTop(DEFAULT_MARGIN);
+                ctx.SetPaddingTop(DEFAULT_PADDING);
+                ctx.SetMarginBottom(DEFAULT_MARGIN);
+                ctx.SetPaddingBottom(DEFAULT_PADDING);
+                ctx.Add(new Paragraph(GenerateLongString(15000)));
+            }
+            );
+        }
+
+        //TODO: DEVSIX-7626
+        [NUnit.Framework.Test]
+        public virtual void LargeColumnParagraphWithMarginTest() {
+            ExecuteTest("largeColumnParagraphWithMarginTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetMarginTop(DEFAULT_MARGIN);
+                ctx.SetMarginBottom(DEFAULT_MARGIN);
+                ctx.Add(new Paragraph(GenerateLongString(8000)));
+            }
+            );
+        }
+
+        //TODO: DEVSIX-7626
+        [NUnit.Framework.Test]
+        public virtual void LargeColumnParagraphWithPaddingTest() {
+            ExecuteTest("largeColumnParagraphWithPaddingTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetPaddingTop(DEFAULT_PADDING);
+                ctx.SetPaddingBottom(DEFAULT_PADDING);
+                ctx.Add(new Paragraph(GenerateLongString(8000)));
+            }
+            );
+        }
+
+        //TODO: DEVSIX-7626
+        [NUnit.Framework.Test]
+        public virtual void LargeColumnParagraphWithBorderTest() {
+            ExecuteTest("largeColumnParagraphWithBorderTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetBorder(new SolidBorder(ColorConstants.GREEN, 50));
                 ctx.Add(new Paragraph(GenerateLongString(8000)));
             }
             );
@@ -306,6 +366,266 @@ namespace iText.Layout.Element {
             );
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SingleParagraphMultiPageTest() {
+            String outFileName = DESTINATION_FOLDER + "singleParagraphMultiPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_singleParagraphMultiPageTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                document.Add(CreateFirstPageFiller());
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                     + "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute " + "irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+                     + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim " +
+                     "id est laborum.");
+                columnContainer.Add(paragraph);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SingleParagraphWithBorderMultiPageTest() {
+            String outFileName = DESTINATION_FOLDER + "singleParagraphWithBorderMultiPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_singleParagraphWithBorderMultiPageTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                document.Add(CreateFirstPageFiller());
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                     + "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute " + "irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+                     + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim " +
+                     "id est laborum.");
+                paragraph.SetBorder(new SolidBorder(2));
+                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                columnContainer.Add(paragraph);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParagraphWithImagesMultiPageTest() {
+            String outFileName = DESTINATION_FOLDER + "paragraphWithImagesMultiPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithImagesMultiPageTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                document.Add(CreateFirstPageFiller());
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph.SetBorder(new SolidBorder(2));
+                PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "placeholder_100x100.png"
+                    )));
+                iText.Layout.Element.Image image1 = new iText.Layout.Element.Image(xObject, 20);
+                iText.Layout.Element.Image image2 = new iText.Layout.Element.Image(xObject, 150);
+                iText.Layout.Element.Image image3 = new iText.Layout.Element.Image(xObject, 100).SetHorizontalAlignment(HorizontalAlignment
+                    .RIGHT);
+                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                Div div = new Div();
+                div.Add(paragraph);
+                div.Add(image1);
+                div.Add(image2);
+                div.Add(image3);
+                columnContainer.Add(div);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        //TODO: DEVSIX-7621
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void ParagraphWithOverflowingImageTest() {
+            String outFileName = DESTINATION_FOLDER + "paragraphWithOverflowingImageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithOverflowingImageTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                document.Add(CreateFirstPageFiller());
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph.SetBorder(new SolidBorder(2));
+                PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "placeholder_100x100.png"
+                    )));
+                iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 200);
+                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                Div div = new Div();
+                div.Add(paragraph);
+                div.Add(image);
+                columnContainer.Add(div);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        //TODO: DEVSIX-7621
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void OverflowingImageWithParagraphTest() {
+            String outFileName = DESTINATION_FOLDER + "overflowingImageWithParagraphMultipageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_overflowingImageWithParagraphMultipageTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph.SetBorder(new SolidBorder(2));
+                PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "placeholder_100x100.png"
+                    )));
+                iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 200);
+                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                Div div = new Div();
+                div.Add(image);
+                div.Add(paragraph);
+                columnContainer.Add(div);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void ImageBiggerThanPageTest() {
+            String outFileName = DESTINATION_FOLDER + "imageBiggerThanPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_imageBiggerThanPageTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph.SetBorder(new SolidBorder(2));
+                PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "placeholder_100x100.png"
+                    )));
+                iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 800);
+                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                Div div = new Div();
+                div.Add(image);
+                div.Add(paragraph);
+                columnContainer.Add(div);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowingDivWithParagraphMultipageTest() {
+            String outFileName = DESTINATION_FOLDER + "overflowingDivWithParagraphMultipageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_overflowingDivWithParagraphMultipageTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                document.Add(CreateFirstPageFiller());
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph.SetBorder(new SolidBorder(2));
+                Div columnDiv = new Div();
+                columnDiv.SetProperty(Property.BORDER, new SolidBorder(1));
+                columnDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.BLUE));
+                columnDiv.SetProperty(Property.KEEP_TOGETHER, true);
+                columnDiv.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(50));
+                columnDiv.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(150));
+                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                Div div = new Div();
+                div.Add(paragraph);
+                div.Add(columnDiv);
+                columnContainer.Add(div);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarginCantFitCurrentPageTest() {
+            String outFileName = DESTINATION_FOLDER + "marginCantFitCurrentPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_marginCantFitCurrentPageTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                document.Add(CreateFirstPageFiller());
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph.SetBorder(new SolidBorder(2));
+                Div columnDiv = new Div();
+                columnDiv.SetProperty(Property.BORDER, new SolidBorder(1));
+                columnDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.BLUE));
+                columnDiv.SetProperty(Property.KEEP_TOGETHER, true);
+                columnDiv.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(40));
+                columnDiv.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(60));
+                columnDiv.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(60));
+                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                Div div = new Div();
+                div.Add(columnDiv);
+                div.Add(paragraph);
+                columnContainer.Add(div);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PaddingCantFitCurrentPageTest() {
+            String outFileName = DESTINATION_FOLDER + "paddingCantFitCurrentPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paddingCantFitCurrentPageTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                document.Add(CreateFirstPageFiller());
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph.SetBorder(new SolidBorder(2));
+                Div columnDiv = new Div();
+                columnDiv.SetProperty(Property.BORDER, new SolidBorder(1));
+                columnDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.BLUE));
+                columnDiv.SetProperty(Property.KEEP_TOGETHER, true);
+                columnDiv.SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(40));
+                columnDiv.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(60));
+                columnDiv.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(60));
+                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                Div div = new Div();
+                div.Add(columnDiv);
+                div.Add(paragraph);
+                columnContainer.Add(div);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherBlockingLayoutTest() {
+            String outFileName = DESTINATION_FOLDER + "keepTogetherBlockingLayoutTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherBlockingLayoutTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                document.Add(CreateFirstPageFiller());
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                     + "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute " + "irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+                     + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim " +
+                     "id est laborum.");
+                paragraph.SetBorder(new SolidBorder(2));
+                paragraph.SetFontSize(20);
+                paragraph.SetProperty(Property.KEEP_TOGETHER, true);
+                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                Div div = new Div();
+                div.Add(paragraph);
+                columnContainer.Add(div);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
         private void ExecuteTest<T>(String testName, T container, Action<T> executor)
             where T : IBlockElement {
             String filename = DESTINATION_FOLDER + testName + ".pdf";
@@ -341,6 +661,17 @@ namespace iText.Layout.Element {
             int second = 1929;
             int max = 7;
             return (prev * first + second) % max;
+        }
+
+        private static Div CreateFirstPageFiller() {
+            Div firstPageFiller = new Div();
+            firstPageFiller.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(50));
+            firstPageFiller.SetProperty(Property.BORDER, new SolidBorder(1));
+            firstPageFiller.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(20));
+            firstPageFiller.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
+            firstPageFiller.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(450));
+            firstPageFiller.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(650));
+            return firstPageFiller;
         }
     }
 }
