@@ -84,7 +84,8 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (layoutResult.GetOverflowRenderer() == null) {
-                    this.SetChildRenderers(layoutResult.GetSplitRenderers());
+                    this.childRenderers.Clear();
+                    AddAllChildRenderers(layoutResult.GetSplitRenderers());
                     this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, true);
                     return new LayoutResult(LayoutResult.FULL, this.occupiedArea, this, null);
                 }
