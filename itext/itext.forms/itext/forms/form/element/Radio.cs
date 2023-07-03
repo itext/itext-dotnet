@@ -21,8 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Forms.Fields.Properties;
 using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
+using iText.Kernel.Colors;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -44,14 +46,26 @@ namespace iText.Forms.Form.Element {
         /// <param name="id">the id.</param>
         public Radio(String id)
             : base(id) {
+
             // Draw the borders inside the element by default
             SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
-            // Rounded border
-            SetBorderRadius(new BorderRadius(UnitValue.CreatePercentValue(50)));
+            //// Rounded border
+            //SetBorderRadius(new BorderRadius(UnitValue.CreatePercentValue(50)));
             // Draw border as a circle by default
             SetProperty(FormProperty.FORM_FIELD_RADIO_BORDER_CIRCLE, true);
         }
-
+        /// <summary>
+        /// Creates a new
+        /// <see cref="Radio"/>
+        /// instance.
+        /// </summary>
+        /// <param name="id">the id</param>
+        /// <param name="checkBoxType">CheckBoxType</param>
+        public Radio(String id, CheckBoxType checkBoxType)
+            : base(id)
+        {
+            SetCheckBoxType(checkBoxType);
+        }
         /// <summary>
         /// Creates a new
         /// <see cref="Radio"/>
@@ -101,6 +115,39 @@ namespace iText.Forms.Form.Element {
         */
         protected override IRenderer MakeNewRenderer() {
             return new RadioRenderer(this);
+        }
+        /// <summary>Sets the icon of the radio.</summary>
+        /// <param name="checkBoxType">the type of the radio to set</param>
+        /// <returns>this Radio instance</returns>
+        public Radio SetCheckBoxType(CheckBoxType checkBoxType)
+        {
+            SetProperty(FormProperty.FORM_CHECKBOX_TYPE, checkBoxType);
+            if(checkBoxType != CheckBoxType.CIRCLE)            
+            {                
+                // Rounded border
+               //SetBorderRadius(null);
+                DeleteOwnProperty(Property.BORDER_RADIUS);
+                DeleteOwnProperty(Property.BOX_SIZING);
+                DeleteOwnProperty(FormProperty.FORM_FIELD_RADIO_BORDER_CIRCLE);
+                SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
+                SetProperty(FormProperty.FORM_FIELD_RADIO_BORDER_CIRCLE, false);
+            }
+
+            return this;
+        }
+        /// <summary>
+        /// Sets the chech mark color
+        /// </summary>
+        /// <param name="color">The selected iText color</param>
+        /// <returns></returns>
+        public override Radio SetFontColor(Color color)
+        {
+            if(color == null)
+                color = ColorConstants.BLACK;
+
+            DeleteOwnProperty(Property.FONT_COLOR);
+            SetProperty(Property.FONT_COLOR, color);
+            return this;
         }
     }
 }
