@@ -23,7 +23,7 @@ The **iText Community** source code is hosted on [Github][github], where you can
 
 *We strongly recommend that you use [NuGet][nuget] to add **iText Community** to your project:*
 
-    Install-Package itext7
+    Install-Package itext
 
 You can also [build iText  Community from source][building].
 
@@ -59,7 +59,7 @@ Contact [sales] for more info.
 [itext]: https://itextpdf.com/
 [github]: https://github.com/itext/itext7-dotnet
 [latest]: https://github.com/itext/itext7-dotnet/releases/latest
-[nuget]: https://www.nuget.org/packages/itext7
+[nuget]: https://www.nuget.org/packages/itext
 [sales]: https://itextpdf.com/sales
 [gratis]: https://en.wikipedia.org/wiki/Gratis_versus_libre
 [rups]: https://github.com/itext/i7j-rups

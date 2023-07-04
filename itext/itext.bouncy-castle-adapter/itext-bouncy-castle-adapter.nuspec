@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
-    <id>itext7.commons</id>
+    <id>itext.bouncy-castle-adapter</id>
     <version>8.0.1-SNAPSHOT</version>
-    <title>iText commons module</title>
+    <title>iText bouncy-castle adapter module</title>
     <authors>Apryse Software</authors>
     <owners>Apryse Software</owners>
     <licenseUrl>https://www.gnu.org/licenses/agpl.html</licenseUrl>
     <projectUrl>https://itextpdf.com/</projectUrl>
     <icon>ITSC-avatar.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>Commons module</description>
+    <description>Bouncy-castle adapter module</description>
     <summary />
     <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
     <copyright>Copyright (c) 1998-2023 Apryse Group NV</copyright>
@@ -18,20 +18,20 @@
     <tags>itext itext7 itextsharp c# .net csharp</tags>
     <dependencies>
       <group targetFramework="net461">
-		<dependency id="Newtonsoft.Json" version="13.0.1" />
-        <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
+		<dependency id="itext.commons" version="8.0.1-SNAPSHOT" />
+		<dependency id="Portable.BouncyCastle" version="1.8.10" />
       </group>
       <group targetFramework="netstandard2.0">
-		<dependency id="Newtonsoft.Json" version="13.0.1" />
-        <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
+		<dependency id="itext.commons" version="8.0.1-SNAPSHOT" />
+		<dependency id="Portable.BouncyCastle" version="1.8.10" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\net461\itext.commons.dll" target="lib\net461" />
-    <file src="bin\Release\net461\itext.commons.xml" target="lib\net461" />
-    <file src="bin\Release\netstandard2.0\itext.commons.dll" target="lib\netstandard2.0" />
-    <file src="bin\Release\netstandard2.0\itext.commons.xml" target="lib\netstandard2.0" />
+    <file src="bin\Release\net461\itext.bouncy-castle-adapter.dll" target="lib\net461" />
+    <file src="bin\Release\net461\itext.bouncy-castle-adapter.xml" target="lib\net461" />
+    <file src="bin\Release\netstandard2.0\itext.bouncy-castle-adapter.dll" target="lib\netstandard2.0" />
+    <file src="bin\Release\netstandard2.0\itext.bouncy-castle-adapter.xml" target="lib\netstandard2.0" />
     <file src="..\..\ITSC-avatar.png" target="" />
   </files>
 </package>
