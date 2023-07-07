@@ -31,13 +31,11 @@ using iText.Layout.Properties;
 namespace iText.Layout.Renderer {
     /// <summary>Represents a renderer for columns.</summary>
     public class MulticolRenderer : AbstractRenderer {
-        private const int MAX_RELAYOUT_COUNT = 4;
-
         private const float ZERO_DELTA = 0.0001F;
 
-        private BlockRenderer elementRenderer;
+        private MulticolRenderer.ColumnHeightCalculator heightCalculator;
 
-        private readonly MulticolRenderer.HeightEnhancer heightCalculator = new MulticolRenderer.HeightEnhancer();
+        private BlockRenderer elementRenderer;
 
         private int columnCount;
 
@@ -53,6 +51,13 @@ namespace iText.Layout.Renderer {
         /// </param>
         public MulticolRenderer(MulticolContainer modelElement)
             : base(modelElement) {
+            SetHeightCalculator(new MulticolRenderer.LayoutInInfiniteHeightCalculator());
+        }
+
+        /// <summary>Sets the height calculator to be used by this renderer.</summary>
+        /// <param name="heightCalculator">the height calculator to be used by this renderer.</param>
+        public void SetHeightCalculator(MulticolRenderer.ColumnHeightCalculator heightCalculator) {
+            this.heightCalculator = heightCalculator;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -71,14 +76,7 @@ namespace iText.Layout.Renderer {
             }
             //It is necessary to set parent, because during relayout elementRenderer's parent gets cleaned up
             elementRenderer.SetParent(this);
-            LayoutResult prelayoutResult = elementRenderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(columnWidth
-                , INF))));
-            if (prelayoutResult.GetStatus() != LayoutResult.FULL) {
-                return new LayoutResult(LayoutResult.NOTHING, null, null, this, prelayoutResult.GetCauseOfNothing());
-            }
-            approximateHeight = prelayoutResult.GetOccupiedArea().GetBBox().GetHeight() / columnCount;
-            MulticolRenderer.MulticolLayoutResult layoutResult = BalanceContentAndLayoutColumns(layoutContext, actualBBox
-                );
+            MulticolRenderer.MulticolLayoutResult layoutResult = LayoutInColumns(layoutContext, actualBBox);
             if (layoutResult.GetSplitRenderers().IsEmpty()) {
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this, layoutResult.GetCauseOfNothing());
             }
@@ -101,6 +99,19 @@ namespace iText.Layout.Renderer {
         public override IRenderer GetNextRenderer() {
             LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.MulticolRenderer), this.GetType());
             return new iText.Layout.Renderer.MulticolRenderer((MulticolContainer)modelElement);
+        }
+
+        protected internal virtual MulticolRenderer.MulticolLayoutResult LayoutInColumns(LayoutContext layoutContext
+            , Rectangle actualBBox) {
+            LayoutResult inifiniteHeighOneColumnLayoutResult = elementRenderer.Layout(new LayoutContext(new LayoutArea
+                (1, new Rectangle(columnWidth, INF))));
+            if (inifiniteHeighOneColumnLayoutResult.GetStatus() != LayoutResult.FULL) {
+                MulticolRenderer.MulticolLayoutResult result = new MulticolRenderer.MulticolLayoutResult();
+                result.SetCauseOfNothing(inifiniteHeighOneColumnLayoutResult.GetCauseOfNothing());
+                return result;
+            }
+            approximateHeight = inifiniteHeighOneColumnLayoutResult.GetOccupiedArea().GetBBox().GetHeight() / columnCount;
+            return BalanceContentAndLayoutColumns(layoutContext, actualBBox);
         }
 
         /// <summary>Creates a split renderer.</summary>
@@ -156,7 +167,7 @@ namespace iText.Layout.Renderer {
             , Rectangle actualBbox) {
             float additionalHeightPerIteration;
             MulticolRenderer.MulticolLayoutResult result = new MulticolRenderer.MulticolLayoutResult();
-            int counter = MAX_RELAYOUT_COUNT + 1;
+            int counter = heightCalculator.MaxAmountOfRelayouts() + 1;
             float maxHeight = actualBbox.GetHeight();
             bool isLastLayout = false;
             while (counter-- > 0) {
@@ -168,7 +179,7 @@ namespace iText.Layout.Renderer {
                 if (result.GetOverflowRenderer() == null || isLastLayout) {
                     return result;
                 }
-                additionalHeightPerIteration = heightCalculator.Apply(this, result).Value;
+                additionalHeightPerIteration = heightCalculator.GetAdditionalHeightOfEachColumn(this, result).Value;
                 if (Math.Abs(additionalHeightPerIteration) <= ZERO_DELTA) {
                     return result;
                 }
@@ -234,43 +245,8 @@ namespace iText.Layout.Renderer {
             return result;
         }
 
-        /// <summary>
-        /// Represents result of one iteration of MulticolRenderer layouting
-        /// It contains split renderers which were lauded on a given height and overflow renderer
-        /// for which height should be increased, so it can be lauded.
-        /// </summary>
-        private class MulticolLayoutResult {
-            private IList<IRenderer> splitRenderers = new List<IRenderer>();
-
-            private AbstractRenderer overflowRenderer;
-
-            private IRenderer causeOfNothing;
-
-            public virtual IList<IRenderer> GetSplitRenderers() {
-                return splitRenderers;
-            }
-
-            public virtual AbstractRenderer GetOverflowRenderer() {
-                return overflowRenderer;
-            }
-
-            public virtual IRenderer GetCauseOfNothing() {
-                return causeOfNothing;
-            }
-
-            public virtual void SetOverflowRenderer(AbstractRenderer overflowRenderer) {
-                this.overflowRenderer = overflowRenderer;
-            }
-
-            public virtual void SetCauseOfNothing(IRenderer causeOfNothing) {
-                this.causeOfNothing = causeOfNothing;
-            }
-        }
-
-        /// <summary>Class which used for additional height calculation</summary>
-        private class HeightEnhancer {
-            private float? height = null;
-
+        /// <summary>Interface which used for additional height calculation</summary>
+        public interface ColumnHeightCalculator {
             /// <summary>
             /// Calculate height, by which current height of given
             /// <c>MulticolRenderer</c>
@@ -285,7 +261,52 @@ namespace iText.Layout.Renderer {
             /// layouting
             /// </param>
             /// <returns>height by which current height of given multicol renderer should be increased</returns>
-            public virtual float? Apply(MulticolRenderer renderer, MulticolRenderer.MulticolLayoutResult result) {
+            float? GetAdditionalHeightOfEachColumn(MulticolRenderer renderer, MulticolRenderer.MulticolLayoutResult result
+                );
+
+            int MaxAmountOfRelayouts();
+        }
+
+        /// <summary>
+        /// Represents result of one iteration of MulticolRenderer layouting
+        /// It contains split renderers which were lauded on a given height and overflow renderer
+        /// for which height should be increased, so it can be lauded.
+        /// </summary>
+        public class MulticolLayoutResult {
+            private IList<IRenderer> splitRenderers = new List<IRenderer>();
+
+            private AbstractRenderer overflowRenderer;
+
+            private IRenderer causeOfNothing;
+
+            public virtual IList<IRenderer> GetSplitRenderers() {
+                return splitRenderers;
+            }
+
+            public virtual AbstractRenderer GetOverflowRenderer() {
+                return overflowRenderer;
+            }
+
+            public virtual void SetOverflowRenderer(AbstractRenderer overflowRenderer) {
+                this.overflowRenderer = overflowRenderer;
+            }
+
+            public virtual IRenderer GetCauseOfNothing() {
+                return causeOfNothing;
+            }
+
+            public virtual void SetCauseOfNothing(IRenderer causeOfNothing) {
+                this.causeOfNothing = causeOfNothing;
+            }
+        }
+
+        public class LayoutInInfiniteHeightCalculator : MulticolRenderer.ColumnHeightCalculator {
+            protected internal int maxRelayoutCount = 4;
+
+            private float? height = null;
+
+            public virtual float? GetAdditionalHeightOfEachColumn(MulticolRenderer renderer, MulticolRenderer.MulticolLayoutResult
+                 result) {
                 if (height != null) {
                     return height;
                 }
@@ -294,8 +315,13 @@ namespace iText.Layout.Renderer {
                 }
                 LayoutResult overflowResult = result.GetOverflowRenderer().Layout(new LayoutContext(new LayoutArea(1, new 
                     Rectangle(renderer.columnWidth, INF))));
-                height = overflowResult.GetOccupiedArea().GetBBox().GetHeight() / MAX_RELAYOUT_COUNT;
+                height = overflowResult.GetOccupiedArea().GetBBox().GetHeight() / maxRelayoutCount;
                 return height;
+            }
+
+            /// <returns>maximum amount of relayouts which can be done by this height enhancer</returns>
+            public virtual int MaxAmountOfRelayouts() {
+                return maxRelayoutCount;
             }
         }
     }
