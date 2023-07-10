@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Text;
+using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -124,7 +124,8 @@ namespace iText.Layout.Element {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMarginTop(DEFAULT_MARGIN * 1.25F);
                 ctx.SetMarginBottom(DEFAULT_MARGIN);
-                ctx.Add(new Paragraph(GenerateLongString(400)));
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    400)));
             }
             );
         }
@@ -136,7 +137,8 @@ namespace iText.Layout.Element {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetPaddingTop(DEFAULT_PADDING);
                 ctx.SetPaddingBottom(DEFAULT_PADDING * 2F);
-                ctx.Add(new Paragraph(GenerateLongString(400)));
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    400)));
             }
             );
         }
@@ -147,7 +149,8 @@ namespace iText.Layout.Element {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
-                ctx.Add(new Paragraph(GenerateLongString(400)));
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    400)));
             }
             );
         }
@@ -162,7 +165,8 @@ namespace iText.Layout.Element {
                 ctx.SetPaddingTop(DEFAULT_PADDING);
                 ctx.SetMarginBottom(DEFAULT_MARGIN);
                 ctx.SetPaddingBottom(DEFAULT_PADDING);
-                ctx.Add(new Paragraph(GenerateLongString(300)));
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    300)));
             }
             );
         }
@@ -177,7 +181,8 @@ namespace iText.Layout.Element {
                 ctx.SetPaddingTop(DEFAULT_PADDING);
                 ctx.SetMarginBottom(DEFAULT_MARGIN);
                 ctx.SetPaddingBottom(DEFAULT_PADDING);
-                Paragraph paragraph = new Paragraph(GenerateLongString(300));
+                Paragraph paragraph = new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy
+                    .WORDS, 300));
                 paragraph.SetBorder(new SolidBorder(ColorConstants.RED, 2));
                 paragraph.SetMarginTop(200);
                 paragraph.SetPaddingTop(40);
@@ -197,7 +202,8 @@ namespace iText.Layout.Element {
                 ctx.SetPaddingTop(DEFAULT_PADDING);
                 ctx.SetMarginBottom(DEFAULT_MARGIN);
                 ctx.SetPaddingBottom(DEFAULT_PADDING);
-                Paragraph paragraph = new Paragraph(GenerateLongString(300));
+                Paragraph paragraph = new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy
+                    .WORDS, 300));
                 paragraph.SetBorder(new SolidBorder(ColorConstants.RED, 2));
                 paragraph.SetMarginBottom(200);
                 paragraph.SetPaddingBottom(40);
@@ -218,7 +224,8 @@ namespace iText.Layout.Element {
                 ctx.SetPaddingTop(DEFAULT_PADDING);
                 ctx.SetMarginBottom(DEFAULT_MARGIN);
                 ctx.SetPaddingBottom(DEFAULT_PADDING);
-                ctx.Add(new Paragraph(GenerateLongString(8000)));
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    8000)));
             }
             );
         }
@@ -234,7 +241,8 @@ namespace iText.Layout.Element {
                 ctx.SetPaddingTop(DEFAULT_PADDING);
                 ctx.SetMarginBottom(DEFAULT_MARGIN);
                 ctx.SetPaddingBottom(DEFAULT_PADDING);
-                ctx.Add(new Paragraph(GenerateLongString(15000)));
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    15000)));
             }
             );
         }
@@ -247,7 +255,8 @@ namespace iText.Layout.Element {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMarginTop(DEFAULT_MARGIN);
                 ctx.SetMarginBottom(DEFAULT_MARGIN);
-                ctx.Add(new Paragraph(GenerateLongString(8000)));
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    8000)));
             }
             );
         }
@@ -260,7 +269,8 @@ namespace iText.Layout.Element {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetPaddingTop(DEFAULT_PADDING);
                 ctx.SetPaddingBottom(DEFAULT_PADDING);
-                ctx.Add(new Paragraph(GenerateLongString(8000)));
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    8000)));
             }
             );
         }
@@ -272,7 +282,8 @@ namespace iText.Layout.Element {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(new SolidBorder(ColorConstants.GREEN, 50));
-                ctx.Add(new Paragraph(GenerateLongString(8000)));
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    8000)));
             }
             );
         }
@@ -314,8 +325,9 @@ namespace iText.Layout.Element {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
-                ctx.Add(new Paragraph(GenerateLongString(400)).SetBackgroundColor(ColorConstants.YELLOW).SetMarginTop(DEFAULT_MARGIN
-                    ).SetBorder(new SolidBorder(ColorConstants.RED, 2)));
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    400)).SetBackgroundColor(ColorConstants.YELLOW).SetMarginTop(DEFAULT_MARGIN).SetBorder(new SolidBorder
+                    (ColorConstants.RED, 2)));
                 ctx.SetMarginBottom(DEFAULT_MARGIN);
             }
             );
@@ -721,7 +733,265 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
-        private void ExecuteTest(String testName, MulticolContainer container, Action<MulticolContainer> executor) {
+        [NUnit.Framework.Test]
+        public virtual void ContinuousColumContainerSetWidth() {
+            ExecuteTest("continuousColumContainerSetWidth", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetWidth(300);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                Div pseudoContainer = new Div();
+                for (int i = 0; i < 30; i++) {
+                    pseudoContainer.Add(new Paragraph("" + i));
+                }
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.Add(pseudoContainer);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContinuousColumContainerSetHeightBigger() {
+            ExecuteTest("continuousColumContainerSetHeightBigger", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetHeight(600);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    400)));
+                ctx.SetBorder(DEFAULT_BORDER);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WidthBorderTest() {
+            ExecuteTest("widthBorderTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetBorder(new SolidBorder(ColorConstants.RED, 20));
+                ctx.SetWidth(300);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    100)));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HeightBorderTest() {
+            ExecuteTest("heightBorderTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                //content should be clipped
+                ctx.SetHeight(150);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    400)));
+                ctx.SetBorder(new SolidBorder(ColorConstants.RED, 20));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WidthPaddingTest() {
+            ExecuteTest("widthPaddingTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetPadding(DEFAULT_PADDING);
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.SetWidth(400);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    100)));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HeightPaddingTest() {
+            ExecuteTest("heightPaddingTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                //content should be clipped
+                ctx.SetHeight(200);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    400)));
+                ctx.SetPadding(DEFAULT_PADDING);
+                ctx.SetBorder(DEFAULT_BORDER);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HeightMarginTest() {
+            ExecuteTest("heightMarginTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                //content should be clipped
+                ctx.SetHeight(200);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    400)));
+                ctx.SetMargin(40);
+                ctx.SetBorder(DEFAULT_BORDER);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WidthMarginTest() {
+            ExecuteTest("widthMarginTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetMargin(40);
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.SetWidth(400);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    100)));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WidthHeightMarginTest() {
+            ExecuteTest("widthHeightMarginTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetMargin(60);
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.SetWidth(400);
+                ctx.SetHeight(400);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    100)));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MinHeightTest() {
+            ExecuteTest("minHeightTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetMargin(60);
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.SetMinHeight(200);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    10)));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaxHeightTest() {
+            ExecuteTest("maxHeightTest", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetMargin(60);
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.SetMaxHeight(200);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    10)));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MinWidth() {
+            ExecuteTest("minWidth", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.SetMinWidth(200);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    200)));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MinWidthBiggerThenPage() {
+            ExecuteTest("minWidthBiggerThenPage", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.SetMinWidth(2000);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    200)));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaxWidth() {
+            ExecuteTest("maxWidth", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.SetBorder(DEFAULT_BORDER);
+                ctx.SetMaxWidth(200);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    200)));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WidthMultiPage() {
+            String testName = "widthMultiPage";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                Document doc = new Document(pdfDoc);
+                MulticolContainer container = new MulticolContainer();
+                container.SetProperty(Property.COLUMN_COUNT, 3);
+                container.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                container.SetBorder(DEFAULT_BORDER);
+                container.SetWidth(400);
+                container.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS
+                    , 150)));
+                doc.Add(new Paragraph("ELEMENT ABOVE").SetHeight(600).SetBackgroundColor(ColorConstants.YELLOW));
+                doc.Add(container);
+                doc.Add(new Paragraph("ELEMENT BELOW").SetBackgroundColor(ColorConstants.YELLOW));
+            }
+            CompareTool compareTool = new CompareTool();
+            NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_")
+                );
+        }
+
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-7630")]
+        public virtual void HeightMultiPage() {
+            String testName = "heightMultiPage";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                Document doc = new Document(pdfDoc);
+                MulticolContainer container = new MulticolContainer();
+                container.SetProperty(Property.COLUMN_COUNT, 3);
+                container.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                container.SetBorder(DEFAULT_BORDER);
+                container.SetHeight(600);
+                container.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS
+                    , 150)));
+                doc.Add(new Paragraph("ELEMENT ABOVE").SetHeight(600).SetBackgroundColor(ColorConstants.YELLOW));
+                doc.Add(container);
+                doc.Add(new Paragraph("ELEMENT BELOW").SetBackgroundColor(ColorConstants.YELLOW));
+            }
+            CompareTool compareTool = new CompareTool();
+            NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_")
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContinuousColumContainerSetHeightSmaller() {
+            ExecuteTest("continuousColumContainerSetHeightSmaller", new MulticolContainer(), (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                //content should be clipped
+                ctx.SetHeight(50);
+                ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+                ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                    400)));
+                ctx.SetBorder(DEFAULT_BORDER);
+            }
+            );
+        }
+
+        private void ExecuteTest<T>(String testName, T container, Action<T> executor)
+            where T : IBlockElement {
             String filename = DESTINATION_FOLDER + testName + ".pdf";
             String cmpName = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
@@ -734,26 +1004,6 @@ namespace iText.Layout.Element {
             CompareTool compareTool = new CompareTool();
             NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_")
                 );
-        }
-
-        private static String GenerateLongString(int amountOfWords) {
-            StringBuilder sb = new StringBuilder();
-            int random = 1;
-            for (int i = 0; i < amountOfWords; i++) {
-                random = GetPseudoRandomInt(i + random);
-                for (int j = 1; j <= random; j++) {
-                    sb.Append('a');
-                }
-                sb.Append(' ');
-            }
-            return sb.ToString();
-        }
-
-        private static int GetPseudoRandomInt(int prev) {
-            int first = 93840;
-            int second = 1929;
-            int max = 7;
-            return (prev * first + second) % max;
         }
 
         private static Div CreateFirstPageFiller() {

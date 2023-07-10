@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Text;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -58,7 +58,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMarginTop(DEFAULT_MARGIN);
                 for (int i = 0; i < 30; i++) {
-                    ctx.Add(new Paragraph(GenerateLongString(5)));
+                    ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                        5)));
                 }
             }
             );
@@ -70,7 +71,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMarginBottom(DEFAULT_MARGIN);
                 for (int i = 0; i < 30; i++) {
-                    ctx.Add(new Paragraph(GenerateLongString(5)));
+                    ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                        5)));
                 }
             }
             );
@@ -82,7 +84,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMargin(100);
                 for (int i = 0; i < 30; i++) {
-                    ctx.Add(new Paragraph(GenerateLongString(5)));
+                    ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                        5)));
                 }
             }
             );
@@ -94,7 +97,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetPaddingTop(DEFAULT_PADDING);
                 for (int i = 0; i < 30; i++) {
-                    ctx.Add(new Paragraph(GenerateLongString(5)));
+                    ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                        5)));
                 }
             }
             );
@@ -106,7 +110,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetPaddingBottom(DEFAULT_PADDING);
                 for (int i = 0; i < 30; i++) {
-                    ctx.Add(new Paragraph(GenerateLongString(5)));
+                    ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                        5)));
                 }
             }
             );
@@ -118,7 +123,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetPadding(DEFAULT_PADDING);
                 for (int i = 0; i < 30; i++) {
-                    ctx.Add(new Paragraph(GenerateLongString(5)));
+                    ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                        5)));
                 }
             }
             );
@@ -130,7 +136,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorderTop(DEFAULT_BORDER);
                 for (int i = 0; i < 30; i++) {
-                    ctx.Add(new Paragraph(GenerateLongString(5)));
+                    ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                        5)));
                 }
             }
             );
@@ -142,7 +149,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorderBottom(DEFAULT_BORDER);
                 for (int i = 0; i < 30; i++) {
-                    ctx.Add(new Paragraph(GenerateLongString(5)));
+                    ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                        5)));
                 }
             }
             );
@@ -154,7 +162,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
                 for (int i = 0; i < 30; i++) {
-                    ctx.Add(new Paragraph(GenerateLongString(5)));
+                    ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                        5)));
                 }
             }
             );
@@ -166,7 +175,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(new SolidBorder(ColorConstants.GREEN, 50F));
                 for (int i = 0; i < 30; i++) {
-                    ctx.Add(new Paragraph(GenerateLongString(5)));
+                    ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                        5)));
                 }
             }
             );
@@ -182,7 +192,8 @@ namespace iText.Layout.Properties {
                 ctx.SetPaddingTop(DEFAULT_PADDING);
                 ctx.SetPaddingBottom(DEFAULT_PADDING);
                 for (int i = 0; i < 100; i++) {
-                    ctx.Add(new Paragraph(GenerateLongString(10)));
+                    ctx.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 
+                        10)));
                 }
             }
             );
@@ -250,7 +261,7 @@ namespace iText.Layout.Properties {
             ExecuteTest("paragraphRendererMarginTop", new Paragraph(), (ctx) => {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMarginTop(DEFAULT_MARGIN);
-                ctx.Add(GenerateLongString(1500));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 1500));
             }
             );
         }
@@ -261,7 +272,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMarginBottom(DEFAULT_MARGIN);
                 int amountOfWords = 1000;
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -272,7 +284,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMargin(DEFAULT_MARGIN);
                 int amountOfWords = 1000;
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -285,7 +298,8 @@ namespace iText.Layout.Properties {
                 int amountOfWords = 900;
                 //trigger overflow
                 ctx.SetMarginTop(20);
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -298,7 +312,8 @@ namespace iText.Layout.Properties {
                 int amountOfWords = 900;
                 //trigger overflow with small padding
                 ctx.SetPaddingTop(20);
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -311,7 +326,8 @@ namespace iText.Layout.Properties {
                 int amountOfWords = 900;
                 //trigger overflow
                 ctx.SetBorder(new SolidBorder(ColorConstants.RED, 8));
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -322,7 +338,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetPaddingTop(DEFAULT_PADDING);
                 int amountOfWords = 1000;
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -333,7 +350,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetPaddingBottom(DEFAULT_PADDING);
                 int amountOfWords = 1000;
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -344,7 +362,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetPadding(DEFAULT_PADDING);
                 int amountOfWords = 1000;
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -355,7 +374,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorderTop(DEFAULT_BORDER);
                 int amountOfWords = 1000;
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -366,7 +386,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorderBottom(DEFAULT_BORDER);
                 int amountOfWords = 1000;
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -377,7 +398,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
                 int amountOfWords = 1000;
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -388,7 +410,8 @@ namespace iText.Layout.Properties {
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(new SolidBorder(ColorConstants.GREEN, 25));
                 int amountOfWords = 1000;
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -401,7 +424,8 @@ namespace iText.Layout.Properties {
                 ctx.SetMargin(DEFAULT_MARGIN);
                 ctx.SetBorder(DEFAULT_BORDER);
                 int amountOfWords = 1000;
-                ctx.Add(GenerateLongString(amountOfWords));
+                ctx.Add(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords)
+                    );
             }
             );
         }
@@ -421,26 +445,6 @@ namespace iText.Layout.Properties {
             CompareTool compareTool = new CompareTool();
             NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_")
                 );
-        }
-
-        private static String GenerateLongString(int amountOfWords) {
-            StringBuilder sb = new StringBuilder();
-            int random = 1;
-            for (int i = 0; i < amountOfWords; i++) {
-                random = GetPseudoRandomInt(i + random);
-                for (int j = 1; j <= random; j++) {
-                    sb.Append('a');
-                }
-                sb.Append(' ');
-            }
-            return sb.ToString();
-        }
-
-        private static int GetPseudoRandomInt(int prev) {
-            int first = 93840;
-            int second = 1929;
-            int max = 7;
-            return (prev * first + second) % max;
         }
     }
 }

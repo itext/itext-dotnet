@@ -43,6 +43,8 @@ namespace iText.Layout.Renderer {
 
         private float approximateHeight;
 
+        private float? heightFromProperties;
+
         /// <summary>Creates a DivRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
         /// the
@@ -64,9 +66,12 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             this.SetProperty(Property.TREAT_AS_CONTINUOUS_CONTAINER, true);
             Rectangle actualBBox = layoutContext.GetArea().GetBBox().Clone();
+            float originalWidth = actualBBox.GetWidth();
+            ApplyWidth(actualBBox, originalWidth);
             ApplyPaddings(actualBBox, false);
             ApplyBorderBox(actualBBox, false);
             ApplyMargins(actualBBox, false);
+            heightFromProperties = DetermineHeight(actualBBox);
             columnCount = (int)this.GetProperty<int?>(Property.COLUMN_COUNT);
             columnWidth = actualBBox.GetWidth() / columnCount;
             if (this.elementRenderer == null) {
@@ -152,6 +157,44 @@ namespace iText.Layout.Renderer {
             return overflowRenderer;
         }
 
+        private void ApplyWidth(Rectangle parentBbox, float originalWidth) {
+            float? blockWidth = RetrieveWidth(originalWidth);
+            if (blockWidth != null) {
+                parentBbox.SetWidth((float)blockWidth);
+            }
+            else {
+                float? minWidth = RetrieveMinWidth(parentBbox.GetWidth());
+                if (minWidth != null && minWidth > parentBbox.GetWidth()) {
+                    parentBbox.SetWidth((float)minWidth);
+                }
+            }
+        }
+
+        private float? DetermineHeight(Rectangle parentBBox) {
+            float? height = RetrieveHeight();
+            float? minHeight = RetrieveMinHeight();
+            float? maxHeight = RetrieveMaxHeight();
+            if (height == null || (minHeight != null && height < minHeight)) {
+                if ((minHeight != null) && parentBBox.GetHeight() < minHeight) {
+                    height = minHeight;
+                }
+            }
+            if (height != null && maxHeight != null && height > maxHeight) {
+                height = maxHeight;
+            }
+            return height;
+        }
+
+        private void RecalculateHeightWidthAfterLayouting(Rectangle parentBBox) {
+            float? height = DetermineHeight(parentBBox);
+            if (height != null) {
+                float heightDelta = parentBBox.GetHeight() - (float)height;
+                parentBBox.MoveUp(heightDelta);
+                parentBBox.SetHeight((float)height);
+            }
+            ApplyWidth(parentBBox, parentBBox.GetWidth());
+        }
+
         private float SafelyRetrieveFloatProperty(int property) {
             Object value = this.GetProperty<Object>(property);
             if (value is UnitValue) {
@@ -175,17 +218,40 @@ namespace iText.Layout.Renderer {
                     isLastLayout = true;
                     approximateHeight = maxHeight;
                 }
-                result = LayoutColumnsAndReturnOverflowRenderer(prelayoutContext, actualBbox);
+                // height calcultion
+                float workingHeight = approximateHeight;
+                if (heightFromProperties != null) {
+                    workingHeight = Math.Min((float)heightFromProperties, (float)approximateHeight);
+                    workingHeight -= SafelyRetrieveFloatProperty(Property.PADDING_TOP);
+                    workingHeight -= SafelyRetrieveFloatProperty(Property.PADDING_BOTTOM);
+                    workingHeight -= SafelyRetrieveFloatProperty(Property.BORDER_TOP);
+                    workingHeight -= SafelyRetrieveFloatProperty(Property.BORDER_BOTTOM);
+                    workingHeight -= SafelyRetrieveFloatProperty(Property.BORDER) * 2;
+                    workingHeight -= SafelyRetrieveFloatProperty(Property.MARGIN_TOP);
+                    workingHeight -= SafelyRetrieveFloatProperty(Property.MARGIN_BOTTOM);
+                }
+                result = LayoutColumnsAndReturnOverflowRenderer(prelayoutContext, actualBbox, workingHeight);
                 if (result.GetOverflowRenderer() == null || isLastLayout) {
+                    ClearOverFlowRendererIfNeeded(result);
                     return result;
                 }
                 additionalHeightPerIteration = heightCalculator.GetAdditionalHeightOfEachColumn(this, result).Value;
                 if (Math.Abs(additionalHeightPerIteration) <= ZERO_DELTA) {
+                    ClearOverFlowRendererIfNeeded(result);
                     return result;
                 }
                 approximateHeight += additionalHeightPerIteration;
+                ClearOverFlowRendererIfNeeded(result);
             }
             return result;
+        }
+
+        private void ClearOverFlowRendererIfNeeded(MulticolRenderer.MulticolLayoutResult result) {
+            //When we have a height set on the element but the content doesn't fit in the given height
+            //we don't want to render the overflow renderer as it would be rendered in the next area
+            if (heightFromProperties != null && heightFromProperties < approximateHeight) {
+                result.SetOverflowRenderer(null);
+            }
         }
 
         private LayoutArea CalculateContainerOccupiedArea(LayoutContext layoutContext, bool isFull) {
@@ -204,6 +270,7 @@ namespace iText.Layout.Renderer {
             area.GetBBox().SetHeight(totalHeight);
             Rectangle initialBBox = layoutContext.GetArea().GetBBox();
             area.GetBBox().SetY(initialBBox.GetY() + initialBBox.GetHeight() - area.GetBBox().GetHeight());
+            RecalculateHeightWidthAfterLayouting(area.GetBBox());
             return area;
         }
 
@@ -215,13 +282,13 @@ namespace iText.Layout.Renderer {
         }
 
         private MulticolRenderer.MulticolLayoutResult LayoutColumnsAndReturnOverflowRenderer(LayoutContext preLayoutContext
-            , Rectangle actualBBox) {
+            , Rectangle actualBBox, float workingHeight) {
             MulticolRenderer.MulticolLayoutResult result = new MulticolRenderer.MulticolLayoutResult();
             IRenderer renderer = elementRenderer;
             for (int i = 0; i < columnCount && renderer != null; i++) {
                 LayoutArea tempArea = preLayoutContext.GetArea().Clone();
                 tempArea.GetBBox().SetWidth(columnWidth);
-                tempArea.GetBBox().SetHeight(approximateHeight);
+                tempArea.GetBBox().SetHeight(workingHeight);
                 tempArea.GetBBox().SetX(actualBBox.GetX() + columnWidth * i);
                 tempArea.GetBBox().SetY(actualBBox.GetY() + actualBBox.GetHeight() - tempArea.GetBBox().GetHeight());
                 LayoutContext columnContext = new LayoutContext(tempArea, preLayoutContext.GetMarginsCollapseInfo(), preLayoutContext
