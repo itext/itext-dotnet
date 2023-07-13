@@ -54,6 +54,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             shorthandResolvers.Put(CommonCssConstants.FLEX_FLOW, new FlexFlowShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.GAP, new GapShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.PLACE_ITEMS, new PlaceItemsShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.COLUMNS, new ColumnsShorthandResolver());
         }
 
         /// <summary>Gets a shorthand resolver.</summary>

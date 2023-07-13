@@ -196,6 +196,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant COLUMN_GAP.</summary>
         public const String COLUMN_GAP = "column-gap";
 
+        /// <summary>The Constant COLUMNS</summary>
+        public const String COLUMNS = "columns";
+
         /// <summary>The Constant DARKEN.</summary>
         public const String DARKEN = "darken";
 

@@ -26,6 +26,14 @@ using iText.StyledXmlParser.Css;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
     /// <summary>Interface for shorthand resolvers.</summary>
+    /// <remarks>
+    /// Interface for shorthand resolvers.
+    /// <para />
+    /// CSS shorthand is a group of CSS properties that allow values of multiple properties to be set simultaneously. These
+    /// values are separated by spaces. For example, the border property is shorthand for the border-width, border-style, and
+    /// border-color properties. So in CSS, border: 5px solid red; would specify a border that’s five px wide, solid, and
+    /// red.
+    /// </remarks>
     public interface IShorthandResolver {
         /// <summary>Resolves a shorthand expression.</summary>
         /// <param name="shorthandExpression">the shorthand expression</param>
