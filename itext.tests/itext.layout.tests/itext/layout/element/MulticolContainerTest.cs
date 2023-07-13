@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Text;
 using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.IO.Source;
@@ -62,29 +61,21 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ParagraphColumnContainerTest() {
-            String outFileName = DESTINATION_FOLDER + "paragraphColumnContainerTest.pdf";
-            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphColumnContainerTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
-                Div columnContainer = new MulticolContainer();
-                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+            ExecuteTest("paragraphColumnContainerTest", (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
                      + "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute " + "irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
                      + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim " +
                      "id est laborum.");
-                columnContainer.Add(paragraph);
-                document.Add(columnContainer);
+                ctx.Add(paragraph);
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
-                , "diff"));
+            , false);
         }
 
         [NUnit.Framework.Test]
         public virtual void DivColumnContainerTest() {
-            String outFileName = DESTINATION_FOLDER + "divColumnContainerTest.pdf";
-            String cmpFileName = SOURCE_FOLDER + "cmp_divColumnContainerTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
-                Div columnContainer = new MulticolContainer();
-                columnContainer.SetProperty(Property.COLUMN_COUNT, 2);
+            ExecuteTest("divColumnContainerTest", (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 2);
                 Div div = new Div();
                 div.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(50));
                 div.SetProperty(Property.BORDER, new SolidBorder(2));
@@ -92,11 +83,9 @@ namespace iText.Layout.Element {
                 div.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
                 div.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(450));
                 div.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(500));
-                columnContainer.Add(div);
-                document.Add(columnContainer);
+                ctx.Add(div);
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
-                , "diff"));
+            , false);
         }
 
         [NUnit.Framework.Test]
@@ -122,7 +111,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerParagraphMarginTopBottom() {
-            ExecuteTest("continuousColumContainerParagraphMarginTopBottom", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerParagraphMarginTopBottom", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 2);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMarginTop(DEFAULT_MARGIN * 1.25F);
@@ -135,7 +124,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerParagraphPaddingTopBottom() {
-            ExecuteTest("continuousColumContainerPaddingTopBottom", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerPaddingTopBottom", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetPaddingTop(DEFAULT_PADDING);
@@ -148,7 +137,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerParagraphBorder() {
-            ExecuteTest("continuousColumContainerParagraphBorder", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerParagraphBorder", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
@@ -160,7 +149,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerParagraphAll() {
-            ExecuteTest("continuousColumContainerParagraphAll", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerParagraphAll", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
@@ -176,7 +165,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerParagraphAllChildStart() {
-            ExecuteTest("continuousColumContainerParagraphAllChildStart", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerParagraphAllChildStart", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
@@ -197,7 +186,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerParagraphAllChildEnd() {
-            ExecuteTest("continuousColumContainerParagraphAllChildEnd", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerParagraphAllChildEnd", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
@@ -219,7 +208,7 @@ namespace iText.Layout.Element {
         //TODO: DEVSIX-7626
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerParagraphOverflowShouldShow() {
-            ExecuteTest("continuousColumContainerParagraphOverflowShouldShow", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerParagraphOverflowShouldShow", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
@@ -236,7 +225,7 @@ namespace iText.Layout.Element {
         //TODO: DEVSIX-7626
         [NUnit.Framework.Test]
         public virtual void ExtraLargeColumnParagraphTest() {
-            ExecuteTest("extraLargeColumnParagraphTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("extraLargeColumnParagraphTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
@@ -253,7 +242,7 @@ namespace iText.Layout.Element {
         //TODO: DEVSIX-7626
         [NUnit.Framework.Test]
         public virtual void LargeColumnParagraphWithMarginTest() {
-            ExecuteTest("largeColumnParagraphWithMarginTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("largeColumnParagraphWithMarginTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMarginTop(DEFAULT_MARGIN);
@@ -267,7 +256,7 @@ namespace iText.Layout.Element {
         //TODO: DEVSIX-7626
         [NUnit.Framework.Test]
         public virtual void LargeColumnParagraphWithPaddingTest() {
-            ExecuteTest("largeColumnParagraphWithPaddingTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("largeColumnParagraphWithPaddingTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetPaddingTop(DEFAULT_PADDING);
@@ -281,7 +270,7 @@ namespace iText.Layout.Element {
         //TODO: DEVSIX-7626
         [NUnit.Framework.Test]
         public virtual void LargeColumnParagraphWithBorderTest() {
-            ExecuteTest("largeColumnParagraphWithBorderTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("largeColumnParagraphWithBorderTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(new SolidBorder(ColorConstants.GREEN, 50));
@@ -293,7 +282,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerMultipleElementsMarginTop() {
-            ExecuteTest("continuousColumContainerMultipleElementsMarginTop", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerMultipleElementsMarginTop", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 Div pseudoContainer = new Div();
@@ -308,7 +297,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerMultipleElementsMarginBottom() {
-            ExecuteTest("continuousColumContainerMultipleElementsMarginBottom", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerMultipleElementsMarginBottom", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 Div pseudoContainer = new Div();
@@ -324,7 +313,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerInnerBackgroundColorAndBorder() {
-            ExecuteTest("continuousColumContainerInnerBackgroundColor", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerInnerBackgroundColor", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
@@ -338,7 +327,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerMultipleElementsPaddingTop() {
-            ExecuteTest("continuousColumContainerMultipleElementsPaddingTop", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerMultipleElementsPaddingTop", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 Div pseudoContainer = new Div();
@@ -353,7 +342,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerMultipleElementsPaddingBottom() {
-            ExecuteTest("continuousColumContainerMultipleElementsPaddingBottom", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerMultipleElementsPaddingBottom", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 Div pseudoContainer = new Div();
@@ -368,7 +357,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerMultipleElementsBorder() {
-            ExecuteTest("continuousColumContainerMultipleElementsBorder", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerMultipleElementsBorder", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 Div pseudoContainer = new Div();
@@ -384,7 +373,7 @@ namespace iText.Layout.Element {
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
         public virtual void MulticolElementWithKeepTogetherTest() {
-            ExecuteTest("multicolElementWithKeepTogether", new MulticolContainer(), (ctx) => {
+            ExecuteTest("multicolElementWithKeepTogether", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 Div pseudoContainer = new Div();
@@ -400,7 +389,7 @@ namespace iText.Layout.Element {
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
         public virtual void AllChildrenOfMulticolElementWithKeepTogetherTest() {
-            ExecuteTest("allChildrenOfMulticolElementWithKeepTogether", new MulticolContainer(), (ctx) => {
+            ExecuteTest("allChildrenOfMulticolElementWithKeepTogether", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 Div pseudoContainer = new Div();
@@ -415,7 +404,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ChildOfMulticolElementWithKeepTogetherTest() {
-            ExecuteTest("childOfMulticolElementWithKeepTogether", new MulticolContainer(), (ctx) => {
+            ExecuteTest("childOfMulticolElementWithKeepTogether", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 Div pseudoContainer = new Div();
@@ -440,7 +429,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ChildrenOfMulticolElementWithKeepTogetherTest() {
-            ExecuteTest("childrenOfMulticolElementWithKeepTogether", new MulticolContainer(), (ctx) => {
+            ExecuteTest("childrenOfMulticolElementWithKeepTogether", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 Div pseudoContainer = new Div();
@@ -546,82 +535,108 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
-        //TODO: DEVSIX-7621
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
-        public virtual void ParagraphWithOverflowingImageTest() {
-            String outFileName = DESTINATION_FOLDER + "paragraphWithOverflowingImageTest.pdf";
-            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithOverflowingImageTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
-                document.Add(CreateFirstPageFiller());
-                Div columnContainer = new MulticolContainer();
-                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+        public virtual void OverflowImageBetweenParagraphsTest() {
+            ExecuteTest("overflowImageBetweenParagraphsTest", (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
                     );
                 paragraph.SetBorder(new SolidBorder(2));
-                PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "placeholder_100x100.png"
-                    )));
-                iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 200);
-                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                iText.Layout.Element.Image image = CreateImage(SOURCE_FOLDER + "placeholder_100x100.png", 200);
+                Paragraph paragraph2 = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph2.SetBorder(new SolidBorder(ColorConstants.BLUE, 2));
+                ctx.SetBorder(new SolidBorder(ColorConstants.RED, 3));
                 Div div = new Div();
                 div.Add(paragraph);
                 div.Add(image);
-                columnContainer.Add(div);
-                document.Add(columnContainer);
+                div.Add(paragraph2);
+                ctx.Add(div);
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
-                , "diff"));
+            , false);
         }
 
-        //TODO: DEVSIX-7621
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void OverflowingImageWithParagraphTest() {
-            String outFileName = DESTINATION_FOLDER + "overflowingImageWithParagraphMultipageTest.pdf";
-            String cmpFileName = SOURCE_FOLDER + "cmp_overflowingImageWithParagraphMultipageTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
-                Div columnContainer = new MulticolContainer();
-                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+            ExecuteTest("overflowingImageWithParagraphMultipageTest", (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
                     );
                 paragraph.SetBorder(new SolidBorder(2));
-                PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "placeholder_100x100.png"
-                    )));
-                iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 200);
-                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                iText.Layout.Element.Image image = CreateImage(SOURCE_FOLDER + "placeholder_100x100.png", 200);
+                ctx.SetBorder(new SolidBorder(ColorConstants.RED, 3));
                 Div div = new Div();
                 div.Add(image);
                 div.Add(paragraph);
-                columnContainer.Add(div);
-                document.Add(columnContainer);
+                ctx.Add(div);
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
-                , "diff"));
+            , false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowImageWithForcedPlacementTest() {
+            ExecuteTest("overflowImageWithForcedPlacementTest", (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph.SetBorder(new SolidBorder(2));
+                iText.Layout.Element.Image image = CreateImage(SOURCE_FOLDER + "placeholder_100x100.png", 200);
+                image.SetProperty(Property.FORCED_PLACEMENT, true);
+                Paragraph paragraph2 = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph2.SetBorder(new SolidBorder(ColorConstants.BLUE, 2));
+                ctx.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                Div div = new Div();
+                div.Add(paragraph);
+                div.Add(image);
+                div.Add(paragraph2);
+                ctx.Add(div);
+            }
+            , false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageForcedPlacementAndKeepTogetherTest() {
+            ExecuteTest("imageForcedPlacementAndKeepTogetherTest", (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
+                Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
+                iText.Layout.Element.Image image = CreateImage(SOURCE_FOLDER + "placeholder_100x100.png", 200);
+                image.SetProperty(Property.FORCED_PLACEMENT, true);
+                Paragraph paragraph2 = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                    );
+                paragraph2.SetBorder(new SolidBorder(ColorConstants.BLUE, 2));
+                Div child = new Div();
+                child.SetBorder(new SolidBorder(ColorConstants.BLACK, 2));
+                child.SetKeepTogether(true);
+                child.Add(image);
+                child.Add(paragraph2);
+                ctx.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                Div div = new Div();
+                div.Add(paragraph);
+                div.Add(child);
+                ctx.Add(div);
+            }
+            , false);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageBiggerThanPageTest() {
-            String outFileName = DESTINATION_FOLDER + "imageBiggerThanPageTest.pdf";
-            String cmpFileName = SOURCE_FOLDER + "cmp_imageBiggerThanPageTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
-                Div columnContainer = new MulticolContainer();
-                columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
+            ExecuteTest("imageBiggerThanPageTest", (ctx) => {
+                ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 Paragraph paragraph = new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
                     );
                 paragraph.SetBorder(new SolidBorder(2));
-                PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "placeholder_100x100.png"
-                    )));
-                iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 800);
-                columnContainer.SetBorder(new SolidBorder(ColorConstants.RED, 3));
+                iText.Layout.Element.Image image = CreateImage(SOURCE_FOLDER + "placeholder_100x100.png", 800);
+                ctx.SetBorder(new SolidBorder(ColorConstants.RED, 3));
                 Div div = new Div();
                 div.Add(image);
                 div.Add(paragraph);
-                columnContainer.Add(div);
-                document.Add(columnContainer);
+                ctx.Add(div);
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
-                , "diff"));
+            , false);
         }
 
         [NUnit.Framework.Test]
@@ -738,7 +753,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerSetWidth() {
-            ExecuteTest("continuousColumContainerSetWidth", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerSetWidth", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetWidth(300);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
@@ -754,7 +769,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerSetHeightBigger() {
-            ExecuteTest("continuousColumContainerSetHeightBigger", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerSetHeightBigger", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetHeight(600);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
@@ -767,7 +782,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void WidthBorderTest() {
-            ExecuteTest("widthBorderTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("widthBorderTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(new SolidBorder(ColorConstants.RED, 20));
@@ -780,7 +795,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void HeightBorderTest() {
-            ExecuteTest("heightBorderTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("heightBorderTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 //content should be clipped
                 ctx.SetHeight(150);
@@ -794,7 +809,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void WidthPaddingTest() {
-            ExecuteTest("widthPaddingTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("widthPaddingTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetPadding(DEFAULT_PADDING);
@@ -808,7 +823,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void HeightPaddingTest() {
-            ExecuteTest("heightPaddingTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("heightPaddingTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 //content should be clipped
                 ctx.SetHeight(200);
@@ -823,7 +838,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void HeightMarginTest() {
-            ExecuteTest("heightMarginTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("heightMarginTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 //content should be clipped
                 ctx.SetHeight(200);
@@ -838,7 +853,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void WidthMarginTest() {
-            ExecuteTest("widthMarginTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("widthMarginTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMargin(40);
@@ -852,7 +867,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void WidthHeightMarginTest() {
-            ExecuteTest("widthHeightMarginTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("widthHeightMarginTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMargin(60);
@@ -867,7 +882,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void MinHeightTest() {
-            ExecuteTest("minHeightTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("minHeightTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMargin(60);
@@ -881,7 +896,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void MaxHeightTest() {
-            ExecuteTest("maxHeightTest", new MulticolContainer(), (ctx) => {
+            ExecuteTest("maxHeightTest", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetMargin(60);
@@ -895,7 +910,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void MinWidth() {
-            ExecuteTest("minWidth", new MulticolContainer(), (ctx) => {
+            ExecuteTest("minWidth", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
@@ -908,7 +923,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void MinWidthBiggerThenPage() {
-            ExecuteTest("minWidthBiggerThenPage", new MulticolContainer(), (ctx) => {
+            ExecuteTest("minWidthBiggerThenPage", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
@@ -921,7 +936,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void MaxWidth() {
-            ExecuteTest("maxWidth", new MulticolContainer(), (ctx) => {
+            ExecuteTest("maxWidth", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 ctx.SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
                 ctx.SetBorder(DEFAULT_BORDER);
@@ -981,7 +996,7 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerSetHeightSmaller() {
-            ExecuteTest("continuousColumContainerSetHeightSmaller", new MulticolContainer(), (ctx) => {
+            ExecuteTest("continuousColumContainerSetHeightSmaller", (ctx) => {
                 ctx.SetProperty(Property.COLUMN_COUNT, 3);
                 //content should be clipped
                 ctx.SetHeight(50);
@@ -1075,19 +1090,39 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
-        private void ExecuteTest(String testName, MulticolContainer container, Action<MulticolContainer> executor) {
+        private void ExecuteTest(String testName, Action<MulticolContainer> executor, bool wrapByP) {
             String filename = DESTINATION_FOLDER + testName + ".pdf";
             String cmpName = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
                 Document doc = new Document(pdfDoc);
+                MulticolContainer container = new MulticolContainer();
                 executor(container);
-                doc.Add(new Paragraph("ELEMENT ABOVE").SetBackgroundColor(ColorConstants.YELLOW));
+                if (wrapByP) {
+                    doc.Add(new Paragraph("ELEMENT ABOVE").SetBackgroundColor(ColorConstants.YELLOW));
+                }
                 doc.Add(container);
-                doc.Add(new Paragraph("ELEMENT BELOW").SetBackgroundColor(ColorConstants.YELLOW));
+                if (wrapByP) {
+                    doc.Add(new Paragraph("ELEMENT BELOW").SetBackgroundColor(ColorConstants.YELLOW));
+                }
             }
             CompareTool compareTool = new CompareTool();
             NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_")
                 );
+        }
+
+        private void ExecuteTest(String testName, Action<MulticolContainer> executor) {
+            ExecuteTest(testName, executor, true);
+        }
+
+        private iText.Layout.Element.Image CreateImage(String path, float width) {
+            PdfImageXObject xObject = null;
+            try {
+                xObject = new PdfImageXObject(ImageDataFactory.Create(path));
+            }
+            catch (UriFormatException e) {
+                throw new Exception(e.Message);
+            }
+            return new iText.Layout.Element.Image(xObject, width);
         }
 
         private static Paragraph CreateDummyParagraph() {
@@ -1095,26 +1130,6 @@ namespace iText.Layout.Element {
                  + "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute " + "irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
                  + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim " +
                  "id est laborum.");
-        }
-
-        private static String GenerateLongString(int amountOfWords) {
-            StringBuilder sb = new StringBuilder();
-            int random = 1;
-            for (int i = 0; i < amountOfWords; i++) {
-                random = GetPseudoRandomInt(i + random);
-                for (int j = 1; j <= random; j++) {
-                    sb.Append('a');
-                }
-                sb.Append(' ');
-            }
-            return sb.ToString();
-        }
-
-        private static int GetPseudoRandomInt(int prev) {
-            int first = 93840;
-            int second = 1929;
-            int max = 7;
-            return (prev * first + second) % max;
         }
 
         private static Div CreateFirstPageFiller() {

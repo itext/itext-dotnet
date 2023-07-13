@@ -68,6 +68,7 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             this.SetProperty(Property.TREAT_AS_CONTINUOUS_CONTAINER, true);
+            SetOverflowForAllChildren(this);
             Rectangle actualBBox = layoutContext.GetArea().GetBBox().Clone();
             float originalWidth = actualBBox.GetWidth();
             ApplyWidth(actualBBox, originalWidth);
@@ -157,6 +158,16 @@ namespace iText.Layout.Renderer {
             overflowRenderer.SetChildRenderers(children);
             ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
             return overflowRenderer;
+        }
+
+        private void SetOverflowForAllChildren(IRenderer renderer) {
+            if (renderer == null) {
+                return;
+            }
+            renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            foreach (IRenderer child in renderer.GetChildRenderers()) {
+                SetOverflowForAllChildren(child);
+            }
         }
 
         private void ApplyWidth(Rectangle parentBbox, float originalWidth) {
@@ -410,7 +421,14 @@ namespace iText.Layout.Renderer {
                 }
                 LayoutResult overflowResult = result.GetOverflowRenderer().Layout(new LayoutContext(new LayoutArea(1, new 
                     Rectangle(renderer.columnWidth, INF))));
-                height = overflowResult.GetOccupiedArea().GetBBox().GetHeight() / maxRelayoutCount;
+                float overflowHeight = overflowResult.GetOccupiedArea().GetBBox().GetHeight();
+                if (result.GetSplitRenderers().IsEmpty()) {
+                    // In case when first child of content bigger or wider than column and in first layout NOTHING is
+                    // returned. In that case content again layouted in infinity area without keeping in mind that some
+                    // approximateHeight already exist.
+                    overflowHeight -= renderer.approximateHeight;
+                }
+                height = overflowHeight / maxRelayoutCount;
                 return height;
             }
 
