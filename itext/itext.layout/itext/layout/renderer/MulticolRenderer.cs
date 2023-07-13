@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 
@@ -44,6 +45,8 @@ namespace iText.Layout.Renderer {
         private float approximateHeight;
 
         private float? heightFromProperties;
+
+        private float columnGap;
 
         /// <summary>Creates a DivRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
@@ -71,9 +74,8 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(actualBBox, false);
             ApplyBorderBox(actualBBox, false);
             ApplyMargins(actualBBox, false);
+            CalculateColumnCountAndWidth(actualBBox.GetWidth());
             heightFromProperties = DetermineHeight(actualBBox);
-            columnCount = (int)this.GetProperty<int?>(Property.COLUMN_COUNT);
-            columnWidth = actualBBox.GetWidth() / columnCount;
             if (this.elementRenderer == null) {
                 // initialize elementRenderer on first layout when first child represents renderer of element which
                 // should be layouted in multicol, because on the next layouts this can have multiple children
@@ -246,6 +248,32 @@ namespace iText.Layout.Renderer {
             return result;
         }
 
+        //algorithm is based on pseudo algorithm from https://www.w3.org/TR/css-multicol-1/#propdef-column-span
+        private void CalculateColumnCountAndWidth(float initialWidth) {
+            int? columnCount = (int?)this.GetProperty<int?>(Property.COLUMN_COUNT);
+            float? columnWidth = (float?)this.GetProperty<float?>(Property.COLUMN_WIDTH);
+            float? columnGap = (float?)this.GetProperty<float?>(Property.COLUMN_GAP);
+            this.columnGap = columnGap != null ? columnGap.Value : 0;
+            if ((columnCount == null && columnWidth == null) || (columnCount != null && columnCount.Value < 0) || (columnWidth
+                 != null && columnWidth.Value < 0)) {
+                throw new InvalidOperationException(LayoutExceptionMessageConstant.INVALID_COLUMN_PROPERTIES);
+            }
+            if (columnWidth == null) {
+                this.columnCount = columnCount.Value;
+            }
+            else {
+                if (columnCount == null) {
+                    this.columnCount = Math.Max(1, (int)Math.Floor((double)((initialWidth + this.columnGap) / (columnWidth.Value
+                         + this.columnGap))));
+                }
+                else {
+                    this.columnCount = Math.Min((int)columnCount, Math.Max(1, (int)Math.Floor((double)((initialWidth + this.columnGap
+                        ) / (columnWidth.Value + this.columnGap)))));
+                }
+            }
+            this.columnWidth = Math.Max(0.0f, ((initialWidth + this.columnGap) / this.columnCount - this.columnGap));
+        }
+
         private void ClearOverFlowRendererIfNeeded(MulticolRenderer.MulticolLayoutResult result) {
             //When we have a height set on the element but the content doesn't fit in the given height
             //we don't want to render the overflow renderer as it would be rendered in the next area
@@ -289,7 +317,7 @@ namespace iText.Layout.Renderer {
                 LayoutArea tempArea = preLayoutContext.GetArea().Clone();
                 tempArea.GetBBox().SetWidth(columnWidth);
                 tempArea.GetBBox().SetHeight(workingHeight);
-                tempArea.GetBBox().SetX(actualBBox.GetX() + columnWidth * i);
+                tempArea.GetBBox().SetX(actualBBox.GetX() + (columnWidth + columnGap) * i);
                 tempArea.GetBBox().SetY(actualBBox.GetY() + actualBBox.GetHeight() - tempArea.GetBBox().GetHeight());
                 LayoutContext columnContext = new LayoutContext(tempArea, preLayoutContext.GetMarginsCollapseInfo(), preLayoutContext
                     .GetFloatRendererAreas(), preLayoutContext.IsClippedHeight());

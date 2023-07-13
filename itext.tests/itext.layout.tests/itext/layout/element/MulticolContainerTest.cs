@@ -21,8 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Text;
 using iText.Commons.Utils;
 using iText.IO.Image;
+using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
@@ -30,6 +32,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
+using iText.Layout.Exceptions;
 using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Test;
@@ -990,8 +993,89 @@ namespace iText.Layout.Element {
             );
         }
 
-        private void ExecuteTest<T>(String testName, T container, Action<T> executor)
-            where T : IBlockElement {
+        [NUnit.Framework.Test]
+        public virtual void ParagraphWithColumnWidthTest() {
+            String outFileName = DESTINATION_FOLDER + "paragraphWithColumnWidthTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithColumnWidthTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_WIDTH, 200.0f);
+                Paragraph paragraph = CreateDummyParagraph();
+                columnContainer.Add(paragraph);
+                document.Add(columnContainer);
+            }
+            //expecting 2 columns with ~260px width each
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParagraphWithColumnWidthAndColumnCountTest() {
+            String outFileName = DESTINATION_FOLDER + "paragraphWithColumnWidthAndColumnCountTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithColumnWidthAndColumnCountTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div columnContainer = new MulticolContainer();
+                //column width is ignored in this case, because column-count requires higher width
+                columnContainer.SetProperty(Property.COLUMN_WIDTH, 100.0f);
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 2);
+                Paragraph paragraph = CreateDummyParagraph();
+                columnContainer.Add(paragraph);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParagraphWithInvalidColumnValuesTest() {
+            using (Document document = new Document(new PdfDocument(new PdfWriter(new ByteArrayOutputStream())))) {
+                Div columnContainer = new MulticolContainer();
+                //column width is ignored in this case, because column-count requires higher width
+                columnContainer.SetProperty(Property.COLUMN_WIDTH, -30.0f);
+                columnContainer.SetProperty(Property.COLUMN_COUNT, -2);
+                columnContainer.SetProperty(Property.COLUMN_GAP, -20.0f);
+                Paragraph paragraph = CreateDummyParagraph();
+                columnContainer.Add(paragraph);
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => document.Add(columnContainer
+                    ));
+                NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.INVALID_COLUMN_PROPERTIES, exception.Message
+                    );
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParagraphWithColumnWidthAndGapTest() {
+            String outFileName = DESTINATION_FOLDER + "paragraphWithColumnWidthAndGapTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithColumnWidthAndGapTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_WIDTH, 100.0f);
+                columnContainer.SetProperty(Property.COLUMN_GAP, 100.0f);
+                Paragraph paragraph = CreateDummyParagraph();
+                columnContainer.Add(paragraph);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParagraphWithColumnCountAndGapTest() {
+            String outFileName = DESTINATION_FOLDER + "paragraphWithColumnCountAndGapTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithColumnCountAndGapTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
+                columnContainer.SetProperty(Property.COLUMN_GAP, 50.0f);
+                Paragraph paragraph = CreateDummyParagraph();
+                columnContainer.Add(paragraph);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        private void ExecuteTest(String testName, MulticolContainer container, Action<MulticolContainer> executor) {
             String filename = DESTINATION_FOLDER + testName + ".pdf";
             String cmpName = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
@@ -1004,6 +1088,33 @@ namespace iText.Layout.Element {
             CompareTool compareTool = new CompareTool();
             NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_")
                 );
+        }
+
+        private static Paragraph CreateDummyParagraph() {
+            return new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
+                 + "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute " + "irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+                 + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim " +
+                 "id est laborum.");
+        }
+
+        private static String GenerateLongString(int amountOfWords) {
+            StringBuilder sb = new StringBuilder();
+            int random = 1;
+            for (int i = 0; i < amountOfWords; i++) {
+                random = GetPseudoRandomInt(i + random);
+                for (int j = 1; j <= random; j++) {
+                    sb.Append('a');
+                }
+                sb.Append(' ');
+            }
+            return sb.ToString();
+        }
+
+        private static int GetPseudoRandomInt(int prev) {
+            int first = 93840;
+            int second = 1929;
+            int max = 7;
+            return (prev * first + second) % max;
         }
 
         private static Div CreateFirstPageFiller() {

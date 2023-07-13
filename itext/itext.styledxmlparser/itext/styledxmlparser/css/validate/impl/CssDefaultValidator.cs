@@ -85,6 +85,11 @@ namespace iText.StyledXmlParser.Css.Validate.Impl {
                 inheritInitialUnsetValidator));
             defaultValidators.Put(CommonCssConstants.COLUMN_GAP, new MultiTypeDeclarationValidator(new CssLengthValueValidator
                 (false), new CssPercentageValueValidator(false), normalValidator, inheritInitialUnsetValidator));
+            defaultValidators.Put(CommonCssConstants.COLUMN_WIDTH, new MultiTypeDeclarationValidator(new CssLengthValueValidator
+                (false), new CssPercentageValueValidator(false), new CssEnumValidator(CommonCssConstants.AUTO), inheritInitialUnsetValidator
+                ));
+            defaultValidators.Put(CommonCssConstants.COLUMN_COUNT, new MultiTypeDeclarationValidator(new CssNumberValueValidator
+                (false), new CssEnumValidator(CommonCssConstants.AUTO), inheritInitialUnsetValidator));
             defaultValidators.Put(CommonCssConstants.ROW_GAP, new MultiTypeDeclarationValidator(new CssLengthValueValidator
                 (false), new CssPercentageValueValidator(false), normalValidator, inheritInitialUnsetValidator));
             defaultValidators.Put(CommonCssConstants.FLEX_GROW, new MultiTypeDeclarationValidator(new CssNumberValueValidator
