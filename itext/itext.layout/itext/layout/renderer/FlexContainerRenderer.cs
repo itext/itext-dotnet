@@ -197,7 +197,8 @@ namespace iText.Layout.Renderer {
                 bool isSplitLine = line.Any((flexItem) => flexItem.GetRenderer() == childRenderer);
                 metChildRenderer = metChildRenderer || isSplitLine;
                 // If the renderer to split is in the current line
-                if (isSplitLine && !forcedPlacement && layoutStatus == LayoutResult.PARTIAL) {
+                if (isSplitLine && !forcedPlacement && layoutStatus == LayoutResult.PARTIAL && !FlexUtil.IsColumnDirection
+                    (this)) {
                     // It has sense to call it also for LayoutResult.NOTHING. And then try to layout remaining renderers
                     // in line inside fillSplitOverflowRenderersForPartialResult to see if some of them can be left or
                     // partially left on the first page (in split renderer). But it's not that easy.
@@ -308,6 +309,16 @@ namespace iText.Layout.Renderer {
 
         internal override void DecreaseLayoutBoxAfterChildPlacement(Rectangle layoutBox, LayoutResult result, IRenderer
              childRenderer) {
+            if (FlexUtil.IsColumnDirection(this)) {
+                DecreaseLayoutBoxAfterChildPlacementColumnLayout(layoutBox, childRenderer);
+            }
+            else {
+                DecreaseLayoutBoxAfterChildPlacementRowLayout(layoutBox, result, childRenderer);
+            }
+        }
+
+        internal virtual void DecreaseLayoutBoxAfterChildPlacementRowLayout(Rectangle layoutBox, LayoutResult result
+            , IRenderer childRenderer) {
             layoutBox.DecreaseWidth(result.GetOccupiedArea().GetBBox().GetRight() - layoutBox.GetLeft());
             layoutBox.SetX(result.GetOccupiedArea().GetBBox().GetRight());
             IList<FlexItemInfo> line = FindLine(childRenderer);
@@ -326,6 +337,28 @@ namespace iText.Layout.Renderer {
                 layoutBox.SetX(minLeft);
                 layoutBox.IncreaseWidth(commonWidth);
                 layoutBox.DecreaseHeight(layoutBox.GetTop() - minBottom);
+            }
+        }
+
+        internal virtual void DecreaseLayoutBoxAfterChildPlacementColumnLayout(Rectangle layoutBox, IRenderer childRenderer
+            ) {
+            FlexItemInfo childFlexItemInfo = FindFlexItemInfo((AbstractRenderer)childRenderer);
+            layoutBox.DecreaseHeight(childFlexItemInfo.GetRenderer().GetOccupiedArea().GetBBox().GetHeight() + childFlexItemInfo
+                .GetRectangle().GetY());
+            IList<FlexItemInfo> line = FindLine(childRenderer);
+            bool isLastInLine = childRenderer.Equals(line[line.Count - 1].GetRenderer());
+            // If it was the last renderer in line we have to go to the next line (row)
+            if (isLastInLine) {
+                float maxWidth = 0;
+                float commonHeight = 0;
+                foreach (FlexItemInfo item in line) {
+                    maxWidth = Math.Max(maxWidth, item.GetRenderer().GetOccupiedArea().GetBBox().GetWidth() + item.GetRectangle
+                        ().GetX());
+                    commonHeight += item.GetRectangle().GetY() + item.GetRenderer().GetOccupiedArea().GetBBox().GetHeight();
+                }
+                layoutBox.IncreaseHeight(commonHeight);
+                layoutBox.DecreaseWidth(maxWidth);
+                layoutBox.MoveRight(maxWidth);
             }
         }
 
@@ -516,8 +549,14 @@ namespace iText.Layout.Renderer {
                 else {
                     childMinMaxWidth = MinMaxWidthUtils.CountDefaultMinMaxWidth(childRenderer);
                 }
-                maxWidth += childMinMaxWidth.GetMaxWidth();
-                minWidth += childMinMaxWidth.GetMinWidth();
+                if (FlexUtil.IsColumnDirection(this)) {
+                    maxWidth = Math.Max(maxWidth, childMinMaxWidth.GetMaxWidth());
+                    minWidth = Math.Max(minWidth, childMinMaxWidth.GetMinWidth());
+                }
+                else {
+                    maxWidth += childMinMaxWidth.GetMaxWidth();
+                    minWidth += childMinMaxWidth.GetMinWidth();
+                }
             }
             minMaxWidthHandler.UpdateMaxChildWidth(maxWidth);
             minMaxWidthHandler.UpdateMinChildWidth(minWidth);
@@ -536,10 +575,15 @@ namespace iText.Layout.Renderer {
                 , null);
         }
 
+        private bool IsColumnReverse() {
+            return FlexDirectionPropertyValue.COLUMN_REVERSE == this.GetProperty<FlexDirectionPropertyValue?>(Property
+                .FLEX_DIRECTION, null);
+        }
+
         private IFlexItemMainDirector CreateMainDirector() {
-            if (FlexDirectionPropertyValue.COLUMN == this.GetProperty<FlexDirectionPropertyValue?>(Property.FLEX_DIRECTION
-                )) {
-                return new TopToBottomFlexItemMainDirector();
+            if (FlexUtil.IsColumnDirection(this)) {
+                return IsColumnReverse() ? (IFlexItemMainDirector)new BottomToTopFlexItemMainDirector() : new TopToBottomFlexItemMainDirector
+                    ();
             }
             else {
                 bool isRtlDirection = BaseDirection.RIGHT_TO_LEFT == this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION

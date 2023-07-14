@@ -75,7 +75,8 @@ namespace iText.Layout.Renderer {
             if (rotation != null || IsFixedLayout()) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
-            if (rotation != null && !FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+            if (rotation != null && !FloatingHelper.IsRendererFloating(this, floatPropertyValue) && !(this is FlexContainerRenderer
+                )) {
                 blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), this);
             }
             bool includeFloatsInOccupiedArea = BlockFormattingContextUtil.IsRendererCreateBfc(this);

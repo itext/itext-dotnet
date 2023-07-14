@@ -248,11 +248,12 @@ namespace iText.Layout.Renderer {
             FlexContainerRenderer flexRendererChild = new FlexContainerRenderer(new Div());
             flexRendererChild.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(150));
             DivRenderer divRenderer = new DivRenderer(new Div());
-            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(125));
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(150));
             flexRendererChild.AddChild(divRenderer);
             flexRenderer.AddChild(flexRendererChild);
             // In general, it's possible that we might call layout more than once for 1 renderer
             flexRenderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(100, 0))));
+            flexRendererChild.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(125));
             flexRenderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(200, 0))));
             // Test that hypotheticalCrossSizes can contain more than 1 value
             NUnit.Framework.Assert.IsNotNull(flexRendererChild.GetHypotheticalCrossSize(125F));

@@ -33,6 +33,7 @@ namespace iText.Layout.Renderer {
         public virtual IList<IRenderer> ApplyDirection(IList<IList<FlexItemInfo>> lines) {
             IList<IRenderer> renderers = new List<IRenderer>();
             foreach (IList<FlexItemInfo> line in lines) {
+                ApplyDirectionForLine(line);
                 foreach (FlexItemInfo itemInfo in line) {
                     renderers.Add(itemInfo.GetRenderer());
                 }
