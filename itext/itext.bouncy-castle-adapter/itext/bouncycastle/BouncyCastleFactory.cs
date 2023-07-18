@@ -110,6 +110,24 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual String GetAlgorithmOid(String name) {
+            try {
+                return new DefaultSignatureAlgorithmIdentifierFinder().Find(name).Algorithm.Id;
+            } catch (ArgumentException) {
+                return null;
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual String GetAlgorithmName(String oid) {
+            try {
+                return SignerUtilities.GetEncodingName(new DerObjectIdentifier(oid));
+            } catch (FormatException) {
+                return oid;
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual IDerObjectIdentifier CreateASN1ObjectIdentifier(IAsn1Encodable encodable) {
             Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
             if (encodableBC.GetEncodable() is DerObjectIdentifier) {

@@ -115,6 +115,16 @@ namespace iText.Bouncycastlefips {
                 CryptoServicesRegistrar.SetApprovedOnlyMode(true);
             }
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual String GetAlgorithmOid(String name) {
+            return null;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual String GetAlgorithmName(String oid) {
+            return oid;
+        }
 
         /// <summary><inheritDoc/></summary>
         public virtual IDerObjectIdentifier CreateASN1ObjectIdentifier(IAsn1Encodable encodable) {

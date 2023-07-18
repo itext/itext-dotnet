@@ -533,7 +533,7 @@ namespace iText.Signatures {
                 }
 
                 default: {
-                    return GetDigestAlgorithmName() + "with" + GetSignatureAlgorithmName();
+                    return SignatureMechanisms.GetMechanism(signatureMechanismOid, GetDigestAlgorithmName());
                 }
             }
         }
