@@ -196,6 +196,15 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant COLUMN_GAP.</summary>
         public const String COLUMN_GAP = "column-gap";
 
+        /// <summary>The Constant COLUMN_RULE_WIDTH.</summary>
+        public const String COLUMN_RULE_WIDTH = "column-rule-width";
+
+        /// <summary>The Constant COLUMN_RULE_STYLE.</summary>
+        public const String COLUMN_RULE_STYLE = "column-rule-style";
+
+        /// <summary>The Constant COLUMN_RULE_COLOR.</summary>
+        public const String COLUMN_RULE_COLOR = "column-rule-color";
+
         /// <summary>The Constant COLUMNS</summary>
         public const String COLUMNS = "columns";
 

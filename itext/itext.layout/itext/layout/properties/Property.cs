@@ -107,6 +107,8 @@ namespace iText.Layout.Properties {
 
         public const int COLUMN_GAP = 143;
 
+        public const int COLUMN_GAP_BORDER = 144;
+
         public const int DESTINATION = 17;
 
         public const int FILL_AVAILABLE_AREA = 86;
@@ -370,7 +372,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 143;
+        private const int MAX_INHERITED_PROPERTY_ID = 144;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];

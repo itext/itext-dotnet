@@ -38,10 +38,11 @@ namespace iText.StyledXmlParser.Css.Validate.Impl {
         /// <summary>A map containing all the CSS declaration validators.</summary>
         protected internal readonly IDictionary<String, ICssDeclarationValidator> defaultValidators;
 
+        private static readonly ICssDeclarationValidator colorCommonValidator = new MultiTypeDeclarationValidator(
+            new CssEnumValidator(CommonCssConstants.TRANSPARENT, CommonCssConstants.INITIAL, CommonCssConstants.INHERIT
+            , CommonCssConstants.CURRENTCOLOR), new CssColorValidator());
+
         public CssDefaultValidator() {
-            ICssDeclarationValidator colorCommonValidator = new MultiTypeDeclarationValidator(new CssEnumValidator(CommonCssConstants
-                .TRANSPARENT, CommonCssConstants.INITIAL, CommonCssConstants.INHERIT, CommonCssConstants.CURRENTCOLOR)
-                , new CssColorValidator());
             CssEnumValidator normalValidator = new CssEnumValidator(CommonCssConstants.NORMAL);
             CssEnumValidator relativeSizeValidator = new CssEnumValidator(CommonCssConstants.LARGER, CommonCssConstants
                 .SMALLER);
@@ -80,6 +81,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl {
             defaultValidators.Put(CommonCssConstants.TEXT_INDENT, new MultiTypeDeclarationValidator(new CssLengthValueValidator
                 (true), new CssPercentageValueValidator(true), new CssEnumValidator(CommonCssConstants.EACH_LINE, CommonCssConstants
                 .HANGING, CommonCssConstants.HANGING + " " + CommonCssConstants.EACH_LINE)));
+            AddColumnRuleValidation(defaultValidators);
             defaultValidators.Put(CommonCssConstants.LINE_HEIGHT, new MultiTypeDeclarationValidator(new CssNumberValueValidator
                 (false), new CssLengthValueValidator(false), new CssPercentageValueValidator(false), normalValidator, 
                 inheritInitialUnsetValidator));
@@ -158,6 +160,15 @@ namespace iText.StyledXmlParser.Css.Validate.Impl {
         public virtual bool IsValid(CssDeclaration declaration) {
             ICssDeclarationValidator validator = defaultValidators.Get(declaration.GetProperty());
             return validator == null || validator.IsValid(declaration);
+        }
+
+        private static void AddColumnRuleValidation(IDictionary<String, ICssDeclarationValidator> container) {
+            container.Put(CommonCssConstants.COLUMN_RULE_COLOR, colorCommonValidator);
+            container.Put(CommonCssConstants.COLUMN_RULE_WIDTH, new MultiTypeDeclarationValidator(new CssNumberValueValidator
+                (false), new CssLengthValueValidator(false), new CssEnumValidator(CommonCssConstants.BORDER_WIDTH_VALUES
+                ), new CssEnumValidator(CommonCssConstants.AUTO)));
+            container.Put(CommonCssConstants.COLUMN_RULE_STYLE, new MultiTypeDeclarationValidator(new CssEnumValidator
+                (CommonCssConstants.BORDER_STYLE_VALUES)));
         }
     }
 }

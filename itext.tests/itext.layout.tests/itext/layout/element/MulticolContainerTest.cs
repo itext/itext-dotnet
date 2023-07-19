@@ -1090,6 +1090,92 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ParagraphWithSimpleSolidColumnGapTest() {
+            String outFileName = DESTINATION_FOLDER + "paragraphWithSimpleStyledColumnGapTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithSimpleStyledColumnGapTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
+                columnContainer.SetProperty(Property.COLUMN_GAP, 50.0f);
+                columnContainer.SetProperty(Property.COLUMN_GAP_BORDER, new SolidBorder(50));
+                Paragraph paragraph = CreateDummyParagraph();
+                columnContainer.Add(paragraph);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DivWithSimpleSolidColumnGapTest() {
+            String outFileName = DESTINATION_FOLDER + "divWithSimpleStyledColumnGapTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_divWithSimpleStyledColumnGapTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
+                columnContainer.SetProperty(Property.COLUMN_GAP, 50.0f);
+                columnContainer.SetProperty(Property.COLUMN_GAP_BORDER, new SolidBorder(50));
+                Div div = new Div();
+                for (int i = 0; i < 20; i++) {
+                    Paragraph paragraph = new Paragraph("Hello world! " + i);
+                    div.Add(paragraph);
+                }
+                columnContainer.Add(div);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParagraphWithNegativeValueSolidColumnGapTest() {
+            String outFileName = DESTINATION_FOLDER + "paragraphWithNegativeValueSolidColumnGapTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithNegativeValueSolidColumnGapTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
+                columnContainer.SetProperty(Property.COLUMN_GAP_BORDER, new SolidBorder(0));
+                Paragraph paragraph = CreateDummyParagraph();
+                columnContainer.Add(paragraph);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParagraphWithBiggerValueSolidColumnGapTest() {
+            String outFileName = DESTINATION_FOLDER + "paragraphWithBiggerValueSolidColumnGapTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithBiggerValueSolidColumnGapTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
+                columnContainer.SetProperty(Property.COLUMN_GAP_BORDER, new SolidBorder(600));
+                Paragraph paragraph = CreateDummyParagraph();
+                columnContainer.Add(paragraph);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParagraphWithNullValueSolidColumnGapTest() {
+            String outFileName = DESTINATION_FOLDER + "paragraphWithNullValueSolidColumnGapTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithNullValueSolidColumnGapTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div columnContainer = new MulticolContainer();
+                columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
+                columnContainer.SetProperty(Property.COLUMN_GAP_BORDER, null);
+                Paragraph paragraph = CreateDummyParagraph();
+                columnContainer.Add(paragraph);
+                document.Add(columnContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
         private void ExecuteTest(String testName, Action<MulticolContainer> executor, bool wrapByP) {
             String filename = DESTINATION_FOLDER + testName + ".pdf";
             String cmpName = SOURCE_FOLDER + "cmp_" + testName + ".pdf";

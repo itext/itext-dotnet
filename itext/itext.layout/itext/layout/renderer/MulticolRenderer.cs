@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Exceptions;
@@ -109,6 +110,41 @@ namespace iText.Layout.Renderer {
             return new iText.Layout.Renderer.MulticolRenderer((MulticolContainer)modelElement);
         }
 
+        /// <summary>
+        /// Performs the drawing operation for the border of this renderer, if
+        /// defined by any of the
+        /// <see cref="iText.Layout.Properties.Property.BORDER"/>
+        /// values in either the layout
+        /// element or this
+        /// <see cref="IRenderer"/>
+        /// itself.
+        /// </summary>
+        /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
+        public override void DrawBorder(DrawContext drawContext) {
+            base.DrawBorder(drawContext);
+            Rectangle borderRect = ApplyMargins(occupiedArea.GetBBox().Clone(), GetMargins(), false);
+            bool isAreaClipped = ClipBorderArea(drawContext, borderRect);
+            Border gap = this.GetProperty<Border>(Property.COLUMN_GAP_BORDER);
+            if (GetChildRenderers().IsEmpty() || gap == null || gap.GetWidth() <= ZERO_DELTA) {
+                return;
+            }
+            DrawTaggedWhenNeeded(drawContext, (canvas) => {
+                for (int i = 0; i < GetChildRenderers().Count - 1; ++i) {
+                    Rectangle columnBBox = GetChildRenderers()[i].GetOccupiedArea().GetBBox();
+                    Rectangle columnSpaceBBox = new Rectangle(columnBBox.GetX() + columnBBox.GetWidth(), columnBBox.GetY(), columnGap
+                        , columnBBox.GetHeight());
+                    float x1 = columnSpaceBBox.GetX() + columnSpaceBBox.GetWidth() / 2 + gap.GetWidth() / 2;
+                    float y1 = columnSpaceBBox.GetY();
+                    float y2 = columnSpaceBBox.GetY() + columnSpaceBBox.GetHeight();
+                    gap.Draw(canvas, x1, y1, x1, y2, Border.Side.RIGHT, 0, 0);
+                }
+                if (isAreaClipped) {
+                    drawContext.GetCanvas().RestoreState();
+                }
+            }
+            );
+        }
+
         protected internal virtual MulticolRenderer.MulticolLayoutResult LayoutInColumns(LayoutContext layoutContext
             , Rectangle actualBBox) {
             LayoutResult inifiniteHeighOneColumnLayoutResult = elementRenderer.Layout(new LayoutContext(new LayoutArea
@@ -167,6 +203,17 @@ namespace iText.Layout.Renderer {
             renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             foreach (IRenderer child in renderer.GetChildRenderers()) {
                 SetOverflowForAllChildren(child);
+            }
+        }
+
+        private void DrawTaggedWhenNeeded(DrawContext drawContext, Action<PdfCanvas> action) {
+            PdfCanvas canvas = drawContext.GetCanvas();
+            if (drawContext.IsTaggingEnabled()) {
+                canvas.OpenTag(new CanvasArtifact());
+            }
+            action(canvas);
+            if (drawContext.IsTaggingEnabled()) {
+                canvas.CloseTag();
             }
         }
 
