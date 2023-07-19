@@ -94,6 +94,19 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ValidateIntegerNumericValue() {
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsIntegerNumber("1"));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsIntegerNumber("+12"));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsIntegerNumber("-12"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsIntegerNumber(".12"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsIntegerNumber("1.2"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsIntegerNumber("1,2"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsIntegerNumber("12f"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsIntegerNumber("f1.2"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsIntegerNumber(".12f"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestSpacesBeforeUnitTypes() {
             NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsAngleValue("10 deg"));
             NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsEmValue("10 em"));

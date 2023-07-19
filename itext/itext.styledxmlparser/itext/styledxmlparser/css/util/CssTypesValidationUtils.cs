@@ -163,6 +163,17 @@ namespace iText.StyledXmlParser.Css.Util {
                 .Matches("^[-+]?\\.\\d\\d*$"));
         }
 
+        /// <summary>Checks whether a string matches an integer numeric value (e.g. 123, 23).</summary>
+        /// <remarks>
+        /// Checks whether a string matches an integer numeric value (e.g. 123, 23). All these metric values are allowed in
+        /// HTML/CSS.
+        /// </remarks>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>boolean true if value contains an allowed metric value</returns>
+        public static bool IsIntegerNumber(String value) {
+            return value != null && value.Matches("^[-+]?\\d\\d*$");
+        }
+
         /// <summary>Checks whether a string contains a percentage value</summary>
         /// <param name="valueArgument">the string that needs to be checked</param>
         /// <returns>boolean true if value contains an allowed percentage value</returns>

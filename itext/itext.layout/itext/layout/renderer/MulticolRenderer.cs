@@ -259,27 +259,39 @@ namespace iText.Layout.Renderer {
             return result;
         }
 
-        //algorithm is based on pseudo algorithm from https://www.w3.org/TR/css-multicol-1/#propdef-column-span
+        // Algorithm is based on pseudo algorithm from https://www.w3.org/TR/css-multicol-1/#propdef-column-span
         private void CalculateColumnCountAndWidth(float initialWidth) {
-            int? columnCount = (int?)this.GetProperty<int?>(Property.COLUMN_COUNT);
-            float? columnWidth = (float?)this.GetProperty<float?>(Property.COLUMN_WIDTH);
-            float? columnGap = (float?)this.GetProperty<float?>(Property.COLUMN_GAP);
-            this.columnGap = columnGap != null ? columnGap.Value : 0;
-            if ((columnCount == null && columnWidth == null) || (columnCount != null && columnCount.Value < 0) || (columnWidth
-                 != null && columnWidth.Value < 0)) {
+            int? columnCountTemp = (int?)this.GetProperty<int?>(Property.COLUMN_COUNT);
+            float? columnWidthTemp = (float?)this.GetProperty<float?>(Property.COLUMN_WIDTH);
+            float? columnGapTemp = (float?)this.GetProperty<float?>(Property.COLUMN_GAP);
+            this.columnGap = columnGapTemp == null ? 0f : columnGapTemp.Value;
+            if ((columnCountTemp == null && columnWidthTemp == null) || (columnCountTemp != null && columnCountTemp.Value
+                 < 0) || (columnWidthTemp != null && columnWidthTemp.Value < 0) || (this.columnGap < 0)) {
                 throw new InvalidOperationException(LayoutExceptionMessageConstant.INVALID_COLUMN_PROPERTIES);
             }
-            if (columnWidth == null) {
-                this.columnCount = columnCount.Value;
+            if (columnWidthTemp == null) {
+                this.columnCount = columnCountTemp.Value;
             }
             else {
-                if (columnCount == null) {
-                    this.columnCount = Math.Max(1, (int)Math.Floor((double)((initialWidth + this.columnGap) / (columnWidth.Value
-                         + this.columnGap))));
+                if (columnCountTemp == null) {
+                    float columnWidthPlusGap = columnWidthTemp.Value + this.columnGap;
+                    if (columnWidthPlusGap > ZERO_DELTA) {
+                        this.columnCount = Math.Max(1, (int)Math.Floor((double)((initialWidth + this.columnGap) / columnWidthPlusGap
+                            )));
+                    }
+                    else {
+                        this.columnCount = 1;
+                    }
                 }
                 else {
-                    this.columnCount = Math.Min((int)columnCount, Math.Max(1, (int)Math.Floor((double)((initialWidth + this.columnGap
-                        ) / (columnWidth.Value + this.columnGap)))));
+                    float columnWidthPlusGap = columnWidthTemp.Value + this.columnGap;
+                    if (columnWidthPlusGap > ZERO_DELTA) {
+                        this.columnCount = Math.Min((int)columnCountTemp, Math.Max(1, (int)Math.Floor((double)((initialWidth + this
+                            .columnGap) / columnWidthPlusGap))));
+                    }
+                    else {
+                        this.columnCount = 1;
+                    }
                 }
             }
             this.columnWidth = Math.Max(0.0f, ((initialWidth + this.columnGap) / this.columnCount - this.columnGap));
