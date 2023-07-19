@@ -208,6 +208,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant COLUMNS</summary>
         public const String COLUMNS = "columns";
 
+        /// <summary>The Constant COLUMNS</summary>
+        public const String COLUMN_RULE = "column-rule";
+
         /// <summary>The Constant DARKEN.</summary>
         public const String DARKEN = "darken";
 

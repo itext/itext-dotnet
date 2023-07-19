@@ -28,70 +28,82 @@ using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Util;
+using iText.StyledXmlParser.Css.Validate.Impl.Datatype;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
-    /// <summary>Shorthand resolver for the column property.</summary>
+    /// <summary>Shorthand resolver for the column-rule property.</summary>
     /// <remarks>
-    /// Shorthand resolver for the column property.
-    /// This property is a shorthand for the column-count and column-width properties.
+    /// Shorthand resolver for the column-rule property.
+    /// This property is a shorthand for the column-rule-width, column-rule-style, and column-rule-color  properties.
     /// </remarks>
-    public class ColumnsShorthandResolver : IShorthandResolver {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.ColumnsShorthandResolver
+    public class ColumnRuleShortHandResolver : IShorthandResolver {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.ColumnRuleShortHandResolver
             ));
+
+        private readonly CssEnumValidator borderStyleValidators = new CssEnumValidator(CommonCssConstants.BORDER_STYLE_VALUES
+            );
+
+        private readonly CssEnumValidator borderWithValidators = new CssEnumValidator(CommonCssConstants.BORDER_WIDTH_VALUES
+            );
 
         /// <summary>
         /// Creates a new
         /// <see cref="ColumnsShorthandResolver"/>
         /// instance.
         /// </summary>
-        public ColumnsShorthandResolver() {
+        public ColumnRuleShortHandResolver() {
         }
 
         //empty constructor
-        /// <summary><inheritDoc/></summary>
+        /// <summary>Resolves a shorthand expression.</summary>
+        /// <param name="shorthandExpression">the shorthand expression</param>
+        /// <returns>a list of CSS declaration</returns>
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
             shorthandExpression = shorthandExpression.Trim();
             if (CssTypesValidationUtils.IsInitialOrInheritOrUnset(shorthandExpression)) {
-                return JavaUtil.ArraysAsList(new CssDeclaration(CommonCssConstants.COLUMN_COUNT, shorthandExpression), new 
-                    CssDeclaration(CommonCssConstants.COLUMN_WIDTH, shorthandExpression));
+                return JavaUtil.ArraysAsList(new CssDeclaration(CommonCssConstants.COLUMN_RULE_COLOR, shorthandExpression)
+                    , new CssDeclaration(CommonCssConstants.COLUMN_RULE_WIDTH, shorthandExpression), new CssDeclaration(CommonCssConstants
+                    .COLUMN_RULE_STYLE, shorthandExpression));
             }
             if (CssTypesValidationUtils.ContainsInitialOrInheritOrUnset(shorthandExpression)) {
                 return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
-                    , CommonCssConstants.COLUMNS, shorthandExpression);
+                    , CommonCssConstants.COLUMN_RULE, shorthandExpression);
             }
             if (String.IsNullOrEmpty(shorthandExpression)) {
                 return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
-                    , CommonCssConstants.COLUMNS, shorthandExpression);
+                    , CommonCssConstants.COLUMN_RULE, shorthandExpression);
             }
+            int maxProperties = 3;
             IList<String> properties = CssUtils.ExtractShorthandProperties(shorthandExpression)[0];
-            if (properties.Count > 2) {
+            if (properties.Count > maxProperties) {
                 return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
-                    , CommonCssConstants.COLUMNS, shorthandExpression);
+                    , CommonCssConstants.COLUMN_RULE, shorthandExpression);
             }
-            IList<CssDeclaration> result = new List<CssDeclaration>(2);
+            IList<CssDeclaration> result = new List<CssDeclaration>(maxProperties);
             foreach (String property in properties) {
-                CssDeclaration declaration = ProcessProperty(property);
+                String cleanProperty = property.Trim();
+                CssDeclaration declaration = ProcessProperty(cleanProperty);
                 if (declaration != null) {
                     result.Add(declaration);
                 }
-                if (declaration == null && !CommonCssConstants.AUTO.Equals(property)) {
+                if (declaration == null) {
                     return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
-                        , CommonCssConstants.COLUMNS, shorthandExpression);
+                        , CommonCssConstants.COLUMN_RULE_STYLE, shorthandExpression);
                 }
-            }
-            if (result.Count == 2 && result[0].GetProperty().Equals(result[1].GetProperty())) {
-                return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
-                    , CommonCssConstants.COLUMNS, shorthandExpression);
             }
             return result;
         }
 
-        private static CssDeclaration ProcessProperty(String value) {
-            if (CssTypesValidationUtils.IsMetricValue(value) || CssTypesValidationUtils.IsRelativeValue(value)) {
-                return new CssDeclaration(CommonCssConstants.COLUMN_WIDTH, value);
+        private CssDeclaration ProcessProperty(String value) {
+            if (CssTypesValidationUtils.IsMetricValue(value) || CssTypesValidationUtils.IsRelativeValue(value) || borderWithValidators
+                .IsValid(value)) {
+                return new CssDeclaration(CommonCssConstants.COLUMN_RULE_WIDTH, value);
             }
-            if (CssTypesValidationUtils.IsNumber(value)) {
-                return new CssDeclaration(CommonCssConstants.COLUMN_COUNT, value);
+            if (CssTypesValidationUtils.IsColorProperty(value)) {
+                return new CssDeclaration(CommonCssConstants.COLUMN_RULE_COLOR, value);
+            }
+            if (borderStyleValidators.IsValid(value)) {
+                return new CssDeclaration(CommonCssConstants.COLUMN_RULE_STYLE, value);
             }
             return null;
         }
