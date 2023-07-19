@@ -49,6 +49,8 @@ namespace iText.Layout.Renderer {
 
         private float columnGap;
 
+        private bool isFirstLayout = true;
+
         /// <summary>Creates a DivRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
         /// the
@@ -73,6 +75,7 @@ namespace iText.Layout.Renderer {
             Rectangle actualBBox = layoutContext.GetArea().GetBBox().Clone();
             float originalWidth = actualBBox.GetWidth();
             ApplyWidth(actualBBox, originalWidth);
+            ContinuousContainer.SetupContinuousContainerIfNeeded(this);
             ApplyPaddings(actualBBox, false);
             ApplyBorderBox(actualBBox, false);
             ApplyMargins(actualBBox, false);
@@ -91,6 +94,11 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (layoutResult.GetOverflowRenderer() == null) {
+                    ContinuousContainer continuousContainer = this.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
+                        );
+                    if (continuousContainer != null) {
+                        continuousContainer.ReApplyProperties(this);
+                    }
                     this.childRenderers.Clear();
                     AddAllChildRenderers(layoutResult.GetSplitRenderers());
                     this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, true);
@@ -185,7 +193,9 @@ namespace iText.Layout.Renderer {
         /// instance
         /// </returns>
         protected internal virtual AbstractRenderer CreateOverflowRenderer(IRenderer overflowedContentRenderer) {
-            AbstractRenderer overflowRenderer = (AbstractRenderer)GetNextRenderer();
+            iText.Layout.Renderer.MulticolRenderer overflowRenderer = (iText.Layout.Renderer.MulticolRenderer)GetNextRenderer
+                ();
+            overflowRenderer.isFirstLayout = false;
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());
@@ -245,9 +255,10 @@ namespace iText.Layout.Renderer {
             return height;
         }
 
-        private void RecalculateHeightWidthAfterLayouting(Rectangle parentBBox) {
+        private void RecalculateHeightWidthAfterLayouting(Rectangle parentBBox, bool isFull) {
             float? height = DetermineHeight(parentBBox);
             if (height != null) {
+                height = UpdateOccupiedHeight((float)height, isFull);
                 float heightDelta = parentBBox.GetHeight() - (float)height;
                 parentBBox.MoveUp(heightDelta);
                 parentBBox.SetHeight((float)height);
@@ -282,13 +293,6 @@ namespace iText.Layout.Renderer {
                 float workingHeight = approximateHeight;
                 if (heightFromProperties != null) {
                     workingHeight = Math.Min((float)heightFromProperties, (float)approximateHeight);
-                    workingHeight -= SafelyRetrieveFloatProperty(Property.PADDING_TOP);
-                    workingHeight -= SafelyRetrieveFloatProperty(Property.PADDING_BOTTOM);
-                    workingHeight -= SafelyRetrieveFloatProperty(Property.BORDER_TOP);
-                    workingHeight -= SafelyRetrieveFloatProperty(Property.BORDER_BOTTOM);
-                    workingHeight -= SafelyRetrieveFloatProperty(Property.BORDER) * 2;
-                    workingHeight -= SafelyRetrieveFloatProperty(Property.MARGIN_TOP);
-                    workingHeight -= SafelyRetrieveFloatProperty(Property.MARGIN_BOTTOM);
                 }
                 result = LayoutColumnsAndReturnOverflowRenderer(prelayoutContext, actualBbox, workingHeight);
                 if (result.GetOverflowRenderer() == null || isLastLayout) {
@@ -354,22 +358,36 @@ namespace iText.Layout.Renderer {
 
         private LayoutArea CalculateContainerOccupiedArea(LayoutContext layoutContext, bool isFull) {
             LayoutArea area = layoutContext.GetArea().Clone();
-            float totalHeight = approximateHeight;
-            if (isFull) {
-                totalHeight += SafelyRetrieveFloatProperty(Property.PADDING_BOTTOM);
-                totalHeight += SafelyRetrieveFloatProperty(Property.MARGIN_BOTTOM);
-                totalHeight += SafelyRetrieveFloatProperty(Property.BORDER_BOTTOM);
-            }
-            totalHeight += SafelyRetrieveFloatProperty(Property.PADDING_TOP);
-            totalHeight += SafelyRetrieveFloatProperty(Property.MARGIN_TOP);
-            totalHeight += SafelyRetrieveFloatProperty(Property.BORDER_TOP);
-            float TOP_AND_BOTTOM = isFull ? 2 : 1;
-            totalHeight += SafelyRetrieveFloatProperty(Property.BORDER) * TOP_AND_BOTTOM;
+            float totalHeight = UpdateOccupiedHeight(approximateHeight, isFull);
             area.GetBBox().SetHeight(totalHeight);
             Rectangle initialBBox = layoutContext.GetArea().GetBBox();
             area.GetBBox().SetY(initialBBox.GetY() + initialBBox.GetHeight() - area.GetBBox().GetHeight());
-            RecalculateHeightWidthAfterLayouting(area.GetBBox());
+            RecalculateHeightWidthAfterLayouting(area.GetBBox(), isFull);
             return area;
+        }
+
+        private float UpdateOccupiedHeight(float initialHeight, bool isFull) {
+            if (isFull) {
+                initialHeight += SafelyRetrieveFloatProperty(Property.PADDING_BOTTOM);
+                initialHeight += SafelyRetrieveFloatProperty(Property.MARGIN_BOTTOM);
+                if (!this.HasOwnProperty(Property.BORDER) || this.GetProperty<Border>(Property.BORDER) == null) {
+                    initialHeight += SafelyRetrieveFloatProperty(Property.BORDER_BOTTOM);
+                }
+            }
+            initialHeight += SafelyRetrieveFloatProperty(Property.PADDING_TOP);
+            initialHeight += SafelyRetrieveFloatProperty(Property.MARGIN_TOP);
+            if (!this.HasOwnProperty(Property.BORDER) || this.GetProperty<Border>(Property.BORDER) == null) {
+                initialHeight += SafelyRetrieveFloatProperty(Property.BORDER_TOP);
+            }
+            // isFirstLayout is necessary to handle the case when multicol container layouted in more
+            // than 2 pages, and on the last page layout result is full, but there is no bottom border
+            float TOP_AND_BOTTOM = isFull && isFirstLayout ? 2 : 1;
+            // Multicol container layouted in more than 3 pages, and there is a page where there are no bottom and top borders
+            if (!isFull && !isFirstLayout) {
+                TOP_AND_BOTTOM = 0;
+            }
+            initialHeight += SafelyRetrieveFloatProperty(Property.BORDER) * TOP_AND_BOTTOM;
+            return initialHeight;
         }
 
         private BlockRenderer GetElementsRenderer() {

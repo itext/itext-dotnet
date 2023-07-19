@@ -205,7 +205,6 @@ namespace iText.Layout.Element {
             );
         }
 
-        //TODO: DEVSIX-7626
         [NUnit.Framework.Test]
         public virtual void ContinuousColumContainerParagraphOverflowShouldShow() {
             ExecuteTest("continuousColumContainerParagraphOverflowShouldShow", (ctx) => {
@@ -222,7 +221,6 @@ namespace iText.Layout.Element {
             );
         }
 
-        //TODO: DEVSIX-7626
         [NUnit.Framework.Test]
         public virtual void ExtraLargeColumnParagraphTest() {
             ExecuteTest("extraLargeColumnParagraphTest", (ctx) => {
@@ -239,7 +237,6 @@ namespace iText.Layout.Element {
             );
         }
 
-        //TODO: DEVSIX-7626
         [NUnit.Framework.Test]
         public virtual void LargeColumnParagraphWithMarginTest() {
             ExecuteTest("largeColumnParagraphWithMarginTest", (ctx) => {
@@ -253,7 +250,6 @@ namespace iText.Layout.Element {
             );
         }
 
-        //TODO: DEVSIX-7626
         [NUnit.Framework.Test]
         public virtual void LargeColumnParagraphWithPaddingTest() {
             ExecuteTest("largeColumnParagraphWithPaddingTest", (ctx) => {
@@ -267,7 +263,6 @@ namespace iText.Layout.Element {
             );
         }
 
-        //TODO: DEVSIX-7626
         [NUnit.Framework.Test]
         public virtual void LargeColumnParagraphWithBorderTest() {
             ExecuteTest("largeColumnParagraphWithBorderTest", (ctx) => {
