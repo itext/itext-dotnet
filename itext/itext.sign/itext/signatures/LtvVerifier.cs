@@ -34,6 +34,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Forms;
+using iText.Forms.Fields;
 using iText.Kernel.Pdf;
 
 namespace iText.Signatures {
@@ -255,7 +256,7 @@ namespace iText.Signatures {
                 signatureName = names[names.Count - 2];
                 using (PdfReader readerTmp = new PdfReader(sgnUtil.ExtractRevision(signatureName))) {
                     document = new PdfDocument(readerTmp, new DocumentProperties().SetEventCountingMetaInfo(metaInfo));
-                    this.acroForm = PdfAcroForm.GetAcroForm(document, true);
+                    this.acroForm = PdfFormCreator.GetAcroForm(document, true);
                     this.sgnUtil = new SignatureUtil(document);
                     names = sgnUtil.GetSignatureNames();
                     signatureName = names[names.Count - 1];
@@ -324,7 +325,7 @@ namespace iText.Signatures {
 
         protected internal virtual void InitLtvVerifier(PdfDocument document) {
             this.document = document;
-            this.acroForm = PdfAcroForm.GetAcroForm(document, true);
+            this.acroForm = PdfFormCreator.GetAcroForm(document, true);
             this.sgnUtil = new SignatureUtil(document);
             IList<String> names = sgnUtil.GetSignatureNames();
             signatureName = names[names.Count - 1];

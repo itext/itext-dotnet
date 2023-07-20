@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Forms.Fields;
 using iText.Forms.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
@@ -48,7 +49,7 @@ namespace iText.Forms {
             String dest = destinationFolder + "flatteningFormFieldNoSubtypeInAPTest.pdf";
             String cmp = sourceFolder + "cmp_flatteningFormFieldNoSubtypeInAPTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
-            PdfAcroForm.GetAcroForm(doc, false).FlattenFields();
+            PdfFormCreator.GetAcroForm(doc, false).FlattenFields();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
         }
@@ -61,7 +62,7 @@ namespace iText.Forms {
             String dest = destinationFolder + filename + "_flattened.pdf";
             String cmp = sourceFolder + "cmp_" + filename + "_flattened.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
-            PdfAcroForm.GetAcroForm(doc, false).FlattenFields();
+            PdfFormCreator.GetAcroForm(doc, false).FlattenFields();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
         }
@@ -73,7 +74,7 @@ namespace iText.Forms {
             String src = sourceFolder + filename + ".pdf";
             String dest = destinationFolder + filename + "_flattened.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
             acroForm.GetField("hiddenField").GetPdfObject().Put(PdfName.F, new PdfNumber(2));
             acroForm.FlattenFields();
             String textAfterFlatten = PdfTextExtractor.GetTextFromPage(document.GetPage(1));

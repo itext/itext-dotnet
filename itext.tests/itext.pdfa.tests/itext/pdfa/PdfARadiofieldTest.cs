@@ -61,7 +61,7 @@ namespace iText.Pdfa {
             doc.SetTagged();
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             String formFieldName = "group";
             RadioFormFieldBuilder builder = new RadioFormFieldBuilder(doc, formFieldName);
             PdfButtonFormField group = builder.CreateRadioGroup();

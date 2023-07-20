@@ -28,13 +28,16 @@ namespace iText.Test
 {
     internal class ITextTestLoggerFactory : ILoggerFactory
     {
-        private readonly HashSet<String> expectedTemplates = new HashSet<String>();
+        private readonly Dictionary<String, Boolean> expectedTemplates = new Dictionary<String, Boolean>();
         
         private readonly IList<ITextTestLogEvent> logEvents = new List<ITextTestLogEvent>();
         
-        public void SetExpectedTemplates(HashSet<String> expectedTemplates) {
+        public void SetExpectedTemplates(Dictionary<String, Boolean> expectedTemplates) {
             this.expectedTemplates.Clear();
-            this.expectedTemplates.UnionWith(expectedTemplates);
+            foreach (KeyValuePair<String, Boolean> item in expectedTemplates)
+            {
+                this.expectedTemplates[item.Key] = item.Value;
+            }
         }
         
         public IList<ITextTestLogEvent> GetLogEvents()
@@ -64,7 +67,18 @@ namespace iText.Test
         private bool IsExpectedMessage(String message) {
             if (message != null) {
                 foreach (var template in expectedTemplates) {
-                    if (LogListenerHelper.EqualsMessageByTemplate(message, template)) {
+                    if (LogListenerHelper.EqualsMessageByTemplate(message, template.Key)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
+        private bool IsExpectedMessageQuiet(String message) {
+            if (message != null) {
+                foreach (String template in expectedTemplates.Keys) {
+                    if (LogListenerHelper.EqualsMessageByTemplate(message, template) && expectedTemplates[template]) {
                         return true;
                     }
                 }
@@ -102,7 +116,10 @@ namespace iText.Test
             
             public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
             {
-                Console.WriteLine(categoryName + ": " + state);
+                if (!factory.IsExpectedMessageQuiet(state.ToString()))
+                {
+                    Console.WriteLine(categoryName + ": " + state);
+                }
                 if (logLevel >= LogLevel.Warning || factory.IsExpectedMessage(state.ToString()))
                 {
                     factory.AddLogEvent(new ITextTestLogEvent(logLevel, state.ToString()));

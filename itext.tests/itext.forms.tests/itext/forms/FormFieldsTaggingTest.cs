@@ -28,6 +28,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Forms {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -51,7 +52,7 @@ namespace iText.Forms {
             PdfWriter writer = new PdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.SetTagged();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             AddFormFieldsToDocument(pdfDoc, form);
             pdfDoc.Close();
             CompareOutput(outFileName, cmpFileName);
@@ -65,7 +66,7 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             pdfDoc.SetTagged();
             pdfDoc.InitializeOutlines();
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
             acroForm.AddField(new CheckBoxFormFieldBuilder(pdfDoc, "TestCheck").SetWidgetRectangle(new Rectangle(36, 560
                 , 20, 20)).CreateCheckBox().SetValue("1", true));
             PdfDocument docToCopyFrom = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms07.pdf"));
@@ -81,7 +82,7 @@ namespace iText.Forms {
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms03.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"), new PdfWriter
                 (outFileName));
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, false);
             acroForm.FlattenFields();
             pdfDoc.Close();
             CompareOutput(outFileName, cmpFileName);
@@ -94,7 +95,7 @@ namespace iText.Forms {
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms04.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"), new PdfWriter
                 (outFileName));
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, false);
             acroForm.RemoveField("TestCheck");
             acroForm.RemoveField("push");
             pdfDoc.Close();
@@ -108,7 +109,7 @@ namespace iText.Forms {
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms05.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             pdfDoc.SetTagged();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             AddFormFieldsToDocument(pdfDoc, form);
             form.FlattenFields();
             pdfDoc.Close();
@@ -122,7 +123,7 @@ namespace iText.Forms {
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms06.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             pdfDoc.SetTagged();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             AddFormFieldsToDocument(pdfDoc, form);
             form.RemoveField("TestCheck");
             form.RemoveField("push");
@@ -140,7 +141,7 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             // Original document is already tagged, so there is no need to mark it as tagged again
             //        pdfDoc.setTagged();
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfButtonFormField pushButton = new PushButtonFormFieldBuilder(pdfDoc, "push").SetWidgetRectangle(new Rectangle
                 (36, 650, 40, 20)).SetCaption("Capcha").CreatePushButton();
             pushButton.SetFontSize(12f);
@@ -158,7 +159,7 @@ namespace iText.Forms {
             String srcFileName = sourceFolder + "mergeFieldTaggingTest08.pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
                 pdfDoc.SetTagged();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 AddFormFieldsToDocument(pdfDoc, form);
             }
             CompareOutput(outFileName, cmpFileName);
@@ -170,12 +171,30 @@ namespace iText.Forms {
             String cmpFileName = sourceFolder + "cmp_mergeFieldTaggingTest09.pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
                 pdfDoc.SetTagged();
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 AddFormFieldsToDocument(pdfDoc, form);
                 AddFormFieldsToDocument(pdfDoc, form);
             }
             CompareOutput(outFileName, cmpFileName);
             CompareOutput(outFileName, sourceFolder + "cmp_mergeFieldTaggingTest08.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 2)]
+        public virtual void FormFieldTaggingTest10() {
+            String outFileName = destinationFolder + "taggedPdfWithForms10.pdf";
+            String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms10.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            pdfDoc.SetTagged();
+            pdfDoc.InitializeOutlines();
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            acroForm.AddField(new CheckBoxFormFieldBuilder(pdfDoc, "TestCheck").SetWidgetRectangle(new Rectangle(36, 560
+                , 20, 20)).CreateCheckBox().SetValue("1", true));
+            PdfDocument docToCopyFrom = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms07.pdf"));
+            docToCopyFrom.CopyPagesTo(1, docToCopyFrom.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
+            docToCopyFrom.CopyPagesTo(1, docToCopyFrom.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
+            pdfDoc.Close();
+            CompareOutput(outFileName, cmpFileName);
         }
 
         private void AddFormFieldsToDocument(PdfDocument pdfDoc, PdfAcroForm acroForm) {

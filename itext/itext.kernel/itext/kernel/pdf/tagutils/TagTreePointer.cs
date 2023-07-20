@@ -414,8 +414,14 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddAnnotationTag(PdfAnnotation annotation) {
             ThrowExceptionIfCurrentPageIsNotInited();
-            PdfObjRef kid = new PdfObjRef(annotation, GetCurrentStructElem(), GetDocument().GetNextStructParentIndex()
-                );
+            // Sometimes the merged field is split into a form field and an annotation, so we should add the annotation
+            // instead of the merged field in the tag structure. So the annotation already contains the merged field's
+            // StructParent in its dictionary, which we need to take into account. Otherwise, getNextStructParentIndex()
+            // will increment the structParentIndex counter and the annotation will be added to the end, but the merged
+            // field's StructParent index will disappear from the number tree of the tag structure.
+            PdfNumber structParentIndex = annotation.GetPdfObject().GetAsNumber(PdfName.StructParent);
+            PdfObjRef kid = new PdfObjRef(annotation, GetCurrentStructElem(), structParentIndex != null ? structParentIndex
+                .IntValue() : GetDocument().GetNextStructParentIndex());
             if (!EnsureElementPageEqualsKidPage(GetCurrentStructElem(), currentPage.GetPdfObject())) {
                 // Explicitly using object indirect reference here in order to correctly process released objects.
                 ((PdfDictionary)kid.GetPdfObject()).Put(PdfName.Pg, currentPage.GetPdfObject().GetIndirectReference());

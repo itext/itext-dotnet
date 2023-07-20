@@ -248,23 +248,23 @@ namespace iText.Forms.Fields {
             iText.Forms.Fields.PdfFormField field;
             PdfName formType = dictionary.GetAsName(PdfName.FT);
             if (PdfName.Tx.Equals(formType)) {
-                field = new PdfTextFormField(dictionary);
+                field = PdfFormCreator.CreateTextFormField(dictionary);
             }
             else {
                 if (PdfName.Btn.Equals(formType)) {
-                    field = new PdfButtonFormField(dictionary);
+                    field = PdfFormCreator.CreateButtonFormField(dictionary);
                 }
                 else {
                     if (PdfName.Ch.Equals(formType)) {
-                        field = new PdfChoiceFormField(dictionary);
+                        field = PdfFormCreator.CreateChoiceFormField(dictionary);
                     }
                     else {
                         if (PdfName.Sig.Equals(formType)) {
-                            field = new PdfSignatureFormField(dictionary);
+                            field = PdfFormCreator.CreateSignatureFormField(dictionary);
                         }
                         else {
                             // No form type but still a form field
-                            field = new iText.Forms.Fields.PdfFormField(dictionary);
+                            field = PdfFormCreator.CreateFormField(dictionary);
                         }
                     }
                 }
@@ -631,7 +631,7 @@ namespace iText.Forms.Fields {
             kid.SetParent(GetPdfObject());
             PdfDictionary pdfObject = kid.GetPdfObject();
             pdfObject.MakeIndirect(this.GetDocument());
-            AbstractPdfFormField field = new PdfFormAnnotation(pdfObject);
+            AbstractPdfFormField field = PdfFormCreator.CreateFormAnnotation(pdfObject);
             return AddKid(field);
         }
 
@@ -807,8 +807,8 @@ namespace iText.Forms.Fields {
         public virtual iText.Forms.Fields.PdfFormField SetFieldFlags(int flags) {
             int oldFlags = GetFieldFlags();
             Put(PdfName.Ff, new PdfNumber(flags));
-            if (((oldFlags ^ flags) & PdfTextFormField.FF_COMB) != 0 && PdfName.Tx.Equals(GetFormType()) && new PdfTextFormField
-                (GetPdfObject()).GetMaxLen() != 0) {
+            if (((oldFlags ^ flags) & PdfTextFormField.FF_COMB) != 0 && PdfName.Tx.Equals(GetFormType()) && PdfFormCreator
+                .CreateTextFormField(GetPdfObject()).GetMaxLen() != 0) {
                 RegenerateField();
             }
             return this;
@@ -1207,7 +1207,12 @@ namespace iText.Forms.Fields {
         /// </returns>
         public override bool RegenerateField() {
             bool result = true;
-            UpdateDefaultAppearance();
+            if (IsFieldRegenerationEnabled()) {
+                UpdateDefaultAppearance();
+            }
+            else {
+                result = false;
+            }
             foreach (AbstractPdfFormField child in childFields) {
                 if (child is PdfFormAnnotation) {
                     PdfFormAnnotation annotation = (PdfFormAnnotation)child;
@@ -1354,8 +1359,8 @@ namespace iText.Forms.Fields {
                 }
                 else {
                     if (obj.IsArray()) {
-                        PdfObject element = ((PdfArray)obj).Get(1);
-                        if (element.IsString()) {
+                        PdfObject element = ((PdfArray)obj).Size() > 1 ? ((PdfArray)obj).Get(1) : null;
+                        if (element != null && element.IsString()) {
                             sb.Append(((PdfString)element).ToUnicodeString()).Append('\n');
                         }
                     }
@@ -1478,7 +1483,15 @@ namespace iText.Forms.Fields {
                         img = ImageDataFactory.Create(Convert.FromBase64String(value));
                     }
                     catch (Exception) {
-                        text = value;
+                        if (generateAppearance) {
+                            // Display value.
+                            foreach (PdfFormAnnotation annot in GetChildFormAnnotations()) {
+                                annot.SetCaption(value, false);
+                            }
+                        }
+                        else {
+                            text = value;
+                        }
                     }
                 }
                 else {
@@ -1486,6 +1499,11 @@ namespace iText.Forms.Fields {
                     // so we need to get rid of the form fields kids
                     PdfFormFieldMergeUtil.ProcessDirtyAnnotations(this, true);
                     Put(PdfName.V, new PdfName(value));
+                    if (generateAppearance && !GetFieldFlag(PdfButtonFormField.FF_RADIO)) {
+                        if (TryGenerateCheckboxAppearance(value)) {
+                            return this;
+                        }
+                    }
                     foreach (PdfWidgetAnnotation widget in GetWidgets()) {
                         IList<String> states = JavaUtil.ArraysAsList(PdfFormAnnotation.MakeFormAnnotation(widget.GetPdfObject(), GetDocument
                             ()).GetAppearanceStates());
@@ -1504,7 +1522,7 @@ namespace iText.Forms.Fields {
                         ((PdfChoiceFormField)this).SetListSelected(new String[] { value }, false);
                     }
                     else {
-                        PdfChoiceFormField choice = new PdfChoiceFormField(this.GetPdfObject());
+                        PdfChoiceFormField choice = PdfFormCreator.CreateChoiceFormField(this.GetPdfObject());
                         choice.SetListSelected(new String[] { value }, false);
                     }
                 }
@@ -1517,6 +1535,35 @@ namespace iText.Forms.Fields {
             }
             this.SetModified();
             return this;
+        }
+
+        /// <summary>
+        /// Distinguish mutually exclusive and regular checkboxes: check all the on states of the widgets, if they are
+        /// not all equal, then consider that this checkbox is mutually exclusive and do nothing, otherwise regenerate
+        /// normal appearance with value as on appearance state for all the widgets.
+        /// </summary>
+        /// <param name="value">not empty value different from "Off".</param>
+        private bool TryGenerateCheckboxAppearance(String value) {
+            if (value == null || String.IsNullOrEmpty(value) || PdfFormAnnotation.OFF_STATE_VALUE.Equals(value)) {
+                return false;
+            }
+            ICollection<String> allStates = new HashSet<String>();
+            foreach (PdfFormAnnotation annotation in GetChildFormAnnotations()) {
+                allStates.AddAll(JavaUtil.ArraysAsList(annotation.GetAppearanceStates()));
+                if (allStates.Count > 2) {
+                    return false;
+                }
+            }
+            allStates.Remove(PdfFormAnnotation.OFF_STATE_VALUE);
+            if (allStates.IsEmpty() || allStates.Count == 1 && !value.Equals(allStates.ToArray(new String[allStates.Count
+                ])[0])) {
+                foreach (PdfFormAnnotation annotation in GetChildFormAnnotations()) {
+                    annotation.SetCheckBoxAppearanceOnStateName(value);
+                }
+                UpdateDefaultAppearance();
+                return true;
+            }
+            return false;
         }
 
         private bool MergeKidsIfKidWithSuchNameExists(AbstractPdfFormField newKid, bool throwExceptionOnError) {

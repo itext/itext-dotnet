@@ -255,6 +255,34 @@ namespace iText.Forms.Form.Element {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void RadioWithPaddingsTest() {
+            String outPdf = DESTINATION_FOLDER + "radioWithPaddings.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_radioWithPaddings.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                Div div = new Div().SetBackgroundColor(ColorConstants.PINK);
+                Radio radio = CreateRadioButton("radio", "form radio group", new SolidBorder(ColorConstants.DARK_GRAY, 20)
+                    , ColorConstants.WHITE, true, false);
+                radio.SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(20));
+                radio.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(20));
+                radio.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(20));
+                radio.SetProperty(Property.PADDING_RIGHT, UnitValue.CreatePointValue(20));
+                // Paddings are always 0 for radio buttons
+                NUnit.Framework.Assert.AreEqual(radio.GetProperty<UnitValue>(Property.PADDING_BOTTOM), UnitValue.CreatePointValue
+                    (0));
+                NUnit.Framework.Assert.AreEqual(radio.GetProperty<UnitValue>(Property.PADDING_TOP), UnitValue.CreatePointValue
+                    (0));
+                NUnit.Framework.Assert.AreEqual(radio.GetProperty<UnitValue>(Property.PADDING_LEFT), UnitValue.CreatePointValue
+                    (0));
+                NUnit.Framework.Assert.AreEqual(radio.GetProperty<UnitValue>(Property.PADDING_RIGHT), UnitValue.CreatePointValue
+                    (0));
+                radio.SetSize(100);
+                div.Add(radio);
+                document.Add(div);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
         private static Radio CreateRadioButton(String name, String groupName, Border border, Color backgroundColor
             , bool @checked, bool flatten) {
             Radio radio = new Radio(name, groupName);

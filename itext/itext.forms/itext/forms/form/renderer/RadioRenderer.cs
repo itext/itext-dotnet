@@ -143,7 +143,7 @@ namespace iText.Forms.Form.Renderer {
         /// <summary><inheritDoc/></summary>
         protected internal override void ApplyAcroField(DrawContext drawContext) {
             PdfDocument doc = drawContext.GetDocument();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
             DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
@@ -155,13 +155,18 @@ namespace iText.Forms.Form.Renderer {
             bool addNew = false;
             if (null == radioGroup) {
                 radioGroup = new RadioFormFieldBuilder(doc, groupName).CreateRadioGroup();
+                radioGroup.DisableFieldRegeneration();
                 radioGroup.SetValue(PdfFormAnnotation.OFF_STATE_VALUE);
                 addNew = true;
+            }
+            else {
+                radioGroup.DisableFieldRegeneration();
             }
             if (IsBoxChecked()) {
                 radioGroup.SetValue(GetModelId());
             }
             PdfFormAnnotation radio = new RadioFormFieldBuilder(doc, null).CreateRadioButton(GetModelId(), area);
+            radio.DisableFieldRegeneration();
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
                 radio.SetBackgroundColor(background.GetColor());
@@ -169,6 +174,7 @@ namespace iText.Forms.Form.Renderer {
             ApplyBorderProperty(radio);
             radio.SetFormFieldElement((Radio)modelElement);
             radioGroup.AddKid(radio);
+            radioGroup.EnableFieldRegeneration();
             if (addNew) {
                 form.AddField(radioGroup, page);
             }

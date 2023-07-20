@@ -1043,7 +1043,8 @@ namespace iText.Forms {
         public virtual PdfFormField CopyField(String name) {
             PdfFormField oldField = GetField(name);
             if (oldField != null) {
-                return new PdfFormField((PdfDictionary)oldField.GetPdfObject().Clone().MakeIndirect(document));
+                return PdfFormCreator.CreateFormField((PdfDictionary)oldField.GetPdfObject().Clone().MakeIndirect(document
+                    ));
             }
             return null;
         }
@@ -1081,6 +1082,23 @@ namespace iText.Forms {
             }
             else {
                 parent.AddKid(field);
+            }
+        }
+
+        /// <summary>
+        /// Disables appearance stream regeneration for all the root fields in the Acroform, so all of its children
+        /// in the hierarchy will also not be regenerated.
+        /// </summary>
+        public virtual void DisableRegenerationForAllFields() {
+            foreach (PdfFormField rootField in GetRootFormFields().Values) {
+                rootField.DisableFieldRegeneration();
+            }
+        }
+
+        /// <summary>Enables appearance stream regeneration for all the fields in the Acroform and regenerates them.</summary>
+        public virtual void EnableRegenerationForAllFields() {
+            foreach (PdfFormField rootField in GetRootFormFields().Values) {
+                rootField.EnableFieldRegeneration();
             }
         }
 

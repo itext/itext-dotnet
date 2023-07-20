@@ -497,6 +497,10 @@ namespace iText.Kernel.Pdf {
         /// Copies page and adds it to the specified document to the end or by index if the corresponding parameter is true.
         /// <br /><br />
         /// NOTE: Works only for pages from the document opened in reading mode, otherwise an exception is thrown.
+        /// NOTE: If both documents (from which and to which the copy is made) are tagged, you must additionally call the
+        /// <see cref="IPdfPageFormCopier.RecreateAcroformToProcessCopiedFields(PdfDocument)"/>
+        /// method after copying the
+        /// tag structure to process copied fields, like add them to the document and merge fields with the same names.
         /// </remarks>
         /// <param name="toDocument">a document to copy page to.</param>
         /// <param name="copier">

@@ -1471,7 +1471,6 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void MSungLightFontRanges() {
-            //TODO DEVSIX-3348
             String filename = destinationFolder + "mSungLightFontRanges.pdf";
             String cmpFilename = sourceFolder + "cmp_mSungLightFontRanges.pdf";
             PdfWriter writer = new PdfWriter(filename);

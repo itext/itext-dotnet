@@ -278,7 +278,7 @@ namespace iText.Signatures {
         /// <summary>Gets a new signature field name that doesn't clash with any existing name.</summary>
         /// <returns>A new signature field name.</returns>
         public virtual String GetNewSigFieldName() {
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
             String name = "Signature";
             int step = 1;
             while (acroForm.GetField(name + step) != null) {
@@ -295,7 +295,7 @@ namespace iText.Signatures {
         /// <param name="fieldName">The name indicating the field to be signed.</param>
         public virtual void SetFieldName(String fieldName) {
             if (fieldName != null) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
                 PdfFormField field = acroForm.GetField(fieldName);
                 if (field != null) {
                     if (!PdfName.Sig.Equals(field.GetFormType())) {
@@ -706,7 +706,7 @@ namespace iText.Signatures {
                 throw new PdfException(SignExceptionMessageConstant.DOCUMENT_ALREADY_PRE_CLOSED);
             }
             preClosed = true;
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
             SignatureUtil sgnUtil = new SignatureUtil(document);
             String name = GetFieldName();
             bool fieldExist = sgnUtil.DoesSignatureFieldExist(name);
@@ -1067,7 +1067,7 @@ namespace iText.Signatures {
             if (catalogPerms != null) {
                 urSignature = catalogPerms.GetAsDictionary(PdfName.UR3);
             }
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, false);
             if (acroForm != null) {
                 foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
                     PdfDictionary fieldDict = entry.Value.GetPdfObject();

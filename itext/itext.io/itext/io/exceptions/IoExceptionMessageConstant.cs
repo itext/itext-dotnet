@@ -275,5 +275,10 @@ namespace iText.IO.Exceptions {
         public const String UNSUPPORTED_JPEG_MARKER = "{0} unsupported jpeg marker {1}.";
 
         public const String WRITE_FAILED = "Writing woff2 exception";
+
+        public const String ENCODING_ERROR = "Error during encoding the following code point: {0} in characterset:"
+             + " {1}";
+
+        public const String ONLY_BMP_ENCODING = "This encoder only accepts BMP codepoints";
     }
 }

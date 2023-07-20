@@ -633,7 +633,7 @@ namespace iText.Signatures {
                 topLayer = new PdfFormXObject(rotated);
                 topLayer.MakeIndirect(document);
                 if (reuseAppearance) {
-                    PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
+                    PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
                     PdfFormField field = acroForm.GetField(fieldName);
                     PdfStream stream = field.GetWidgets()[0].GetAppearanceDictionary().GetAsStream(PdfName.N);
                     PdfFormXObject xobj = new PdfFormXObject(stream);

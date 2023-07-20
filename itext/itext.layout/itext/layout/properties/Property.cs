@@ -101,6 +101,14 @@ namespace iText.Layout.Properties {
 
         public const int COLSPAN = 16;
 
+        public const int COLUMN_COUNT = 138;
+
+        public const int COLUMN_WIDTH = 142;
+
+        public const int COLUMN_GAP = 143;
+
+        public const int COLUMN_GAP_BORDER = 144;
+
         public const int DESTINATION = 17;
 
         public const int FILL_AVAILABLE_AREA = 86;
@@ -116,6 +124,8 @@ namespace iText.Layout.Properties {
         public const int FLEX_SHRINK = 127;
 
         public const int FLEX_WRAP = 128;
+
+        public const int FLEX_DIRECTION = 139;
 
         public const int FLOAT = 99;
 
@@ -343,6 +353,10 @@ namespace iText.Layout.Properties {
 
         public const int ADD_MARKED_CONTENT_TEXT = 137;
 
+        public const int TREAT_AS_CONTINUOUS_CONTAINER = 140;
+
+        public const int TREAT_AS_CONTINUOUS_CONTAINER_RESULT = 141;
+
         /// <summary>
         /// Some properties must be passed to
         /// <see cref="iText.Layout.IPropertyContainer"/>
@@ -358,7 +372,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 137;
+        private const int MAX_INHERITED_PROPERTY_ID = 144;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -402,6 +416,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.OVERFLOW_WRAP] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.META_INFO] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.ADD_MARKED_CONTENT_TEXT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.TREAT_AS_CONTINUOUS_CONTAINER] = true;
         }
 
         private Property() {

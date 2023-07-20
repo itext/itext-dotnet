@@ -295,7 +295,7 @@ namespace iText.Forms.Form.Element {
                     .PINK, 10));
                 flattenInputField.SetWidth(200);
                 flattenInputField.SetInteractive(false);
-                flattenInputField.SetValue("content box");
+                flattenInputField.SetValue("border box");
                 flattenInputField.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
                 document.Add(flattenInputField);
                 // CONTENT_BOX

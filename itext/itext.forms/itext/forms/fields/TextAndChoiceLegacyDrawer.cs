@@ -245,7 +245,7 @@ namespace iText.Forms.Fields {
             if (formAnnotation.GetColor() != null) {
                 paragraphStyle.SetProperty(Property.FONT_COLOR, new TransparentColor(formAnnotation.GetColor()));
             }
-            int maxLen = new PdfTextFormField(formAnnotation.parent.GetPdfObject()).GetMaxLen();
+            int maxLen = PdfFormCreator.CreateTextFormField(formAnnotation.parent.GetPdfObject()).GetMaxLen();
             // check if /Comb has been set
             float widthPerCharacter = width / maxLen;
             int numberOfCharacters = Math.Min(maxLen, value.Length);

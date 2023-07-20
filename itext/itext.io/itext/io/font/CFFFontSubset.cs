@@ -1236,7 +1236,6 @@ namespace iText.IO.Font {
             int minor = GetCard8();
             int hdrSize = GetCard8();
             int offSize = GetCard8();
-            nextIndexOffset = hdrSize;
             OutputList.AddLast(new CFFFont.RangeItem(buf, 0, hdrSize));
         }
 

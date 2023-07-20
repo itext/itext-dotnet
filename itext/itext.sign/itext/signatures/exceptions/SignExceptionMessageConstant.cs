@@ -25,6 +25,8 @@ using System;
 namespace iText.Signatures.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class SignExceptionMessageConstant {
+        public const String ALGORITHMS_NOT_SUPPORTED = "Signing algorithms {0} and {1} are not supported.";
+
         public const String AUTHENTICATED_ATTRIBUTE_IS_MISSING_THE_DIGEST = "Authenticated attribute is missing " 
             + "the digest.";
 

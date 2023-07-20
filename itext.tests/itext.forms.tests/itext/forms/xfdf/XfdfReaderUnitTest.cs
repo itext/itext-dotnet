@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.IO;
 using iText.Forms;
+using iText.Forms.Fields;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Test;
@@ -36,7 +37,7 @@ namespace iText.Forms.Xfdf {
         public virtual void XfdfSquareAnnotationWithoutFringe() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             pdfDocument.AddNewPage();
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDocument, true);
             AnnotObject annotObject = new AnnotObject();
             annotObject.SetName(XfdfConstants.SQUARE);
             annotObject.AddAttribute(new AttributeObject(XfdfConstants.PAGE, "1"));

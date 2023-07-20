@@ -243,11 +243,13 @@ namespace iText.Forms.Form.Renderer {
                 ));
             PdfButtonFormField button = new PushButtonFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreatePushButton
                 ();
+            button.DisableFieldRegeneration();
             button.SetFont(font).SetFontSize(fontSizeValue);
             button.GetFirstFormAnnotation().SetBackgroundColor(backgroundColor);
             ApplyDefaultFieldProperties(button);
             button.GetFirstFormAnnotation().SetFormFieldElement((Button)modelElement);
-            PdfAcroForm forms = PdfAcroForm.GetAcroForm(doc, true);
+            button.EnableFieldRegeneration();
+            PdfAcroForm forms = PdfFormCreator.GetAcroForm(doc, true);
             // Fields can be already added on split, e.g. when button split into multiple pages. But now we merge fields
             // with the same names (and add all the widgets as kids to that merged field), so we can add it anyway.
             forms.AddField(button, page);

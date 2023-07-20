@@ -76,7 +76,7 @@ namespace iText.Forms {
             String cmp = sourceFolder + "cmp_" + inputPdfFileName + ".pdf";
             String cmp_flattened = sourceFolder + "cmp_" + inputPdfFileName + "_flattened.pdf";
             using (PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest))) {
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
                 foreach (PdfFormField field in form.GetAllFormFields().Values) {
                     field.SetValue("Long Long Text");
                     field.GetFirstFormAnnotation().SetBorderWidth(1);
@@ -85,7 +85,7 @@ namespace iText.Forms {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
             using (PdfDocument doc_1 = new PdfDocument(new PdfReader(dest), new PdfWriter(dest_flattened))) {
-                PdfAcroForm.GetAcroForm(doc_1, true).FlattenFields();
+                PdfFormCreator.GetAcroForm(doc_1, true).FlattenFields();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest_flattened, cmp_flattened, destinationFolder
                 , "diff_"));

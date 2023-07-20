@@ -226,7 +226,7 @@ namespace iText.Forms.Fields {
                 PdfDictionary parent = GetParent();
                 // MaxLen is an inherited form field property, therefore we try to recursively extract it from the ancestors
                 if (parent != null) {
-                    return new iText.Forms.Fields.PdfTextFormField(parent).GetMaxLen();
+                    return PdfFormCreator.CreateTextFormField(parent).GetMaxLen();
                 }
                 else {
                     return 0;

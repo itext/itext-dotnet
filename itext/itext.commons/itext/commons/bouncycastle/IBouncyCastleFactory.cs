@@ -57,6 +57,21 @@ namespace iText.Commons.Bouncycastle {
     /// selected depending on a bouncy-castle dependency specified by the user.
     /// </remarks>
     public interface IBouncyCastleFactory {
+
+        /// <summary>
+        /// Get signing algorithm oid from its name.
+        /// </summary>
+        /// <param name="name">name of the algorithm</param>
+        /// <returns>algorithm oid</returns>
+        String GetAlgorithmOid(String name);
+
+        /// <summary>
+        /// Get signing algorithm name from its oid.
+        /// </summary>
+        /// <param name="oid">oid of the algorithm</param>
+        /// <returns>algorithm name</returns>
+        String GetAlgorithmName(String oid);
+        
         /// <summary>Cast ASN1 encodable wrapper to the ASN1 object identifier wrapper.</summary>
         /// <param name="encodable">wrapper to be cast</param>
         /// <returns>casted wrapper</returns>

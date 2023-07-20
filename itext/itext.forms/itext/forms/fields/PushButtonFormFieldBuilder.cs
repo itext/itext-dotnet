@@ -66,11 +66,11 @@ namespace iText.Forms.Fields {
             PdfButtonFormField field;
             PdfWidgetAnnotation annotation = null;
             if (GetWidgetRectangle() == null) {
-                field = new PdfButtonFormField(GetDocument());
+                field = PdfFormCreator.CreateButtonFormField(GetDocument());
             }
             else {
                 annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
-                field = new PdfButtonFormField(annotation, GetDocument());
+                field = PdfFormCreator.CreateButtonFormField(annotation, GetDocument());
                 if (null != GetConformanceLevel()) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }

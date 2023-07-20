@@ -128,12 +128,12 @@ namespace iText.Forms.Fields {
         /// <summary>Highlights the options.</summary>
         /// <remarks>
         /// Highlights the options. If this method is used for Combo box, the first value in input array
-        /// will be the field value
+        /// will be the field value.
         /// </remarks>
-        /// <param name="optionValues">Array of options to be highlighted</param>
+        /// <param name="optionValues">Array of display values to be highlighted.</param>
         /// <returns>
         /// current
-        /// <see cref="PdfChoiceFormField"/>
+        /// <see cref="PdfChoiceFormField"/>.
         /// </returns>
         public virtual iText.Forms.Fields.PdfChoiceFormField SetListSelected(String[] optionValues) {
             return SetListSelected(optionValues, true);
@@ -390,7 +390,7 @@ namespace iText.Forms.Fields {
                     value = (PdfString)option;
                 }
                 else {
-                    if (option.IsArray()) {
+                    if (option.IsArray() && ((PdfArray)option).Size() > 1) {
                         value = (PdfString)((PdfArray)option).Get(1);
                     }
                 }

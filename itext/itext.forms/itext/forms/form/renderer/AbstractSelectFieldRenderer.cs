@@ -22,12 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
-using iText.Forms.Logs;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -48,12 +49,6 @@ namespace iText.Forms.Form.Renderer {
         protected internal AbstractSelectFieldRenderer(AbstractSelectField modelElement)
             : base(modelElement) {
             AddChild(CreateFlatRenderer());
-            if (!IsFlatten()) {
-                // TODO DEVSIX-1901
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.AbstractSelectFieldRenderer));
-                logger.LogWarning(FormsLogMessageConstants.ACROFORM_NOT_SUPPORTED_FOR_SELECT);
-                SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
-            }
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
@@ -66,10 +61,13 @@ namespace iText.Forms.Form.Renderer {
             float childrenMaxWidth = GetMinMaxWidth().GetMaxWidth();
             LayoutArea area = layoutContext.GetArea().Clone();
             area.GetBBox().MoveDown(INF - area.GetBBox().GetHeight()).SetHeight(INF).SetWidth(childrenMaxWidth + EPS);
+            // A workaround for the issue that super.layout clears Property.FORCED_PLACEMENT,
+            // but we need it later in this function
+            bool isForcedPlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
             LayoutResult layoutResult = base.Layout(new LayoutContext(area, layoutContext.GetMarginsCollapseInfo(), layoutContext
                 .GetFloatRendererAreas(), layoutContext.IsClippedHeight()));
             if (layoutResult.GetStatus() != LayoutResult.FULL) {
-                if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                if (isForcedPlacement) {
                     layoutResult = MakeLayoutResultFull(layoutContext.GetArea(), layoutResult);
                 }
                 else {
@@ -97,6 +95,16 @@ namespace iText.Forms.Form.Renderer {
             return layoutResult;
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override void Draw(DrawContext drawContext) {
+            if (IsFlatten()) {
+                base.Draw(drawContext);
+            }
+            else {
+                DrawChildren(drawContext);
+            }
+        }
+
         public override void DrawChildren(DrawContext drawContext) {
             if (IsFlatten()) {
                 base.DrawChildren(drawContext);
@@ -110,6 +118,19 @@ namespace iText.Forms.Form.Renderer {
         /// <returns>the accessibility language</returns>
         protected internal virtual String GetLang() {
             return this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
+        }
+
+        protected internal virtual void WriteAcroFormFieldLangAttribute(PdfDocument pdfDoc) {
+            if (pdfDoc.IsTagged()) {
+                TagTreePointer formParentPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                IList<String> kidsRoles = formParentPointer.GetKidsRoles();
+                int lastFormIndex = kidsRoles.LastIndexOf(StandardRoles.FORM);
+                TagTreePointer formPointer = formParentPointer.MoveToKid(lastFormIndex);
+                if (GetLang() != null) {
+                    formPointer.GetProperties().SetLanguage(GetLang());
+                }
+                formParentPointer.MoveToParent();
+            }
         }
 
         protected internal abstract IRenderer CreateFlatRenderer();
@@ -126,6 +147,51 @@ namespace iText.Forms.Form.Renderer {
         /// <returns>the model id</returns>
         protected internal virtual String GetModelId() {
             return ((IFormField)GetModelElement()).GetId();
+        }
+
+        /// <summary>
+        /// Retrieve the options from select field (can be combo box or list box field) and set them
+        /// to the form field builder.
+        /// </summary>
+        /// <param name="builder">
+        /// 
+        /// <see cref="iText.Forms.Fields.ChoiceFormFieldBuilder"/>
+        /// to set options to.
+        /// </param>
+        /// <param name="field">
+        /// 
+        /// <see cref="iText.Forms.Form.Element.AbstractSelectField"/>
+        /// to retrieve the options from.
+        /// </param>
+        protected internal virtual void SetupBuilderValues(ChoiceFormFieldBuilder builder, AbstractSelectField field
+            ) {
+            IList<SelectFieldItem> options = field.GetItems();
+            if (options.IsEmpty()) {
+                builder.SetOptions(new String[0]);
+                return;
+            }
+            bool supportExportValueAndDisplayValue = field.HasExportAndDisplayValues();
+            // If one element has export value and display value, then all elements must have export value and display value
+            if (supportExportValueAndDisplayValue) {
+                String[][] exportValuesAndDisplayValues = new String[options.Count][];
+                for (int i = 0; i < options.Count; i++) {
+                    SelectFieldItem option = options[i];
+                    String[] exportValues = new String[2];
+                    exportValues[0] = option.GetExportValue();
+                    exportValues[1] = option.GetDisplayValue();
+                    exportValuesAndDisplayValues[i] = exportValues;
+                }
+                builder.SetOptions(exportValuesAndDisplayValues);
+            }
+            else {
+                // In normal case we just use display values as this will correctly give the one value that we need
+                String[] displayValues = new String[options.Count];
+                for (int i = 0; i < options.Count; i++) {
+                    SelectFieldItem option = options[i];
+                    displayValues[i] = option.GetDisplayValue();
+                }
+                builder.SetOptions(displayValues);
+            }
         }
 
         protected internal virtual float GetFinalSelectFieldHeight(float availableHeight, float actualHeight, bool
@@ -156,6 +222,15 @@ namespace iText.Forms.Form.Renderer {
             return selectedOptions;
         }
 
+        internal static bool IsOptGroupRenderer(IRenderer renderer) {
+            return renderer.HasProperty(FormProperty.FORM_FIELD_LABEL) && !renderer.HasProperty(FormProperty.FORM_FIELD_SELECTED
+                );
+        }
+
+        internal static bool IsOptionRenderer(IRenderer child) {
+            return child.HasProperty(FormProperty.FORM_FIELD_SELECTED);
+        }
+
         private LayoutResult MakeLayoutResultFull(LayoutArea layoutArea, LayoutResult layoutResult) {
             IRenderer splitRenderer = layoutResult.GetSplitRenderer() == null ? this : layoutResult.GetSplitRenderer();
             if (occupiedArea == null) {
@@ -164,15 +239,6 @@ namespace iText.Forms.Form.Renderer {
             }
             layoutResult = new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null);
             return layoutResult;
-        }
-
-        internal static bool IsOptGroupRenderer(IRenderer renderer) {
-            return renderer.HasProperty(FormProperty.FORM_FIELD_LABEL) && !renderer.HasProperty(FormProperty.FORM_FIELD_SELECTED
-                );
-        }
-
-        internal static bool IsOptionRenderer(IRenderer child) {
-            return child.HasProperty(FormProperty.FORM_FIELD_SELECTED);
         }
     }
 }

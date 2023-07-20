@@ -31,6 +31,7 @@ namespace iText.Test.Attributes
         public int Count;
         public bool Ignore;
         public int LogLevel;
+        public bool QuietMode;
 
         public LogMessageAttribute(string messageTemplate)
         {
@@ -38,6 +39,7 @@ namespace iText.Test.Attributes
             this.Count = 1;
             this.Ignore = false;
             this.LogLevel = LogLevelConstants.UNKNOWN;
+            this.QuietMode = false;
         }
 
         public string GetMessageTemplate()

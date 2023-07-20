@@ -180,7 +180,7 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonShouldNotContainTerminalFieldKeys() {
             using (PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()))) {
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(document, true);
                 PdfButtonFormField radioGroup = new RadioFormFieldBuilder(document, DUMMY_NAME).CreateRadioGroup();
                 PdfFormAnnotation radioAnnotation = new RadioFormFieldBuilder(document, DUMMY_NAME).CreateRadioButton(DUMMY_APPEARANCE_NAME
                     , DUMMY_RECTANGLE);
@@ -192,7 +192,7 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonButDontAddToGroupGroupContainsNoRadioButton() {
             using (PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()))) {
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(document, true);
                 PdfButtonFormField radioGroup = new RadioFormFieldBuilder(document, DUMMY_NAME).CreateRadioGroup();
                 new RadioFormFieldBuilder(document, DUMMY_NAME).CreateRadioButton(DUMMY_APPEARANCE_NAME, DUMMY_RECTANGLE);
                 form.AddField(radioGroup);
@@ -204,7 +204,7 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonAddToGroupGroupContainsOneRadioButton() {
             using (PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()))) {
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(document, true);
                 PdfButtonFormField radioGroup = new RadioFormFieldBuilder(document, DUMMY_NAME).CreateRadioGroup();
                 PdfFormAnnotation radioAnnotation = new RadioFormFieldBuilder(document, DUMMY_NAME).CreateRadioButton(DUMMY_APPEARANCE_NAME
                     , DUMMY_RECTANGLE);

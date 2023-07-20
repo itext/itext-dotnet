@@ -53,20 +53,22 @@ namespace iText.Forms.Fields {
         private PdfTextFormField CreateText(bool multiline) {
             PdfTextFormField field;
             if (GetWidgetRectangle() == null) {
-                field = new PdfTextFormField(GetDocument());
+                field = PdfFormCreator.CreateTextFormField(GetDocument());
             }
             else {
                 PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
                 if (null != GetConformanceLevel()) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
-                field = new PdfTextFormField(annotation, GetDocument());
+                field = PdfFormCreator.CreateTextFormField(annotation, GetDocument());
                 SetPageToField(field);
             }
+            field.DisableFieldRegeneration();
             field.pdfAConformanceLevel = GetConformanceLevel();
             field.SetMultiline(multiline);
             field.SetFieldName(GetFormFieldName());
             field.SetValue(TEXT_FORM_FIELD_DEFAULT_VALUE);
+            field.EnableFieldRegeneration();
             return field;
         }
 

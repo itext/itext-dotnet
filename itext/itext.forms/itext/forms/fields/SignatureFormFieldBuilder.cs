@@ -48,14 +48,14 @@ namespace iText.Forms.Fields {
         public virtual PdfSignatureFormField CreateSignature() {
             PdfSignatureFormField signatureFormField;
             if (GetWidgetRectangle() == null) {
-                signatureFormField = new PdfSignatureFormField(GetDocument());
+                signatureFormField = PdfFormCreator.CreateSignatureFormField(GetDocument());
             }
             else {
                 PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
                 if (GetConformanceLevel() != null) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
-                signatureFormField = new PdfSignatureFormField(annotation, GetDocument());
+                signatureFormField = PdfFormCreator.CreateSignatureFormField(annotation, GetDocument());
                 SetPageToField(signatureFormField);
             }
             signatureFormField.pdfAConformanceLevel = GetConformanceLevel();

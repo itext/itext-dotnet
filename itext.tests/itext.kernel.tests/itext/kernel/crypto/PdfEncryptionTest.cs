@@ -28,10 +28,12 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.IO.Font.Constants;
+using iText.Kernel.Crypto.Securityhandler;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Utils;
 using iText.Kernel.XMP;
@@ -209,17 +211,6 @@ namespace iText.Kernel.Crypto {
 
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void OpenEncryptedDocWithWrongPrivateKey() {
-            using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
-                ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), PemFileHelper.ReadPrivateKeyFromPemFile(new 
-                FileStream(sourceFolder + "wrong.pem", FileMode.Open, FileAccess.Read), PRIVATE_KEY_PASS)))) {
-                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
-                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PDF_DECRYPTION, e.Message);
-            }
-        }
-
-        [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void OpenEncryptedDocWithWrongCertificateAndPrivateKey() {
             using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
                 ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), PemFileHelper.ReadPrivateKeyFromPemFile
@@ -245,6 +236,9 @@ namespace iText.Kernel.Crypto {
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void CopyEncryptedDocument() {
+            // I don't know how this source doc was created. Currently it's not opening by Acrobat and Foxit.
+            // If I recreate it using iText, decrypting it in bc-fips on dotnet will start failing. But we probably still
+            // want this test.
             PdfDocument srcDoc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new 
                 ReaderProperties().SetPublicKeySecurityParams(GetPublicCertificate(CERT), GetPrivateKey())));
             String fileName = "copiedEncryptedDoc.pdf";
@@ -466,6 +460,29 @@ namespace iText.Kernel.Crypto {
         }
 
         // this test checks log message absence
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true, Count = 2)]
+        public virtual void DecryptAdobeWithPasswordAes256() {
+            String filename = System.IO.Path.Combine(sourceFolder + "AdobeAes256.pdf").ToString();
+            DecryptWithPassword(filename, "user".GetBytes());
+            DecryptWithPassword(filename, "owner".GetBytes());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void DecodeDictionaryWithInvalidOwnerHashAes256() {
+            PdfDictionary dictionary = new PdfDictionary();
+            dictionary.Put(PdfName.R, new PdfNumber(0));
+            //Setting password hash which exceeds 48 bytes and contains non 0 elements after first 48 bytes
+            dictionary.Put(PdfName.O, new PdfString("Ä\u0010\u001D`¶\u0084nË»j{\fßò\u0089JàN*\u0090ø>No\u0099" + "\u0087J \u0013\"V\u008E\fT!\u0082\u0003\u009E£\u008Fc\u0004 ].\u008C\u009C\u009C\u0000"
+                 + "\u0000\u0000\u0000\u0013\u0000\u0013\u0013\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" + "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0013"
+                ));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new StandardHandlerUsingAes256(dictionary
+                , "owner".GetBytes()));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.BAD_PASSWORD_HASH, e.InnerException.Message
+                );
+        }
+
         public virtual void EncryptWithPassword2(String filename, int encryptionType, int compression) {
             EncryptWithPassword2(filename, encryptionType, compression, false);
         }
@@ -594,6 +611,16 @@ namespace iText.Kernel.Crypto {
                 filename, destinationFolder, "diff_", USER, USER);
             if (compareResult != null) {
                 NUnit.Framework.Assert.Fail(compareResult);
+            }
+        }
+
+        private void DecryptWithPassword(String fileName, byte[] password) {
+            ReaderProperties readerProperties = new ReaderProperties().SetPassword(password);
+            using (PdfReader reader = new PdfReader(fileName, readerProperties)) {
+                using (PdfDocument pdfDocument = new PdfDocument(reader)) {
+                    NUnit.Framework.Assert.IsTrue(PdfTextExtractor.GetTextFromPage(pdfDocument.GetFirstPage()).StartsWith("Content encrypted by "
+                        ));
+                }
             }
         }
     }

@@ -164,17 +164,22 @@ namespace iText.Forms.Xfdf {
                 contents.InnerText = annotObject.GetContents().ToString().Replace('\r', '\n');
                 annot.AppendChild(contents);
             }
+            if (annotObject.GetVertices() != null) {
+                XmlElement contents = document.CreateElement("vertices");
+                contents.InnerText = annotObject.GetVertices();
+                annot.AppendChild(contents);
+            }
             if (annotObject.GetAppearance() != null) {
                 XmlElement appearance = document.CreateElement("appearance");
                 appearance.InnerText = annotObject.GetAppearance();
                 annot.AppendChild(appearance);
             }
-            //
-            //        if (annotObject.getContentsRichText() != null) {
-            //            Element contentsRichText = document.createElement("contents-richtext");
-            //            contentsRichText.setNodeValue(annotObject.getContents().getValue());
-            //            annot.appendChild(contentsRichText);
-            //        }
+            if (annotObject.GetContentsRichText() != null) {
+                // TODO: DEVSIX-7600 - add tests for this code. contentsRichText#setTextContent might be wrong here.
+                XmlElement contentsRichText = document.CreateElement("contents-richtext");
+                contentsRichText.InnerText = annotObject.GetContentsRichText().GetValue();
+                annot.AppendChild(contentsRichText);
+            }
             if (XfdfConstants.LINK.EqualsIgnoreCase(annotObject.GetName())) {
                 if (annotObject.GetDestination() != null) {
                     AddDest(annotObject.GetDestination(), annot, document);

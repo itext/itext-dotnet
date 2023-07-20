@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Forms.Fields;
 using iText.Forms.Logs;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -46,7 +47,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void OrphanedNamelessFormFieldTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "orphanedFormField.pdf"))) {
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 NUnit.Framework.Assert.AreEqual(3, form.GetRootFormFields().Count);
             }
         }
@@ -57,7 +58,7 @@ namespace iText.Forms {
             String cmpFileName = SOURCE_FOLDER + "cmp_mergeMergedFieldsWithTheSameNames.pdf";
             String outFileName = DESTINATION_FOLDER + "mergeMergedFieldsWithTheSameNames.pdf";
             using (PdfDocument sourceDoc = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(sourceDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(sourceDoc, true);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
                 NUnit.Framework.Assert.IsNull(acroForm.GetField("Field").GetKids());
                 PdfFormField field = acroForm.CopyField("Field");
@@ -77,7 +78,7 @@ namespace iText.Forms {
             String outFileName = DESTINATION_FOLDER + "fieldsWithTheSameNamesButDifferentValues.pdf";
             using (PdfDocument outputDoc = new PdfDocument(new PdfWriter(outFileName))) {
                 outputDoc.AddNewPage();
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(outputDoc, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField root = new TextFormFieldBuilder(outputDoc, "root").CreateText();
                 PdfFormField firstField = new TextFormFieldBuilder(outputDoc, "field").CreateText().SetValue("first");
                 PdfFormField secondField = new TextFormFieldBuilder(outputDoc, "field").CreateText().SetValue("second");
@@ -95,12 +96,12 @@ namespace iText.Forms {
         public virtual void ProcessFieldsWithTheSameNamesButDifferentValuesInReadingModeTest() {
             String srcFileName = SOURCE_FOLDER + "cmp_fieldsWithTheSameNamesButDifferentValues.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName))) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
                 PdfFormField root = acroForm.GetField("root");
                 NUnit.Framework.Assert.AreEqual(2, root.GetKids().Size());
                 root.GetChildField("field").SetValue("field");
-                PdfAcroForm.GetAcroForm(document, true);
+                PdfFormCreator.GetAcroForm(document, true);
                 // Check that fields weren't merged
                 NUnit.Framework.Assert.AreEqual(2, root.GetKids().Size());
             }
@@ -112,15 +113,59 @@ namespace iText.Forms {
             String srcFileName = SOURCE_FOLDER + "cmp_fieldsWithTheSameNamesButDifferentValues.pdf";
             String outFileName = DESTINATION_FOLDER + "processFieldsWithTheSameNamesInWritingMode.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
-                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
                 PdfFormField root = acroForm.GetField("root");
                 NUnit.Framework.Assert.AreEqual(2, root.GetKids().Size());
                 root.GetChildField("field").SetValue("field");
-                PdfAcroForm.GetAcroForm(document, true);
+                PdfFormCreator.GetAcroForm(document, true);
                 // Check that fields were merged
                 NUnit.Framework.Assert.AreEqual(1, root.GetKids().Size());
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisableFieldRegenerationTest() {
+            String srcFileName = SOURCE_FOLDER + "borderBoxes.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_disableFieldRegeneration.pdf";
+            String cmpFileName2 = SOURCE_FOLDER + "cmp_disableFieldRegenerationUpdated.pdf";
+            String outFileName = DESTINATION_FOLDER + "disableFieldRegeneration.pdf";
+            String outFileName2 = DESTINATION_FOLDER + "disableFieldRegenerationUpdated.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
+                acroForm.DisableRegenerationForAllFields();
+                foreach (PdfFormField field in acroForm.GetRootFormFields().Values) {
+                    field.SetColor(new DeviceRgb(51, 0, 102));
+                    field.GetFirstFormAnnotation().SetBackgroundColor(new DeviceRgb(229, 204, 255)).SetBorderColor(new DeviceRgb
+                        (51, 0, 102)).SetBorderWidth(5);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_"));
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(cmpFileName), new PdfWriter(outFileName2))) {
+                PdfFormCreator.GetAcroForm(document_1, true).EnableRegenerationForAllFields();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName2, cmpFileName2, DESTINATION_FOLDER
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EnableFieldRegenerationTest() {
+            String srcFileName = SOURCE_FOLDER + "cmp_disableFieldRegeneration.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_enableFieldRegeneration.pdf";
+            String outFileName = DESTINATION_FOLDER + "enableFieldRegeneration.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
+                acroForm.DisableRegenerationForAllFields();
+                foreach (PdfFormField field in acroForm.GetRootFormFields().Values) {
+                    field.SetColor(ColorConstants.DARK_GRAY);
+                    field.GetFirstFormAnnotation().SetBackgroundColor(new DeviceRgb(255, 255, 204)).SetBorderColor(new DeviceRgb
+                        (204, 229, 255)).SetBorderWidth(10);
+                }
+                acroForm.EnableRegenerationForAllFields();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_"));
         }
     }
 }

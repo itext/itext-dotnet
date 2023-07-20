@@ -34,6 +34,8 @@ namespace iText.Forms.Exceptions {
 
         public const String INNER_ARRAY_SHALL_HAVE_TWO_ELEMENTS = "Inner arrays shall have exactly two elements";
 
+        public const String OPTION_ELEMENT_MUST_BE_STRING_OR_ARRAY = "Option element must be a string or an array";
+
         public const String PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING = ""
              + "The page has been already flushed. Use PdfAcroForm#addFieldAppearanceToPage() method before page "
              + "flushing.";
@@ -49,6 +51,12 @@ namespace iText.Forms.Exceptions {
         public const String CHECKBOX_TYPE_NOT_SUPPORTED = "Unsupported checkbox type for PDF/A";
 
         public const String INVALID_ROTATION_VALUE = "Invalid rotation. Rotation must be a multiple of 90 degrees.";
+
+        public const String OPTION_ELEMENT_SHALL_NOT_BE_NULL = "Option element shall not be null.";
+
+        public const String VALUE_SHALL_NOT_BE_NULL = "Value <{0}> shall not be null";
+
+        public const String INDEX_OUT_OF_BOUNDS = "Index: {0}, Size: {1}";
 
         private FormsExceptionMessageConstant() {
         }

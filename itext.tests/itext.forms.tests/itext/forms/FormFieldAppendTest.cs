@@ -49,7 +49,7 @@ namespace iText.Forms {
             StampingProperties props = new StampingProperties();
             props.UseAppendMode();
             PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(temp), props);
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             foreach (PdfFormField field in form.GetAllFormFields().Values) {
                 field.SetValue("Test");
             }
@@ -73,7 +73,7 @@ namespace iText.Forms {
             StampingProperties props = new StampingProperties();
             props.UseAppendMode();
             PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(temp), props);
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             foreach (PdfFormField field in form.GetAllFormFields().Values) {
                 field.SetValue("Different");
             }
@@ -90,7 +90,7 @@ namespace iText.Forms {
 
         private void Flatten(String src, String dest) {
             PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             form.FlattenFields();
             doc.Close();
         }

@@ -26,7 +26,6 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
-using iText.Forms;
 using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
@@ -135,8 +134,9 @@ namespace iText.Forms.Form.Renderer {
             // Default html2pdf input field appearance differs from the default one for form fields.
             // That's why we got rid of several properties we set by default during InputField instance creation.
             modelElement.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
-            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateText().SetValue
-                (value);
+            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateText();
+            inputField.DisableFieldRegeneration();
+            inputField.SetValue(value);
             inputField.SetFont(font).SetFontSize(fontSizeValue);
             if (password) {
                 inputField.SetFieldFlag(PdfFormField.FF_PASSWORD, true);
@@ -150,7 +150,8 @@ namespace iText.Forms.Form.Renderer {
             }
             ApplyDefaultFieldProperties(inputField);
             inputField.GetFirstFormAnnotation().SetFormFieldElement((InputField)modelElement);
-            PdfAcroForm.GetAcroForm(doc, true).AddField(inputField, page);
+            inputField.EnableFieldRegeneration();
+            PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);
             WriteAcroFormFieldLangAttribute(doc);
         }
 

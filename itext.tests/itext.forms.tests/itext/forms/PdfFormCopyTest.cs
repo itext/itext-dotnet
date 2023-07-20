@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Forms.Fields;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -113,7 +114,7 @@ namespace iText.Forms {
             PdfPageFormCopier formCopier = new PdfPageFormCopier();
             srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), destDoc, formCopier);
             srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), destDoc, formCopier);
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(destDoc, false);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(destDoc, false);
             NUnit.Framework.Assert.AreEqual(1, form.GetFields().Size());
             NUnit.Framework.Assert.IsNotNull(form.GetField("Name1"));
             destDoc.Close();
@@ -143,7 +144,7 @@ namespace iText.Forms {
             for (int i = 0; i < 4; ++i) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
             }
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(destDoc, false);
             acroForm.GetField("text_1").SetValue("Text 1!");
             acroForm.GetField("text_2").SetValue("Text 2!");
             acroForm.GetField("text.3").SetValue("Text 3!");
@@ -166,7 +167,7 @@ namespace iText.Forms {
             for (int i = 0; i < 3; ++i) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
             }
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(destDoc, false);
             acroForm.GetField("text.3").SetValue("Text 3!");
             destDoc.Close();
             srcDoc.Close();
@@ -186,7 +187,7 @@ namespace iText.Forms {
             for (int i = 0; i < 3; ++i) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
             }
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(destDoc, false);
             acroForm.GetField("text_1").SetValue("Text 1!");
             destDoc.Close();
             srcDoc.Close();
@@ -206,7 +207,7 @@ namespace iText.Forms {
             for (int i = 0; i < 4; ++i) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
             }
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(destDoc, false);
             acroForm.GetField("text_1").SetValue("Text 1!");
             acroForm.GetField("text_2").SetValue("Text 2!");
             acroForm.GetField("text.3").SetValue("Text 3!");
@@ -358,7 +359,7 @@ namespace iText.Forms {
             for (int i = 0; i < 1; ++i) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
             }
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(destDoc, false);
             acroForm.GetField("text").SetValue("Text!");
             destDoc.Close();
             srcDoc.Close();
@@ -403,7 +404,7 @@ namespace iText.Forms {
             for (int i = 0; i < 4; i++) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
             }
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(destDoc, false);
             acroForm.GetField("text_1").SetValue("text_1");
             acroForm.GetField("NumberField_text.2").SetValue("-100.00");
             acroForm.GetField("NumberField_text.2_1").SetValue("3.00");
@@ -427,7 +428,7 @@ namespace iText.Forms {
             for (int i = 0; i < 4; i++) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
             }
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(destDoc, false);
             acroForm.GetField("CheckBox_1").SetValue("On");
             acroForm.GetField("Check Box.2").SetValue("Off");
             acroForm.GetField("CheckBox4.1#1").SetValue("Off");
@@ -449,7 +450,7 @@ namespace iText.Forms {
             for (int i = 0; i < 4; i++) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
             }
-            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(destDoc, false);
             acroForm.GetField("Group.4").SetValue("Choice_3!<>3.3.3");
             destDoc.Close();
             srcDoc.Close();
@@ -467,7 +468,7 @@ namespace iText.Forms {
                 using (PdfDocument resultPdfDocument = new PdfDocument(writer)) {
                     using (PdfReader reader1 = new PdfReader(srcFileName1)) {
                         using (PdfDocument sourceDoc1 = new PdfDocument(reader1)) {
-                            PdfAcroForm.GetAcroForm(resultPdfDocument, true);
+                            PdfFormCreator.GetAcroForm(resultPdfDocument, true);
                             PdfPageFormCopier formCopier = new PdfPageFormCopier();
                             sourceDoc1.CopyPagesTo(1, sourceDoc1.GetNumberOfPages(), resultPdfDocument, formCopier);
                             sourceDoc1.CopyPagesTo(1, sourceDoc1.GetNumberOfPages(), resultPdfDocument, formCopier);
@@ -492,7 +493,7 @@ namespace iText.Forms {
                         using (PdfDocument sourceDoc1 = new PdfDocument(reader1)) {
                             using (PdfReader reader2 = new PdfReader(srcFileName2)) {
                                 using (PdfDocument sourceDoc2 = new PdfDocument(reader2)) {
-                                    PdfAcroForm.GetAcroForm(resultPdfDocument, true);
+                                    PdfFormCreator.GetAcroForm(resultPdfDocument, true);
                                     PdfPageFormCopier formCopier = new PdfPageFormCopier();
                                     sourceDoc1.CopyPagesTo(1, sourceDoc1.GetNumberOfPages(), resultPdfDocument, formCopier);
                                     sourceDoc2.CopyPagesTo(1, sourceDoc2.GetNumberOfPages(), resultPdfDocument, formCopier);
@@ -519,7 +520,7 @@ namespace iText.Forms {
                         using (PdfDocument sourceDoc1 = new PdfDocument(reader1)) {
                             using (PdfReader reader2 = new PdfReader(srcFileName2)) {
                                 using (PdfDocument sourceDoc2 = new PdfDocument(reader2)) {
-                                    PdfAcroForm.GetAcroForm(resultPdfDocument, true);
+                                    PdfFormCreator.GetAcroForm(resultPdfDocument, true);
                                     PdfPageFormCopier formCopier = new PdfPageFormCopier();
                                     sourceDoc2.CopyPagesTo(1, sourceDoc2.GetNumberOfPages(), resultPdfDocument, formCopier);
                                     sourceDoc1.CopyPagesTo(1, sourceDoc1.GetNumberOfPages(), resultPdfDocument, formCopier);
@@ -543,7 +544,7 @@ namespace iText.Forms {
                 using (PdfDocument resultPdfDocument = new PdfDocument(writer)) {
                     using (PdfReader reader2 = new PdfReader(srcFileName2)) {
                         using (PdfDocument sourceDoc2 = new PdfDocument(reader2)) {
-                            PdfAcroForm.GetAcroForm(resultPdfDocument, true);
+                            PdfFormCreator.GetAcroForm(resultPdfDocument, true);
                             PdfPageFormCopier formCopier = new PdfPageFormCopier();
                             sourceDoc2.CopyPagesTo(1, sourceDoc2.GetNumberOfPages(), resultPdfDocument, formCopier);
                             sourceDoc2.CopyPagesTo(1, sourceDoc2.GetNumberOfPages(), resultPdfDocument, formCopier);

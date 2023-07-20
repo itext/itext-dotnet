@@ -27,6 +27,8 @@ namespace iText.Signatures.Logs {
     public sealed class SignLogMessageConstant {
         public const String EXCEPTION_WITHOUT_MESSAGE = "Unexpected exception without message was thrown during keystore processing";
 
+        public const String ALGORITHM_NOT_FROM_SPEC = "Requested algorithm might not be supported by the pdf specification.";
+
         private SignLogMessageConstant() {
         }
         // Private constructor will prevent the instantiation of this class directly

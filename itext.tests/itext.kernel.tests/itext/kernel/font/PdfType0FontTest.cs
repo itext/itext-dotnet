@@ -115,5 +115,24 @@ namespace iText.Kernel.Font {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfType0Font(fontDict));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.ORDERING_SHOULD_BE_DETERMINED, e.Message);
         }
+
+        private static IList<Glyph> ConstructGlyphListFromString(String text, PdfFont font) {
+            IList<Glyph> glyphList = new List<Glyph>(text.Length);
+            char[] chars = text.ToCharArray();
+            foreach (char letter in chars) {
+                glyphList.Add(font.GetGlyph(letter));
+            }
+            return glyphList;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertToBytesNoEncoderTest() {
+            byte[] expected = "十锊埋伏".GetBytes(System.Text.Encoding.BigEndianUnicode);
+            PdfFont font = PdfFontFactory.CreateFont("STSong-Light", "UniGB-UCS2-H", PdfFontFactory.EmbeddingStrategy.
+                PREFER_NOT_EMBEDDED);
+            GlyphLine line = new GlyphLine(ConstructGlyphListFromString("\u5341\u950a\u57cb\u4f0f", font));
+            byte[] result = font.ConvertToBytes(line);
+            NUnit.Framework.Assert.AreEqual(expected, result);
+        }
     }
 }

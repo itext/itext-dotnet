@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
 
@@ -155,26 +156,40 @@ namespace iText.Signatures {
         /// <summary><inheritDoc/></summary>
         public virtual byte[] Sign(byte[] message) {
             String algorithm = GetSignatureMechanismName();
-            ISigner sig = SignUtils.GetSignatureHelper(algorithm);
-            if (parameters != null) {
-                parameters.Apply(sig);
+            ISigner sig;
+            try {
+                sig = SignUtils.GetSignatureHelper(algorithm);
+                if (parameters != null) {
+                    parameters.Apply(sig);
+                }
+                sig.InitSign(pk);
+                sig.Update(message);
+                return sig.GenerateSignature();
             }
-            sig.InitSign(pk);
-            sig.Update(message);
-            return sig.GenerateSignature();
+            catch (Exception) {
+                try {
+                    sig = SignUtils.GetSignatureHelper(GetSignatureAlgorithmName());
+                    if (parameters != null) {
+                        parameters.Apply(sig);
+                    }
+                    sig.InitSign(pk);
+                    sig.Update(message);
+                    return sig.GenerateSignature();
+                }
+                catch (Exception e) {
+                    throw new PdfException(MessageFormatUtil.Format(SignExceptionMessageConstant.ALGORITHMS_NOT_SUPPORTED, algorithm
+                        , GetSignatureAlgorithmName()), e);
+                }
+            }
         }
 
         private String GetSignatureMechanismName() {
             String signatureAlgo = this.GetSignatureAlgorithmName();
-            // Ed25519 and Ed448 do not involve a choice of hashing algorithm
-            // and RSASSA-PSS is parameterised
-            if ("Ed25519".Equals(signatureAlgo) || "Ed448".Equals(signatureAlgo) || "RSASSA-PSS".Equals(signatureAlgo)
-                ) {
+            // RSASSA-PSS is parameterised
+            if ("RSASSA-PSS".Equals(signatureAlgo)) {
                 return signatureAlgo;
             }
-            else {
-                return GetDigestAlgorithmName() + "with" + GetSignatureAlgorithmName();
-            }
+            return GetDigestAlgorithmName() + "with" + GetSignatureAlgorithmName();
         }
     }
 }

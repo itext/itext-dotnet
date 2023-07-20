@@ -184,8 +184,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     }
                 }
                 isPdf2 = encryptionDictionary.GetAsNumber(PdfName.R).GetValue() == 6;
-                byte[] oValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.O));
-                byte[] uValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.U));
+                //truncate user and owner passwords to 48 bytes where the first 32 bytes
+                //are a hash value, next 8 bytes are validation salt and final 8 bytes are the key salt
+                byte[] oValue = TruncateArray(GetIsoBytes(encryptionDictionary.GetAsString(PdfName.O)));
+                byte[] uValue = TruncateArray(GetIsoBytes(encryptionDictionary.GetAsString(PdfName.U)));
                 byte[] oeValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.OE));
                 byte[] ueValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.UE));
                 byte[] perms = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.Perms));
@@ -322,6 +324,20 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 }
             }
             return true;
+        }
+
+        private byte[] TruncateArray(byte[] array) {
+            if (array.Length == 48) {
+                return array;
+            }
+            for (int i = 48; i < array.Length; ++i) {
+                if (array[i] != 0) {
+                    throw new PdfException(KernelExceptionMessageConstant.BAD_PASSWORD_HASH);
+                }
+            }
+            byte[] truncated = new byte[48];
+            Array.Copy(array, 0, truncated, 0, 48);
+            return truncated;
         }
     }
 }

@@ -38,7 +38,9 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="contents">- the displayed text</param>
         public PdfFreeTextAnnotation(Rectangle rect, PdfString contents)
             : base(rect) {
-            SetContents(contents);
+            if (contents != null) {
+                SetContents(contents);
+            }
         }
 
         /// <summary>
@@ -138,7 +140,7 @@ namespace iText.Kernel.Pdf.Annot {
         ///     </returns>
         public virtual int GetJustification() {
             PdfNumber q = GetPdfObject().GetAsNumber(PdfName.Q);
-            return q == null ? 0 : q.IntValue();
+            return q == null ? iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation.LEFT_JUSTIFIED : q.IntValue();
         }
 
         /// <summary>
@@ -328,6 +330,28 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetBorderEffect(PdfDictionary borderEffect) {
             return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.BE, borderEffect);
+        }
+
+        /// <summary>Gets the rotation angle in degrees.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfNumber"/>
+        /// representing the clockwise rotation in degrees.
+        /// </returns>
+        public virtual PdfNumber GetRotation() {
+            return GetPdfObject().GetAsNumber(PdfName.Rotate);
+        }
+
+        /// <summary>Sets the rotation angle in degrees.</summary>
+        /// <param name="degAngle">an integer representing the clockwise rotation in degrees.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFreeTextAnnotation"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetRotation(int degAngle) {
+            Put(PdfName.Rotate, new PdfNumber(degAngle));
+            return this;
         }
     }
 }

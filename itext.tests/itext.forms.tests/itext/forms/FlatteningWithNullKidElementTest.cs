@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Forms.Fields;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -46,7 +47,7 @@ namespace iText.Forms {
             PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(temp));
             bool fail = false;
             try {
-                PdfAcroForm.GetAcroForm(doc, true).FlattenFields();
+                PdfFormCreator.GetAcroForm(doc, true).FlattenFields();
                 doc.Close();
             }
             catch (Exception) {

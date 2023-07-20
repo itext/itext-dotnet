@@ -51,7 +51,7 @@ namespace iText.Forms {
         public virtual void ReadUtf8FieldName() {
             String filename = sourceFolder + "utf-8-field-name.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             pdfDoc.Close();
             foreach (String fldName in fields.Keys) {
@@ -65,7 +65,7 @@ namespace iText.Forms {
         public virtual void ReadUtf8TextAnnot() {
             String filename = sourceFolder + "utf-8-text-annot.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             pdfDoc.Close();
             foreach (String fldName in fields.Keys) {
@@ -78,7 +78,7 @@ namespace iText.Forms {
         public virtual void WriteUtf8FieldNameAndValue() {
             //TODO DEVSIX-2798
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "writeUtf8FieldNameAndValue.pdf"));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "").SetWidgetRectangle(new Rectangle(99, 753, 425
                 , 15)).CreateText();
             field.SetValue("");

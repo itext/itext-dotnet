@@ -263,26 +263,22 @@ namespace iText.Forms.Form.Renderer {
         /// <summary>Applies the border property.</summary>
         /// <param name="annotation">the annotation to set border characteristics to.</param>
         internal virtual void ApplyBorderProperty(PdfFormAnnotation annotation) {
-            Border border = this.GetProperty<Border>(Property.BORDER);
+            ApplyBorderProperty(this, annotation);
+        }
+
+        /// <summary>Applies the border property to the renderer.</summary>
+        /// <param name="renderer">renderer to apply border properties to.</param>
+        /// <param name="annotation">the annotation to set border characteristics to.</param>
+        internal static void ApplyBorderProperty(IRenderer renderer, PdfFormAnnotation annotation) {
+            Border border = renderer.GetProperty<Border>(Property.BORDER);
             if (border == null) {
                 // For now, we set left border to an annotation, but appropriate borders for an element will be drawn.
-                border = this.GetProperty<Border>(Property.BORDER_LEFT);
+                border = renderer.GetProperty<Border>(Property.BORDER_LEFT);
             }
             if (border != null) {
                 annotation.SetBorderStyle(TransformBorderTypeToBorderStyleDictionary(border.GetBorderType()));
                 annotation.SetBorderColor(border.GetColor());
                 annotation.SetBorderWidth(border.GetWidth());
-            }
-        }
-
-        private void ProcessLangAttribute() {
-            IPropertyContainer propertyContainer = flatRenderer.GetModelElement();
-            String lang = GetLang();
-            if (propertyContainer is IAccessibleElement && lang != null) {
-                AccessibilityProperties properties = ((IAccessibleElement)propertyContainer).GetAccessibilityProperties();
-                if (properties.GetLanguage() == null) {
-                    properties.SetLanguage(lang);
-                }
             }
         }
 
@@ -320,6 +316,17 @@ namespace iText.Forms.Form.Renderer {
             }
             bs.Put(PdfName.S, style);
             return bs;
+        }
+
+        private void ProcessLangAttribute() {
+            IPropertyContainer propertyContainer = flatRenderer.GetModelElement();
+            String lang = GetLang();
+            if (propertyContainer is IAccessibleElement && lang != null) {
+                AccessibilityProperties properties = ((IAccessibleElement)propertyContainer).GetAccessibilityProperties();
+                if (properties.GetLanguage() == null) {
+                    properties.SetLanguage(lang);
+                }
+            }
         }
     }
 }

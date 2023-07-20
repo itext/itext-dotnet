@@ -116,15 +116,15 @@ namespace iText.IO.Font {
             String uniMap = GetCompatibleUniMap(registry);
             if (uniMap != null) {
                 IntHashtable metrics = (IntHashtable)fontDesc.Get("W");
-                CMapCidUni cid2Uni = FontCache.GetCid2UniCmap(uniMap);
+                CMapUniCid uni2cid = FontCache.GetUni2CidCmap(uniMap);
                 avgWidth = 0;
-                foreach (int cid in cid2Uni.GetCids()) {
-                    int uni = cid2Uni.Lookup(cid);
+                foreach (int cp in uni2cid.GetCodePoints()) {
+                    int cid = uni2cid.Lookup(cp);
                     int width = metrics.ContainsKey(cid) ? metrics.Get(cid) : DEFAULT_WIDTH;
-                    Glyph glyph = new Glyph(cid, width, uni);
+                    Glyph glyph = new Glyph(cid, width, cp);
                     avgWidth += glyph.GetWidth();
                     codeToGlyph.Put(cid, glyph);
-                    unicodeToGlyph.Put(uni, glyph);
+                    unicodeToGlyph.Put(cp, glyph);
                 }
                 FixSpaceIssue();
                 if (codeToGlyph.Count != 0) {

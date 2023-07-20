@@ -33,6 +33,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
+using iText.Forms.Fields;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
@@ -102,7 +103,7 @@ namespace iText.Signatures {
         /// </param>
         public LtvVerification(PdfDocument document) {
             this.document = document;
-            this.acroForm = PdfAcroForm.GetAcroForm(document, true);
+            this.acroForm = PdfFormCreator.GetAcroForm(document, true);
             this.sgnUtil = new SignatureUtil(document);
         }
 

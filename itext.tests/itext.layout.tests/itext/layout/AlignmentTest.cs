@@ -33,6 +33,7 @@ using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using iText.Layout.Renderer;
 using iText.Test;
 
 namespace iText.Layout {
@@ -490,6 +491,30 @@ namespace iText.Layout {
             AddInlineBlockFloatAndText(doc, text);
             doc.Close();
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FlexItemHorizontalAlignmentTest() {
+            String outFileName = DESTINATION_FOLDER + "flexItemHorizontalAlignmentTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexItemHorizontalAlignmentTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                Document doc = new Document(pdfDoc);
+                DocumentRenderer documentRenderer = new DocumentRenderer(doc);
+                Div div = new Div();
+                FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
+                flexContainerRenderer.SetParent(documentRenderer);
+                div.SetNextRenderer(flexContainerRenderer);
+                Div innerDiv = new Div();
+                innerDiv.SetProperty(Property.BORDER, new SolidBorder(1));
+                innerDiv.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(50));
+                innerDiv.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100));
+                innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
+                innerDiv.SetHorizontalAlignment(HorizontalAlignment.RIGHT);
+                div.Add(innerDiv).Add(innerDiv);
+                doc.Add(div);
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
