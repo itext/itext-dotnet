@@ -517,7 +517,6 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-7264: Investigate 3 failed forms tests from 7.3/develop on .NET")]
         public virtual void RegenerateAppearance() {
             String input = "regenerateAppearance.pdf";
             String output = "regenerateAppearance.pdf";
