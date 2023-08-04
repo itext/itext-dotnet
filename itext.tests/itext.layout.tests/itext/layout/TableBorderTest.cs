@@ -784,7 +784,6 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph(text)));
             table.AddCell(new Cell().Add(new Paragraph(text)));
             doc.Add(table);
-            // TODO DEVSIX-1735: set pagesize as 196x132 to produce a NPE
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(196, 192));
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
@@ -817,17 +816,14 @@ namespace iText.Layout {
             table.AddCell("middle row 2");
             table.AddCell("middle row 3");
             doc.Add(table);
-            // TODO DEVSIX-1735: uncomment to produce a NPE
-            //        doc.add(new AreaBreak());
-            //
-            //        doc.add(new Paragraph("No more"));
-            //        doc.add(new Paragraph("place"));
-            //        doc.add(new Paragraph("here"));
-            //
-            //        table.setBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
-            //        table.setHorizontalBorderSpacing(20);
-            //        table.setVerticalBorderSpacing(20);
-            //        doc.add(table);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("No more"));
+            doc.Add(new Paragraph("place"));
+            doc.Add(new Paragraph("here"));
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            table.SetHorizontalBorderSpacing(20);
+            table.SetVerticalBorderSpacing(20);
+            doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
 
@@ -865,13 +861,12 @@ namespace iText.Layout {
                 (100)).SetFixedLayout();
             table.AddCell(new Cell().Add(new Paragraph(text + "1")));
             table.AddCell(new Cell(2, 1).Add(new Paragraph(text + "2")).SetBorder(new SolidBorder(ColorConstants.GREEN
-                , 4)));
+                , 1)));
             table.AddCell(new Cell().Add(new Paragraph(text + "3")));
             table.AddCell(new Cell().Add(new Paragraph(text + "4")));
             table.AddCell(new Cell().Add(new Paragraph(text + "5")));
             doc.Add(table);
-            // TODO DEVSIX-1735: set pagesize as 204x160 to produce a bug: cell with a big rowspan appears only on the final page
-            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(224, 200));
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(204, 160));
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             table.SetHorizontalBorderSpacing(20);
@@ -882,7 +877,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest09() {
-            // TODO DEVSIX-1735: uncomment snippet with separated borders to produce a NPE
             fileName = "splitCellsTest09.pdf";
             Document doc = CreateDocument();
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 160));
@@ -896,11 +890,11 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph(text + "5")));
             table.AddCell(new Cell().Add(new Paragraph(text + "5")));
             doc.Add(table);
-            //        doc.add(new AreaBreak());
-            //        table.setBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
-            //        table.setHorizontalBorderSpacing(20);
-            //        table.setVerticalBorderSpacing(20);
-            //        doc.add(table);
+            doc.Add(new AreaBreak());
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            table.SetHorizontalBorderSpacing(20);
+            table.SetVerticalBorderSpacing(20);
+            doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
 
@@ -930,7 +924,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest10A() {
-            // TODO DEVSIX-1735
             fileName = "splitCellsTest10A.pdf";
             Document doc = CreateDocument();
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 140));

@@ -2671,7 +2671,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CellWithBigRowspanCompletedRowTooTest() {
-            // TODO DEVSIX-3716
             String testName = "cellWithBigRowspanCompletedRowTooTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -2704,7 +2703,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CellWithBigRowspanCompletedRowNotTest() {
-            // TODO DEVSIX-3716
             String testName = "cellWithBigRowspanCompletedRowNotTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -2812,7 +2810,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BigRowSpanTooFarFullTest() {
-            // TODO DEVSIX-5250 The first column should be fully red
             String filename = "bigRowSpanTooFarFullTest.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
             Document document = new Document(pdf);
@@ -2835,7 +2832,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BigRowSpanTooFarPartialTest() {
-            // TODO DEVSIX-5250 The first column should be fully red, but on page 2 it is not
             String filename = "bigRowSpanTooFarPartialTest.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
             Document document = new Document(pdf);
@@ -2859,7 +2855,6 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void BigRowSpanTooFarNothingTest() {
-            // TODO DEVSIX-5250 The first column should be fully red
             String filename = "bigRowSpanTooFarNothingTest.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
             Document document = new Document(pdf);
