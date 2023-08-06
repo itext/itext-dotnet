@@ -26,7 +26,7 @@ using iText.Test;
 
 namespace iText.Forms.Form.Element {
     [NUnit.Framework.Category("UnitTest")]
-    public class SelectFieldItemTest : ITextTest {
+    public class SelectFieldItemTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NewSelectFieldItem2ParamConstructorTest() {
             SelectFieldItem item = new SelectFieldItem("exportValue", "displayValue");

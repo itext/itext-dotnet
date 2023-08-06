@@ -60,9 +60,7 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-6319")]
         public virtual void PdfAButtonFieldTest() {
-            // TODO DEVSIX-6319 Radio buttons shall be widgets instead of form fields
             PdfDocument pdf;
             Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 );
