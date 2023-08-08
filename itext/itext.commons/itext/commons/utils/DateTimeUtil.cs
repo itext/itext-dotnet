@@ -86,6 +86,16 @@ namespace iText.Commons.Utils {
         }
 
         /// <summary>
+        /// Adds provided number of milliseconds to the DateTime.
+        /// </summary>
+        /// <param name="date">DateTime to increase</param>
+        /// <param name="millis">number of milliseconds to add</param>
+        /// <returns>updated DateTime</returns>
+        public static DateTime AddMillisToDate(DateTime date, long millis) {
+            return date.AddMilliseconds(millis);
+        }
+
+        /// <summary>
         /// Parses passing date with default {@code yyyy-MM-dd} pattern.
         /// </summary>
         /// <param name="date">date is date to be parse</param>
