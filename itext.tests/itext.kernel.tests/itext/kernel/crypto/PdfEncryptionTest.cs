@@ -230,7 +230,7 @@ namespace iText.Kernel.Crypto {
             XMPProperty creatorToolXmp = xmpMeta.GetProperty(XMPConst.NS_XMP, "CreatorTool");
             doc.Close();
             NUnit.Framework.Assert.IsNotNull(creatorToolXmp);
-            NUnit.Framework.Assert.AreEqual("iText 7", creatorToolXmp.GetValue());
+            NUnit.Framework.Assert.AreEqual("iText", creatorToolXmp.GetValue());
         }
 
         [NUnit.Framework.Test]

@@ -177,7 +177,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             //constants permissions: PdfWriter.AllowCopy | PdfWriter.AllowPrinting | PdfWriter.AllowScreenReaders |
             // PdfWriter.AllowAssembly;
             int permission = recipient.GetPermission();
-            // NOTE! Added while porting to itext7
+            // NOTE! Added while porting to itext
             // Previous strange code was:
             // int revision = 3;
             // permission |= revision == 3 ? 0xfffff0c0 : 0xffffffc0;
