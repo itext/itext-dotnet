@@ -3,7 +3,7 @@
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
     <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.bouncy-castle-adapter.xml</DocumentationFile>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>

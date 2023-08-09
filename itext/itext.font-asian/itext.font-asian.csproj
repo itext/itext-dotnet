@@ -5,7 +5,7 @@
     <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.font_asian.xml</DocumentationFile>
     <RootNamespace>iText.IO.Font.Cmap</RootNamespace>
     <AssemblyName>itext.font_asian</AssemblyName>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>

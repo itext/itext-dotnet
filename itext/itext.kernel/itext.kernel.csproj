@@ -3,7 +3,7 @@
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
     <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.kernel.xml</DocumentationFile>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>PORTABLE;NEW_REFLECTION</DefineConstants>
