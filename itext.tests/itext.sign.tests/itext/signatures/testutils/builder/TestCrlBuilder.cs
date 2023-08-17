@@ -36,7 +36,7 @@ namespace iText.Signatures.Testutils.Builder {
         private readonly IPrivateKey issuerPrivateKey;
         private readonly IX509V2CrlGenerator crlBuilder;
 
-        private DateTime nextUpdate = DateTimeUtil.GetCurrentUtcTime().AddDays(30);
+        private DateTime nextUpdate = TimeTestUtil.TEST_DATE_TIME.AddDays(30);
 
         public TestCrlBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey, DateTime thisUpdate) {
             IX500Name issuerCertSubjectDn = issuerCert.GetSubjectDN();

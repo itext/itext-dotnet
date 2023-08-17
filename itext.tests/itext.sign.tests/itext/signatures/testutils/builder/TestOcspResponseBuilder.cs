@@ -45,9 +45,9 @@ namespace iText.Signatures.Testutils.Builder {
 
         private ICertStatus certificateStatus;
 
-        private DateTime thisUpdate = DateTimeUtil.GetCurrentTime();
+        private DateTime thisUpdate = TimeTestUtil.TEST_DATE_TIME.AddDays(-1);
 
-        private DateTime nextUpdate = DateTimeUtil.GetCurrentTime();
+        private DateTime nextUpdate = TimeTestUtil.TEST_DATE_TIME.AddDays(30);
 
         public TestOcspResponseBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey,
             ICertStatus certificateStatus)
@@ -56,11 +56,9 @@ namespace iText.Signatures.Testutils.Builder {
             this.issuerPrivateKey = issuerPrivateKey;
             this.certificateStatus = certificateStatus;
             IX500Name subjectDN = issuerCert.GetSubjectDN();
-            thisUpdate = thisUpdate.AddDays(-1);
-            nextUpdate = nextUpdate.AddDays(30);
             responseBuilder = FACTORY.CreateBasicOCSPRespBuilder(FACTORY.CreateRespID(subjectDN));
         }
-
+        
         public TestOcspResponseBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey)
             : this(issuerCert, issuerPrivateKey, FACTORY.CreateCertificateStatus().GetGood())
         {
@@ -106,7 +104,8 @@ namespace iText.Signatures.Testutils.Builder {
                 responseBuilder.AddResponse(req.GetCertID(), certificateStatus, thisUpdate.ToUniversalTime(), nextUpdate.ToUniversalTime(), 
                     FACTORY.CreateExtensions());
             }
-            DateTime time = DateTimeUtil.GetCurrentUtcTime();
+
+            DateTime time = TimeTestUtil.TEST_DATE_TIME;
             return responseBuilder.Build(FACTORY.CreateContentSigner(SIGN_ALG, issuerPrivateKey), new IX509Certificate[] { issuerCert }, time);
         }
     }
