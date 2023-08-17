@@ -55,8 +55,8 @@ namespace iText.Bouncycastle.Crypto {
         /// <param name="key">byte array</param>
         /// <param name="iv">init vector</param>
         public CipherBC(bool forEncryption, byte[] key, byte[] iv) {
-            IBlockCipher aes = new AesFastEngine();
-            IBlockCipher cbc = new CbcBlockCipher(aes);
+            IBlockCipher aes = new AesEngine();
+            IBlockCipherMode cbc = new CbcBlockCipher(aes);
             cipher = new PaddedBufferedBlockCipher(cbc);
             KeyParameter kp = new KeyParameter(key);
             ParametersWithIV piv = new ParametersWithIV(kp, iv);

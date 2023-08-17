@@ -46,7 +46,7 @@ namespace iText.Bouncycastle.Crypto {
         /// Initialization vector to be used during block cipher creation.
         /// </param>
         public CipherCBCnoPadBC(bool forEncryption, byte[] key, byte[] initVector = null) {
-            IBlockCipher aes = new AesFastEngine();
+            IBlockCipher aes = new AesEngine();
             blockCipher = new CbcBlockCipher(aes);
             KeyParameter kp = new KeyParameter(key);
             if (initVector == null) {

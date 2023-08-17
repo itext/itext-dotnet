@@ -22,6 +22,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using iText.Bouncycastle.Asn1;
 using iText.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Asn1;
@@ -69,7 +70,8 @@ namespace iText.Bouncycastle.Cert.Ocsp {
             gen.AddRequest(new CertificateID(((CertIDBC) certId).GetCertID()));
 
             // create details for nonce extension
-            IDictionary extensions = new Hashtable();
+            IDictionary<DerObjectIdentifier, X509Extension> extensions = new Dictionary<DerObjectIdentifier,
+                X509Extension>();
             DerOctetString derOctetString = new DerOctetString(new DerOctetString(documentId).GetEncoded());
             extensions[OcspObjectIdentifiers.PkixOcspNonce] = new X509Extension(false, derOctetString);
 

@@ -65,7 +65,7 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
 
         /// <summary><inheritDoc/></summary>
         public virtual DateTime GetProducedAtDate() {
-            return GetBasicOcspResponse().GetTbsResponseData().ProducedAt.ToDateTime();
+            return GetBasicOcspResponse().TbsResponseData.ProducedAt.ToDateTime();
         }
 
         /// <summary><inheritDoc/></summary>

@@ -285,10 +285,7 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public virtual IDerOutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
-            if (Asn1Encodable.Ber.Equals(asn1Encoding)) {
-                return new DerOutputStreamBC(new BerOutputStream(outputStream));
-            }
-            return new DerOutputStreamBC(new DerOutputStream(outputStream));
+            return new DerOutputStreamBC(Asn1OutputStream.Create(outputStream));
         }
 
         /// <summary><inheritDoc/></summary>
@@ -471,7 +468,7 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public IX509Extensions CreateExtensions(IDictionary objectIdentifier) {
-            IDictionary dictionary = new Dictionary<DerObjectIdentifier, X509Extension>();
+            IDictionary<DerObjectIdentifier, X509Extension> dictionary = new Dictionary<DerObjectIdentifier, X509Extension>();
             foreach (IDerObjectIdentifier key in objectIdentifier.Keys) {
                 dictionary.Add(((DerObjectIdentifierBC)key).GetDerObjectIdentifier(), 
                     ((X509ExtensionBC)objectIdentifier[key]).GetX509Extension());

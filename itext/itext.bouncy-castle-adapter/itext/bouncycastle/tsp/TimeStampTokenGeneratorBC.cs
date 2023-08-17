@@ -35,6 +35,7 @@ using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Utilities.Collections;
 using Org.BouncyCastle.X509;
 using Org.BouncyCastle.X509.Store;
 
@@ -93,9 +94,8 @@ namespace iText.Bouncycastle.Tsp {
 
         /// <summary><inheritDoc/></summary>
         public virtual void SetCertificates(IList<IX509Certificate> certificateChain) {
-            timeStampTokenGenerator.SetCertificates(X509StoreFactory.Create("Certificate/Collection", 
-                new X509CollectionStoreParameters(certificateChain.Select(certificate => 
-                    ((X509CertificateBC)certificate).GetCertificate()).ToList())));
+            timeStampTokenGenerator.SetCertificates(CollectionUtilities.CreateStore(certificateChain.Select(certificate => 
+                    ((X509CertificateBC)certificate).GetCertificate()).ToList()));
         }
 
         /// <summary><inheritDoc/></summary>
