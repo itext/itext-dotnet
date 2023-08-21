@@ -154,6 +154,8 @@ namespace iText.Kernel.Pdf {
 
         private EncryptedEmbeddedStreamsHandler encryptedEmbeddedStreamsHandler;
 
+        private readonly DIContainer diContainer = new DIContainer();
+
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
         public PdfDocument(PdfReader reader)
@@ -545,6 +547,12 @@ namespace iText.Kernel.Pdf {
                 DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.REMOVE_PAGE, removedPage));
             }
             catalog.GetPageTree().RemovePage(pageNum);
+        }
+
+        /// <summary>Gets the container containing all available dependencies.</summary>
+        /// <returns>the container containing all available dependencies.</returns>
+        public virtual DIContainer GetDiContainer() {
+            return diContainer;
         }
 
         /// <summary>Gets document information dictionary.</summary>
