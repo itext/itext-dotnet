@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using iText.IO.Font;
 
 namespace iText.IO.Font.Cmap {
-    /// <author>psoares</author>
     public abstract class AbstractCMap {
         private String cmapName;
 

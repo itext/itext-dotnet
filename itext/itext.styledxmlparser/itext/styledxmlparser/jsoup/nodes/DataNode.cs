@@ -25,7 +25,6 @@ using System.Text;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>A data node, for contents of style, script tags etc, where contents should not show in text().</summary>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class DataNode : LeafNode {
         /// <summary>Create a new DataNode.</summary>
         /// <param name="data">data contents</param>

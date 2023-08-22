@@ -31,8 +31,6 @@ using iText.Kernel.Crypto.Securityhandler;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
-    /// <author>Paulo Soares</author>
-    /// <author>Kazuya Ujihara</author>
     public class PdfEncryption : PdfObjectWrapper<PdfDictionary> {
         private const int STANDARD_ENCRYPTION_40 = 2;
 

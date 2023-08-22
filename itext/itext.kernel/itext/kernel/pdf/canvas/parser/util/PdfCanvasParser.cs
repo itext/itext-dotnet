@@ -28,7 +28,6 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Util {
     /// <summary>Parses the page or form XObject content.</summary>
-    /// <author>Paulo Soares</author>
     public class PdfCanvasParser {
         /// <summary>Holds value of property tokeniser.</summary>
         private PdfTokenizer tokeniser;

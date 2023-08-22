@@ -35,7 +35,6 @@ using iText.IO.Util;
 
 namespace iText.Signatures {
     /// <summary>OcspClient implementation using BouncyCastle.</summary>
-    /// <author>Paulo Soarees</author>
     public class OcspClientBouncyCastle : IOcspClient {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();

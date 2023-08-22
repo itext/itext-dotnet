@@ -32,7 +32,6 @@ namespace iText.Barcodes.Qrcode {
     /// Much credit is due to William Rucklidge since portions of this code are an indirect
     /// port of his C++ Reed-Solomon implementation.
     /// </remarks>
-    /// <author>Sean Owen</author>
     internal sealed class GF256Poly {
         private readonly GF256 field;
 

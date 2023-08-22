@@ -24,7 +24,6 @@ using System.Collections.Generic;
 
 namespace iText.IO.Font.Otf {
     /// <summary>LookupType 4: Ligature Substitution Subtable</summary>
-    /// <author>psoares</author>
     public class GsubLookupType4 : OpenTableLookup {
         /// <summary>The key is the first character.</summary>
         /// <remarks>

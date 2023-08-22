@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.StyledXmlParser.Jsoup.Select {
     /// <summary>Collects a list of elements that match the supplied criteria.</summary>
-    /// <author>Jonathan Hedley</author>
     public class Collector {
         private Collector() {
         }

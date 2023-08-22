@@ -24,7 +24,6 @@ using System;
 
 namespace iText.Barcodes.Qrcode {
     /// <summary>This class implements an array of unsigned bytes.</summary>
-    /// <author>dswitkin@google.com (Daniel Switkin)</author>
     internal sealed class ByteArray {
         private const int INITIAL_SIZE = 32;
 

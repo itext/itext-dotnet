@@ -29,7 +29,6 @@ using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests Nodes</summary>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     [NUnit.Framework.Category("UnitTest")]
     public class NodeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
@@ -249,12 +248,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void Traverse() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            doc.Select("div").First().Traverse(new _NodeVisitor_290(accum));
+            doc.Select("div").First().Traverse(new _NodeVisitor_289(accum));
             NUnit.Framework.Assert.AreEqual("<div><p><#text></#text></p></div>", accum.ToString());
         }
 
-        private sealed class _NodeVisitor_290 : NodeVisitor {
-            public _NodeVisitor_290(StringBuilder accum) {
+        private sealed class _NodeVisitor_289 : NodeVisitor {
+            public _NodeVisitor_289(StringBuilder accum) {
                 this.accum = accum;
             }
 

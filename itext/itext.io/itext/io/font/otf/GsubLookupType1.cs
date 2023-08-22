@@ -25,8 +25,6 @@ using System.Collections.Generic;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
-    /// <summary>LookupType 1: Single Substitution Subtable</summary>
-    /// <author>psoares</author>
     public class GsubLookupType1 : OpenTableLookup {
         private IntHashtable substMap;
 

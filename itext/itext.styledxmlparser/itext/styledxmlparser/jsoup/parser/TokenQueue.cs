@@ -26,7 +26,6 @@ using iText.StyledXmlParser.Jsoup.Helper;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>A character queue with parsing helpers.</summary>
-    /// <author>Jonathan Hedley</author>
     public class TokenQueue {
         private String queue;
 

@@ -29,7 +29,6 @@ using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
     /// <summary>Tests for ElementList.</summary>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class ElementsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Filter() {

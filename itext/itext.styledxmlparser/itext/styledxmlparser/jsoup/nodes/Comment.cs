@@ -26,7 +26,6 @@ using iText.StyledXmlParser.Jsoup.Parser;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>A comment node.</summary>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class Comment : LeafNode {
         /// <summary>Create a new comment node.</summary>
         /// <param name="data">The contents of the comment</param>

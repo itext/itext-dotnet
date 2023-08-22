@@ -30,7 +30,6 @@ namespace iText.Signatures {
     /// An implementation of the CrlClient that handles offline
     /// Certificate Revocation Lists.
     /// </summary>
-    /// <author>Paulo Soares</author>
     public class CrlClientOffline : ICrlClient {
         /// <summary>The CRL as a byte array.</summary>
         private IList<byte[]> crls = new List<byte[]>();

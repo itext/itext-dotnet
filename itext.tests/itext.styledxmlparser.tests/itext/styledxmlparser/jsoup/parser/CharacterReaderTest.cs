@@ -27,7 +27,6 @@ using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Test suite for character reader.</summary>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class CharacterReaderTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Consume() {

@@ -25,7 +25,6 @@ using iText.Commons.Bouncycastle.Crypto;
 
 namespace iText.Kernel.Crypto {
     /// <summary>Creates an AES Cipher with CBC and padding PKCS5/7.</summary>
-    /// <author>Paulo Soares</author>
     public class AESCipher {
         private ICipher cipher;
 

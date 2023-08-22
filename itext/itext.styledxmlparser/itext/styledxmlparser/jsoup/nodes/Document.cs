@@ -30,7 +30,6 @@ using iText.StyledXmlParser.Jsoup.Select;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>A HTML Document.</summary>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class Document : iText.StyledXmlParser.Jsoup.Nodes.Element {
         private iText.StyledXmlParser.Jsoup.Nodes.OutputSettings outputSettings = new iText.StyledXmlParser.Jsoup.Nodes.OutputSettings
             ();

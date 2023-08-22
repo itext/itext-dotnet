@@ -35,7 +35,6 @@ namespace iText.Signatures {
     /// An implementation of the CrlClient that fetches the CRL bytes
     /// from an URL.
     /// </summary>
-    /// <author>Paulo Soares</author>
     public class CrlClientOnline : ICrlClient {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();

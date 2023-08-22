@@ -45,7 +45,6 @@ namespace iText.StyledXmlParser.Jsoup.Select {
     /// <see cref="iText.StyledXmlParser.Jsoup.Nodes.Element.Select(System.String)"/>
     /// method.
     /// </remarks>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class Elements : List<iText.StyledXmlParser.Jsoup.Nodes.Element> {
         public Elements() {
         }

@@ -31,7 +31,6 @@ namespace iText.IO.Font.Otf {
     /// Note that tags in OTF always consist of exactly 4 bytes. Shorter
     /// identifiers are padded with spaces as necessary.
     /// </remarks>
-    /// <author><a href="mailto:matthias.valvekens@itextpdf.com">Matthias Valvekens</a></author>
     public sealed class LanguageTags {
         public const String ABAZA = "ABA ";
 

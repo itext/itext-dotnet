@@ -37,7 +37,6 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
-    /// <author>Aiken Sam (aikensam@ieee.org)</author>
     public abstract class PubKeySecurityHandler : SecurityHandler {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();

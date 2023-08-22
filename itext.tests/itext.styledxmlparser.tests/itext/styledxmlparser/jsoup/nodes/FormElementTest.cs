@@ -27,7 +27,6 @@ using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for FormElement</summary>
-    /// <author>Jonathan Hedley</author>
     [NUnit.Framework.Category("UnitTest")]
     public class FormElementTest : ExtendedITextTest {
         [NUnit.Framework.Test]

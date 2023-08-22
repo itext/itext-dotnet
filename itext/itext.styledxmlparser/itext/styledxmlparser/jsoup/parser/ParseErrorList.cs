@@ -24,7 +24,6 @@ using System.Collections.Generic;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>A container for ParseErrors.</summary>
-    /// <author>Jonathan Hedley</author>
     public class ParseErrorList : List<ParseError> {
         private const int INITIAL_CAPACITY = 16;
 

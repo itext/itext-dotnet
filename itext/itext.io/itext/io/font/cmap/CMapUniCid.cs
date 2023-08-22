@@ -24,7 +24,6 @@ using System;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
-    /// <author>psoares</author>
     public class CMapUniCid : AbstractCMap {
         private IntHashtable map = new IntHashtable(65537);
 
