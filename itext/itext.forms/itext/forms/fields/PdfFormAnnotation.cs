@@ -712,6 +712,7 @@ namespace iText.Forms.Fields {
             // flushes TagTreePointer that will be used later, so set null to the corresponding property.
             canvas.SetProperty(Property.TAGGING_HELPER, null);
             canvas.Close();
+            formFieldElement.SetInteractive(true);
         }
 
         /// <summary>Draws the appearance of a radio button with a specified value and saves it into an appearance stream.
@@ -748,6 +749,7 @@ namespace iText.Forms.Fields {
                 normalAppearance.Put(new PdfName(value), xObject.GetPdfObject());
             }
             GetWidget().SetNormalAppearance(normalAppearance);
+            formFieldElement.SetInteractive(true);
         }
 
         /// <summary>Draws the appearance of a list box form field and saves it into an appearance stream.</summary>
@@ -808,6 +810,7 @@ namespace iText.Forms.Fields {
             canvas.Add(formFieldElement);
             canvas.GetPdfCanvas().RestoreState().EndVariableText();
             GetWidget().SetNormalAppearance(xObject.GetPdfObject());
+            formFieldElement.SetInteractive(true);
         }
 
         /// <summary>Draws the appearance of a text form field and saves it into an appearance stream.</summary>
@@ -857,6 +860,7 @@ namespace iText.Forms.Fields {
             SetMetaInfoToCanvas(canvas);
             canvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             canvas.Add(formFieldElement);
+            formFieldElement.SetInteractive(true);
             GetWidget().SetNormalAppearance(xObject.GetPdfObject());
         }
 
@@ -899,6 +903,7 @@ namespace iText.Forms.Fields {
             canvas.Add(comboBoxField);
             canvas.GetPdfCanvas().RestoreState().EndVariableText();
             GetWidget().SetNormalAppearance(xObject.GetPdfObject());
+            formFieldElement.SetInteractive(true);
         }
 
         private void PrepareComboBoxFieldWithCorrectOptionsAndValues(ComboBoxField comboBoxField) {
@@ -961,6 +966,7 @@ namespace iText.Forms.Fields {
             mk.Put(PdfName.CA, new PdfString(PdfCheckBoxRenderingStrategy.ZAPFDINGBATS_CHECKBOX_MAPPING.GetByKey(parent
                 .checkType.GetValue())));
             GetWidget().Put(PdfName.MK, mk);
+            formFieldElement.SetInteractive(true);
         }
 
         internal static void SetMetaInfoToCanvas(iText.Layout.Canvas canvas) {

@@ -21,9 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Forms;
 using iText.Forms.Exceptions;
+using iText.Forms.Fields;
 using iText.Forms.Form;
+using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
@@ -306,6 +311,51 @@ namespace iText.Forms.Form.Element {
                 flattenInputField2.SetValue("content box");
                 flattenInputField2.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
                 document.Add(flattenInputField2);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MultiPageInputFieldTest() {
+            String outPdf = DESTINATION_FOLDER + "multiPageInputField.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_multiPageInputField.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfWriter(outPdf))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
+                for (int i = 0; i < 10; i++) {
+                    document.AddNewPage();
+                    Rectangle rect = new Rectangle(210, 490, 150, 22);
+                    PdfFormField inputField = new TextFormFieldBuilder(document, "fing").SetWidgetRectangle(rect).CreateText();
+                    inputField.SetValue("some value").SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER)).SetFontSize(10
+                        );
+                    PdfPage page = document.GetPage(i + 1);
+                    form.AddField(inputField, page);
+                    if (i > 2) {
+                        page.Flush();
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MultiPageInputFieldFormFlushTest() {
+            String outPdf = DESTINATION_FOLDER + "multiPageInputFieldFormFlush.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_multiPageInputFieldFormFlush.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfWriter(outPdf))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
+                for (int i = 0; i < 10; i++) {
+                    document.AddNewPage();
+                    Rectangle rect = new Rectangle(210, 490, 150, 22);
+                    PdfFormField inputField = new TextFormFieldBuilder(document, "fing").SetWidgetRectangle(rect).CreateText();
+                    inputField.SetValue("some value").SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER)).SetFontSize(10
+                        );
+                    PdfPage page = document.GetPage(i + 1);
+                    form.AddField(inputField, page);
+                    page.Flush();
+                    inputField.Flush();
+                    // simulate behaviour from applyAcrofield methods that always get the acroforms
+                    form = PdfAcroForm.GetAcroForm(document, true);
+                }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }

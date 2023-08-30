@@ -42,6 +42,9 @@ namespace iText.Forms.Fields {
         /// <param name="fieldDict">field dictionary to check.</param>
         /// <returns>true if passed dictionary is a widget or merged field, false otherwise.</returns>
         public static bool IsPureWidgetOrMergedField(PdfDictionary fieldDict) {
+            if (fieldDict.IsFlushed()) {
+                return false;
+            }
             PdfName subtype = fieldDict.GetAsName(PdfName.Subtype);
             return PdfName.Widget.Equals(subtype);
         }
