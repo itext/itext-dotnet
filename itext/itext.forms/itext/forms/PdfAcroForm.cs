@@ -288,25 +288,15 @@ namespace iText.Forms {
                 }
             }
             PdfFormFieldMergeUtil.MergeKidsWithSameNames(field, throwExceptionOnError);
-            PdfDictionary fieldDict = field.GetPdfObject();
             // PdfPageFormCopier expects that we replace existed field by a new one in case they have the same names.
-            String fieldName = field.GetFieldName().ToUnicodeString();
-            if (!fields.ContainsKey(fieldName) || !PdfFormFieldMergeUtil.MergeTwoFieldsWithTheSameNames(fields.Get(fieldName
-                ), field, throwExceptionOnError)) {
-                fieldName = field.GetFieldName().ToUnicodeString();
-                fieldDict = field.GetPdfObject();
+            if (NeedToAddToAcroform(field, throwExceptionOnError)) {
                 PdfArray fieldsArray = GetFields();
-                fieldsArray.Add(fieldDict);
+                fieldsArray.Add(field.GetPdfObject());
                 fieldsArray.SetModified();
-                fields.Put(fieldName, field);
+                fields.Put(field.GetFieldName().ToUnicodeString(), field);
             }
-            String newFieldName = field.GetFieldName().ToUnicodeString();
-            if (!fieldName.Equals(newFieldName)) {
-                fields.Put(newFieldName, fields.Get(fieldName));
-            }
-            fieldName = newFieldName;
-            fieldDict = field.GetPdfObject();
-            ProcessKids(fields.Get(fieldName), page);
+            PdfDictionary fieldDict = field.GetPdfObject();
+            ProcessKids(fields.Get(field.GetFieldName().ToUnicodeString()), page);
             if (fieldDict.ContainsKey(PdfName.Subtype) && page != null) {
                 DefineWidgetPageAndAddToIt(page, fieldDict, false);
             }
@@ -1423,6 +1413,19 @@ namespace iText.Forms {
                 allFields.AddAll(kids);
             }
             return allFields;
+        }
+
+        private bool NeedToAddToAcroform(PdfFormField field, bool throwExceptionOnError) {
+            String fieldNameBeforeMergeCall = field.GetFieldName().ToUnicodeString();
+            if (!fields.ContainsKey(fieldNameBeforeMergeCall)) {
+                return true;
+            }
+            if (!PdfFormFieldMergeUtil.MergeTwoFieldsWithTheSameNames(fields.Get(fieldNameBeforeMergeCall), field, throwExceptionOnError
+                )) {
+                return true;
+            }
+            bool isFieldNameChanged = !fieldNameBeforeMergeCall.Equals(field.GetFieldName().ToUnicodeString());
+            return isFieldNameChanged;
         }
     }
 }
