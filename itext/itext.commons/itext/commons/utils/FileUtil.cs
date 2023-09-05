@@ -177,6 +177,10 @@ namespace iText.Commons.Utils {
             return new FileStream(path, FileMode.Open, FileAccess.Read);
         }
 
+        public static FileStream GetInputStreamForFile(FileInfo fileInfo) {
+            return fileInfo.OpenRead();
+        }
+
         public static FileStream GetFileOutputStream(String path) {
             return new FileStream(path, FileMode.Create, FileAccess.Write);
         }

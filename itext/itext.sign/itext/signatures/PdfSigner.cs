@@ -566,6 +566,9 @@ namespace iText.Signatures {
             if (closed) {
                 throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
+            if (tsa == null) {
+                throw new PdfException(SignExceptionMessageConstant.PROVIDED_TSA_CLIENT_IS_NULL);
+            }
             int contentEstimated = tsa.GetTokenSizeEstimate();
             if (!IsDocumentPdf2()) {
                 AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL5);

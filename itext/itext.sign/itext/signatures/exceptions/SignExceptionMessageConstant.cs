@@ -50,6 +50,9 @@ namespace iText.Signatures.Exceptions {
 
         public const String DOCUMENT_ALREADY_PRE_CLOSED = "Document has been already pre closed.";
 
+        public const String DOCUMENT_CANNOT_BE_SIGNED = "Document cannot be signed with this PaDES profile level, "
+             + "because {0} is null. Please, provide {0} using corresponding setter method.";
+
         public const String DOCUMENT_MUST_BE_PRE_CLOSED = "Document must be preClosed.";
 
         public const String DOCUMENT_MUST_HAVE_READER = "Document must have reader.";
@@ -76,6 +79,10 @@ namespace iText.Signatures.Exceptions {
              "data.";
 
         public const String NOT_ENOUGH_SPACE = "Not enough space.";
+
+        public const String PATH_IS_NOT_DIRECTORY = "Provided path: {0} is not a directory. " + "Please provide a directory path to store temporary pdf files which are required for signing.";
+
+        public const String PROVIDED_TSA_CLIENT_IS_NULL = "Provided TSA client is null. TSA client is required for timestamp signing.";
 
         public const String SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT = "Signature "
              + "with name {0} is not the last. It doesn't cover the whole document.";
