@@ -69,6 +69,17 @@ namespace iText.Pdfa.Checker {
             .HardLight, PdfName.SoftLight, PdfName.Difference, PdfName.Exclusion, PdfName.Hue, PdfName.Saturation, 
             PdfName.Color, PdfName.Luminosity)));
 
+        protected internal static readonly ICollection<PdfName> allowedFilters = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.ASCIIHexDecode, PdfName.ASCII85Decode, PdfName.RunLengthDecode
+            , PdfName.FlateDecode, PdfName.CCITTFaxDecode, PdfName.JBIG2Decode, PdfName.DCTDecode, PdfName.JPXDecode
+            , PdfName.Crypt)));
+
+        protected internal static readonly ICollection<PdfName> allowedInlineImageFilters = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.DeviceGray, PdfName.DeviceRGB, PdfName.DeviceCMYK, 
+            PdfName.Indexed, PdfName.ASCIIHexDecode, PdfName.ASCII85Decode, PdfName.FlateDecode, PdfName.RunLengthDecode
+            , PdfName.CCITTFaxDecode, PdfName.DCTDecode, PdfName.G, PdfName.RGB, PdfName.CMYK, PdfName.I, PdfName.
+            AHx, PdfName.A85, PdfName.Fl, PdfName.RL, PdfName.CCF, PdfName.DCT)));
+
         internal const int MAX_PAGE_SIZE = 14400;
 
         internal const int MIN_PAGE_SIZE = 3;
@@ -101,6 +112,9 @@ namespace iText.Pdfa.Checker {
                 if (filter.Equals(PdfName.Crypt)) {
                     throw new PdfAConformanceException(PdfAConformanceException.CRYPT_FILTER_IS_NOT_PERMITTED_INLINE_IMAGE);
                 }
+                if (!allowedInlineImageFilters.Contains((PdfName)filter)) {
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.INVALID_INLINE_IMAGE_FILTER_USAGE);
+                }
             }
             else {
                 if (filter is PdfArray) {
@@ -111,6 +125,9 @@ namespace iText.Pdfa.Checker {
                         }
                         if (f.Equals(PdfName.Crypt)) {
                             throw new PdfAConformanceException(PdfAConformanceException.CRYPT_FILTER_IS_NOT_PERMITTED_INLINE_IMAGE);
+                        }
+                        if (!allowedInlineImageFilters.Contains((PdfName)f)) {
+                            throw new PdfAConformanceException(PdfaExceptionMessageConstant.INVALID_INLINE_IMAGE_FILTER_USAGE);
                         }
                     }
                 }
@@ -159,10 +176,7 @@ namespace iText.Pdfa.Checker {
             else {
                 if (colorSpace is PdfSpecialCs.DeviceN) {
                     PdfSpecialCs.DeviceN deviceN = (PdfSpecialCs.DeviceN)colorSpace;
-                    if (deviceN.GetNumberOfComponents() > MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS) {
-                        throw new PdfAConformanceException(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
-                            , MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS);
-                    }
+                    CheckNumberOfDeviceNComponents(deviceN);
                     //TODO DEVSIX-4203 Fix IndexOutOfBounds exception being thrown for DeviceN (not NChannel) colorspace without
                     // attributes. According to the spec PdfAConformanceException should be thrown.
                     PdfDictionary attributes = ((PdfArray)deviceN.GetPdfObject()).GetAsDictionary(4);
@@ -306,6 +320,13 @@ namespace iText.Pdfa.Checker {
                             );
                     }
                 }
+            }
+        }
+
+        protected internal virtual void CheckNumberOfDeviceNComponents(PdfSpecialCs.DeviceN deviceN) {
+            if (deviceN.GetNumberOfComponents() > MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS) {
+                throw new PdfAConformanceException(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
+                    , MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS);
             }
         }
 
@@ -577,6 +598,9 @@ namespace iText.Pdfa.Checker {
                         }
                     }
                 }
+                if (!allowedFilters.Contains((PdfName)filter)) {
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.INVALID_STREAM_FILTER_USAGE);
+                }
             }
             else {
                 if (filter is PdfArray) {
@@ -594,6 +618,9 @@ namespace iText.Pdfa.Checker {
                                     throw new PdfAConformanceException(PdfAConformanceException.NOT_IDENTITY_CRYPT_FILTER_IS_NOT_PERMITTED);
                                 }
                             }
+                        }
+                        if (!allowedFilters.Contains((PdfName)f)) {
+                            throw new PdfAConformanceException(PdfaExceptionMessageConstant.INVALID_STREAM_FILTER_USAGE);
                         }
                     }
                 }

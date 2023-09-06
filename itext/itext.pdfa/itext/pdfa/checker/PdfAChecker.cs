@@ -142,6 +142,7 @@ namespace iText.Pdfa.Checker {
             CheckMetaData(catalogDict);
             CheckCatalogValidEntries(catalogDict);
             CheckTrailer(catalog.GetDocument().GetTrailer());
+            CheckCatalog(catalog);
             CheckLogicalStructure(catalogDict);
             CheckForm(catalogDict.GetAsDictionary(PdfName.AcroForm));
             CheckOutlines(catalogDict);
@@ -385,6 +386,12 @@ namespace iText.Pdfa.Checker {
         /// <param name="xrefTable">is the Xref table</param>
         public abstract void CheckXrefTable(PdfXrefTable xrefTable);
 
+        /// <summary>Verify the conformity of encryption usage.</summary>
+        /// <param name="crypto">Encryption object to verify.</param>
+        [System.ObsoleteAttribute(@"Will become an abstract in the next major release.")]
+        public virtual void CheckCrypto(PdfObject crypto) {
+        }
+
         /// <summary>Attest content stream conformance with appropriate specification.</summary>
         /// <remarks>
         /// Attest content stream conformance with appropriate specification.
@@ -402,7 +409,47 @@ namespace iText.Pdfa.Checker {
         /// specification. Throws PdfAConformanceException if any discrepancy was found
         /// </remarks>
         /// <param name="object">is an operand of content stream to validate</param>
-        protected internal abstract void CheckContentStreamObject(PdfObject @object);
+        protected internal virtual void CheckContentStreamObject(PdfObject @object) {
+            byte type = @object.GetObjectType();
+            switch (type) {
+                case PdfObject.NAME: {
+                    CheckPdfName((PdfName)@object);
+                    break;
+                }
+
+                case PdfObject.STRING: {
+                    CheckPdfString((PdfString)@object);
+                    break;
+                }
+
+                case PdfObject.NUMBER: {
+                    CheckPdfNumber((PdfNumber)@object);
+                    break;
+                }
+
+                case PdfObject.ARRAY: {
+                    PdfArray array = (PdfArray)@object;
+                    CheckPdfArray(array);
+                    foreach (PdfObject obj in array) {
+                        CheckContentStreamObject(obj);
+                    }
+                    break;
+                }
+
+                case PdfObject.DICTIONARY: {
+                    PdfDictionary dictionary = (PdfDictionary)@object;
+                    CheckPdfDictionary(dictionary);
+                    foreach (PdfName name in dictionary.KeySet()) {
+                        CheckPdfName(name);
+                        CheckPdfObject(dictionary.Get(name, false));
+                    }
+                    foreach (PdfObject obj in dictionary.Values()) {
+                        CheckContentStreamObject(obj);
+                    }
+                    break;
+                }
+            }
+        }
 
         /// <summary>Retrieve maximum allowed number of indirect objects in conforming document.</summary>
         /// <returns>maximum allowed number of indirect objects</returns>
@@ -592,6 +639,16 @@ namespace iText.Pdfa.Checker {
         /// of trailer to check
         /// </param>
         protected internal abstract void CheckTrailer(PdfDictionary trailer);
+
+        /// <summary>Verify the conformity of the pdf catalog.</summary>
+        /// <param name="catalog">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
+        /// of trailer to check.
+        /// </param>
+        [System.ObsoleteAttribute(@"Will become an abstract in the next major release.")]
+        protected internal virtual void CheckCatalog(PdfCatalog catalog) {
+        }
 
         /// <summary>Verify the conformity of the page transparency.</summary>
         /// <param name="pageDict">

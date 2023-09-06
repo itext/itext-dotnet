@@ -196,6 +196,9 @@ namespace iText.Pdfa.Checker {
             protected internal override void CheckTrailer(PdfDictionary trailer) {
             }
 
+            protected internal override void CheckCatalog(PdfCatalog catalog) {
+            }
+
             protected internal override void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
                 ) {
             }

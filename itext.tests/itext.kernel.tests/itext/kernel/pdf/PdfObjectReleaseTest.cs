@@ -113,7 +113,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AddingReleasedObjectToDocumentTest() {
             String srcFile = SOURCE_FOLDER + "releaseObjectsInSimpleDoc.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(SOURCE_FOLDER + "addingReleasedObjectToDocument.pdf"
+            PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(DESTINATION_FOLDER + "addingReleasedObjectToDocument.pdf"
                 ));
             try {
                 PdfObject releasedObj = doc.GetPdfObject(1);

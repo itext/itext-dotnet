@@ -781,12 +781,10 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                         PdfObject pageRoot = catalog.GetPageTree().GenerateTree();
+                        FlushInfoDictionary(properties.appendMode);
                         if (catalog.GetPdfObject().IsModified() || pageRoot.IsModified()) {
                             catalog.Put(PdfName.Pages, pageRoot);
                             catalog.GetPdfObject().Flush(false);
-                        }
-                        if (GetDocumentInfo().GetPdfObject().IsModified()) {
-                            GetDocumentInfo().GetPdfObject().Flush(false);
                         }
                         FlushFonts();
                         if (writer.crypto != null) {
@@ -832,8 +830,8 @@ namespace iText.Kernel.Pdf {
                         if (structTreeRoot != null) {
                             TryFlushTagStructure(false);
                         }
+                        FlushInfoDictionary(properties.appendMode);
                         catalog.GetPdfObject().Flush(false);
-                        GetDocumentInfo().GetPdfObject().Flush(false);
                         FlushFonts();
                         if (writer.crypto != null) {
                             crypto = writer.crypto.GetPdfObject();
@@ -859,15 +857,15 @@ namespace iText.Kernel.Pdf {
                     // To avoid encryption of XrefStream and Encryption dictionary remove crypto.
                     // NOTE. No need in reverting, because it is the last operation with the document.
                     writer.crypto = null;
+                    CheckIsoConformance(crypto, IsoKey.CRYPTO);
                     if (!properties.appendMode && crypto != null) {
                         // no need to flush crypto in append mode, it shall not have changed in this case
                         crypto.Flush(false);
                     }
-                    // The following two operators prevents the possible inconsistency between root and info
+                    // The following operator prevents the possible inconsistency between root and info
                     // entries existing in the trailer object and corresponding fields. This inconsistency
                     // may appear when user gets trailer and explicitly sets new root or info dictionaries.
                     trailer.Put(PdfName.Root, catalog.GetPdfObject());
-                    trailer.Put(PdfName.Info, GetDocumentInfo().GetPdfObject());
                     //By this time original and modified document ids should always be not null due to initializing in
                     // either writer properties, or in the writer init section on document open or from pdfreader. So we
                     // shouldn't worry about it being null next
@@ -2084,7 +2082,6 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
-                    trailer.Put(PdfName.Info, GetDocumentInfo().GetPdfObject().GetIndirectReference());
                     if (reader != null) {
                         // If the reader's trailer contains an ID entry, let's copy it over to the new trailer
                         if (reader.trailer.ContainsKey(PdfName.ID)) {
@@ -2195,6 +2192,19 @@ namespace iText.Kernel.Pdf {
         /// to add custom metadata to.
         /// </param>
         protected internal virtual void AddCustomMetadataExtensions(XMPMeta xmpMeta) {
+        }
+
+        /// <summary>Flush info dictionary if needed.</summary>
+        /// <param name="appendMode"><c>true</c> if the document is edited in append mode.</param>
+        protected internal virtual void FlushInfoDictionary(bool appendMode) {
+            PdfObject infoDictObj = GetDocumentInfo().GetPdfObject();
+            if (!appendMode || infoDictObj.IsModified()) {
+                infoDictObj.Flush(false);
+            }
+            // The following operator prevents the possible inconsistency between root and info
+            // entries existing in the trailer object and corresponding fields. This inconsistency
+            // may appear when user gets trailer and explicitly sets new root or info dictionaries.
+            trailer.Put(PdfName.Info, infoDictObj);
         }
 
         /// <summary>Updates XMP metadata.</summary>

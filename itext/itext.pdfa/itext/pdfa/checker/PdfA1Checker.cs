@@ -273,6 +273,18 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <param name="crypto">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        public override void CheckCrypto(PdfObject crypto) {
+            if (crypto != null) {
+                throw new PdfAConformanceException(PdfAConformanceException.KEYWORD_ENCRYPT_SHALL_NOT_BE_USED_IN_THE_TRAILER_DICTIONARY
+                    );
+            }
+        }
+
         protected internal override void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
             ) {
         }
@@ -294,48 +306,6 @@ namespace iText.Pdfa.Checker {
                 }
                 catch (System.IO.IOException e) {
                     throw new PdfException(PdfaExceptionMessageConstant.CANNOT_PARSE_CONTENT_STREAM, e);
-                }
-            }
-        }
-
-        protected internal override void CheckContentStreamObject(PdfObject @object) {
-            byte type = @object.GetObjectType();
-            switch (type) {
-                case PdfObject.NAME: {
-                    CheckPdfName((PdfName)@object);
-                    break;
-                }
-
-                case PdfObject.STRING: {
-                    CheckPdfString((PdfString)@object);
-                    break;
-                }
-
-                case PdfObject.NUMBER: {
-                    CheckPdfNumber((PdfNumber)@object);
-                    break;
-                }
-
-                case PdfObject.ARRAY: {
-                    PdfArray array = (PdfArray)@object;
-                    CheckPdfArray(array);
-                    foreach (PdfObject obj in array) {
-                        CheckContentStreamObject(obj);
-                    }
-                    break;
-                }
-
-                case PdfObject.DICTIONARY: {
-                    PdfDictionary dictionary = (PdfDictionary)@object;
-                    CheckPdfDictionary(dictionary);
-                    foreach (PdfName name in dictionary.KeySet()) {
-                        CheckPdfName(name);
-                        CheckPdfObject(dictionary.Get(name, false));
-                    }
-                    foreach (PdfObject obj in dictionary.Values()) {
-                        CheckContentStreamObject(obj);
-                    }
-                    break;
                 }
             }
         }
@@ -675,6 +645,15 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckCatalog(PdfCatalog catalog) {
+            String pdfVersion = catalog.GetDocument().GetPdfVersion().ToString();
+            if ('1' != pdfVersion[4] || ('1' > pdfVersion[6] || '7' < pdfVersion[6])) {
+                throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_FILE_HEADER_SHALL_CONTAIN_RIGHT_PDF_VERSION
+                    , "1"));
+            }
+        }
+
         protected internal override void CheckCatalogValidEntries(PdfDictionary catalogDict) {
             if (catalogDict.ContainsKey(PdfName.AA)) {
                 throw new PdfAConformanceException(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY
@@ -707,10 +686,6 @@ namespace iText.Pdfa.Checker {
         }
 
         protected internal override void CheckTrailer(PdfDictionary trailer) {
-            if (trailer.ContainsKey(PdfName.Encrypt)) {
-                throw new PdfAConformanceException(PdfAConformanceException.KEYWORD_ENCRYPT_SHALL_NOT_BE_USED_IN_THE_TRAILER_DICTIONARY
-                    );
-            }
         }
 
         /// <summary>
