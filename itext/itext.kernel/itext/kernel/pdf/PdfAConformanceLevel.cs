@@ -54,6 +54,12 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_4 = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("4", null);
 
+        public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_4E = new iText.Kernel.Pdf.PdfAConformanceLevel
+            ("4", "E");
+
+        public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_4F = new iText.Kernel.Pdf.PdfAConformanceLevel
+            ("4", "F");
+
         public const String PDF_A_4_REVISION = "2020";
 
         private readonly String conformance;
@@ -78,6 +84,8 @@ namespace iText.Kernel.Pdf {
             bool aLevel = "A".Equals(lowLetter);
             bool bLevel = "B".Equals(lowLetter);
             bool uLevel = "U".Equals(lowLetter);
+            bool eLevel = "E".Equals(lowLetter);
+            bool fLevel = "F".Equals(lowLetter);
             switch (part) {
                 case "1": {
                     if (aLevel) {
@@ -116,6 +124,12 @@ namespace iText.Kernel.Pdf {
                 }
 
                 case "4": {
+                    if (eLevel) {
+                        return iText.Kernel.Pdf.PdfAConformanceLevel.PDF_A_4E;
+                    }
+                    if (fLevel) {
+                        return iText.Kernel.Pdf.PdfAConformanceLevel.PDF_A_4F;
+                    }
                     return iText.Kernel.Pdf.PdfAConformanceLevel.PDF_A_4;
                 }
             }

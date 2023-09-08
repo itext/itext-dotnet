@@ -41,6 +41,8 @@ namespace iText.Pdfa.Exceptions {
 
         public const String CANNOT_FIND_PDFA_CHECKER_FOR_SPECIFIED_NAME = "Can't find an appropriate checker for a specified name.";
 
+        public const String WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_ENTRY = "Widget annotation dictionary or field dictionary shall not include a entry";
+
         private PdfaExceptionMessageConstant() {
         }
     }

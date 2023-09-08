@@ -1279,6 +1279,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Producer = CreateDirectName("Producer");
 
+        public static readonly iText.Kernel.Pdf.PdfName Projection = CreateDirectName("Projection");
+
         public static readonly iText.Kernel.Pdf.PdfName PronunciationLexicon = CreateDirectName("PronunciationLexicon"
             );
 

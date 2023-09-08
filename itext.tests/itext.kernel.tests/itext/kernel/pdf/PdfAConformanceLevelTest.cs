@@ -29,8 +29,12 @@ namespace iText.Kernel.Pdf {
     public class PdfAConformanceLevelTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetConformanceTest() {
-            PdfAConformanceLevel level = PdfAConformanceLevel.GetConformanceLevel("4", null);
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_4, level);
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_4, PdfAConformanceLevel.GetConformanceLevel("4"
+                , null));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_4E, PdfAConformanceLevel.GetConformanceLevel("4"
+                , "E"));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_4F, PdfAConformanceLevel.GetConformanceLevel("4"
+                , "F"));
         }
 
         [NUnit.Framework.Test]

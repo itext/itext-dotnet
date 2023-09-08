@@ -532,7 +532,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.ANNOTATION_TYPE_0_IS_NOT_PERMITTED).SetMessageParams
                     ("null");
             }
-            if (forbiddenAnnotations.Contains(subtype)) {
+            if (GetForbiddenAnnotations().Contains(subtype)) {
                 throw new PdfAConformanceException(PdfAConformanceException.ANNOTATION_TYPE_0_IS_NOT_PERMITTED).SetMessageParams
                     (subtype.GetValue());
             }
@@ -597,6 +597,12 @@ namespace iText.Pdfa.Checker {
                         .SetMessageParams(subtype.GetValue());
                 }
             }
+        }
+
+        /// <summary>Gets forbidden annotation types.</summary>
+        /// <returns>a set of forbidden annotation types</returns>
+        protected internal virtual ICollection<PdfName> GetForbiddenAnnotations() {
+            return forbiddenAnnotations;
         }
 
         protected internal override void CheckForm(PdfDictionary form) {

@@ -58,6 +58,9 @@ namespace iText.Pdfa.Checker {
             (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName._3D, PdfName.Sound, PdfName.Screen, PdfName.Movie)
             ));
 
+        protected internal static readonly ICollection<PdfName> apLessAnnotations = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Popup, PdfName.Link)));
+
         protected internal static readonly ICollection<PdfName> forbiddenActions = JavaCollectionsUtil.UnmodifiableSet
             (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm
             , PdfName.ImportData, PdfName.JavaScript, PdfName.Hide, PdfName.SetOCGState, PdfName.Rendition, PdfName
@@ -362,7 +365,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.ANNOTATION_TYPE_0_IS_NOT_PERMITTED).SetMessageParams
                     ("null");
             }
-            if (forbiddenAnnotations.Contains(subtype)) {
+            if (GetForbiddenAnnotations().Contains(subtype)) {
                 throw new PdfAConformanceException(PdfAConformanceException.ANNOTATION_TYPE_0_IS_NOT_PERMITTED).SetMessageParams
                     (subtype.GetValue());
             }
@@ -386,15 +389,7 @@ namespace iText.Pdfa.Checker {
                     }
                 }
             }
-            if (PdfName.Widget.Equals(subtype) && (annotDic.ContainsKey(PdfName.AA) || annotDic.ContainsKey(PdfName.A)
-                )) {
-                throw new PdfAConformanceException(PdfAConformanceException.WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_OR_AA_ENTRY
-                    );
-            }
-            if (annotDic.ContainsKey(PdfName.AA)) {
-                throw new PdfAConformanceException(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_AA_KEY
-                    );
-            }
+            CheckAnnotationAgainstActions(annotDic);
             if (CheckStructure(conformanceLevel)) {
                 if (contentAnnotations.Contains(subtype) && !annotDic.ContainsKey(PdfName.Contents)) {
                     throw new PdfAConformanceException(PdfAConformanceException.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY)
@@ -435,11 +430,42 @@ namespace iText.Pdfa.Checker {
                         isCorrectRect = true;
                     }
                 }
-                if (!PdfName.Popup.Equals(subtype) && !PdfName.Link.Equals(subtype) && !isCorrectRect) {
+                if (!GetAppearanceLessAnnotations().Contains(subtype) && !isCorrectRect) {
                     throw new PdfAConformanceException(PdfAConformanceException.EVERY_ANNOTATION_SHALL_HAVE_AT_LEAST_ONE_APPEARANCE_DICTIONARY
                         );
                 }
             }
+        }
+
+        /// <summary>Gets annotation types which are allowed not to have appearance stream.</summary>
+        /// <returns>set of annotation names.</returns>
+        protected internal virtual ICollection<PdfName> GetAppearanceLessAnnotations() {
+            return apLessAnnotations;
+        }
+
+        /// <summary>
+        /// Checked annotation against actions, exception will be thrown if either
+        /// <c>A</c>
+        /// or
+        /// <c>AA</c>
+        /// actions aren't allowed for specific type of annotation.
+        /// </summary>
+        /// <param name="annotDic">an annotation PDF dictionary</param>
+        protected internal virtual void CheckAnnotationAgainstActions(PdfDictionary annotDic) {
+            if (PdfName.Widget.Equals(annotDic.GetAsName(PdfName.Subtype)) && (annotDic.ContainsKey(PdfName.AA) || annotDic
+                .ContainsKey(PdfName.A))) {
+                throw new PdfAConformanceException(PdfAConformanceException.WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_OR_AA_ENTRY
+                    );
+            }
+            if (annotDic.ContainsKey(PdfName.AA)) {
+                throw new PdfAConformanceException(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_AA_KEY
+                    );
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override ICollection<PdfName> GetForbiddenAnnotations() {
+            return forbiddenAnnotations;
         }
 
         protected internal override void CheckAppearanceStream(PdfStream appearanceStream) {

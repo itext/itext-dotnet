@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
@@ -39,6 +40,21 @@ namespace iText.Pdfa.Checker {
     /// The specification implemented by this class is ISO 19005-4
     /// </remarks>
     public class PdfA4Checker : PdfA3Checker {
+        protected internal static readonly ICollection<PdfName> forbiddenAnnotations4 = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName._3D, PdfName.RichMedia, PdfName.FileAttachment, PdfName
+            .Sound, PdfName.Screen, PdfName.Movie)));
+
+        protected internal static readonly ICollection<PdfName> forbiddenAnnotations4E = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.FileAttachment, PdfName.Sound, PdfName.Screen, PdfName
+            .Movie)));
+
+        protected internal static readonly ICollection<PdfName> forbiddenAnnotations4F = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName._3D, PdfName.RichMedia, PdfName.Sound, PdfName.Screen
+            , PdfName.Movie)));
+
+        protected internal static readonly ICollection<PdfName> apLessAnnotations = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Popup, PdfName.Link, PdfName.Projection)));
+
         /// <summary>Creates a PdfA4Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">the required conformance level</param>
         public PdfA4Checker(PdfAConformanceLevel conformanceLevel)
@@ -102,6 +118,36 @@ namespace iText.Pdfa.Checker {
         //There is no limit for DeviceN components count in pdf-a/4
         /// <summary><inheritDoc/></summary>
         protected internal override void CheckNumberOfDeviceNComponents(PdfSpecialCs.DeviceN deviceN) {
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override ICollection<PdfName> GetForbiddenAnnotations() {
+            if ("E".Equals(conformanceLevel.GetConformance())) {
+                return forbiddenAnnotations4E;
+            }
+            else {
+                if ("F".Equals(conformanceLevel.GetConformance())) {
+                    return forbiddenAnnotations4F;
+                }
+            }
+            return forbiddenAnnotations4;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override ICollection<PdfName> GetAppearanceLessAnnotations() {
+            return apLessAnnotations;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckAnnotationAgainstActions(PdfDictionary annotDic) {
+            if (PdfName.Widget.Equals(annotDic.GetAsName(PdfName.Subtype)) && annotDic.ContainsKey(PdfName.A)) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_ENTRY
+                    );
+            }
+            if (!PdfName.Widget.Equals(annotDic.GetAsName(PdfName.Subtype)) && annotDic.ContainsKey(PdfName.AA)) {
+                throw new PdfAConformanceException(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_AA_KEY
+                    );
+            }
         }
     }
 }
