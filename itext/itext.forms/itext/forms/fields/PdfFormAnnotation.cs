@@ -727,6 +727,7 @@ namespace iText.Forms.Fields {
                 // Create it one time and re-set properties during each widget regeneration.
                 formFieldElement = new Radio("");
             }
+            bool wasChecked = true.Equals(formFieldElement.GetProperty<bool?>(FormProperty.FORM_FIELD_CHECKED));
             SetModelElementProperties(GetRect(GetPdfObject()));
             // First draw off appearance
             ((Radio)formFieldElement).SetChecked(false);
@@ -748,6 +749,7 @@ namespace iText.Forms.Fields {
                 canvas.Add(formFieldElement);
                 normalAppearance.Put(new PdfName(value), xObject.GetPdfObject());
             }
+            ((Radio)formFieldElement).SetChecked(wasChecked);
             GetWidget().SetNormalAppearance(normalAppearance);
             formFieldElement.SetInteractive(true);
         }
@@ -938,6 +940,7 @@ namespace iText.Forms.Fields {
             }
             ReconstructCheckBoxType();
             CreateCheckBox();
+            bool wasChecked = true.Equals(formFieldElement.GetProperty<bool?>(FormProperty.FORM_FIELD_CHECKED));
             PdfDictionary normalAppearance = new PdfDictionary();
             ((CheckBox)formFieldElement).SetChecked(false);
             PdfFormXObject xObjectOff = new PdfFormXObject(new Rectangle(0, 0, rect.GetWidth(), rect.GetHeight()));
@@ -967,6 +970,7 @@ namespace iText.Forms.Fields {
                 .checkType.GetValue())));
             GetWidget().Put(PdfName.MK, mk);
             formFieldElement.SetInteractive(true);
+            ((CheckBox)formFieldElement).SetChecked(wasChecked);
         }
 
         internal static void SetMetaInfoToCanvas(iText.Layout.Canvas canvas) {
