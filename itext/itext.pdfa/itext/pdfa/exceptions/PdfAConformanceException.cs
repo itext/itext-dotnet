@@ -85,7 +85,10 @@ namespace iText.Pdfa.Exceptions {
 
         public const String AN_IMAGE_DICTIONARY_SHALL_NOT_CONTAIN_OPI_KEY = "An image dictionary shall not contain opi key";
 
-        public const String ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY = "Annotation of type {0} should have contents key";
+        [Obsolete]
+        public const String ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY = 
+                // Was moved to PdfAConformanceLogMessageConstant
+                "Annotation of type {0} should have contents key";
 
         public const String ANNOTATION_TYPE_0_IS_NOT_PERMITTED = "Annotation type {0} is not permitted";
 

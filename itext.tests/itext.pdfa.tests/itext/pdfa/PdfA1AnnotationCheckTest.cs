@@ -29,7 +29,10 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Utils;
 using iText.Pdfa.Exceptions;
+using iText.Pdfa.Logs;
 using iText.Test;
+using iText.Test.Attributes;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -166,8 +169,12 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY, LogLevel = LogLevelConstants
+            .WARN)]
         public virtual void AnnotationCheckTest08() {
-            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            String outPdf = destinationFolder + "pdfA1a_annotationCheckTest08.pdf";
+            String cmpPdf = cmpFolder + "cmp_pdfA1a_annotationCheckTest08.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
@@ -178,11 +185,12 @@ namespace iText.Pdfa {
             PdfAnnotation annot = new PdfStampAnnotation(rect);
             annot.SetFlag(PdfAnnotation.PRINT);
             page.AddAnnotation(annot);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
-                , PdfName.Stamp.GetValue()), e.Message);
+            doc.Close();
+            CompareResult(outPdf, cmpPdf);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest09() {
             String outPdf = destinationFolder + "pdfA1a_annotationCheckTest09.pdf";

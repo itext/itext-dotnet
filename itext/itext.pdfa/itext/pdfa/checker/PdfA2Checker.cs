@@ -89,6 +89,8 @@ namespace iText.Pdfa.Checker {
 
         private const int MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS = 32;
 
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
+
         private bool currentFillCsIsIccBasedCMYK = false;
 
         private bool currentStrokeCsIsIccBasedCMYK = false;
@@ -392,8 +394,8 @@ namespace iText.Pdfa.Checker {
             CheckAnnotationAgainstActions(annotDic);
             if (CheckStructure(conformanceLevel)) {
                 if (contentAnnotations.Contains(subtype) && !annotDic.ContainsKey(PdfName.Contents)) {
-                    throw new PdfAConformanceException(PdfAConformanceException.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY)
-                        .SetMessageParams(subtype.GetValue());
+                    logger.LogWarning(MessageFormatUtil.Format(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
+                        , subtype.GetValue()));
                 }
             }
             PdfDictionary ap = annotDic.GetAsDictionary(PdfName.AP);
@@ -588,7 +590,6 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 if (!fileSpec.ContainsKey(PdfName.Desc)) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
                     logger.LogWarning(PdfAConformanceLogMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY);
                 }
                 PdfDictionary ef = fileSpec.GetAsDictionary(PdfName.EF);
@@ -598,8 +599,7 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 // iText doesn't check whether provided file is compliant to PDF-A specs.
-                ILogger logger_1 = ITextLogManager.GetLogger(typeof(PdfAChecker));
-                logger_1.LogWarning(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC);
+                logger.LogWarning(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC);
             }
         }
 
@@ -1027,7 +1027,6 @@ namespace iText.Pdfa.Checker {
             ) {
             if (!IsAltCSIsTheSame(separation.Get(2), deviceNColorSpace) || !deviceNTintTransform.Equals(separation.Get
                 (3))) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
                 logger.LogWarning(PdfAConformanceLogMessageConstant.TINT_TRANSFORM_AND_ALTERNATE_SPACE_OF_SEPARATION_ARRAYS_IN_THE_COLORANTS_OF_DEVICE_N_SHOULD_BE_CONSISTENT_WITH_SAME_ATTRIBUTES_OF_DEVICE_N
                     );
             }

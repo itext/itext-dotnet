@@ -25,6 +25,8 @@ using System;
 namespace iText.Pdfa.Logs {
     /// <summary>Class containing pdfa conformance constants to be used in logging.</summary>
     public sealed class PdfAConformanceLogMessageConstant {
+        public const String ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY = "Annotation of type {0} should have contents key";
+
         public const String CATALOG_SHOULD_CONTAIN_LANG_ENTRY = "Catalog dictionary should contain lang entry";
 
         public const String EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC = "Embedded file shall be compliant with either ISO 19005-1 (PDF-A/1 standard) or ISO 19005-2 "

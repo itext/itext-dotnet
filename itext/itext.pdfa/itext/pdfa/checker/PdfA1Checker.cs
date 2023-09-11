@@ -76,6 +76,8 @@ namespace iText.Pdfa.Checker {
 
         private const int MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS = 8;
 
+        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
+
         /// <summary>Creates a PdfA1Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">
         /// the required conformance level, <c>a</c> or
@@ -393,7 +395,6 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 if (!catalog.ContainsKey(PdfName.Lang)) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
                     logger.LogWarning(PdfAConformanceLogMessageConstant.CATALOG_SHOULD_CONTAIN_LANG_ENTRY);
                 }
             }
@@ -593,8 +594,8 @@ namespace iText.Pdfa.Checker {
             }
             if (CheckStructure(conformanceLevel)) {
                 if (contentAnnotations.Contains(subtype) && !annotDic.ContainsKey(PdfName.Contents)) {
-                    throw new PdfAConformanceException(PdfAConformanceException.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY)
-                        .SetMessageParams(subtype.GetValue());
+                    logger.LogWarning(MessageFormatUtil.Format(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
+                        , subtype.GetValue()));
                 }
             }
         }
