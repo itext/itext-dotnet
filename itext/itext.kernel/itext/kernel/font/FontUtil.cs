@@ -106,7 +106,7 @@ namespace iText.Kernel.Font {
                     toUnicode = CMapToUnicode.GetIdentity();
                 }
                 else {
-                    CMapUniCid uni = FontCache.GetUni2CidCmap(uniMap);
+                    CMapUniCid uni = CjkResourceLoader.GetUni2CidCmap(uniMap);
                     toUnicode = uni.ExportToUnicode();
                 }
                 uniMaps.Put(uniMap, toUnicode);

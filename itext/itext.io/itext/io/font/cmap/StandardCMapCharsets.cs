@@ -56,6 +56,8 @@ namespace iText.IO.Font.Cmap {
             RegisterHV("UniCNS-UTF16", UTF16_ENCODER);
             // Japanese
             RegisterHV("UniJIS-UCS2", UCS2_ENCODER);
+            RegisterHV("UniJIS-UCS2-HW", UCS2_ENCODER);
+            RegisterHV("UniJIS2004-UTF16", UTF16_ENCODER);
             RegisterHV("UniJIS-UTF16", UTF16_ENCODER);
             // Korean
             RegisterHV("UniKS-UCS2", UCS2_ENCODER);

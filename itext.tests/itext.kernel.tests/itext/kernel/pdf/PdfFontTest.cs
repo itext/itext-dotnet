@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Exceptions;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Font;
@@ -1396,23 +1397,6 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void KozminNames() {
-            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor("KozMinPro-Regular");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "KozMinPro-Regular");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "KozMinPro-Regular".ToLowerInvariant());
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void HelveticaNames() {
-            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor("Helvetica");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "Helvetica");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Helvetica".ToLowerInvariant());
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "helvetica");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 500);
-        }
-
-        [NUnit.Framework.Test]
         public virtual void OtfByStringNames() {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "Puritan2.otf"
                 );
@@ -1484,6 +1468,62 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder)
                 );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HalfWidthFontTest() {
+            String outFileName = destinationFolder + "halfWidthFont.pdf";
+            String cmpFileName = sourceFolder + "cmp_halfWidthFont.pdf";
+            String uniEncodings = "UniJIS-UCS2-HW-H UniJIS-UTF16-H UniJIS-UTF32-H " + "UniJIS-UTF8-H UniJIS2004-UTF16-H UniJIS2004-UTF32-H UniJIS2004-UTF8-H "
+                 + "UniJISX0213-UTF32-H UniJISX02132004-UTF32-H";
+            String jpFonts = "HeiseiMin-W3 HeiseiKakuGo-W5 KozMinPro-Regular";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                String msg = "あいうえおアイウエオ fufufufufuf 012345678917 更ッ一  平成20年12月31日";
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                int y = 700;
+                foreach (String font in iText.Commons.Utils.StringUtil.Split(jpFonts, " ")) {
+                    foreach (String uniEncoding in iText.Commons.Utils.StringUtil.Split(uniEncodings, " ")) {
+                        canvas.SaveState().BeginText().MoveText(36, y).SetFontAndSize(PdfFontFactory.CreateFont(font, uniEncoding, 
+                            PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED, true), 12).ShowText(msg).EndText().RestoreState();
+                        y -= 20;
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Utf16ToUcs2HWFontTest() {
+            String outFileName = destinationFolder + "utf16ToUcs2HWFont.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                // Surrogate pair
+                String msg = "\ud83c\udd00 f";
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont("KozMinPro-Regular"
+                    , "UniJIS-UCS2-HW-H", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED, true), 12);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => canvas.ShowText(msg));
+                NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.ONLY_BMP_ENCODING, e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UniJIS2004UTF16FontTest() {
+            String outFileName = destinationFolder + "uniJIS2004UTF16Font.pdf";
+            String cmpFileName = sourceFolder + "cmp_uniJIS2004UTF16Font.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                // Surrogate pair
+                String msg = "\ud83c\udd00 fffff";
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont("KozMinPro-Regular"
+                    , "UniJIS2004-UTF16-H", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED, true), 12).ShowText(msg).EndText
+                    ().RestoreState();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
         }
 
         private float GetContentWidth(PdfType3Font type3, char glyph) {

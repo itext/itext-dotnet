@@ -67,7 +67,7 @@ namespace iText.IO.Font {
                 this.codeSpaceRanges = IDENTITY_H_V_CODESPACE_RANGES;
             }
             else {
-                cid2Code = FontCache.GetCidToCodepointCmap(cmap);
+                cid2Code = CjkResourceLoader.GetCidToCodepointCmap(cmap);
                 code2Cid = iText.IO.Font.CMapEncoding.GetCodeToCidCmap(cmap, cid2Code);
                 this.codeSpaceRanges = cid2Code.GetCodeSpaceRanges();
             }
@@ -197,7 +197,7 @@ namespace iText.IO.Font {
 
         private static CMapCodepointToCid GetCodeToCidCmap(String cmap, CMapCidToCodepoint cid2Code) {
             try {
-                return FontCache.GetCodepointToCidCmap(cmap);
+                return CjkResourceLoader.GetCodepointToCidCmap(cmap);
             }
             catch (iText.IO.Exceptions.IOException) {
                 // if not found, fall back to reversing

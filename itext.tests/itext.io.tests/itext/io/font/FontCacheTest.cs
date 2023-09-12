@@ -26,8 +26,7 @@ using iText.Test;
 
 namespace iText.IO.Font {
     [NUnit.Framework.Category("UnitTest")]
-    public class FontCacheNoFontAsianTest : ExtendedITextTest {
-        // Android-Conversion-Skip-File (TODO DEVSIX-7376 investigate why FontCacheNoFontAsianTest is skipped on Android)
+    public class FontCacheTest : ExtendedITextTest {
         [NUnit.Framework.SetUp]
         public virtual void Before() {
             FontCache.ClearSavedFonts();
@@ -37,7 +36,7 @@ namespace iText.IO.Font {
         public virtual void ClearFontCacheTest() {
             String fontName = "FreeSans.ttf";
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(fontName));
-            FontProgram fontProgram = new FontCacheNoFontAsianTest.FontProgramMock();
+            FontProgram fontProgram = new FontCacheTest.FontProgramMock();
             FontCache.SaveFont(fontProgram, fontName);
             NUnit.Framework.Assert.AreEqual(fontProgram, FontCache.GetFont(fontName));
             FontCache.ClearSavedFonts();
@@ -51,7 +50,7 @@ namespace iText.IO.Font {
             FontCacheKey ttc1 = FontCacheKey.Create(fontName, 1);
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(ttc0));
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(ttc1));
-            FontProgram fontProgram = new FontCacheNoFontAsianTest.FontProgramMock();
+            FontProgram fontProgram = new FontCacheTest.FontProgramMock();
             FontCache.SaveFont(fontProgram, ttc1);
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(ttc0));
             NUnit.Framework.Assert.AreEqual(fontProgram, FontCache.GetFont(ttc1));
@@ -68,73 +67,13 @@ namespace iText.IO.Font {
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(ttc0));
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(otherTtc0));
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(normal));
-            FontProgram otherTtc0MockFontProgram = new FontCacheNoFontAsianTest.FontProgramMock();
-            FontProgram normalMockFontProgram = new FontCacheNoFontAsianTest.FontProgramMock();
+            FontProgram otherTtc0MockFontProgram = new FontCacheTest.FontProgramMock();
+            FontProgram normalMockFontProgram = new FontCacheTest.FontProgramMock();
             FontCache.SaveFont(otherTtc0MockFontProgram, otherTtc0);
             FontCache.SaveFont(normalMockFontProgram, normal);
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(ttc0));
             NUnit.Framework.Assert.AreEqual(otherTtc0MockFontProgram, FontCache.GetFont(otherTtc0));
             NUnit.Framework.Assert.AreEqual(normalMockFontProgram, FontCache.GetFont(normal));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetCompatibleCidFontNoFontAsian() {
-            // Without font-asian module in the class path
-            // any value passed into a method is expected to return null.
-            NUnit.Framework.Assert.IsNull(FontCache.GetCompatibleCidFont("78-RKSJ-V"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void IsPredefinedCidFontNoFontAsian() {
-            // Without font-asian module in the class path
-            // any value passed into a method is expected to return false.
-            NUnit.Framework.Assert.IsFalse(FontCache.IsPredefinedCidFont("78-RKSJ-V"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetCompatibleCmapsNoFontAsian() {
-            // Without font-asian module in the class path
-            // any value passed into a method is expected to return null.
-            NUnit.Framework.Assert.IsNull(FontCache.GetCompatibleCmaps("HeiseiKakuGo-W5"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetRegistryNamesNoFontAsian() {
-            // Without font-asian module in the class path
-            // registry names collection is expected to be empty.
-            NUnit.Framework.Assert.IsTrue(FontCache.GetRegistryNames().IsEmpty());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetCid2UniCMapNoFontAsian() {
-            // Without font-asian module in the class path
-            // no CMap can be found.
-            NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => FontCache.GetCid2UniCmap("UniJIS-UTF16-H"
-                ));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetUni2CidCMapNoFontAsian() {
-            // Without font-asian module in the class path
-            // no CMap can be found.
-            NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => FontCache.GetUni2CidCmap("UniJIS-UTF16-H"
-                ));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetByte2CidCMapNoFontAsian() {
-            // Without font-asian module in the class path
-            // no CMap can be found.
-            NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => FontCache.GetByte2CidCmap("78ms-RKSJ-H"
-                ));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetCid2ByteCMapNoFontAsian() {
-            // Without font-asian module in the class path
-            // no CMap can be found.
-            NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => FontCache.GetCidToCodepointCmap
-                ("78ms-RKSJ-H"));
         }
 
         private class FontProgramMock : FontProgram {
