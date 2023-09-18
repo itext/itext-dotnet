@@ -49,6 +49,8 @@ namespace iText.Kernel.Logs {
 
         public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} color space";
 
+        public const String CANNOT_MERGE_ENTRY = "Cannot merge entry {0}, entry with such key already exists.";
+
         /// <summary>
         /// Message warns about unexpected product name which was mentioned as involved into PDF
         /// processing.
