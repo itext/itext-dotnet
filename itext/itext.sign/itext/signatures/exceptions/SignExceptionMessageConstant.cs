@@ -46,12 +46,12 @@ namespace iText.Signatures.Exceptions {
 
         public const String CERTIFICATE_TEMPLATE_FOR_EXCEPTION_MESSAGE = "Certificate {0} failed: {1}";
 
+        public const String DEFAULT_CLIENTS_CANNOT_BE_CREATED = "Default implementation of OCSP and CRL clients " 
+            + "cannot be created, because signing certificate doesn't contain revocation data sources. " + "Please try to explicitly add OCSP or CRL client.";
+
         public const String DICTIONARY_THIS_KEY_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
 
         public const String DOCUMENT_ALREADY_PRE_CLOSED = "Document has been already pre closed.";
-
-        public const String DOCUMENT_CANNOT_BE_SIGNED = "Document cannot be signed with this PaDES profile level, "
-             + "because {0} is null. Please, provide {0} using corresponding setter method.";
 
         public const String DOCUMENT_MUST_BE_PRE_CLOSED = "Document must be preClosed.";
 
@@ -72,6 +72,8 @@ namespace iText.Signatures.Exceptions {
         public const String INVALID_TSA_RESPONSE = "Invalid TSA {0} response code {1}.";
 
         public const String NO_CRYPTO_DICTIONARY_DEFINED = "No crypto dictionary defined.";
+
+        public const String NO_SIGNATURES_TO_PROLONG = "Document doesn't contain any signatures to prolong.";
 
         public const String NOT_A_VALID_PKCS7_OBJECT_NOT_A_SEQUENCE = "Not a valid PKCS#7 object - not a sequence";
 

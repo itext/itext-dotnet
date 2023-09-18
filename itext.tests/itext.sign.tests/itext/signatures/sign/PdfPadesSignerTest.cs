@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -58,23 +57,6 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TsaClientCannotBeCreatedTest() {
-            String fileName = "tsaClientCannotBeCreatedTest.pdf";
-            String outFileName = destinationFolder + fileName;
-            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
-            String signCertFileName = certsSrc + "signCertRsa01.pem";
-            IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
-            IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
-            IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
-            PdfSigner signer = CreatePdfSigner(srcFileName, outFileName);
-            PdfPadesSigner padesSigner = new PdfPadesSigner(signer, pks);
-            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => padesSigner.SignWithBaselineTProfile
-                (signRsaChain));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignExceptionMessageConstant.DOCUMENT_CANNOT_BE_SIGNED
-                , "TSA Client"), exception.Message);
-        }
-
-        [NUnit.Framework.Test]
         public virtual void DirectoryPathIsNotADirectoryTest() {
             String fileName = "directoryPathIsNotADirectoryTest.pdf";
             String outFileName = destinationFolder + fileName;
@@ -93,18 +75,61 @@ namespace iText.Signatures.Sign {
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             ICrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
-            PdfPadesSigner padesSigner = new PdfPadesSigner(signer, pks);
+            PdfPadesSigner padesSigner = new PdfPadesSigner();
             padesSigner.SetTemporaryDirectoryPath(destinationFolder + "newPdf.pdf");
-            padesSigner.SetTsaClient(testTsa).SetOcspClient(ocspClient).SetCrlClient(crlClient);
+            padesSigner.SetOcspClient(ocspClient).SetCrlClient(crlClient);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => padesSigner.SignWithBaselineLTProfile
-                (signRsaChain));
+                (signer, signRsaChain, pks, testTsa));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignExceptionMessageConstant.PATH_IS_NOT_DIRECTORY
                 , destinationFolder + "newPdf.pdf"), exception.Message);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void NoSignaturesToProlongTest() {
+            String fileName = "noSignaturesToProlongTest.pdf";
+            String outFileName = destinationFolder + fileName;
+            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
+            String tsaCertFileName = certsSrc + "tsCertRsa.pem";
+            String caCertFileName = certsSrc + "rootRsa.pem";
+            IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
+            IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
+            IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
+            IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertFileName, password);
+            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
+            ICrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
+            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
+            PdfPadesSigner padesSigner = new PdfPadesSigner();
+            padesSigner.SetOcspClient(ocspClient).SetCrlClient(crlClient);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => padesSigner.ProlongSignatures
+                (new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), testTsa));
+            NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.NO_SIGNATURES_TO_PROLONG, exception.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultClientsCannotBeCreated() {
+            String fileName = "defaultClientsCannotBeCreated.pdf";
+            String outFileName = destinationFolder + fileName;
+            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
+            String signCertFileName = certsSrc + "signCertRsa01.pem";
+            String tsaCertFileName = certsSrc + "tsCertRsa.pem";
+            IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
+            IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
+            IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
+            IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
+            IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
+            PdfSigner signer = CreatePdfSigner(srcFileName, outFileName);
+            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
+            PdfPadesSigner padesSigner = new PdfPadesSigner();
+            padesSigner.SetTemporaryDirectoryPath(destinationFolder);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => padesSigner.SignWithBaselineLTProfile
+                (signer, signRsaChain, pks, testTsa));
+            NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.DEFAULT_CLIENTS_CANNOT_BE_CREATED, exception.
+                Message);
+        }
+
         private PdfSigner CreatePdfSigner(String srcFileName, String outFileName) {
-            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
-                new StampingProperties());
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), new 
+                StampingProperties());
             signer.SetFieldName("Signature1");
             signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
                 ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText.");

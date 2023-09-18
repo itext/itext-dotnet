@@ -108,10 +108,10 @@ namespace iText.Signatures {
         protected internal PdfSignatureAppearance appearance;
 
         /// <summary>Holds value of property signDate.</summary>
-        protected internal DateTime signDate;
+        protected internal DateTime signDate = DateTimeUtil.GetCurrentTime();
 
         /// <summary>Boolean to check if this PdfSigner instance has been closed already or not.</summary>
-        protected internal bool closed;
+        protected internal bool closed = false;
 
         /// <summary>Creates a PdfSigner instance.</summary>
         /// <remarks>
@@ -157,11 +157,23 @@ namespace iText.Signatures {
                 document = InitDocument(reader, new PdfWriter(FileUtil.GetFileOutputStream(tempFile)), localProps);
             }
             originalOS = outputStream;
-            signDate = DateTimeUtil.GetCurrentTime();
             fieldName = GetNewSigFieldName();
             appearance = new PdfSignatureAppearance(document, new Rectangle(0, 0), 1);
             appearance.SetSignDate(signDate);
-            closed = false;
+        }
+
+        internal PdfSigner(PdfDocument document, Stream outputStream, MemoryStream temporaryOS, FileInfo tempFile) {
+            if (tempFile == null) {
+                this.temporaryOS = temporaryOS;
+            }
+            else {
+                this.tempFile = tempFile;
+            }
+            this.document = document;
+            this.originalOS = outputStream;
+            this.fieldName = GetNewSigFieldName();
+            this.appearance = new PdfSignatureAppearance(document, new Rectangle(0, 0), 1);
+            this.appearance.SetSignDate(this.signDate);
         }
 
         protected internal virtual PdfDocument InitDocument(PdfReader reader, PdfWriter writer, StampingProperties

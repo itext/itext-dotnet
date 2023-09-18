@@ -45,9 +45,7 @@ namespace iText.Signatures {
 
         private static long increment = 0;
 
-        private ITSAClient tsaClient;
-
-        private IOcspClient ocspClient = new OcspClientBouncyCastle(null);
+        private IOcspClient ocspClient = null;
 
         private ICrlClient crlClient;
 
@@ -57,86 +55,16 @@ namespace iText.Signatures {
 
         private String temporaryDirectoryPath = null;
 
-        private readonly PdfSigner pdfSigner;
-
-        private readonly IExternalSignature externalSignature;
-
         private MemoryStream tempOutputStream;
 
         private FileInfo tempFile;
 
         private readonly ICollection<FileInfo> tempFiles = new HashSet<FileInfo>();
 
-        /// <summary>
-        /// Creates PdfPadesSigner instance using provided
-        /// <see cref="PdfSigner"/>
-        /// and
-        /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
-        /// parameters.
-        /// </summary>
-        /// <remarks>
-        /// Creates PdfPadesSigner instance using provided
-        /// <see cref="PdfSigner"/>
-        /// and
-        /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
-        /// parameters.
-        /// <para />
-        /// <see cref="PdfSigner"/>
-        /// instance shall be newly created and not closed.
-        /// <para />
-        /// Same instance of
-        /// <see cref="PdfPadesSigner"/>
-        /// shall not be used for more than one signing operation.
-        /// </remarks>
-        /// <param name="pdfSigner">
-        /// 
-        /// <see cref="PdfSigner"/>
-        /// to be used for main signing operation
-        /// </param>
-        /// <param name="privateKey">
-        /// 
-        /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
-        /// private key to be used for main signing operation
-        /// </param>
-        public PdfPadesSigner(PdfSigner pdfSigner, IPrivateKey privateKey) {
-            this.pdfSigner = pdfSigner;
-            this.externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
-        }
-
-        /// <summary>
-        /// Creates PdfPadesSigner instance using provided
-        /// <see cref="PdfSigner"/>
-        /// and
-        /// <see cref="IExternalSignature"/>
-        /// parameters.
-        /// </summary>
-        /// <remarks>
-        /// Creates PdfPadesSigner instance using provided
-        /// <see cref="PdfSigner"/>
-        /// and
-        /// <see cref="IExternalSignature"/>
-        /// parameters.
-        /// <para />
-        /// <see cref="PdfSigner"/>
-        /// instance shall be newly created and not closed.
-        /// <para />
-        /// Same instance of
-        /// <see cref="PdfPadesSigner"/>
-        /// shall not be used for more than one signing operation.
-        /// </remarks>
-        /// <param name="pdfSigner">
-        /// 
-        /// <see cref="PdfSigner"/>
-        /// to be used for main signing operation
-        /// </param>
-        /// <param name="externalSignature">
-        /// 
-        /// <see cref="IExternalSignature"/>
-        /// external signature to be used for main signing operation
-        /// </param>
-        public PdfPadesSigner(PdfSigner pdfSigner, IExternalSignature externalSignature) {
-            this.pdfSigner = pdfSigner;
-            this.externalSignature = externalSignature;
+        /// <summary>Create an instance of PdfPadesSigner class.</summary>
+        /// <remarks>Create an instance of PdfPadesSigner class. One instance shall be used for one signing operation.
+        ///     </remarks>
+        public PdfPadesSigner() {
         }
 
         /// <summary>
@@ -144,9 +72,42 @@ namespace iText.Signatures {
         /// <see cref="PdfSigner"/>
         /// instance with PaDES Baseline-B Profile.
         /// </summary>
+        /// <param name="pdfSigner">
+        /// 
+        /// <see cref="PdfSigner"/>
+        /// instance to be used for main signing operation
+        /// </param>
         /// <param name="chain">the chain of certificates to be used for signing operation</param>
-        public virtual void SignWithBaselineBProfile(IX509Certificate[] chain) {
-            PerformSignDetached(chain, null);
+        /// <param name="externalSignature">
+        /// 
+        /// <see cref="IExternalSignature"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        public virtual void SignWithBaselineBProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IExternalSignature
+             externalSignature) {
+            PerformSignDetached(pdfSigner, externalSignature, chain, null);
+        }
+
+        /// <summary>
+        /// Sign the document provided in
+        /// <see cref="PdfSigner"/>
+        /// instance with PaDES Baseline-B Profile.
+        /// </summary>
+        /// <param name="pdfSigner">
+        /// 
+        /// <see cref="PdfSigner"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        /// <param name="chain">the chain of certificates to be used for signing operation</param>
+        /// <param name="privateKey">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        public virtual void SignWithBaselineBProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IPrivateKey privateKey
+            ) {
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            SignWithBaselineBProfile(pdfSigner, chain, externalSignature);
         }
 
         /// <summary>
@@ -154,10 +115,42 @@ namespace iText.Signatures {
         /// <see cref="PdfSigner"/>
         /// instance with PaDES Baseline-T Profile.
         /// </summary>
+        /// <param name="pdfSigner">
+        /// 
+        /// <see cref="PdfSigner"/>
+        /// instance to be used for main signing operation
+        /// </param>
         /// <param name="chain">the chain of certificates to be used for signing operation</param>
-        public virtual void SignWithBaselineTProfile(IX509Certificate[] chain) {
-            CreateTsaClient(chain);
-            PerformSignDetached(chain, tsaClient);
+        /// <param name="externalSignature">
+        /// 
+        /// <see cref="IExternalSignature"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        public virtual void SignWithBaselineTProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IExternalSignature
+             externalSignature, ITSAClient tsaClient) {
+            PerformSignDetached(pdfSigner, externalSignature, chain, tsaClient);
+        }
+
+        /// <summary>
+        /// Sign the document provided in
+        /// <see cref="PdfSigner"/>
+        /// instance with PaDES Baseline-T Profile.
+        /// </summary>
+        /// <param name="pdfSigner">
+        /// 
+        /// <see cref="PdfSigner"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        /// <param name="chain">the chain of certificates to be used for signing operation</param>
+        /// <param name="privateKey">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        public virtual void SignWithBaselineTProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IPrivateKey privateKey
+            , ITSAClient tsaClient) {
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            SignWithBaselineTProfile(pdfSigner, chain, externalSignature, tsaClient);
         }
 
         /// <summary>
@@ -165,14 +158,86 @@ namespace iText.Signatures {
         /// <see cref="PdfSigner"/>
         /// instance with PaDES Baseline-LT Profile.
         /// </summary>
+        /// <param name="pdfSigner">
+        /// 
+        /// <see cref="PdfSigner"/>
+        /// instance to be used for main signing operation
+        /// </param>
         /// <param name="chain">the chain of certificates to be used for signing operation</param>
-        public virtual void SignWithBaselineLTProfile(IX509Certificate[] chain) {
-            CreateTsaClient(chain);
-            CreateCrlClient(chain);
+        /// <param name="externalSignature">
+        /// 
+        /// <see cref="IExternalSignature"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        public virtual void SignWithBaselineLTProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IExternalSignature
+             externalSignature, ITSAClient tsaClient) {
+            CreateRevocationClients(chain, true);
             try {
-                Stream originalOS = SubstituteOutputStream();
-                PerformSignDetached(chain, tsaClient);
-                PerformLtvVerification(CreateInputStream(), originalOS);
+                Stream originalOS = SubstituteOutputStream(pdfSigner);
+                PerformSignDetached(pdfSigner, externalSignature, chain, tsaClient);
+                using (Stream inputStream = CreateInputStream()) {
+                    using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(originalOS), new 
+                        StampingProperties().UseAppendMode())) {
+                        PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(pdfSigner.GetFieldName()));
+                    }
+                }
+            }
+            finally {
+                DeleteTempFiles();
+            }
+        }
+
+        /// <summary>
+        /// Sign the document provided in
+        /// <see cref="PdfSigner"/>
+        /// instance with PaDES Baseline-LT Profile.
+        /// </summary>
+        /// <param name="pdfSigner">
+        /// 
+        /// <see cref="PdfSigner"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        /// <param name="chain">the chain of certificates to be used for signing operation</param>
+        /// <param name="privateKey">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        public virtual void SignWithBaselineLTProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IPrivateKey privateKey
+            , ITSAClient tsaClient) {
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            SignWithBaselineLTProfile(pdfSigner, chain, externalSignature, tsaClient);
+        }
+
+        /// <summary>
+        /// Sign the document provided in
+        /// <see cref="PdfSigner"/>
+        /// instance with PaDES Baseline-LTA Profile.
+        /// </summary>
+        /// <param name="pdfSigner">
+        /// 
+        /// <see cref="PdfSigner"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        /// <param name="chain">the chain of certificates to be used for signing operation</param>
+        /// <param name="externalSignature">
+        /// 
+        /// <see cref="IExternalSignature"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        public virtual void SignWithBaselineLTAProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IExternalSignature
+             externalSignature, ITSAClient tsaClient) {
+            CreateRevocationClients(chain, true);
+            try {
+                Stream originalOS = SubstituteOutputStream(pdfSigner);
+                PerformSignDetached(pdfSigner, externalSignature, chain, tsaClient);
+                using (Stream inputStream = CreateInputStream()) {
+                    using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(CreateOutputStream
+                        ()), new StampingProperties().UseAppendMode())) {
+                        PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(pdfSigner.GetFieldName()));
+                        PerformTimestamping(pdfDocument, originalOS, tsaClient);
+                    }
+                }
             }
             finally {
                 DeleteTempFiles();
@@ -184,19 +249,73 @@ namespace iText.Signatures {
         /// <see cref="PdfSigner"/>
         /// instance with PaDES Baseline-LTA Profile.
         /// </summary>
+        /// <param name="pdfSigner">
+        /// 
+        /// <see cref="PdfSigner"/>
+        /// instance to be used for main signing operation
+        /// </param>
         /// <param name="chain">the chain of certificates to be used for signing operation</param>
-        public virtual void SignWithBaselineLTAProfile(IX509Certificate[] chain) {
-            CreateTsaClient(chain);
-            CreateCrlClient(chain);
-            try {
-                Stream originalOS = SubstituteOutputStream();
-                PerformSignDetached(chain, tsaClient);
-                PerformLtvVerification(CreateInputStream(), CreateOutputStream());
-                PerformTimestamping(originalOS);
+        /// <param name="privateKey">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
+        /// instance to be used for main signing operation
+        /// </param>
+        public virtual void SignWithBaselineLTAProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IPrivateKey 
+            privateKey, ITSAClient tsaClient) {
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            SignWithBaselineLTAProfile(pdfSigner, chain, externalSignature, tsaClient);
+        }
+
+        /// <summary>Add revocation information for all the signatures which could be found in the provided document.</summary>
+        /// <remarks>
+        /// Add revocation information for all the signatures which could be found in the provided document.
+        /// Also add timestamp signature on top of that.
+        /// </remarks>
+        /// <param name="reader">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// instance to read original PDF file
+        /// </param>
+        /// <param name="outputStream">
+        /// 
+        /// <see cref="System.IO.Stream"/>
+        /// output stream to write the resulting PDF file into
+        /// </param>
+        /// <param name="tsaClient">
+        /// 
+        /// <see cref="ITSAClient"/>
+        /// TSA Client to be used for timestamp signature creation
+        /// </param>
+        public virtual void ProlongSignatures(PdfReader reader, Stream outputStream, ITSAClient tsaClient) {
+            Stream documentOutputStream = tsaClient == null ? outputStream : CreateOutputStream();
+            using (PdfDocument pdfDocument = new PdfDocument(reader, new PdfWriter(documentOutputStream), new StampingProperties
+                ().UseAppendMode())) {
+                SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+                IList<String> signatureNames = signatureUtil.GetSignatureNames();
+                if (signatureNames.IsEmpty()) {
+                    throw new PdfException(SignExceptionMessageConstant.NO_SIGNATURES_TO_PROLONG);
+                }
+                CreateRevocationClients(new IX509Certificate[0], false);
+                PerformLtvVerification(pdfDocument, signatureNames);
+                if (tsaClient != null) {
+                    PerformTimestamping(pdfDocument, outputStream, tsaClient);
+                }
             }
-            finally {
-                DeleteTempFiles();
-            }
+        }
+
+        /// <summary>Add revocation information for all the signatures which could be found in the provided document.</summary>
+        /// <param name="reader">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// instance to read original PDF file
+        /// </param>
+        /// <param name="outputStream">
+        /// 
+        /// <see cref="System.IO.Stream"/>
+        /// output stream to write the resulting PDF file into
+        /// </param>
+        public virtual void ProlongSignatures(PdfReader reader, Stream outputStream) {
+            ProlongSignatures(reader, outputStream, null);
         }
 
         /// <summary>Set temporary directory to be used for temporary files creation.</summary>
@@ -224,8 +343,11 @@ namespace iText.Signatures {
         /// Set the name to be used for timestamp signature creation.
         /// <para />
         /// This setter is only relevant if
-        /// <see cref="SignWithBaselineLTAProfile(iText.Commons.Bouncycastle.Cert.IX509Certificate[])"/>
-        /// method is used.
+        /// <see cref="SignWithBaselineLTAProfile(PdfSigner, iText.Commons.Bouncycastle.Cert.IX509Certificate[], IExternalSignature, ITSAClient)
+        ///     "/>
+        /// or
+        /// <see cref="ProlongSignatures(iText.Kernel.Pdf.PdfReader, System.IO.Stream)"/>
+        /// methods are used.
         /// <para />
         /// If none is set, randomly generated signature name will be used.
         /// </remarks>
@@ -258,34 +380,6 @@ namespace iText.Signatures {
         /// </returns>
         public virtual iText.Signatures.PdfPadesSigner SetEstimatedSize(int estimatedSize) {
             this.estimatedSize = estimatedSize;
-            return this;
-        }
-
-        /// <summary>
-        /// Set
-        /// <see cref="ITSAClient"/>
-        /// to be used for both timestamp signature and usual signature.
-        /// </summary>
-        /// <remarks>
-        /// Set
-        /// <see cref="ITSAClient"/>
-        /// to be used for both timestamp signature and usual signature.
-        /// <para />
-        /// This setter is only relevant if Baseline-T Profile level or higher is used.
-        /// <para />
-        /// If none is set, there will be an attempt to create default TSA Client instance using the certificate chain.
-        /// </remarks>
-        /// <param name="tsaClient">
-        /// 
-        /// <see cref="ITSAClient"/>
-        /// instance to be used for timestamping
-        /// </param>
-        /// <returns>
-        /// same instance of
-        /// <see cref="PdfPadesSigner"/>
-        /// </returns>
-        public virtual iText.Signatures.PdfPadesSigner SetTsaClient(ITSAClient tsaClient) {
-            this.tsaClient = tsaClient;
             return this;
         }
 
@@ -345,15 +439,13 @@ namespace iText.Signatures {
             return this;
         }
 
-        private void PerformTimestamping(Stream outputStream) {
-            using (Stream tempInputStream = CreateInputStream()) {
-                PdfSigner timestampSigner = new PdfSigner(new PdfReader(tempInputStream), outputStream, new StampingProperties
-                    ().UseAppendMode());
-                timestampSigner.Timestamp(tsaClient, timestampSignatureName);
-            }
+        private void PerformTimestamping(PdfDocument document, Stream outputStream, ITSAClient tsaClient) {
+            PdfSigner timestampSigner = new PdfSigner(document, outputStream, tempOutputStream, tempFile);
+            timestampSigner.Timestamp(tsaClient, timestampSignatureName);
         }
 
-        private void PerformSignDetached(IX509Certificate[] chain, ITSAClient tsaClient) {
+        private void PerformSignDetached(PdfSigner pdfSigner, IExternalSignature externalSignature, IX509Certificate
+            [] chain, ITSAClient tsaClient) {
             try {
                 pdfSigner.SignDetached(externalSignature, chain, null, null, tsaClient, estimatedSize, PdfSigner.CryptoStandard
                     .CADES);
@@ -363,23 +455,16 @@ namespace iText.Signatures {
             }
         }
 
-        private void PerformLtvVerification(Stream inputStream, Stream outputStream) {
-            PdfReader tempReader = new PdfReader(inputStream);
-            try {
-                using (PdfDocument tempDocument = new PdfDocument(tempReader, new PdfWriter(outputStream), new StampingProperties
-                    ().UseAppendMode())) {
-                    LtvVerification ltvVerification = new LtvVerification(tempDocument);
-                    ltvVerification.AddVerification(pdfSigner.fieldName, ocspClient, crlClient, LtvVerification.CertificateOption
-                        .SIGNING_CERTIFICATE, LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.YES);
-                    ltvVerification.Merge();
-                }
+        private void PerformLtvVerification(PdfDocument pdfDocument, IList<String> signatureNames) {
+            LtvVerification ltvVerification = new LtvVerification(pdfDocument);
+            foreach (String signatureName in signatureNames) {
+                ltvVerification.AddVerification(signatureName, ocspClient, crlClient, LtvVerification.CertificateOption.WHOLE_CHAIN
+                    , LtvVerification.Level.OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.YES);
             }
-            finally {
-                inputStream.Dispose();
-            }
+            ltvVerification.Merge();
         }
 
-        private Stream SubstituteOutputStream() {
+        private Stream SubstituteOutputStream(PdfSigner pdfSigner) {
             Stream originalOS = pdfSigner.originalOS;
             pdfSigner.originalOS = CreateOutputStream();
             return originalOS;
@@ -422,37 +507,20 @@ namespace iText.Signatures {
             return tempFile;
         }
 
-        private void CreateTsaClient(IX509Certificate[] chain) {
-            if (tsaClient == null) {
-                tsaClient = GetTsaClientFromChain(chain);
+        private void CreateRevocationClients(IX509Certificate[] chain, bool clientsRequired) {
+            if (crlClient == null && ocspClient == null && clientsRequired) {
+                IX509Certificate signingCertificate = (IX509Certificate)chain[0];
+                if (CertificateUtil.GetOCSPURL(signingCertificate) == null && CertificateUtil.GetCRLURL(signingCertificate
+                    ) == null) {
+                    throw new PdfException(SignExceptionMessageConstant.DEFAULT_CLIENTS_CANNOT_BE_CREATED);
+                }
             }
-            if (tsaClient == null) {
-                throw new PdfException(MessageFormatUtil.Format(SignExceptionMessageConstant.DOCUMENT_CANNOT_BE_SIGNED, "TSA Client"
-                    ));
-            }
-        }
-
-        private void CreateCrlClient(IX509Certificate[] chain) {
             if (crlClient == null) {
                 crlClient = new CrlClientOnline(chain);
-                if (((CrlClientOnline)crlClient).urls.IsEmpty()) {
-                    throw new PdfException(MessageFormatUtil.Format(SignExceptionMessageConstant.DOCUMENT_CANNOT_BE_SIGNED, "CRL Client"
-                        ));
-                }
             }
-        }
-
-        private static ITSAClient GetTsaClientFromChain(IX509Certificate[] chain) {
-            foreach (IX509Certificate certificate in chain) {
-                if (certificate is IX509Certificate) {
-                    IX509Certificate x509Certificate = (IX509Certificate)certificate;
-                    String tsaUrl = CertificateUtil.GetTSAURL(x509Certificate);
-                    if (tsaUrl != null) {
-                        return new TSAClientBouncyCastle(tsaUrl);
-                    }
-                }
+            if (ocspClient == null) {
+                ocspClient = new OcspClientBouncyCastle(null);
             }
-            return null;
         }
     }
 }
