@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
@@ -45,11 +46,14 @@ namespace iText.Signatures.Sign {
              + "/test/itext/signatures/sign/PadesSignatureLevelTest/";
 
         private static readonly char[] password = "testpassphrase".ToCharArray();
+        private static bool runningInFipsMode;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(destinationFolder);
+            runningInFipsMode = "BCFIPS".Equals(BouncyCastleFactoryCreator.GetFactory().GetProviderName());
         }
+
 
         [NUnit.Framework.Test]
         public virtual void PadesSignatureLevelTTest01() {
@@ -57,6 +61,11 @@ namespace iText.Signatures.Sign {
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String signCertFileName = certsSrc + "signCertRsa01.pem";
             String tsaCertFileName = certsSrc + "tsCertRsa.pem";
+            String cmpFileName = sourceFolder + "cmp_padesSignatureLevelTTest01.pdf";
+            if (runningInFipsMode)
+            {
+                cmpFileName = cmpFileName.Replace(".pdf", "_FIPS.pdf");
+            }
             IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
             IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
@@ -70,8 +79,7 @@ namespace iText.Signatures.Sign {
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.SignDetached(pks, signRsaChain, null, null, testTsa, 0, PdfSigner.CryptoStandard.CADES);
             PadesSigTest.BasicCheckSignedDoc(destinationFolder + "padesSignatureLevelTTest01.pdf", "Signature1");
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, sourceFolder + "cmp_padesSignatureLevelTTest01.pdf"
-                ));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
         [NUnit.Framework.Test]
@@ -79,6 +87,11 @@ namespace iText.Signatures.Sign {
             String outFileName = destinationFolder + "padesSignatureLevelLTTest01.pdf";
             String srcFileName = sourceFolder + "signedPAdES-T.pdf";
             String caCertFileName = certsSrc + "rootRsa.pem";
+            String cmpFileName = sourceFolder + "cmp_padesSignatureLevelLTTest01.pdf";
+            if (runningInFipsMode)
+            {
+                cmpFileName = cmpFileName.Replace(".pdf", "_FIPS.pdf");
+            }
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
             IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertFileName, password);
             ICrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
@@ -90,8 +103,7 @@ namespace iText.Signatures.Sign {
                 , LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.YES);
             ltvVerification.Merge();
             document.Close();
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, sourceFolder + "cmp_padesSignatureLevelLTTest01.pdf"
-                ));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
         [NUnit.Framework.Test]
@@ -99,14 +111,18 @@ namespace iText.Signatures.Sign {
             String outFileName = destinationFolder + "padesSignatureLevelLTATest01.pdf";
             String srcFileName = sourceFolder + "signedPAdES-LT.pdf";
             String tsaCertFileName = certsSrc + "tsCertRsa.pem";
+            String cmpFileName = sourceFolder + "cmp_padesSignatureLevelLTATest01.pdf";
+            if (runningInFipsMode)
+            {
+                cmpFileName = cmpFileName.Replace(".pdf", "_FIPS.pdf");
+            }
             IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
                 new StampingProperties().UseAppendMode());
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.Timestamp(testTsa, "timestampSig1");
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, sourceFolder + "cmp_padesSignatureLevelLTATest01.pdf"
-                ));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
     }
 }

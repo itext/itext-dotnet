@@ -57,10 +57,12 @@ namespace iText.Signatures.Sign {
         private readonly bool? useSignature;
 
         private static readonly char[] password = "testpassphrase".ToCharArray();
+        private static bool runningInFipsMode;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(destinationFolder);
+            runningInFipsMode = "BCFIPS".Equals(BouncyCastleFactoryCreator.GetFactory().GetProviderName());
         }
 
         public PdfPadesSignerLevelsTest(Object useTempFolder, Object useSignature, Object comparisonPdfId) {
@@ -87,6 +89,10 @@ namespace iText.Signatures.Sign {
             String fileName = "padesSignatureLevelBTest" + comparisonPdfId + ".pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp_" + fileName;
+            if (runningInFipsMode)
+            {
+                cmpFileName = cmpFileName.Replace(".pdf", "_FIPS.pdf");
+            }
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String signCertFileName = certsSrc + "signCertRsa01.pem";
             IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
@@ -112,6 +118,10 @@ namespace iText.Signatures.Sign {
             String fileName = "padesSignatureLevelTTest" + comparisonPdfId + ".pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp_" + fileName;
+            if (runningInFipsMode)
+            {
+                cmpFileName = cmpFileName.Replace(".pdf", "_FIPS.pdf");
+            }
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String signCertFileName = certsSrc + "signCertRsa01.pem";
             String tsaCertFileName = certsSrc + "tsCertRsa.pem";
@@ -141,6 +151,10 @@ namespace iText.Signatures.Sign {
             String fileName = "padesSignatureLevelLTTest" + comparisonPdfId + ".pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp_" + fileName;
+            if (runningInFipsMode)
+            {
+                cmpFileName = cmpFileName.Replace(".pdf", "_FIPS.pdf");
+            }
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String signCertFileName = certsSrc + "signCertRsa01.pem";
             String tsaCertFileName = certsSrc + "tsCertRsa.pem";
@@ -176,6 +190,10 @@ namespace iText.Signatures.Sign {
             String fileName = "padesSignatureLevelLTATest" + comparisonPdfId + ".pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp_" + fileName;
+            if (runningInFipsMode)
+            {
+                cmpFileName = cmpFileName.Replace(".pdf", "_FIPS.pdf");
+            }
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String signCertFileName = certsSrc + "signCertRsa01.pem";
             String tsaCertFileName = certsSrc + "tsCertRsa.pem";
@@ -214,6 +232,10 @@ namespace iText.Signatures.Sign {
             String srcFileName = sourceFolder + "padesSignatureLevelLTA.pdf";
             String tsaCertFileName = certsSrc + "tsCertRsa.pem";
             String caCertFileName = certsSrc + "rootRsa.pem";
+            if (runningInFipsMode)
+            {
+                cmpFileName = cmpFileName.Replace(".pdf", "_FIPS.pdf");
+            }
             IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
