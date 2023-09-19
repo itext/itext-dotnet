@@ -109,7 +109,7 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
-        //The width based on cols of textarea and size of input doesn't affected by box sizing, so we emulate it here
+        // The width based on cols of textarea and size of input isn't affected by box sizing, so we emulate it here.
         internal virtual float UpdateHtmlColsSizeBasedWidth(float width) {
             if (BoxSizingPropertyValue.BORDER_BOX == this.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING)) {
                 Rectangle dummy = new Rectangle(width, 0);
@@ -141,6 +141,19 @@ namespace iText.Forms.Form.Renderer {
                 int visibleLinesNumber = (int)Math.Ceiling(height / averageLineHeight);
                 AdjustNumberOfContentLines(lines, bBox, visibleLinesNumber, height);
             }
+        }
+
+        /// <summary>Gets the value of the lowest bottom coordinate for all field's children recursively.</summary>
+        /// <returns>the lowest child bottom.</returns>
+        internal virtual float GetLowestChildBottom(IRenderer renderer, float value) {
+            float lowestChildBottom = value;
+            foreach (IRenderer child in renderer.GetChildRenderers()) {
+                lowestChildBottom = GetLowestChildBottom(child, lowestChildBottom);
+                if (child.GetOccupiedArea() != null && child.GetOccupiedArea().GetBBox().GetBottom() < lowestChildBottom) {
+                    lowestChildBottom = child.GetOccupiedArea().GetBBox().GetBottom();
+                }
+            }
+            return lowestChildBottom;
         }
 
         private static void AdjustNumberOfContentLines(IList<LineRenderer> lines, Rectangle bBox, int linesNumber, 

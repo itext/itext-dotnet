@@ -284,18 +284,5 @@ namespace iText.Forms.Form.Renderer {
             bBox.SetHeight(height);
             flatRenderer.Move(0, -dy);
         }
-
-        /// <summary>Gets the value of the lowest bottom coordinate for all button children recursively.</summary>
-        /// <returns>the lowest child bottom.</returns>
-        private float GetLowestChildBottom(IRenderer renderer, float value) {
-            float lowestChildBottom = value;
-            foreach (IRenderer child in renderer.GetChildRenderers()) {
-                lowestChildBottom = GetLowestChildBottom(child, lowestChildBottom);
-                if (child.GetOccupiedArea() != null && child.GetOccupiedArea().GetBBox().GetBottom() < lowestChildBottom) {
-                    lowestChildBottom = child.GetOccupiedArea().GetBBox().GetBottom();
-                }
-            }
-            return lowestChildBottom;
-        }
     }
 }

@@ -316,7 +316,6 @@ namespace iText.Signatures {
                     if (field.GetValue() != null) {
                         throw new ArgumentException(SignExceptionMessageConstant.FIELD_ALREADY_SIGNED);
                     }
-                    appearance.SetFieldName(fieldName);
                     IList<PdfWidgetAnnotation> widgets = field.GetWidgets();
                     if (widgets.Count > 0) {
                         PdfWidgetAnnotation widget = widgets[0];
@@ -331,6 +330,7 @@ namespace iText.Signatures {
                         throw new ArgumentException(SignExceptionMessageConstant.FIELD_NAMES_CANNOT_CONTAIN_A_DOT);
                     }
                 }
+                appearance.SetFieldName(fieldName);
                 this.fieldName = fieldName;
             }
         }
@@ -853,15 +853,8 @@ namespace iText.Signatures {
             }
             flags |= PdfAnnotation.LOCKED;
             sigField.Put(PdfName.F, new PdfNumber(flags));
-            if (appearance.IsInvisible()) {
-                // According to the spec, appearance stream is not required if the width and height of the rectangle are 0
-                sigField.Remove(PdfName.AP);
-            }
-            else {
-                PdfDictionary ap = new PdfDictionary();
-                ap.Put(PdfName.N, appearance.GetAppearance().GetPdfObject());
-                sigField.Put(PdfName.AP, ap);
-            }
+            sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetModelElement());
+            sigField.RegenerateField();
             sigField.SetModified();
             return sigFieldLock;
         }
@@ -894,18 +887,8 @@ namespace iText.Signatures {
             }
             int pagen = appearance.GetPageNumber();
             widget.SetPage(document.GetPage(pagen));
-            if (appearance.IsInvisible()) {
-                // According to the spec, appearance stream is not required if the width and height of the rectangle are 0
-                widget.Remove(PdfName.AP);
-            }
-            else {
-                PdfDictionary ap = widget.GetAppearanceDictionary();
-                if (ap == null) {
-                    ap = new PdfDictionary();
-                    widget.Put(PdfName.AP, ap);
-                }
-                ap.Put(PdfName.N, appearance.GetAppearance().GetPdfObject());
-            }
+            sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetModelElement());
+            sigField.RegenerateField();
             acroForm.AddField(sigField, document.GetPage(pagen));
             if (acroForm.GetPdfObject().IsIndirect()) {
                 acroForm.SetModified();

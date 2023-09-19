@@ -33,6 +33,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Xobject;
 using iText.Pdfa;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
@@ -85,11 +86,16 @@ namespace iText.Signatures {
             PdfFormField formField = acroForm.GetField(signer.fieldName);
             PdfDictionary formFieldDictionary = formField.GetPdfObject();
             NUnit.Framework.Assert.IsNotNull(formFieldDictionary);
-            NUnit.Framework.Assert.IsFalse(formFieldDictionary.ContainsKey(PdfName.AP));
+            NUnit.Framework.Assert.IsTrue(formFieldDictionary.ContainsKey(PdfName.AP));
+            PdfFormXObject ap = new PdfFormXObject(formFieldDictionary.GetAsDictionary(PdfName.AP).GetAsStream(PdfName
+                .N));
+            NUnit.Framework.Assert.IsTrue(new Rectangle(0, 0).EqualsWithEpsilon(ap.GetBBox().ToRectangle()));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        // TODO DEVSIX-7787 Get rid of this logs
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void CreateNewSignatureFormFieldNotInvisibleAnnotationTest() {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateEncryptedDocumentWithoutWidgetAnnotation
                 ()), new ReaderProperties().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties()
@@ -107,6 +113,8 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        // TODO DEVSIX-7787 Get rid of this logs
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void SignWithFieldLockNotNullTest() {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimpleDocument(PdfVersion.PDF_2_0)))
                 , new ByteArrayOutputStream(), new StampingProperties());
@@ -167,7 +175,10 @@ namespace iText.Signatures {
             formField = acroForm.GetField(signer.fieldName);
             PdfDictionary formFieldDictionary = formField.GetPdfObject();
             NUnit.Framework.Assert.IsNotNull(formFieldDictionary);
-            NUnit.Framework.Assert.IsFalse(formFieldDictionary.ContainsKey(PdfName.AP));
+            NUnit.Framework.Assert.IsTrue(formFieldDictionary.ContainsKey(PdfName.AP));
+            PdfFormXObject ap = new PdfFormXObject(formFieldDictionary.GetAsDictionary(PdfName.AP).GetAsStream(PdfName
+                .N));
+            NUnit.Framework.Assert.IsTrue(new Rectangle(0, 0).EqualsWithEpsilon(ap.GetBBox().ToRectangle()));
         }
 
         [NUnit.Framework.Test]

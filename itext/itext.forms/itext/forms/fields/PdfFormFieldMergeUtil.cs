@@ -129,10 +129,10 @@ namespace iText.Forms.Fields {
                 // Process form fields without PdfName.Widget having only annotations as children
                 if (field.GetChildFields().Count > 0 && field.GetChildFormFields().Count == 0) {
                     bool shouldBeMerged = true;
-                    // If parent is radio button we don't care about field related keys, always merge
+                    // If parent is radio button or signature we don't care about field related keys, always merge
                     // If not - go over all fields to compare with parent's fields
                     if (!(PdfName.Btn.Equals(parentField.GetFormType()) && parentField.GetFieldFlag(PdfButtonFormField.FF_RADIO
-                        ))) {
+                        )) && !PdfName.Sig.Equals(parentField.GetFormType())) {
                         if (formDict.ContainsKey(PdfName.T)) {
                             // We only want to perform the merge if field doesn't contain any name (even empty one)
                             continue;

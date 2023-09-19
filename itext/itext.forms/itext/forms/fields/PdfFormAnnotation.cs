@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
+using iText.Forms;
 using iText.Forms.Fields.Borders;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form;
@@ -79,6 +80,8 @@ namespace iText.Forms.Fields {
             ));
 
         private const String LINE_ENDINGS_REGEXP = "\\r\\n|\\r|\\n";
+
+        private static float EPS = 1e-4f;
 
         protected internal float borderWidth = 1;
 
@@ -643,7 +646,7 @@ namespace iText.Forms.Fields {
                     canvas.Rectangle(0, 0, width, height).Stroke();
                 }
             }
-            PdfArray matrix = GetRotationMatrix(GetRotation() % 360, height, width);
+            PdfArray matrix = GetRotationMatrix(GetRotation(), height, width);
             if (matrix != null) {
                 xObject.Put(PdfName.Matrix, matrix);
             }
@@ -660,7 +663,7 @@ namespace iText.Forms.Fields {
             float height = rectangle.GetHeight();
             CreateInputButton();
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
-            PdfArray matrix = GetRotationMatrix(GetRotation() % 360, height, width);
+            PdfArray matrix = GetRotationMatrix(GetRotation(), height, width);
             if (matrix != null) {
                 xObject.Put(PdfName.Matrix, matrix);
             }
@@ -713,6 +716,42 @@ namespace iText.Forms.Fields {
             canvas.SetProperty(Property.TAGGING_HELPER, null);
             canvas.Close();
             formFieldElement.SetInteractive(true);
+        }
+
+        /// <summary>Draws the appearance of a signature field and saves it into an appearance stream.</summary>
+        protected internal virtual void DrawSignatureFormFieldAndSaveAppearance() {
+            Rectangle rectangle = GetRect(this.GetPdfObject());
+            if (iText.Forms.Fields.PdfFormAnnotation.IsFieldInvisible(rectangle)) {
+                // According to the spec, appearance stream is not required but can be an empty xObject
+                // if the width or height of the rectangle is 0.
+                PdfDictionary appearanceDictionary = new PdfDictionary();
+                PdfFormXObject normalAppearance = new PdfFormXObject(new Rectangle(0, 0));
+                normalAppearance.MakeIndirect(this.GetDocument());
+                appearanceDictionary.Put(PdfName.N, normalAppearance.GetPdfObject());
+                appearanceDictionary.SetModified();
+                Put(PdfName.AP, appearanceDictionary);
+                return;
+            }
+            PdfPage page = GetWidget().GetPage();
+            bool rotateRect = page != null && (page.GetRotation() / 90) % 2 == 1;
+            float width = rotateRect ? rectangle.GetHeight() : rectangle.GetWidth();
+            float height = rotateRect ? rectangle.GetWidth() : rectangle.GetHeight();
+            if (rotateRect) {
+                rectangle.SetWidth(width).SetHeight(height);
+            }
+            CreateSigField();
+            SetModelElementProperties(rectangle);
+            PdfFormXObject normalAppearance_1 = new PdfFormXObject(new Rectangle(0, 0, width, height));
+            PdfCanvas normalAppearanceCanvas = new PdfCanvas(normalAppearance_1, GetDocument());
+            PdfFormXObject topLayerXObject = CreateTopLayer(width, height);
+            normalAppearance_1.GetResources().AddForm(topLayerXObject, new PdfName("FRM"));
+            normalAppearanceCanvas.AddXObjectAt(topLayerXObject, topLayerXObject.GetBBox().GetAsNumber(0).FloatValue()
+                , topLayerXObject.GetBBox().GetAsNumber(1).FloatValue());
+            PdfDictionary appearanceDict = new PdfDictionary();
+            PdfStream normalAppearanceStream = normalAppearance_1.GetPdfObject();
+            appearanceDict.Put(PdfName.N, normalAppearanceStream);
+            appearanceDict.SetModified();
+            Put(PdfName.AP, appearanceDict);
         }
 
         /// <summary>Draws the appearance of a radio button with a specified value and saves it into an appearance stream.
@@ -844,7 +883,7 @@ namespace iText.Forms.Fields {
                 formFieldElement.SetProperty(Property.FONT_COLOR, new TransparentColor(GetColor()));
             }
             // Rotation
-            int fieldRotation = GetRotation() % 360;
+            int fieldRotation = GetRotation();
             PdfArray matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
             if (fieldRotation == 90 || fieldRotation == 270) {
                 Rectangle invertedRectangle = rectangle.Clone();
@@ -1027,6 +1066,12 @@ namespace iText.Forms.Fields {
                             }
                             return true;
                         }
+                        else {
+                            if (PdfName.Sig.Equals(type)) {
+                                DrawSignatureFormFieldAndSaveAppearance();
+                                return true;
+                            }
+                        }
                     }
                 }
             }
@@ -1045,6 +1090,31 @@ namespace iText.Forms.Fields {
                 ((Button)formFieldElement).SetFontColor(color);
             }
             SetModelElementProperties(GetRect(GetPdfObject()));
+        }
+
+        internal virtual void CreateSigField() {
+            if (!(formFieldElement is SigField)) {
+                // Create it one time and re-set properties during each widget regeneration.
+                formFieldElement = new SigField(parent.GetPartialFieldName().ToUnicodeString());
+            }
+            if (formFieldElement.GetProperty<Object>(Property.FONT) == null) {
+                ((SigField)formFieldElement).SetFont(GetFont());
+            }
+            if (GetColor() != null) {
+                ((SigField)formFieldElement).SetFontColor(color);
+            }
+            PdfString reason = parent.GetPdfObject().GetAsString(PdfName.Reason);
+            if (reason != null) {
+                ((SigField)formFieldElement).SetReason(reason.ToUnicodeString());
+            }
+            PdfString location = parent.GetPdfObject().GetAsString(PdfName.Location);
+            if (location != null) {
+                ((SigField)formFieldElement).SetLocation(location.ToUnicodeString());
+            }
+            PdfString contact = parent.GetPdfObject().GetAsString(PdfName.ContactInfo);
+            if (contact != null) {
+                ((SigField)formFieldElement).SetContact(contact.ToUnicodeString());
+            }
         }
 
         internal virtual float GetFontSize(PdfArray bBox, String value) {
@@ -1133,17 +1203,42 @@ namespace iText.Forms.Fields {
             // Set fixed size
             BoxSizingPropertyValue? boxSizing = formFieldElement.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING
                 );
-            // Borders are already taken into account for rectangle area, but shouldn't be included into width and height
-            // of the field in case of content-box value of box-sizing property.
-            float extraBorderWidth = BoxSizingPropertyValue.CONTENT_BOX == boxSizing ? 2 * borderWidth : 0;
-            formFieldElement.SetWidth(rectangle.GetWidth() - extraBorderWidth);
-            formFieldElement.SetHeight(rectangle.GetHeight() - extraBorderWidth);
+            // Borders and paddings are already taken into account for rectangle area, but shouldn't be included into width
+            // and height of the field in case of content-box value of box-sizing property.
+            float extraBorderWidth = 0;
+            float extraPaddingsW = 0;
+            float extraPaddingsH = 0;
+            if (BoxSizingPropertyValue.CONTENT_BOX == boxSizing) {
+                extraBorderWidth += 2 * borderWidth;
+                UnitValue lPadding = formFieldElement.GetProperty<UnitValue>(Property.PADDING_LEFT);
+                if (lPadding != null) {
+                    extraPaddingsW += lPadding.GetValue();
+                }
+                UnitValue rPadding = formFieldElement.GetProperty<UnitValue>(Property.PADDING_RIGHT);
+                if (rPadding != null) {
+                    extraPaddingsW += rPadding.GetValue();
+                }
+                UnitValue tPadding = formFieldElement.GetProperty<UnitValue>(Property.PADDING_TOP);
+                if (tPadding != null) {
+                    extraPaddingsH += tPadding.GetValue();
+                }
+                UnitValue bPadding = formFieldElement.GetProperty<UnitValue>(Property.PADDING_BOTTOM);
+                if (bPadding != null) {
+                    extraPaddingsH += bPadding.GetValue();
+                }
+            }
+            formFieldElement.SetWidth(rectangle.GetWidth() - extraBorderWidth - extraPaddingsW);
+            formFieldElement.SetHeight(rectangle.GetHeight() - extraBorderWidth - extraPaddingsH);
             // Always flatten
             formFieldElement.SetInteractive(false);
         }
 
         private static PdfArray GetRotationMatrix(int rotation, float height, float width) {
-            switch (rotation) {
+            int normalizedRotation = rotation % 360;
+            if (normalizedRotation < 0) {
+                normalizedRotation += 360;
+            }
+            switch (normalizedRotation) {
                 case 0: {
                     return null;
                 }
@@ -1207,6 +1302,125 @@ namespace iText.Forms.Fields {
         private bool IsCheckBox() {
             return parent != null && PdfName.Btn.Equals(parent.GetFormType()) && !parent.GetFieldFlag(PdfButtonFormField
                 .FF_RADIO) && !parent.GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON);
+        }
+
+        /// <summary>Gets the visibility status of the signature.</summary>
+        /// <returns>the visibility status of the signature</returns>
+        private static bool IsFieldInvisible(Rectangle rect) {
+            return rect == null || Math.Abs(rect.GetWidth()) < EPS || Math.Abs(rect.GetHeight()) < EPS;
+        }
+
+        /// <summary>Signature appearance is assembled with the top-level and second-level XObjects and the standard layers.
+        ///     </summary>
+        /// <remarks>
+        /// Signature appearance is assembled with the top-level and second-level XObjects and the standard layers. The AP
+        /// dictionary’s N attribute references a top-level XObject. This top-level XObject is necessary to properly resize
+        /// signature appearances when these appearances are referred to by more than one signature field. The top-level
+        /// XObject performs a Do on the second-level XObjects (n0 and n2 painted in sequence). The matrix may change if the
+        /// signature is resized.
+        /// </remarks>
+        /// <param name="width">the width of the annotation rectangle.</param>
+        /// <param name="height">the height of the annotation rectangle.</param>
+        /// <returns>top layer xObject (/FRM).</returns>
+        /// <seealso><a href="https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/ppkappearances.pdf">Adobe Pdf
+        /// * Digital Signature Appearances</a></seealso>
+        private PdfFormXObject CreateTopLayer(float width, float height) {
+            PdfFormXObject topLayerXObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
+            PdfArray matrix = GetRotationMatrix(GetRotation(), height, width);
+            if (matrix != null) {
+                topLayerXObject.Put(PdfName.Matrix, matrix);
+            }
+            PdfCanvas topLayerCanvas = new PdfCanvas(topLayerXObject, this.GetDocument());
+            PdfFormXObject n0LayerXObject = CreateN0Layer(width, height);
+            topLayerXObject.GetResources().AddForm(n0LayerXObject, new PdfName("n0"));
+            topLayerCanvas.AddXObjectWithTransformationMatrix(n0LayerXObject, 1, 0, 0, 1, 0, 0);
+            PdfFormXObject n2LayerXObject = CreateN2Layer(width, height);
+            topLayerXObject.GetResources().AddForm(n2LayerXObject, new PdfName("n2"));
+            topLayerCanvas.AddXObjectWithTransformationMatrix(n2LayerXObject, 1, 0, 0, 1, 0, 0);
+            return topLayerXObject;
+        }
+
+        /// <summary>The background layer that is present when creating the signature field.</summary>
+        /// <remarks>
+        /// The background layer that is present when creating the signature field. This layer renders the background and
+        /// border of the annotation. The Matrix of this XObject is unity and the BBox is that of the original annotation.
+        /// <para />
+        /// In the default itext implementation n0 layer is either a blank xObject or normal appearance of the existed field
+        /// (in case signature field was created but not signed) when reuseAppearance property is true, but user can modify
+        /// n0 layer manually.
+        /// </remarks>
+        /// <param name="width">the width of the annotation rectangle.</param>
+        /// <param name="height">the height of the annotation rectangle.</param>
+        /// <returns>n0 layer xObject.</returns>
+        private PdfFormXObject CreateN0Layer(float width, float height) {
+            if (((SigField)formFieldElement).GetBackgroundLayer() != null) {
+                return ((SigField)formFieldElement).GetBackgroundLayer();
+            }
+            // Create blank n0.
+            PdfFormXObject n0LayerXObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
+            n0LayerXObject.MakeIndirect(GetDocument());
+            PdfCanvas canvas = new PdfCanvas(n0LayerXObject, GetDocument());
+            canvas.WriteLiteral("% DSBlank\n");
+            if (((SigField)formFieldElement).IsReuseAppearance()) {
+                // Reuse existed field appearance as a background
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(GetDocument(), true);
+                PdfFormField field = acroForm.GetField(parent.GetFieldName().ToUnicodeString());
+                PdfStream oldAppearanceStream = field.GetWidgets()[0].GetAppearanceDictionary().GetAsStream(PdfName.N);
+                if (oldAppearanceStream != null) {
+                    n0LayerXObject = new PdfFormXObject(oldAppearanceStream);
+                }
+                else {
+                    ((SigField)formFieldElement).SetReuseAppearance(false);
+                }
+            }
+            return n0LayerXObject;
+        }
+
+        /// <summary>
+        /// The signature appearance layer that contains information about the signature, e.g. the line art for the
+        /// handwritten signature, the text giving the signer’s name, date, reason, location and so on.
+        /// </summary>
+        /// <remarks>
+        /// The signature appearance layer that contains information about the signature, e.g. the line art for the
+        /// handwritten signature, the text giving the signer’s name, date, reason, location and so on. The content of this
+        /// layer can be dynamically created when the signature is created, but thereafter it remains static. Specifically,
+        /// it remains static when the validity state is changed. All appearance handlers that render text honor the font
+        /// type and color defaults that were set for the signature annotation. So, this layer is the main layer where
+        /// signature appearance should be drawn in the current itext implementation.
+        /// </remarks>
+        /// <param name="width">the width of the annotation rectangle.</param>
+        /// <param name="height">the height of the annotation rectangle.</param>
+        /// <returns>n2 layer xObject.</returns>
+        private PdfFormXObject CreateN2Layer(float width, float height) {
+            if (((SigField)formFieldElement).GetSignatureAppearanceLayer() != null) {
+                return ((SigField)formFieldElement).GetSignatureAppearanceLayer();
+            }
+            PdfFormXObject n2LayerXObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
+            iText.Layout.Canvas n2LayerCanvas = new iText.Layout.Canvas(n2LayerXObject, this.GetDocument());
+            PdfPage page = GetWidget().GetPage();
+            int rotation = page == null ? 0 : page.GetRotation();
+            float squeezeTransformation = height / width;
+            if (rotation == 90) {
+                n2LayerCanvas.GetPdfCanvas().ConcatMatrix(0, squeezeTransformation, -1 / squeezeTransformation, 0, width, 
+                    0);
+            }
+            else {
+                if (rotation == 180) {
+                    n2LayerCanvas.GetPdfCanvas().ConcatMatrix(-1, 0, 0, -1, width, height);
+                }
+                else {
+                    if (rotation == 270) {
+                        n2LayerCanvas.GetPdfCanvas().ConcatMatrix(0, -squeezeTransformation, 1 / squeezeTransformation, 0, 0, height
+                            );
+                    }
+                }
+            }
+            n2LayerCanvas.Add(formFieldElement);
+            // We need to draw waitingDrawingElements (drawn inside close method), but the close method
+            // flushes TagTreePointer that will be used later, so set null to the corresponding property.
+            n2LayerCanvas.SetProperty(Property.TAGGING_HELPER, null);
+            n2LayerCanvas.Close();
+            return n2LayerXObject;
         }
     }
 }

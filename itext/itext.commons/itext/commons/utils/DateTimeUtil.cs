@@ -147,6 +147,15 @@ namespace iText.Commons.Utils {
             return (long) tz.GetUtcOffset(date).TotalMilliseconds;
         }
 
+        /// <summary>
+        /// Converts date to string of "yyyy.MM.dd HH:mm:ss z" format.
+        /// </summary>
+        /// <param name="date">date to convert.</param>
+        /// <returns>string date value.</returns>
+        public static String DateToString(DateTime signDate) {
+            return signDate.ToLocalTime().ToString("yyyy.MM.dd HH:mm:ss zzz");
+        }
+
         private static DateTime GetInitial() {
             return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }
