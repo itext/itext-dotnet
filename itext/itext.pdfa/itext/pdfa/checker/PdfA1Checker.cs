@@ -527,6 +527,7 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override void CheckAnnotation(PdfDictionary annotDic) {
             PdfName subtype = annotDic.GetAsName(PdfName.Subtype);
             if (subtype == null) {

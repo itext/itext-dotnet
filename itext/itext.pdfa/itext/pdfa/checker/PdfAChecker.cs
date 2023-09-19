@@ -790,6 +790,16 @@ namespace iText.Pdfa.Checker {
             CheckResources(appearanceStream.GetAsDictionary(PdfName.Resources));
         }
 
+        internal virtual PdfDictionary GetPdfAOutputIntent(PdfArray outputIntents) {
+            for (int i = 0; i < outputIntents.Size(); ++i) {
+                PdfName outputIntentSubtype = outputIntents.GetAsDictionary(i).GetAsName(PdfName.S);
+                if (PdfName.GTS_PDFA1.Equals(outputIntentSubtype)) {
+                    return outputIntents.GetAsDictionary(i);
+                }
+            }
+            return null;
+        }
+
         private void CheckResourcesOfAppearanceStreams(PdfDictionary appearanceStreamsDict, ICollection<PdfObject>
              checkedObjects) {
             if (checkedObjects.Contains(appearanceStreamsDict)) {
@@ -910,16 +920,6 @@ namespace iText.Pdfa.Checker {
             }
             PdfDictionary pdfAOutputIntent = GetPdfAOutputIntent(outputIntents);
             SetCheckerOutputIntent(pdfAOutputIntent);
-        }
-
-        private PdfDictionary GetPdfAOutputIntent(PdfArray outputIntents) {
-            for (int i = 0; i < outputIntents.Size(); ++i) {
-                PdfName outputIntentSubtype = outputIntents.GetAsDictionary(i).GetAsName(PdfName.S);
-                if (PdfName.GTS_PDFA1.Equals(outputIntentSubtype)) {
-                    return outputIntents.GetAsDictionary(i);
-                }
-            }
-            return null;
         }
 
         private void SetCheckerOutputIntent(PdfDictionary outputIntent) {

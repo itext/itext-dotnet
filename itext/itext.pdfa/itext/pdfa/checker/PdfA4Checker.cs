@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
@@ -40,20 +41,28 @@ namespace iText.Pdfa.Checker {
     /// The specification implemented by this class is ISO 19005-4
     /// </remarks>
     public class PdfA4Checker : PdfA3Checker {
-        protected internal static readonly ICollection<PdfName> forbiddenAnnotations4 = JavaCollectionsUtil.UnmodifiableSet
-            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName._3D, PdfName.RichMedia, PdfName.FileAttachment, PdfName
+        private static readonly ICollection<PdfName> forbiddenAnnotations4 = JavaCollectionsUtil.UnmodifiableSet(new 
+            HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName._3D, PdfName.RichMedia, PdfName.FileAttachment, PdfName
             .Sound, PdfName.Screen, PdfName.Movie)));
 
-        protected internal static readonly ICollection<PdfName> forbiddenAnnotations4E = JavaCollectionsUtil.UnmodifiableSet
-            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.FileAttachment, PdfName.Sound, PdfName.Screen, PdfName
+        private static readonly ICollection<PdfName> forbiddenAnnotations4E = JavaCollectionsUtil.UnmodifiableSet(
+            new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.FileAttachment, PdfName.Sound, PdfName.Screen, PdfName
             .Movie)));
 
-        protected internal static readonly ICollection<PdfName> forbiddenAnnotations4F = JavaCollectionsUtil.UnmodifiableSet
-            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName._3D, PdfName.RichMedia, PdfName.Sound, PdfName.Screen
+        private static readonly ICollection<PdfName> forbiddenAnnotations4F = JavaCollectionsUtil.UnmodifiableSet(
+            new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName._3D, PdfName.RichMedia, PdfName.Sound, PdfName.Screen
             , PdfName.Movie)));
 
-        protected internal static readonly ICollection<PdfName> apLessAnnotations = JavaCollectionsUtil.UnmodifiableSet
-            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Popup, PdfName.Link, PdfName.Projection)));
+        private static readonly ICollection<PdfName> apLessAnnotations = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <PdfName>(JavaUtil.ArraysAsList(PdfName.Popup, PdfName.Link, PdfName.Projection)));
+
+        private static readonly ICollection<PdfName> allowedBlendModes4 = JavaCollectionsUtil.UnmodifiableSet(new 
+            HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Normal, PdfName.Multiply, PdfName.Screen, PdfName.Overlay
+            , PdfName.Darken, PdfName.Lighten, PdfName.ColorDodge, PdfName.ColorBurn, PdfName.HardLight, PdfName.SoftLight
+            , PdfName.Difference, PdfName.Exclusion, PdfName.Hue, PdfName.Saturation, PdfName.Color, PdfName.Luminosity
+            )));
+
+        private const String TRANSPARENCY_ERROR_MESSAGE = PdfaExceptionMessageConstant.THE_DOCUMENT_AND_THE_PAGE_DO_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE;
 
         /// <summary>Creates a PdfA4Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">the required conformance level</param>
@@ -99,6 +108,24 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
+            ) {
+            // Get page pdf/a output intent
+            PdfDictionary pdfAPageOutputIntent = null;
+            PdfArray outputIntents = pageDict.GetAsArray(PdfName.OutputIntents);
+            if (outputIntents != null) {
+                pdfAPageOutputIntent = GetPdfAOutputIntent(outputIntents);
+            }
+            if (pdfAOutputIntentColorSpace == null && pdfAPageOutputIntent == null && transparencyObjects.Count > 0 &&
+                 (pageDict.GetAsDictionary(PdfName.Group) == null || pageDict.GetAsDictionary(PdfName.Group).Get(PdfName
+                .CS) == null)) {
+                CheckContentsForTransparency(pageDict);
+                CheckAnnotationsForTransparency(pageDict.GetAsArray(PdfName.Annots));
+                CheckResourcesForTransparency(pageResources, new HashSet<PdfObject>());
+            }
+        }
+
         //There are no limits for numbers in pdf-a/4
         /// <summary><inheritDoc/></summary>
         protected internal override void CheckPdfNumber(PdfNumber number) {
@@ -118,6 +145,21 @@ namespace iText.Pdfa.Checker {
         //There is no limit for DeviceN components count in pdf-a/4
         /// <summary><inheritDoc/></summary>
         protected internal override void CheckNumberOfDeviceNComponents(PdfSpecialCs.DeviceN deviceN) {
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckAnnotation(PdfDictionary annotDic) {
+            base.CheckAnnotation(annotDic);
+            // Extra check for blending mode
+            PdfName blendMode = annotDic.GetAsName(PdfName.BM);
+            if (blendMode != null && !allowedBlendModes4.Contains(blendMode)) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.ONLY_STANDARD_BLEND_MODES_SHALL_BE_USED_FOR_THE_VALUE_OF_THE_BM_KEY_IN_A_GRAPHIC_STATE_AND_ANNOTATION_DICTIONARY
+                    );
+            }
+            // And then treat the annotation as an object with transparency
+            if (blendMode != null && !PdfName.Normal.Equals(blendMode)) {
+                transparencyObjects.Add(annotDic);
+            }
         }
 
         /// <summary><inheritDoc/></summary>
@@ -146,6 +188,19 @@ namespace iText.Pdfa.Checker {
             }
             if (!PdfName.Widget.Equals(annotDic.GetAsName(PdfName.Subtype)) && annotDic.ContainsKey(PdfName.AA)) {
                 throw new PdfAConformanceException(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_AA_KEY
+                    );
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override String GetTransparencyErrorMessage() {
+            return TRANSPARENCY_ERROR_MESSAGE;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckBlendMode(PdfName blendMode) {
+            if (!allowedBlendModes4.Contains(blendMode)) {
+                throw new PdfAConformanceException(PdfAConformanceException.ONLY_STANDARD_BLEND_MODES_SHALL_BE_USED_FOR_THE_VALUE_OF_THE_BM_KEY_IN_AN_EXTENDED_GRAPHIC_STATE_DICTIONARY
                     );
             }
         }
