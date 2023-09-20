@@ -22,10 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Pdfa.Exceptions;
+using iText.Pdfa.Logs;
 
 namespace iText.Pdfa.Checker {
     /// <summary>
@@ -64,6 +67,8 @@ namespace iText.Pdfa.Checker {
 
         private const String TRANSPARENCY_ERROR_MESSAGE = PdfaExceptionMessageConstant.THE_DOCUMENT_AND_THE_PAGE_DO_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE;
 
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(PdfAChecker));
+
         /// <summary>Creates a PdfA4Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">the required conformance level</param>
         public PdfA4Checker(PdfAConformanceLevel conformanceLevel)
@@ -95,6 +100,12 @@ namespace iText.Pdfa.Checker {
                         );
                 }
             }
+            if ("F".Equals(conformanceLevel.GetConformance())) {
+                if (!catalog.NameTreeContainsKey(PdfName.EmbeddedFiles)) {
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.NAME_DICTIONARY_SHALL_CONTAIN_EMBEDDED_FILES_KEY
+                        );
+                }
+            }
         }
 
         /// <summary><inheritDoc/></summary>
@@ -105,6 +116,21 @@ namespace iText.Pdfa.Checker {
                 .ToString()[2]))) {
                 throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_CATALOG_VERSION_SHALL_CONTAIN_RIGHT_PDF_VERSION
                     , "2"));
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckFileSpec(PdfDictionary fileSpec) {
+            if (fileSpec.GetAsName(PdfName.AFRelationship) == null) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_AFRELATIONSHIP_KEY
+                    );
+            }
+            if (!fileSpec.ContainsKey(PdfName.F) || !fileSpec.ContainsKey(PdfName.UF)) {
+                throw new PdfAConformanceException(PdfAConformanceException.FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY
+                    );
+            }
+            if (!fileSpec.ContainsKey(PdfName.Desc)) {
+                LOGGER.LogWarning(PdfAConformanceLogMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY);
             }
         }
 
@@ -192,6 +218,11 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckContentConfigurationDictAgainstAsKey(PdfDictionary config) {
+        }
+
+        // Do nothing because in PDF/A-4 AS key may appear in any optional content configuration dictionary.
         /// <summary><inheritDoc/></summary>
         protected internal override String GetTransparencyErrorMessage() {
             return TRANSPARENCY_ERROR_MESSAGE;

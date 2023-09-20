@@ -180,6 +180,7 @@ namespace iText.Pdfa {
                 .PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
             PdfPage page = doc.AddNewPage();
+            AddSimpleEmbeddedFile(doc);
             PdfAnnotation annot = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100), new PdfStream());
             page.AddAnnotation(annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
@@ -193,6 +194,7 @@ namespace iText.Pdfa {
                 .PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
             PdfPage page = doc.AddNewPage();
+            AddSimpleEmbeddedFile(doc);
             PdfAnnotation annot = new Pdf3DAnnotation(new Rectangle(100, 100, 100, 100), new PdfArray());
             page.AddAnnotation(annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
@@ -207,9 +209,7 @@ namespace iText.Pdfa {
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent())) {
                 PdfPage page = doc.AddNewPage();
-                PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(doc, "file".GetBytes(), "description", "file.txt", null
-                    , null, null);
-                doc.AddFileAttachment("file.txt", fs);
+                AddSimpleEmbeddedFile(doc);
                 PdfAnnotation annot = new PdfFileAttachmentAnnotation(new Rectangle(100, 100, 100, 100));
                 annot.SetFlag(PdfAnnotation.PRINT);
                 annot.SetContents("Hello world");
@@ -226,9 +226,7 @@ namespace iText.Pdfa {
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent())) {
                 PdfPage page = doc.AddNewPage();
-                PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(doc, "file".GetBytes(), "description", "file.txt", null
-                    , null, null);
-                doc.AddFileAttachment("file.txt", fs);
+                AddSimpleEmbeddedFile(doc);
                 PdfAnnotation annot = new PdfLinkAnnotation(new Rectangle(100, 100, 100, 100));
                 annot.SetFlag(PdfAnnotation.PRINT);
                 annot.SetContents("Hello world");
@@ -259,6 +257,7 @@ namespace iText.Pdfa {
                 .PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
             PdfPage page = doc.AddNewPage();
+            AddSimpleEmbeddedFile(doc);
             PdfAnnotation annot = new PdfWidgetAnnotation(new Rectangle(100, 100, 100, 100));
             annot.GetPdfObject().Put(PdfName.A, (new PdfAction()).GetPdfObject());
             annot.SetFlag(PdfAnnotation.PRINT);
@@ -290,6 +289,7 @@ namespace iText.Pdfa {
                 .PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
             PdfPage page = doc.AddNewPage();
+            AddSimpleEmbeddedFile(doc);
             PdfAnnotation annot = new PdfLinkAnnotation(new Rectangle(100, 100, 100, 100));
             annot.GetPdfObject().Put(PdfName.AA, (new PdfAction()).GetPdfObject());
             annot.SetFlag(PdfAnnotation.PRINT);
@@ -306,6 +306,12 @@ namespace iText.Pdfa {
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }
+        }
+
+        private void AddSimpleEmbeddedFile(PdfDocument doc) {
+            PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(doc, "file".GetBytes(), "description", "file.txt", null
+                , null, null);
+            doc.AddFileAttachment("file.txt", fs);
         }
 
         private PdfOutputIntent CreateOutputIntent() {

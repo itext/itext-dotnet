@@ -924,6 +924,15 @@ namespace iText.Pdfa.Checker {
             CheckContentStream(form);
         }
 
+        /// <summary>Check optional content configuration dictionary against AS key.</summary>
+        /// <param name="config">a content configuration dictionary</param>
+        protected internal virtual void CheckContentConfigurationDictAgainstAsKey(PdfDictionary config) {
+            if (config.ContainsKey(PdfName.AS)) {
+                throw new PdfAConformanceException(PdfAConformanceException.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
+                    );
+            }
+        }
+
         /// <summary>Retrieve transparency error message valid for the pdf/a standard being used.</summary>
         /// <returns>error message.</returns>
         protected internal virtual String GetTransparencyErrorMessage() {
@@ -1094,10 +1103,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES
                     );
             }
-            if (config.ContainsKey(PdfName.AS)) {
-                throw new PdfAConformanceException(PdfAConformanceException.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
-                    );
-            }
+            CheckContentConfigurationDictAgainstAsKey(config);
             PdfArray orderArray = config.GetAsArray(PdfName.Order);
             if (orderArray != null) {
                 HashSet<PdfObject> order = new HashSet<PdfObject>();

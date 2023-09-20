@@ -54,6 +54,23 @@ namespace iText.Pdfa.Checker {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CheckAsKeyInContentConfigDictTest() {
+            PdfDictionary ocProperties = new PdfDictionary();
+            PdfArray configs = new PdfArray();
+            PdfDictionary config = new PdfDictionary();
+            config.Put(PdfName.Name, new PdfString("CustomName"));
+            config.Put(PdfName.AS, new PdfArray());
+            configs.Add(config);
+            ocProperties.Put(PdfName.Configs, configs);
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.OCProperties, ocProperties);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CheckNameEntryShouldBeUniqueBetweenAdditionalConfigs() {
             PdfDictionary ocProperties = new PdfDictionary();
             PdfDictionary d = new PdfDictionary();
