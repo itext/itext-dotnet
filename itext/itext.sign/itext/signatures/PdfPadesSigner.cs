@@ -126,6 +126,11 @@ namespace iText.Signatures {
         /// <see cref="IExternalSignature"/>
         /// instance to be used for main signing operation
         /// </param>
+        /// <param name="tsaClient">
+        /// 
+        /// <see cref="ITSAClient"/>
+        /// instance to be used for timestamp creation
+        /// </param>
         public virtual void SignWithBaselineTProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IExternalSignature
              externalSignature, ITSAClient tsaClient) {
             PerformSignDetached(pdfSigner, externalSignature, chain, tsaClient);
@@ -146,6 +151,11 @@ namespace iText.Signatures {
         /// 
         /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
         /// instance to be used for main signing operation
+        /// </param>
+        /// <param name="tsaClient">
+        /// 
+        /// <see cref="ITSAClient"/>
+        /// instance to be used for timestamp creation
         /// </param>
         public virtual void SignWithBaselineTProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IPrivateKey privateKey
             , ITSAClient tsaClient) {
@@ -168,6 +178,11 @@ namespace iText.Signatures {
         /// 
         /// <see cref="IExternalSignature"/>
         /// instance to be used for main signing operation
+        /// </param>
+        /// <param name="tsaClient">
+        /// 
+        /// <see cref="ITSAClient"/>
+        /// instance to be used for timestamp creation
         /// </param>
         public virtual void SignWithBaselineLTProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IExternalSignature
              externalSignature, ITSAClient tsaClient) {
@@ -203,6 +218,11 @@ namespace iText.Signatures {
         /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
         /// instance to be used for main signing operation
         /// </param>
+        /// <param name="tsaClient">
+        /// 
+        /// <see cref="ITSAClient"/>
+        /// instance to be used for timestamp creation
+        /// </param>
         public virtual void SignWithBaselineLTProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IPrivateKey privateKey
             , ITSAClient tsaClient) {
             IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
@@ -224,6 +244,11 @@ namespace iText.Signatures {
         /// 
         /// <see cref="IExternalSignature"/>
         /// instance to be used for main signing operation
+        /// </param>
+        /// <param name="tsaClient">
+        /// 
+        /// <see cref="ITSAClient"/>
+        /// instance to be used for timestamp creation
         /// </param>
         public virtual void SignWithBaselineLTAProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IExternalSignature
              externalSignature, ITSAClient tsaClient) {
@@ -259,6 +284,11 @@ namespace iText.Signatures {
         /// 
         /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
         /// instance to be used for main signing operation
+        /// </param>
+        /// <param name="tsaClient">
+        /// 
+        /// <see cref="ITSAClient"/>
+        /// instance to be used for timestamp creation
         /// </param>
         public virtual void SignWithBaselineLTAProfile(PdfSigner pdfSigner, IX509Certificate[] chain, IPrivateKey 
             privateKey, ITSAClient tsaClient) {
