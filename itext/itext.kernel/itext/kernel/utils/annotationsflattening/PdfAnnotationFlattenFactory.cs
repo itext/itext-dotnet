@@ -35,28 +35,29 @@ namespace iText.Kernel.Utils.Annotationsflattening {
             map.Put(PdfName.Link, () => new DefaultAnnotationFlattener());
             map.Put(PdfName.Popup, () => new NotSupportedFlattener());
             map.Put(PdfName.Widget, () => new NotSupportedFlattener());
-            map.Put(PdfName.Screen, () => new NotSupportedFlattener());
-            map.Put(PdfName._3D, () => new NotSupportedFlattener());
+            map.Put(PdfName.Screen, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName._3D, () => new DefaultAnnotationFlattener());
             map.Put(PdfName.Highlight, () => new HighLightTextMarkupAnnotationFlattener());
             map.Put(PdfName.Underline, () => new UnderlineTextMarkupAnnotationFlattener());
             map.Put(PdfName.Squiggly, () => new SquigglyTextMarkupAnnotationFlattener());
             map.Put(PdfName.StrikeOut, () => new StrikeOutTextMarkupAnnotationFlattener());
-            map.Put(PdfName.Caret, () => new NotSupportedFlattener());
-            map.Put(PdfName.Text, () => new NotSupportedFlattener());
-            map.Put(PdfName.Sound, () => new NotSupportedFlattener());
-            map.Put(PdfName.Stamp, () => new NotSupportedFlattener());
-            map.Put(PdfName.FileAttachment, () => new NotSupportedFlattener());
-            map.Put(PdfName.Ink, () => new NotSupportedFlattener());
-            map.Put(PdfName.PrinterMark, () => new NotSupportedFlattener());
-            map.Put(PdfName.TrapNet, () => new NotSupportedFlattener());
-            map.Put(PdfName.FreeText, () => new NotSupportedFlattener());
-            map.Put(PdfName.Square, () => new NotSupportedFlattener());
-            map.Put(PdfName.Circle, () => new NotSupportedFlattener());
-            map.Put(PdfName.Line, () => new NotSupportedFlattener());
-            map.Put(PdfName.Polygon, () => new NotSupportedFlattener());
-            map.Put(PdfName.PolyLine, () => new NotSupportedFlattener());
-            map.Put(PdfName.Redact, () => new NotSupportedFlattener());
-            map.Put(PdfName.Watermark, () => new NotSupportedFlattener());
+            map.Put(PdfName.Caret, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.Text, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.Sound, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.Stamp, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.FileAttachment, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.Ink, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.PrinterMark, () => new DefaultAnnotationFlattener());
+            // TrapNet is a deprecated property in the PDF 2.0 version
+            map.Put(PdfName.TrapNet, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.FreeText, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.Square, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.Circle, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.Line, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.Polygon, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.PolyLine, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.Redact, () => new DefaultAnnotationFlattener());
+            map.Put(PdfName.Watermark, () => new DefaultAnnotationFlattener());
             // To allow for the unknown subtype
             map.Put(UNKNOWN, () => new NotSupportedFlattener());
         }
