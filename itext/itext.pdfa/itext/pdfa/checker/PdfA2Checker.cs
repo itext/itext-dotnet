@@ -506,15 +506,21 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary>Checks if the catalog is compliant with the PDF/A-2 standard.</summary>
+        /// <param name="dict">the catalog dictionary</param>
+        protected internal virtual void CheckCatalogAAConformance(PdfDictionary dict) {
+            if (dict.ContainsKey(PdfName.AA)) {
+                throw new PdfAConformanceException(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY
+                    );
+            }
+        }
+
         protected internal override void CheckCatalogValidEntries(PdfDictionary catalogDict) {
             if (catalogDict.ContainsKey(PdfName.NeedsRendering)) {
                 throw new PdfAConformanceException(PdfAConformanceException.THE_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_THE_NEEDSRENDERING_KEY
                     );
             }
-            if (catalogDict.ContainsKey(PdfName.AA)) {
-                throw new PdfAConformanceException(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY
-                    );
-            }
+            CheckCatalogAAConformance(catalogDict);
             if (catalogDict.ContainsKey(PdfName.Requirements)) {
                 throw new PdfAConformanceException(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_REQUIREMENTS_ENTRY
                     );
@@ -656,11 +662,17 @@ namespace iText.Pdfa.Checker {
             }
         }
 
-        protected internal override void CheckPageObject(PdfDictionary pageDict, PdfDictionary pageResources) {
-            if (pageDict.ContainsKey(PdfName.AA)) {
+        /// <summary>Checks if the page is compliant with the PDF/A-2 standard.</summary>
+        /// <param name="dict">the page dictionary</param>
+        protected internal virtual void CheckPageAAConformance(PdfDictionary dict) {
+            if (dict.ContainsKey(PdfName.AA)) {
                 throw new PdfAConformanceException(PdfAConformanceException.THE_PAGE_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY
                     );
             }
+        }
+
+        protected internal override void CheckPageObject(PdfDictionary pageDict, PdfDictionary pageResources) {
+            CheckPageAAConformance(pageDict);
             if (pageDict.ContainsKey(PdfName.PresSteps)) {
                 throw new PdfAConformanceException(PdfAConformanceException.THE_PAGE_DICTIONARY_SHALL_NOT_CONTAIN_PRESSTEPS_ENTRY
                     );

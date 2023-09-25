@@ -285,18 +285,19 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenAAKeyAnnotationTest() {
-            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream(), new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0));
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
+            String outPdf = DESTINATION_FOLDER + "pdfA4ForbiddenAAKeyAnnotationTest.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4ForbiddenAAKeyAnnotationTest.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, CreateOutputIntent());
             PdfPage page = doc.AddNewPage();
-            AddSimpleEmbeddedFile(doc);
             PdfAnnotation annot = new PdfLinkAnnotation(new Rectangle(100, 100, 100, 100));
-            annot.GetPdfObject().Put(PdfName.AA, (new PdfAction()).GetPdfObject());
+            PdfDictionary dict = new PdfDictionary();
+            dict.Put(PdfName.Fo, new PdfName("bingbong"));
+            annot.GetPdfObject().Put(PdfName.AA, dict);
             annot.SetFlag(PdfAnnotation.PRINT);
             page.AddAnnotation(annot);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_AA_KEY
-                , e.Message);
+            doc.Close();
+            CompareResult(outPdf, cmpPdf);
         }
 
         private void CompareResult(String outPdf, String cmpPdf) {

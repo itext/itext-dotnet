@@ -69,6 +69,14 @@ namespace iText.Pdfa.Checker {
 
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(PdfAChecker));
 
+        private static readonly ICollection<PdfName> forbiddenActionsE = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <PdfName>(JavaUtil.ArraysAsList(PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm, PdfName
+            .ImportData, PdfName.JavaScript, PdfName.Hide, PdfName.Rendition, PdfName.Trans)));
+
+        private static readonly ICollection<PdfName> allowedEntriesInAAWhenNonWidget = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.E, PdfName.X, PdfName.D, PdfName.U, PdfName.Fo, PdfName
+            .Bl)));
+
         /// <summary>Creates a PdfA4Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">the required conformance level</param>
         public PdfA4Checker(PdfAConformanceLevel conformanceLevel)
@@ -152,6 +160,26 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary>Check the conformity of the AA dictionary on catalog level.</summary>
+        /// <param name="dict">the catalog dictionary</param>
+        protected internal override void CheckCatalogAAConformance(PdfDictionary dict) {
+            PdfDictionary aa = dict.GetAsDictionary(PdfName.AA);
+            if (aa != null && HasAAIllegalEntries(aa)) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.CATALOG_AA_DICTIONARY_SHALL_CONTAIN_ONLY_ALLOWED_KEYS
+                    );
+            }
+        }
+
+        /// <summary>Check the conformity of the AA dictionary on catalog level.</summary>
+        /// <param name="dict">the catalog dictionary</param>
+        protected internal override void CheckPageAAConformance(PdfDictionary dict) {
+            PdfDictionary aa = dict.GetAsDictionary(PdfName.AA);
+            if (aa != null && HasAAIllegalEntries(aa)) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.PAGE_AA_DICTIONARY_SHALL_CONTAIN_ONLY_ALLOWED_KEYS
+                    );
+            }
+        }
+
         //There are no limits for numbers in pdf-a/4
         /// <summary><inheritDoc/></summary>
         protected internal override void CheckPdfNumber(PdfNumber number) {
@@ -206,16 +234,42 @@ namespace iText.Pdfa.Checker {
             return apLessAnnotations;
         }
 
+        /// <summary>Check the conformity of the AA dictionary on widget level.</summary>
+        /// <param name="dict">the widget dictionary</param>
+        protected internal virtual void CheckWidgetAAConformance(PdfDictionary dict) {
+            if (!PdfName.Widget.Equals(dict.GetAsName(PdfName.Subtype)) && dict.ContainsKey(PdfName.AA)) {
+                PdfObject additionalActions = dict.Get(PdfName.AA);
+                if (additionalActions.IsDictionary() && HasAAIllegalEntries((PdfDictionary)additionalActions)) {
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.ANNOTATION_AA_DICTIONARY_SHALL_CONTAIN_ONLY_ALLOWED_KEYS
+                        );
+                }
+            }
+        }
+
         /// <summary><inheritDoc/></summary>
         protected internal override void CheckAnnotationAgainstActions(PdfDictionary annotDic) {
             if (PdfName.Widget.Equals(annotDic.GetAsName(PdfName.Subtype)) && annotDic.ContainsKey(PdfName.A)) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_ENTRY
                     );
             }
-            if (!PdfName.Widget.Equals(annotDic.GetAsName(PdfName.Subtype)) && annotDic.ContainsKey(PdfName.AA)) {
-                throw new PdfAConformanceException(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_AA_KEY
-                    );
+            CheckWidgetAAConformance(annotDic);
+        }
+
+        private static bool HasAAIllegalEntries(PdfDictionary aa) {
+            foreach (PdfName key in aa.KeySet()) {
+                if (!allowedEntriesInAAWhenNonWidget.Contains(key)) {
+                    return true;
+                }
             }
+            return false;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override ICollection<PdfName> GetForbiddenActions() {
+            if ("E".Equals(conformanceLevel.GetConformance())) {
+                return forbiddenActionsE;
+            }
+            return base.GetForbiddenActions();
         }
 
         /// <summary><inheritDoc/></summary>
