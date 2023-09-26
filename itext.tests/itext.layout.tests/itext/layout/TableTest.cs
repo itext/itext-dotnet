@@ -37,6 +37,7 @@ using iText.Layout.Logs;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
@@ -2945,6 +2946,33 @@ namespace iText.Layout {
                     NUnit.Framework.Assert.IsTrue(tableRect.EqualsWithEpsilon(tableRectRelayout));
                 }
             }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        public virtual void InfiniteLoopKeepTogetherTest() {
+            String fileName = "infiniteLoopKeepTogether.pdf";
+            float fontSize = 8;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + fileName))) {
+                using (Document doc = new Document(pdfDoc)) {
+                    doc.SetMargins(138, 20, 75, 20);
+                    Table table = new Table(5);
+                    table.SetKeepTogether(true);
+                    for (int i = 0; i < 37; i++) {
+                        table.AddCell(new Cell(1, 5).Add(new Paragraph(new Text("Cell"))).SetFontSize(fontSize));
+                        table.StartNewRow();
+                    }
+                    Table commentsTable = new Table(1);
+                    Cell commentsCell = new Cell().Add(new Paragraph(new Text("First line\nSecond line")));
+                    commentsTable.AddCell(commentsCell);
+                    Cell outerCommentsCell = new Cell(1, 5).SetFontSize(fontSize);
+                    outerCommentsCell.Add(commentsTable);
+                    table.AddCell(outerCommentsCell);
+                    doc.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder));
         }
 
         private class RotatedDocumentRenderer : DocumentRenderer {
