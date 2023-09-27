@@ -568,7 +568,7 @@ namespace iText.Layout {
             fc = new FontCharacteristics();
             fc.SetFontStyle("italic");
             fc.SetFontWeight((short)500);
-            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
             fc = new FontCharacteristics();
             fc.SetFontStyle("oblique");
             AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
@@ -641,7 +641,7 @@ namespace iText.Layout {
             fc = new FontCharacteristics();
             fc.SetFontStyle("italic");
             fc.SetFontWeight((short)500);
-            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
             fc = new FontCharacteristics();
             fc.SetFontStyle("oblique");
             AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
@@ -715,7 +715,7 @@ namespace iText.Layout {
             fc = new FontCharacteristics();
             fc.SetFontStyle("italic");
             fc.SetFontWeight((short)500);
-            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
             fc = new FontCharacteristics();
             fc.SetFontStyle("oblique");
             AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
@@ -789,7 +789,7 @@ namespace iText.Layout {
             fc = new FontCharacteristics();
             fc.SetFontStyle("italic");
             fc.SetFontWeight((short)500);
-            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
             fc = new FontCharacteristics();
             fc.SetFontStyle("oblique");
             AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
@@ -810,6 +810,18 @@ namespace iText.Layout {
             fc.SetFontStyle("italic");
             fc.SetFontWeight((short)800);
             AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-ExtraBoldItalic");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OpenSansLightTest() {
+            FontSet set = GetOpenSansFontSet();
+            AddTimesFonts(set);
+            ICollection<FontInfo> fontInfoCollection = set.GetFonts();
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("Open Sans Light");
+            FontCharacteristics fc = new FontCharacteristics();
+            fc.SetFontWeight((short)500);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Light");
         }
 
         [NUnit.Framework.Test]
@@ -919,6 +931,22 @@ namespace iText.Layout {
             //Expected font is Courier
             NUnit.Framework.Assert.AreEqual("Helvetica", new FontSelector(set.GetFonts(), fontFamilies, fc).BestMatch(
                 ).GetDescriptor().GetFontName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Family2UsedToSortFontsTest() {
+            FontSet set = new FontSet();
+            set.AddFont(fontsFolder + "Lato/Lato-Black.ttf");
+            set.AddFont(fontsFolder + "Lato/Lato-Regular.ttf");
+            set.AddFont(fontsFolder + "Lato/Lato-Italic.ttf");
+            set.AddFont(fontsFolder + "Lato/Lato-Hairline.ttf");
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("Lato Hairline");
+            FontCharacteristics fc = new FontCharacteristics();
+            fc.SetFontWeight((short)300);
+            // Between hairline (200) and regular (400)
+            NUnit.Framework.Assert.AreEqual("Lato-Hairline", new FontSelector(set.GetFonts(), fontFamilies, fc).BestMatch
+                ().GetDescriptor().GetFontName());
         }
 
         private void CheckSelector(ICollection<FontInfo> fontInfoCollection, String fontFamily, String expectedNormal
