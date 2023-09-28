@@ -854,7 +854,6 @@ namespace iText.Signatures {
             flags |= PdfAnnotation.LOCKED;
             sigField.Put(PdfName.F, new PdfNumber(flags));
             sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetModelElement());
-            sigField.RegenerateField();
             sigField.SetModified();
             return sigFieldLock;
         }
@@ -888,7 +887,6 @@ namespace iText.Signatures {
             int pagen = appearance.GetPageNumber();
             widget.SetPage(document.GetPage(pagen));
             sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetModelElement());
-            sigField.RegenerateField();
             acroForm.AddField(sigField, document.GetPage(pagen));
             if (acroForm.GetPdfObject().IsIndirect()) {
                 acroForm.SetModified();

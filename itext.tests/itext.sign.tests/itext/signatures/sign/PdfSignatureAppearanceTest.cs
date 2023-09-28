@@ -81,14 +81,12 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-7787 Get rid of this logs
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void TextAutoscaleTest02() {
             String fileName = "textAutoscaleTest02.pdf";
             String dest = DESTINATION_FOLDER + fileName;
             Rectangle rect = new Rectangle(36, 648, 150, 50);
             TestSignatureAppearanceAutoscale(dest, rect, PdfSignatureAppearance.RenderingMode.DESCRIPTION);
-            AssertAppearanceFontSize(dest, 6.48f);
+            AssertAppearanceFontSize(dest, 7.73f);
         }
 
         [NUnit.Framework.Test]
@@ -101,8 +99,6 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-7787 Get rid of this logs
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void TextAutoscaleTest04() {
             String fileName = "textAutoscaleTest04.pdf";
             String dest = DESTINATION_FOLDER + fileName;
@@ -121,8 +117,6 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-7787 Get rid of this logs
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void TextAutoscaleTest06() {
             String fileName = "textAutoscaleTest06.pdf";
             String dest = DESTINATION_FOLDER + fileName;
@@ -172,8 +166,7 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-7787 Get rid of this logs
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 24)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 4)]
         public virtual void SignaturesOnRotatedPages() {
             StringBuilder assertionResults = new StringBuilder();
             for (int i = 1; i <= 4; i++) {

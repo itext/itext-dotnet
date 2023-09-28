@@ -50,6 +50,8 @@ namespace iText.Forms.Form.Renderer {
 
         private const float EPS = 1e-5f;
 
+        private bool isFontSizeApproximated = false;
+
         /// <summary>
         /// Creates a new
         /// <see cref="SigFieldRenderer"/>
@@ -92,7 +94,7 @@ namespace iText.Forms.Form.Renderer {
                         throw new InvalidOperationException("A signature image must be present when rendering mode is " + "graphic and description. Use setSignatureGraphic()"
                             );
                     }
-                    div.Add(new iText.Layout.Element.Image(signatureGraphic)).Add(new Paragraph(description).SetMultipliedLeading
+                    div.Add(new iText.Layout.Element.Image(signatureGraphic)).Add(new Paragraph(description).SetMargin(0).SetMultipliedLeading
                         (0.9f));
                     break;
                 }
@@ -108,11 +110,17 @@ namespace iText.Forms.Form.Renderer {
                 }
 
                 default: {
-                    div.Add(new Paragraph(description).SetMultipliedLeading(0.9f));
+                    div.Add(new Paragraph(description).SetMargin(0).SetMultipliedLeading(0.9f));
                     break;
                 }
             }
             return div.CreateRendererSubTree();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override LayoutResult Layout(LayoutContext layoutContext) {
+            ApproximateFontSizeToFitLayoutArea(layoutContext);
+            return base.Layout(layoutContext);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -136,16 +144,23 @@ namespace iText.Forms.Form.Renderer {
                 case SigField.RenderingMode.GRAPHIC_AND_DESCRIPTION: {
                     // Split the signature field into two and add the name of the signer or an image to the one side,
                     // the description to the other side.
+                    UnitValue[] paddings = GetPaddings();
                     if (bBox.GetHeight() > bBox.GetWidth()) {
-                        signatureRect = new Rectangle(bBox.GetX(), bBox.GetY() + bBox.GetHeight() / 2, bBox.GetWidth(), bBox.GetHeight
-                            () / 2);
-                        descriptionRect = new Rectangle(bBox.GetX(), bBox.GetY(), bBox.GetWidth(), bBox.GetHeight() / 2);
+                        float topPadding = paddings[0].GetValue();
+                        float bottomPadding = paddings[2].GetValue();
+                        signatureRect = new Rectangle(bBox.GetX(), bBox.GetY() + bBox.GetHeight() / 2 + bottomPadding / 2, bBox.GetWidth
+                            (), bBox.GetHeight() / 2 - bottomPadding / 2);
+                        descriptionRect = new Rectangle(bBox.GetX(), bBox.GetY(), bBox.GetWidth(), bBox.GetHeight() / 2 - topPadding
+                             / 2);
                     }
                     else {
                         // origin is the bottom-left
-                        signatureRect = new Rectangle(bBox.GetX(), bBox.GetY(), bBox.GetWidth() / 2, bBox.GetHeight());
-                        descriptionRect = new Rectangle(bBox.GetX() + bBox.GetWidth() / 2, bBox.GetY(), bBox.GetWidth() / 2, bBox.
-                            GetHeight());
+                        float rightPadding = paddings[1].GetValue();
+                        float leftPadding = paddings[3].GetValue();
+                        signatureRect = new Rectangle(bBox.GetX(), bBox.GetY(), bBox.GetWidth() / 2 - rightPadding / 2, bBox.GetHeight
+                            ());
+                        descriptionRect = new Rectangle(bBox.GetX() + bBox.GetWidth() / 2 + leftPadding / 2, bBox.GetY(), bBox.GetWidth
+                            () / 2 - leftPadding / 2, bBox.GetHeight());
                     }
                     break;
                 }
@@ -158,7 +173,15 @@ namespace iText.Forms.Form.Renderer {
 
                 default: {
                     // Default one, it just shows whatever description was defined for the signature.
-                    descriptionRect = bBox.SetHeight(GetOccupiedArea().GetBBox().GetHeight() * (1 - TOP_SECTION));
+                    if (RetrieveHeight() == null) {
+                        // Adjust calculated occupied area height to keep the same font size.
+                        float calculatedHeight = GetOccupiedArea().GetBBox().GetHeight();
+                        GetOccupiedArea().GetBBox().MoveDown(calculatedHeight * TOP_SECTION).SetHeight(calculatedHeight * (1 + TOP_SECTION
+                            ));
+                        bBox.MoveDown(calculatedHeight * TOP_SECTION);
+                    }
+                    descriptionRect = bBox.SetHeight(GetOccupiedArea().GetBBox().GetHeight() * (1 - TOP_SECTION) - CalculateAdditionalHeight
+                        ());
                     break;
                 }
             }
@@ -300,9 +323,9 @@ namespace iText.Forms.Form.Renderer {
         }
 
         private void RelayoutParagraph(IRenderer renderer, Rectangle rect, int pageNum) {
-            UnitValue fontSize = this.HasOwnProperty(Property.FONT_SIZE) ? (UnitValue)this.GetOwnProperty<UnitValue>(Property
-                .FONT_SIZE) : (UnitValue)modelElement.GetOwnProperty<UnitValue>(Property.FONT_SIZE);
-            if (fontSize == null || fontSize.GetValue() < EPS) {
+            UnitValue fontSizeAsUV = this.HasOwnProperty(Property.FONT_SIZE) ? (UnitValue)this.GetOwnProperty<UnitValue
+                >(Property.FONT_SIZE) : (UnitValue)modelElement.GetOwnProperty<UnitValue>(Property.FONT_SIZE);
+            if (fontSizeAsUV == null || fontSizeAsUV.GetValue() < EPS || isFontSizeApproximated) {
                 // Calculate font size.
                 IRenderer helper = ((Paragraph)renderer.GetModelElement()).CreateRendererSubTree().SetParent(renderer.GetParent
                     ());
@@ -312,20 +335,8 @@ namespace iText.Forms.Form.Renderer {
                 float rFontSize = 100;
                 int numberOfIterations = 15;
                 // 15 iterations with lFontSize = 0.1 and rFontSize = 100 should result in ~0.003 precision.
-                for (int i = 0; i < numberOfIterations; i++) {
-                    float mFontSize = (lFontSize + rFontSize) / 2;
-                    UnitValue fontSizeAsUV = UnitValue.CreatePointValue(mFontSize);
-                    helper.SetProperty(Property.FONT_SIZE, fontSizeAsUV);
-                    LayoutResult result = helper.Layout(layoutContext);
-                    if (result.GetStatus() == LayoutResult.FULL) {
-                        lFontSize = mFontSize;
-                    }
-                    else {
-                        rFontSize = mFontSize;
-                    }
-                }
-                UnitValue fontSizeAsUV_1 = UnitValue.CreatePointValue(lFontSize);
-                renderer.GetModelElement().SetProperty(Property.FONT_SIZE, fontSizeAsUV_1);
+                float fontSize = CalculateFittingFontSize(helper, lFontSize, rFontSize, layoutContext, numberOfIterations);
+                renderer.GetModelElement().SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(fontSize));
             }
             // Relayout the element after font size was changed or signature was split into 2 parts.
             LayoutContext layoutContext_1 = new LayoutContext(new LayoutArea(pageNum, rect));
@@ -353,6 +364,31 @@ namespace iText.Forms.Form.Renderer {
                 }
                 modelElement.SetBackgroundImage(new BackgroundImage.Builder().SetImage(new PdfImageXObject(modelElement.GetImage
                     ())).SetBackgroundSize(size).SetBackgroundRepeat(repeat).SetBackgroundPosition(position).Build());
+            }
+        }
+
+        private float CalculateAdditionalHeight() {
+            Rectangle dummy = new Rectangle(0, 0);
+            this.ApplyMargins(dummy, true);
+            this.ApplyBorderBox(dummy, true);
+            this.ApplyPaddings(dummy, true);
+            return dummy.GetHeight();
+        }
+
+        private void ApproximateFontSizeToFitLayoutArea(LayoutContext layoutContext) {
+            if (this.HasOwnProperty(Property.FONT_SIZE) || modelElement.HasOwnProperty(Property.FONT_SIZE)) {
+                return;
+            }
+            if (SigField.RenderingMode.GRAPHIC == ((SigField)modelElement).GetRenderingMode() || SigField.RenderingMode
+                .GRAPHIC_AND_DESCRIPTION == ((SigField)modelElement).GetRenderingMode()) {
+                // We can expect CLIP_ELEMENT log messages since the initial image size may be larger than the field height.
+                // But image size will be adjusted during its relayout in #adjustFieldLayout.
+                return;
+            }
+            float fontSize = ApproximateFontSize(layoutContext, 0.1f, AbstractPdfFormField.DEFAULT_FONT_SIZE);
+            if (fontSize > 0) {
+                isFontSizeApproximated = true;
+                modelElement.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(fontSize));
             }
         }
     }

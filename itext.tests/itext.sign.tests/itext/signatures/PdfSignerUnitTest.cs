@@ -94,8 +94,6 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        // TODO DEVSIX-7787 Get rid of this logs
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void CreateNewSignatureFormFieldNotInvisibleAnnotationTest() {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateEncryptedDocumentWithoutWidgetAnnotation
                 ()), new ReaderProperties().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties()
@@ -113,8 +111,6 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-7787 Get rid of this logs
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void SignWithFieldLockNotNullTest() {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimpleDocument(PdfVersion.PDF_2_0)))
                 , new ByteArrayOutputStream(), new StampingProperties());

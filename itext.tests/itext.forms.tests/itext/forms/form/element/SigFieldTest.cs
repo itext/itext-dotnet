@@ -55,8 +55,6 @@ namespace iText.Forms.Form.Element {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-7787 Get rid of this logs
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void BasicSigFieldTest() {
             String outPdf = DESTINATION_FOLDER + "basicSigField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicSigField.pdf";
@@ -126,7 +124,6 @@ namespace iText.Forms.Form.Element {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-7787 Get rid of this logs
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void SignatureFieldVerticalAlignmentTest() {
             String outPdf = DESTINATION_FOLDER + "signatureFieldVerticalAlignment.pdf";
@@ -299,6 +296,7 @@ namespace iText.Forms.Form.Element {
                 sigField.SetSize(100);
                 sigField.SetInteractive(true);
                 sigField.SetDescription("dashed");
+                sigField.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(30));
                 document.Add(sigField);
                 PdfDictionary bs = new PdfDictionary();
                 // UNDERLINE
@@ -308,6 +306,8 @@ namespace iText.Forms.Form.Element {
                 sigField2.SetSize(100);
                 sigField2.SetInteractive(true);
                 sigField2.SetDescription("underline");
+                sigField2.SetFontSize(18);
+                sigField2.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(30));
                 document.Add(sigField2);
                 // INSET
                 bs.Put(PdfName.S, PdfAnnotation.STYLE_INSET);
@@ -316,6 +316,7 @@ namespace iText.Forms.Form.Element {
                 sigField3.SetSize(100);
                 sigField3.SetInteractive(true);
                 sigField3.SetDescription("inset");
+                sigField3.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(30));
                 document.Add(sigField3);
                 // BEVELLED
                 bs.Put(PdfName.S, PdfAnnotation.STYLE_BEVELED);
@@ -324,6 +325,7 @@ namespace iText.Forms.Form.Element {
                 sigField4.SetSize(100);
                 sigField4.SetInteractive(true);
                 sigField4.SetDescription("bevelled");
+                sigField4.SetFontSize(18);
                 document.Add(sigField4);
                 PdfFormCreator.GetAcroForm(document.GetPdfDocument(), false).FlattenFields();
             }

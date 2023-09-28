@@ -30,6 +30,8 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Font;
+using iText.Layout.Properties;
 
 namespace iText.Signatures {
     /// <summary>Provides convenient methods to make a signature appearance.</summary>
@@ -445,12 +447,49 @@ namespace iText.Signatures {
 
         /// <summary>Sets the signature layout element.</summary>
         /// <param name="modelElement">the signature layout element.</param>
-        public virtual void SetModelElement(SigField modelElement) {
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual iText.Signatures.PdfSignatureAppearance SetModelElement(SigField modelElement) {
             this.modelElement = modelElement;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
+        /// </summary>
+        /// <remarks>
+        /// Sets
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// . Note, font provider is inherited property.
+        /// </remarks>
+        /// <param name="fontProvider">
+        /// the instance of
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
+        /// </param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual iText.Signatures.PdfSignatureAppearance SetFontProvider(FontProvider fontProvider) {
+            modelElement.SetProperty(Property.FONT_PROVIDER, fontProvider);
+            return this;
+        }
+
+        /// <summary>Sets the preferable font families for the signature content.</summary>
+        /// <remarks>
+        /// Sets the preferable font families for the signature content.
+        /// Note that
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// shall be set as well.
+        /// </remarks>
+        /// <param name="fontFamilyNames">defines an ordered list of preferable font families for the signature element.
+        ///     </param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual iText.Signatures.PdfSignatureAppearance SetFontFamily(params String[] fontFamilyNames) {
+            modelElement.SetFontFamily(fontFamilyNames);
+            return this;
         }
 
         /// <summary>Gets the visibility status of the signature.</summary>
         /// <returns>the visibility status of the signature</returns>
+        [Obsolete]
         public virtual bool IsInvisible() {
             return rect == null || rect.GetWidth() == 0 || rect.GetHeight() == 0;
         }

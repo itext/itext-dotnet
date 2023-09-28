@@ -28,6 +28,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
 using iText.Layout.Element;
+using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -107,6 +108,47 @@ namespace iText.Forms.Form.Renderer {
                     font = (PdfFont)retrievedFont;
                 }
             }
+        }
+
+        /// <summary>Approximates font size to fit occupied area if width anf height are specified.</summary>
+        /// <param name="layoutContext">layout context that specifies layout area.</param>
+        /// <param name="lFontSize">minimal font size value.</param>
+        /// <param name="rFontSize">maximum font size value.</param>
+        /// <returns>fitting font size or -1 in case it shouldn't be approximated.</returns>
+        internal virtual float ApproximateFontSize(LayoutContext layoutContext, float lFontSize, float rFontSize) {
+            IRenderer flatRenderer = CreateFlatRenderer().SetParent(this);
+            float? areaWidth = RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth());
+            float? areaHeight = RetrieveHeight();
+            if (areaWidth == null || areaHeight == null) {
+                return -1;
+            }
+            flatRenderer.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(AbstractPdfFormField.DEFAULT_FONT_SIZE
+                ));
+            LayoutContext newLayoutContext = new LayoutContext(new LayoutArea(1, new Rectangle((float)areaWidth, (float
+                )areaHeight)));
+            if (flatRenderer.Layout(newLayoutContext).GetStatus() == LayoutResult.FULL) {
+                return -1;
+            }
+            else {
+                int numberOfIterations = 6;
+                return CalculateFittingFontSize(flatRenderer, lFontSize, rFontSize, newLayoutContext, numberOfIterations);
+            }
+        }
+
+        internal virtual float CalculateFittingFontSize(IRenderer renderer, float lFontSize, float rFontSize, LayoutContext
+             newLayoutContext, int numberOfIterations) {
+            for (int i = 0; i < numberOfIterations; i++) {
+                float mFontSize = (lFontSize + rFontSize) / 2;
+                renderer.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(mFontSize));
+                LayoutResult result = renderer.Layout(newLayoutContext);
+                if (result.GetStatus() == LayoutResult.FULL) {
+                    lFontSize = mFontSize;
+                }
+                else {
+                    rFontSize = mFontSize;
+                }
+            }
+            return lFontSize;
         }
 
         // The width based on cols of textarea and size of input isn't affected by box sizing, so we emulate it here.

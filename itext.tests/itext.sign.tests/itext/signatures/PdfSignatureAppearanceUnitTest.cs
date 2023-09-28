@@ -24,12 +24,15 @@ using System;
 using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Font;
+using iText.Layout.Properties;
 using iText.Signatures.Testutils;
 using iText.Test;
 
@@ -166,6 +169,19 @@ namespace iText.Signatures {
             PdfFont newFont = PdfFontFactory.CreateFont();
             signatureAppearance.SetLayer2Font(newFont);
             NUnit.Framework.Assert.AreEqual(newFont, signatureAppearance.GetLayer2Font());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetFontProviderAndFamilyTest() {
+            PdfSignatureAppearance appearance = GetTestSignatureAppearance();
+            FontProvider fontProvider = new FontProvider();
+            fontProvider.GetFontSet().AddFont(StandardFonts.HELVETICA, "");
+            String fontFamilyName = "fontFamily";
+            appearance.SetFontProvider(fontProvider).SetFontFamily(fontFamilyName);
+            NUnit.Framework.Assert.AreEqual(fontProvider, appearance.GetModelElement().GetProperty<FontProvider>(Property
+                .FONT_PROVIDER));
+            NUnit.Framework.Assert.AreEqual(fontFamilyName, ((String[])appearance.GetModelElement().GetProperty<String
+                []>(Property.FONT))[0]);
         }
 
         [NUnit.Framework.Test]
