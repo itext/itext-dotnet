@@ -52,7 +52,7 @@ namespace iText.Pdfa {
             names.Add(spec.GetPdfObject());
             pdfDocument.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_NAME_DICTIONARY_SHALL_NOT_CONTAIN_THE_EMBEDDED_FILES_KEY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.A_NAME_DICTIONARY_SHALL_NOT_CONTAIN_THE_EMBEDDED_FILES_KEY
                 , e.Message);
         }
 
@@ -70,7 +70,7 @@ namespace iText.Pdfa {
             stream.Put(PdfName.F, spec.GetPdfObject());
             pdfDocument.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.STREAM_OBJECT_DICTIONARY_SHALL_NOT_CONTAIN_THE_F_FFILTER_OR_FDECODEPARAMS_KEYS
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.STREAM_OBJECT_DICTIONARY_SHALL_NOT_CONTAIN_THE_F_FFILTER_OR_FDECODEPARAMS_KEYS
                 , e.Message);
         }
 
@@ -88,7 +88,7 @@ namespace iText.Pdfa {
             stream.Put(new PdfName("fileData"), spec.GetPdfObject());
             pdfDocument.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.FILE_SPECIFICATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_EF_KEY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_EF_KEY
                 , e.Message);
         }
     }

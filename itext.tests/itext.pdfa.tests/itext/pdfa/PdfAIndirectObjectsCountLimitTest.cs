@@ -39,7 +39,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void ValidAmountOfIndirectObjectsTest() {
-            PdfA1Checker testChecker = new _PdfA1Checker_57(PdfAConformanceLevel.PDF_A_1B);
+            PdfA1Checker testChecker = new _PdfA1Checker_58(PdfAConformanceLevel.PDF_A_1B);
             using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 )) {
                 using (Stream fos = new MemoryStream()) {
@@ -53,8 +53,8 @@ namespace iText.Pdfa {
             }
         }
 
-        private sealed class _PdfA1Checker_57 : PdfA1Checker {
-            public _PdfA1Checker_57(PdfAConformanceLevel baseArg1)
+        private sealed class _PdfA1Checker_58 : PdfA1Checker {
+            public _PdfA1Checker_58(PdfAConformanceLevel baseArg1)
                 : base(baseArg1) {
             }
 
@@ -67,7 +67,7 @@ namespace iText.Pdfa {
         // limit per "mock specification" conformance exception shouldn't be thrown
         [NUnit.Framework.Test]
         public virtual void InvalidAmountOfIndirectObjectsTest() {
-            PdfA1Checker testChecker = new _PdfA1Checker_82(PdfAConformanceLevel.PDF_A_1B);
+            PdfA1Checker testChecker = new _PdfA1Checker_83(PdfAConformanceLevel.PDF_A_1B);
             using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 )) {
                 using (Stream fos = new MemoryStream()) {
@@ -80,14 +80,14 @@ namespace iText.Pdfa {
                     // limit per "mock specification" conformance exception should be thrown as the limit
                     // is exceeded
                     Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => document.Close());
-                    NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_NUMBER_OF_INDIRECT_OBJECTS_EXCEEDED, e.Message
-                        );
+                    NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.MAXIMUM_NUMBER_OF_INDIRECT_OBJECTS_EXCEEDED, 
+                        e.Message);
                 }
             }
         }
 
-        private sealed class _PdfA1Checker_82 : PdfA1Checker {
-            public _PdfA1Checker_82(PdfAConformanceLevel baseArg1)
+        private sealed class _PdfA1Checker_83 : PdfA1Checker {
+            public _PdfA1Checker_83(PdfAConformanceLevel baseArg1)
                 : base(baseArg1) {
             }
 
@@ -98,7 +98,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void InvalidAmountOfIndirectObjectsAppendModeTest() {
-            PdfA1Checker testChecker = new _PdfA1Checker_110(PdfAConformanceLevel.PDF_A_1B);
+            PdfA1Checker testChecker = new _PdfA1Checker_111(PdfAConformanceLevel.PDF_A_1B);
             using (Stream fis = new FileStream(sourceFolder + "pdfs/pdfa10IndirectObjects.pdf", FileMode.Open, FileAccess.Read
                 )) {
                 using (Stream fos = new MemoryStream()) {
@@ -109,14 +109,14 @@ namespace iText.Pdfa {
                     // during closing of pdfa object exception will be thrown as new document will contain
                     // 12 indirect objects and limit per "mock specification" conformance will be exceeded
                     Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfa.Close());
-                    NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_NUMBER_OF_INDIRECT_OBJECTS_EXCEEDED, e.Message
-                        );
+                    NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.MAXIMUM_NUMBER_OF_INDIRECT_OBJECTS_EXCEEDED, 
+                        e.Message);
                 }
             }
         }
 
-        private sealed class _PdfA1Checker_110 : PdfA1Checker {
-            public _PdfA1Checker_110(PdfAConformanceLevel baseArg1)
+        private sealed class _PdfA1Checker_111 : PdfA1Checker {
+            public _PdfA1Checker_111(PdfAConformanceLevel baseArg1)
                 : base(baseArg1) {
             }
 

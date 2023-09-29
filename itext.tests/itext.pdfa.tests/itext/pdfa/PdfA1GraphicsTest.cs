@@ -64,14 +64,14 @@ namespace iText.Pdfa {
             canvas.Fill();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.SetFillColor(ColorConstants
                 .RED));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.DEVICERGB_AND_DEVICECMYK_COLORSPACES_CANNOT_BE_USED_BOTH_IN_ONE_FILE
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.DEVICERGB_AND_DEVICECMYK_COLORSPACES_CANNOT_BE_USED_BOTH_IN_ONE_FILE
                 , e.Message);
             canvas.MoveTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
             canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
             canvas.LineTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
             canvas.Fill();
             Exception e2 = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.DEVICERGB_AND_DEVICECMYK_COLORSPACES_CANNOT_BE_USED_BOTH_IN_ONE_FILE
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.DEVICERGB_AND_DEVICECMYK_COLORSPACES_CANNOT_BE_USED_BOTH_IN_ONE_FILE
                 , e.Message);
         }
 
@@ -90,7 +90,7 @@ namespace iText.Pdfa {
             canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
             canvas.Fill();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT
                 , e.Message);
         }
 
@@ -106,7 +106,7 @@ namespace iText.Pdfa {
             canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
             canvas.Fill();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.IF_DEVICE_RGB_CMYK_GRAY_USED_IN_FILE_THAT_FILE_SHALL_CONTAIN_PDFA_OUTPUTINTENT
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.IF_DEVICE_RGB_CMYK_GRAY_USED_IN_FILE_THAT_FILE_SHALL_CONTAIN_PDFA_OUTPUTINTENT
                 , e.Message);
         }
 
@@ -141,7 +141,7 @@ namespace iText.Pdfa {
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.SetExtGState(new 
                     PdfExtGState().SetTransferFunction(new PdfName("Test"))));
-                NUnit.Framework.Assert.AreEqual(PdfAConformanceException.AN_EXTGSTATE_DICTIONARY_SHALL_NOT_CONTAIN_THE_TR_KEY
+                NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.AN_EXTGSTATE_DICTIONARY_SHALL_NOT_CONTAIN_THE_TR_KEY
                     , e.Message);
             }
         }
@@ -174,7 +174,7 @@ namespace iText.Pdfa {
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.SetExtGState(new 
                     PdfExtGState().SetTransferFunction2(new PdfName("Test"))));
-                NUnit.Framework.Assert.AreEqual(PdfAConformanceException.AN_EXTGSTATE_DICTIONARY_SHALL_NOT_CONTAIN_THE_TR_2_KEY_WITH_A_VALUE_OTHER_THAN_DEFAULT
+                NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.AN_EXTGSTATE_DICTIONARY_SHALL_NOT_CONTAIN_THE_TR_2_KEY_WITH_A_VALUE_OTHER_THAN_DEFAULT
                     , e.Message);
             }
         }
@@ -190,7 +190,7 @@ namespace iText.Pdfa {
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.SetExtGState(new 
                     PdfExtGState().SetRenderingIntent(new PdfName("Test"))));
-                NUnit.Framework.Assert.AreEqual(PdfAConformanceException.IF_SPECIFIED_RENDERING_SHALL_BE_ONE_OF_THE_FOLLOWING_RELATIVECOLORIMETRIC_ABSOLUTECOLORIMETRIC_PERCEPTUAL_OR_SATURATION
+                NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.IF_SPECIFIED_RENDERING_SHALL_BE_ONE_OF_THE_FOLLOWING_RELATIVECOLORIMETRIC_ABSOLUTECOLORIMETRIC_PERCEPTUAL_OR_SATURATION
                     , e.Message);
             }
         }
@@ -211,7 +211,7 @@ namespace iText.Pdfa {
             xObject.SetGroup(group);
             canvas.AddXObjectFittedIntoRectangle(xObject, new Rectangle(300, 300));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_GROUP_OBJECT_WITH_AN_S_KEY_WITH_A_VALUE_OF_TRANSPARENCY_SHALL_NOT_BE_INCLUDED_IN_A_FORM_XOBJECT
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.A_GROUP_OBJECT_WITH_AN_S_KEY_WITH_A_VALUE_OF_TRANSPARENCY_SHALL_NOT_BE_INCLUDED_IN_A_FORM_XOBJECT
                 , e.Message);
         }
 
@@ -226,8 +226,8 @@ namespace iText.Pdfa {
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.SetExtGState(new 
                     PdfExtGState().SetSoftMask(new PdfName("Test"))));
-                NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_SMASK_KEY_IS_NOT_ALLOWED_IN_EXTGSTATE, e.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_SMASK_KEY_IS_NOT_ALLOWED_IN_EXTGSTATE, e.
+                    Message);
             }
         }
 

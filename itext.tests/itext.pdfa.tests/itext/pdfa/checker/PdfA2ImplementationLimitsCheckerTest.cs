@@ -48,7 +48,7 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPdfObject
                 (longString));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -65,7 +65,7 @@ namespace iText.Pdfa.Checker {
             // is longer then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckContentStream
                 (stream));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -97,14 +97,14 @@ namespace iText.Pdfa.Checker {
             // An exception is thrown as any number greater then 32767 is considered as Integer
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPdfObject
                 (largeNumber));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DeviceNColorspaceWithMoreThan32Components() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckColorspace(BuildDeviceNColorspace
                 (34)));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
                 , e.Message);
         }
 

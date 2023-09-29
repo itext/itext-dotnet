@@ -99,7 +99,7 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
                 (longString));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -109,7 +109,7 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
                 (longName));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_NAME_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_NAME_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -119,7 +119,7 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
                 (largeNumber));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -129,7 +129,7 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
                 (largeNumber));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -147,7 +147,8 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
                 (longArray));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
@@ -157,7 +158,7 @@ namespace iText.Pdfa.Checker {
             // then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
                 (longDictionary));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
                 );
         }
 
@@ -168,7 +169,7 @@ namespace iText.Pdfa.Checker {
             // then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
                 (longStream));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
                 );
         }
 
@@ -179,7 +180,7 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInDictionary(longString
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -193,7 +194,7 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
                 (dict));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_NAME_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_NAME_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -203,7 +204,7 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInArray(longString
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -213,7 +214,7 @@ namespace iText.Pdfa.Checker {
             // is longer then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(longString
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -223,7 +224,7 @@ namespace iText.Pdfa.Checker {
             // is longer then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(longName
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_NAME_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_NAME_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -233,7 +234,7 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(largeNumber
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -243,7 +244,7 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(largeNumber
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -261,7 +262,8 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(longArray
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
@@ -271,7 +273,7 @@ namespace iText.Pdfa.Checker {
             // then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(longDictionary
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
                 );
         }
 
@@ -305,7 +307,7 @@ namespace iText.Pdfa.Checker {
             // is longer then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInArrayInContentStream
                 (longString));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -315,7 +317,7 @@ namespace iText.Pdfa.Checker {
             // is longer then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInDictionaryInContentStream
                 (longString));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -329,7 +331,7 @@ namespace iText.Pdfa.Checker {
             // is longer then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(dict
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_NAME_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_NAME_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -339,7 +341,7 @@ namespace iText.Pdfa.Checker {
             // doesn't match the limitations provided in specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInComplexStructure
                 (longString));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -349,7 +351,8 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInComplexStructure
                 (longArray));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
@@ -359,7 +362,7 @@ namespace iText.Pdfa.Checker {
             // then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInComplexStructure
                 (longDictionary));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
                 );
         }
 
@@ -370,7 +373,7 @@ namespace iText.Pdfa.Checker {
             // is longer then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInFormXObject(longString
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -380,7 +383,7 @@ namespace iText.Pdfa.Checker {
             // is longer then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInTilingPattern(longString
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -398,14 +401,14 @@ namespace iText.Pdfa.Checker {
             // is longer then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInType3Font(longString
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DeviceNColorspaceWithMoreThan8Components() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckColorspace(BuildDeviceNColorspace
                 (10)));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
                 , e.Message);
         }
 

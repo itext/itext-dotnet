@@ -136,7 +136,7 @@ namespace iText.Pdfa {
                     isPdfADocument = false;
                 }
                 else {
-                    throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
                         );
                 }
             }

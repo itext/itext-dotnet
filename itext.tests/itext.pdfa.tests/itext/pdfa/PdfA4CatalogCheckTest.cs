@@ -23,7 +23,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.Commons.Utils;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Pdfa.Exceptions;
 using iText.Test;
@@ -86,7 +89,7 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.KEYWORD_ENCRYPT_SHALL_NOT_BE_USED_IN_THE_TRAILER_DICTIONARY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.KEYWORD_ENCRYPT_SHALL_NOT_BE_USED_IN_THE_TRAILER_DICTIONARY
                 , e.Message);
         }
 
@@ -104,7 +107,7 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.KEYWORD_ENCRYPT_SHALL_NOT_BE_USED_IN_THE_TRAILER_DICTIONARY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.KEYWORD_ENCRYPT_SHALL_NOT_BE_USED_IN_THE_TRAILER_DICTIONARY
                 , e.Message);
         }
 
@@ -205,5 +208,68 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_FILE_HEADER_SHALL_CONTAIN_RIGHT_PDF_VERSION
                 , 2), e.Message);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckReferenceXObject() {
+            PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
+                ));
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            doc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
+            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(100, 100));
+            xObject.Put(PdfName.Ref, new PdfString("test.pdf"));
+            PdfCanvas xObjCanvas = new PdfCanvas(xObject, doc);
+            xObjCanvas.Rectangle(30, 30, 10, 10).Fill();
+            canvas.AddXObjectFittedIntoRectangle(xObject, new Rectangle(300, 300));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_REF_KEY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckOpiInXObject() {
+            PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
+                ));
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            doc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
+            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(100, 100));
+            xObject.Put(PdfName.OPI, new PdfString("test.pdf"));
+            PdfCanvas xObjCanvas = new PdfCanvas(xObject, doc);
+            xObjCanvas.Rectangle(30, 30, 10, 10).Fill();
+            canvas.AddXObjectFittedIntoRectangle(xObject, new Rectangle(300, 300));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_OPI_KEY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ValidFormXObjectTest() {
+            String outPdf = destinationFolder + "pdfA4_catalogCheck08.pdf";
+            String cmpPdf = sourceFolder + "cmp/PdfA4CatalogCheckTest/cmp_pdfA4_catalogCheck08.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            doc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
+            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(100, 100));
+            xObject.GetPdfObject().Put(PdfName.Subtype2, PdfName.PS);
+            PdfCanvas xObjCanvas = new PdfCanvas(xObject, doc);
+            xObjCanvas.Rectangle(30, 30, 10, 10).Fill();
+            canvas.AddXObjectFittedIntoRectangle(xObject, new Rectangle(300, 300));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+        }
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     }
 }

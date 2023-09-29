@@ -440,6 +440,14 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName CMYK = CreateDirectName("CMYK");
 
+        public static readonly iText.Kernel.Pdf.PdfName Cyan = CreateDirectName("Cyan");
+
+        public static readonly iText.Kernel.Pdf.PdfName Magenta = CreateDirectName("Magenta");
+
+        public static readonly iText.Kernel.Pdf.PdfName Yellow = CreateDirectName("Yellow");
+
+        public static readonly iText.Kernel.Pdf.PdfName Black = CreateDirectName("Black");
+
         public static readonly iText.Kernel.Pdf.PdfName DefaultCryptFilter = CreateDirectName("DefaultCryptFilter"
             );
 
@@ -1628,6 +1636,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName TR = CreateDirectName("TR");
 
         public static readonly iText.Kernel.Pdf.PdfName TR2 = CreateDirectName("TR2");
+
+        public static readonly iText.Kernel.Pdf.PdfName TransferFunction = CreateDirectName("TransferFunction");
 
         public static readonly iText.Kernel.Pdf.PdfName Trans = CreateDirectName("Trans");
 

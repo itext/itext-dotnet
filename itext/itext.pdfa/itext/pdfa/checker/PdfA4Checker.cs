@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Pdfa.Exceptions;
 using iText.Pdfa.Logs;
@@ -201,6 +202,49 @@ namespace iText.Pdfa.Checker {
         protected internal override void CheckNumberOfDeviceNComponents(PdfSpecialCs.DeviceN deviceN) {
         }
 
+        public override void CheckExtGState(CanvasGraphicsState extGState, PdfStream contentStream) {
+            base.CheckExtGState(extGState, contentStream);
+            if (extGState.GetHalftone() is PdfDictionary) {
+                PdfDictionary halftoneDict = (PdfDictionary)extGState.GetHalftone();
+                if (halftoneDict.ContainsKey(PdfName.TransferFunction)) {
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.ALL_HALFTONES_CONTAINING_TRANSFER_FUNCTION_SHALL_HAVE_HALFTONETYPE_5
+                        );
+                }
+                int halftoneType = halftoneDict.GetAsInt(PdfName.HalftoneType).Value;
+                if (halftoneType == 5) {
+                    foreach (KeyValuePair<PdfName, PdfObject> entry in halftoneDict.EntrySet()) {
+                        //see ISO_32000_2;2020 table 132
+                        if (PdfName.Type.Equals(entry.Key) || PdfName.HalftoneType.Equals(entry.Key) || PdfName.HalftoneName.Equals
+                            (entry.Key)) {
+                            continue;
+                        }
+                        if (entry.Value is PdfDictionary && IsCMYKColorant(entry.Key) && entry.Value is PdfDictionary && ((PdfDictionary
+                            )entry.Value).ContainsKey(PdfName.TransferFunction)) {
+                            throw new PdfAConformanceException(PdfaExceptionMessageConstant.ALL_HALFTONES_CONTAINING_TRANSFER_FUNCTION_SHALL_HAVE_HALFTONETYPE_5
+                                );
+                        }
+                    }
+                }
+            }
+        }
+
+        protected internal override void CheckFormXObject(PdfStream form) {
+            if (IsAlreadyChecked(form)) {
+                return;
+            }
+            if (form.ContainsKey(PdfName.OPI)) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_OPI_KEY
+                    );
+            }
+            if (form.ContainsKey(PdfName.Ref)) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_REF_KEY
+                    );
+            }
+            CheckTransparencyGroup(form, null);
+            CheckResources(form.GetAsDictionary(PdfName.Resources));
+            CheckContentStream(form);
+        }
+
         /// <summary><inheritDoc/></summary>
         protected internal override void CheckAnnotation(PdfDictionary annotDic) {
             base.CheckAnnotation(annotDic);
@@ -288,6 +332,11 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.ONLY_STANDARD_BLEND_MODES_SHALL_BE_USED_FOR_THE_VALUE_OF_THE_BM_KEY_IN_AN_EXTENDED_GRAPHIC_STATE_DICTIONARY
                     );
             }
+        }
+
+        private bool IsCMYKColorant(PdfName colourant) {
+            return PdfName.Cyan.Equals(colourant) || PdfName.Magenta.Equals(colourant) || PdfName.Yellow.Equals(colourant
+                ) || PdfName.Black.Equals(colourant);
         }
     }
 }

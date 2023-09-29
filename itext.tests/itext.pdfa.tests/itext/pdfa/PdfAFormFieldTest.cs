@@ -163,7 +163,7 @@ namespace iText.Pdfa {
                 .SetFieldName("button").SetValue("hello"));
             form.AddField(emptyField);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), exception.Message);
         }
 
@@ -211,7 +211,7 @@ namespace iText.Pdfa {
             choiceFormField.SetFont(fontFreeSans);
             form.AddField(choiceFormField);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), exception.Message);
         }
 
@@ -235,7 +235,7 @@ namespace iText.Pdfa {
             choiceFormField.SetFont(fontCJK);
             form.AddField(choiceFormField);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), exception.Message);
         }
 
@@ -263,7 +263,7 @@ namespace iText.Pdfa {
             f.SetListSelected(new String[] { "3", "5" });
             form.AddField(f);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), exception.Message);
         }
 
@@ -287,7 +287,7 @@ namespace iText.Pdfa {
             pushButtonFormField.SetFont(fontFreeSans).SetFontSize(12);
             form.AddField(pushButtonFormField);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), exception.Message);
         }
 
@@ -341,7 +341,7 @@ namespace iText.Pdfa {
             textFormField.SetFont(fontFreeSans).SetFontSize(12);
             form.AddField(textFormField);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), exception.Message);
         }
 
@@ -403,7 +403,7 @@ namespace iText.Pdfa {
                 }
             }
             Exception ex = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocToMerge.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), ex.Message);
         }
     }

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
@@ -49,7 +50,7 @@ namespace iText.Pdfa.Checker {
             catalog.Put(PdfName.OCProperties, ocProperties);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
                 (catalog));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES
                 , e.Message);
         }
 
@@ -88,7 +89,7 @@ namespace iText.Pdfa.Checker {
             catalog.Put(PdfName.OCProperties, ocProperties);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
                 (catalog));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES
                 , e.Message);
         }
 
@@ -109,7 +110,7 @@ namespace iText.Pdfa.Checker {
             catalog.Put(PdfName.OCProperties, ocProperties);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
                 (catalog));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY
                 , e.Message);
         }
 
@@ -139,8 +140,8 @@ namespace iText.Pdfa.Checker {
             catalog.Put(PdfName.OCProperties, ocProperties);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
                 (catalog));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS, 
-                e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -169,8 +170,8 @@ namespace iText.Pdfa.Checker {
             catalog.Put(PdfName.OCProperties, ocProperties);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
                 (catalog));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS, 
-                e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -204,8 +205,8 @@ namespace iText.Pdfa.Checker {
             catalog.Put(PdfName.OCProperties, ocProperties);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
                 (catalog));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS, 
-                e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -261,7 +262,7 @@ namespace iText.Pdfa.Checker {
             catalog.Put(PdfName.Names, names);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
                 (catalog));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_ALTERNATEPRESENTATIONS_NAMES_ENTRY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_ALTERNATEPRESENTATIONS_NAMES_ENTRY
                 , e.Message);
         }
 
@@ -271,7 +272,7 @@ namespace iText.Pdfa.Checker {
             catalog.Put(PdfName.Requirements, new PdfDictionary());
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
                 (catalog));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_REQUIREMENTS_ENTRY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_REQUIREMENTS_ENTRY
                 , e.Message);
         }
 
@@ -327,8 +328,310 @@ namespace iText.Pdfa.Checker {
             reference.Put(PdfName.DigestMethod, digestMethod);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckSignature
                 (signatureDict));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.SIGNATURE_REFERENCES_DICTIONARY_SHALL_NOT_CONTAIN_DIGESTLOCATION_DIGESTMETHOD_DIGESTVALUE
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.SIGNATURE_REFERENCES_DICTIONARY_SHALL_NOT_CONTAIN_DIGESTLOCATION_DIGESTMETHOD_DIGESTVALUE
                 , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckLZWDecodeInInlineImage() {
+            PdfStream stream = new PdfStream();
+            stream.Put(PdfName.Filter, PdfName.LZWDecode);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckInlineImage
+                (stream, null));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.LZWDECODE_FILTER_IS_NOT_PERMITTED, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckImageWithAlternateTest() {
+            PdfStream image = new PdfStream();
+            image.Put(PdfName.Alternates, PdfName.Identity);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckImage
+                (image, null));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.AN_IMAGE_DICTIONARY_SHALL_NOT_CONTAIN_ALTERNATES_KEY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckImageWithOPITest() {
+            PdfStream image = new PdfStream();
+            image.Put(PdfName.OPI, PdfName.Identity);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckImage
+                (image, null));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.AN_IMAGE_DICTIONARY_SHALL_NOT_CONTAIN_OPI_KEY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckImageWithInterpolateTest() {
+            PdfStream image = new PdfStream();
+            image.Put(PdfName.Interpolate, new PdfBoolean(true));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckImage
+                (image, null));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_VALUE_OF_INTERPOLATE_KEY_SHALL_BE_FALSE, 
+                e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckFormXObjectWithOPITest() {
+            PdfStream form = new PdfStream();
+            form.Put(PdfName.OPI, PdfName.Identity);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckFormXObject
+                (form));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_OPI_KEY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckFormXObjectWithPSTest() {
+            PdfStream form = new PdfStream();
+            form.Put(PdfName.PS, PdfName.Identity);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckFormXObject
+                (form));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_PS_KEY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckCryptInInlineImage() {
+            PdfStream stream = new PdfStream();
+            stream.Put(PdfName.Filter, PdfName.Crypt);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckInlineImage
+                (stream, null));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.CRYPT_FILTER_IS_NOT_PERMITTED_INLINE_IMAGE, e
+                .Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckLZWDecodeArrayInInlineImage() {
+            PdfStream stream = new PdfStream();
+            PdfArray array = new PdfArray();
+            array.Add(PdfName.LZWDecode);
+            stream.Put(PdfName.Filter, array);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckInlineImage
+                (stream, null));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.LZWDECODE_FILTER_IS_NOT_PERMITTED, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckCryptArrayInInlineImage() {
+            PdfStream stream = new PdfStream();
+            PdfArray array = new PdfArray();
+            array.Add(PdfName.Crypt);
+            stream.Put(PdfName.Filter, array);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckInlineImage
+                (stream, null));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.CRYPT_FILTER_IS_NOT_PERMITTED_INLINE_IMAGE, e
+                .Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckAllowedArrayFilterInInlineImage() {
+            PdfStream stream = new PdfStream();
+            PdfArray array = new PdfArray();
+            array.Add(PdfName.Identity);
+            stream.Put(PdfName.Filter, array);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckInlineImage
+                (stream, null));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INVALID_INLINE_IMAGE_FILTER_USAGE, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckAllowedFilterInInlineImage() {
+            PdfStream stream = new PdfStream();
+            stream.Put(PdfName.Filter, PdfName.Identity);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckInlineImage
+                (stream, null));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INVALID_INLINE_IMAGE_FILTER_USAGE, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckEmptyAnnotationTest() {
+            PdfDictionary annotation = new PdfDictionary();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckAnnotation
+                (annotation));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ANNOTATION_TYPE_0_IS_NOT_PERMITTED
+                , "null"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckAnnotationAgainstActionsWithATest() {
+            PdfDictionary annotation = new PdfDictionary();
+            annotation.Put(PdfName.A, PdfName.Identity);
+            annotation.Put(PdfName.Subtype, PdfName.Widget);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckAnnotationAgainstActions
+                (annotation));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_OR_AA_ENTRY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckAnnotationAgainstActionsWithAATest() {
+            PdfDictionary annotation = new PdfDictionary();
+            annotation.Put(PdfName.AA, PdfName.Identity);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckAnnotationAgainstActions
+                (annotation));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_AA_KEY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckNeedsRenderingCatalogTest() {
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.NeedsRendering, new PdfBoolean(true));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_THE_NEEDSRENDERING_KEY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckCatalogContainsAATest() {
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.AA, PdfName.Identity);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckCatalogContainsSignatureTest() {
+            PdfDictionary catalog = new PdfDictionary();
+            PdfDictionary perms = new PdfDictionary();
+            PdfDictionary docMdp = new PdfDictionary();
+            perms.Put(PdfName.DocMDP, docMdp);
+            catalog.Put(PdfName.Perms, perms);
+            pdfA2Checker.CheckCatalogValidEntries(catalog);
+        }
+
+        //nothing to check, expecting that no error is thrown
+        [NUnit.Framework.Test]
+        public virtual void CheckPageSizeTest() {
+            PdfDictionary page = new PdfDictionary();
+            PdfArray rect = new PdfArray();
+            rect.Add(new PdfNumber(0));
+            rect.Add(new PdfNumber(0));
+            rect.Add(new PdfNumber(0));
+            rect.Add(new PdfNumber(0));
+            page.Put(PdfName.CropBox, rect);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPageSize
+                (page));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_PAGE_LESS_3_UNITS_NO_GREATER_14400_IN_EITHER_DIRECTION
+                , e.Message);
+        }
+
+        //nothing to check, expecting that no error is thrown
+        [NUnit.Framework.Test]
+        public virtual void CheckOutputIntentsTest() {
+            PdfDictionary catalog = new PdfDictionary();
+            PdfArray array = new PdfArray();
+            PdfDictionary dictionary = new PdfDictionary();
+            dictionary.Put(PdfName.DestOutputProfile, PdfName.Identity);
+            PdfDictionary dictionary2 = new PdfDictionary();
+            dictionary2.Put(PdfName.DestOutputProfile, PdfName.Crypt);
+            array.Add(dictionary);
+            array.Add(dictionary2);
+            catalog.Put(PdfName.OutputIntents, array);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckOutputIntents
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.IF_OUTPUTINTENTS_ARRAY_HAS_MORE_THAN_ONE_ENTRY_WITH_DESTOUTPUTPROFILE_KEY_THE_SAME_INDIRECT_OBJECT_SHALL_BE_USED_AS_THE_VALUE_OF_THAT_OBJECT
+                , e.Message);
+        }
+
+        //nothing to check, expecting that no error is thrown
+        [NUnit.Framework.Test]
+        public virtual void CheckCatalogContainsInvalidPermsTest() {
+            PdfDictionary catalog = new PdfDictionary();
+            PdfDictionary perms = new PdfDictionary();
+            perms.Put(PdfName.Identity, PdfName.Identity);
+            catalog.Put(PdfName.Perms, perms);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.NO_KEYS_OTHER_THAN_UR3_AND_DOC_MDP_SHALL_BE_PRESENT_IN_A_PERMISSIONS_DICTIONARY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckFileSpecNotContainsFKeyTest() {
+            PdfDictionary fileSpec = new PdfDictionary();
+            fileSpec.Put(PdfName.EF, PdfName.Identity);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckFileSpec
+                (fileSpec));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckFileSpecContainsNullFKeyTest() {
+            PdfDictionary fileSpec = new PdfDictionary();
+            fileSpec.Put(PdfName.EF, new PdfDictionary());
+            fileSpec.Put(PdfName.F, PdfName.Identity);
+            fileSpec.Put(PdfName.UF, PdfName.Identity);
+            fileSpec.Put(PdfName.Desc, PdfName.Identity);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckFileSpec
+                (fileSpec));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EF_KEY_OF_FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_DICTIONARY_WITH_VALID_F_KEY
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPdfStreamContainsFKeyTest() {
+            PdfStream pdfStream = new PdfStream();
+            pdfStream.Put(PdfName.F, PdfName.Identity);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPdfStream
+                (pdfStream));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.STREAM_OBJECT_DICTIONARY_SHALL_NOT_CONTAIN_THE_F_FFILTER_OR_FDECODEPARAMS_KEYS
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPdfStreamContainsLZWDecodeKeyTest() {
+            PdfStream pdfStream = new PdfStream();
+            pdfStream.Put(PdfName.Filter, PdfName.LZWDecode);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPdfStream
+                (pdfStream));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.LZWDECODE_FILTER_IS_NOT_PERMITTED, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPdfStreamContainsLZWDecodeArrayKeyTest() {
+            PdfStream pdfStream = new PdfStream();
+            PdfArray array = new PdfArray();
+            array.Add(PdfName.LZWDecode);
+            pdfStream.Put(PdfName.Filter, array);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPdfStream
+                (pdfStream));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.LZWDECODE_FILTER_IS_NOT_PERMITTED, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPdfStreamContainsCryptKeyTest() {
+            PdfStream pdfStream = new PdfStream();
+            pdfStream.Put(PdfName.Filter, PdfName.Crypt);
+            PdfDictionary decodeParams = new PdfDictionary();
+            decodeParams.Put(PdfName.Name, PdfName.Crypt);
+            pdfStream.Put(PdfName.DecodeParms, decodeParams);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPdfStream
+                (pdfStream));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.NOT_IDENTITY_CRYPT_FILTER_IS_NOT_PERMITTED, e
+                .Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPdfStreamContainsCryptArrayKeyTest() {
+            PdfStream pdfStream = new PdfStream();
+            PdfArray array = new PdfArray();
+            array.Add(PdfName.Crypt);
+            pdfStream.Put(PdfName.Filter, array);
+            PdfDictionary decodeParams = new PdfDictionary();
+            PdfArray decodeArray = new PdfArray();
+            decodeArray.Add(decodeParams);
+            decodeParams.Put(PdfName.Name, PdfName.Crypt);
+            pdfStream.Put(PdfName.DecodeParms, decodeArray);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPdfStream
+                (pdfStream));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.NOT_IDENTITY_CRYPT_FILTER_IS_NOT_PERMITTED, e
+                .Message);
         }
 
         private static PdfDictionary CreateSignatureDict() {
