@@ -22,12 +22,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Properties;
 using iText.Pdfa.Exceptions;
 using iText.Pdfa.Logs;
 
@@ -290,6 +295,26 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <param name="catalog">
+        /// the catalog
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to check
+        /// </param>
+        protected internal override void CheckMetaData(PdfDictionary catalog) {
+            base.CheckMetaData(catalog);
+            try {
+                PdfStream xmpMetadata = catalog.GetAsStream(PdfName.Metadata);
+                byte[] bytes = xmpMetadata.GetBytes();
+                CheckPacketHeader(bytes);
+                XMPMeta meta = XMPMetaFactory.Parse(new MemoryStream(bytes));
+                CheckVersionIdentification(meta);
+                CheckFileProvenanceSpec(meta);
+            }
+            catch (XMPException ex) {
+                throw new PdfException(ex);
+            }
+        }
+
         /// <summary><inheritDoc/></summary>
         protected internal override void CheckAnnotationAgainstActions(PdfDictionary annotDic) {
             if (PdfName.Widget.Equals(annotDic.GetAsName(PdfName.Subtype)) && annotDic.ContainsKey(PdfName.A)) {
@@ -334,6 +359,107 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        private static bool IsValidXmpConformance(String value) {
+            if (value == null) {
+                return false;
+            }
+            if (value.Length != 1) {
+                return false;
+            }
+            return "F".Equals(value) || "E".Equals(value);
+        }
+
+        private static bool IsValidXmpRevision(String value) {
+            if (value == null) {
+                return false;
+            }
+            if (value.Length != 4) {
+                return false;
+            }
+            foreach (char c in value.ToCharArray()) {
+                if (!char.IsDigit(c)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void CheckPacketHeader(byte[] meta) {
+            if (meta == null) {
+                return;
+            }
+            String metAsStr = iText.Commons.Utils.JavaUtil.GetStringForBytes(meta);
+            String regex = "<\\?xpacket.*encoding|bytes.*\\?>";
+            Regex pattern = iText.Commons.Utils.StringUtil.RegexCompile(regex);
+            if (iText.Commons.Utils.Matcher.Match(pattern, metAsStr).Find()) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_PACKET_MAY_NOT_CONTAIN_BYTES_OR_ENCODING_ATTRIBUTE
+                    );
+            }
+        }
+
+        private void CheckFileProvenanceSpec(XMPMeta meta) {
+            try {
+                XMPProperty history = meta.GetProperty(XMPConst.NS_XMP_MM, XMPConst.HISTORY);
+                if (history == null) {
+                    return;
+                }
+                if (!history.GetOptions().IsArray()) {
+                    return;
+                }
+                int amountOfEntries = meta.CountArrayItems(XMPConst.NS_XMP_MM, XMPConst.HISTORY);
+                for (int i = 0; i < amountOfEntries; i++) {
+                    int nameSpaceIndex = i + 1;
+                    if (!meta.DoesPropertyExist(XMPConst.NS_XMP_MM, XMPConst.HISTORY + "[" + nameSpaceIndex + "]/stEvt:action"
+                        )) {
+                        throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HISTORY_ENTRY_SHALL_CONTAIN_KEY
+                            , "stEvt:action"));
+                    }
+                    if (!meta.DoesPropertyExist(XMPConst.NS_XMP_MM, XMPConst.HISTORY + "[" + nameSpaceIndex + "]/stEvt:when")) {
+                        throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HISTORY_ENTRY_SHALL_CONTAIN_KEY
+                            , "stEvt:when"));
+                    }
+                }
+            }
+            catch (XMPException e) {
+                throw new PdfException(e);
+            }
+        }
+
+        private void CheckVersionIdentification(XMPMeta meta) {
+            try {
+                XMPProperty prop = meta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART);
+                if (prop == null || !GetConformanceLevel().GetPart().Equals(prop.GetValue())) {
+                    throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                        , GetConformanceLevel().GetPart()));
+                }
+            }
+            catch (XMPException) {
+                throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                    , GetConformanceLevel().GetPart()));
+            }
+            try {
+                XMPProperty prop = meta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.REV);
+                if (prop == null || !IsValidXmpRevision(prop.GetValue())) {
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV
+                        );
+                }
+            }
+            catch (XMPException) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV
+                    );
+            }
+            try {
+                XMPProperty prop = meta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE);
+                if (prop != null && !IsValidXmpConformance(prop.GetValue())) {
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_CONFORMANCE
+                        );
+                }
+            }
+            catch (XMPException) {
+            }
+        }
+
+        // ignored because it is not required
         private bool IsCMYKColorant(PdfName colourant) {
             return PdfName.Cyan.Equals(colourant) || PdfName.Magenta.Equals(colourant) || PdfName.Yellow.Equals(colourant
                 ) || PdfName.Black.Equals(colourant);

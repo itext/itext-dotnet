@@ -270,6 +270,84 @@ namespace iText.Pdfa {
                 ));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
+
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void CreateInvalidPdfAVersionNumberWithPDFA4() {
+            PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_1_7));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            doc.AddNewPage();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_FILE_HEADER_SHALL_CONTAIN_RIGHT_PDF_VERSION
+                , "2"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateInvalidPdfAVersionNumberWithPDFA4F() {
+            PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_1_7));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            doc.AddNewPage();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_FILE_HEADER_SHALL_CONTAIN_RIGHT_PDF_VERSION
+                , "2"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateInvalidPdfAVersionNumberWithPDFA4E() {
+            PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_1_7));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4E, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            doc.AddNewPage();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_FILE_HEADER_SHALL_CONTAIN_RIGHT_PDF_VERSION
+                , "2"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateInvalidPdfAVersion16NumberWithPDFA4() {
+            PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_1_6));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            doc.AddNewPage();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_FILE_HEADER_SHALL_CONTAIN_RIGHT_PDF_VERSION
+                , "2"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateInvalidPdfAVersion13NumberWithPDFA4F() {
+            PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_1_3));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            doc.AddNewPage();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_FILE_HEADER_SHALL_CONTAIN_RIGHT_PDF_VERSION
+                , "2"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateInvalidPdfAVersionNumber17WithPDFA4E() {
+            PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_1_7));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4E, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            doc.AddNewPage();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_FILE_HEADER_SHALL_CONTAIN_RIGHT_PDF_VERSION
+                , "2"), e.Message);
+        }
     }
 }

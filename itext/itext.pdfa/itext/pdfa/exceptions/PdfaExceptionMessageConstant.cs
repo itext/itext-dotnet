@@ -297,6 +297,20 @@ namespace iText.Pdfa.Exceptions {
              = "Only blend modes that are specified in ISO 32000-2:2020 shall be used for the value of the BM key in a"
              + " graphic state dictionary or an annotation dictionary.";
 
+        public const String XMP_METADATA_HEADER_PACKET_MAY_NOT_CONTAIN_BYTES_OR_ENCODING_ATTRIBUTE = "XMP metadata"
+             + " header packet may not contain bytes or encoding attribute.";
+
+        public const String XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART = "XMP metadata header shall"
+             + " contain version identifier pdfaid:part with value {0}";
+
+        public const String XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV = "XMP metadata header shall"
+             + " contain version identifier pdfaid:rev with four digit integer value";
+
+        public const String XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_CONFORMANCE = "XMP metadata header shall"
+             + " contain version identifier pdfaid:rev F or E or absent if no conformance level is specified";
+
+        public const String XMP_METADATA_HISTORY_ENTRY_SHALL_CONTAIN_KEY = "XMP metadata history entry shall" + " contain key {0}";
+
         private PdfaExceptionMessageConstant() {
         }
     }

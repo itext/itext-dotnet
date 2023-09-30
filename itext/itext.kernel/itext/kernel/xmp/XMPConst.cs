@@ -236,6 +236,9 @@ namespace iText.Kernel.XMP {
 
         /// <summary>Conformance, A, B, or U.</summary>
         public const String CONFORMANCE = "conformance";
+
+        /// <summary>History</summary>
+        public const String HISTORY = "History";
     }
 
     public static class XMPConstConstants {
