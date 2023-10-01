@@ -289,6 +289,11 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override void CheckSignatureType(bool isCAdES) {
+        }
+
+        //nothing to do
         protected internal override void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
             ) {
         }

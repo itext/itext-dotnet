@@ -35,6 +35,7 @@ namespace iText.Kernel.Pdf {
         FONT_GLYPHS,
         XREF_TABLE,
         SIGNATURE,
+        SIGNATURE_TYPE,
         CRYPTO
     }
 }

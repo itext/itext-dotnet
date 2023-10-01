@@ -97,7 +97,10 @@ namespace iText.Kernel.Utils {
             return this;
         }
 
-        /// <summary>merge documents ECMA scripts</summary>
+        /// <summary>
+        /// merge documents ECMA scripts,
+        /// if AA or OpenAction or Names dictionaries contained in both documents than nothing will be merged
+        /// </summary>
         /// <param name="mergeNames">true to merge, false otherwise</param>
         /// <returns><c>PdfMergerProperties</c> instance</returns>
         public virtual iText.Kernel.Utils.PdfMergerProperties SetMergeScripts(bool mergeNames) {

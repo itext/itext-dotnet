@@ -196,6 +196,14 @@ namespace iText.Pdfa.Checker {
         public override void CheckCanvasStack(char stackOperation) {
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override void CheckSignatureType(bool isCAdES) {
+            if (!isCAdES) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.SIGNATURE_SHALL_CONFORM_TO_ONE_OF_THE_PADES_PROFILE
+                    );
+            }
+        }
+
         //There is no limit for String length in pdf-a/4
         /// <summary><inheritDoc/></summary>
         protected internal override int GetMaxStringLength() {

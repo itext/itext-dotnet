@@ -222,6 +222,11 @@ namespace iText.Pdfa {
                     break;
                 }
 
+                case IsoKey.SIGNATURE_TYPE: {
+                    checker.CheckSignatureType(((bool?)obj).Value);
+                    break;
+                }
+
                 case IsoKey.CRYPTO: {
                     checker.CheckCrypto((PdfObject)obj);
                     break;

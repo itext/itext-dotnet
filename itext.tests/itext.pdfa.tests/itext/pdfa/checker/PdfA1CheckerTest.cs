@@ -85,6 +85,12 @@ namespace iText.Pdfa.Checker {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CheckSignatureTypeTest() {
+            pdfA1Checker.CheckSignatureType(true);
+        }
+
+        //nothing to check, only for coverage
+        [NUnit.Framework.Test]
         public virtual void CheckLZWDecodeInInlineImage() {
             PdfStream stream = new PdfStream();
             stream.Put(PdfName.Filter, PdfName.LZWDecode);

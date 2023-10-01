@@ -274,6 +274,12 @@ namespace iText.Pdfa.Checker {
             checkedObjects.Add(signatureDict);
         }
 
+        /// <summary>This method checks compliance of the signature type</summary>
+        /// <param name="isCAdES">true is CAdES sig type is used, false otherwise.</param>
+        [System.ObsoleteAttribute(@"Will become an abstract in the next major release.")]
+        public virtual void CheckSignatureType(bool isCAdES) {
+        }
+
         /// <summary>
         /// This method checks compliance with the graphics state architectural
         /// limitation, explained by

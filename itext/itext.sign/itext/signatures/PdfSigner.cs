@@ -444,6 +444,7 @@ namespace iText.Signatures {
                         );
                 }
             }
+            document.CheckIsoConformance(sigtype == PdfSigner.CryptoStandard.CADES, IsoKey.SIGNATURE_TYPE);
             ICollection<byte[]> crlBytes = null;
             int i = 0;
             while (crlBytes == null && i < chain.Length) {

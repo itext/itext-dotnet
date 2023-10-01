@@ -106,6 +106,35 @@ namespace iText.Signatures.Sign {
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
+        public virtual void SignPdf2CmsTest() {
+            String srcFile = sourceFolder + "simplePdfA4Document.pdf";
+            String outPdf = destinationFolder + "signPdfCms.pdf";
+            Rectangle rect = new Rectangle(30, 200, 200, 100);
+            String fieldName = "Signature1";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => Sign(srcFile, fieldName
+                , outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CMS, "Test 1", "TestCity", rect
+                , false, true, PdfSigner.NOT_CERTIFIED, 12f));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.SIGNATURE_SHALL_CONFORM_TO_ONE_OF_THE_PADES_PROFILE
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignPdf2CadesTest() {
+            String srcFile = sourceFolder + "simplePdfA4Document.pdf";
+            String cmpPdf = sourceFolder + "cmp_signPdfCades.pdf";
+            String outPdf = destinationFolder + "signPdfCades.pdf";
+            Rectangle rect = new Rectangle(30, 200, 200, 100);
+            String fieldName = "Signature1";
+            Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1"
+                , "TestCity", rect, false, true, PdfSigner.NOT_CERTIFIED, 12f);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_"
+                , GetTestMap(rect)));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
         public virtual void FailedSigningPdfA2DocumentTest() {
             String src = sourceFolder + "simplePdfADocument.pdf";
             String @out = destinationFolder + "signedPdfADocument2.pdf";
