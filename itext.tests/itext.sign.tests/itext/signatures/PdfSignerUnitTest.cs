@@ -80,7 +80,7 @@ namespace iText.Signatures {
                 ()), new ReaderProperties().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties()
                 );
             signer.cryptoDictionary = new PdfSignature();
-            signer.appearance.SetPageRect(new Rectangle(100, 100, 0, 0));
+            signer.SetPageRect(new Rectangle(100, 100, 0, 0));
             PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signer.document, true);
             signer.CreateNewSignatureFormField(acroForm, signer.fieldName);
             PdfFormField formField = acroForm.GetField(signer.fieldName);
@@ -99,7 +99,7 @@ namespace iText.Signatures {
                 ()), new ReaderProperties().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties()
                 );
             signer.cryptoDictionary = new PdfSignature();
-            signer.appearance.SetPageRect(new Rectangle(100, 100, 10, 10));
+            signer.SetPageRect(new Rectangle(100, 100, 10, 10));
             PdfSigFieldLock fieldLock = new PdfSigFieldLock();
             signer.fieldLock = fieldLock;
             PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signer.document, true);
@@ -115,7 +115,7 @@ namespace iText.Signatures {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimpleDocument(PdfVersion.PDF_2_0)))
                 , new ByteArrayOutputStream(), new StampingProperties());
             signer.cryptoDictionary = new PdfSignature();
-            signer.appearance.SetPageRect(new Rectangle(100, 100, 10, 10));
+            signer.SetPageRect(new Rectangle(100, 100, 10, 10));
             PdfSigFieldLock fieldLock = new PdfSigFieldLock();
             signer.fieldLock = fieldLock;
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
@@ -160,7 +160,7 @@ namespace iText.Signatures {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(outputStream.ToArray()), new ReaderProperties
                 ().SetPassword(OWNER)), new ByteArrayOutputStream(), new StampingProperties());
             signer.cryptoDictionary = new PdfSignature();
-            signer.appearance.SetPageRect(new Rectangle(100, 100, 0, 0));
+            signer.SetPageRect(new Rectangle(100, 100, 0, 0));
             widgetAnnotation = (PdfWidgetAnnotation)signer.document.GetPage(1).GetAnnotations()[0];
             PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signer.document, true);
             PdfFormField formField = new PdfSignerUnitTest.ExtendedPdfSignatureFormField(widgetAnnotation, signer.document
@@ -192,7 +192,7 @@ namespace iText.Signatures {
             signer.cryptoDictionary = new PdfSignature();
             PdfSigFieldLock fieldLock = new PdfSigFieldLock();
             signer.fieldLock = fieldLock;
-            signer.appearance.SetPageRect(new Rectangle(100, 100, 10, 10));
+            signer.SetPageRect(new Rectangle(100, 100, 10, 10));
             widgetAnnotation = (PdfWidgetAnnotation)signer.document.GetPage(1).GetAnnotations()[0];
             PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signer.document, true);
             PdfFormField formField = new PdfSignerUnitTest.ExtendedPdfSignatureFormField(widgetAnnotation, signer.document

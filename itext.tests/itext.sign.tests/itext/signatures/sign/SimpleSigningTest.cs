@@ -26,6 +26,7 @@ using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -136,9 +137,9 @@ namespace iText.Signatures.Sign {
             }
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
             signer.SetCertificationLevel(certificationLevel);
+            signer.SetFieldName(name);
             // Creating the appearance
             CreateAppearance(signer, reason, location, setReuseAppearance, rectangleForNewField, fontSize);
-            signer.SetFieldName(name);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
@@ -152,14 +153,15 @@ namespace iText.Signatures.Sign {
 
         private static void CreateAppearance(PdfSigner signer, String reason, String location, bool setReuseAppearance
             , Rectangle rectangleForNewField, float? fontSize) {
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
-                ).SetReuseAppearance(setReuseAppearance);
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName()).SetReason(reason
+                ).SetLocation(location).SetReuseAppearance(setReuseAppearance);
             if (rectangleForNewField != null) {
-                appearance.SetPageRect(rectangleForNewField);
+                signer.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
-                appearance.SetLayer2FontSize((float)fontSize);
+                appearance.SetFontSize((float)fontSize);
             }
+            signer.SetSignatureAppearance(appearance);
         }
     }
 }

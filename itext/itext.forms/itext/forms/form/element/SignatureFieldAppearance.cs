@@ -35,12 +35,12 @@ namespace iText.Forms.Form.Element {
     /// <see cref="FormField{T}"/>
     /// class representing a signature field in PDF.
     /// </summary>
-    public class SigField : FormField<iText.Forms.Form.Element.SigField> {
+    public class SignatureFieldAppearance : FormField<iText.Forms.Form.Element.SignatureFieldAppearance> {
         /// <summary>Default paddings for the signature field.</summary>
         private const float DEFAULT_PADDING = 2;
 
         /// <summary>The rendering mode chosen for visible signatures.</summary>
-        private SigField.RenderingMode renderingMode = SigField.RenderingMode.DESCRIPTION;
+        private SignatureFieldAppearance.RenderingMode renderingMode = SignatureFieldAppearance.RenderingMode.DESCRIPTION;
 
         /// <summary>The reason for signing.</summary>
         private String reason = "";
@@ -65,6 +65,8 @@ namespace iText.Forms.Form.Element {
 
         /// <summary>Holds value of property signDate.</summary>
         private DateTime signDate;
+
+        private bool isSignDateSet = false;
 
         /// <summary>The image that needs to be used for a visible signature.</summary>
         private ImageData signatureGraphic = null;
@@ -97,11 +99,11 @@ namespace iText.Forms.Form.Element {
 
         /// <summary>
         /// Creates a new
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </summary>
         /// <param name="id">the id.</param>
-        public SigField(String id)
+        public SignatureFieldAppearance(String id)
             : base(
                         // We should support signing of existing fields with dots in name.
                         id != null && id.Contains(".") ? "" : id) {
@@ -118,7 +120,7 @@ namespace iText.Forms.Form.Element {
 
         /// <summary>Gets the rendering mode for this signature model element.</summary>
         /// <returns>the rendering mode for this signature.</returns>
-        public virtual SigField.RenderingMode GetRenderingMode() {
+        public virtual SignatureFieldAppearance.RenderingMode GetRenderingMode() {
             return renderingMode;
         }
 
@@ -126,10 +128,11 @@ namespace iText.Forms.Form.Element {
         /// <param name="renderingMode">the rendering mode.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetRenderingMode(SigField.RenderingMode renderingMode) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetRenderingMode(SignatureFieldAppearance.RenderingMode
+             renderingMode) {
             this.renderingMode = renderingMode;
             return this;
         }
@@ -144,10 +147,10 @@ namespace iText.Forms.Form.Element {
         /// <param name="reason">signing reason.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetReason(String reason) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetReason(String reason) {
             this.reason = reason;
             return this;
         }
@@ -156,10 +159,10 @@ namespace iText.Forms.Form.Element {
         /// <param name="reasonCaption">new signing reason caption.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetReasonCaption(String reasonCaption) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetReasonCaption(String reasonCaption) {
             this.reasonCaption = reasonCaption;
             return this;
         }
@@ -174,10 +177,10 @@ namespace iText.Forms.Form.Element {
         /// <param name="location">new signing location.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetLocation(String location) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetLocation(String location) {
             this.location = location;
             return this;
         }
@@ -186,10 +189,11 @@ namespace iText.Forms.Form.Element {
         /// <param name="locationCaption">new signing location caption.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetLocationCaption(String locationCaption) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetLocationCaption(String locationCaption
+            ) {
             this.locationCaption = locationCaption;
             return this;
         }
@@ -204,10 +208,11 @@ namespace iText.Forms.Form.Element {
         /// <param name="signatureCreator">new name of the application signing a document.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetSignatureCreator(String signatureCreator) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetSignatureCreator(String signatureCreator
+            ) {
             this.signatureCreator = signatureCreator;
             return this;
         }
@@ -222,10 +227,10 @@ namespace iText.Forms.Form.Element {
         /// <param name="contact">new signing contact.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetContact(String contact) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContact(String contact) {
             this.contact = contact;
             return this;
         }
@@ -240,10 +245,11 @@ namespace iText.Forms.Form.Element {
         /// <param name="signatureGraphic">image rendered.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetSignatureGraphic(ImageData signatureGraphic) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetSignatureGraphic(ImageData signatureGraphic
+            ) {
             this.signatureGraphic = signatureGraphic;
             return this;
         }
@@ -258,10 +264,10 @@ namespace iText.Forms.Form.Element {
         /// <param name="reuseAppearance">is an appearances reusing flag value to set.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetReuseAppearance(bool reuseAppearance) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetReuseAppearance(bool reuseAppearance) {
             this.reuseAppearance = reuseAppearance;
             return this;
         }
@@ -276,10 +282,10 @@ namespace iText.Forms.Form.Element {
         /// <param name="image">the background image.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetImage(ImageData image) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetImage(ImageData image) {
             this.image = image;
             return this;
         }
@@ -300,10 +306,10 @@ namespace iText.Forms.Form.Element {
         /// <param name="imageScale">the scaling to be applied to the background image.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetImageScale(float imageScale) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetImageScale(float imageScale) {
             this.imageScale = imageScale;
             return this;
         }
@@ -315,10 +321,10 @@ namespace iText.Forms.Form.Element {
         /// </param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetDescription(String text) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetDescription(String text) {
             description = text;
             return this;
         }
@@ -334,10 +340,10 @@ namespace iText.Forms.Form.Element {
         /// <param name="signedBy">name of the signer.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetSignedBy(String signedBy) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetSignedBy(String signedBy) {
             this.signedBy = signedBy;
             return this;
         }
@@ -358,11 +364,12 @@ namespace iText.Forms.Form.Element {
         /// <param name="signDate">new signature date.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetSignDate(DateTime signDate) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetSignDate(DateTime signDate) {
             this.signDate = signDate;
+            this.isSignDateSet = true;
             return this;
         }
 
@@ -376,10 +383,10 @@ namespace iText.Forms.Form.Element {
         /// <param name="n0">layer xObject.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetBackgroundLayer(PdfFormXObject n0) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetBackgroundLayer(PdfFormXObject n0) {
             this.n0 = n0;
             return this;
         }
@@ -397,10 +404,11 @@ namespace iText.Forms.Form.Element {
         /// <param name="n2">layer xObject.</param>
         /// <returns>
         /// this same
-        /// <see cref="SigField"/>
+        /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SigField SetSignatureAppearanceLayer(PdfFormXObject n2) {
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetSignatureAppearanceLayer(PdfFormXObject
+             n2) {
             this.n2 = n2;
             return this;
         }
@@ -420,7 +428,7 @@ namespace iText.Forms.Form.Element {
         /// <inheritDoc/>
         /// </returns>
         protected override IRenderer MakeNewRenderer() {
-            return new SigFieldRenderer(this);
+            return new SignatureAppearanceRenderer(this);
         }
 
         private String GenerateDescriptionText() {
@@ -428,7 +436,7 @@ namespace iText.Forms.Form.Element {
             if (!String.IsNullOrEmpty(signedBy)) {
                 buf.Append("Digitally signed by ").Append(signedBy);
             }
-            if (signDate != null) {
+            if (isSignDateSet) {
                 buf.Append('\n').Append("Date: ").Append(DateTimeUtil.DateToString(signDate));
             }
             if (reason != null) {

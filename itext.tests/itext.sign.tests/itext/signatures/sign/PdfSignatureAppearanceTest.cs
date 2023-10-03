@@ -217,8 +217,8 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             signer.GetSignatureAppearance().SetLayer2Text("SIGNED").SetLayer2FontColor(ColorConstants.GREEN).SetReason
-                ("Test 1").SetLocation("TestCity").SetReuseAppearance(true).GetModelElement().SetProperty(Property.VERTICAL_ALIGNMENT
-                , VerticalAlignment.MIDDLE);
+                ("Test 1").SetLocation("TestCity").SetReuseAppearance(true).GetSignatureAppearance().SetProperty(Property
+                .VERTICAL_ALIGNMENT, VerticalAlignment.MIDDLE);
             signer.SetFieldName("Signature1");
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);

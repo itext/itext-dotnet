@@ -42,7 +42,7 @@ using iText.Test.Attributes;
 
 namespace iText.Forms.Form.Element {
     [NUnit.Framework.Category("IntegrationTest")]
-    public class SigFieldTest : ExtendedITextTest {
+    public class SignatureFieldAppearanceTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/form/element/SigFieldTest/";
 
@@ -59,13 +59,13 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "basicSigField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicSigField.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                SigField formSigField = new SigField("form SigField");
+                SignatureFieldAppearance formSigField = new SignatureFieldAppearance("form SigField");
                 formSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formSigField.SetDescription("form SigField");
                 formSigField.SetBorder(new SolidBorder(ColorConstants.YELLOW, 1));
                 document.Add(formSigField);
                 document.Add(new Paragraph(""));
-                SigField flattenSigField = new SigField("flatten SigField");
+                SignatureFieldAppearance flattenSigField = new SignatureFieldAppearance("flatten SigField");
                 flattenSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenSigField.SetDescription("flatten SigField");
                 flattenSigField.SetBorder(new SolidBorder(ColorConstants.PINK, 1));
@@ -80,7 +80,7 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "invisibleSigField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_invisibleSigField.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                SigField formSigField = new SigField("form SigField");
+                SignatureFieldAppearance formSigField = new SignatureFieldAppearance("form SigField");
                 formSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formSigField.SetDescription("form SigField");
                 formSigField.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(0));
@@ -98,7 +98,7 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "customizedSigField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_customizedSigField.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                SigField formSigField = new SigField("form SigField");
+                SignatureFieldAppearance formSigField = new SignatureFieldAppearance("form SigField");
                 formSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formSigField.SetSignedBy("signedBy").SetLocationCaption("Location capt: ").SetLocation("location").SetReasonCaption
                     ("Reason capt: ").SetReason("reason").SetDescription("Description text that allows as to port that test and compare files by content."
@@ -109,7 +109,7 @@ namespace iText.Forms.Form.Element {
                 formSigField.SetHeight(100);
                 document.Add(formSigField);
                 document.Add(new Paragraph(""));
-                SigField flattenSigField = new SigField("flatten SigField");
+                SignatureFieldAppearance flattenSigField = new SignatureFieldAppearance("flatten SigField");
                 flattenSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenSigField.SetSignedBy("signedBy").SetLocationCaption("Location capt: ").SetLocation("location").SetReasonCaption
                     ("Reason capt: ").SetReason("reason").SetDescription("Description text that allows as to port that test and compare files by content."
@@ -129,7 +129,7 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "signatureFieldVerticalAlignment.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_signatureFieldVerticalAlignment.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                SigField bottomSigField = new SigField("bottomSigField");
+                SignatureFieldAppearance bottomSigField = new SignatureFieldAppearance("bottomSigField");
                 bottomSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 bottomSigField.SetDescription("description on bottom");
                 bottomSigField.SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.BOTTOM);
@@ -138,10 +138,10 @@ namespace iText.Forms.Form.Element {
                 bottomSigField.SetBorder(new SolidBorder(ColorConstants.YELLOW, 3));
                 bottomSigField.SetFontSize(15);
                 document.Add(bottomSigField);
-                SigField middleSigField = new SigField("middleSigField");
+                SignatureFieldAppearance middleSigField = new SignatureFieldAppearance("middleSigField");
                 middleSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 middleSigField.SetDescription("description on the middle");
-                middleSigField.SetRenderingMode(SigField.RenderingMode.NAME_AND_DESCRIPTION);
+                middleSigField.SetRenderingMode(SignatureFieldAppearance.RenderingMode.NAME_AND_DESCRIPTION);
                 middleSigField.SetSignedBy("Name");
                 middleSigField.SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.MIDDLE);
                 middleSigField.SetProperty(Property.TEXT_ALIGNMENT, TextAlignment.CENTER);
@@ -149,10 +149,10 @@ namespace iText.Forms.Form.Element {
                 middleSigField.SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
                 middleSigField.SetFontSize(15);
                 document.Add(middleSigField);
-                SigField topSigField = new SigField("topSigField");
+                SignatureFieldAppearance topSigField = new SignatureFieldAppearance("topSigField");
                 topSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 topSigField.SetDescription("description on top");
-                topSigField.SetRenderingMode(SigField.RenderingMode.GRAPHIC_AND_DESCRIPTION);
+                topSigField.SetRenderingMode(SignatureFieldAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION);
                 topSigField.SetSignatureGraphic(ImageDataFactory.Create(SOURCE_FOLDER + "1.png"));
                 topSigField.SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.TOP);
                 topSigField.SetProperty(Property.TEXT_ALIGNMENT, TextAlignment.CENTER);
@@ -170,10 +170,10 @@ namespace iText.Forms.Form.Element {
             String cmpPdf = SOURCE_FOLDER + "cmp_sigFieldWithGraphicAndDescriptionMode.pdf";
             String imagePath = SOURCE_FOLDER + "1.png";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                SigField formSigField = new SigField("SigField");
+                SignatureFieldAppearance formSigField = new SignatureFieldAppearance("SigField");
                 ImageData image = ImageDataFactory.Create(imagePath);
                 formSigField.SetSignatureGraphic(image);
-                formSigField.SetRenderingMode(SigField.RenderingMode.GRAPHIC_AND_DESCRIPTION);
+                formSigField.SetRenderingMode(SignatureFieldAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION);
                 formSigField.SetDescription("description");
                 formSigField.SetFontColor(ColorConstants.BLUE);
                 formSigField.SetFontSize(20);
@@ -191,10 +191,10 @@ namespace iText.Forms.Form.Element {
             String cmpPdf = SOURCE_FOLDER + "cmp_sigFieldWithGraphicMode.pdf";
             String imagePath = SOURCE_FOLDER + "1.png";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                SigField formSigField = new SigField("SigField");
+                SignatureFieldAppearance formSigField = new SignatureFieldAppearance("SigField");
                 ImageData image = ImageDataFactory.Create(imagePath);
                 formSigField.SetSignatureGraphic(image);
-                formSigField.SetRenderingMode(SigField.RenderingMode.GRAPHIC);
+                formSigField.SetRenderingMode(SignatureFieldAppearance.RenderingMode.GRAPHIC);
                 formSigField.SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
                 formSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 document.Add(formSigField);
@@ -207,10 +207,10 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "sigFieldWithNameAndDescriptionModeHorizontal.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_sigFieldWithNameAndDescriptionModeHorizontal.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                SigField formSigField = new SigField("SigField");
+                SignatureFieldAppearance formSigField = new SignatureFieldAppearance("SigField");
                 formSigField.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(250));
                 formSigField.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(150));
-                formSigField.SetRenderingMode(SigField.RenderingMode.NAME_AND_DESCRIPTION);
+                formSigField.SetRenderingMode(SignatureFieldAppearance.RenderingMode.NAME_AND_DESCRIPTION);
                 formSigField.SetDescription("description");
                 formSigField.SetSignedBy("name");
                 formSigField.SetFontSize(20);
@@ -228,10 +228,10 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "sigFieldWithNameAndDescriptionModeVertical.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_sigFieldWithNameAndDescriptionModeVertical.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                SigField formSigField = new SigField("SigField");
+                SignatureFieldAppearance formSigField = new SignatureFieldAppearance("SigField");
                 formSigField.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(150));
                 formSigField.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(250));
-                formSigField.SetRenderingMode(SigField.RenderingMode.NAME_AND_DESCRIPTION);
+                formSigField.SetRenderingMode(SignatureFieldAppearance.RenderingMode.NAME_AND_DESCRIPTION);
                 formSigField.SetDescription("description");
                 formSigField.SetSignedBy("name");
                 formSigField.SetFontSize(20);
@@ -250,32 +250,32 @@ namespace iText.Forms.Form.Element {
             String cmpPdf = SOURCE_FOLDER + "cmp_borderBoxes.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 // BORDER_BOX
-                SigField interactiveSigField = new SigField("interactiveSigField").SetBorder(new SolidBorder(ColorConstants
-                    .PINK, 10));
+                SignatureFieldAppearance interactiveSigField = new SignatureFieldAppearance("interactiveSigField").SetBorder
+                    (new SolidBorder(ColorConstants.PINK, 10));
                 interactiveSigField.SetWidth(200).SetHeight(100);
                 interactiveSigField.SetInteractive(true);
                 interactiveSigField.SetDescription("interactive border box");
                 interactiveSigField.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
                 document.Add(interactiveSigField);
                 // CONTENT_BOX
-                SigField interactiveSigField2 = new SigField("interactiveSigField2").SetBorder(new SolidBorder(ColorConstants
-                    .YELLOW, 10));
+                SignatureFieldAppearance interactiveSigField2 = new SignatureFieldAppearance("interactiveSigField2").SetBorder
+                    (new SolidBorder(ColorConstants.YELLOW, 10));
                 interactiveSigField2.SetWidth(200).SetHeight(100);
                 interactiveSigField2.SetInteractive(true);
                 interactiveSigField2.SetDescription("interactive content box");
                 interactiveSigField2.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
                 document.Add(interactiveSigField2);
                 // BORDER_BOX
-                SigField flattenSigField = new SigField("flattenSigField").SetBorder(new SolidBorder(ColorConstants.PINK, 
-                    10));
+                SignatureFieldAppearance flattenSigField = new SignatureFieldAppearance("flattenSigField").SetBorder(new SolidBorder
+                    (ColorConstants.PINK, 10));
                 flattenSigField.SetWidth(200).SetHeight(100);
                 flattenSigField.SetInteractive(false);
                 flattenSigField.SetDescription("flatten border box");
                 flattenSigField.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
                 document.Add(flattenSigField);
                 // CONTENT_BOX
-                SigField flattenSigField2 = new SigField("flattenSigField2").SetBorder(new SolidBorder(ColorConstants.YELLOW
-                    , 10));
+                SignatureFieldAppearance flattenSigField2 = new SignatureFieldAppearance("flattenSigField2").SetBorder(new 
+                    SolidBorder(ColorConstants.YELLOW, 10));
                 flattenSigField2.SetWidth(200).SetHeight(100);
                 flattenSigField2.SetInteractive(false);
                 flattenSigField2.SetDescription("flatten content box");
@@ -291,8 +291,8 @@ namespace iText.Forms.Form.Element {
             String cmpPdf = SOURCE_FOLDER + "cmp_borderTypes.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 // DASHED
-                SigField sigField = new SigField("SigField").SetBorder(new DashedBorder(ColorConstants.PINK, 10)).SetBackgroundColor
-                    (ColorConstants.YELLOW);
+                SignatureFieldAppearance sigField = new SignatureFieldAppearance("SigField").SetBorder(new DashedBorder(ColorConstants
+                    .PINK, 10)).SetBackgroundColor(ColorConstants.YELLOW);
                 sigField.SetSize(100);
                 sigField.SetInteractive(true);
                 sigField.SetDescription("dashed");
@@ -301,8 +301,9 @@ namespace iText.Forms.Form.Element {
                 PdfDictionary bs = new PdfDictionary();
                 // UNDERLINE
                 bs.Put(PdfName.S, PdfAnnotation.STYLE_UNDERLINE);
-                SigField sigField2 = new SigField("SigField2").SetBorder(FormBorderFactory.GetBorder(bs, 10f, ColorConstants
-                    .YELLOW, ColorConstants.ORANGE)).SetBackgroundColor(ColorConstants.PINK);
+                SignatureFieldAppearance sigField2 = new SignatureFieldAppearance("SigField2").SetBorder(FormBorderFactory
+                    .GetBorder(bs, 10f, ColorConstants.YELLOW, ColorConstants.ORANGE)).SetBackgroundColor(ColorConstants.PINK
+                    );
                 sigField2.SetSize(100);
                 sigField2.SetInteractive(true);
                 sigField2.SetDescription("underline");
@@ -311,8 +312,9 @@ namespace iText.Forms.Form.Element {
                 document.Add(sigField2);
                 // INSET
                 bs.Put(PdfName.S, PdfAnnotation.STYLE_INSET);
-                SigField sigField3 = new SigField("SigField3").SetBorder(FormBorderFactory.GetBorder(bs, 10f, ColorConstants
-                    .PINK, ColorConstants.RED)).SetBackgroundColor(ColorConstants.YELLOW);
+                SignatureFieldAppearance sigField3 = new SignatureFieldAppearance("SigField3").SetBorder(FormBorderFactory
+                    .GetBorder(bs, 10f, ColorConstants.PINK, ColorConstants.RED)).SetBackgroundColor(ColorConstants.YELLOW
+                    );
                 sigField3.SetSize(100);
                 sigField3.SetInteractive(true);
                 sigField3.SetDescription("inset");
@@ -320,8 +322,9 @@ namespace iText.Forms.Form.Element {
                 document.Add(sigField3);
                 // BEVELLED
                 bs.Put(PdfName.S, PdfAnnotation.STYLE_BEVELED);
-                SigField sigField4 = new SigField("SigField4").SetBorder(FormBorderFactory.GetBorder(bs, 10f, ColorConstants
-                    .YELLOW, ColorConstants.ORANGE)).SetBackgroundColor(ColorConstants.PINK);
+                SignatureFieldAppearance sigField4 = new SignatureFieldAppearance("SigField4").SetBorder(FormBorderFactory
+                    .GetBorder(bs, 10f, ColorConstants.YELLOW, ColorConstants.ORANGE)).SetBackgroundColor(ColorConstants.PINK
+                    );
                 sigField4.SetSize(100);
                 sigField4.SetInteractive(true);
                 sigField4.SetDescription("bevelled");
@@ -347,15 +350,15 @@ namespace iText.Forms.Form.Element {
                     (new Rectangle(50, 50, 400, 200)).SetPage(2).CreateSignature();
                 PdfSignatureFormField field3 = new SignatureFormFieldBuilder(document.GetPdfDocument(), "sigField3").SetWidgetRectangle
                     (new Rectangle(50, 50, 400, 200)).SetPage(3).CreateSignature();
-                SigField sigField1 = new SigField("sigField1");
+                SignatureFieldAppearance sigField1 = new SignatureFieldAppearance("sigField1");
                 sigField1.SetDescription("rotation 90 rotation 90 rotation 90 rotation 90 rotation 90");
                 sigField1.SetFontSize(25);
                 field1.GetFirstFormAnnotation().SetFormFieldElement(sigField1).SetBorderColor(ColorConstants.GREEN);
-                SigField sigField2 = new SigField("sigField2");
+                SignatureFieldAppearance sigField2 = new SignatureFieldAppearance("sigField2");
                 sigField2.SetDescription("rotation 180 rotation 180 rotation 180 rotation 180 rotation 180");
                 sigField2.SetFontSize(25);
                 field2.GetFirstFormAnnotation().SetFormFieldElement(sigField2).SetBorderColor(ColorConstants.GREEN);
-                SigField sigField3 = new SigField("sigField3");
+                SignatureFieldAppearance sigField3 = new SignatureFieldAppearance("sigField3");
                 sigField3.SetDescription("rotation 270 rotation 270 rotation 270 rotation 270 rotation 270");
                 sigField3.SetFontSize(25);
                 field3.GetFirstFormAnnotation().SetFormFieldElement(sigField3).SetBorderColor(ColorConstants.GREEN);
@@ -370,11 +373,11 @@ namespace iText.Forms.Form.Element {
         [NUnit.Framework.Test]
         public virtual void WrongRenderingModeTest() {
             using (Document document = new Document(new PdfDocument(new PdfWriter(new MemoryStream())))) {
-                SigField formSigField = new SigField("SigField");
-                formSigField.SetRenderingMode(SigField.RenderingMode.GRAPHIC_AND_DESCRIPTION);
+                SignatureFieldAppearance formSigField = new SignatureFieldAppearance("SigField");
+                formSigField.SetRenderingMode(SignatureFieldAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION);
                 NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => document.Add(formSigField));
-                SigField formSigField2 = new SigField("SigField2");
-                formSigField2.SetRenderingMode(SigField.RenderingMode.GRAPHIC);
+                SignatureFieldAppearance formSigField2 = new SignatureFieldAppearance("SigField2");
+                formSigField2.SetRenderingMode(SignatureFieldAppearance.RenderingMode.GRAPHIC);
                 NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => document.Add(formSigField2));
             }
         }
@@ -384,19 +387,19 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "signatureFieldBackground.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_signatureFieldBackground.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                SigField field1 = new SigField("field1");
+                SignatureFieldAppearance field1 = new SignatureFieldAppearance("field1");
                 field1.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 field1.SetDescription("scale -1").SetFontColor(ColorConstants.GREEN).SetFontSize(50).SetImage(ImageDataFactory
                     .Create(SOURCE_FOLDER + "1.png")).SetImageScale(-1).SetBorder(new SolidBorder(ColorConstants.RED, 10))
                     .SetHeight(200).SetWidth(300).SetProperty(Property.TEXT_ALIGNMENT, TextAlignment.CENTER);
                 document.Add(field1);
-                SigField field2 = new SigField("field2");
+                SignatureFieldAppearance field2 = new SignatureFieldAppearance("field2");
                 field2.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 field2.SetDescription("scale 0").SetFontColor(ColorConstants.GREEN).SetFontSize(50).SetImage(ImageDataFactory
                     .Create(SOURCE_FOLDER + "1.png")).SetImageScale(0).SetBorder(new SolidBorder(ColorConstants.YELLOW, 10
                     )).SetHeight(200).SetWidth(300).SetProperty(Property.TEXT_ALIGNMENT, TextAlignment.CENTER);
                 document.Add(field2);
-                SigField field3 = new SigField("field3");
+                SignatureFieldAppearance field3 = new SignatureFieldAppearance("field3");
                 field3.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 field3.SetDescription("scale 0.5").SetFontColor(ColorConstants.GREEN).SetFontSize(50).SetImage(ImageDataFactory
                     .Create(SOURCE_FOLDER + "1.png")).SetImageScale(0.5f).SetBorder(new SolidBorder(ColorConstants.GREEN, 

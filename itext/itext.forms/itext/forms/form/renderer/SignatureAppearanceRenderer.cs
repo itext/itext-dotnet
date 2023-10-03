@@ -44,7 +44,7 @@ namespace iText.Forms.Form.Renderer {
     /// <see cref="AbstractTextFieldRenderer"/>
     /// implementation for SigFields.
     /// </summary>
-    public class SigFieldRenderer : AbstractTextFieldRenderer {
+    public class SignatureAppearanceRenderer : AbstractTextFieldRenderer {
         /// <summary>Extra space at the top.</summary>
         private const float TOP_SECTION = 0.3f;
 
@@ -54,11 +54,11 @@ namespace iText.Forms.Form.Renderer {
 
         /// <summary>
         /// Creates a new
-        /// <see cref="SigFieldRenderer"/>
+        /// <see cref="SignatureAppearanceRenderer"/>
         /// instance.
         /// </summary>
         /// <param name="modelElement">the model element</param>
-        public SigFieldRenderer(SigField modelElement)
+        public SignatureAppearanceRenderer(SignatureFieldAppearance modelElement)
             : base(modelElement) {
             ApplyBackgroundImage(modelElement);
         }
@@ -79,17 +79,18 @@ namespace iText.Forms.Form.Renderer {
         /// </returns>
         protected internal override IRenderer CreateFlatRenderer() {
             Div div = new Div();
-            String description = ((SigField)modelElement).GetDescription(true);
-            SigField.RenderingMode renderingMode = ((SigField)modelElement).GetRenderingMode();
+            String description = ((SignatureFieldAppearance)modelElement).GetDescription(true);
+            SignatureFieldAppearance.RenderingMode renderingMode = ((SignatureFieldAppearance)modelElement).GetRenderingMode
+                ();
             switch (renderingMode) {
-                case SigField.RenderingMode.NAME_AND_DESCRIPTION: {
-                    div.Add(new Paragraph(((SigField)modelElement).GetSignedBy()).SetMargin(0).SetMultipliedLeading(0.9f)).Add
-                        (new Paragraph(description).SetMargin(0).SetMultipliedLeading(0.9f));
+                case SignatureFieldAppearance.RenderingMode.NAME_AND_DESCRIPTION: {
+                    div.Add(new Paragraph(((SignatureFieldAppearance)modelElement).GetSignedBy()).SetMargin(0).SetMultipliedLeading
+                        (0.9f)).Add(new Paragraph(description).SetMargin(0).SetMultipliedLeading(0.9f));
                     break;
                 }
 
-                case SigField.RenderingMode.GRAPHIC_AND_DESCRIPTION: {
-                    ImageData signatureGraphic = ((SigField)modelElement).GetSignatureGraphic();
+                case SignatureFieldAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION: {
+                    ImageData signatureGraphic = ((SignatureFieldAppearance)modelElement).GetSignatureGraphic();
                     if (signatureGraphic == null) {
                         throw new InvalidOperationException("A signature image must be present when rendering mode is " + "graphic and description. Use setSignatureGraphic()"
                             );
@@ -99,8 +100,8 @@ namespace iText.Forms.Form.Renderer {
                     break;
                 }
 
-                case SigField.RenderingMode.GRAPHIC: {
-                    ImageData signatureGraphic_1 = ((SigField)modelElement).GetSignatureGraphic();
+                case SignatureFieldAppearance.RenderingMode.GRAPHIC: {
+                    ImageData signatureGraphic_1 = ((SignatureFieldAppearance)modelElement).GetSignatureGraphic();
                     if (signatureGraphic_1 == null) {
                         throw new InvalidOperationException("A signature image must be present when rendering mode is " + "graphic. Use setSignatureGraphic()"
                             );
@@ -138,10 +139,11 @@ namespace iText.Forms.Form.Renderer {
             }
             Rectangle descriptionRect = null;
             Rectangle signatureRect = null;
-            SigField.RenderingMode renderingMode = ((SigField)modelElement).GetRenderingMode();
+            SignatureFieldAppearance.RenderingMode renderingMode = ((SignatureFieldAppearance)modelElement).GetRenderingMode
+                ();
             switch (renderingMode) {
-                case SigField.RenderingMode.NAME_AND_DESCRIPTION:
-                case SigField.RenderingMode.GRAPHIC_AND_DESCRIPTION: {
+                case SignatureFieldAppearance.RenderingMode.NAME_AND_DESCRIPTION:
+                case SignatureFieldAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION: {
                     // Split the signature field into two and add the name of the signer or an image to the one side,
                     // the description to the other side.
                     UnitValue[] paddings = GetPaddings();
@@ -165,7 +167,7 @@ namespace iText.Forms.Form.Renderer {
                     break;
                 }
 
-                case SigField.RenderingMode.GRAPHIC: {
+                case SignatureFieldAppearance.RenderingMode.GRAPHIC: {
                     // The signature field will consist of an image only; no description will be shown.
                     signatureRect = bBox;
                     break;
@@ -195,7 +197,7 @@ namespace iText.Forms.Form.Renderer {
         /// <inheritDoc/>
         /// </returns>
         public override IRenderer GetNextRenderer() {
-            return new iText.Forms.Form.Renderer.SigFieldRenderer((SigField)modelElement);
+            return new iText.Forms.Form.Renderer.SignatureAppearanceRenderer((SignatureFieldAppearance)modelElement);
         }
 
         /// <summary>Gets the default value of the form field.</summary>
@@ -214,7 +216,7 @@ namespace iText.Forms.Form.Renderer {
             String name = GetModelId();
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.SigFieldRenderer));
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.SignatureAppearanceRenderer));
                 logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.FONT_SIZE));
             }
@@ -242,17 +244,17 @@ namespace iText.Forms.Form.Renderer {
             sigField.SetFont(font).SetFontSize(fontSizeValue);
             sigField.GetFirstFormAnnotation().SetBackgroundColor(backgroundColor);
             ApplyDefaultFieldProperties(sigField);
-            sigField.GetFirstFormAnnotation().SetFormFieldElement((SigField)modelElement);
+            sigField.GetFirstFormAnnotation().SetFormFieldElement((SignatureFieldAppearance)modelElement);
             sigField.EnableFieldRegeneration();
             PdfAcroForm forms = PdfFormCreator.GetAcroForm(doc, true);
             forms.AddField(sigField, page);
             WriteAcroFormFieldLangAttribute(doc);
         }
 
-        private void AdjustChildrenLayout(SigField.RenderingMode renderingMode, Rectangle signatureRect, Rectangle
-             descriptionRect, int pageNum) {
+        private void AdjustChildrenLayout(SignatureFieldAppearance.RenderingMode renderingMode, Rectangle signatureRect
+            , Rectangle descriptionRect, int pageNum) {
             switch (renderingMode) {
-                case SigField.RenderingMode.NAME_AND_DESCRIPTION: {
+                case SignatureFieldAppearance.RenderingMode.NAME_AND_DESCRIPTION: {
                     ParagraphRenderer name = (ParagraphRenderer)flatRenderer.GetChildRenderers()[0];
                     RelayoutParagraph(name, signatureRect, pageNum);
                     ParagraphRenderer description = (ParagraphRenderer)flatRenderer.GetChildRenderers()[1];
@@ -260,14 +262,14 @@ namespace iText.Forms.Form.Renderer {
                     break;
                 }
 
-                case SigField.RenderingMode.GRAPHIC_AND_DESCRIPTION: {
+                case SignatureFieldAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION: {
                     RelayoutImage(signatureRect, pageNum);
                     ParagraphRenderer description = (ParagraphRenderer)flatRenderer.GetChildRenderers()[1];
                     RelayoutParagraph(description, descriptionRect, pageNum);
                     break;
                 }
 
-                case SigField.RenderingMode.GRAPHIC: {
+                case SignatureFieldAppearance.RenderingMode.GRAPHIC: {
                     RelayoutImage(signatureRect, pageNum);
                     break;
                 }
@@ -343,7 +345,7 @@ namespace iText.Forms.Form.Renderer {
             renderer.Layout(layoutContext_1);
         }
 
-        private void ApplyBackgroundImage(SigField modelElement) {
+        private void ApplyBackgroundImage(SignatureFieldAppearance modelElement) {
             if (modelElement.GetImage() != null) {
                 BackgroundRepeat repeat = new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT);
                 BackgroundPosition position = new BackgroundPosition().SetPositionX(BackgroundPosition.PositionX.CENTER).SetPositionY
@@ -379,8 +381,9 @@ namespace iText.Forms.Form.Renderer {
             if (this.HasOwnProperty(Property.FONT_SIZE) || modelElement.HasOwnProperty(Property.FONT_SIZE)) {
                 return;
             }
-            if (SigField.RenderingMode.GRAPHIC == ((SigField)modelElement).GetRenderingMode() || SigField.RenderingMode
-                .GRAPHIC_AND_DESCRIPTION == ((SigField)modelElement).GetRenderingMode()) {
+            if (SignatureFieldAppearance.RenderingMode.GRAPHIC == ((SignatureFieldAppearance)modelElement).GetRenderingMode
+                () || SignatureFieldAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION == ((SignatureFieldAppearance)modelElement
+                ).GetRenderingMode()) {
                 // We can expect CLIP_ELEMENT log messages since the initial image size may be larger than the field height.
                 // But image size will be adjusted during its relayout in #adjustFieldLayout.
                 return;

@@ -29,6 +29,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.Forms.Form.Element;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Exceptions;
@@ -222,8 +223,24 @@ namespace iText.Signatures {
         /// <see cref="PdfSignatureAppearance"/>
         /// object.
         /// </returns>
+        [Obsolete]
         public virtual PdfSignatureAppearance GetSignatureAppearance() {
             return appearance;
+        }
+
+        /// <summary>Sets the signature field layout element to customize the appearance of the signature.</summary>
+        /// <remarks>
+        /// Sets the signature field layout element to customize the appearance of the signature. Signer's sign date will
+        /// be set.
+        /// </remarks>
+        /// <param name="appearance">
+        /// the
+        /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance"/>
+        /// layout element.
+        /// </param>
+        public virtual void SetSignatureAppearance(SignatureFieldAppearance appearance) {
+            appearance.SetSignDate(signDate);
+            this.appearance.SetSignatureAppearance(appearance);
         }
 
         /// <summary>Returns the document's certification level.</summary>
@@ -319,8 +336,8 @@ namespace iText.Signatures {
                     IList<PdfWidgetAnnotation> widgets = field.GetWidgets();
                     if (widgets.Count > 0) {
                         PdfWidgetAnnotation widget = widgets[0];
-                        appearance.SetPageRect(GetWidgetRectangle(widget));
-                        appearance.SetPageNumber(GetWidgetPageNumber(widget));
+                        SetPageRect(GetWidgetRectangle(widget));
+                        SetPageNumber(GetWidgetPageNumber(widget));
                     }
                 }
                 else {
@@ -348,6 +365,64 @@ namespace iText.Signatures {
                 throw new ArgumentException(SignExceptionMessageConstant.DOCUMENT_MUST_HAVE_READER);
             }
             this.document = document;
+        }
+
+        /// <summary>
+        /// Provides the page number of the signature field which this signature
+        /// appearance is associated with.
+        /// </summary>
+        /// <returns>
+        /// The page number of the signature field which this signature
+        /// appearance is associated with.
+        /// </returns>
+        public virtual int GetPageNumber() {
+            return appearance.GetPageNumber();
+        }
+
+        /// <summary>
+        /// Sets the page number of the signature field which this signature
+        /// appearance is associated with.
+        /// </summary>
+        /// <remarks>
+        /// Sets the page number of the signature field which this signature
+        /// appearance is associated with. Implicitly calls
+        /// <see cref="SetPageRect(iText.Kernel.Geom.Rectangle)"/>
+        /// which considers page number to process the rectangle correctly.
+        /// </remarks>
+        /// <param name="pageNumber">
+        /// The page number of the signature field which
+        /// this signature appearance is associated with.
+        /// </param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetPageNumber(int pageNumber) {
+            appearance.SetPageNumber(pageNumber);
+            return this;
+        }
+
+        /// <summary>
+        /// Provides the rectangle that represent the position and dimension
+        /// of the signature field in the page.
+        /// </summary>
+        /// <returns>
+        /// the rectangle that represent the position and dimension
+        /// of the signature field in the page
+        /// </returns>
+        public virtual Rectangle GetPageRect() {
+            return appearance.GetPageRect();
+        }
+
+        /// <summary>
+        /// Sets the rectangle that represent the position and dimension of
+        /// the signature field in the page.
+        /// </summary>
+        /// <param name="pageRect">
+        /// The rectangle that represents the position and
+        /// dimension of the signature field in the page.
+        /// </param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetPageRect(Rectangle pageRect) {
+            appearance.SetPageRect(pageRect);
+            return this;
         }
 
         /// <summary>Setter for the OutputStream.</summary>
@@ -464,7 +539,6 @@ namespace iText.Signatures {
                     estimatedSize += 4192;
                 }
             }
-            PdfSignatureAppearance appearance = GetSignatureAppearance();
             appearance.SetCertificate(chain[0]);
             if (sigtype == PdfSigner.CryptoStandard.CADES && !IsDocumentPdf2()) {
                 AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
@@ -538,7 +612,6 @@ namespace iText.Signatures {
                 throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
             PdfSignature dic = new PdfSignature();
-            PdfSignatureAppearance appearance = GetSignatureAppearance();
             dic.SetReason(appearance.GetReason());
             dic.SetLocation(appearance.GetLocation());
             dic.SetSignatureCreator(appearance.GetSignatureCreator());
@@ -845,7 +918,7 @@ namespace iText.Signatures {
                 sigField.Put(PdfName.Lock, this.fieldLock.GetPdfObject());
                 sigFieldLock = this.fieldLock;
             }
-            sigField.Put(PdfName.P, document.GetPage(appearance.GetPageNumber()).GetPdfObject());
+            sigField.Put(PdfName.P, document.GetPage(GetPageNumber()).GetPdfObject());
             sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
             PdfObject obj = sigField.GetPdfObject().Get(PdfName.F);
             int flags = 0;
@@ -854,7 +927,7 @@ namespace iText.Signatures {
             }
             flags |= PdfAnnotation.LOCKED;
             sigField.Put(PdfName.F, new PdfNumber(flags));
-            sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetModelElement());
+            sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetSignatureAppearance());
             sigField.SetModified();
             return sigFieldLock;
         }
@@ -874,7 +947,7 @@ namespace iText.Signatures {
         /// <param name="name">the name of the field</param>
         /// <returns>signature field lock dictionary</returns>
         protected internal virtual PdfSigFieldLock CreateNewSignatureFormField(PdfAcroForm acroForm, String name) {
-            PdfWidgetAnnotation widget = new PdfWidgetAnnotation(appearance.GetPageRect());
+            PdfWidgetAnnotation widget = new PdfWidgetAnnotation(GetPageRect());
             widget.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.LOCKED);
             PdfSignatureFormField sigField = new SignatureFormFieldBuilder(document, name).CreateSignature();
             sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
@@ -885,9 +958,9 @@ namespace iText.Signatures {
                 sigField.Put(PdfName.Lock, this.fieldLock.GetPdfObject());
                 sigFieldLock = this.fieldLock;
             }
-            int pagen = appearance.GetPageNumber();
+            int pagen = GetPageNumber();
             widget.SetPage(document.GetPage(pagen));
-            sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetModelElement());
+            sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetSignatureAppearance());
             acroForm.AddField(sigField, document.GetPage(pagen));
             if (acroForm.GetPdfObject().IsIndirect()) {
                 acroForm.SetModified();

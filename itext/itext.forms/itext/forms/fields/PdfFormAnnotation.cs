@@ -1093,27 +1093,27 @@ namespace iText.Forms.Fields {
         }
 
         internal virtual void CreateSigField() {
-            if (!(formFieldElement is SigField)) {
+            if (!(formFieldElement is SignatureFieldAppearance)) {
                 // Create it one time and re-set properties during each widget regeneration.
-                formFieldElement = new SigField(parent.GetPartialFieldName().ToUnicodeString());
+                formFieldElement = new SignatureFieldAppearance(parent.GetPartialFieldName().ToUnicodeString());
             }
             if (formFieldElement.GetProperty<Object>(Property.FONT) == null) {
-                ((SigField)formFieldElement).SetFont(GetFont());
+                ((SignatureFieldAppearance)formFieldElement).SetFont(GetFont());
             }
             if (GetColor() != null) {
-                ((SigField)formFieldElement).SetFontColor(color);
+                ((SignatureFieldAppearance)formFieldElement).SetFontColor(color);
             }
             PdfString reason = parent.GetPdfObject().GetAsString(PdfName.Reason);
             if (reason != null) {
-                ((SigField)formFieldElement).SetReason(reason.ToUnicodeString());
+                ((SignatureFieldAppearance)formFieldElement).SetReason(reason.ToUnicodeString());
             }
             PdfString location = parent.GetPdfObject().GetAsString(PdfName.Location);
             if (location != null) {
-                ((SigField)formFieldElement).SetLocation(location.ToUnicodeString());
+                ((SignatureFieldAppearance)formFieldElement).SetLocation(location.ToUnicodeString());
             }
             PdfString contact = parent.GetPdfObject().GetAsString(PdfName.ContactInfo);
             if (contact != null) {
-                ((SigField)formFieldElement).SetContact(contact.ToUnicodeString());
+                ((SignatureFieldAppearance)formFieldElement).SetContact(contact.ToUnicodeString());
             }
         }
 
@@ -1353,15 +1353,15 @@ namespace iText.Forms.Fields {
         /// <param name="height">the height of the annotation rectangle.</param>
         /// <returns>n0 layer xObject.</returns>
         private PdfFormXObject CreateN0Layer(float width, float height) {
-            if (((SigField)formFieldElement).GetBackgroundLayer() != null) {
-                return ((SigField)formFieldElement).GetBackgroundLayer();
+            if (((SignatureFieldAppearance)formFieldElement).GetBackgroundLayer() != null) {
+                return ((SignatureFieldAppearance)formFieldElement).GetBackgroundLayer();
             }
             // Create blank n0.
             PdfFormXObject n0LayerXObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
             n0LayerXObject.MakeIndirect(GetDocument());
             PdfCanvas canvas = new PdfCanvas(n0LayerXObject, GetDocument());
             canvas.WriteLiteral("% DSBlank\n");
-            if (((SigField)formFieldElement).IsReuseAppearance()) {
+            if (((SignatureFieldAppearance)formFieldElement).IsReuseAppearance()) {
                 // Reuse existed field appearance as a background
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(GetDocument(), true);
                 PdfFormField field = acroForm.GetField(parent.GetFieldName().ToUnicodeString());
@@ -1370,7 +1370,7 @@ namespace iText.Forms.Fields {
                     n0LayerXObject = new PdfFormXObject(oldAppearanceStream);
                 }
                 else {
-                    ((SigField)formFieldElement).SetReuseAppearance(false);
+                    ((SignatureFieldAppearance)formFieldElement).SetReuseAppearance(false);
                 }
             }
             return n0LayerXObject;
@@ -1392,8 +1392,8 @@ namespace iText.Forms.Fields {
         /// <param name="height">the height of the annotation rectangle.</param>
         /// <returns>n2 layer xObject.</returns>
         private PdfFormXObject CreateN2Layer(float width, float height) {
-            if (((SigField)formFieldElement).GetSignatureAppearanceLayer() != null) {
-                return ((SigField)formFieldElement).GetSignatureAppearanceLayer();
+            if (((SignatureFieldAppearance)formFieldElement).GetSignatureAppearanceLayer() != null) {
+                return ((SignatureFieldAppearance)formFieldElement).GetSignatureAppearanceLayer();
             }
             PdfFormXObject n2LayerXObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
             iText.Layout.Canvas n2LayerCanvas = new iText.Layout.Canvas(n2LayerXObject, this.GetDocument());

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Forms.Fields;
+using iText.Forms.Form.Element;
 using iText.Forms.Logs;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -34,6 +35,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
@@ -1522,6 +1524,49 @@ namespace iText.Forms {
                 form.AddField(root);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignatureLayersTest() {
+            String fileName = destinationFolder + "signatureLayersTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
+            pdfDoc.AddNewPage();
+            PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(new Rectangle
+                (36, 436, 100, 100)).CreateSignature();
+            PdfFormXObject layer0 = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
+            // Draw pink rectangle with blue border
+            new PdfCanvas(layer0, pdfDoc).SaveState().SetFillColor(ColorConstants.PINK).SetStrokeColor(ColorConstants.
+                BLUE).Rectangle(0, 0, 100, 100).FillStroke().RestoreState();
+            PdfFormXObject layer2 = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
+            // Draw yellow circle with gray border
+            new PdfCanvas(layer2, pdfDoc).SaveState().SetFillColor(ColorConstants.YELLOW).SetStrokeColor(ColorConstants
+                .DARK_GRAY).Circle(50, 50, 50).FillStroke().RestoreState();
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance("signature").SetBackgroundLayer(layer0)
+                .SetSignatureAppearanceLayer(layer2);
+            signField.GetFirstFormAnnotation().SetFormFieldElement(appearance);
+            form.AddField(signField);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, sourceFolder + "cmp_signatureLayersTest.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfWithSignatureFieldTest() {
+            String fileName = destinationFolder + "pdfWithSignatureFieldTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
+            pdfDoc.AddNewPage();
+            PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(new Rectangle
+                (100, 500, 100, 50)).CreateSignature();
+            signField.GetPdfObject().Put(PdfName.Reason, new PdfString("test reason"));
+            signField.GetPdfObject().Put(PdfName.Location, new PdfString("test location"));
+            signField.GetPdfObject().Put(PdfName.ContactInfo, new PdfString("test contact"));
+            signField.GetFirstFormAnnotation().SetBackgroundColor(ColorConstants.PINK).SetColor(ColorConstants.WHITE);
+            form.AddField(signField);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, sourceFolder + "cmp_pdfWithSignatureFieldTest.pdf"
+                , destinationFolder, "diff_"));
         }
 
         internal class CustomButtonFormField : PdfButtonFormField {

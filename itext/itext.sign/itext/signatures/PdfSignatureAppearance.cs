@@ -44,7 +44,7 @@ namespace iText.Signatures {
         private readonly PdfDocument document;
 
         /// <summary>Signature model element.</summary>
-        private SigField modelElement = new SigField("");
+        private SignatureFieldAppearance modelElement = new SignatureFieldAppearance("");
 
         /// <summary>The page where the signature will appear.</summary>
         private int page = 1;
@@ -98,6 +98,7 @@ namespace iText.Signatures {
         /// The page number of the signature field which this signature
         /// appearance is associated with.
         /// </returns>
+        [Obsolete]
         public virtual int GetPageNumber() {
             return page;
         }
@@ -117,6 +118,7 @@ namespace iText.Signatures {
         /// this signature appearance is associated with.
         /// </param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetPageNumber(int pageNumber) {
             this.page = pageNumber;
             SetPageRect(pageRect);
@@ -131,6 +133,7 @@ namespace iText.Signatures {
         /// the rectangle that represent the position and dimension
         /// of the signature field in the page
         /// </returns>
+        [Obsolete]
         public virtual Rectangle GetPageRect() {
             return pageRect;
         }
@@ -144,6 +147,7 @@ namespace iText.Signatures {
         /// dimension of the signature field in the page.
         /// </param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetPageRect(Rectangle pageRect) {
             this.pageRect = new Rectangle(pageRect);
             this.rect = new Rectangle(pageRect.GetWidth(), pageRect.GetHeight());
@@ -158,6 +162,7 @@ namespace iText.Signatures {
         /// <see cref="SetPageRect(iText.Kernel.Geom.Rectangle)"/>
         /// </remarks>
         /// <returns>layer 0</returns>
+        [Obsolete]
         public virtual PdfFormXObject GetLayer0() {
             if (n0 == null) {
                 n0 = new PdfFormXObject(rect);
@@ -174,6 +179,7 @@ namespace iText.Signatures {
         /// <see cref="SetPageRect(iText.Kernel.Geom.Rectangle)"/>
         /// </remarks>
         /// <returns>layer 2</returns>
+        [Obsolete]
         public virtual PdfFormXObject GetLayer2() {
             if (n2 == null) {
                 n2 = new PdfFormXObject(rect);
@@ -184,6 +190,7 @@ namespace iText.Signatures {
 
         /// <summary>Gets the rendering mode for this signature.</summary>
         /// <returns>the rendering mode for this signature</returns>
+        [Obsolete]
         public virtual PdfSignatureAppearance.RenderingMode GetRenderingMode() {
             return renderingMode;
         }
@@ -191,27 +198,28 @@ namespace iText.Signatures {
         /// <summary>Sets the rendering mode for this signature.</summary>
         /// <param name="renderingMode">the rendering mode</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetRenderingMode(PdfSignatureAppearance.RenderingMode
              renderingMode) {
             this.renderingMode = renderingMode;
             switch (renderingMode) {
                 case PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION: {
-                    modelElement.SetRenderingMode(SigField.RenderingMode.NAME_AND_DESCRIPTION);
+                    modelElement.SetRenderingMode(SignatureFieldAppearance.RenderingMode.NAME_AND_DESCRIPTION);
                     break;
                 }
 
                 case PdfSignatureAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION: {
-                    modelElement.SetRenderingMode(SigField.RenderingMode.GRAPHIC_AND_DESCRIPTION);
+                    modelElement.SetRenderingMode(SignatureFieldAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION);
                     break;
                 }
 
                 case PdfSignatureAppearance.RenderingMode.GRAPHIC: {
-                    modelElement.SetRenderingMode(SigField.RenderingMode.GRAPHIC);
+                    modelElement.SetRenderingMode(SignatureFieldAppearance.RenderingMode.GRAPHIC);
                     break;
                 }
 
                 default: {
-                    modelElement.SetRenderingMode(SigField.RenderingMode.DESCRIPTION);
+                    modelElement.SetRenderingMode(SignatureFieldAppearance.RenderingMode.DESCRIPTION);
                     break;
                 }
             }
@@ -220,6 +228,7 @@ namespace iText.Signatures {
 
         /// <summary>Returns the signing reason.</summary>
         /// <returns>reason for signing</returns>
+        [Obsolete]
         public virtual String GetReason() {
             return modelElement.GetReason();
         }
@@ -227,6 +236,7 @@ namespace iText.Signatures {
         /// <summary>Sets the signing reason.</summary>
         /// <param name="reason">signing reason.</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetReason(String reason) {
             modelElement.SetReason(reason);
             return this;
@@ -235,6 +245,7 @@ namespace iText.Signatures {
         /// <summary>Sets the caption for the signing reason.</summary>
         /// <param name="reasonCaption">A new signing reason caption</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetReasonCaption(String reasonCaption) {
             modelElement.SetReasonCaption(reasonCaption);
             return this;
@@ -242,6 +253,7 @@ namespace iText.Signatures {
 
         /// <summary>Returns the signing location.</summary>
         /// <returns>signing location</returns>
+        [Obsolete]
         public virtual String GetLocation() {
             return modelElement.GetLocation();
         }
@@ -249,6 +261,7 @@ namespace iText.Signatures {
         /// <summary>Sets the signing location.</summary>
         /// <param name="location">A new signing location</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetLocation(String location) {
             modelElement.SetLocation(location);
             return this;
@@ -257,6 +270,7 @@ namespace iText.Signatures {
         /// <summary>Sets the caption for the signing location.</summary>
         /// <param name="locationCaption">A new signing location caption</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetLocationCaption(String locationCaption) {
             modelElement.SetLocationCaption(locationCaption);
             return this;
@@ -264,6 +278,7 @@ namespace iText.Signatures {
 
         /// <summary>Returns the signature creator.</summary>
         /// <returns>The signature creator</returns>
+        [Obsolete]
         public virtual String GetSignatureCreator() {
             return modelElement.GetSignatureCreator();
         }
@@ -271,6 +286,7 @@ namespace iText.Signatures {
         /// <summary>Sets the name of the application used to create the signature.</summary>
         /// <param name="signatureCreator">A new name of the application signing a document</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetSignatureCreator(String signatureCreator) {
             modelElement.SetSignatureCreator(signatureCreator);
             return this;
@@ -278,6 +294,7 @@ namespace iText.Signatures {
 
         /// <summary>Returns the signing contact.</summary>
         /// <returns>The signing contact</returns>
+        [Obsolete]
         public virtual String GetContact() {
             return modelElement.GetContact();
         }
@@ -285,6 +302,7 @@ namespace iText.Signatures {
         /// <summary>Sets the signing contact.</summary>
         /// <param name="contact">A new signing contact</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetContact(String contact) {
             modelElement.SetContact(contact);
             return this;
@@ -297,6 +315,7 @@ namespace iText.Signatures {
         /// </remarks>
         /// <param name="signCertificate">the certificate</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetCertificate(IX509Certificate signCertificate) {
             this.signCertificate = signCertificate;
             String signedBy = CertificateInfo.GetSubjectFields((IX509Certificate)signCertificate).GetField("CN");
@@ -312,12 +331,14 @@ namespace iText.Signatures {
 
         /// <summary>Get the signing certificate.</summary>
         /// <returns>the signing certificate</returns>
+        [Obsolete]
         public virtual IX509Certificate GetCertificate() {
             return signCertificate;
         }
 
         /// <summary>Gets the Image object to render.</summary>
         /// <returns>the image</returns>
+        [Obsolete]
         public virtual ImageData GetSignatureGraphic() {
             return modelElement.GetSignatureGraphic();
         }
@@ -326,6 +347,7 @@ namespace iText.Signatures {
         ///     </summary>
         /// <param name="signatureGraphic">image rendered. If null the mode is defaulted to RenderingMode.DESCRIPTION</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetSignatureGraphic(ImageData signatureGraphic) {
             modelElement.SetSignatureGraphic(signatureGraphic);
             return this;
@@ -334,6 +356,7 @@ namespace iText.Signatures {
         /// <summary>Indicates that the existing appearances needs to be reused as layer 0.</summary>
         /// <param name="reuseAppearance">is an appearances reusing flag value to set</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetReuseAppearance(bool reuseAppearance) {
             modelElement.SetReuseAppearance(reuseAppearance);
             return this;
@@ -342,6 +365,7 @@ namespace iText.Signatures {
         // layer 2
         /// <summary>Gets the background image for the layer 2.</summary>
         /// <returns>the background image for the layer 2</returns>
+        [Obsolete]
         public virtual ImageData GetImage() {
             return modelElement.GetImage();
         }
@@ -349,6 +373,7 @@ namespace iText.Signatures {
         /// <summary>Sets the background image for the text in the layer 2.</summary>
         /// <param name="image">the background image for the layer 2</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetImage(ImageData image) {
             modelElement.SetImage(image);
             return this;
@@ -356,6 +381,7 @@ namespace iText.Signatures {
 
         /// <summary>Gets the scaling to be applied to the background image.</summary>
         /// <returns>the scaling to be applied to the background image</returns>
+        [Obsolete]
         public virtual float GetImageScale() {
             return modelElement.GetImageScale();
         }
@@ -369,6 +395,7 @@ namespace iText.Signatures {
         /// </remarks>
         /// <param name="imageScale">the scaling to be applied to the background image</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetImageScale(float imageScale) {
             modelElement.SetImageScale(imageScale);
             return this;
@@ -380,6 +407,7 @@ namespace iText.Signatures {
         /// a standard description will be used
         /// </param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetLayer2Text(String text) {
             modelElement.SetDescription(text);
             return this;
@@ -387,12 +415,14 @@ namespace iText.Signatures {
 
         /// <summary>Gets the signature text identifying the signer if set by setLayer2Text().</summary>
         /// <returns>the signature text identifying the signer</returns>
+        [Obsolete]
         public virtual String GetLayer2Text() {
             return modelElement.GetDescription(false);
         }
 
         /// <summary>Gets the n2 and n4 layer font.</summary>
         /// <returns>the n2 and n4 layer font</returns>
+        [Obsolete]
         public virtual PdfFont GetLayer2Font() {
             return this.layer2Font;
         }
@@ -401,6 +431,7 @@ namespace iText.Signatures {
         /// <remarks>Sets the n2 and n4 layer font. If the font size is zero, auto-fit will be used.</remarks>
         /// <param name="layer2Font">the n2 and n4 font</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetLayer2Font(PdfFont layer2Font) {
             this.layer2Font = layer2Font;
             modelElement.SetFont(layer2Font);
@@ -410,6 +441,7 @@ namespace iText.Signatures {
         /// <summary>Sets the n2 and n4 layer font size.</summary>
         /// <param name="fontSize">font size</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetLayer2FontSize(float fontSize) {
             this.layer2FontSize = fontSize;
             modelElement.SetFontSize(fontSize);
@@ -418,6 +450,7 @@ namespace iText.Signatures {
 
         /// <summary>Gets the n2 and n4 layer font size.</summary>
         /// <returns>the n2 and n4 layer font size</returns>
+        [Obsolete]
         public virtual float GetLayer2FontSize() {
             return layer2FontSize;
         }
@@ -425,6 +458,7 @@ namespace iText.Signatures {
         /// <summary>Sets the n2 and n4 layer font color.</summary>
         /// <param name="color">font color</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetLayer2FontColor(Color color) {
             this.layer2FontColor = color;
             modelElement.SetFontColor(color);
@@ -433,13 +467,15 @@ namespace iText.Signatures {
 
         /// <summary>Gets the n2 and n4 layer font color.</summary>
         /// <returns>the n2 and n4 layer font color</returns>
+        [Obsolete]
         public virtual Color GetLayer2FontColor() {
             return layer2FontColor;
         }
 
         /// <summary>Gets the signature layout element.</summary>
         /// <returns>the signature layout element.</returns>
-        public virtual SigField GetModelElement() {
+        [Obsolete]
+        public virtual SignatureFieldAppearance GetSignatureAppearance() {
             modelElement.SetBackgroundLayer(n0);
             modelElement.SetSignatureAppearanceLayer(n2);
             return modelElement;
@@ -448,7 +484,9 @@ namespace iText.Signatures {
         /// <summary>Sets the signature layout element.</summary>
         /// <param name="modelElement">the signature layout element.</param>
         /// <returns>this instance to support fluent interface.</returns>
-        public virtual iText.Signatures.PdfSignatureAppearance SetModelElement(SigField modelElement) {
+        [Obsolete]
+        public virtual iText.Signatures.PdfSignatureAppearance SetSignatureAppearance(SignatureFieldAppearance modelElement
+            ) {
             this.modelElement = modelElement;
             return this;
         }
@@ -467,6 +505,7 @@ namespace iText.Signatures {
         /// <see cref="iText.Layout.Font.FontProvider"/>.
         /// </param>
         /// <returns>this instance to support fluent interface.</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetFontProvider(FontProvider fontProvider) {
             modelElement.SetProperty(Property.FONT_PROVIDER, fontProvider);
             return this;
@@ -482,6 +521,7 @@ namespace iText.Signatures {
         /// <param name="fontFamilyNames">defines an ordered list of preferable font families for the signature element.
         ///     </param>
         /// <returns>this instance to support fluent interface.</returns>
+        [Obsolete]
         public virtual iText.Signatures.PdfSignatureAppearance SetFontFamily(params String[] fontFamilyNames) {
             modelElement.SetFontFamily(fontFamilyNames);
             return this;
@@ -498,6 +538,7 @@ namespace iText.Signatures {
         /// <returns>a top-level signature appearance</returns>
         /// <seealso><a href="https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/ppkappearances.pdf">Adobe Pdf Digital
         /// * Signature Appearances</a></seealso>
+        [Obsolete]
         protected internal virtual PdfFormXObject GetAppearance() {
             SignatureUtil signatureUtil = new SignatureUtil(document);
             String name = modelElement.GetId();
@@ -518,6 +559,7 @@ namespace iText.Signatures {
 
         /// <summary>Returns the signature date.</summary>
         /// <returns>the signature date</returns>
+        [Obsolete]
         protected internal virtual DateTime GetSignDate() {
             return modelElement.GetSignDate();
         }
@@ -525,6 +567,7 @@ namespace iText.Signatures {
         /// <summary>Sets the signature date.</summary>
         /// <param name="signDate">A new signature date</param>
         /// <returns>this instance to support fluent interface</returns>
+        [Obsolete]
         protected internal virtual iText.Signatures.PdfSignatureAppearance SetSignDate(DateTime signDate) {
             modelElement.SetSignDate(signDate);
             return this;
@@ -538,7 +581,7 @@ namespace iText.Signatures {
         /// <param name="fieldName">name of the field</param>
         /// <returns>this instance to support fluent interface</returns>
         protected internal virtual iText.Signatures.PdfSignatureAppearance SetFieldName(String fieldName) {
-            SigField newModelElement = new SigField(fieldName);
+            SignatureFieldAppearance newModelElement = new SignatureFieldAppearance(fieldName);
             newModelElement.SetRenderingMode(modelElement.GetRenderingMode());
             newModelElement.SetReason(modelElement.GetReason());
             newModelElement.SetLocation(modelElement.GetLocation());
@@ -560,6 +603,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Signature rendering modes.</summary>
+        [Obsolete]
         public enum RenderingMode {
             /// <summary>The rendering mode is just the description.</summary>
             DESCRIPTION,

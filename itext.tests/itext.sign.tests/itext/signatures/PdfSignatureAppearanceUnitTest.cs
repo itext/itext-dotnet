@@ -75,11 +75,11 @@ namespace iText.Signatures {
             PdfSignatureAppearance signatureAppearance = GetTestSignatureAppearance();
             String newReasonCaption = "Hello World";
             NUnit.Framework.Assert.IsNull(signatureAppearance.GetLayer2Text());
-            String layer2Text = signatureAppearance.GetModelElement().GetDescription(true);
+            String layer2Text = signatureAppearance.GetSignatureAppearance().GetDescription(true);
             // There is no text from new reason caption in the default layer 2 text
             NUnit.Framework.Assert.IsFalse(layer2Text.Contains(newReasonCaption));
             signatureAppearance.SetReasonCaption(newReasonCaption);
-            layer2Text = signatureAppearance.GetModelElement().GetDescription(true);
+            layer2Text = signatureAppearance.GetSignatureAppearance().GetDescription(true);
             // Now layer 2 text contains text from new reason caption
             NUnit.Framework.Assert.IsTrue(layer2Text.Contains(newReasonCaption));
         }
@@ -89,11 +89,11 @@ namespace iText.Signatures {
             PdfSignatureAppearance signatureAppearance = GetTestSignatureAppearance();
             String newLocationCaption = "Hello World";
             NUnit.Framework.Assert.IsNull(signatureAppearance.GetLayer2Text());
-            String layer2Text = signatureAppearance.GetModelElement().GetDescription(true);
+            String layer2Text = signatureAppearance.GetSignatureAppearance().GetDescription(true);
             // There is no text from new location caption in the default layer 2 text
             NUnit.Framework.Assert.IsFalse(layer2Text.Contains(newLocationCaption));
             signatureAppearance.SetLocationCaption(newLocationCaption);
-            layer2Text = signatureAppearance.GetModelElement().GetDescription(true);
+            layer2Text = signatureAppearance.GetSignatureAppearance().GetDescription(true);
             // Now layer 2 text contains text from new location caption
             NUnit.Framework.Assert.IsTrue(layer2Text.Contains(newLocationCaption));
         }
@@ -178,10 +178,10 @@ namespace iText.Signatures {
             fontProvider.GetFontSet().AddFont(StandardFonts.HELVETICA, "");
             String fontFamilyName = "fontFamily";
             appearance.SetFontProvider(fontProvider).SetFontFamily(fontFamilyName);
-            NUnit.Framework.Assert.AreEqual(fontProvider, appearance.GetModelElement().GetProperty<FontProvider>(Property
-                .FONT_PROVIDER));
-            NUnit.Framework.Assert.AreEqual(fontFamilyName, ((String[])appearance.GetModelElement().GetProperty<String
-                []>(Property.FONT))[0]);
+            NUnit.Framework.Assert.AreEqual(fontProvider, appearance.GetSignatureAppearance().GetProperty<FontProvider
+                >(Property.FONT_PROVIDER));
+            NUnit.Framework.Assert.AreEqual(fontFamilyName, ((String[])appearance.GetSignatureAppearance().GetProperty
+                <String[]>(Property.FONT))[0]);
         }
 
         [NUnit.Framework.Test]
