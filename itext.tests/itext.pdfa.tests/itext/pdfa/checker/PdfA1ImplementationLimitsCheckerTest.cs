@@ -539,7 +539,7 @@ namespace iText.Pdfa.Checker {
 
         private void CheckColorspace(PdfColorSpace colorSpace) {
             PdfDictionary currentColorSpaces = new PdfDictionary();
-            pdfA1Checker.CheckColorSpace(colorSpace, currentColorSpaces, false, false);
+            pdfA1Checker.CheckColorSpace(colorSpace, null, currentColorSpaces, false, false);
         }
 
         private PdfColorSpace BuildDeviceNColorspace(int numberOfComponents) {

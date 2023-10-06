@@ -72,7 +72,7 @@ namespace iText.Pdfa.Checker {
         public virtual void DeviceNColorspaceWithMoreThan32Components() {
             //exception shall not be thrown as pdf/a-4 supports any number of deviceN components
             PdfDictionary currentColorSpaces = new PdfDictionary();
-            pdfA4Checker.CheckColorSpace(BuildDeviceNColorspace(40), currentColorSpaces, true, false);
+            pdfA4Checker.CheckColorSpace(BuildDeviceNColorspace(40), null, currentColorSpaces, true, false);
         }
 
         private PdfColorSpace BuildDeviceNColorspace(int numberOfComponents) {

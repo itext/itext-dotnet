@@ -27,6 +27,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.IO.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -50,6 +51,8 @@ namespace iText.Pdfa.Checker {
     /// The specification implemented by this class is ISO 19005-4
     /// </remarks>
     public class PdfA4Checker : PdfA3Checker {
+        private const String CALRGB_COLOR_SPACE = "CalRGB";
+
         private static readonly ICollection<PdfName> forbiddenAnnotations4 = JavaCollectionsUtil.UnmodifiableSet(new 
             HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName._3D, PdfName.RichMedia, PdfName.FileAttachment, PdfName
             .Sound, PdfName.Screen, PdfName.Movie)));
@@ -83,10 +86,61 @@ namespace iText.Pdfa.Checker {
             (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.E, PdfName.X, PdfName.D, PdfName.U, PdfName.Fo, PdfName
             .Bl)));
 
+        // Map pdfObject using CMYK - list of CMYK icc profile streams
+        private IDictionary<PdfObject, IList<PdfStream>> iccBasedCmykObjects = new Dictionary<PdfObject, IList<PdfStream
+            >>();
+
         /// <summary>Creates a PdfA4Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">the required conformance level</param>
         public PdfA4Checker(PdfAConformanceLevel conformanceLevel)
             : base(conformanceLevel) {
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override void CheckColorSpace(PdfColorSpace colorSpace, PdfObject pdfObject, PdfDictionary currentColorSpaces
+            , bool checkAlternate, bool? fill) {
+            if (colorSpace is PdfCieBasedCs.IccBased) {
+                // 6.2.4.2: An ICCBased colour space shall not be used where the profile is a CMYK destination profile and is
+                // identical to that in the current PDF/A OutputIntent or the current transparency blending colorspace.
+                PdfStream iccStream = ((PdfArray)colorSpace.GetPdfObject()).GetAsStream(1);
+                byte[] iccBytes = iccStream.GetBytes();
+                // If not CMYK - we don't care
+                if (ICC_COLOR_SPACE_CMYK.Equals(IccProfile.GetIccColorSpaceName(iccBytes))) {
+                    if (!iccBasedCmykObjects.ContainsKey(pdfObject)) {
+                        iccBasedCmykObjects.Put(pdfObject, new List<PdfStream>());
+                    }
+                    iccBasedCmykObjects.Get(pdfObject).Add(iccStream);
+                }
+            }
+            base.CheckColorSpace(colorSpace, pdfObject, currentColorSpaces, checkAlternate, fill);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckPageColorsUsages(PdfDictionary pageDict, PdfDictionary pageResources
+            ) {
+            // Get page pdf/a output intent output profile
+            PdfStream pageDestOutputProfile = null;
+            PdfArray outputIntents = pageDict.GetAsArray(PdfName.OutputIntents);
+            if (outputIntents != null) {
+                PdfDictionary pdfAPageOutputIntent = GetPdfAOutputIntent(outputIntents);
+                if (pdfAPageOutputIntent != null) {
+                    pageDestOutputProfile = pdfAPageOutputIntent.GetAsStream(PdfName.DestOutputProfile);
+                }
+            }
+            if (pageDestOutputProfile == null) {
+                pageDestOutputProfile = pdfAOutputIntentDestProfile;
+            }
+            // Page blending colorspace should be taken into account while checking objects using device dependent colors
+            PdfColorSpace pageTransparencyBlendingCS = GetDeviceIndependentTransparencyBlendingCSIfRbgOrCmykBased(pageDict
+                );
+            // We don't know on which pages these objects are so that we have to go inside anyway
+            if (!rgbUsedObjects.IsEmpty() || !cmykUsedObjects.IsEmpty() || !grayUsedObjects.IsEmpty() || !iccBasedCmykObjects
+                .IsEmpty()) {
+                CheckPageContentsForColorUsages(pageDict, pageDestOutputProfile, pageTransparencyBlendingCS);
+                CheckAnnotationsForColorUsages(pageDict.GetAsArray(PdfName.Annots), pageDestOutputProfile, pageTransparencyBlendingCS
+                    );
+                CheckResourcesForColorUsages(pageResources, pageDestOutputProfile, pageTransparencyBlendingCS);
+            }
         }
 
         /// <summary><inheritDoc/></summary>
@@ -157,7 +211,7 @@ namespace iText.Pdfa.Checker {
             if (outputIntents != null) {
                 pdfAPageOutputIntent = GetPdfAOutputIntent(outputIntents);
             }
-            if (pdfAOutputIntentColorSpace == null && pdfAPageOutputIntent == null && transparencyObjects.Count > 0 &&
+            if (pdfAOutputIntentColorSpace == null && pdfAPageOutputIntent == null && !transparencyObjects.IsEmpty() &&
                  (pageDict.GetAsDictionary(PdfName.Group) == null || pageDict.GetAsDictionary(PdfName.Group).Get(PdfName
                 .CS) == null)) {
                 CheckContentsForTransparency(pageDict);
@@ -254,7 +308,7 @@ namespace iText.Pdfa.Checker {
                     );
             }
             CheckTransparencyGroup(form, null);
-            CheckResources(form.GetAsDictionary(PdfName.Resources));
+            CheckResources(form.GetAsDictionary(PdfName.Resources), form);
             CheckContentStream(form);
         }
 
@@ -471,6 +525,182 @@ namespace iText.Pdfa.Checker {
         private bool IsCMYKColorant(PdfName colourant) {
             return PdfName.Cyan.Equals(colourant) || PdfName.Magenta.Equals(colourant) || PdfName.Yellow.Equals(colourant
                 ) || PdfName.Black.Equals(colourant);
+        }
+
+        private void CheckPageContentsForColorUsages(PdfDictionary pageDict, PdfStream pageIntentProfile, PdfColorSpace
+             pageTransparencyBlendingCS) {
+            PdfStream contentStream = pageDict.GetAsStream(PdfName.Contents);
+            if (contentStream != null) {
+                CheckContentForColorUsages(contentStream, pageIntentProfile, pageTransparencyBlendingCS);
+            }
+            else {
+                PdfArray contentSteamArray = pageDict.GetAsArray(PdfName.Contents);
+                if (contentSteamArray != null) {
+                    for (int i = 0; i < contentSteamArray.Size(); i++) {
+                        CheckContentForColorUsages(contentSteamArray.Get(i), pageIntentProfile, pageTransparencyBlendingCS);
+                    }
+                }
+            }
+        }
+
+        private void CheckAnnotationsForColorUsages(PdfArray annotations, PdfStream pageIntentProfile, PdfColorSpace
+             pageTransparencyBlendingCS) {
+            if (annotations == null) {
+                return;
+            }
+            for (int i = 0; i < annotations.Size(); ++i) {
+                PdfDictionary annot = annotations.GetAsDictionary(i);
+                PdfDictionary ap = annot.GetAsDictionary(PdfName.AP);
+                if (ap != null) {
+                    CheckAppearanceStreamForColorUsages(ap, pageIntentProfile, pageTransparencyBlendingCS);
+                }
+            }
+        }
+
+        private void CheckAppearanceStreamForColorUsages(PdfDictionary ap, PdfStream pageIntentProfile, PdfColorSpace
+             pageTransparencyBlendingCS) {
+            CheckContentForColorUsages(ap, pageIntentProfile, pageTransparencyBlendingCS);
+            foreach (PdfObject val in ap.Values()) {
+                CheckContentForColorUsages(val, pageIntentProfile, pageTransparencyBlendingCS);
+                if (val.IsDictionary()) {
+                    CheckAppearanceStreamForColorUsages((PdfDictionary)val, pageIntentProfile, pageTransparencyBlendingCS);
+                }
+                else {
+                    if (val.IsStream()) {
+                        CheckObjectWithResourcesForColorUsages(val, pageIntentProfile, pageTransparencyBlendingCS);
+                    }
+                }
+            }
+        }
+
+        private void CheckObjectWithResourcesForColorUsages(PdfObject objectWithResources, PdfStream pageIntentProfile
+            , PdfColorSpace pageTransparencyBlendingCS) {
+            CheckContentForColorUsages(objectWithResources, pageIntentProfile, pageTransparencyBlendingCS);
+            if (objectWithResources is PdfDictionary) {
+                CheckResourcesForColorUsages(((PdfDictionary)objectWithResources).GetAsDictionary(PdfName.Resources), pageIntentProfile
+                    , pageTransparencyBlendingCS);
+            }
+        }
+
+        private void CheckResourcesForColorUsages(PdfDictionary resources, PdfStream pageIntentProfile, PdfColorSpace
+             pageTransparencyBlendingCS) {
+            if (resources != null) {
+                CheckSingleResourceTypeForColorUsages(resources.GetAsDictionary(PdfName.XObject), pageIntentProfile, pageTransparencyBlendingCS
+                    );
+                CheckSingleResourceTypeForColorUsages(resources.GetAsDictionary(PdfName.Pattern), pageIntentProfile, pageTransparencyBlendingCS
+                    );
+            }
+        }
+
+        private void CheckSingleResourceTypeForColorUsages(PdfDictionary singleResourceDict, PdfStream pageIntentProfile
+            , PdfColorSpace pageTransparencyBlendingCS) {
+            if (singleResourceDict != null) {
+                foreach (PdfObject resource in singleResourceDict.Values()) {
+                    CheckObjectWithResourcesForColorUsages(resource, pageIntentProfile, pageTransparencyBlendingCS);
+                }
+            }
+        }
+
+        private void CheckContentForColorUsages(PdfObject pdfObject, PdfStream pageIntentProfile, PdfColorSpace pageTransparencyBlendingCS
+            ) {
+            String pageIntentCSType = pageIntentProfile == null ? null : IccProfile.GetIccColorSpaceName(pageIntentProfile
+                .GetBytes());
+            PdfColorSpace currentTransparencyBlendingCS = pdfObject is PdfDictionary ? GetDeviceIndependentTransparencyBlendingCSIfRbgOrCmykBased
+                ((PdfDictionary)pdfObject) : null;
+            // Step 1 - 6.2.4.3: check if device dependent color in the object is allowed
+            // Current output intent, page blending colorspace and object blending colorspace should be taken into account
+            // Step 1.1 - check if any excuse exists
+            if (pageIntentCSType == null && pageTransparencyBlendingCS == null && currentTransparencyBlendingCS == null
+                ) {
+                if (rgbUsedObjects.Contains(pdfObject)) {
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICERGB_SHALL_ONLY_BE_USED_IF_CURRENT_RGB_PDFA_OUTPUT_INTENT_OR_DEFAULTRGB_IN_USAGE_CONTEXT
+                        );
+                }
+                else {
+                    if (cmykUsedObjects.Contains(pdfObject)) {
+                        throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICECMYK_SHALL_ONLY_BE_USED_IF_CURRENT_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT
+                            );
+                    }
+                }
+            }
+            // pageTransparencyBlendingCS currentTransparencyBlendingCS don't help for DeviceGray
+            if (grayUsedObjects.Contains(pdfObject) && pageIntentCSType == null) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICEGRAY_SHALL_ONLY_BE_USED_IF_CURRENT_PDFA_OUTPUT_INTENT_OR_DEFAULTGRAY_IN_USAGE_CONTEXT
+                    );
+            }
+            String pageTransparencyBlendingCSType = GetColorspaceTypeIfIccBasedOrCalRgb(pageTransparencyBlendingCS);
+            String currentTransparencyBlendingCSType = GetColorspaceTypeIfIccBasedOrCalRgb(currentTransparencyBlendingCS
+                );
+            // Step 1.2 - check for RGB
+            if (rgbUsedObjects.Contains(pdfObject) && !ICC_COLOR_SPACE_RGB.Equals(pageIntentCSType) && !ICC_COLOR_SPACE_RGB
+                .Equals(pageTransparencyBlendingCSType) && !ICC_COLOR_SPACE_RGB.Equals(currentTransparencyBlendingCSType
+                ) && !CALRGB_COLOR_SPACE.Equals(pageTransparencyBlendingCSType) && !CALRGB_COLOR_SPACE.Equals(currentTransparencyBlendingCSType
+                )) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICERGB_SHALL_ONLY_BE_USED_IF_CURRENT_RGB_PDFA_OUTPUT_INTENT_OR_DEFAULTRGB_IN_USAGE_CONTEXT
+                    );
+            }
+            // Step 1.3 - check for CMYK
+            if (cmykUsedObjects.Contains(pdfObject) && !ICC_COLOR_SPACE_CMYK.Equals(pageIntentCSType) && !ICC_COLOR_SPACE_CMYK
+                .Equals(pageTransparencyBlendingCSType) && !ICC_COLOR_SPACE_CMYK.Equals(currentTransparencyBlendingCSType
+                )) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICECMYK_SHALL_ONLY_BE_USED_IF_CURRENT_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT
+                    );
+            }
+            // Step 2 - 6.2.4.2: An ICCBased colour space shall not be used where the profile is a CMYK destination profile and is
+            // identical to that in the current PDF/A OutputIntent or the current transparency blending colorspace.
+            IList<PdfStream> currentICCBasedProfiles = iccBasedCmykObjects.Get(pdfObject);
+            if (currentICCBasedProfiles == null) {
+                return;
+            }
+            foreach (PdfStream currentICCBasedProfile in currentICCBasedProfiles) {
+                ThrowIfIdenticalProfiles(currentICCBasedProfile, pageIntentProfile);
+                if (ICC_COLOR_SPACE_CMYK.Equals(currentTransparencyBlendingCSType)) {
+                    PdfStream iccStream = ((PdfArray)currentTransparencyBlendingCS.GetPdfObject()).GetAsStream(1);
+                    ThrowIfIdenticalProfiles(currentICCBasedProfile, iccStream);
+                }
+                if (ICC_COLOR_SPACE_CMYK.Equals(pageTransparencyBlendingCSType)) {
+                    PdfStream iccStream = ((PdfArray)pageTransparencyBlendingCS.GetPdfObject()).GetAsStream(1);
+                    ThrowIfIdenticalProfiles(currentICCBasedProfile, iccStream);
+                }
+            }
+        }
+
+        private static void ThrowIfIdenticalProfiles(PdfStream iccBasedProfile1, PdfStream iccBasedProfile2) {
+            if (iccBasedProfile1 != null && iccBasedProfile2 != null && (iccBasedProfile1.Equals(iccBasedProfile2) || 
+                JavaUtil.ArraysEquals(iccBasedProfile1.GetBytes(), iccBasedProfile2.GetBytes()))) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.ICCBASED_COLOUR_SPACE_SHALL_NOT_BE_USED_IF_IT_IS_CMYK_AND_IS_IDENTICAL_TO_CURRENT_PROFILE
+                    );
+            }
+        }
+
+        private static String GetColorspaceTypeIfIccBasedOrCalRgb(PdfColorSpace colorspace) {
+            if (colorspace is PdfCieBasedCs.CalRgb) {
+                return CALRGB_COLOR_SPACE;
+            }
+            if (colorspace is PdfCieBasedCs.IccBased) {
+                // 6.2.4.2: An ICCBased colour space shall not be used where the profile is a CMYK destination profile and is
+                // identical to that in the current PDF/A OutputIntent or the current transparency blending colorspace.
+                PdfStream iccStream = ((PdfArray)colorspace.GetPdfObject()).GetAsStream(1);
+                return IccProfile.GetIccColorSpaceName(iccStream.GetBytes());
+            }
+            return null;
+        }
+
+        private static PdfColorSpace GetDeviceIndependentTransparencyBlendingCSIfRbgOrCmykBased(PdfDictionary pageDict
+            ) {
+            if (!IsContainsTransparencyGroup(pageDict)) {
+                return null;
+            }
+            PdfObject cs = pageDict.GetAsDictionary(PdfName.Group).Get(PdfName.CS);
+            if (cs == null) {
+                return null;
+            }
+            PdfColorSpace transparencyBlendingCS = PdfColorSpace.MakeColorSpace(cs);
+            if (transparencyBlendingCS is PdfCieBasedCs.CalRgb || transparencyBlendingCS is PdfCieBasedCs.IccBased) {
+                // Do not take others into account
+                return transparencyBlendingCS;
+            }
+            return null;
         }
     }
 }

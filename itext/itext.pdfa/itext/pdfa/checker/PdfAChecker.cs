@@ -92,15 +92,26 @@ namespace iText.Pdfa.Checker {
 
         protected internal PdfAConformanceLevel conformanceLevel;
 
+        protected internal PdfStream pdfAOutputIntentDestProfile;
+
         protected internal String pdfAOutputIntentColorSpace;
 
         protected internal int gsStackDepth = 0;
 
+        [Obsolete]
         protected internal bool rgbIsUsed = false;
 
+        [Obsolete]
         protected internal bool cmykIsUsed = false;
 
+        [Obsolete]
         protected internal bool grayIsUsed = false;
+
+        protected internal ICollection<PdfObject> rgbUsedObjects = new HashSet<PdfObject>();
+
+        protected internal ICollection<PdfObject> cmykUsedObjects = new HashSet<PdfObject>();
+
+        protected internal ICollection<PdfObject> grayUsedObjects = new HashSet<PdfObject>();
 
         /// <summary>Contains some objects that are already checked.</summary>
         /// <remarks>
@@ -329,6 +340,7 @@ namespace iText.Pdfa.Checker {
         /// on the type and properties of that color space.
         /// </summary>
         /// <param name="colorSpace">the color space to check</param>
+        /// <param name="pdfObject">the pdf object to check color space in</param>
         /// <param name="currentColorSpaces">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
@@ -336,8 +348,40 @@ namespace iText.Pdfa.Checker {
         /// </param>
         /// <param name="checkAlternate">whether or not to also check the parent color space</param>
         /// <param name="fill">whether the color space is used for fill or stroke operations</param>
-        public abstract void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
-            , bool? fill);
+        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
+        public virtual void CheckColorSpace(PdfColorSpace colorSpace, PdfObject pdfObject, PdfDictionary currentColorSpaces
+            , bool checkAlternate, bool? fill) {
+        }
+
+        /// <summary>
+        /// This method performs a range of checks on the given color space, depending
+        /// on the type and properties of that color space.
+        /// </summary>
+        /// <param name="colorSpace">the color space to check</param>
+        /// <param name="currentColorSpaces">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the color spaces used in the document
+        /// </param>
+        /// <param name="checkAlternate">whether or not to also check the parent color space</param>
+        /// <param name="fill">whether the color space is used for fill or stroke operations</param>
+        [System.ObsoleteAttribute(@"in favor of checkColorSpace(PdfColorSpace colorSpace, PdfObject object, PdfDictionary currentColorSpaces, boolean checkAlternate, Boolean fill)"
+            )]
+        public virtual void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
+            , bool? fill) {
+            CheckColorSpace(colorSpace, null, currentColorSpaces, checkAlternate, fill);
+        }
+
+        /// <summary>Set Pdf A output intent color space.</summary>
+        /// <param name="catalog">Catalog dictionary to retrieve the color space from.</param>
+        public virtual void SetPdfAOutputIntentColorSpace(PdfDictionary catalog) {
+            PdfArray outputIntents = catalog.GetAsArray(PdfName.OutputIntents);
+            if (outputIntents == null) {
+                return;
+            }
+            PdfDictionary pdfAOutputIntent = GetPdfAOutputIntent(outputIntents);
+            SetCheckerOutputIntent(pdfAOutputIntent);
+        }
 
         /// <summary>
         /// Checks whether the rendering intent of the document is within the allowed
@@ -394,7 +438,7 @@ namespace iText.Pdfa.Checker {
 
         /// <summary>Verify the conformity of encryption usage.</summary>
         /// <param name="crypto">Encryption object to verify.</param>
-        [System.ObsoleteAttribute(@"Will become an abstract in the next major release.")]
+        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
         public virtual void CheckCrypto(PdfObject crypto) {
         }
 
@@ -498,7 +542,24 @@ namespace iText.Pdfa.Checker {
         protected internal abstract void CheckCatalogValidEntries(PdfDictionary catalogDict);
 
         /// <summary>Verify the conformity of used color spaces.</summary>
+        [System.ObsoleteAttribute(@"in favor of checkPageColorsUsages(PdfDictionary pageDict, PdfDictionary pageResources)"
+            )]
         protected internal abstract void CheckColorsUsages();
+
+        /// <summary>Verify the conformity of used color spaces on the page.</summary>
+        /// <param name="pageDict">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// contains contents for colors to be checked.
+        /// </param>
+        /// <param name="pageResources">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// contains resources for colors to be checked.
+        /// </param>
+        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
+        protected internal virtual void CheckPageColorsUsages(PdfDictionary pageDict, PdfDictionary pageResources) {
+        }
 
         /// <summary>Verify the conformity of the given image.</summary>
         /// <param name="image">the image to check</param>
@@ -652,7 +713,7 @@ namespace iText.Pdfa.Checker {
         /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
         /// of trailer to check.
         /// </param>
-        [System.ObsoleteAttribute(@"Will become an abstract in the next major release.")]
+        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
         protected internal virtual void CheckCatalog(PdfCatalog catalog) {
         }
 
@@ -676,7 +737,19 @@ namespace iText.Pdfa.Checker {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// to be checked
         /// </param>
+        [System.ObsoleteAttribute(@"in favor of checkResources(PdfDictionary resources, PdfObject pdfObject)")]
         protected internal virtual void CheckResources(PdfDictionary resources) {
+            CheckResources(resources, null);
+        }
+
+        /// <summary>Verify the conformity of the resources dictionary.</summary>
+        /// <param name="resources">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to be checked
+        /// </param>
+        /// <param name="pdfObject">the pdf object to check resources for</param>
+        protected internal virtual void CheckResources(PdfDictionary resources, PdfObject pdfObject) {
             if (resources == null) {
                 return;
             }
@@ -706,7 +779,7 @@ namespace iText.Pdfa.Checker {
                 foreach (PdfObject shading in shadings.Values()) {
                     PdfDictionary shadingDict = (PdfDictionary)shading;
                     if (!IsAlreadyChecked(shadingDict)) {
-                        CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace)), resources.GetAsDictionary
+                        CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace)), pdfObject, resources.GetAsDictionary
                             (PdfName.ColorSpace), true, null);
                     }
                 }
@@ -716,7 +789,7 @@ namespace iText.Pdfa.Checker {
                     if (p.IsStream()) {
                         PdfStream pStream = (PdfStream)p;
                         if (!IsAlreadyChecked(pStream)) {
-                            CheckResources(pStream.GetAsDictionary(PdfName.Resources));
+                            CheckResources(pStream.GetAsDictionary(PdfName.Resources), pdfObject);
                         }
                     }
                 }
@@ -793,7 +866,7 @@ namespace iText.Pdfa.Checker {
             if (IsAlreadyChecked(appearanceStream)) {
                 return;
             }
-            CheckResources(appearanceStream.GetAsDictionary(PdfName.Resources));
+            CheckResources(appearanceStream.GetAsDictionary(PdfName.Resources), appearanceStream);
         }
 
         internal virtual PdfDictionary GetPdfAOutputIntent(PdfArray outputIntents) {
@@ -861,10 +934,11 @@ namespace iText.Pdfa.Checker {
             }
             CheckPageObject(pageDict, page.GetResources().GetPdfObject());
             PdfDictionary pageResources = page.GetResources().GetPdfObject();
-            CheckResources(pageResources);
+            CheckResources(pageResources, pageDict);
             CheckAnnotations(pageDict);
             CheckPageSize(pageDict);
             CheckPageTransparency(pageDict, page.GetResources().GetPdfObject());
+            CheckPageColorsUsages(pageDict, page.GetResources().GetPdfObject());
             int contentStreamCount = page.GetContentStreamCount();
             for (int j = 0; j < contentStreamCount; ++j) {
                 PdfStream contentStream = page.GetContentStream(j);
@@ -919,21 +993,12 @@ namespace iText.Pdfa.Checker {
             return outlines;
         }
 
-        private void SetPdfAOutputIntentColorSpace(PdfDictionary catalog) {
-            PdfArray outputIntents = catalog.GetAsArray(PdfName.OutputIntents);
-            if (outputIntents == null) {
-                return;
-            }
-            PdfDictionary pdfAOutputIntent = GetPdfAOutputIntent(outputIntents);
-            SetCheckerOutputIntent(pdfAOutputIntent);
-        }
-
         private void SetCheckerOutputIntent(PdfDictionary outputIntent) {
             if (outputIntent != null) {
-                PdfStream destOutputProfile = outputIntent.GetAsStream(PdfName.DestOutputProfile);
-                if (destOutputProfile != null) {
-                    String intentCS = IccProfile.GetIccColorSpaceName(destOutputProfile.GetBytes());
-                    this.pdfAOutputIntentColorSpace = intentCS;
+                pdfAOutputIntentDestProfile = outputIntent.GetAsStream(PdfName.DestOutputProfile);
+                if (pdfAOutputIntentDestProfile != null) {
+                    String intentCS = IccProfile.GetIccColorSpaceName(pdfAOutputIntentDestProfile.GetBytes());
+                    pdfAOutputIntentColorSpace = intentCS;
                 }
             }
         }

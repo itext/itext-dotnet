@@ -483,7 +483,6 @@ namespace iText.Pdfa {
             // A A A A E E E ~ é
             String testString = "A A A A E E E ~ \u00E9";
             //writing type3 font characters
-            String title = "Type3 font iText Document";
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfType3Font type3 = PdfFontFactory.CreateType3Font(doc, false);
             PdfDictionary charProcs = new PdfDictionary();

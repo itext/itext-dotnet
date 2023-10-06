@@ -293,7 +293,7 @@ namespace iText.Pdfa.Checker {
             // Should throw PdfAConformanceException as Colorants dictionary always must be present
             // for Pdf/A-2
             NUnit.Framework.Assert.Catch(typeof(Exception), () => pdfA2Checker.CheckColorSpace(new PdfSpecialCs.DeviceN
-                (tmpArray, new PdfDeviceCs.Rgb(), function), currentColorSpaces, true, false));
+                (tmpArray, new PdfDeviceCs.Rgb(), function), null, currentColorSpaces, true, false));
         }
 
         [NUnit.Framework.Test]

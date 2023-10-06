@@ -61,16 +61,11 @@ namespace iText.Pdfa {
             PdfPage page1 = pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.SaveState();
-            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 1 without transparency").EndText
-                ().RestoreState();
-            PdfPage page2 = pdfDocument.AddNewPage();
-            canvas = new PdfCanvas(page2);
-            canvas.SaveState();
             PdfExtGState state = new PdfExtGState();
             state.SetFillOpacity(0.6f);
             canvas.SetExtGState(state);
-            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 2 with transparency").EndText
-                ().RestoreState();
+            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page with transparency").EndText()
+                .RestoreState();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
                 ), e.Message);

@@ -123,7 +123,7 @@ namespace iText.Pdfa.Checker {
 
         public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream stream
             ) {
-            CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
+            CheckColorSpace(color.GetColorSpace(), stream, currentColorSpaces, true, fill);
             if (color is PatternColor) {
                 PdfPattern pattern = ((PatternColor)color).GetPattern();
                 if (pattern is PdfPattern.Tiling) {
@@ -132,8 +132,9 @@ namespace iText.Pdfa.Checker {
             }
         }
 
-        public override void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
-            , bool? fill) {
+        /// <summary><inheritDoc/></summary>
+        public override void CheckColorSpace(PdfColorSpace colorSpace, PdfObject pdfObject, PdfDictionary currentColorSpaces
+            , bool checkAlternate, bool? fill) {
             if (colorSpace is PdfSpecialCs.Separation) {
                 colorSpace = ((PdfSpecialCs.Separation)colorSpace).GetBaseCs();
             }
@@ -148,23 +149,23 @@ namespace iText.Pdfa.Checker {
                 }
             }
             if (colorSpace is PdfDeviceCs.Rgb) {
-                if (cmykIsUsed) {
+                if (cmykIsUsed || !cmykUsedObjects.IsEmpty()) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICERGB_AND_DEVICECMYK_COLORSPACES_CANNOT_BE_USED_BOTH_IN_ONE_FILE
                         );
                 }
-                rgbIsUsed = true;
+                rgbUsedObjects.Add(pdfObject);
             }
             else {
                 if (colorSpace is PdfDeviceCs.Cmyk) {
-                    if (rgbIsUsed) {
+                    if (rgbIsUsed || !rgbUsedObjects.IsEmpty()) {
                         throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICERGB_AND_DEVICECMYK_COLORSPACES_CANNOT_BE_USED_BOTH_IN_ONE_FILE
                             );
                     }
-                    cmykIsUsed = true;
+                    cmykUsedObjects.Add(pdfObject);
                 }
                 else {
                     if (colorSpace is PdfDeviceCs.Gray) {
-                        grayIsUsed = true;
+                        grayUsedObjects.Add(pdfObject);
                     }
                 }
             }
@@ -189,18 +190,26 @@ namespace iText.Pdfa.Checker {
             return 8_388_607;
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override void CheckColorsUsages() {
-            if ((rgbIsUsed || cmykIsUsed || grayIsUsed) && pdfAOutputIntentColorSpace == null) {
+        }
+
+        // Do not check anything here. All checks are in checkPageColorsUsages.
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckPageColorsUsages(PdfDictionary pageDict, PdfDictionary pageResources
+            ) {
+            if ((rgbIsUsed || cmykIsUsed || grayIsUsed || !rgbUsedObjects.IsEmpty() || !cmykUsedObjects.IsEmpty() || grayUsedObjects
+                .IsEmpty()) && pdfAOutputIntentColorSpace == null) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.IF_DEVICE_RGB_CMYK_GRAY_USED_IN_FILE_THAT_FILE_SHALL_CONTAIN_PDFA_OUTPUTINTENT
                     );
             }
-            if (rgbIsUsed) {
+            if (rgbIsUsed || !rgbUsedObjects.IsEmpty()) {
                 if (!ICC_COLOR_SPACE_RGB.Equals(pdfAOutputIntentColorSpace)) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICERGB_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_RGB_PDFA_OUTPUT_INTENT
                         );
                 }
             }
-            if (cmykIsUsed) {
+            if (cmykIsUsed || !cmykUsedObjects.IsEmpty()) {
                 if (!ICC_COLOR_SPACE_CMYK.Equals(pdfAOutputIntentColorSpace)) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT
                         );
@@ -341,13 +350,13 @@ namespace iText.Pdfa.Checker {
             PdfColorSpace colorSpace = null;
             if (IsAlreadyChecked(image)) {
                 colorSpace = checkedObjectsColorspace.Get(image);
-                CheckColorSpace(colorSpace, currentColorSpaces, true, null);
+                CheckColorSpace(colorSpace, image, currentColorSpaces, true, null);
                 return;
             }
             PdfObject colorSpaceObj = image.Get(PdfName.ColorSpace);
             if (colorSpaceObj != null) {
                 colorSpace = PdfColorSpace.MakeColorSpace(colorSpaceObj);
-                CheckColorSpace(colorSpace, currentColorSpaces, true, null);
+                CheckColorSpace(colorSpace, image, currentColorSpaces, true, null);
                 checkedObjectsColorspace.Put(image, colorSpace);
             }
             if (image.ContainsKey(PdfName.Alternates)) {
@@ -391,7 +400,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.A_GROUP_OBJECT_WITH_AN_S_KEY_WITH_A_VALUE_OF_TRANSPARENCY_SHALL_NOT_BE_INCLUDED_IN_A_FORM_XOBJECT
                     );
             }
-            CheckResources(form.GetAsDictionary(PdfName.Resources));
+            CheckResources(form.GetAsDictionary(PdfName.Resources), form);
             CheckContentStream(form);
         }
 
@@ -625,7 +634,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.NEEDAPPEARANCES_FLAG_OF_THE_INTERACTIVE_FORM_DICTIONARY_SHALL_EITHER_NOT_BE_PRESENTED_OR_SHALL_BE_FALSE
                     );
             }
-            CheckResources(form.GetAsDictionary(PdfName.DR));
+            CheckResources(form.GetAsDictionary(PdfName.DR), form);
             PdfArray fields = form.GetAsArray(PdfName.Fields);
             if (fields != null) {
                 fields = GetFormFields(fields);
@@ -635,7 +644,7 @@ namespace iText.Pdfa.Checker {
                         throw new PdfAConformanceException(PdfaExceptionMessageConstant.WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_OR_AA_ENTRY
                             );
                     }
-                    CheckResources(fieldDic.GetAsDictionary(PdfName.DR));
+                    CheckResources(fieldDic.GetAsDictionary(PdfName.DR), fieldDic);
                 }
             }
         }

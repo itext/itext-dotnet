@@ -93,8 +93,8 @@ namespace iText.Pdfa.Checker {
                 ) {
             }
 
-            public override void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
-                , bool? fill) {
+            public override void CheckColorSpace(PdfColorSpace colorSpace, PdfObject @object, PdfDictionary currentColorSpaces
+                , bool checkAlternate, bool? fill) {
             }
 
             public override void CheckRenderingIntent(PdfName intent) {

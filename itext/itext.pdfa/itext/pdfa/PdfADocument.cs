@@ -252,6 +252,16 @@ namespace iText.Pdfa {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <param name="outputIntent">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        public override void AddOutputIntent(PdfOutputIntent outputIntent) {
+            base.AddOutputIntent(outputIntent);
+            checker.SetPdfAOutputIntentColorSpace(GetCatalog().GetPdfObject());
+        }
+
         internal virtual void LogThatPdfAPageFlushingWasNotPerformed() {
             if (!alreadyLoggedThatPageFlushingWasNotPerformed) {
                 alreadyLoggedThatPageFlushingWasNotPerformed = true;

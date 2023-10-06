@@ -22,9 +22,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
+using iText.IO.Image;
+using iText.Kernel.Colors;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Function;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Pdfa.Exceptions;
 using iText.Test;
@@ -213,6 +222,789 @@ namespace iText.Pdfa {
             TestWithColourant(PdfName.Black);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest1() {
+            PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
+                ));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent)) {
+                float[] whitePoint = new float[] { 0.9505f, 1f, 1.089f };
+                float[] gamma = new float[] { 2.2f, 2.2f, 2.2f };
+                float[] matrix = new float[] { 0.4124f, 0.2126f, 0.0193f, 0.3576f, 0.7152f, 0.1192f, 0.1805f, 0.0722f, 0.9505f
+                     };
+                PdfCieBasedCs.CalRgb calRgb = new PdfCieBasedCs.CalRgb(whitePoint, null, gamma, matrix);
+                PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+                canvas.GetResources().SetDefaultCmyk(calRgb);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.SetFillColor(new 
+                    DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)));
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.COLOR_SPACE_0_SHALL_HAVE_1_COMPONENTS
+                    , PdfName.DefaultCMYK.GetValue(), 4), e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest2() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest2.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest2.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null)) {
+                float[] whitePoint = new float[] { 0.9505f, 1f, 1.089f };
+                float[] gamma = new float[] { 2.2f, 2.2f, 2.2f };
+                float[] matrix = new float[] { 0.4124f, 0.2126f, 0.0193f, 0.3576f, 0.7152f, 0.1192f, 0.1805f, 0.0722f, 0.9505f
+                     };
+                PdfCieBasedCs.CalRgb calRgb = new PdfCieBasedCs.CalRgb(whitePoint, null, gamma, matrix);
+                PdfCieBasedCs.CalGray calGray = new PdfCieBasedCs.CalGray(whitePoint, null, 2.2f);
+                PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+                canvas.GetResources().SetDefaultRgb(calRgb);
+                canvas.GetResources().SetDefaultGray(calGray);
+                String shortText = "text";
+                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
+                    PREFER_EMBEDDED);
+                canvas.SetFontAndSize(font, 12);
+                canvas.SetFillColor(ColorConstants.RED).BeginText().ShowText(shortText).EndText();
+                canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
+            }
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest3() {
+            PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
+                ));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+            canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
+            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
+            canvas.Fill();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.DEVICECMYK_SHALL_ONLY_BE_USED_IF_CURRENT_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest4() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest4.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest4.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+            canvas.SetFillColor(ColorConstants.BLUE);
+            canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
+            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
+            canvas.Fill();
+            canvas.SetFillColor(DeviceGray.BLACK);
+            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
+            canvas.Fill();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.DEVICECMYK_SHALL_ONLY_BE_USED_IF_CURRENT_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest5() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest5.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest5.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfPage page = doc.AddNewPage();
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream(SOURCE_FOLDER
+                 + "USWebUncoated.icc", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SetFillColor(ColorConstants.BLUE);
+            canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
+            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
+            canvas.Fill();
+            canvas.SetFillColor(DeviceGray.BLACK);
+            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
+            canvas.Fill();
+            // Here we use RGB and CMYK at the same time. And only page output intent is taken into account not both.
+            // So it throws on device RGB color.
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.DEVICERGB_SHALL_ONLY_BE_USED_IF_CURRENT_RGB_PDFA_OUTPUT_INTENT_OR_DEFAULTRGB_IN_USAGE_CONTEXT
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest6() {
+            PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
+                ));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+            String shortText = "text";
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
+                PREFER_EMBEDDED);
+            canvas.SetFontAndSize(font, 12);
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.CLIP);
+            canvas.SetFillColor(ColorConstants.RED).BeginText().ShowText(shortText).EndText();
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.STROKE);
+            canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)).BeginText().ShowText(shortText).EndText();
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.FILL);
+            canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.DEVICECMYK_SHALL_ONLY_BE_USED_IF_CURRENT_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest7() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest7.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest7.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfPage page = doc.AddNewPage();
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream(SOURCE_FOLDER
+                 + "USWebUncoated.icc", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            String shortText = "text";
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
+                PREFER_EMBEDDED);
+            canvas.SetFontAndSize(font, 12);
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.CLIP);
+            canvas.SetFillColor(ColorConstants.RED).BeginText().ShowText(shortText).EndText();
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.STROKE);
+            canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)).BeginText().ShowText(shortText).EndText();
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.FILL);
+            canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
+            // Here we use RGB and CMYK at the same time. And only page output intent is taken into account not both.
+            // So it throws on device RGB color.
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.DEVICERGB_SHALL_ONLY_BE_USED_IF_CURRENT_RGB_PDFA_OUTPUT_INTENT_OR_DEFAULTRGB_IN_USAGE_CONTEXT
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest8() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest8.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest8.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+            String shortText = "text";
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
+                PREFER_EMBEDDED);
+            canvas.SetFontAndSize(font, 12);
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.STROKE);
+            canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)).BeginText().ShowText(shortText).EndText();
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.STROKE);
+            canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.INVISIBLE);
+            canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)).BeginText().ShowText(shortText).EndText();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.DEVICECMYK_SHALL_ONLY_BE_USED_IF_CURRENT_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest9() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest9.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest9.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfPage page = doc.AddNewPage();
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream(SOURCE_FOLDER
+                 + "USWebUncoated.icc", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            String shortText = "text";
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
+                PREFER_EMBEDDED);
+            canvas.SetFontAndSize(font, 12);
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.STROKE);
+            canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)).BeginText().ShowText(shortText).EndText();
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.STROKE);
+            canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
+            canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.INVISIBLE);
+            canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)).BeginText().ShowText(shortText).EndText();
+            doc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest10() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest10.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest10.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            // Add page blending colorspace
+            PdfTransparencyGroup transparencyGroup = new PdfTransparencyGroup();
+            PdfArray transparencyArray = new PdfArray(PdfName.ICCBased);
+            transparencyArray.Add(PdfCieBasedCs.IccBased.GetIccProfileStream(new FileStream(SOURCE_FOLDER + "USWebUncoated.icc"
+                , FileMode.Open, FileAccess.Read)));
+            transparencyGroup.SetColorSpace(transparencyArray);
+            page.GetPdfObject().Put(PdfName.Group, transparencyGroup.GetPdfObject());
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SetStrokeColor(DeviceCmyk.MAGENTA).Circle(250, 300, 50).Stroke();
+            pdfDoc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest11() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest11.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest11.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            // Add page blending colorspace
+            PdfTransparencyGroup transparencyGroup = new PdfTransparencyGroup();
+            PdfArray transparencyArray = new PdfArray(PdfName.ICCBased);
+            transparencyArray.Add(PdfCieBasedCs.IccBased.GetIccProfileStream(new FileStream(SOURCE_FOLDER + "USWebUncoated.icc"
+                , FileMode.Open, FileAccess.Read)));
+            transparencyGroup.SetColorSpace(transparencyArray);
+            page.GetPdfObject().Put(PdfName.Group, transparencyGroup.GetPdfObject());
+            // Add annotation
+            PdfAnnotation annot = new PdfCircleAnnotation(new Rectangle(100, 100, 100, 100));
+            annot.SetFlag(PdfAnnotation.PRINT);
+            // Draw annotation
+            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
+            iText.Layout.Canvas annotCanvas = new iText.Layout.Canvas(xObject, pdfDoc);
+            annotCanvas.GetPdfCanvas().SetStrokeColor(DeviceCmyk.MAGENTA);
+            annotCanvas.GetPdfCanvas().Circle(50, 50, 40).Stroke();
+            xObject.GetPdfObject().Put(PdfName.Group, transparencyGroup.GetPdfObject());
+            // Add appearance stream
+            annot.SetAppearance(PdfName.N, xObject.GetPdfObject());
+            page.AddAnnotation(annot);
+            pdfDoc.Close();
+            // Here we have blending colorspaces set on page and xobject level but verapdf still asserts
+            // That's very weird
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckTest12() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest12.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest12.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            // Add page blending colorspace
+            PdfTransparencyGroup transparencyGroup = new PdfTransparencyGroup();
+            PdfArray transparencyArray = new PdfArray(PdfName.ICCBased);
+            transparencyArray.Add(PdfCieBasedCs.IccBased.GetIccProfileStream(new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            transparencyGroup.SetColorSpace(transparencyArray);
+            page.GetPdfObject().Put(PdfName.Group, transparencyGroup.GetPdfObject());
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SetStrokeColor(DeviceRgb.BLUE).Circle(250, 300, 50).Stroke();
+            pdfDoc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultTextColorCheckTest() {
+            String outPdf = DESTINATION_FOLDER + "defaultColorCheck.pdf";
+            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("some text").EndText().RestoreState
+                ();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.DEVICEGRAY_SHALL_ONLY_BE_USED_IF_CURRENT_PDFA_OUTPUT_INTENT_OR_DEFAULTGRAY_IN_USAGE_CONTEXT
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultTextColorCheckWithPageOutputIntentTest() {
+            String outPdf = DESTINATION_FOLDER + "defaultTextColorCheckWithPageOutputIntent.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_defaultTextColorCheckWithPageOutputIntent.pdf";
+            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
+            PdfPage page = pdfDocument.AddNewPage();
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream(SOURCE_FOLDER
+                 + "USWebUncoated.icc", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("some text").EndText().RestoreState
+                ();
+            pdfDocument.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultTextColorCheckForInvisibleTextTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_defaultColorCheckInvisibleText.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_defaultColorCheckInvisibleText.pdf";
+            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            canvas.BeginText().SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.INVISIBLE).MoveText(36, 750).
+                SetFontAndSize(font, 16).ShowText("some text").EndText().RestoreState();
+            pdfDocument.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultStrokeColorCheckTest() {
+            String outPdf = DESTINATION_FOLDER + "defaultColorCheck.pdf";
+            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            float[] whitePoint = new float[] { 0.9505f, 1f, 1.089f };
+            float[] gamma = new float[] { 2.2f, 2.2f, 2.2f };
+            float[] matrix = new float[] { 0.4124f, 0.2126f, 0.0193f, 0.3576f, 0.7152f, 0.1192f, 0.1805f, 0.0722f, 0.9505f
+                 };
+            PdfCieBasedCs.CalRgb calRgb = new PdfCieBasedCs.CalRgb(whitePoint, null, gamma, matrix);
+            canvas.GetResources().SetDefaultRgb(calRgb);
+            canvas.SetFillColor(ColorConstants.BLUE);
+            canvas.MoveTo(pdfDocument.GetDefaultPageSize().GetLeft(), pdfDocument.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(pdfDocument.GetDefaultPageSize().GetRight(), pdfDocument.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(pdfDocument.GetDefaultPageSize().GetRight(), pdfDocument.GetDefaultPageSize().GetTop());
+            canvas.Stroke();
+            // We set fill color but don't set stroke, so the exception should be thrown
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.DEVICEGRAY_SHALL_ONLY_BE_USED_IF_CURRENT_PDFA_OUTPUT_INTENT_OR_DEFAULTGRAY_IN_USAGE_CONTEXT
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckWithDuplicatedCmykColorspaceTest1() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckWithDuplicatedCmykColorspace1.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckWithDuplicatedCmykColorspace1.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfPage page = pdfDoc.AddNewPage();
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream(SOURCE_FOLDER
+                 + "USWebUncoated.icc", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            // Create color
+            FileStream stream = new FileStream(SOURCE_FOLDER + "USWebUncoated.icc", FileMode.Open, FileAccess.Read);
+            IccBased magenta = new IccBased(stream, new float[] { 0f, 1f, 0f, 0f });
+            canvas.SetStrokeColor(magenta).Circle(250, 300, 50).Stroke();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ICCBASED_COLOUR_SPACE_SHALL_NOT_BE_USED_IF_IT_IS_CMYK_AND_IS_IDENTICAL_TO_CURRENT_PROFILE
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckWithDuplicatedCmykColorspaceTest2() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckWithDuplicatedCmykColorspace2.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckWithDuplicatedCmykColorspace2.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfPage page = pdfDoc.AddNewPage();
+            // Add page blending colorspace
+            PdfTransparencyGroup transparencyGroup = new PdfTransparencyGroup();
+            PdfArray transparencyArray = new PdfArray(PdfName.ICCBased);
+            transparencyArray.Add(PdfCieBasedCs.IccBased.GetIccProfileStream(new FileStream(SOURCE_FOLDER + "USWebUncoated.icc"
+                , FileMode.Open, FileAccess.Read)));
+            transparencyGroup.SetColorSpace(transparencyArray);
+            page.GetPdfObject().Put(PdfName.Group, transparencyGroup.GetPdfObject());
+            PdfCanvas canvas = new PdfCanvas(page);
+            // Create color
+            FileStream stream = new FileStream(SOURCE_FOLDER + "USWebUncoated.icc", FileMode.Open, FileAccess.Read);
+            IccBased magenta = new IccBased(stream, new float[] { 0f, 1f, 0f, 0f });
+            canvas.SetStrokeColor(magenta).Circle(250, 300, 50).Stroke();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ICCBASED_COLOUR_SPACE_SHALL_NOT_BE_USED_IF_IT_IS_CMYK_AND_IS_IDENTICAL_TO_CURRENT_PROFILE
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckWithDuplicatedCmykColorspaceTest3() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckWithDuplicatedCmykColorspace3.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckWithDuplicatedCmykColorspace3.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfPage page = pdfDoc.AddNewPage();
+            // Add page blending colorspace
+            PdfTransparencyGroup transparencyGroup = new PdfTransparencyGroup();
+            PdfArray transparencyArray = new PdfArray(PdfName.ICCBased);
+            transparencyArray.Add(PdfCieBasedCs.IccBased.GetIccProfileStream(new FileStream(SOURCE_FOLDER + "USWebUncoated.icc"
+                , FileMode.Open, FileAccess.Read)));
+            transparencyGroup.SetColorSpace(transparencyArray);
+            page.GetPdfObject().Put(PdfName.Group, transparencyGroup.GetPdfObject());
+            // Create color
+            FileStream stream = new FileStream(SOURCE_FOLDER + "USWebUncoated.icc", FileMode.Open, FileAccess.Read);
+            IccBased magenta = new IccBased(stream, new float[] { 0f, 1f, 0f, 0f });
+            // Add annotation
+            PdfAnnotation annot = new PdfCircleAnnotation(new Rectangle(100, 100, 100, 100));
+            annot.SetFlag(PdfAnnotation.PRINT);
+            // Draw annotation
+            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
+            iText.Layout.Canvas annotCanvas = new iText.Layout.Canvas(xObject, pdfDoc);
+            annotCanvas.GetPdfCanvas().SetStrokeColor(magenta);
+            annotCanvas.GetPdfCanvas().Circle(50, 50, 40).Stroke();
+            // Add appearance stream
+            annot.SetAppearance(PdfName.N, xObject.GetPdfObject());
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ICCBASED_COLOUR_SPACE_SHALL_NOT_BE_USED_IF_IT_IS_CMYK_AND_IS_IDENTICAL_TO_CURRENT_PROFILE
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckWithDuplicatedCmykColorspaceTest4() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckWithDuplicatedCmykColorspace4.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckWithDuplicatedCmykColorspace4.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            // Create color
+            FileStream stream = new FileStream(SOURCE_FOLDER + "USWebUncoated.icc", FileMode.Open, FileAccess.Read);
+            IccBased magenta = new IccBased(stream, new float[] { 0f, 1f, 0f, 0f });
+            canvas.SetStrokeColor(magenta).Circle(250, 300, 50).Stroke();
+            // Add annotation
+            PdfAnnotation annot = new PdfCircleAnnotation(new Rectangle(100, 100, 100, 100));
+            annot.SetFlag(PdfAnnotation.PRINT);
+            // Draw annotation
+            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
+            iText.Layout.Canvas annotCanvas = new iText.Layout.Canvas(xObject, pdfDoc);
+            annotCanvas.GetPdfCanvas().SetStrokeColor(magenta);
+            annotCanvas.GetPdfCanvas().Circle(50, 50, 40).Stroke();
+            // Add stream blending colorspace
+            PdfTransparencyGroup transparencyGroup = new PdfTransparencyGroup();
+            PdfArray transparencyArray = new PdfArray(PdfName.ICCBased);
+            transparencyArray.Add(PdfCieBasedCs.IccBased.GetIccProfileStream(new FileStream(SOURCE_FOLDER + "USWebUncoated.icc"
+                , FileMode.Open, FileAccess.Read)));
+            transparencyGroup.SetColorSpace(transparencyArray);
+            xObject.GetPdfObject().Put(PdfName.Group, transparencyGroup.GetPdfObject());
+            // Add appearance stream
+            annot.SetAppearance(PdfName.N, xObject.GetPdfObject());
+            page.AddAnnotation(annot);
+            // Verapdf doesn't assert for such file however the expectation is that it's not a valid pdfa4
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ICCBASED_COLOUR_SPACE_SHALL_NOT_BE_USED_IF_IT_IS_CMYK_AND_IS_IDENTICAL_TO_CURRENT_PROFILE
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckWithDuplicatedRgbColorspaceTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckWithDuplicatedRgbColorspace.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckWithDuplicatedRgbColorspace.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            // Create color
+            FileStream stream = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            IccBased green = new IccBased(stream, new float[] { 0f, 1f, 0f });
+            canvas.SetStrokeColor(green).Circle(250, 300, 50).Stroke();
+            pdfDoc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckWithDuplicatedRgbAndCmykColorspaceTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckWithDuplicatedRgbAndCmykColorspace.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckWithDuplicatedRgbAndCmykColorspace.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfPage page = pdfDoc.AddNewPage();
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream(SOURCE_FOLDER
+                 + "USWebUncoated.icc", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            // Create colors
+            FileStream stream = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            IccBased green = new IccBased(stream, new float[] { 0f, 1f, 0f });
+            stream = new FileStream(SOURCE_FOLDER + "USWebUncoated.icc", FileMode.Open, FileAccess.Read);
+            IccBased magenta = new IccBased(stream, new float[] { 0f, 1f, 0f, 0f });
+            canvas.SetStrokeColor(green).SetFillColor(magenta).Circle(250, 300, 50).FillStroke();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ICCBASED_COLOUR_SPACE_SHALL_NOT_BE_USED_IF_IT_IS_CMYK_AND_IS_IDENTICAL_TO_CURRENT_PROFILE
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorCheckWithDuplicated2CmykColorspacesTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckWithDuplicated2CmykColorspaces.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckWithDuplicated2CmykColorspaces.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfPage page = pdfDoc.AddNewPage();
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream(SOURCE_FOLDER
+                 + "USWebUncoated.icc", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            // Create colors
+            FileStream stream = new FileStream(SOURCE_FOLDER + "USWebUncoated.icc", FileMode.Open, FileAccess.Read);
+            IccBased cayan = new IccBased(stream, new float[] { 1f, 0f, 0f, 0f });
+            stream = new FileStream(SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc", FileMode.Open, FileAccess.Read);
+            IccBased magenta = new IccBased(stream, new float[] { 0f, 1f, 0f, 0f });
+            canvas.SetStrokeColor(cayan).SetFillColor(magenta).Circle(250, 300, 50).FillStroke();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ICCBASED_COLOUR_SPACE_SHALL_NOT_BE_USED_IF_IT_IS_CMYK_AND_IS_IDENTICAL_TO_CURRENT_PROFILE
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColourSpaceTest01() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colourSpaceTest01.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colourSpaceTest01.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
+            //Tint transformation function is a stream
+            byte[] samples = new byte[] { 0x00, 0x00, 0x00, 0x01, 0x01, 0x01 };
+            float[] domain = new float[] { 0, 1 };
+            float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
+            int[] size = new int[] { 2 };
+            int bitsPerSample = 8;
+            PdfType0Function type0 = new PdfType0Function(domain, size, range, 1, bitsPerSample, samples);
+            PdfColorSpace separationColourSpace = new PdfSpecialCs.Separation("separationTestFunction0", alternateSpace
+                , type0);
+            //Add to document
+            page.GetResources().AddColorSpace(separationColourSpace);
+            doc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColourSpaceTest02() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colourSpaceTest02.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colourSpaceTest02.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
+            //Tint transformation function is a dictionary
+            float[] domain = new float[] { 0, 1 };
+            float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
+            float[] C0 = new float[] { 0, 0, 0 };
+            float[] C1 = new float[] { 1, 1, 1 };
+            int n = 1;
+            PdfType2Function type2 = new PdfType2Function(domain, range, C0, C1, n);
+            PdfColorSpace separationColourSpace = new PdfSpecialCs.Separation("separationTestFunction2", alternateSpace
+                , type2);
+            //Add to document
+            page.GetResources().AddColorSpace(separationColourSpace);
+            doc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColourSpaceTest03() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_colourSpaceTest03.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colourSpaceTest03.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
+            //Tint transformation function is a dictionary
+            float[] domain = new float[] { 0, 1 };
+            float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
+            float[] C0 = new float[] { 0, 0, 0 };
+            float[] C1 = new float[] { 1, 1, 1 };
+            int n = 1;
+            PdfType2Function type2 = new PdfType2Function(domain, range, C0, C1, n);
+            PdfCanvas canvas = new PdfCanvas(page);
+            String separationName = "separationTest";
+            canvas.SetColor(new Separation(separationName, alternateSpace, type2, 0.5f), true);
+            PdfDictionary attributes = new PdfDictionary();
+            PdfDictionary colorantsDict = new PdfDictionary();
+            colorantsDict.Put(new PdfName(separationName), new PdfSpecialCs.Separation(separationName, alternateSpace, 
+                type2).GetPdfObject());
+            attributes.Put(PdfName.Colorants, colorantsDict);
+            DeviceN deviceN = new DeviceN(new PdfSpecialCs.NChannel(JavaCollectionsUtil.SingletonList(separationName), 
+                alternateSpace, type2, attributes), new float[] { 0.5f });
+            canvas.SetColor(deviceN, true);
+            doc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageFailureTest() {
+            String outPdf = DESTINATION_FOLDER + "imageFailure.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_imageFailure.pdf";
+            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            // This should suppress transparency issue
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream(SOURCE_FOLDER
+                 + "USWebUncoated.icc", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(SOURCE_FOLDER + "itext.png"), new Rectangle(0, 
+                0, page.GetPageSize().GetWidth() / 2, page.GetPageSize().GetHeight() / 2), false);
+            canvas.RestoreState();
+            // But devicergb should still be not allowed
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.DEVICERGB_SHALL_ONLY_BE_USED_IF_CURRENT_RGB_PDFA_OUTPUT_INTENT_OR_DEFAULTRGB_IN_USAGE_CONTEXT
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_image.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_image.pdf";
+            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            // This should suppress transparency and device RGB
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream
+                (SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(SOURCE_FOLDER + "itext.png"), new Rectangle(0, 
+                0, page.GetPageSize().GetWidth() / 2, page.GetPageSize().GetHeight() / 2), false);
+            canvas.RestoreState();
+            pdfDoc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4AnnotationsNoOutputIntentTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4AnnotationsNoOutputIntent.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4AnnotationsNoOutputIntent.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfAnnotation annot = new PdfCircleAnnotation(new Rectangle(100, 100, 100, 100));
+            annot.SetFlag(PdfAnnotation.PRINT);
+            // Draw annotation
+            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, pdfDoc);
+            canvas.GetPdfCanvas().SetFillColor(DeviceRgb.RED);
+            canvas.GetPdfCanvas().Circle(50, 50, 40).Stroke();
+            annot.SetAppearance(PdfName.N, xObject.GetPdfObject());
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.DEVICERGB_SHALL_ONLY_BE_USED_IF_CURRENT_RGB_PDFA_OUTPUT_INTENT_OR_DEFAULTRGB_IN_USAGE_CONTEXT
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4AnnotationsWrongPageOutputIntentTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4AnnotationsWrongPageOutputIntent.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4AnnotationsWrongPageOutputIntent.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream(SOURCE_FOLDER
+                 + "USWebUncoated.icc", FileMode.Open, FileAccess.Read)));
+            PdfAnnotation annot = new PdfCircleAnnotation(new Rectangle(100, 100, 100, 100));
+            annot.SetFlag(PdfAnnotation.PRINT);
+            annot.SetContents("Circle");
+            annot.SetColor(DeviceRgb.BLUE);
+            // Draw annotation
+            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, pdfDoc);
+            canvas.GetPdfCanvas().SetStrokeColor(DeviceRgb.BLUE);
+            canvas.GetPdfCanvas().Circle(50, 50, 40).Stroke();
+            annot.SetAppearance(PdfName.N, xObject.GetPdfObject());
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.DEVICERGB_SHALL_ONLY_BE_USED_IF_CURRENT_RGB_PDFA_OUTPUT_INTENT_OR_DEFAULTRGB_IN_USAGE_CONTEXT
+                ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4AnnotationsCorrectPageOutputIntentTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4AnnotationsCorrectPageOutputIntent.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4AnnotationsCorrectPageOutputIntent.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream
+                (SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read)));
+            PdfAnnotation annot = new PdfCircleAnnotation(new Rectangle(100, 100, 100, 100));
+            annot.SetFlag(PdfAnnotation.PRINT);
+            annot.SetContents("Circle");
+            annot.SetColor(DeviceRgb.BLUE);
+            // Draw annotation
+            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, pdfDoc);
+            canvas.GetPdfCanvas().SetStrokeColor(DeviceRgb.BLUE);
+            canvas.GetPdfCanvas().Circle(50, 50, 40).Stroke();
+            annot.SetAppearance(PdfName.N, xObject.GetPdfObject());
+            page.AddAnnotation(annot);
+            pdfDoc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
         private void TestWithColourant(PdfName color) {
             PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
                 ));
@@ -233,6 +1025,15 @@ namespace iText.Pdfa {
                     PdfExtGState().SetHalftone(halftone)));
                 NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.ALL_HALFTONES_CONTAINING_TRANSFER_FUNCTION_SHALL_HAVE_HALFTONETYPE_5
                     , e.Message);
+            }
+        }
+
+        private void CompareResult(String outPdf, String cmpPdf) {
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
+            if (result != null) {
+                NUnit.Framework.Assert.Fail(result);
             }
         }
     }
