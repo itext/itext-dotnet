@@ -64,34 +64,51 @@ namespace iText.Kernel.Utils {
         /// <see cref="iText.Kernel.Utils.Annotationsflattening.IAnnotationFlattener"/>.
         /// </summary>
         /// <param name="annotationsToFlatten">the annotations that should be flattened.</param>
-        /// <param name="page">the page where the annotations are located.</param>
-        public virtual void Flatten(IList<PdfAnnotation> annotationsToFlatten, PdfPage page) {
-            if (page == null) {
-                throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL, "page"
-                    ));
-            }
+        /// <returns>the list of annotations that were not flattened successfully</returns>
+        public virtual IList<PdfAnnotation> Flatten(IList<PdfAnnotation> annotationsToFlatten) {
             if (annotationsToFlatten == null) {
                 throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL, "annotationsToFlatten"
                     ));
             }
+            IList<PdfAnnotation> unFlattenedAnnotations = new List<PdfAnnotation>();
             foreach (PdfAnnotation pdfAnnotation in annotationsToFlatten) {
+                if (pdfAnnotation == null) {
+                    continue;
+                }
+                PdfPage page = pdfAnnotation.GetPage();
+                if (page == null) {
+                    continue;
+                }
                 IAnnotationFlattener worker = pdfAnnotationFlattenFactory.GetAnnotationFlattenWorker(pdfAnnotation.GetSubtype
                     ());
-                worker.Flatten(pdfAnnotation, page);
+                bool flattenedSuccessfully = worker.Flatten(pdfAnnotation, page);
+                if (!flattenedSuccessfully) {
+                    unFlattenedAnnotations.Add(pdfAnnotation);
+                }
             }
+            return unFlattenedAnnotations;
         }
 
         /// <summary>
-        /// Flattens all annotations on the page according to the defined implementation of
+        /// Flattens the annotations on the page according to the defined implementation of
         /// <see cref="iText.Kernel.Utils.Annotationsflattening.IAnnotationFlattener"/>.
         /// </summary>
-        /// <param name="page">the page where the annotations are located.</param>
-        public virtual void Flatten(PdfPage page) {
-            if (page == null) {
-                throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL, "page"
+        /// <param name="document">the document that contains the annotations that should be flattened.</param>
+        /// <returns>the list of annotations that were not flattened successfully</returns>
+        public virtual IList<PdfAnnotation> Flatten(PdfDocument document) {
+            if (document == null) {
+                throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL, "document"
                     ));
             }
-            Flatten(page.GetAnnotations(), page);
+            IList<PdfAnnotation> annotations = new List<PdfAnnotation>();
+            // Process page by page to avoid loading a bunch of annotations into memory
+            int documentNumberOfPages = document.GetNumberOfPages();
+            for (int i = 1; i <= documentNumberOfPages; i++) {
+                PdfPage page = document.GetPage(i);
+                IList<PdfAnnotation> failedFlatteningAnnotations = Flatten(page.GetAnnotations());
+                annotations.AddAll(failedFlatteningAnnotations);
+            }
+            return annotations;
         }
     }
 }

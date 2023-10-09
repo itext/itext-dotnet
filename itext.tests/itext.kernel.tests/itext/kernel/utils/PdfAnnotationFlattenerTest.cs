@@ -58,37 +58,22 @@ namespace iText.Kernel.Utils {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
                 pdfDoc.AddNewPage();
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                PdfPage page = pdfDoc.GetFirstPage();
+                IList<PdfAnnotation> annotations = null;
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                    flattener.Flatten(null, page);
+                    flattener.Flatten(annotations);
                 }
                 );
             }
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestNullPage() {
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
-                pdfDoc.AddNewPage();
-                PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                IList<PdfAnnotation> annotations = new List<PdfAnnotation>();
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                    flattener.Flatten(annotations, null);
-                }
-                );
+        public virtual void TestNullDocument() {
+            PdfDocument pdfDoc = null;
+            PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
+            NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                flattener.Flatten(pdfDoc);
             }
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestNullPageFlatten() {
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
-                pdfDoc.AddNewPage();
-                PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                    flattener.Flatten(null);
-                }
-                );
-            }
+            );
         }
 
         [NUnit.Framework.Test]
@@ -121,7 +106,7 @@ namespace iText.Kernel.Utils {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
                 pdfDoc.AddNewPage();
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(new List<PdfAnnotation>(), pdfDoc.GetFirstPage());
+                flattener.Flatten(new List<PdfAnnotation>());
                 NUnit.Framework.Assert.AreEqual(0, pdfDoc.GetFirstPage().GetAnnotsSize());
             }
         }
@@ -159,7 +144,7 @@ namespace iText.Kernel.Utils {
                 pdfDoc.AddNewPage();
                 pdfDoc.GetFirstPage().AddAnnotation(unknownAnnotation);
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(JavaCollectionsUtil.SingletonList(unknownAnnotation), pdfDoc.GetFirstPage());
+                flattener.Flatten(JavaCollectionsUtil.SingletonList(unknownAnnotation));
                 //Annotation is not removed in default implementation
                 NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetFirstPage().GetAnnotsSize());
             }
@@ -175,7 +160,7 @@ namespace iText.Kernel.Utils {
                 pdfDoc.AddNewPage();
                 pdfDoc.GetFirstPage().AddAnnotation(unknownAnnotation);
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(JavaCollectionsUtil.SingletonList(unknownAnnotation), pdfDoc.GetFirstPage());
+                flattener.Flatten(JavaCollectionsUtil.SingletonList(unknownAnnotation));
                 //Annotation is not removed in default implementation
                 NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetFirstPage().GetAnnotsSize());
             }
@@ -190,7 +175,7 @@ namespace iText.Kernel.Utils {
                     .CreateURI("http://itextpdf.com/node")).SetBorder(new PdfArray(borders)));
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener(new PdfAnnotationFlattenerTest.CustomPdfAnnotationFlattenFactory
                     ());
-                flattener.Flatten(pdfDoc.GetFirstPage().GetAnnotations(), pdfDoc.GetFirstPage());
+                flattener.Flatten(pdfDoc.GetFirstPage().GetAnnotations());
                 NUnit.Framework.Assert.AreEqual(0, pdfDoc.GetFirstPage().GetAnnotsSize());
             }
         }
@@ -211,7 +196,7 @@ namespace iText.Kernel.Utils {
                 page.AddAnnotation(annot);
             }
             using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(fileToFlatten), new PdfWriter(resultFile))) {
-                new PdfAnnotationFlattener().Flatten(pdfDoc_1.GetFirstPage().GetAnnotations(), pdfDoc_1.GetFirstPage());
+                new PdfAnnotationFlattener().Flatten(pdfDoc_1.GetFirstPage().GetAnnotations());
             }
             //it is expected that the line is the middle of the page because the annotation whole rectangle is the
             // size of the page, it's also expected that underline will not show up as it is at the bottom of the page
@@ -235,7 +220,7 @@ namespace iText.Kernel.Utils {
                 page.AddAnnotation(annot);
             }
             using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(fileToFlatten), new PdfWriter(resultFile))) {
-                new PdfAnnotationFlattener().Flatten(pdfDoc_1.GetFirstPage().GetAnnotations(), pdfDoc_1.GetFirstPage());
+                new PdfAnnotationFlattener().Flatten(pdfDoc_1.GetFirstPage().GetAnnotations());
             }
             //it is expected that the line is the middle of the page because the annotation whole rectangle is the
             // size of the page, it's also expected that underline will not show up as it is at the bottom of the page
@@ -251,7 +236,7 @@ namespace iText.Kernel.Utils {
                 pdfDoc.GetFirstPage().AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 540, 300, 25)).SetAction(PdfAction
                     .CreateURI("http://itextpdf.com/node")).SetBorder(new PdfArray(borders)));
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(new List<PdfAnnotation>(), pdfDoc.GetFirstPage());
+                flattener.Flatten(new List<PdfAnnotation>());
                 NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetFirstPage().GetAnnotsSize());
             }
         }
@@ -268,7 +253,7 @@ namespace iText.Kernel.Utils {
                 pdfDoc.GetPage(2).AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 540, 300, 25)).SetAction(PdfAction
                     .CreateURI("http://itextpdf.com/node")).SetBorder(new PdfArray(borders)));
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(pdfDoc.GetPage(2).GetAnnotations(), pdfDoc.GetFirstPage());
+                flattener.Flatten(pdfDoc.GetPage(2).GetAnnotations());
                 NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetFirstPage().GetAnnotsSize());
                 NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetPage(2).GetAnnotsSize());
             }
@@ -280,7 +265,7 @@ namespace iText.Kernel.Utils {
             String resultFile = DESTINATION_FOLDER + "flattened_pdf_link.pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "simple_link_annotation.pdf"), new 
                 PdfWriter(resultFile))) {
-                new PdfAnnotationFlattener().Flatten(pdfDoc.GetFirstPage());
+                new PdfAnnotationFlattener().Flatten(pdfDoc);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattened_pdf_link.pdf"
                 , DESTINATION_FOLDER, "diff_"));
@@ -298,7 +283,7 @@ namespace iText.Kernel.Utils {
                 canvasN.SaveState().SetColor(ColorConstants.RED, true).SetLineWidth(1.5f).Rectangle(180, 531, 120, 48).Fill
                     ().RestoreState();
                 annot.SetNormalAppearance(formN.GetPdfObject());
-                new PdfAnnotationFlattener().Flatten(pdfDoc.GetFirstPage());
+                new PdfAnnotationFlattener().Flatten(pdfDoc);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattened_DA_pdf_link.pdf"
                 , DESTINATION_FOLDER, "diff_"));
@@ -327,7 +312,7 @@ namespace iText.Kernel.Utils {
                 page.AddAnnotation(CreateTextAnnotation(canvas, x, y, points4, PdfName.Highlight, ColorConstants.YELLOW));
             }
             using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(fileToFlatten), new PdfWriter(resultFile))) {
-                new PdfAnnotationFlattener().Flatten(pdfDoc_1.GetFirstPage().GetAnnotations(), pdfDoc_1.GetFirstPage());
+                new PdfAnnotationFlattener().Flatten(pdfDoc_1.GetFirstPage().GetAnnotations());
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_text_markup_flatten.pdf"
                 , DESTINATION_FOLDER, "diff_"));
@@ -340,7 +325,7 @@ namespace iText.Kernel.Utils {
             String resultFile = DESTINATION_FOLDER + "flattenLinkAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
+                flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenLinkAnnotationTest.pdf"
@@ -348,14 +333,14 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
+        [LogMessage(KernelLogMessageConstant.FORMFIELD_ANNOTATION_WILL_NOT_BE_FLATTENED)]
         public virtual void FlattenWidgetAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenWidgetAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenWidgetAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
+                IList<PdfAnnotation> annot = flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(1, annot.Count);
                 NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenWidgetAnnotationTest.pdf"
@@ -368,7 +353,7 @@ namespace iText.Kernel.Utils {
             String resultFile = DESTINATION_FOLDER + "flattenScreenAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
+                flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenScreenAnnotationTest.pdf"
@@ -381,7 +366,7 @@ namespace iText.Kernel.Utils {
             String resultFile = DESTINATION_FOLDER + "flatten3DAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
+                flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flatten3DAnnotationTest.pdf"
@@ -389,90 +374,78 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenHighlightAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenHighlightAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenHighlightAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenHighlightAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenUnderlineAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenUnderlineAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenUnderlineAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenUnderlineAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenSquigglyAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenSquigglyAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenSquigglyAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenSquigglyAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenStrikeOutAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenStrikeOutAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenStrikeOutAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenStrikeOutAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenCaretAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenCaretAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenCaretAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenCaretAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenTextAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenTextAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenTextAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenTextAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
@@ -484,7 +457,7 @@ namespace iText.Kernel.Utils {
             String resultFile = DESTINATION_FOLDER + "flattenSoundAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
+                flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenSoundAnnotationTest.pdf"
@@ -492,15 +465,13 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenStampAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenStampAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenStampAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                NUnit.Framework.Assert.AreEqual(0, flattener.Flatten(document).Count);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenStampAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
@@ -512,7 +483,7 @@ namespace iText.Kernel.Utils {
             String resultFile = DESTINATION_FOLDER + "flattenFileAttachmentAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
+                flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenFileAttachmentAnnotationTest.pdf"
@@ -520,15 +491,13 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenInkAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenInkAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenInkAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenInkAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
@@ -540,7 +509,7 @@ namespace iText.Kernel.Utils {
             String resultFile = DESTINATION_FOLDER + "flattenPrinterMarkAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
+                flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenPrinterMarkAnnotationTest.pdf"
@@ -553,11 +522,51 @@ namespace iText.Kernel.Utils {
             String resultFile = DESTINATION_FOLDER + "flattenTrapNetAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
+                flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenTrapNetAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestWarnAnnotationFlattenerAnnotNull() {
+            WarnFormfieldFlattener warnFormfieldFlattener = new WarnFormfieldFlattener();
+            PdfPage page = null;
+            NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                warnFormfieldFlattener.Flatten(null, page);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestWarnAnnotationFlattenerPageNull() {
+            WarnFormfieldFlattener warnFormfieldFlattener = new WarnFormfieldFlattener();
+            PdfAnnotation annot = new PdfCircleAnnotation(new Rectangle(100, 100, 100, 100));
+            NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                warnFormfieldFlattener.Flatten(annot, null);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveWithoutDrawingFormfieldFlattenerNull() {
+            RemoveWithoutDrawingFlattener flattener = new RemoveWithoutDrawingFlattener();
+            PdfPage page = null;
+            NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                flattener.Flatten(null, page);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveWithoutDrawingAnnotationFlattenerPageNull() {
+            RemoveWithoutDrawingFlattener warnFormfieldFlattener = new RemoveWithoutDrawingFlattener();
+            PdfAnnotation annot = new PdfCircleAnnotation(new Rectangle(100, 100, 100, 100));
+            NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                warnFormfieldFlattener.Flatten(annot, null);
+            }
+            );
         }
 
         [NUnit.Framework.Test]
@@ -566,7 +575,7 @@ namespace iText.Kernel.Utils {
             String resultFile = DESTINATION_FOLDER + "flattenFreeTextAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
+                flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenFreeTextAnnotationTest.pdf"
@@ -574,90 +583,102 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenSquareAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenSquareAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenSquareAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenSquareAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenCircleAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenCircleAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenCircleAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenCircleAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED, Count = 2)]
+        public virtual void FlatteningOfAnnotationListWithNullAnnotationContinues() {
+            using (PdfDocument document = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
+                document.AddNewPage();
+                List<PdfAnnotation> annots = new List<PdfAnnotation>();
+                annots.Add(null);
+                flattener.Flatten(annots);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FlatteningOfAnnotationListWithNoPageAttachedAnnotationContinues() {
+            using (PdfDocument document = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
+                document.AddNewPage();
+                List<PdfAnnotation> annots = new List<PdfAnnotation>();
+                annots.Add(new PdfCircleAnnotation(new Rectangle(100, 100, 100, 100)));
+                flattener.Flatten(annots);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void FlattenLineAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenLineAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenLineAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(2, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenLineAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenPolygonAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenPolygonAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenPolygonAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenPolygonAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenPolyLineAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenPolyLineAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenPolyLineAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenPolyLineAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-2440 Investigate whether we can support popup and widget annotations
-        [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenRedactAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenRedactAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenRedactAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
-                NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenRedactAnnotationTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
@@ -669,7 +690,7 @@ namespace iText.Kernel.Utils {
             String resultFile = DESTINATION_FOLDER + "flattenWatermarkAnnotationTest.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
-                flattener.Flatten(document.GetFirstPage());
+                flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattenWatermarkAnnotationTest.pdf"
@@ -705,13 +726,13 @@ namespace iText.Kernel.Utils {
         internal class CustomPdfAnnotationFlattenFactory : PdfAnnotationFlattenFactory {
             public override IAnnotationFlattener GetAnnotationFlattenWorker(PdfName name) {
                 if (PdfName.Link.Equals(name)) {
-                    return new _IAnnotationFlattener_838();
+                    return new _IAnnotationFlattener_866();
                 }
                 return base.GetAnnotationFlattenWorker(name);
             }
 
-            private sealed class _IAnnotationFlattener_838 : IAnnotationFlattener {
-                public _IAnnotationFlattener_838() {
+            private sealed class _IAnnotationFlattener_866 : IAnnotationFlattener {
+                public _IAnnotationFlattener_866() {
                 }
 
                 public bool Flatten(PdfAnnotation annotation, PdfPage page) {

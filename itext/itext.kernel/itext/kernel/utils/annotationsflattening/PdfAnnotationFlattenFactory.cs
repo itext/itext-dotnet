@@ -33,8 +33,8 @@ namespace iText.Kernel.Utils.Annotationsflattening {
         static PdfAnnotationFlattenFactory() {
             map = new Dictionary<PdfName, Func<IAnnotationFlattener>>();
             map.Put(PdfName.Link, () => new DefaultAnnotationFlattener());
-            map.Put(PdfName.Popup, () => new NotSupportedFlattener());
-            map.Put(PdfName.Widget, () => new NotSupportedFlattener());
+            map.Put(PdfName.Popup, () => new RemoveWithoutDrawingFlattener());
+            map.Put(PdfName.Widget, () => new WarnFormfieldFlattener());
             map.Put(PdfName.Screen, () => new DefaultAnnotationFlattener());
             map.Put(PdfName._3D, () => new DefaultAnnotationFlattener());
             map.Put(PdfName.Highlight, () => new HighLightTextMarkupAnnotationFlattener());
