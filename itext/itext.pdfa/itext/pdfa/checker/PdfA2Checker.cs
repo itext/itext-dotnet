@@ -553,31 +553,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_ALTERNATEPRESENTATIONS_NAMES_ENTRY
                     );
             }
-            PdfDictionary oCProperties = catalogDict.GetAsDictionary(PdfName.OCProperties);
-            if (oCProperties != null) {
-                IList<PdfDictionary> configList = new List<PdfDictionary>();
-                PdfDictionary d = oCProperties.GetAsDictionary(PdfName.D);
-                if (d != null) {
-                    configList.Add(d);
-                }
-                PdfArray configs = oCProperties.GetAsArray(PdfName.Configs);
-                if (configs != null) {
-                    foreach (PdfObject config in configs) {
-                        configList.Add((PdfDictionary)config);
-                    }
-                }
-                HashSet<PdfObject> ocgs = new HashSet<PdfObject>();
-                PdfArray ocgsArray = oCProperties.GetAsArray(PdfName.OCGs);
-                if (ocgsArray != null) {
-                    foreach (PdfObject ocg in ocgsArray) {
-                        ocgs.Add(ocg);
-                    }
-                }
-                HashSet<String> names = new HashSet<String>();
-                foreach (PdfDictionary config in configList) {
-                    CheckCatalogConfig(config, ocgs, names);
-                }
-            }
+            CheckOCProperties(catalogDict.GetAsDictionary(PdfName.OCProperties));
         }
 
         protected internal override void CheckPageSize(PdfDictionary page) {
@@ -761,6 +737,33 @@ namespace iText.Pdfa.Checker {
                 if (!ICC_COLOR_SPACE_CMYK.Equals(pdfAOutputIntentColorSpace)) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT
                         );
+                }
+            }
+        }
+
+        private void CheckOCProperties(PdfDictionary oCProperties) {
+            if (oCProperties != null) {
+                IList<PdfDictionary> configList = new List<PdfDictionary>();
+                PdfDictionary d = oCProperties.GetAsDictionary(PdfName.D);
+                if (d != null) {
+                    configList.Add(d);
+                }
+                PdfArray configs = oCProperties.GetAsArray(PdfName.Configs);
+                if (configs != null) {
+                    foreach (PdfObject config in configs) {
+                        configList.Add((PdfDictionary)config);
+                    }
+                }
+                HashSet<PdfObject> ocgs = new HashSet<PdfObject>();
+                PdfArray ocgsArray = oCProperties.GetAsArray(PdfName.OCGs);
+                if (ocgsArray != null) {
+                    foreach (PdfObject ocg in ocgsArray) {
+                        ocgs.Add(ocg);
+                    }
+                }
+                HashSet<String> names = new HashSet<String>();
+                foreach (PdfDictionary config in configList) {
+                    CheckCatalogConfig(config, ocgs, names);
                 }
             }
         }

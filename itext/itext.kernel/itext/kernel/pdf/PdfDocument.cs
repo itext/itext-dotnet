@@ -756,6 +756,9 @@ namespace iText.Kernel.Pdf {
                             xmp.Put(PdfName.Filter, ar);
                         }
                     }
+                    if (!properties.appendMode && catalog.IsOCPropertiesMayHaveChanged()) {
+                        catalog.GetPdfObject().Put(PdfName.OCProperties, catalog.GetOCProperties(false).GetPdfObject());
+                    }
                     CheckIsoConformance();
                     if (GetNumberOfPages() == 0) {
                         // Add new page here, not in PdfPagesTree#generateTree method, so that any page
@@ -808,7 +811,6 @@ namespace iText.Kernel.Pdf {
                     }
                     else {
                         if (catalog.IsOCPropertiesMayHaveChanged()) {
-                            catalog.GetPdfObject().Put(PdfName.OCProperties, catalog.GetOCProperties(false).GetPdfObject());
                             catalog.GetOCProperties(false).Flush();
                         }
                         if (catalog.pageLabels != null) {
