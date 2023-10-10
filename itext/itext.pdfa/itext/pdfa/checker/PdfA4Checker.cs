@@ -295,7 +295,8 @@ namespace iText.Pdfa.Checker {
             }
         }
 
-        protected internal override void CheckFormXObject(PdfStream form) {
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckFormXObject(PdfStream form, PdfStream contentStream) {
             if (IsAlreadyChecked(form)) {
                 return;
             }
@@ -307,7 +308,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_REF_KEY
                     );
             }
-            CheckTransparencyGroup(form, null);
+            CheckTransparencyGroup(form, contentStream);
             CheckResources(form.GetAsDictionary(PdfName.Resources), form);
             CheckContentStream(form);
         }

@@ -88,6 +88,11 @@ namespace iText.Pdfa.Checker {
             PdfArray deviceNAsArray = ((PdfArray)(new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb(), function))
                 .GetPdfObject());
             PdfDictionary attributes = new PdfDictionary();
+            PdfDictionary colourants = new PdfDictionary();
+            String colourantName = "colourantTest";
+            colourants.Put(new PdfName(colourantName), new PdfSpecialCs.DeviceN(((PdfArray)(new PdfSpecialCs.DeviceN(tmpArray
+                , new PdfDeviceCs.Rgb(), function)).GetPdfObject())).GetPdfObject());
+            attributes.Put(PdfName.Colorants, colourants);
             deviceNAsArray.Add(attributes);
             return new PdfSpecialCs.DeviceN(deviceNAsArray);
         }

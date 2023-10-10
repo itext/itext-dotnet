@@ -332,6 +332,9 @@ namespace iText.Pdfa.Exceptions {
              = "An ICCBased colour space shall not be used where the profile is a CMYK destination profile and is "
              + "identical to that in the current PDF/A OutputIntent or the current transparency blending colorspace.";
 
+        public const String COLORANTS_DICTIONARY_SHALL_NOT_BE_EMPTY_IN_DEVICE_N_COLORSPACE = "For any spot color "
+             + "used in a DeviceN or NChannel colorspace, an entry in the Colorants dictionary shall be present.";
+
         private PdfaExceptionMessageConstant() {
         }
     }

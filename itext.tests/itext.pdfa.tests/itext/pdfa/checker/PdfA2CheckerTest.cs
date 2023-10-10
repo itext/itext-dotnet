@@ -634,6 +634,52 @@ namespace iText.Pdfa.Checker {
                 .Message);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CheckColorSpaceWithDeviceNWithoutAttributes() {
+            IList<String> tmpArray = new List<String>(3);
+            float[] transformArray = new float[6];
+            tmpArray.Add("Black");
+            tmpArray.Add("Magenta");
+            tmpArray.Add("White");
+            for (int i = 0; i < 3; i++) {
+                transformArray[i * 2] = 0;
+                transformArray[i * 2 + 1] = 1;
+            }
+            PdfType4Function function = new PdfType4Function(transformArray, new float[] { 0, 1, 0, 1, 0, 1 }, "{0}".GetBytes
+                (iText.Commons.Utils.EncodingUtil.ISO_8859_1));
+            PdfArray deviceNAsArray = ((PdfArray)(new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb(), function))
+                .GetPdfObject());
+            PdfDictionary currentColorSpaces = new PdfDictionary();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckColorSpace
+                (new PdfSpecialCs.DeviceN(deviceNAsArray), currentColorSpaces, true, false));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.COLORANTS_DICTIONARY_SHALL_NOT_BE_EMPTY_IN_DEVICE_N_COLORSPACE
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckColorSpaceWithDeviceNWithoutColorants() {
+            IList<String> tmpArray = new List<String>(3);
+            float[] transformArray = new float[6];
+            tmpArray.Add("Black");
+            tmpArray.Add("Magenta");
+            tmpArray.Add("White");
+            for (int i = 0; i < 3; i++) {
+                transformArray[i * 2] = 0;
+                transformArray[i * 2 + 1] = 1;
+            }
+            PdfType4Function function = new PdfType4Function(transformArray, new float[] { 0, 1, 0, 1, 0, 1 }, "{0}".GetBytes
+                (iText.Commons.Utils.EncodingUtil.ISO_8859_1));
+            PdfArray deviceNAsArray = ((PdfArray)(new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb(), function))
+                .GetPdfObject());
+            PdfDictionary currentColorSpaces = new PdfDictionary();
+            PdfDictionary attributes = new PdfDictionary();
+            deviceNAsArray.Add(attributes);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckColorSpace
+                (new PdfSpecialCs.DeviceN(deviceNAsArray), currentColorSpaces, true, false));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.COLORANTS_DICTIONARY_SHALL_NOT_BE_EMPTY_IN_DEVICE_N_COLORSPACE
+                , e.Message);
+        }
+
         private static PdfDictionary CreateSignatureDict() {
             PdfDictionary signatureDict = new PdfDictionary();
             PdfDictionary reference = new PdfDictionary();

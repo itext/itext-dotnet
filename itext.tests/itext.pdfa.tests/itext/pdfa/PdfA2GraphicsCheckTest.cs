@@ -525,6 +525,67 @@ namespace iText.Pdfa {
             doc.Close();
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ColourSpaceWithoutColourantsTest() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
+            //Tint transformation function is a dictionary
+            float[] domain = new float[] { 0, 1 };
+            float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
+            float[] C0 = new float[] { 0, 0, 0 };
+            float[] C1 = new float[] { 1, 1, 1 };
+            int n = 1;
+            PdfType2Function type2 = new PdfType2Function(domain, range, C0, C1, n);
+            PdfCanvas canvas = new PdfCanvas(page);
+            String separationName = "separationTest";
+            canvas.SetColor(new Separation(separationName, alternateSpace, type2, 0.5f), true);
+            PdfDictionary attributes = new PdfDictionary();
+            PdfDictionary colorantsDict = new PdfDictionary();
+            colorantsDict.Put(new PdfName(separationName), new PdfSpecialCs.Separation(separationName, alternateSpace, 
+                type2).GetPdfObject());
+            DeviceN deviceN = new DeviceN(new PdfSpecialCs.NChannel(JavaCollectionsUtil.SingletonList(separationName), 
+                alternateSpace, type2, attributes), new float[] { 0.5f });
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.SetColor(deviceN
+                , true));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.COLORANTS_DICTIONARY_SHALL_NOT_BE_EMPTY_IN_DEVICE_N_COLORSPACE
+                , e.Message);
+            doc.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColourSpaceWithoutAttributesTest() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
+            //Tint transformation function is a dictionary
+            float[] domain = new float[] { 0, 1 };
+            float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
+            float[] C0 = new float[] { 0, 0, 0 };
+            float[] C1 = new float[] { 1, 1, 1 };
+            int n = 1;
+            PdfType2Function type2 = new PdfType2Function(domain, range, C0, C1, n);
+            PdfCanvas canvas = new PdfCanvas(page);
+            String separationName = "separationTest";
+            canvas.SetColor(new Separation(separationName, alternateSpace, type2, 0.5f), true);
+            PdfDictionary colorantsDict = new PdfDictionary();
+            colorantsDict.Put(new PdfName(separationName), new PdfSpecialCs.Separation(separationName, alternateSpace, 
+                type2).GetPdfObject());
+            DeviceN deviceN = new DeviceN(new PdfSpecialCs.DeviceN(JavaCollectionsUtil.SingletonList(separationName), 
+                alternateSpace, type2), new float[] { 0.5f });
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.SetColor(deviceN
+                , true));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.COLORANTS_DICTIONARY_SHALL_NOT_BE_EMPTY_IN_DEVICE_N_COLORSPACE
+                , e.Message);
+            doc.Close();
+        }
+
         private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null) {

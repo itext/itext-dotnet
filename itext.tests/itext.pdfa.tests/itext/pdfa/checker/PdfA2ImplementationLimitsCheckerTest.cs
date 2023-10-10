@@ -31,10 +31,11 @@ using iText.Test;
 namespace iText.Pdfa.Checker {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfA2ImplementationLimitsCheckerTest : ExtendedITextTest {
-        private PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B);
+        private PdfA2Checker pdfA2Checker;
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
+            pdfA2Checker = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B);
             pdfA2Checker.SetFullCheckMode(true);
         }
 
@@ -137,6 +138,11 @@ namespace iText.Pdfa.Checker {
             PdfArray deviceNAsArray = ((PdfArray)(new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb(), function))
                 .GetPdfObject());
             PdfDictionary attributes = new PdfDictionary();
+            PdfDictionary colourants = new PdfDictionary();
+            String colourantName = "colourantTest";
+            colourants.Put(new PdfName(colourantName), new PdfSpecialCs.DeviceN(((PdfArray)(new PdfSpecialCs.DeviceN(tmpArray
+                , new PdfDeviceCs.Rgb(), function)).GetPdfObject())).GetPdfObject());
+            attributes.Put(PdfName.Colorants, colourants);
             deviceNAsArray.Add(attributes);
             return new PdfSpecialCs.DeviceN(deviceNAsArray);
         }
