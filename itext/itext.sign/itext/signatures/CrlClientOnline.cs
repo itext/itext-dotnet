@@ -118,7 +118,7 @@ namespace iText.Signatures {
             foreach (Uri urlt in urlList) {
                 try {
                     LOGGER.LogInformation("Checking CRL: " + urlt);
-                    Stream inp = SignUtils.GetHttpResponse(urlt);
+                    Stream inp = GetCrlResponse(checkCert, urlt);
                     byte[] buf = new byte[1024];
                     MemoryStream bout = new MemoryStream();
                     while (true) {
@@ -138,6 +138,28 @@ namespace iText.Signatures {
                 }
             }
             return ar;
+        }
+
+        /// <summary>
+        /// Get CRL response represented as
+        /// <see cref="System.IO.Stream"/>.
+        /// </summary>
+        /// <param name="cert">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// certificate to get CRL response for
+        /// </param>
+        /// <param name="urlt">
+        /// 
+        /// <see cref="System.Uri"/>
+        /// link, which is expected to be used to get CRL response from
+        /// </param>
+        /// <returns>
+        /// CRL response bytes, represented as
+        /// <see cref="System.IO.Stream"/>
+        /// </returns>
+        protected internal virtual Stream GetCrlResponse(IX509Certificate cert, Uri urlt) {
+            return SignUtils.GetHttpResponse(urlt);
         }
 
         /// <summary>Adds an URL to the list of CRL URLs</summary>

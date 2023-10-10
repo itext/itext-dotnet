@@ -129,7 +129,8 @@ namespace iText.Signatures {
         /// <see cref="iText.Commons.Bouncycastle.Cert.Ocsp.IOcspRequest"/>
         /// an OCSP request wrapper
         /// </returns>
-        private static IOcspRequest GenerateOCSPRequest(IX509Certificate issuerCert, IBigInteger serialNumber) {
+        protected internal static IOcspRequest GenerateOCSPRequest(IX509Certificate issuerCert, IBigInteger serialNumber
+            ) {
             //Add provider BC
             // Generate the id for the certificate we are looking for
             ICertID id = SignUtils.GenerateCertificateId(issuerCert, serialNumber, BOUNCY_CASTLE_FACTORY.CreateCertificateID
@@ -161,12 +162,40 @@ namespace iText.Signatures {
             if (url == null) {
                 return null;
             }
+            Stream @in = CreateRequestAndResponse(checkCert, rootCert, url);
+            return BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(StreamUtil.InputStreamToArray(@in));
+        }
+
+        /// <summary>
+        /// Create OCSP request and get the response for this request, represented as
+        /// <see cref="System.IO.Stream"/>.
+        /// </summary>
+        /// <param name="checkCert">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// certificate to get OCSP response for
+        /// </param>
+        /// <param name="rootCert">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// root certificate from which OCSP request will be built
+        /// </param>
+        /// <param name="url">
+        /// 
+        /// <see cref="System.Uri"/>
+        /// link, which is expected to be used to get OCSP response from
+        /// </param>
+        /// <returns>
+        /// OCSP response bytes, represented as
+        /// <see cref="System.IO.Stream"/>
+        /// </returns>
+        protected internal virtual Stream CreateRequestAndResponse(IX509Certificate checkCert, IX509Certificate rootCert
+            , String url) {
             LOGGER.LogInformation("Getting OCSP from " + url);
             IOcspRequest request = GenerateOCSPRequest(rootCert, checkCert.GetSerialNumber());
             byte[] array = request.GetEncoded();
             Uri urlt = new Uri(url);
-            Stream @in = SignUtils.GetHttpResponseForOcspRequest(array, urlt);
-            return BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(StreamUtil.InputStreamToArray(@in));
+            return SignUtils.GetHttpResponseForOcspRequest(array, urlt);
         }
     }
 }

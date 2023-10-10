@@ -44,6 +44,10 @@ namespace iText.Signatures.Testutils.Builder {
             this.issuerPrivateKey = issuerPrivateKey;
         }
 
+        public TestCrlBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey)
+            : this(issuerCert, issuerPrivateKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-1)) {
+        }
+
         public virtual void SetNextUpdate(DateTime nextUpdate) {
             this.nextUpdate = nextUpdate;
         }
@@ -51,6 +55,10 @@ namespace iText.Signatures.Testutils.Builder {
         /// <summary>See CRLReason</summary>
         public virtual void AddCrlEntry(IX509Certificate certificate, DateTime revocationDate, int reason) {
             crlBuilder.AddCRLEntry(certificate.GetSerialNumber(), revocationDate, reason);
+        }
+
+        public virtual void AddCrlEntry(IX509Certificate certificate, int reason) {
+            crlBuilder.AddCRLEntry(certificate.GetSerialNumber(), nextUpdate, reason);
         }
 
         public virtual byte[] MakeCrl() {
