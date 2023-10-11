@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Forms.Fields;
-using iText.Forms.Form.Element;
 using iText.Forms.Logs;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -1532,8 +1531,8 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             pdfDoc.AddNewPage();
-            PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(new Rectangle
-                (36, 436, 100, 100)).CreateSignature();
+            PdfSignatureFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(new 
+                Rectangle(36, 436, 100, 100)).CreateSignature();
             PdfFormXObject layer0 = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
             // Draw pink rectangle with blue border
             new PdfCanvas(layer0, pdfDoc).SaveState().SetFillColor(ColorConstants.PINK).SetStrokeColor(ColorConstants.
@@ -1542,9 +1541,7 @@ namespace iText.Forms {
             // Draw yellow circle with gray border
             new PdfCanvas(layer2, pdfDoc).SaveState().SetFillColor(ColorConstants.YELLOW).SetStrokeColor(ColorConstants
                 .DARK_GRAY).Circle(50, 50, 50).FillStroke().RestoreState();
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance("signature").SetBackgroundLayer(layer0)
-                .SetSignatureAppearanceLayer(layer2);
-            signField.GetFirstFormAnnotation().SetFormFieldElement(appearance);
+            signField.SetBackgroundLayer(layer0).SetSignatureAppearanceLayer(layer2);
             form.AddField(signField);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, sourceFolder + "cmp_signatureLayersTest.pdf"
@@ -1558,7 +1555,8 @@ namespace iText.Forms {
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             pdfDoc.AddNewPage();
             PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(new Rectangle
-                (100, 500, 100, 50)).CreateSignature();
+                (100, 600, 400, 150)).CreateSignature();
+            signField.GetPdfObject().Put(PdfName.Name, new PdfName("test name"));
             signField.GetPdfObject().Put(PdfName.Reason, new PdfString("test reason"));
             signField.GetPdfObject().Put(PdfName.Location, new PdfString("test location"));
             signField.GetPdfObject().Put(PdfName.ContactInfo, new PdfString("test contact"));

@@ -265,8 +265,8 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), new 
                 StampingProperties());
             signer.SetFieldName("Signature1");
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance("Signature1").SetReason("Test").SetLocation
-                ("TestCity").SetDescription("Approval test signature.\nCreated by iText.");
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName())
+                .SetContent("Approval test signature.\nCreated by iText.");
             signer.SetPageRect(new Rectangle(50, 650, 200, 100)).SetSignatureAppearance(appearance);
             return signer;
         }

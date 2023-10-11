@@ -26,7 +26,6 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
-using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -75,9 +74,8 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
                 new StampingProperties());
             signer.SetFieldName("Signature1");
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance("Signature1").SetReason("Test").SetLocation
-                ("TestCity").SetDescription("Approval test signature.\nCreated by iText.");
-            signer.SetPageRect(new Rectangle(50, 650, 200, 100)).SetSignatureAppearance(appearance);
+            signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
+                ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText.");
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.SignDetached(pks, signRsaChain, null, null, testTsa, 0, PdfSigner.CryptoStandard.CADES);
             PadesSigTest.BasicCheckSignedDoc(destinationFolder + "padesSignatureLevelTTest01.pdf", "Signature1");

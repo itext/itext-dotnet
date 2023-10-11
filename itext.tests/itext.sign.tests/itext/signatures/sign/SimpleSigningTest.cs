@@ -26,7 +26,6 @@ using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
-using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -153,15 +152,14 @@ namespace iText.Signatures.Sign {
 
         private static void CreateAppearance(PdfSigner signer, String reason, String location, bool setReuseAppearance
             , Rectangle rectangleForNewField, float? fontSize) {
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName()).SetReason(reason
-                ).SetLocation(location).SetReuseAppearance(setReuseAppearance);
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
+                ).SetReuseAppearance(setReuseAppearance);
             if (rectangleForNewField != null) {
                 signer.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
-                appearance.SetFontSize((float)fontSize);
+                appearance.SetLayer2FontSize((float)fontSize);
             }
-            signer.SetSignatureAppearance(appearance);
         }
     }
 }

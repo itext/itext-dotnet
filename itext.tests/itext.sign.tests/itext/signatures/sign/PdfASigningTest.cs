@@ -27,7 +27,6 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
-using iText.Forms.Form.Element;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -150,9 +149,8 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(x, y, w, h);
             PdfFont font = PdfFontFactory.CreateFont("Helvetica", "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                 );
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance("").SetReason("pdfA test").SetLocation(
-                "TestCity").SetFont(font).SetReuseAppearance(false);
-            signer.SetPageRect(rect).SetSignatureAppearance(appearance);
+            signer.SetPageRect(rect).GetSignatureAppearance().SetReason("pdfA test").SetLocation("TestCity").SetLayer2Font
+                (font).SetReuseAppearance(false);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => signer.SignDetached(pks
                 , chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES));
@@ -182,15 +180,14 @@ namespace iText.Signatures.Sign {
                 );
             signer.SetFieldName(name);
             // Creating the appearance
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(name).SetReason(reason).SetLocation(location
-                ).SetFont(font).SetReuseAppearance(setReuseAppearance);
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
+                ).SetLayer2Font(font).SetReuseAppearance(setReuseAppearance);
             if (rectangleForNewField != null) {
                 signer.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
-                appearance.SetFontSize((float)fontSize);
+                appearance.SetLayer2FontSize((float)fontSize);
             }
-            signer.SetSignatureAppearance(appearance);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(pks, chain, null, null, null, 0, subfilter);

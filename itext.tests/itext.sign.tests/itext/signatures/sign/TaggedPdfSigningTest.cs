@@ -26,7 +26,6 @@ using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
-using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -111,17 +110,16 @@ namespace iText.Signatures.Sign {
             }
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
             signer.SetCertificationLevel(certificationLevel);
-            signer.SetFieldName(name);
             // Creating the appearance
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(name).SetReason(reason).SetLocation(location
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
                 ).SetReuseAppearance(setReuseAppearance);
             if (rectangleForNewField != null) {
-                signer.SetPageRect(rectangleForNewField);
+                appearance.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
-                appearance.SetFontSize((float)fontSize);
+                appearance.SetLayer2FontSize((float)fontSize);
             }
-            signer.SetSignatureAppearance(appearance);
+            signer.SetFieldName(name);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(pks, chain, null, null, null, 0, subfilter);

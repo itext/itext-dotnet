@@ -21,11 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Text;
+using System.Collections.Generic;
 using iText.Commons.Utils;
+using iText.Forms.Fields.Properties;
 using iText.Forms.Form.Renderer;
 using iText.IO.Image;
-using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -39,55 +40,8 @@ namespace iText.Forms.Form.Element {
         /// <summary>Default paddings for the signature field.</summary>
         private const float DEFAULT_PADDING = 2;
 
-        /// <summary>The rendering mode chosen for visible signatures.</summary>
-        private SignatureFieldAppearance.RenderingMode renderingMode = SignatureFieldAppearance.RenderingMode.DESCRIPTION;
-
-        /// <summary>The reason for signing.</summary>
-        private String reason = "";
-
-        /// <summary>The caption for the reason for signing.</summary>
-        private String reasonCaption = "Reason: ";
-
-        /// <summary>Holds value of property location.</summary>
-        private String location = "";
-
-        /// <summary>The caption for the location of signing.</summary>
-        private String locationCaption = "Location: ";
-
-        /// <summary>Holds value of the application that creates the signature.</summary>
-        private String signatureCreator = "";
-
-        /// <summary>The contact name of the signer.</summary>
-        private String contact = "";
-
-        /// <summary>The name of the signer from the certificate.</summary>
-        private String signedBy = "";
-
-        /// <summary>Holds value of property signDate.</summary>
-        private DateTime signDate;
-
-        private bool isSignDateSet = false;
-
-        /// <summary>The image that needs to be used for a visible signature.</summary>
-        private ImageData signatureGraphic = null;
-
-        /// <summary>A background image for the text.</summary>
-        private ImageData image;
-
-        /// <summary>The scaling to be applied to the background image.</summary>
-        private float imageScale = 0;
-
-        /// <summary>The text that represents the description of the signature.</summary>
-        private String description;
-
-        /// <summary>Indicates if we need to reuse the existing appearance as a background.</summary>
-        private bool reuseAppearance = false;
-
-        /// <summary>Background level of the signature appearance.</summary>
-        private PdfFormXObject n0;
-
-        /// <summary>Signature appearance layer that contains information about the signature.</summary>
-        private PdfFormXObject n2;
+        /// <summary>Collection of the layout elements which will be rendered as a signature content.</summary>
+        private readonly IList<IElement> contentElements = new List<IElement>();
 
         /// <summary>We should support signing of existing fields with dots in name, but dots are now allowed in model element id.
         ///     </summary>
@@ -118,299 +72,135 @@ namespace iText.Forms.Form.Element {
             SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(DEFAULT_PADDING));
         }
 
-        /// <summary>Gets the rendering mode for this signature model element.</summary>
-        /// <returns>the rendering mode for this signature.</returns>
-        public virtual SignatureFieldAppearance.RenderingMode GetRenderingMode() {
-            return renderingMode;
-        }
-
-        /// <summary>Sets the rendering mode for this signature.</summary>
-        /// <param name="renderingMode">the rendering mode.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="SignatureFieldAppearance"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetRenderingMode(SignatureFieldAppearance.RenderingMode
-             renderingMode) {
-            this.renderingMode = renderingMode;
-            return this;
-        }
-
-        /// <summary>Returns the signing reason.</summary>
-        /// <returns>reason for signing.</returns>
-        public virtual String GetReason() {
-            return reason;
-        }
-
-        /// <summary>Sets the signing reason.</summary>
-        /// <param name="reason">signing reason.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="SignatureFieldAppearance"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetReason(String reason) {
-            this.reason = reason;
-            return this;
-        }
-
-        /// <summary>Sets the caption for the signing reason.</summary>
-        /// <param name="reasonCaption">new signing reason caption.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="SignatureFieldAppearance"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetReasonCaption(String reasonCaption) {
-            this.reasonCaption = reasonCaption;
-            return this;
-        }
-
-        /// <summary>Returns the signing location.</summary>
-        /// <returns>signing location.</returns>
-        public virtual String GetLocation() {
-            return location;
-        }
-
-        /// <summary>Sets the signing location.</summary>
-        /// <param name="location">new signing location.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="SignatureFieldAppearance"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetLocation(String location) {
-            this.location = location;
-            return this;
-        }
-
-        /// <summary>Sets the caption for the signing location.</summary>
-        /// <param name="locationCaption">new signing location caption.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="SignatureFieldAppearance"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetLocationCaption(String locationCaption
-            ) {
-            this.locationCaption = locationCaption;
-            return this;
-        }
-
-        /// <summary>Returns the signature creator.</summary>
-        /// <returns>the signature creator.</returns>
-        public virtual String GetSignatureCreator() {
-            return signatureCreator;
-        }
-
-        /// <summary>Sets the name of the application used to create the signature.</summary>
-        /// <param name="signatureCreator">new name of the application signing a document.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="SignatureFieldAppearance"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetSignatureCreator(String signatureCreator
-            ) {
-            this.signatureCreator = signatureCreator;
-            return this;
-        }
-
-        /// <summary>Returns the signing contact.</summary>
-        /// <returns>the signing contact.</returns>
-        public virtual String GetContact() {
-            return this.contact;
-        }
-
-        /// <summary>Sets the signing contact.</summary>
-        /// <param name="contact">new signing contact.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="SignatureFieldAppearance"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContact(String contact) {
-            this.contact = contact;
-            return this;
-        }
-
-        /// <summary>Gets the Image object to render.</summary>
-        /// <returns>the image.</returns>
-        public virtual ImageData GetSignatureGraphic() {
-            return signatureGraphic;
-        }
-
-        /// <summary>Sets the Image object to render.</summary>
-        /// <param name="signatureGraphic">image rendered.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="SignatureFieldAppearance"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetSignatureGraphic(ImageData signatureGraphic
-            ) {
-            this.signatureGraphic = signatureGraphic;
-            return this;
-        }
-
-        /// <summary>Indicates if the existing appearances needs to be reused as a background.</summary>
-        /// <returns>appearances reusing flag value.</returns>
-        public virtual bool IsReuseAppearance() {
-            return reuseAppearance;
-        }
-
-        /// <summary>Indicates that the existing appearances needs to be reused as a background.</summary>
-        /// <param name="reuseAppearance">is an appearances reusing flag value to set.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="SignatureFieldAppearance"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetReuseAppearance(bool reuseAppearance) {
-            this.reuseAppearance = reuseAppearance;
-            return this;
-        }
-
-        /// <summary>Gets the background image for the text.</summary>
-        /// <returns>the background image.</returns>
-        public virtual ImageData GetImage() {
-            return this.image;
-        }
-
-        /// <summary>Sets the background image for the text.</summary>
-        /// <param name="image">the background image.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="SignatureFieldAppearance"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetImage(ImageData image) {
-            this.image = image;
-            return this;
-        }
-
-        /// <summary>Gets the scaling to be applied to the background image.</summary>
-        /// <returns>the scaling to be applied to the background image.</returns>
-        public virtual float GetImageScale() {
-            return this.imageScale;
-        }
-
-        /// <summary>Sets the scaling to be applied to the background image.</summary>
-        /// <remarks>
-        /// Sets the scaling to be applied to the background image. If it's zero the image
-        /// will fully fill the rectangle. If it's less than zero the image will fill the rectangle but
-        /// will keep the proportions. If it's greater than zero that scaling will be applied.
-        /// In any of the cases the image will always be centered. It's zero by default.
-        /// </remarks>
-        /// <param name="imageScale">the scaling to be applied to the background image.</param>
-        /// <returns>
-        /// this same
-        /// <see cref="SignatureFieldAppearance"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetImageScale(float imageScale) {
-            this.imageScale = imageScale;
-            return this;
-        }
-
-        /// <summary>Sets the signature text identifying the signer.</summary>
-        /// <param name="text">
-        /// the signature text identifying the signer. If null or not set
-        /// a standard description will be used.
+        /// <summary>Sets the content for this signature.</summary>
+        /// <param name="description">
+        /// 
+        /// <see cref="iText.Forms.Fields.Properties.SignedAppearanceText"/>
+        /// instance representing the signature text identifying the signer.
         /// </param>
         /// <returns>
         /// this same
         /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetDescription(String text) {
-            description = text;
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(SignedAppearanceText description
+            ) {
+            AddTextContent(description.GenerateDescriptionText());
             return this;
         }
 
-        /// <summary>Gets the signature text identifying the signer if set by setDescription().</summary>
-        /// <param name="generate">if true and description wasn't set by user, description will be generated.</param>
-        /// <returns>the signature text identifying the signer.</returns>
-        public virtual String GetDescription(bool generate) {
-            return generate && description == null ? GenerateDescriptionText() : description;
-        }
-
-        /// <summary>Sets the name of the signer from the certificate.</summary>
-        /// <param name="signedBy">name of the signer.</param>
+        /// <summary>Sets the content for this signature.</summary>
+        /// <param name="description">the signature text identifying the signer.</param>
         /// <returns>
         /// this same
         /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetSignedBy(String signedBy) {
-            this.signedBy = signedBy;
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(String description) {
+            AddTextContent(description);
             return this;
         }
 
-        /// <summary>Gets the name of the signer from the certificate.</summary>
-        /// <returns>signedBy name of the signer.</returns>
-        public virtual String GetSignedBy() {
-            return signedBy;
-        }
-
-        /// <summary>Returns the signature date.</summary>
-        /// <returns>the signature date</returns>
-        public virtual DateTime GetSignDate() {
-            return signDate;
-        }
-
-        /// <summary>Sets the signature date.</summary>
-        /// <param name="signDate">new signature date.</param>
+        /// <summary>Sets the content for this signature.</summary>
+        /// <param name="description">
+        /// 
+        /// <see cref="iText.Forms.Fields.Properties.SignedAppearanceText"/>
+        /// instance representing the signature text identifying the signer.
+        /// </param>
+        /// <param name="image">the Image object to render.</param>
         /// <returns>
         /// this same
         /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetSignDate(DateTime signDate) {
-            this.signDate = signDate;
-            this.isSignDateSet = true;
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(SignedAppearanceText description
+            , ImageData image) {
+            AddImageContent(image);
+            AddTextContent(description.GenerateDescriptionText());
             return this;
         }
 
-        /// <summary>Gets the background layer that is present when creating the signature field if it was set.</summary>
-        /// <returns>n0 layer xObject.</returns>
-        public virtual PdfFormXObject GetBackgroundLayer() {
-            return n0;
-        }
-
-        /// <summary>Sets the background layer that is present when creating the signature field.</summary>
-        /// <param name="n0">layer xObject.</param>
+        /// <summary>Sets the content for this signature.</summary>
+        /// <param name="description">the signature text identifying the signer.</param>
+        /// <param name="image">the Image object to render.</param>
         /// <returns>
         /// this same
         /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetBackgroundLayer(PdfFormXObject n0) {
-            this.n0 = n0;
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(String description, ImageData 
+            image) {
+            AddImageContent(image);
+            AddTextContent(description);
             return this;
         }
 
-        /// <summary>Gets the signature appearance layer that contains information about the signature if it was set.</summary>
-        /// <returns>n2 layer xObject.</returns>
-        public virtual PdfFormXObject GetSignatureAppearanceLayer() {
-            return n2;
-        }
-
-        /// <summary>
-        /// Sets the signature appearance layer that contains information about the signature, e.g. the line art for the
-        /// handwritten signature, the text giving the signer’s name, date, reason, location and so on.
-        /// </summary>
-        /// <param name="n2">layer xObject.</param>
+        /// <summary>Sets the content for this signature.</summary>
+        /// <param name="image">the Image object to render.</param>
         /// <returns>
         /// this same
         /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </returns>
-        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetSignatureAppearanceLayer(PdfFormXObject
-             n2) {
-            this.n2 = n2;
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(ImageData image) {
+            AddImageContent(image);
             return this;
+        }
+
+        /// <summary>Sets the content for this signature.</summary>
+        /// <param name="signerName">the name of the signer from the certificate.</param>
+        /// <param name="description">
+        /// 
+        /// <see cref="iText.Forms.Fields.Properties.SignedAppearanceText"/>
+        /// instance representing the signature text identifying the signer.
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="SignatureFieldAppearance"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(String signerName, SignedAppearanceText
+             description) {
+            AddTextContent(signerName);
+            AddTextContent(description.GenerateDescriptionText());
+            return this;
+        }
+
+        /// <summary>Sets the content for this signature.</summary>
+        /// <param name="signerName">the name of the signer from the certificate.</param>
+        /// <param name="description">
+        /// 
+        /// <see cref="iText.Forms.Fields.Properties.SignedAppearanceText"/>
+        /// instance representing the signature text identifying the signer.
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="SignatureFieldAppearance"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(String signerName, String description
+            ) {
+            AddTextContent(signerName);
+            AddTextContent(description);
+            return this;
+        }
+
+        /// <summary>Sets the content for this signature.</summary>
+        /// <param name="data">the custom signature data which will be rendered.</param>
+        /// <returns>
+        /// this same
+        /// <see cref="SignatureFieldAppearance"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(Div data) {
+            contentElements.Add(data);
+            return this;
+        }
+
+        /// <summary>Gets the content for this signature.</summary>
+        /// <returns>collection of the layout elements which will be rendered as a signature content.</returns>
+        public virtual IList<IElement> GetContentElements() {
+            return JavaCollectionsUtil.UnmodifiableList(contentElements);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -431,33 +221,12 @@ namespace iText.Forms.Form.Element {
             return new SignatureAppearanceRenderer(this);
         }
 
-        private String GenerateDescriptionText() {
-            StringBuilder buf = new StringBuilder();
-            if (!String.IsNullOrEmpty(signedBy)) {
-                buf.Append("Digitally signed by ").Append(signedBy);
-            }
-            if (isSignDateSet) {
-                buf.Append('\n').Append("Date: ").Append(DateTimeUtil.DateToString(signDate));
-            }
-            if (reason != null) {
-                buf.Append('\n').Append(reasonCaption).Append(reason);
-            }
-            if (location != null) {
-                buf.Append('\n').Append(locationCaption).Append(location);
-            }
-            return buf.ToString();
+        private void AddTextContent(String text) {
+            contentElements.Add(new Paragraph(text).SetMargin(0).SetMultipliedLeading(0.9f));
         }
 
-        /// <summary>Signature rendering modes.</summary>
-        public enum RenderingMode {
-            /// <summary>The rendering mode is just the description.</summary>
-            DESCRIPTION,
-            /// <summary>The rendering mode is the name of the signer and the description.</summary>
-            NAME_AND_DESCRIPTION,
-            /// <summary>The rendering mode is an image and the description.</summary>
-            GRAPHIC_AND_DESCRIPTION,
-            /// <summary>The rendering mode is just an image.</summary>
-            GRAPHIC
+        private void AddImageContent(ImageData imageData) {
+            contentElements.Add(new iText.Layout.Element.Image(imageData));
         }
     }
 }

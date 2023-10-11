@@ -40,7 +40,6 @@ using iText.Layout.Properties;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -166,7 +165,6 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 4)]
         public virtual void SignaturesOnRotatedPages() {
             StringBuilder assertionResults = new StringBuilder();
             for (int i = 1; i <= 4; i++) {
@@ -216,10 +214,10 @@ namespace iText.Signatures.Sign {
             PdfReader reader = new PdfReader(src);
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            signer.SetFieldName("Signature1");
             signer.GetSignatureAppearance().SetLayer2Text("SIGNED").SetLayer2FontColor(ColorConstants.GREEN).SetReason
                 ("Test 1").SetLocation("TestCity").SetReuseAppearance(true).GetSignatureAppearance().SetProperty(Property
                 .VERTICAL_ALIGNMENT, VerticalAlignment.MIDDLE);
-            signer.SetFieldName("Signature1");
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, SOURCE_FOLDER + "cmp_" + fileName, DESTINATION_FOLDER

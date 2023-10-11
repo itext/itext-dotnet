@@ -239,7 +239,6 @@ namespace iText.Signatures {
         /// layout element.
         /// </param>
         public virtual void SetSignatureAppearance(SignatureFieldAppearance appearance) {
-            appearance.SetSignDate(signDate);
             this.appearance.SetSignatureAppearance(appearance);
         }
 
@@ -449,6 +448,34 @@ namespace iText.Signatures {
             this.fieldLock = fieldLock;
         }
 
+        /// <summary>Returns the signature creator.</summary>
+        /// <returns>The signature creator.</returns>
+        public virtual String GetSignatureCreator() {
+            return appearance.GetSignatureCreator();
+        }
+
+        /// <summary>Sets the name of the application used to create the signature.</summary>
+        /// <param name="signatureCreator">A new name of the application signing a document.</param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetSignatureCreator(String signatureCreator) {
+            appearance.SetSignatureCreator(signatureCreator);
+            return this;
+        }
+
+        /// <summary>Returns the signing contact.</summary>
+        /// <returns>The signing contact.</returns>
+        public virtual String GetContact() {
+            return appearance.GetContact();
+        }
+
+        /// <summary>Sets the signing contact.</summary>
+        /// <param name="contact">A new signing contact.</param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetContact(String contact) {
+            appearance.SetContact(contact);
+            return this;
+        }
+
         /// <summary>Signs the document using the detached mode, CMS or CAdES equivalent.</summary>
         /// <remarks>
         /// Signs the document using the detached mode, CMS or CAdES equivalent.
@@ -557,8 +584,8 @@ namespace iText.Signatures {
                 .ETSI_CAdES_DETACHED : PdfName.Adbe_pkcs7_detached);
             dic.SetReason(appearance.GetReason());
             dic.SetLocation(appearance.GetLocation());
-            dic.SetSignatureCreator(appearance.GetSignatureCreator());
-            dic.SetContact(appearance.GetContact());
+            dic.SetSignatureCreator(GetSignatureCreator());
+            dic.SetContact(GetContact());
             dic.SetDate(new PdfDate(GetSignDate()));
             // time-stamp will over-rule this
             cryptoDictionary = dic;
@@ -614,8 +641,8 @@ namespace iText.Signatures {
             PdfSignature dic = new PdfSignature();
             dic.SetReason(appearance.GetReason());
             dic.SetLocation(appearance.GetLocation());
-            dic.SetSignatureCreator(appearance.GetSignatureCreator());
-            dic.SetContact(appearance.GetContact());
+            dic.SetSignatureCreator(GetSignatureCreator());
+            dic.SetContact(GetContact());
             dic.SetDate(new PdfDate(GetSignDate()));
             // time-stamp will over-rule this
             externalSignatureContainer.ModifySigningDictionary(dic.GetPdfObject());
@@ -927,7 +954,11 @@ namespace iText.Signatures {
             }
             flags |= PdfAnnotation.LOCKED;
             sigField.Put(PdfName.F, new PdfNumber(flags));
+            sigField.DisableFieldRegeneration();
+            sigField.SetReuseAppearance(appearance.IsReuseAppearance()).SetSignatureAppearanceLayer(appearance.GetSignatureAppearanceLayer
+                ()).SetBackgroundLayer(appearance.GetBackgroundLayer());
             sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetSignatureAppearance());
+            sigField.EnableFieldRegeneration();
             sigField.SetModified();
             return sigFieldLock;
         }
@@ -960,7 +991,11 @@ namespace iText.Signatures {
             }
             int pagen = GetPageNumber();
             widget.SetPage(document.GetPage(pagen));
+            sigField.DisableFieldRegeneration();
+            sigField.SetReuseAppearance(appearance.IsReuseAppearance()).SetSignatureAppearanceLayer(appearance.GetSignatureAppearanceLayer
+                ()).SetBackgroundLayer(appearance.GetBackgroundLayer());
             sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetSignatureAppearance());
+            sigField.EnableFieldRegeneration();
             acroForm.AddField(sigField, document.GetPage(pagen));
             if (acroForm.GetPdfObject().IsIndirect()) {
                 acroForm.SetModified();

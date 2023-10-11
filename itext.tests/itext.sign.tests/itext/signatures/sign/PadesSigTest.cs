@@ -29,7 +29,6 @@ using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
-using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -143,9 +142,8 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
                 new StampingProperties());
             signer.SetFieldName("Signature1");
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance("Signature1").SetReason("Test").SetLocation
-                ("TestCity").SetDescription("Approval test signature.\nCreated by iText.");
-            signer.SetPageRect(new Rectangle(50, 650, 200, 100)).SetSignatureAppearance(appearance);
+            signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
+                ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText.");
             if (sigPolicyIdentifier != null) {
                 signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES, sigPolicyIdentifier
                     );
