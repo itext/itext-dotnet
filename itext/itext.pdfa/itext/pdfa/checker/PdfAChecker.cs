@@ -156,7 +156,9 @@ namespace iText.Pdfa.Checker {
             CheckCatalog(catalog);
             CheckLogicalStructure(catalogDict);
             CheckForm(catalogDict.GetAsDictionary(PdfName.AcroForm));
-            CheckOutlines(catalogDict);
+            if (catalog.GetDocument().HasOutlines()) {
+                CheckOutlines(catalog.GetDocument().GetOutlines(false));
+            }
             CheckPages(catalog.GetDocument());
             CheckOpenAction(catalogDict.Get(PdfName.OpenAction));
             CheckColorsUsages();
@@ -967,30 +969,16 @@ namespace iText.Pdfa.Checker {
             }
         }
 
-        private void CheckOutlines(PdfDictionary catalogDict) {
-            PdfDictionary outlines = catalogDict.GetAsDictionary(PdfName.Outlines);
-            if (outlines != null) {
-                foreach (PdfDictionary outline in GetOutlines(outlines)) {
-                    PdfDictionary action = outline.GetAsDictionary(PdfName.A);
-                    if (action != null) {
-                        CheckAction(action);
-                    }
+        private void CheckOutlines(PdfOutline outline) {
+            if (outline != null) {
+                PdfDictionary action = outline.GetContent().GetAsDictionary(PdfName.A);
+                if (action != null) {
+                    CheckAction(action);
+                }
+                foreach (PdfOutline child in outline.GetAllChildren()) {
+                    CheckOutlines(child);
                 }
             }
-        }
-
-        private IList<PdfDictionary> GetOutlines(PdfDictionary item) {
-            IList<PdfDictionary> outlines = new List<PdfDictionary>();
-            outlines.Add(item);
-            PdfDictionary processItem = item.GetAsDictionary(PdfName.First);
-            if (processItem != null) {
-                outlines.AddAll(GetOutlines(processItem));
-            }
-            processItem = item.GetAsDictionary(PdfName.Next);
-            if (processItem != null) {
-                outlines.AddAll(GetOutlines(processItem));
-            }
-            return outlines;
         }
 
         private void SetCheckerOutputIntent(PdfDictionary outputIntent) {

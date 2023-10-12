@@ -48,6 +48,13 @@ namespace iText.Pdfa.Checker {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CheckPdfWithHugeAmountOfOutlinesTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(SOURCE_FOLDER + "outlineStackOverflowTest01.pdf"))) {
+                NUnit.Framework.Assert.DoesNotThrow(() => pdfAChecker.CheckDocument(pdf.GetCatalog()));
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CheckAppearanceStreamsWithCycle() {
             using (MemoryStream bos = new MemoryStream()) {
                 using (PdfWriter writer = new PdfWriter(bos)) {
