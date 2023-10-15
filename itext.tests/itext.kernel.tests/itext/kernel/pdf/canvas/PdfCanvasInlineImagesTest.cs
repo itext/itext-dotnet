@@ -65,8 +65,8 @@ namespace iText.Kernel.Pdf.Canvas {
                 460, 100, 14.16f), true);
             canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "0047478.jpg"), new Rectangle(36
                 , 300, 100, 141.41f), true);
-            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "map.jp2"), new Rectangle(36, 200
-                , 100, 76.34f), true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "bee.jp2"), new Rectangle(36, 200
+                , 60, 76.34f), true);
             canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "amb.jb2"), new Rectangle(36, 30
                 , 100, 150), true);
             document.Close();
@@ -109,10 +109,10 @@ namespace iText.Kernel.Pdf.Canvas {
             StreamUtil.TransferBytes(stream, baos);
             canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 300, 100, 141.41f
                 ), true);
-            stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "map.jp2"));
+            stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "bee.jp2"));
             baos = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 200, 100, 76.34f
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 200, 60, 76.34f
                 ), true);
             stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "amb.jb2"));
             baos = new ByteArrayOutputStream();
