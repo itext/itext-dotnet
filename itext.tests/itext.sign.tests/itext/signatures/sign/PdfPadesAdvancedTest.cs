@@ -28,6 +28,7 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -146,8 +147,8 @@ namespace iText.Signatures.Sign {
                 ());
             testCrlClient.AddBuilderForCertIssuer((IX509Certificate)signRsaChain[0], crlBuilderMainCert);
             testCrlClient.AddBuilderForCertIssuer((IX509Certificate)signRsaChain[1], crlBuilderRootCert);
-            PdfSigner signer = CreatePdfSigner(srcFileName, outFileName);
-            PdfPadesSigner padesSigner = new PdfPadesSigner();
+            SignerProperties signer = CreateSignerProperties();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outFileName);
             padesSigner.SetOcspClient(testOcspClient);
             padesSigner.SetCrlClient(testCrlClient);
             IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
@@ -155,14 +156,21 @@ namespace iText.Signatures.Sign {
             PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
+        
+        private SignerProperties CreateSignerProperties() {
+            SignerProperties signerProperties = new SignerProperties();
+            signerProperties.SetFieldName("Signature1");
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signerProperties.GetFieldName())
+                .SetContent("Approval test signature.\nCreated by iText.");
+            signerProperties.SetPageRect(new Rectangle(50, 650, 200, 100))
+                .SetSignatureAppearance(appearance);
 
-        private PdfSigner CreatePdfSigner(String srcFileName, String outFileName) {
-            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), new 
-                StampingProperties());
-            signer.SetFieldName("Signature1");
-            signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
-                ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText.");
-            return signer;
+            return signerProperties;
+        }
+
+        private PdfPadesSigner CreatePdfPadesSigner(String srcFileName, String outFileName) {
+            return new PdfPadesSigner(new PdfReader(FileUtil.GetInputStreamForFile(srcFileName)),
+                FileUtil.GetFileOutputStream(outFileName));
         }
     }
 }

@@ -98,17 +98,17 @@ namespace iText.Signatures.Sign {
             String signCertFileName = certsSrc + "signCertRsa01.pem";
             IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
-            PdfSigner signer = CreatePdfSigner(srcFileName, outFileName);
-            PdfPadesSigner padesSigner = new PdfPadesSigner();
+            SignerProperties signerProperties = CreateSignerProperties();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outFileName);
             if ((bool)useTempFolder) {
                 padesSigner.SetTemporaryDirectoryPath(destinationFolder);
             }
             if ((bool)useSignature) {
                 IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
-                padesSigner.SignWithBaselineBProfile(signer, signRsaChain, pks);
+                padesSigner.SignWithBaselineBProfile(signerProperties, signRsaChain, pks);
             }
             else {
-                padesSigner.SignWithBaselineBProfile(signer, signRsaChain, signRsaPrivateKey);
+                padesSigner.SignWithBaselineBProfile(signerProperties, signRsaChain, signRsaPrivateKey);
             }
             PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
@@ -130,18 +130,18 @@ namespace iText.Signatures.Sign {
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
             IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
-            PdfSigner signer = CreatePdfSigner(srcFileName, outFileName);
+            SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            PdfPadesSigner padesSigner = new PdfPadesSigner();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outFileName);
             if ((bool)useTempFolder) {
                 padesSigner.SetTemporaryDirectoryPath(destinationFolder);
             }
             if ((bool)useSignature) {
                 IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
-                padesSigner.SignWithBaselineTProfile(signer, signRsaChain, pks, testTsa);
+                padesSigner.SignWithBaselineTProfile(signerProperties, signRsaChain, pks, testTsa);
             }
             else {
-                padesSigner.SignWithBaselineTProfile(signer, signRsaChain, signRsaPrivateKey, testTsa);
+                padesSigner.SignWithBaselineTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             }
             PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
@@ -166,21 +166,21 @@ namespace iText.Signatures.Sign {
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
             IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertFileName, password);
-            PdfSigner signer = CreatePdfSigner(srcFileName, outFileName);
+            SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             ICrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
-            PdfPadesSigner padesSigner = new PdfPadesSigner();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outFileName);
             if ((bool)useTempFolder) {
                 padesSigner.SetTemporaryDirectoryPath(destinationFolder);
             }
             padesSigner.SetOcspClient(ocspClient).SetCrlClient(crlClient);
             if ((bool)useSignature) {
                 IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
-                padesSigner.SignWithBaselineLTProfile(signer, signRsaChain, pks, testTsa);
+                padesSigner.SignWithBaselineLTProfile(signerProperties, signRsaChain, pks, testTsa);
             }
             else {
-                padesSigner.SignWithBaselineLTProfile(signer, signRsaChain, signRsaPrivateKey, testTsa);
+                padesSigner.SignWithBaselineLTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             }
             PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
@@ -205,21 +205,21 @@ namespace iText.Signatures.Sign {
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
             IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertFileName, password);
-            PdfSigner signer = CreatePdfSigner(srcFileName, outFileName);
+            SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             ICrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
-            PdfPadesSigner padesSigner = new PdfPadesSigner();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outFileName);
             if ((bool)useTempFolder) {
                 padesSigner.SetTemporaryDirectoryPath(destinationFolder);
             }
             padesSigner.SetOcspClient(ocspClient).SetCrlClient(crlClient).SetTimestampSignatureName("timestampSig1");
             if ((bool)useSignature) {
                 IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
-                padesSigner.SignWithBaselineLTAProfile(signer, signRsaChain, pks, testTsa);
+                padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, pks, testTsa);
             }
             else {
-                padesSigner.SignWithBaselineLTAProfile(signer, signRsaChain, signRsaPrivateKey, testTsa);
+                padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             }
             PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
@@ -244,31 +244,35 @@ namespace iText.Signatures.Sign {
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             ICrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
-            PdfPadesSigner padesSigner = new PdfPadesSigner();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outFileName);
             if ((bool)useTempFolder) {
                 padesSigner.SetTemporaryDirectoryPath(destinationFolder);
             }
             padesSigner.SetOcspClient(ocspClient).SetCrlClient(crlClient);
             if ((bool)useSignature) {
-                padesSigner.ProlongSignatures(new PdfReader(FileUtil.GetInputStreamForFile(srcFileName)), FileUtil.GetFileOutputStream
-                    (outFileName), testTsa);
+                padesSigner.ProlongSignatures(testTsa);
             }
             else {
-                padesSigner.ProlongSignatures(new PdfReader(FileUtil.GetInputStreamForFile(srcFileName)), FileUtil.GetFileOutputStream
-                    (outFileName));
+                padesSigner.ProlongSignatures();
             }
             PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
-        private PdfSigner CreatePdfSigner(String srcFileName, String outFileName) {
-            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), new 
-                StampingProperties());
-            signer.SetFieldName("Signature1");
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName())
+        private SignerProperties CreateSignerProperties() {
+            SignerProperties signerProperties = new SignerProperties();
+            signerProperties.SetFieldName("Signature1");
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signerProperties.GetFieldName())
                 .SetContent("Approval test signature.\nCreated by iText.");
-            signer.SetPageRect(new Rectangle(50, 650, 200, 100)).SetSignatureAppearance(appearance);
-            return signer;
+            signerProperties.SetPageRect(new Rectangle(50, 650, 200, 100))
+                .SetSignatureAppearance(appearance);
+
+            return signerProperties;
+        }
+
+        private PdfPadesSigner CreatePdfPadesSigner(String srcFileName, String outFileName) {
+            return new PdfPadesSigner(new PdfReader(FileUtil.GetInputStreamForFile(srcFileName)),
+                FileUtil.GetFileOutputStream(outFileName));
         }
     }
 }
