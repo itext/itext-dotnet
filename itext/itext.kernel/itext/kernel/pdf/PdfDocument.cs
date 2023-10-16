@@ -1524,7 +1524,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
         /// <remarks>
         /// Checks whether PDF document conforms a specific standard.
-        /// Shall be override.
+        /// Shall be overridden.
         /// </remarks>
         /// <param name="obj">An object to conform.</param>
         /// <param name="key">type of object to conform.</param>
@@ -1534,7 +1534,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
         /// <remarks>
         /// Checks whether PDF document conforms a specific standard.
-        /// Shall be override.
+        /// Shall be overridden.
         /// </remarks>
         /// <param name="obj">an object to conform.</param>
         /// <param name="key">type of object to conform.</param>
@@ -1551,7 +1551,25 @@ namespace iText.Kernel.Pdf {
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
         /// <remarks>
         /// Checks whether PDF document conforms a specific standard.
-        /// Shall be override.
+        /// Shall be overridden.
+        /// </remarks>
+        /// <param name="obj">an object to conform.</param>
+        /// <param name="key">type of object to conform.</param>
+        /// <param name="resources">
+        /// 
+        /// <see cref="PdfResources"/>
+        /// associated with an object to check.
+        /// </param>
+        /// <param name="contentStream">current content stream.</param>
+        /// <param name="extra">extra data required for the check.</param>
+        public virtual void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
+            , Object extra) {
+        }
+
+        /// <summary>Checks whether PDF document conforms a specific standard.</summary>
+        /// <remarks>
+        /// Checks whether PDF document conforms a specific standard.
+        /// Shall be overridden.
         /// </remarks>
         /// <param name="gState">
         /// a
@@ -1974,7 +1992,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
         /// <remarks>
         /// Checks whether PDF document conforms a specific standard.
-        /// Shall be override.
+        /// Shall be overridden.
         /// </remarks>
         protected internal virtual void CheckIsoConformance() {
         }
@@ -2212,7 +2230,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Updates XMP metadata.</summary>
         /// <remarks>
         /// Updates XMP metadata.
-        /// Shall be override.
+        /// Shall be overridden.
         /// </remarks>
         protected internal virtual void UpdateXmpMetadata() {
             try {

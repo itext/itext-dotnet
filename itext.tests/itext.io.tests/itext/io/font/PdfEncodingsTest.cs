@@ -20,23 +20,16 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-namespace iText.Kernel.Pdf {
-    /// <summary>Type of object to conform.</summary>
-    public enum IsoKey {
-        CANVAS_STACK,
-        FILL_COLOR,
-        EXTENDED_GRAPHICS_STATE,
-        INLINE_IMAGE,
-        PAGE,
-        PDF_OBJECT,
-        RENDERING_INTENT,
-        STROKE_COLOR,
-        TAG_STRUCTURE_ELEMENT,
-        FONT_GLYPHS,
-        XREF_TABLE,
-        SIGNATURE,
-        SIGNATURE_TYPE,
-        CRYPTO,
-        FONT
+using iText.Test;
+
+namespace iText.IO.Font {
+    [NUnit.Framework.Category("UnitTest")]
+    public class PdfEncodingsTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void ConvertToBytesNoEncodingTest() {
+            NUnit.Framework.Assert.AreEqual(new byte[] { (byte)194 }, PdfEncodings.ConvertToBytes('Â', null));
+            NUnit.Framework.Assert.AreEqual(new byte[] { (byte)194 }, PdfEncodings.ConvertToBytes('Â', ""));
+            NUnit.Framework.Assert.AreEqual(new byte[] { (byte)194 }, PdfEncodings.ConvertToBytes('Â', "symboltt"));
+        }
     }
 }

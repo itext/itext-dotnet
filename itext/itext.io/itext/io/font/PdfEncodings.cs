@@ -258,7 +258,7 @@ namespace iText.IO.Font {
 
         /// <summary>
         /// Converts a
-        /// <c>String</c>
+        /// <c>char</c>
         /// to a
         /// <c>byte</c>
         /// array according
@@ -276,7 +276,7 @@ namespace iText.IO.Font {
         /// representing the conversion according to the font's encoding
         /// </returns>
         public static byte[] ConvertToBytes(char ch, String encoding) {
-            if (encoding == null || encoding.Length == 0) {
+            if (encoding == null || encoding.Length == 0 || "symboltt".Equals(encoding)) {
                 return new byte[] { (byte)ch };
             }
             IntHashtable hash = null;

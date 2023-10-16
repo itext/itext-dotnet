@@ -143,12 +143,20 @@ namespace iText.Pdfa {
             SetChecker(conformanceLevel);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void CheckIsoConformance(Object obj, IsoKey key) {
             CheckIsoConformance(obj, key, null, null);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
             ) {
+            CheckIsoConformance(obj, key, resources, contentStream, null);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
+            , Object extra) {
             if (!isPdfADocument) {
                 base.CheckIsoConformance(obj, key, resources, contentStream);
                 return;
@@ -229,6 +237,11 @@ namespace iText.Pdfa {
 
                 case IsoKey.CRYPTO: {
                     checker.CheckCrypto((PdfObject)obj);
+                    break;
+                }
+
+                case IsoKey.FONT: {
+                    checker.CheckText((String)obj, (PdfFont)extra);
                     break;
                 }
             }

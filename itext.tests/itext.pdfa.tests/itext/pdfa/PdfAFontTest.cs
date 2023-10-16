@@ -30,6 +30,8 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
+using iText.Layout;
+using iText.Layout.Element;
 using iText.Pdfa.Exceptions;
 using iText.Test;
 using iText.Test.Pdfa;
@@ -211,18 +213,22 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test01() {
             // encoding must not be specified
-            CreateDocumentWithFont("symbolicTtfCharEncodingsPdfA1Test01.pdf", "Symbols1.ttf", "", PdfAConformanceLevel
-                .PDF_A_1B, null);
+            // Here we produced valid pdfa files in the past by silently removing not valid symbols
+            // But right now we check for used glyphs which don't exist in the font and throw exception
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
+                "symbolicTtfCharEncodingsPdfA1Test01.pdf", "Symbols1.ttf", "", PdfAConformanceLevel.PDF_A_1B));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test02() {
-            // TODO: DEVSIX-2975 Using only shipped fonts in font provider can result in pdf with no-def glyph and not conforming PDF/A document
-            String expectedVeraPdfWarning = "VeraPDF verification failed. See verification results: " + UrlUtil.GetNormalizedFileUriString
-                (DESTINATION_FOLDER + "symbolicTtfCharEncodingsPdfA1Test02.xml");
             // if you specify encoding, symbolic font is treated as non-symbolic
-            CreateDocumentWithFont("symbolicTtfCharEncodingsPdfA1Test02.pdf", "Symbols1.ttf", PdfEncodings.MACROMAN, PdfAConformanceLevel
-                .PDF_A_1B, expectedVeraPdfWarning);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
+                "symbolicTtfCharEncodingsPdfA1Test02.pdf", "Symbols1.ttf", PdfEncodings.MACROMAN, PdfAConformanceLevel
+                .PDF_A_1B));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -230,33 +236,37 @@ namespace iText.Pdfa {
             // if you specify encoding, symbolic font is treated as non-symbolic
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "symbolicTtfCharEncodingsPdfA1Test03.pdf", "Symbols1.ttf", "ISO-8859-1", PdfAConformanceLevel.PDF_A_1B
-                , null));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_OR_WIN_ANSI_ENCODING_AS_THE_ENCODING_ENTRY
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
                 , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test04() {
-            // TODO: DEVSIX-2975 Using only shipped fonts in font provider can result in pdf with no-def glyph and not conforming PDF/A document
-            String expectedVeraPdfWarning = "VeraPDF verification failed. See verification results: " + UrlUtil.GetNormalizedFileUriString
-                (DESTINATION_FOLDER + "symbolicTtfCharEncodingsPdfA1Test04.xml");
-            // emulate behaviour with default WinAnsi, which was present in 7.1
-            CreateDocumentWithFont("symbolicTtfCharEncodingsPdfA1Test04.pdf", "Symbols1.ttf", PdfEncodings.WINANSI, PdfAConformanceLevel
-                .PDF_A_1B, expectedVeraPdfWarning);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
+                "symbolicTtfCharEncodingsPdfA1Test04.pdf", "Symbols1.ttf", PdfEncodings.WINANSI, PdfAConformanceLevel.
+                PDF_A_1B));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test05() {
             // Identity-H behaviour should be the same as the default one, starting from 7.2
-            CreateDocumentWithFont("symbolicTtfCharEncodingsPdfA1Test05.pdf", "Symbols1.ttf", PdfEncodings.IDENTITY_H, 
-                PdfAConformanceLevel.PDF_A_1B, null);
+            // Here we produced valid pdfa files in the past by silently removing not valid symbols
+            // But right now we check for used glyphs which don't exist in the font and throw exception
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
+                "symbolicTtfCharEncodingsPdfA1Test05.pdf", "Symbols1.ttf", PdfEncodings.IDENTITY_H, PdfAConformanceLevel
+                .PDF_A_1B));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void NonSymbolicTtfCharEncodingsPdfA1Test01() {
             // encoding must be either winansi or macroman, by default winansi is used
             CreateDocumentWithFont("nonSymbolicTtfCharEncodingsPdfA1Test01.pdf", "FreeSans.ttf", PdfEncodings.WINANSI, 
-                PdfAConformanceLevel.PDF_A_1B, null);
+                PdfAConformanceLevel.PDF_A_1B);
         }
 
         [NUnit.Framework.Test]
@@ -264,7 +274,7 @@ namespace iText.Pdfa {
             // encoding must be either winansi or macroman, by default winansi is used
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "nonSymbolicTtfCharEncodingsPdfA1Test02.pdf", "FreeSans.ttf", "ISO-8859-1", PdfAConformanceLevel.PDF_A_2B
-                , null));
+                ));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_ENCODING_OR_WIN_ANSI_ENCODING
                 , e.Message);
         }
@@ -280,24 +290,16 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "# simple 32 0020 00C5 1987", PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText("\u00C5 \u1987").EndText
-                ().RestoreState();
-            font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                .PREFER_EMBEDDED);
-            canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(font, 36).ShowText("\u1987").EndText().RestoreState
-                ();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_ENCODING_OR_WIN_ANSI_ENCODING
+            canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.ShowText("\u00C5 \u1987"
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
                 , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void NotdefFontTest2() {
-            // TODO: DEVSIX-2975 Using only shipped fonts in font provider can result in pdf with no-def glyph and not conforming PDF/A document
             String outPdf = DESTINATION_FOLDER + "notdefFontTest2.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp/PdfAFontTest/notdefFontTest2.pdf";
-            String expectedVeraPdfWarning = "VeraPDF verification failed. See verification results: " + UrlUtil.GetNormalizedFileUriString
-                (DESTINATION_FOLDER + "notdefFontTest2.xml");
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 );
@@ -306,10 +308,50 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSans-Regular.ttf", "", PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText("\u898B\u7A4D\u3082\u308A"
-                ).EndText().RestoreState();
-            doc.Close();
-            CompareResult(outPdf, cmpPdf, expectedVeraPdfWarning);
+            canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.ShowText("\u898B\u7A4D\u3082\u308A"
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GlyphLineWithUndefinedGlyphsTest() {
+            String outPdf = DESTINATION_FOLDER + "glyphLineWithUndefinedGlyphs.pdf";
+            Stream icm = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            Document document = new Document(new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)), PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB ICC preference", icm)));
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSans-Regular.ttf", "", PdfFontFactory.EmbeddingStrategy
+                .PREFER_EMBEDDED);
+            Paragraph p = new Paragraph("\u898B\u7A4D\u3082\u308A");
+            p.SetFont(font);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => document.Add(p));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfArrayWithUndefinedGlyphsTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfArrayWithUndefinedGlyphs.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", "", 
+                "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSans-Regular.ttf", "", PdfFontFactory.EmbeddingStrategy
+                .PREFER_EMBEDDED);
+            PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
+            canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36);
+            PdfArray pdfArray = new PdfArray();
+            pdfArray.Add(new PdfString("ABC"));
+            pdfArray.Add(new PdfNumber(1));
+            pdfArray.Add(new PdfString("\u898B\u7A4D\u3082\u308A"));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.ShowText(pdfArray
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -565,7 +607,7 @@ namespace iText.Pdfa {
         }
 
         private void CreateDocumentWithFont(String outFileName, String fontFileName, String encoding, PdfAConformanceLevel
-             conformanceLevel, String expectedVeraPdfWarning) {
+             conformanceLevel) {
             String outPdf = DESTINATION_FOLDER + outFileName;
             String cmpPdf = SOURCE_FOLDER + "cmp/PdfAFontTest/cmp_" + outFileName;
             PdfWriter writer = new PdfWriter(outPdf);
@@ -580,7 +622,7 @@ namespace iText.Pdfa {
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
                 ).RestoreState();
             doc.Close();
-            CompareResult(outPdf, cmpPdf, expectedVeraPdfWarning);
+            CompareResult(outPdf, cmpPdf, null);
         }
 
         private void CompareResult(String outPdf, String cmpPdf, String expectedVeraPdfWarning) {

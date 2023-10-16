@@ -303,6 +303,24 @@ namespace iText.Pdfa.Checker {
         }
 
         //nothing to do
+        /// <summary><inheritDoc/></summary>
+        /// <param name="text">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        /// <param name="font">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        public override void CheckText(String text, PdfFont font) {
+            for (int i = 0; i < text.Length; ++i) {
+                if (!font.ContainsGlyph(text[i])) {
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                        );
+                }
+            }
+        }
+
         protected internal override void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
             ) {
         }

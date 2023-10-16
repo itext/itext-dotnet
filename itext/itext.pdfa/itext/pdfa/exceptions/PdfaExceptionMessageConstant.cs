@@ -328,6 +328,9 @@ namespace iText.Pdfa.Exceptions {
              = "DeviceGray shall only be used if a device independent DefaultGray colour space has been set when the "
              + "DeviceGray colour space is used, or if a PDF/A OutputIntent is in effect.";
 
+        public const String EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS = "Embedded fonts shall define all "
+             + "glyphs referenced for rendering within the conforming file.";
+
         public const String ICCBASED_COLOUR_SPACE_SHALL_NOT_BE_USED_IF_IT_IS_CMYK_AND_IS_IDENTICAL_TO_CURRENT_PROFILE
              = "An ICCBased colour space shall not be used where the profile is a CMYK destination profile and is "
              + "identical to that in the current PDF/A OutputIntent or the current transparency blending colorspace.";

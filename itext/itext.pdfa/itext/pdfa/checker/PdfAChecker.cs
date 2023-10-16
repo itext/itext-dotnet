@@ -289,7 +289,7 @@ namespace iText.Pdfa.Checker {
 
         /// <summary>This method checks compliance of the signature type</summary>
         /// <param name="isCAdES">true is CAdES sig type is used, false otherwise.</param>
-        [System.ObsoleteAttribute(@"Will become an abstract in the next major release.")]
+        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
         public virtual void CheckSignatureType(bool isCAdES) {
         }
 
@@ -442,6 +442,13 @@ namespace iText.Pdfa.Checker {
         /// <param name="crypto">Encryption object to verify.</param>
         [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
         public virtual void CheckCrypto(PdfObject crypto) {
+        }
+
+        /// <summary>Verify the conformity of the text written by the specified font.</summary>
+        /// <param name="text">Text to verify.</param>
+        /// <param name="font">Font to verify the text against.</param>
+        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
+        public virtual void CheckText(String text, PdfFont font) {
         }
 
         /// <summary>Attest content stream conformance with appropriate specification.</summary>
