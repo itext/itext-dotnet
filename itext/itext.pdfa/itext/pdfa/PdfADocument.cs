@@ -449,6 +449,11 @@ namespace iText.Pdfa {
                     break;
                 }
 
+                case "4": {
+                    version = PdfVersion.PDF_2_0;
+                    break;
+                }
+
                 default: {
                     version = PdfVersion.PDF_1_4;
                     break;

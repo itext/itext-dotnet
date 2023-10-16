@@ -23,11 +23,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.Commons.Utils;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Layout;
+using iText.Layout.Element;
 using iText.Pdfa.Exceptions;
 using iText.Test;
 using iText.Test.Pdfa;
@@ -57,6 +60,30 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void CreateSimpleTaggedDocTest() {
+            String outPdf = destinationFolder + "pdfA4_tagged.pdf";
+            String cmpPdf = sourceFolder + "cmp/PdfA4CatalogCheckTest/cmp_pdfA4_tagged.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument pdfDoc = (PdfADocument)new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent
+                ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is)).SetTagged();
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
+            Document document = new Document(pdfDoc);
+            document.SetFont(font);
+            List list = new List();
+            list.Add("123");
+            document.Add(list);
+            NUnit.Framework.Assert.AreEqual(PdfVersion.PDF_2_0, pdfDoc.GetTagStructureContext().GetTagStructureTargetVersion
+                ());
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 

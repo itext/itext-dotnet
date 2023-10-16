@@ -75,6 +75,12 @@ namespace iText.Pdfa.Checker {
             pdfA4Checker.CheckColorSpace(BuildDeviceNColorspace(40), null, currentColorSpaces, true, false);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void LongPdfNameTest() {
+            //exception shall not be thrown as pdf/a-4 supports greater than 127 characters pdf names
+            pdfA4Checker.CheckPdfObject(PdfACheckerTestUtils.GetLongName(200));
+        }
+
         private PdfColorSpace BuildDeviceNColorspace(int numberOfComponents) {
             IList<String> tmpArray = new List<String>(numberOfComponents);
             float[] transformArray = new float[numberOfComponents * 2];

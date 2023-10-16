@@ -422,6 +422,11 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
+        protected internal override int GetMaxNameLength() {
+            return int.MaxValue;
+        }
+
         private static bool IsValidXmpConformance(String value) {
             if (value == null) {
                 return false;
