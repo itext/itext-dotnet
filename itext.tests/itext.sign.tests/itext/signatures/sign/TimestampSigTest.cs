@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
@@ -44,14 +45,21 @@ namespace iText.Signatures.Sign {
              + "/test/itext/signatures/sign/TimestampSigTest/";
 
         private static readonly char[] password = "testpassphrase".ToCharArray();
+        private static bool runningInFipsMode;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(destinationFolder);
+            runningInFipsMode = "BCFIPS".Equals(BouncyCastleFactoryCreator.GetFactory().GetProviderName());
         }
 
         [NUnit.Framework.Test]
         public virtual void TimestampTest01() {
+            string compareFile = sourceFolder + "cmp_timestampTest01.pdf";
+            if (runningInFipsMode)
+            {
+                compareFile = sourceFolder + "cmp_timestampTest01_FIPS.pdf";
+            }
             String tsaCertFileName = certsSrc + "tsCertRsa.pem";
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String outFileName = destinationFolder + "timestampTest01.pdf";
@@ -62,8 +70,7 @@ namespace iText.Signatures.Sign {
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.Timestamp(testTsa, "timestampSig1");
             PadesSigTest.BasicCheckSignedDoc(destinationFolder + "timestampTest01.pdf", "timestampSig1");
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, sourceFolder + "cmp_timestampTest01.pdf"
-                ));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, compareFile));
         }
         //        TimeStampToken tsWrong = new TimeStampResponse(Files.readAllBytes(Paths.get("c:\\Users\\yulian\\Desktop\\myTs"))).getTimeStampToken();
         //

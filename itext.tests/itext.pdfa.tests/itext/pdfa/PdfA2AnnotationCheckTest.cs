@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -32,7 +31,10 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Pdfa.Exceptions;
+using iText.Pdfa.Logs;
 using iText.Test;
+using iText.Test.Attributes;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -61,8 +63,8 @@ namespace iText.Pdfa {
             PdfAnnotation annot = new PdfFileAttachmentAnnotation(rect);
             page.AddAnnotation(annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_CONTAIN_THE_F_KEY, 
-                e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.AN_ANNOTATION_DICTIONARY_SHALL_CONTAIN_THE_F_KEY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -112,7 +114,7 @@ namespace iText.Pdfa {
             annot.SetFlag(PdfAnnotation.PRINT);
             page.AddAnnotation(annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.EVERY_ANNOTATION_SHALL_HAVE_AT_LEAST_ONE_APPEARANCE_DICTIONARY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EVERY_ANNOTATION_SHALL_HAVE_AT_LEAST_ONE_APPEARANCE_DICTIONARY
                 , e.Message);
         }
 
@@ -128,7 +130,7 @@ namespace iText.Pdfa {
             annot.SetFlag(0);
             page.AddAnnotation(annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_F_KEYS_PRINT_FLAG_BIT_SHALL_BE_SET_TO_1_AND_ITS_HIDDEN_INVISIBLE_NOVIEW_AND_TOGGLENOVIEW_FLAG_BITS_SHALL_BE_SET_TO_0
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_F_KEYS_PRINT_FLAG_BIT_SHALL_BE_SET_TO_1_AND_ITS_HIDDEN_INVISIBLE_NOVIEW_AND_TOGGLENOVIEW_FLAG_BITS_SHALL_BE_SET_TO_0
                 , e.Message);
         }
 
@@ -144,7 +146,7 @@ namespace iText.Pdfa {
             annot.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.INVISIBLE);
             page.AddAnnotation(annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_F_KEYS_PRINT_FLAG_BIT_SHALL_BE_SET_TO_1_AND_ITS_HIDDEN_INVISIBLE_NOVIEW_AND_TOGGLENOVIEW_FLAG_BITS_SHALL_BE_SET_TO_0
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_F_KEYS_PRINT_FLAG_BIT_SHALL_BE_SET_TO_1_AND_ITS_HIDDEN_INVISIBLE_NOVIEW_AND_TOGGLENOVIEW_FLAG_BITS_SHALL_BE_SET_TO_0
                 , e.Message);
         }
 
@@ -164,7 +166,7 @@ namespace iText.Pdfa {
             annot.SetNormalAppearance(CreateAppearance(doc, formRect));
             page.AddAnnotation(annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
                 , e.Message);
         }
 
@@ -184,7 +186,7 @@ namespace iText.Pdfa {
             annot.SetNormalAppearance(CreateAppearance(doc, formRect));
             page.AddAnnotation(annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.APPEARANCE_DICTIONARY_OF_WIDGET_SUBTYPE_AND_BTN_FIELD_TYPE_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_DICTIONARY_VALUE
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.APPEARANCE_DICTIONARY_OF_WIDGET_SUBTYPE_AND_BTN_FIELD_TYPE_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_DICTIONARY_VALUE
                 , e.Message);
         }
 
@@ -202,7 +204,7 @@ namespace iText.Pdfa {
             annot.SetNormalAppearance(new PdfDictionary());
             page.AddAnnotation(annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
                 , e.Message);
         }
 
@@ -247,8 +249,12 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY, LogLevel = LogLevelConstants
+            .WARN)]
         public virtual void AnnotationCheckTest12() {
-            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            String outPdf = destinationFolder + "pdfA1a_annotationCheckTest12.pdf";
+            String cmpPdf = cmpFolder + "cmp_pdfA1a_annotationCheckTest12.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2A, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
@@ -258,12 +264,14 @@ namespace iText.Pdfa {
             Rectangle rect = new Rectangle(100, 650, 400, 100);
             PdfAnnotation annot = new PdfStampAnnotation(rect);
             annot.SetFlags(PdfAnnotation.PRINT);
+            annot.SetNormalAppearance(CreateAppearance(doc, new Rectangle(400, 100)));
             page.AddAnnotation(annot);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
-                , PdfName.Stamp.GetValue()), e.Message);
+            doc.Close();
+            CompareResult(outPdf, cmpPdf);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest13() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
@@ -279,7 +287,7 @@ namespace iText.Pdfa {
             annot.SetContents("Hello world");
             page.AddAnnotation(annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.EVERY_ANNOTATION_SHALL_HAVE_AT_LEAST_ONE_APPEARANCE_DICTIONARY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EVERY_ANNOTATION_SHALL_HAVE_AT_LEAST_ONE_APPEARANCE_DICTIONARY
                 , e.Message);
         }
 

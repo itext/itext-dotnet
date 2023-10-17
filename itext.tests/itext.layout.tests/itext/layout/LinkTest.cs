@@ -135,9 +135,7 @@ namespace iText.Layout {
         /// <para />
         /// This is the equivalent Java code for iText of the C# code for iTextSharp 5
         /// in the question.
-        /// <para />
         /// </remarks>
-        /// <author>mkl</author>
         [NUnit.Framework.Test]
         public virtual void TestCreateLocalLinkInRotatedCell() {
             String outFileName = destinationFolder + "linkInRotatedCell.pdf";

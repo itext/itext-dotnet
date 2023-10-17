@@ -26,7 +26,6 @@ using iText.StyledXmlParser.Jsoup.Helper;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>A text node.</summary>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class TextNode : LeafNode {
         /// <summary>Create a new TextNode representing the supplied (unencoded) text).</summary>
         /// <param name="text">raw text</param>

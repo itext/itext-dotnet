@@ -25,7 +25,6 @@ using System.Collections.Generic;
 
 namespace iText.Barcodes.Qrcode {
     /// <summary>This object renders a QR Code as a ByteMatrix 2D array of greyscale values.</summary>
-    /// <author>dswitkin@google.com (Daniel Switkin)</author>
     public sealed class QRCodeWriter {
         private const int QUIET_ZONE_SIZE = 4;
 

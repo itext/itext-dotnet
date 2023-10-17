@@ -502,6 +502,12 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(options, document.GetSerializeOptions());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void GetDiContainer() {
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.IsNotNull(document.GetDiContainer());
+        }
+
         private class IgnoreTagStructurePdfDocument : PdfDocument {
             internal IgnoreTagStructurePdfDocument(PdfReader reader)
                 : base(reader) {

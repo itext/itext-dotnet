@@ -25,7 +25,6 @@ using iText.Kernel.Pdf;
 
 namespace iText.Signatures {
     /// <summary>Dictionary that stores signature build properties.</summary>
-    /// <author>Kwinten Pisman</author>
     public class PdfSignatureBuildProperties : PdfObjectWrapper<PdfDictionary> {
         /// <summary>Creates new PdfSignatureBuildProperties.</summary>
         public PdfSignatureBuildProperties()

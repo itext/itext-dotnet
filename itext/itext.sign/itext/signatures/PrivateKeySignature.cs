@@ -35,7 +35,6 @@ namespace iText.Signatures {
     /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
     /// object.
     /// </summary>
-    /// <author>Paulo Soares</author>
     public class PrivateKeySignature : IExternalSignature {
         /// <summary>The private key object.</summary>
         private readonly IPrivateKey pk;

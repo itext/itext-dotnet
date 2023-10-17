@@ -27,7 +27,6 @@ namespace iText.Signatures {
     /// <summary>Interface to sign a document.</summary>
     /// <remarks>Interface to sign a document. The signing is fully done externally, including the container composition.
     ///     </remarks>
-    /// <author>Paulo Soares</author>
     public interface IExternalSignatureContainer {
         /// <summary>Produces the container with the signature.</summary>
         /// <param name="data">the data to sign</param>

@@ -24,7 +24,6 @@ using System;
 using iText.IO.Source;
 
 namespace iText.IO.Font.Cmap {
-    /// <author>psoares</author>
     public interface ICMapLocation {
         PdfTokenizer GetLocation(String location);
     }

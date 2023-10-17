@@ -26,7 +26,6 @@ using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
-    /// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
     public abstract class OpenTypeFontTableReader {
         protected internal readonly RandomAccessFileOrArray rf;
 

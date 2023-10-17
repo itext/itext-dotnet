@@ -120,7 +120,6 @@ namespace iText.StyledXmlParser.Jsoup.Select {
     /// <tr><td><c>:empty</c></td><td>elements that have no children at all</td><td></td></tr>
     /// </table>
     /// </remarks>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     /// <seealso cref="iText.StyledXmlParser.Jsoup.Nodes.Element.Select(System.String)"/>
     public class Selector {
         // not instantiable

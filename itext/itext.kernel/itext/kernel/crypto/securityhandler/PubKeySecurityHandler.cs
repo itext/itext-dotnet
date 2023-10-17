@@ -37,7 +37,6 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
-    /// <author>Aiken Sam (aikensam@ieee.org)</author>
     public abstract class PubKeySecurityHandler : SecurityHandler {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
@@ -177,7 +176,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             //constants permissions: PdfWriter.AllowCopy | PdfWriter.AllowPrinting | PdfWriter.AllowScreenReaders |
             // PdfWriter.AllowAssembly;
             int permission = recipient.GetPermission();
-            // NOTE! Added while porting to itext7
+            // NOTE! Added while porting to itext
             // Previous strange code was:
             // int revision = 3;
             // permission |= revision == 3 ? 0xfffff0c0 : 0xffffffc0;

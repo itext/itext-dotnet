@@ -24,7 +24,6 @@ using System;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    /// <author>benoit</author>
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfXrefTableTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext

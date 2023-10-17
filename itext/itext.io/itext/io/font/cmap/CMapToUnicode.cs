@@ -29,7 +29,6 @@ using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
     /// <summary>This class represents a CMap file.</summary>
-    /// <author>Ben Litchfield (ben@benlitchfield.com)</author>
     public class CMapToUnicode : AbstractCMap {
         public static iText.IO.Font.Cmap.CMapToUnicode EmptyCMapToUnicodeMap = new iText.IO.Font.Cmap.CMapToUnicode
             (true);

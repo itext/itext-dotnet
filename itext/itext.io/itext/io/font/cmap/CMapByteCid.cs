@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace iText.IO.Font.Cmap {
-    /// <author>psoares</author>
     public class CMapByteCid : AbstractCMap {
         protected internal class Cursor {
             public int offset;

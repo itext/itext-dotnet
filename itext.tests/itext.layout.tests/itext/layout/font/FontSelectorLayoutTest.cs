@@ -79,7 +79,6 @@ namespace iText.Layout.Font {
 
         [NUnit.Framework.Test]
         public virtual void UtfToGlyphToUtfRountripTest() {
-            // See DEVSIX-4945
             // this should not throw a null pointer exception
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 using (Document doc = new Document(pdfDoc)) {

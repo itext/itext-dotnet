@@ -252,7 +252,7 @@ namespace iText.Kernel.Utils {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
                     NUnit.Framework.Assert.AreEqual("very long title to compare later on", docInfo[0]);
-                    NUnit.Framework.Assert.AreEqual("itext7core", docInfo[1]);
+                    NUnit.Framework.Assert.AreEqual("itextcore", docInfo[1]);
                     NUnit.Framework.Assert.AreEqual("test file", docInfo[2]);
                     NUnit.Framework.Assert.AreEqual("new job", docInfo[3]);
                     NUnit.Framework.Assert.AreEqual("Adobe Acrobat Pro DC (64-bit) <version>", docInfo[4]);

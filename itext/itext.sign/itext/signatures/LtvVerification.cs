@@ -41,7 +41,6 @@ using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>Add verification according to PAdES-LTV (part 4).</summary>
-    /// <author>Paulo Soares</author>
     public class LtvVerification {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();

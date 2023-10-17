@@ -31,7 +31,6 @@ namespace iText.Barcodes.Qrcode {
     /// JAVAPORT: The original code was a 2D array of ints, but since it only ever gets assigned
     /// -1, 0, and 1, I'm going to use less memory and go with bytes.
     /// </remarks>
-    /// <author>dswitkin@google.com (Daniel Switkin)</author>
     public sealed class ByteMatrix {
         private readonly byte[][] bytes;
 

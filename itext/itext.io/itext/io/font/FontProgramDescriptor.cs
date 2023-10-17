@@ -35,6 +35,8 @@ namespace iText.IO.Font {
 
         private readonly String familyNameLowerCase;
 
+        private readonly String familyName2LowerCase;
+
         private readonly String style;
 
         private readonly int macStyle;
@@ -64,6 +66,12 @@ namespace iText.IO.Font {
             this.fullNameLowerCase = fontNames.GetFullName()[0][3].ToLowerInvariant();
             this.familyNameLowerCase = fontNames.GetFamilyName() != null && fontNames.GetFamilyName()[0][3] != null ? 
                 fontNames.GetFamilyName()[0][3].ToLowerInvariant() : null;
+            // For font family2 let's take the last element in array. The family in the 1st element has high chance
+            // to be the same as returned by getFamilyName. Ideally we should take different families based on OS
+            // but it breaks the compatibility, produces different results on different OSs etc.
+            String[][] familyName2 = fontNames.GetFamilyName2();
+            this.familyName2LowerCase = familyName2 != null && familyName2[familyName2.Length - 1][3] != null ? familyName2
+                [familyName2.Length - 1][3].ToLowerInvariant() : null;
             this.style = fontNames.GetStyle();
             this.weight = fontNames.GetFontWeight();
             this.macStyle = fontNames.GetMacStyle();
@@ -116,6 +124,16 @@ namespace iText.IO.Font {
 
         public virtual String GetFamilyNameLowerCase() {
             return familyNameLowerCase;
+        }
+
+        /// <summary>Get extra family name if exists.</summary>
+        /// <returns>
+        /// extra family name if exists in the font,
+        /// <see langword="null"/>
+        /// otherwise.
+        /// </returns>
+        public virtual String GetFamilyName2LowerCase() {
+            return familyName2LowerCase;
         }
 
         public virtual ICollection<String> GetFullNameAllLangs() {

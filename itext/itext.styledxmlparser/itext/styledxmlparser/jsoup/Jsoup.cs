@@ -28,7 +28,6 @@ using iText.StyledXmlParser.Jsoup.Safety;
 
 namespace iText.StyledXmlParser.Jsoup {
     /// <summary>The core public access point to the jsoup functionality.</summary>
-    /// <author>Jonathan Hedley</author>
     public class Jsoup {
         private Jsoup() {
         }

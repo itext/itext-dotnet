@@ -207,7 +207,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void SetOverflowForAllChildren(IRenderer renderer) {
-            if (renderer == null) {
+            if (renderer == null || renderer is AreaBreakRenderer) {
                 return;
             }
             renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);

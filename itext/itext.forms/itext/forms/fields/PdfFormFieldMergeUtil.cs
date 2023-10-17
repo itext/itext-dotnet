@@ -22,12 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Utils;
-using iText.Forms.Exceptions;
-using iText.Forms.Logs;
-using iText.Kernel.Exceptions;
+using iText.Forms.Fields.Merging;
 using iText.Kernel.Pdf;
 
 namespace iText.Forms.Fields {
@@ -65,7 +61,7 @@ namespace iText.Forms.Fields {
                     String kidName = GetPartialName(kid);
                     if (!addedKids.ContainsKey(kidName) || !MergeTwoFieldsWithTheSameNames((PdfFormField)addedKids.Get(kidName
                         ), (PdfFormField)kid, throwExceptionOnError)) {
-                        addedKids.Put(kidName, kid);
+                        addedKids.Put(GetPartialName(kid), kid);
                         newKids.Add(kid);
                     }
                 }
@@ -87,30 +83,9 @@ namespace iText.Forms.Fields {
         /// <returns>true if fields is successfully merged, false otherwise.</returns>
         public static bool MergeTwoFieldsWithTheSameNames(PdfFormField firstField, PdfFormField secondField, bool 
             throwExceptionOnError) {
-            PdfName firstFieldFormType = firstField.GetFormType();
-            PdfObject firstFieldValue = firstField.GetValue();
-            PdfObject secondFieldValue = secondField.GetValue();
-            PdfObject firstFieldDefaultValue = firstField.GetDefaultValue();
-            PdfObject secondFieldDefaultValue = secondField.GetDefaultValue();
-            if ((firstFieldFormType == null || firstFieldFormType.Equals(secondField.GetFormType())) && (firstFieldValue
-                 == null || secondFieldValue == null || firstFieldValue.Equals(secondFieldValue)) && (firstFieldDefaultValue
-                 == null || secondFieldDefaultValue == null || firstFieldDefaultValue.Equals(secondFieldDefaultValue))
-                ) {
-                MergeFormFields(firstField, secondField, throwExceptionOnError);
-            }
-            else {
-                if (throwExceptionOnError) {
-                    throw new PdfException(MessageFormatUtil.Format(FormsExceptionMessageConstant.CANNOT_MERGE_FORMFIELDS, firstField
-                        .GetPartialFieldName()));
-                }
-                else {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormFieldMergeUtil));
-                    logger.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_MERGE_FORMFIELDS, firstField.GetPartialFieldName
-                        ()));
-                    return false;
-                }
-            }
-            return true;
+            OnDuplicateFormFieldNameStrategy onDuplicateFormFieldNameStrategy = firstField.GetDocument().GetDiContainer
+                ().GetInstance<OnDuplicateFormFieldNameStrategy>();
+            return onDuplicateFormFieldNameStrategy.Execute(firstField, secondField, throwExceptionOnError);
         }
 
         /// <summary>Gets partial name for the field dictionary.</summary>
@@ -154,10 +129,10 @@ namespace iText.Forms.Fields {
                 // Process form fields without PdfName.Widget having only annotations as children
                 if (field.GetChildFields().Count > 0 && field.GetChildFormFields().Count == 0) {
                     bool shouldBeMerged = true;
-                    // If parent is radio button we don't care about field related keys, always merge
+                    // If parent is radio button or signature we don't care about field related keys, always merge
                     // If not - go over all fields to compare with parent's fields
                     if (!(PdfName.Btn.Equals(parentField.GetFormType()) && parentField.GetFieldFlag(PdfButtonFormField.FF_RADIO
-                        ))) {
+                        )) && !PdfName.Sig.Equals(parentField.GetFormType())) {
                         if (formDict.ContainsKey(PdfName.T)) {
                             // We only want to perform the merge if field doesn't contain any name (even empty one)
                             continue;
@@ -181,7 +156,7 @@ namespace iText.Forms.Fields {
             }
         }
 
-        private static void MergeFormFields(PdfFormField firstField, PdfFormField secondField, bool throwExceptionOnError
+        public static void MergeFormFields(PdfFormField firstField, PdfFormField secondField, bool throwExceptionOnError
             ) {
             PdfFormAnnotationUtil.SeparateWidgetAndField(firstField);
             PdfFormAnnotationUtil.SeparateWidgetAndField(secondField);

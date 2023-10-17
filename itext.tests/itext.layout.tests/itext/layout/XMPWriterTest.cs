@@ -118,7 +118,7 @@ namespace iText.Layout {
             pdfDocument.GetCatalog().SetLang(new PdfString("en-US"));
             pdfDocument.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
             PdfDocumentInfo info = pdfDocument.GetDocumentInfo();
-            info.SetTitle("iText7 PDF/UA test");
+            info.SetTitle("iText PDF/UA test");
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                 );
             Paragraph p = new Paragraph();

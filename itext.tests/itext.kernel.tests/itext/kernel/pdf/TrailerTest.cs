@@ -31,7 +31,6 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    /// <author>Michael Demey</author>
     [NUnit.Framework.Category("IntegrationTest")]
     public class TrailerTest : ExtendedITextTest {
         private ProductData productData;

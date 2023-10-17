@@ -34,6 +34,9 @@ namespace iText.Kernel.Pdf {
         TAG_STRUCTURE_ELEMENT,
         FONT_GLYPHS,
         XREF_TABLE,
-        SIGNATURE
+        SIGNATURE,
+        SIGNATURE_TYPE,
+        CRYPTO,
+        FONT
     }
 }

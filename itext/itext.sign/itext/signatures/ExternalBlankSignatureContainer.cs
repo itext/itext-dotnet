@@ -29,7 +29,6 @@ namespace iText.Signatures {
     /// Produces a blank (or empty) signature. Useful for deferred signing with
     /// MakeSignature.signExternalContainer().
     /// </remarks>
-    /// <author>Paulo Soares</author>
     public class ExternalBlankSignatureContainer : IExternalSignatureContainer {
         /* The Signature dictionary. Should contain values for /Filter and /SubFilter at minimum. */
         private PdfDictionary sigDic;

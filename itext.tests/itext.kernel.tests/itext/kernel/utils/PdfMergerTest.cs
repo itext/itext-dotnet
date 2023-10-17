@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Test;
 using iText.Test.Attributes;
@@ -501,6 +502,135 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("SameStructElemNoParent.pdf"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentsWithStringAdditionalActions() {
+            String firstPdfDocument = sourceFolder + "doc1.pdf";
+            String secondPdfDocument = sourceFolder + "docAAString.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeAAString.pdf";
+            String mergedDocument = destinationFolder + "mergedAAString.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.CANNOT_MERGE_ENTRY)]
+        public virtual void MergeDocumentsWithAdditionalActionsInDestination() {
+            String firstPdfDocument = sourceFolder + "docAAStream.pdf";
+            String secondPdfDocument = sourceFolder + "docAAString.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeAA2.pdf";
+            String mergedDocument = destinationFolder + "mergedAAInDest.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentsWithUnexpectedKeyAdditionalActions() {
+            String firstPdfDocument = sourceFolder + "doc1.pdf";
+            String secondPdfDocument = sourceFolder + "docAAStringWithUnexpectedKey.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeAAUnexpectedKey.pdf";
+            String mergedDocument = destinationFolder + "mergedAAUnexpectedKey.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentsWithStreamAdditionalActions() {
+            String firstPdfDocument = sourceFolder + "doc1.pdf";
+            String secondPdfDocument = sourceFolder + "docAAStream.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeAAStream.pdf";
+            String mergedDocument = destinationFolder + "mergedAAStream.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentsWithStringOpenActions() {
+            String firstPdfDocument = sourceFolder + "doc1.pdf";
+            String secondPdfDocument = sourceFolder + "docOAString.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeOAString.pdf";
+            String mergedDocument = destinationFolder + "mergedOAString.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.CANNOT_MERGE_ENTRY)]
+        public virtual void MergeDocumentsWithOpenActionInDestination() {
+            String firstPdfDocument = sourceFolder + "docOAStream.pdf";
+            String secondPdfDocument = sourceFolder + "docOAString.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeOA2.pdf";
+            String mergedDocument = destinationFolder + "mergedOAInDest.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentsWithStreamOpenActions() {
+            String firstPdfDocument = sourceFolder + "doc1.pdf";
+            String secondPdfDocument = sourceFolder + "docOAStream.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeOAStream.pdf";
+            String mergedDocument = destinationFolder + "mergedOAStream.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentsWithJSInTree() {
+            String firstPdfDocument = sourceFolder + "doc1.pdf";
+            String secondPdfDocument = sourceFolder + "docJS.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeJS.pdf";
+            String mergedDocument = destinationFolder + "mergedJS.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.CANNOT_MERGE_ENTRY)]
+        public virtual void MergeDocumentsWithNamesJSInDestination() {
+            String firstPdfDocument = sourceFolder + "cmp_mergeJS.pdf";
+            String secondPdfDocument = sourceFolder + "docJS.pdf";
+            String cmpDocument = sourceFolder + "cmp_mergeJS2.pdf";
+            String mergedDocument = destinationFolder + "mergedJSInDest.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
         private PdfDictionary MergeSinglePdfAndGetResultingStructTreeRoot(String pathToMerge) {
             IList<FileInfo> sources = new List<FileInfo>();
             sources.Add(new FileInfo(sourceFolder + pathToMerge));
@@ -518,6 +648,20 @@ namespace iText.Kernel.Utils {
             PdfDocument mergedDoc = new PdfDocument(new PdfWriter(destination));
             mergedDoc.GetWriter().SetSmartMode(smartMode);
             PdfMerger merger = new PdfMerger(mergedDoc);
+            foreach (FileInfo source in sources) {
+                PdfDocument sourcePdf = new PdfDocument(new PdfReader(source));
+                merger.Merge(sourcePdf, 1, sourcePdf.GetNumberOfPages()).SetCloseSourceDocuments(true);
+                sourcePdf.Close();
+            }
+            merger.Close();
+            mergedDoc.Close();
+        }
+
+        private void MergePdfs(IList<FileInfo> sources, String destination, PdfMergerProperties properties, bool smartMode
+            ) {
+            PdfDocument mergedDoc = new PdfDocument(new PdfWriter(destination));
+            mergedDoc.GetWriter().SetSmartMode(smartMode);
+            PdfMerger merger = new PdfMerger(mergedDoc, properties);
             foreach (FileInfo source in sources) {
                 PdfDocument sourcePdf = new PdfDocument(new PdfReader(source));
                 merger.Merge(sourcePdf, 1, sourcePdf.GetNumberOfPages()).SetCloseSourceDocuments(true);

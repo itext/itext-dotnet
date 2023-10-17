@@ -294,6 +294,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName CalRGB = CreateDirectName("CalRGB");
 
+        public static readonly iText.Kernel.Pdf.PdfName RGB = CreateDirectName("RGB");
+
         public static readonly iText.Kernel.Pdf.PdfName CapHeight = CreateDirectName("CapHeight");
 
         public static readonly iText.Kernel.Pdf.PdfName Cap = CreateDirectName("Cap");
@@ -307,6 +309,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName Category = CreateDirectName("Category");
 
         public static readonly iText.Kernel.Pdf.PdfName CCITTFaxDecode = CreateDirectName("CCITTFaxDecode");
+
+        public static readonly iText.Kernel.Pdf.PdfName CCF = CreateDirectName("CCF");
 
         public static readonly iText.Kernel.Pdf.PdfName Center = CreateDirectName("Center");
 
@@ -422,6 +426,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName DCTDecode = CreateDirectName("DCTDecode");
 
+        public static readonly iText.Kernel.Pdf.PdfName DCT = CreateDirectName("DCT");
+
         public static readonly iText.Kernel.Pdf.PdfName Decimal = CreateDirectName("Decimal");
 
         public static readonly iText.Kernel.Pdf.PdfName Decode = CreateDirectName("Decode");
@@ -431,6 +437,16 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName Default = CreateDirectName("Default");
 
         public static readonly iText.Kernel.Pdf.PdfName DefaultCMYK = CreateDirectName("DefaultCMYK");
+
+        public static readonly iText.Kernel.Pdf.PdfName CMYK = CreateDirectName("CMYK");
+
+        public static readonly iText.Kernel.Pdf.PdfName Cyan = CreateDirectName("Cyan");
+
+        public static readonly iText.Kernel.Pdf.PdfName Magenta = CreateDirectName("Magenta");
+
+        public static readonly iText.Kernel.Pdf.PdfName Yellow = CreateDirectName("Yellow");
+
+        public static readonly iText.Kernel.Pdf.PdfName Black = CreateDirectName("Black");
 
         public static readonly iText.Kernel.Pdf.PdfName DefaultCryptFilter = CreateDirectName("DefaultCryptFilter"
             );
@@ -745,6 +761,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName GoToE = CreateDirectName("GoToE");
 
         public static readonly iText.Kernel.Pdf.PdfName GoToR = CreateDirectName("GoToR");
+
+        public static readonly iText.Kernel.Pdf.PdfName G = CreateDirectName("G");
 
         public static readonly iText.Kernel.Pdf.PdfName Graph = CreateDirectName("Graph");
 
@@ -1217,6 +1235,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Pdf_Version_2_0 = CreateDirectName("2.0");
 
+        public static readonly iText.Kernel.Pdf.PdfName PieceInfo = CreateDirectName("PieceInfo");
+
         public static readonly iText.Kernel.Pdf.PdfName Pg = CreateDirectName("Pg");
 
         public static readonly iText.Kernel.Pdf.PdfName PI = CreateDirectName("PI");
@@ -1267,6 +1287,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Producer = CreateDirectName("Producer");
 
+        public static readonly iText.Kernel.Pdf.PdfName Projection = CreateDirectName("Projection");
+
         public static readonly iText.Kernel.Pdf.PdfName PronunciationLexicon = CreateDirectName("PronunciationLexicon"
             );
 
@@ -1305,6 +1327,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName RClosedArrow = CreateDirectName("RClosedArrow");
 
         public static readonly iText.Kernel.Pdf.PdfName RD = CreateDirectName("RD");
+
+        public static readonly iText.Kernel.Pdf.PdfName RL = CreateDirectName("RL");
 
         public static readonly iText.Kernel.Pdf.PdfName Reason = CreateDirectName("Reason");
 
@@ -1612,6 +1636,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName TR = CreateDirectName("TR");
 
         public static readonly iText.Kernel.Pdf.PdfName TR2 = CreateDirectName("TR2");
+
+        public static readonly iText.Kernel.Pdf.PdfName TransferFunction = CreateDirectName("TransferFunction");
 
         public static readonly iText.Kernel.Pdf.PdfName Trans = CreateDirectName("Trans");
 

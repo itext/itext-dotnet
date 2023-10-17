@@ -36,6 +36,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Layout.Properties;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
@@ -75,7 +76,7 @@ namespace iText.Signatures.Sign {
             String dest = DESTINATION_FOLDER + fileName;
             Rectangle rect = new Rectangle(36, 648, 200, 100);
             TestSignatureAppearanceAutoscale(dest, rect, PdfSignatureAppearance.RenderingMode.DESCRIPTION);
-            AssertAppearanceFontSize(dest, 13.94f);
+            AssertAppearanceFontSize(dest, 13.72f);
         }
 
         [NUnit.Framework.Test]
@@ -84,7 +85,7 @@ namespace iText.Signatures.Sign {
             String dest = DESTINATION_FOLDER + fileName;
             Rectangle rect = new Rectangle(36, 648, 150, 50);
             TestSignatureAppearanceAutoscale(dest, rect, PdfSignatureAppearance.RenderingMode.DESCRIPTION);
-            AssertAppearanceFontSize(dest, 6.83f);
+            AssertAppearanceFontSize(dest, 7.73f);
         }
 
         [NUnit.Framework.Test]
@@ -188,7 +189,6 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void SignExistingNotMergedFieldNotReusedAPTest() {
-            // TODO: DEVSIX-5162 (the signature is expected to have auto-generated appearance, but now it's empty)
             // Field is not merged with widget and has /P key
             String src = SOURCE_FOLDER + "emptyFieldNotMerged.pdf";
             String fileName = "signExistingNotMergedFieldNotReusedAP.pdf";
@@ -207,7 +207,6 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void SignExistingNotMergedFieldReusedAPTest() {
-            // TODO: DEVSIX-5162 (signature appearance expected to be updated (reused appearance will be used as a background))
             // Field is not merged with widget and has /P key
             String src = SOURCE_FOLDER + "emptyFieldNotMerged.pdf";
             String fileName = "signExistingNotMergedFieldReusedAP.pdf";
@@ -215,9 +214,10 @@ namespace iText.Signatures.Sign {
             PdfReader reader = new PdfReader(src);
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
-            signer.GetSignatureAppearance().SetLayer2Text("Verified and signed by me.").SetReason("Test 1").SetLocation
-                ("TestCity").SetReuseAppearance(true);
             signer.SetFieldName("Signature1");
+            signer.GetSignatureAppearance().SetLayer2Text("SIGNED").SetLayer2FontColor(ColorConstants.GREEN).SetReason
+                ("Test 1").SetLocation("TestCity").SetReuseAppearance(true).GetSignatureAppearance().SetProperty(Property
+                .VERTICAL_ALIGNMENT, VerticalAlignment.MIDDLE);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, SOURCE_FOLDER + "cmp_" + fileName, DESTINATION_FOLDER
@@ -226,7 +226,6 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void SignExistingNotMergedFieldReusedAPEntryNDicTest() {
-            // TODO: DEVSIX-5162 (remove expected exception after fix)
             // Field is not merged with widget and has /P key
             String src = SOURCE_FOLDER + "emptyFieldNotMergedEntryNDict.pdf";
             String fileName = "signExistingNotMergedFieldReusedAPEntryNDic.pdf";
@@ -238,8 +237,9 @@ namespace iText.Signatures.Sign {
                 ("TestCity").SetReuseAppearance(true);
             signer.SetFieldName("Signature1");
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => signer.SignDetached(pks, chain, null, null
-                , null, 0, PdfSigner.CryptoStandard.CADES));
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, SOURCE_FOLDER + "cmp_" + fileName, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -356,11 +356,51 @@ namespace iText.Signatures.Sign {
             // Draw red rectangle with blue border
             new PdfCanvas(layer2, signer.GetDocument()).SaveState().SetFillColor(ColorConstants.RED).SetStrokeColor(ColorConstants
                 .BLUE).Rectangle(0, 0, 100, 100).FillStroke().RestoreState();
-            // Get the same layer once more, so that the logic when n0 is not null is triggered
+            // Get the same layer once more, so that the logic when n2 is not null is triggered
             layer2 = appearance.GetLayer2();
             // Draw yellow circle with black border
             new PdfCanvas(layer2, signer.GetDocument()).SaveState().SetFillColor(ColorConstants.YELLOW).SetStrokeColor
                 (ColorConstants.BLACK).Circle(50, 50, 50).FillStroke().RestoreState();
+            // Signing
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateAndSignSignatureFieldTest() {
+            String src = SOURCE_FOLDER + "noSignatureField.pdf";
+            String dest = DESTINATION_FOLDER + "createdAndSignedSignatureField.pdf";
+            String unsignedDoc = DESTINATION_FOLDER + "unsignedSignatureField.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(src), new PdfWriter(unsignedDoc));
+            PdfSignatureFormField field = new SignatureFormFieldBuilder(document, "Signature1").SetPage(1).SetWidgetRectangle
+                (new Rectangle(45, 509, 517, 179)).CreateSignature();
+            PdfFormCreator.GetAcroForm(document, true).AddField(field);
+            document.Close();
+            PdfSigner signer = new PdfSigner(new PdfReader(unsignedDoc), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
+            // Creating the appearance
+            signer.GetSignatureAppearance().SetReason("Appearance is tested").SetLocation("TestCity").SetLayer2Text("Test signature field appearance. Test signature field appearance. "
+                 + "Test signature field appearance. Test signature field appearance");
+            signer.SetFieldName("Signature1");
+            // Signing
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_createdAndSignedSignatureField.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignExistedSignatureFieldTest() {
+            String src = SOURCE_FOLDER + "unsignedSignatureField.pdf";
+            String fileName = "signedSignatureField.pdf";
+            String dest = DESTINATION_FOLDER + fileName;
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
+            // Creating the appearance
+            signer.GetSignatureAppearance().SetReason("Appearance is tested").SetLocation("TestCity").SetReuseAppearance
+                (true).SetLayer2Text("Test signature field appearance. Test signature field appearance. " + "Test signature field appearance. Test signature field appearance"
+                );
+            signer.SetFieldName("Signature1");
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
@@ -441,7 +481,7 @@ namespace iText.Signatures.Sign {
             }
             float foundFontSize = float.Parse(fontSize, System.Globalization.CultureInfo.InvariantCulture);
             NUnit.Framework.Assert.IsTrue(Math.Abs(foundFontSize - expectedFontSize) < 0.1 * expectedFontSize, MessageFormatUtil
-                .Format("Font size: exptected {0}, found {1}", expectedFontSize, fontSize));
+                .Format("Font size: expected {0}, found {1}", expectedFontSize, fontSize));
         }
 
         private static IDictionary<int, IList<Rectangle>> GetIgnoredAreaTestMap(Rectangle ignoredArea) {

@@ -136,19 +136,27 @@ namespace iText.Pdfa {
                     isPdfADocument = false;
                 }
                 else {
-                    throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
                         );
                 }
             }
             SetChecker(conformanceLevel);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void CheckIsoConformance(Object obj, IsoKey key) {
             CheckIsoConformance(obj, key, null, null);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
             ) {
+            CheckIsoConformance(obj, key, resources, contentStream, null);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
+            , Object extra) {
             if (!isPdfADocument) {
                 base.CheckIsoConformance(obj, key, resources, contentStream);
                 return;
@@ -221,6 +229,21 @@ namespace iText.Pdfa {
                     checker.CheckSignature((PdfDictionary)obj);
                     break;
                 }
+
+                case IsoKey.SIGNATURE_TYPE: {
+                    checker.CheckSignatureType(((bool?)obj).Value);
+                    break;
+                }
+
+                case IsoKey.CRYPTO: {
+                    checker.CheckCrypto((PdfObject)obj);
+                    break;
+                }
+
+                case IsoKey.FONT: {
+                    checker.CheckText((String)obj, (PdfFont)extra);
+                    break;
+                }
             }
         }
 
@@ -240,6 +263,16 @@ namespace iText.Pdfa {
             else {
                 return null;
             }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <param name="outputIntent">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        public override void AddOutputIntent(PdfOutputIntent outputIntent) {
+            base.AddOutputIntent(outputIntent);
+            checker.SetPdfAOutputIntentColorSpace(GetCatalog().GetPdfObject());
         }
 
         internal virtual void LogThatPdfAPageFlushingWasNotPerformed() {
@@ -278,8 +311,13 @@ namespace iText.Pdfa {
             try {
                 XMPMeta xmpMeta = UpdateDefaultXmpMetadata();
                 xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, checker.GetConformanceLevel().GetPart());
-                xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, checker.GetConformanceLevel().GetConformance
-                    ());
+                if (checker.GetConformanceLevel().GetConformance() != null) {
+                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, checker.GetConformanceLevel().GetConformance
+                        ());
+                }
+                if ("4".Equals(checker.GetConformanceLevel().GetPart())) {
+                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.REV, PdfAConformanceLevel.PDF_A_4_REVISION);
+                }
                 AddCustomMetadataExtensions(xmpMeta);
                 SetXmpMetadata(xmpMeta);
             }
@@ -353,6 +391,15 @@ namespace iText.Pdfa {
                     checker = new PdfA3Checker(conformanceLevel);
                     break;
                 }
+
+                case "4": {
+                    checker = new PdfA4Checker(conformanceLevel);
+                    break;
+                }
+
+                default: {
+                    throw new ArgumentException(PdfaExceptionMessageConstant.CANNOT_FIND_PDFA_CHECKER_FOR_SPECIFIED_NAME);
+                }
             }
         }
 
@@ -375,6 +422,24 @@ namespace iText.Pdfa {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <param name="appendMode">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        protected override void FlushInfoDictionary(bool appendMode) {
+            if (!isPdfADocument || (!"4".Equals(checker.GetConformanceLevel().GetPart()))) {
+                base.FlushInfoDictionary(appendMode);
+            }
+            else {
+                if (GetCatalog().GetPdfObject().Get(PdfName.PieceInfo) != null) {
+                    // Leave only ModDate as required by 6.1.3 File trailer of pdf/a-4 spec
+                    GetDocumentInfo().RemoveCreationDate();
+                    base.FlushInfoDictionary(appendMode);
+                }
+            }
+        }
+
         internal virtual bool IsClosing() {
             return isClosing;
         }
@@ -394,6 +459,11 @@ namespace iText.Pdfa {
 
                 case "3": {
                     version = PdfVersion.PDF_1_7;
+                    break;
+                }
+
+                case "4": {
+                    version = PdfVersion.PDF_2_0;
                     break;
                 }
 

@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Font.Otf {
-    /// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
     public class FontReadingException : System.IO.IOException {
         public FontReadingException(String message)
             : base(message) {

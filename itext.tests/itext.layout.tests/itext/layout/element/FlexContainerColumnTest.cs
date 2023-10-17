@@ -306,8 +306,8 @@ namespace iText.Layout.Element {
             Div innerFlex = new FlexContainer();
             innerFlex.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
             innerFlex.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
-            foreach (IElement children in innerFlex.GetChildren()) {
-                children.SetProperty(Property.FLEX_GROW, 0.2f);
+            foreach (IElement child in innerFlex.GetChildren()) {
+                child.SetProperty(Property.FLEX_GROW, 0.2f);
             }
             innerFlex.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
             innerFlex.SetProperty(Property.FLEX_GROW, 0.7f);
@@ -439,6 +439,97 @@ namespace iText.Layout.Element {
             flexContainer.Add(innerDiv).Add(CreateNewDiv());
             document.Add(flexContainer);
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Ignore = true)]
+        public virtual void FlexContainerPaginationTest() {
+            String outFileName = DESTINATION_FOLDER + "flexContainerPaginationTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerPaginationTest" + comparisonPdfId + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div flexContainer = CreateFlexContainer();
+                flexContainer.DeleteOwnProperty(Property.HEIGHT);
+                flexContainer.SetBorder(new SolidBorder(ColorConstants.BLUE, 10));
+                flexContainer.Add(CreateNewDiv().Add(new Paragraph("1"))).Add(CreateNewDiv().Add(new Paragraph("2")).SetWidth
+                    (210)).Add(CreateNewDiv().Add(new Paragraph("3"))).Add(CreateNewDiv().Add(new Paragraph("4"))).Add(CreateNewDiv
+                    ().Add(new Paragraph("5"))).Add(CreateNewDiv().Add(new Paragraph("6"))).Add(CreateNewDiv().Add(new Paragraph
+                    ("7"))).Add(CreateNewDiv().Add(new Paragraph("8"))).Add(CreateNewDiv().Add(new Paragraph("9")).SetHeight
+                    (1000).SetBackgroundColor(ColorConstants.PINK)).Add(CreateNewDiv().Add(new Paragraph("10"))).Add(CreateNewDiv
+                    ().Add(new Paragraph("11"))).Add(CreateNewDiv().Add(new Paragraph("12")).SetWidth(300)).Add(CreateNewDiv
+                    ().Add(new Paragraph("13"))).Add(CreateNewDiv().Add(new Paragraph("14"))).Add(CreateNewDiv().Add(new Paragraph
+                    ("15")));
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FlexContainerWithFixedHeightPaginationTest() {
+            String outFileName = DESTINATION_FOLDER + "flexContainerWithFixedHeightPagination" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerWithFixedHeightPagination" + comparisonPdfId + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div flexContainer = CreateFlexContainer();
+                flexContainer.SetHeight(1000);
+                flexContainer.SetBorder(new SolidBorder(ColorConstants.PINK, 10));
+                flexContainer.Add(CreateNewDiv().Add(new Paragraph("1"))).Add(CreateNewDiv().Add(new Paragraph("2")).SetWidth
+                    (210)).Add(CreateNewDiv().Add(new Paragraph("3"))).Add(CreateNewDiv().Add(new Paragraph("4"))).Add(CreateNewDiv
+                    ().Add(new Paragraph("5"))).Add(CreateNewDiv().Add(new Paragraph("6"))).Add(CreateNewDiv().Add(new Paragraph
+                    ("7"))).Add(CreateNewDiv().Add(new Paragraph("8"))).Add(CreateNewDiv().Add(new Paragraph("9")).SetHeight
+                    (200)).Add(CreateNewDiv().Add(new Paragraph("10"))).Add(CreateNewDiv().Add(new Paragraph("11"))).Add(CreateNewDiv
+                    ().Add(new Paragraph("12")).SetWidth(300)).Add(CreateNewDiv().Add(new Paragraph("13"))).Add(CreateNewDiv
+                    ().Add(new Paragraph("14"))).Add(CreateNewDiv().Add(new Paragraph("15")));
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Ignore = true)]
+        public virtual void FlexContainerInsideDivPaginationTest() {
+            String outFileName = DESTINATION_FOLDER + "flexContainerInsideDivPaginationTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerInsideDivPaginationTest" + comparisonPdfId + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div div = new Div().SetHeight(1800).SetWidth(350).SetBorder(new SolidBorder(ColorConstants.RED, 20));
+                Div flexContainer = CreateFlexContainer();
+                flexContainer.DeleteOwnProperty(Property.HEIGHT);
+                flexContainer.SetBorder(new SolidBorder(ColorConstants.BLUE, 10));
+                flexContainer.Add(CreateNewDiv().Add(new Paragraph("1"))).Add(CreateNewDiv().Add(new Paragraph("2")).SetWidth
+                    (210)).Add(CreateNewDiv().Add(new Paragraph("3"))).Add(CreateNewDiv().Add(new Paragraph("4"))).Add(CreateNewDiv
+                    ().Add(new Paragraph("5"))).Add(CreateNewDiv().Add(new Paragraph("6"))).Add(CreateNewDiv().Add(new Paragraph
+                    ("7"))).Add(CreateNewDiv().Add(new Paragraph("8"))).Add(CreateNewDiv().Add(new Paragraph("9")).SetHeight
+                    (800).SetBackgroundColor(ColorConstants.PINK)).Add(CreateNewDiv().Add(new Paragraph("10"))).Add(CreateNewDiv
+                    ().Add(new Paragraph("11"))).Add(CreateNewDiv().Add(new Paragraph("12")).SetWidth(300)).Add(CreateNewDiv
+                    ().Add(new Paragraph("13"))).Add(CreateNewDiv().Add(new Paragraph("14"))).Add(CreateNewDiv().Add(new Paragraph
+                    ("15")));
+                div.Add(flexContainer);
+                document.Add(div);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Ignore = true)]
+        public virtual void FlexContainerInsideDivTest() {
+            String outFileName = DESTINATION_FOLDER + "flexContainerInsideDivTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerInsideDivTest" + comparisonPdfId + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div div = new Div().SetHeight(400).SetWidth(140).SetBorder(new SolidBorder(ColorConstants.PINK, 10));
+                Div flexContainer = CreateFlexContainer();
+                flexContainer.DeleteOwnProperty(Property.HEIGHT);
+                flexContainer.SetBorder(new SolidBorder(ColorConstants.YELLOW, 5));
+                flexContainer.Add(CreateNewDiv().Add(new Paragraph("1"))).Add(CreateNewDiv().Add(new Paragraph("2"))).Add(
+                    CreateNewDiv().Add(new Paragraph("3"))).Add(CreateNewDiv().Add(new Paragraph("4"))).Add(CreateNewDiv()
+                    .Add(new Paragraph("5"))).Add(CreateNewDiv().Add(new Paragraph("6"))).Add(CreateNewDiv().Add(new Paragraph
+                    ("7"))).Add(CreateNewDiv().Add(new Paragraph("8"))).Add(CreateNewDiv().Add(new Paragraph("9"))).Add(CreateNewDiv
+                    ().Add(new Paragraph("10")));
+                div.Add(flexContainer);
+                document.Add(div);
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }

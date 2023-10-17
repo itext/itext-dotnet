@@ -23,10 +23,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Forms;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Forms.Fields {
     /// <summary>An AcroForm field containing signature data.</summary>
     public class PdfSignatureFormField : PdfFormField {
+        /// <summary>Indicates if we need to reuse the existing appearance as a background layer.</summary>
+        private bool reuseAppearance = false;
+
+        /// <summary>Background level of the signature appearance.</summary>
+        private PdfFormXObject n0;
+
+        /// <summary>Signature appearance layer that contains information about the signature.</summary>
+        private PdfFormXObject n2;
+
         protected internal PdfSignatureFormField(PdfDocument pdfDocument)
             : base(pdfDocument) {
         }
@@ -67,6 +77,65 @@ namespace iText.Forms.Fields {
         public virtual PdfSigFieldLock GetSigFieldLockDictionary() {
             PdfDictionary sigLockDict = (PdfDictionary)GetPdfObject().Get(PdfName.Lock);
             return sigLockDict == null ? null : new PdfSigFieldLock(sigLockDict);
+        }
+
+        /// <summary>Sets the background layer that is present when creating the signature field.</summary>
+        /// <param name="n0">layer xObject.</param>
+        /// <returns>
+        /// this same
+        /// <see cref="PdfSignatureFormField"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfSignatureFormField SetBackgroundLayer(PdfFormXObject n0) {
+            this.n0 = n0;
+            RegenerateField();
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the signature appearance layer that contains information about the signature, e.g. the line art for the
+        /// handwritten signature, the text giving the signer’s name, date, reason, location and so on.
+        /// </summary>
+        /// <param name="n2">layer xObject.</param>
+        /// <returns>
+        /// this same
+        /// <see cref="PdfSignatureFormField"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfSignatureFormField SetSignatureAppearanceLayer(PdfFormXObject n2) {
+            this.n2 = n2;
+            RegenerateField();
+            return this;
+        }
+
+        /// <summary>Indicates that the existing appearances needs to be reused as a background.</summary>
+        /// <param name="reuseAppearance">is an appearances reusing flag value to set.</param>
+        /// <returns>
+        /// this same
+        /// <see cref="PdfSignatureFormField"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfSignatureFormField SetReuseAppearance(bool reuseAppearance) {
+            this.reuseAppearance = reuseAppearance;
+            return this;
+        }
+
+        /// <summary>Gets the background layer that is present when creating the signature field if it was set.</summary>
+        /// <returns>n0 layer xObject.</returns>
+        internal virtual PdfFormXObject GetBackgroundLayer() {
+            return n0;
+        }
+
+        /// <summary>Gets the signature appearance layer that contains information about the signature if it was set.</summary>
+        /// <returns>n2 layer xObject.</returns>
+        internal virtual PdfFormXObject GetSignatureAppearanceLayer() {
+            return n2;
+        }
+
+        /// <summary>Indicates if the existing appearances needs to be reused as a background.</summary>
+        /// <returns>appearances reusing flag value.</returns>
+        internal virtual bool IsReuseAppearance() {
+            return reuseAppearance;
         }
     }
 }

@@ -307,6 +307,39 @@ namespace iText.Kernel.Colors {
             NUnit.Framework.Assert.AreEqual("Unknown color space.", e.Message);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CreateColorWithColorSpaceRgb() {
+            NUnit.Framework.Assert.AreEqual(ColorConstants.BLACK, Color.CreateColorWithColorSpace(new float[] { 0.0F, 
+                0.0F, 0.0F }));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateColorWithColorSpaceGraySpace() {
+            NUnit.Framework.Assert.AreEqual(new DeviceGray(), Color.CreateColorWithColorSpace(new float[] { 0.0F }));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateColorWithColorSpaceCmyk() {
+            NUnit.Framework.Assert.AreEqual(new DeviceCmyk(), Color.CreateColorWithColorSpace(new float[] { 0.0F, 0.0F
+                , 0.0F, 1F }));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateColorWithInvalidValueNull() {
+            NUnit.Framework.Assert.IsNull(Color.CreateColorWithColorSpace(null));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateColorWithInvalidNoValues() {
+            NUnit.Framework.Assert.IsNull(Color.CreateColorWithColorSpace(new float[] {  }));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateColorWithInvalidMoreThen4Values() {
+            NUnit.Framework.Assert.IsNull(Color.CreateColorWithColorSpace(new float[] { 0.0F, 0.0F, 0.0F, 0.0F, 0.0F }
+                ));
+        }
+
         private class CustomDeviceCs : PdfDeviceCs {
             public CustomDeviceCs(PdfName pdfObject)
                 : base(pdfObject) {

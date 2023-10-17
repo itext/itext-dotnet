@@ -33,7 +33,6 @@ using NUnit.Framework;
 
 namespace iText.StyledXmlParser.Jsoup.Integration {
     /// <summary>Integration test: parses from real-world example HTML.</summary>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class ParseTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/styledxmlparser/jsoup";

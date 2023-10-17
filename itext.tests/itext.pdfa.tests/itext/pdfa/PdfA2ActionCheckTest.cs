@@ -55,7 +55,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.S, PdfName.Launch);
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED
                 , PdfName.Launch.GetValue()), e.Message);
         }
 
@@ -70,7 +70,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.S, PdfName.Hide);
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED
                 , PdfName.Hide.GetValue()), e.Message);
         }
 
@@ -85,7 +85,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.S, PdfName.Sound);
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED
                 , PdfName.Sound.GetValue()), e.Message);
         }
 
@@ -100,7 +100,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.S, PdfName.Movie);
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED
                 , PdfName.Movie.GetValue()), e.Message);
         }
 
@@ -115,7 +115,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.S, PdfName.ResetForm);
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED
                 , PdfName.ResetForm.GetValue()), e.Message);
         }
 
@@ -130,7 +130,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.S, PdfName.ImportData);
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED
                 , PdfName.ImportData.GetValue()), e.Message);
         }
 
@@ -145,7 +145,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.S, PdfName.JavaScript);
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED
                 , PdfName.JavaScript.GetValue()), e.Message);
         }
 
@@ -161,7 +161,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.N, new PdfName("CustomName"));
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.NAMED_ACTION_TYPE_0_IS_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.NAMED_ACTION_TYPE_0_IS_NOT_ALLOWED
                 , "CustomName"), e.Message);
         }
 
@@ -176,7 +176,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.S, PdfName.SetOCGState);
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED
                 , PdfName.SetOCGState.GetValue()), e.Message);
         }
 
@@ -191,7 +191,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.S, PdfName.Rendition);
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED
                 , PdfName.Rendition.GetValue()), e.Message);
         }
 
@@ -206,7 +206,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.S, PdfName.Trans);
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED
                 , PdfName.Trans.GetValue()), e.Message);
         }
 
@@ -221,7 +221,7 @@ namespace iText.Pdfa {
             openActions.Put(PdfName.S, PdfName.GoTo3DView);
             doc.GetCatalog().Put(PdfName.OpenAction, openActions);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED
                 , PdfName.GoTo3DView.GetValue()), e.Message);
         }
 
@@ -234,8 +234,8 @@ namespace iText.Pdfa {
             PdfPage page = doc.AddNewPage();
             page.SetAdditionalAction(PdfName.C, PdfAction.CreateJavaScript("js"));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_PAGE_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY, e
-                .Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_PAGE_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -247,8 +247,8 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             doc.GetCatalog().SetAdditionalAction(PdfName.C, PdfAction.CreateJavaScript("js"));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY, 
-                e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]

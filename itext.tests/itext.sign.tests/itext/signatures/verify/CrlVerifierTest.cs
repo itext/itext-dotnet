@@ -53,8 +53,8 @@ namespace iText.Signatures.Verify {
             String caCertP12FileName = certsSrc + "rootRsa.pem";
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertP12FileName)[0];
             IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertP12FileName, password);
-            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, DateTimeUtil.GetCurrentUtcTime().AddDays
-                (-1));
+            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-
+                1));
             NUnit.Framework.Assert.IsTrue(VerifyTest(crlBuilder));
         }
 
@@ -63,12 +63,12 @@ namespace iText.Signatures.Verify {
             String caCertP12FileName = certsSrc + "rootRsa.pem";
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertP12FileName)[0];
             IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertP12FileName, password);
-            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, DateTimeUtil.GetCurrentUtcTime().AddDays
-                (-1));
+            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-
+                1));
             String checkCertFileName = certsSrc + "signCertRsa01.pem";
             IX509Certificate checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(checkCertFileName)[0];
-            crlBuilder.AddCrlEntry(checkCert, DateTimeUtil.GetCurrentUtcTime().AddDays(-40), FACTORY.CreateCRLReason()
-                .GetKeyCompromise());
+            crlBuilder.AddCrlEntry(checkCert, TimeTestUtil.TEST_DATE_TIME.AddDays(-40), FACTORY.CreateCRLReason().GetKeyCompromise
+                ());
             NUnit.Framework.Assert.Catch(typeof(VerificationException), () => VerifyTest(crlBuilder));
         }
 
@@ -77,9 +77,9 @@ namespace iText.Signatures.Verify {
             String caCertP12FileName = certsSrc + "rootRsa.pem";
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertP12FileName)[0];
             IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertP12FileName, password);
-            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, DateTimeUtil.GetCurrentUtcTime().AddDays
-                (-2));
-            crlBuilder.SetNextUpdate(DateTimeUtil.GetCurrentUtcTime().AddDays(-1));
+            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-
+                2));
+            crlBuilder.SetNextUpdate(TimeTestUtil.TEST_DATE_TIME.AddDays(-1));
             NUnit.Framework.Assert.IsFalse(VerifyTest(crlBuilder));
         }
 
@@ -94,7 +94,7 @@ namespace iText.Signatures.Verify {
             foreach (byte[] crlBytes in crlBytesCollection) {
                 IX509Crl crl = (IX509Crl)SignTestPortUtil.ParseCrlFromStream(new MemoryStream(crlBytes));
                 CRLVerifier verifier = new CRLVerifier(null, null);
-                verify = verifier.Verify(crl, checkCert, caCert, DateTimeUtil.GetCurrentUtcTime());
+                verify = verifier.Verify(crl, checkCert, caCert, TimeTestUtil.TEST_DATE_TIME);
                 break;
             }
             return verify;

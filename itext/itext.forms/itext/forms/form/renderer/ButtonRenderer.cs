@@ -226,7 +226,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = GetOccupiedArea().GetBBox().Clone();
             ApplyMargins(area, false);
-            DeleteMargins();
+            IDictionary<int, Object> margins = DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             // Background is light gray by default, but can be set to null by user.
@@ -254,6 +254,7 @@ namespace iText.Forms.Form.Renderer {
             // with the same names (and add all the widgets as kids to that merged field), so we can add it anyway.
             forms.AddField(button, page);
             WriteAcroFormFieldLangAttribute(doc);
+            ApplyProperties(margins);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -282,19 +283,6 @@ namespace iText.Forms.Form.Renderer {
             bBox.MoveDown(dy);
             bBox.SetHeight(height);
             flatRenderer.Move(0, -dy);
-        }
-
-        /// <summary>Gets the value of the lowest bottom coordinate for all button children recursively.</summary>
-        /// <returns>the lowest child bottom.</returns>
-        private float GetLowestChildBottom(IRenderer renderer, float value) {
-            float lowestChildBottom = value;
-            foreach (IRenderer child in renderer.GetChildRenderers()) {
-                lowestChildBottom = GetLowestChildBottom(child, lowestChildBottom);
-                if (child.GetOccupiedArea() != null && child.GetOccupiedArea().GetBBox().GetBottom() < lowestChildBottom) {
-                    lowestChildBottom = child.GetOccupiedArea().GetBBox().GetBottom();
-                }
-            }
-            return lowestChildBottom;
         }
     }
 }

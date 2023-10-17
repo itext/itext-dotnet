@@ -22,11 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Forms;
 using iText.Forms.Exceptions;
+using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Logs;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
@@ -279,6 +282,29 @@ namespace iText.Forms.Form.Element {
                 radio.SetSize(100);
                 div.Add(radio);
                 document.Add(div);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MultiPageRadioFieldTest() {
+            String outPdf = DESTINATION_FOLDER + "multiPageCheckboxField.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_multiPageCheckBoxField.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfWriter(outPdf))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
+                for (int i = 0; i < 10; i++) {
+                    document.AddNewPage();
+                    Rectangle rect = new Rectangle(210, 490, 150, 22);
+                    PdfFormField group = new RadioFormFieldBuilder(document, "fing").CreateRadioGroup();
+                    PdfFormAnnotation radio = new RadioFormFieldBuilder(document, "fing").SetWidgetRectangle(rect).CreateRadioButton
+                        ("bing bong", rect);
+                    PdfPage page = document.GetPage(i + 1);
+                    group.AddKid(radio);
+                    form.AddField(group, page);
+                    if (i > 2) {
+                        page.Flush();
+                    }
+                }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }

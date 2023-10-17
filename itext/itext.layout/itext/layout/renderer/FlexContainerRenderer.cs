@@ -88,6 +88,7 @@ namespace iText.Layout.Renderer {
             IList<IRenderer> renderers = GetFlexItemMainDirector().ApplyDirection(lines);
             RemoveAllChildRenderers(GetChildRenderers());
             AddAllChildRenderers(renderers);
+            IList<IRenderer> renderersToOverflow = RetrieveRenderersToOverflow(layoutContextRectangle);
             IList<UnitValue> previousWidths = new List<UnitValue>();
             IList<UnitValue> previousHeights = new List<UnitValue>();
             IList<UnitValue> previousMinHeights = new List<UnitValue>();
@@ -120,6 +121,9 @@ namespace iText.Layout.Renderer {
                 }
             }
             LayoutResult result = base.Layout(layoutContext);
+            if (!renderersToOverflow.IsEmpty()) {
+                AdjustLayoutResultToHandleOverflowRenderers(result, renderersToOverflow);
+            }
             // We must set back widths of the children because multiple layouts are possible
             // If flex-grow is less than 1, layout algorithm increases the width of the element based on the initial width
             // And if we would not set back widths, every layout flex-item width will grow.
@@ -193,12 +197,13 @@ namespace iText.Layout.Renderer {
             IRenderer childRenderer = GetChildRenderers()[childPos];
             bool forcedPlacement = true.Equals(this.GetProperty<bool?>(Property.FORCED_PLACEMENT));
             bool metChildRenderer = false;
-            foreach (IList<FlexItemInfo> line in lines) {
+            for (int i = 0; i < lines.Count; ++i) {
+                IList<FlexItemInfo> line = lines[i];
                 bool isSplitLine = line.Any((flexItem) => flexItem.GetRenderer() == childRenderer);
                 metChildRenderer = metChildRenderer || isSplitLine;
                 // If the renderer to split is in the current line
-                if (isSplitLine && !forcedPlacement && layoutStatus == LayoutResult.PARTIAL && !FlexUtil.IsColumnDirection
-                    (this)) {
+                if (isSplitLine && !forcedPlacement && layoutStatus == LayoutResult.PARTIAL && (!FlexUtil.IsColumnDirection
+                    (this) || (i == 0 && line[0].GetRenderer() == childRenderer))) {
                     // It has sense to call it also for LayoutResult.NOTHING. And then try to layout remaining renderers
                     // in line inside fillSplitOverflowRenderersForPartialResult to see if some of them can be left or
                     // partially left on the first page (in split renderer). But it's not that easy.
@@ -210,8 +215,11 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     IList<IRenderer> overflowRendererChildren = new List<IRenderer>();
+                    bool isSingleColumn = lines.Count == 1 && FlexUtil.IsColumnDirection(this);
+                    bool metChildRendererInLine = false;
                     foreach (FlexItemInfo itemInfo in line) {
-                        if (metChildRenderer && !forcedPlacement) {
+                        metChildRendererInLine = metChildRendererInLine || itemInfo.GetRenderer() == childRenderer;
+                        if ((!isSingleColumn && metChildRenderer || metChildRendererInLine) && !forcedPlacement) {
                             overflowRendererChildren.Add(itemInfo.GetRenderer());
                         }
                         else {
@@ -459,8 +467,11 @@ namespace iText.Layout.Renderer {
                         splitRenderer.AddChildRenderer(childResult.GetSplitRenderer());
                     }
                     if (childResult.GetOverflowRenderer() != null) {
-                        // Get rid of cross alignment for item with partial result
-                        childResult.GetOverflowRenderer().SetProperty(Property.ALIGN_SELF, AlignmentPropertyValue.START);
+                        // Get rid of vertical alignment for item with partial result. For column direction, justify-content
+                        // is applied to the entire line, not the single item, so there is no point in getting rid of it
+                        if (!FlexUtil.IsColumnDirection(this)) {
+                            childResult.GetOverflowRenderer().SetProperty(Property.ALIGN_SELF, AlignmentPropertyValue.START);
+                        }
                         overflowRenderer.AddChildRenderer(childResult.GetOverflowRenderer());
                     }
                     // Count the height allowed for the items after the one which was partially layouted
@@ -469,6 +480,10 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (metChildRendererInLine) {
+                        if (FlexUtil.IsColumnDirection(this)) {
+                            overflowRenderer.AddChildRenderer(itemInfo.GetRenderer());
+                            continue;
+                        }
                         // Process all following renderers in the current line
                         // We have to layout them to understand what goes where
                         // x - space occupied by all preceding items
@@ -591,6 +606,66 @@ namespace iText.Layout.Renderer {
                 flexItemMainDirector = IsRowReverse() ^ isRtlDirection ? (IFlexItemMainDirector)new RtlFlexItemMainDirector
                     () : new LtrFlexItemMainDirector();
                 return flexItemMainDirector;
+            }
+        }
+
+        private IList<IRenderer> RetrieveRenderersToOverflow(Rectangle flexContainerBBox) {
+            IList<IRenderer> renderersToOverflow = new List<IRenderer>();
+            Rectangle layoutContextRectangle = flexContainerBBox.Clone();
+            ApplyMarginsBordersPaddings(layoutContextRectangle, false);
+            if (FlexUtil.IsColumnDirection(this) && FlexUtil.GetMainSize(this, layoutContextRectangle) >= layoutContextRectangle
+                .GetHeight()) {
+                float commonLineCrossSize = 0;
+                IList<float> lineCrossSizes = FlexUtil.CalculateColumnDirectionCrossSizes(lines);
+                for (int i = 0; i < lines.Count; ++i) {
+                    commonLineCrossSize += lineCrossSizes[i];
+                    if (i > 0 && commonLineCrossSize > layoutContextRectangle.GetWidth()) {
+                        IList<IRenderer> lineRenderersToOverflow = new List<IRenderer>();
+                        foreach (FlexItemInfo itemInfo in lines[i]) {
+                            lineRenderersToOverflow.Add(itemInfo.GetRenderer());
+                        }
+                        GetFlexItemMainDirector().ApplyDirectionForLine(lineRenderersToOverflow);
+                        if (IsWrapReverse()) {
+                            renderersToOverflow.AddAll(0, lineRenderersToOverflow);
+                        }
+                        else {
+                            renderersToOverflow.AddAll(lineRenderersToOverflow);
+                        }
+                        // Those renderers will be handled in adjustLayoutResultToHandleOverflowRenderers method.
+                        // If we leave these children in multi-page fixed-height flex container, renderers
+                        // will be drawn to the right outside the container's bounds on the first page
+                        // (this logic is expected, but needed for the last page only)
+                        foreach (IRenderer renderer in renderersToOverflow) {
+                            childRenderers.Remove(renderer);
+                        }
+                    }
+                }
+            }
+            return renderersToOverflow;
+        }
+
+        private void AdjustLayoutResultToHandleOverflowRenderers(LayoutResult result, IList<IRenderer> renderersToOverflow
+            ) {
+            if (LayoutResult.FULL == result.GetStatus()) {
+                IRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
+                IRenderer overflowRenderer = CreateOverflowRenderer(LayoutResult.PARTIAL);
+                foreach (IRenderer childRenderer in renderersToOverflow) {
+                    overflowRenderer.AddChild(childRenderer);
+                }
+                foreach (IRenderer childRenderer in GetChildRenderers()) {
+                    splitRenderer.AddChild(childRenderer);
+                }
+                result.SetStatus(LayoutResult.PARTIAL);
+                result.SetSplitRenderer(splitRenderer);
+                result.SetOverflowRenderer(overflowRenderer);
+            }
+            if (LayoutResult.PARTIAL == result.GetStatus()) {
+                IRenderer overflowRenderer = result.GetOverflowRenderer();
+                foreach (IRenderer childRenderer in renderersToOverflow) {
+                    if (!overflowRenderer.GetChildRenderers().Contains(childRenderer)) {
+                        overflowRenderer.AddChild(childRenderer);
+                    }
+                }
             }
         }
     }

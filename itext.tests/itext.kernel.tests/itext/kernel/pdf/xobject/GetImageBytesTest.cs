@@ -158,6 +158,46 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestRGBSeparationCSWithJPXDecoderAndFunctionType0() {
+            TestFile("RGBJpxF0.pdf", "Im1", "jp2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestRGBSeparationCSWithDCTDecoderAndFunctionType0() {
+            TestFile("RGBDctF0.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestRGBSeparationCSWithFlateDecoderAndFunctionType0() {
+            TestFile("RGBFlateF0.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestCMYKSeparationCSWithJPXDecoderAndFunctionType2() {
+            TestFile("CMYKJpxF2.pdf", "Im1", "jp2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestRGBSeparationCSWithJPXDecoderAndFunctionType2() {
+            TestFile("RGBJpxF2.pdf", "Im1", "jp2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestCMYKSeparationCSWithDCTDecoderAndFunctionType2() {
+            TestFile("CMYKDctF2.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestRGBSeparationCSWithDCTDecoderAndFunctionType2() {
+            TestFile("RGBDctF2.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestRGBSeparationCSWithFlateDecoderAndFunctionType2() {
+            TestFile("RGBFlateF2.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ExtractByteAlignedG4TiffImageTest() {
             String inFileName = SOURCE_FOLDER + "extractByteAlignedG4TiffImage.pdf";
             String outImageFileName = DESTINATION_FOLDER + "extractedByteAlignedImage.png";

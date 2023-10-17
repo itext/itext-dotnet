@@ -59,7 +59,6 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-7264: Investigate 3 failed forms tests from 7.3/develop on .NET")]
         public virtual void SimpleFormWithMultipleFieldsTest() {
             String pdfDocumentName = "simpleFormWithMultipleFields.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + pdfDocumentName, FileMode.Open

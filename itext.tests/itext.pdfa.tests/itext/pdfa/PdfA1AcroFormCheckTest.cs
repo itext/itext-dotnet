@@ -55,7 +55,7 @@ namespace iText.Pdfa {
             acroForm.Put(PdfName.NeedAppearances, new PdfBoolean(true));
             doc.GetCatalog().Put(PdfName.AcroForm, acroForm);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.NEEDAPPEARANCES_FLAG_OF_THE_INTERACTIVE_FORM_DICTIONARY_SHALL_EITHER_NOT_BE_PRESENTED_OR_SHALL_BE_FALSE
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.NEEDAPPEARANCES_FLAG_OF_THE_INTERACTIVE_FORM_DICTIONARY_SHALL_EITHER_NOT_BE_PRESENTED_OR_SHALL_BE_FALSE
                 , e.Message);
         }
 

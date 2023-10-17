@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Text;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Image;
@@ -634,6 +635,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
                     );
             }
+            document.CheckIsoConformance(text.ToString(), IsoKey.FONT, null, null, currentGs.GetFont());
             float fontSize = FontProgram.ConvertTextSpaceToGlyphSpace(currentGs.GetFontSize());
             float charSpacing = currentGs.GetCharSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
@@ -792,6 +794,14 @@ namespace iText.Kernel.Pdf.Canvas {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
                     );
             }
+            // Take text part to process
+            StringBuilder text = new StringBuilder();
+            foreach (PdfObject obj in textArray) {
+                if (obj is PdfString) {
+                    text.Append(obj);
+                }
+            }
+            document.CheckIsoConformance(text.ToString(), IsoKey.FONT, null, null, currentGs.GetFont());
             contentStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("["));
             foreach (PdfObject obj in textArray) {
                 if (obj.IsString()) {
@@ -2245,6 +2255,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
                     );
             }
+            document.CheckIsoConformance(text, IsoKey.FONT, null, null, currentGs.GetFont());
             currentGs.GetFont().WriteText(text, contentStream.GetOutputStream());
         }
 

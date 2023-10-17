@@ -253,11 +253,31 @@ namespace iText.Forms.Form.Renderer {
         /// with margins applied (margins shouldn't be an interactive part of the field, i.e. included into its occupied
         /// area).
         /// </remarks>
-        internal virtual void DeleteMargins() {
+        /// <returns>the map of deleted margins</returns>
+        internal virtual IDictionary<int, Object> DeleteMargins() {
+            IDictionary<int, Object> margins = new Dictionary<int, Object>();
+            margins.Put(Property.MARGIN_TOP, this.modelElement.GetOwnProperty<UnitValue>(Property.MARGIN_TOP));
+            margins.Put(Property.MARGIN_BOTTOM, this.modelElement.GetOwnProperty<UnitValue>(Property.MARGIN_BOTTOM));
+            margins.Put(Property.MARGIN_LEFT, this.modelElement.GetOwnProperty<UnitValue>(Property.MARGIN_LEFT));
+            margins.Put(Property.MARGIN_RIGHT, this.modelElement.GetOwnProperty<UnitValue>(Property.MARGIN_RIGHT));
             modelElement.DeleteOwnProperty(Property.MARGIN_RIGHT);
             modelElement.DeleteOwnProperty(Property.MARGIN_LEFT);
             modelElement.DeleteOwnProperty(Property.MARGIN_TOP);
             modelElement.DeleteOwnProperty(Property.MARGIN_BOTTOM);
+            return margins;
+        }
+
+        /// <summary>Applies the properties to the model element.</summary>
+        /// <param name="properties">the properties to apply</param>
+        internal virtual void ApplyProperties(IDictionary<int, Object> properties) {
+            foreach (KeyValuePair<int, Object> integerObjectEntry in properties) {
+                if (integerObjectEntry.Value != null) {
+                    modelElement.SetProperty(integerObjectEntry.Key, integerObjectEntry.Value);
+                }
+                else {
+                    modelElement.DeleteOwnProperty(integerObjectEntry.Key);
+                }
+            }
         }
 
         /// <summary>Applies the border property.</summary>

@@ -594,7 +594,6 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     else {
-                        //                    if (cellResult.getStatus() != LayoutResult.FULL || Boolean.TRUE.equals(this.<Boolean>getOwnProperty(Property.FORCED_PLACEMENT))) { TODO DEVSIX-1735
                         if (cellResult.GetStatus() != LayoutResult.FULL) {
                             // first time split occurs
                             if (!split) {
@@ -1572,7 +1571,7 @@ namespace iText.Layout.Renderer {
         private void CorrectLayoutedCellsOccupiedAreas(LayoutResult[] splits, int row, int[] targetOverflowRowIndex
             , float? blockMinHeight, Rectangle layoutBox, IList<bool> rowsHasCellWithSetHeight, bool isLastRenderer
             , bool processBigRowspan, bool skip) {
-            // correct last height
+            // Correct last height
             int finish = bordersHandler.GetFinishRow();
             bordersHandler.SetFinishRow(rowRange.GetFinishRow());
             // It's width will be considered only for collapsed borders
@@ -1588,12 +1587,12 @@ namespace iText.Layout.Renderer {
             float realBottomIndent = bordersHandler is CollapsedTableBorders ? bordersHandler.GetMaxBottomWidth() : 0;
             if (0 != heights.Count) {
                 heights[heights.Count - 1] = heights[heights.Count - 1] + (realBottomIndent - currentBottomIndent) / 2;
-                // correct occupied area and layoutbox
+                // Correct occupied area and layoutbox
                 occupiedArea.GetBBox().IncreaseHeight((realBottomIndent - currentBottomIndent) / 2).MoveDown((realBottomIndent
                      - currentBottomIndent) / 2);
                 layoutBox.DecreaseHeight((realBottomIndent - currentBottomIndent) / 2);
                 if (processBigRowspan) {
-                    // process the last row and correct its height
+                    // Process the last row and correct either its height or height of the cell with rowspan
                     CellRenderer[] currentRow = rows[heights.Count];
                     for (int col = 0; col < currentRow.Length; col++) {
                         CellRenderer cell = null == splits[col] ? currentRow[col] : (CellRenderer)splits[col].GetSplitRenderer();
@@ -1603,6 +1602,7 @@ namespace iText.Layout.Renderer {
                         float height = 0;
                         int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                         int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
+                        // Sum the heights of the rows included into the rowspan, except for the last one
                         for (int l = heights.Count - 1 - 1; l > targetOverflowRowIndex[col] - rowspan && l >= 0; l--) {
                             height += (float)heights[l];
                         }
@@ -1612,12 +1612,21 @@ namespace iText.Layout.Renderer {
                         cellHeightInLastRow = cell.GetOccupiedArea().GetBBox().GetHeight() - height + indents[0] / 2 + indents[2] 
                             / 2;
                         if (heights[heights.Count - 1] < cellHeightInLastRow) {
+                            // Height of the cell with rowspan is greater than height of the rows included into rowspan
                             if (bordersHandler is SeparatedTableBorders) {
                                 float differenceToConsider = cellHeightInLastRow - heights[heights.Count - 1];
                                 occupiedArea.GetBBox().MoveDown(differenceToConsider);
                                 occupiedArea.GetBBox().IncreaseHeight(differenceToConsider);
                             }
                             heights[heights.Count - 1] = cellHeightInLastRow;
+                        }
+                        else {
+                            // Height of the cell with rowspan is less than height of all the rows included into rowspan
+                            float shift = heights[heights.Count - 1] - cellHeightInLastRow;
+                            Rectangle bBox = cell.GetOccupiedArea().GetBBox();
+                            bBox.MoveDown(shift);
+                            bBox.SetHeight(height + heights[heights.Count - 1]);
+                            cell.ApplyVerticalAlignment();
                         }
                     }
                 }

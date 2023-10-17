@@ -24,8 +24,6 @@ using System;
 using System.Text;
 
 namespace iText.Barcodes.Qrcode {
-    /// <author>satorux@google.com (Satoru Takabayashi) - creator</author>
-    /// <author>dswitkin@google.com (Daniel Switkin) - ported from C++</author>
     internal sealed class QRCode {
         public const int NUM_MASK_PATTERNS = 8;
 

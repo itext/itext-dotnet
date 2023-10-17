@@ -37,6 +37,7 @@ using iText.Layout.Logs;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
@@ -2671,7 +2672,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CellWithBigRowspanCompletedRowTooTest() {
-            // TODO DEVSIX-3716
             String testName = "cellWithBigRowspanCompletedRowTooTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -2704,7 +2704,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CellWithBigRowspanCompletedRowNotTest() {
-            // TODO DEVSIX-3716
             String testName = "cellWithBigRowspanCompletedRowNotTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -2812,7 +2811,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BigRowSpanTooFarFullTest() {
-            // TODO DEVSIX-5250 The first column should be fully red
             String filename = "bigRowSpanTooFarFullTest.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
             Document document = new Document(pdf);
@@ -2835,7 +2833,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BigRowSpanTooFarPartialTest() {
-            // TODO DEVSIX-5250 The first column should be fully red, but on page 2 it is not
             String filename = "bigRowSpanTooFarPartialTest.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
             Document document = new Document(pdf);
@@ -2859,7 +2856,6 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void BigRowSpanTooFarNothingTest() {
-            // TODO DEVSIX-5250 The first column should be fully red
             String filename = "bigRowSpanTooFarNothingTest.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
             Document document = new Document(pdf);
@@ -2950,6 +2946,33 @@ namespace iText.Layout {
                     NUnit.Framework.Assert.IsTrue(tableRect.EqualsWithEpsilon(tableRectRelayout));
                 }
             }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        public virtual void InfiniteLoopKeepTogetherTest() {
+            String fileName = "infiniteLoopKeepTogether.pdf";
+            float fontSize = 8;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + fileName))) {
+                using (Document doc = new Document(pdfDoc)) {
+                    doc.SetMargins(138, 20, 75, 20);
+                    Table table = new Table(5);
+                    table.SetKeepTogether(true);
+                    for (int i = 0; i < 37; i++) {
+                        table.AddCell(new Cell(1, 5).Add(new Paragraph(new Text("Cell"))).SetFontSize(fontSize));
+                        table.StartNewRow();
+                    }
+                    Table commentsTable = new Table(1);
+                    Cell commentsCell = new Cell().Add(new Paragraph(new Text("First line\nSecond line")));
+                    commentsTable.AddCell(commentsCell);
+                    Cell outerCommentsCell = new Cell(1, 5).SetFontSize(fontSize);
+                    outerCommentsCell.Add(commentsTable);
+                    table.AddCell(outerCommentsCell);
+                    doc.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder));
         }
 
         private class RotatedDocumentRenderer : DocumentRenderer {

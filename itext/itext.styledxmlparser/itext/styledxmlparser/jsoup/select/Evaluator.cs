@@ -606,7 +606,6 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         }
 
         /// <summary>Abstract evaluator for sibling index matching</summary>
-        /// <author>ant</author>
         public abstract class IndexEvaluator : Evaluator {
             internal int index;
 

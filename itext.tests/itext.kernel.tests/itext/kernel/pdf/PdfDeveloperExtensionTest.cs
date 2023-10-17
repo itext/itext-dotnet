@@ -24,10 +24,11 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Source;
+using iText.Test;
 
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
-    public class PdfDeveloperExtensionTest {
+    public class PdfDeveloperExtensionTest : ExtendedITextTest {
         public static readonly PdfDeveloperExtension SIMPLE_EXTENSION_L3 = new PdfDeveloperExtension(new PdfName("Test"
             ), PdfName.Pdf_Version_1_7, 3);
 

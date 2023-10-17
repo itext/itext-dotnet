@@ -25,8 +25,6 @@ using System.Collections.Generic;
 using iText.Barcodes.Exceptions;
 
 namespace iText.Barcodes.Qrcode {
-    /// <author>satorux@google.com (Satoru Takabayashi) - creator</author>
-    /// <author>dswitkin@google.com (Daniel Switkin) - ported from C++</author>
     internal sealed class Encoder {
         // The original table is defined in the table 5 of JISX0510:2004 (p.19).
         private static readonly int[] ALPHANUMERIC_TABLE = new int[] { 

@@ -46,6 +46,9 @@ namespace iText.Signatures.Exceptions {
 
         public const String CERTIFICATE_TEMPLATE_FOR_EXCEPTION_MESSAGE = "Certificate {0} failed: {1}";
 
+        public const String DEFAULT_CLIENTS_CANNOT_BE_CREATED = "Default implementation of OCSP and CRL clients " 
+            + "cannot be created, because signing certificate doesn't contain revocation data sources. " + "Please try to explicitly add OCSP or CRL client.";
+
         public const String DICTIONARY_THIS_KEY_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
 
         public const String DOCUMENT_ALREADY_PRE_CLOSED = "Document has been already pre closed.";
@@ -70,12 +73,18 @@ namespace iText.Signatures.Exceptions {
 
         public const String NO_CRYPTO_DICTIONARY_DEFINED = "No crypto dictionary defined.";
 
+        public const String NO_SIGNATURES_TO_PROLONG = "Document doesn't contain any signatures to prolong.";
+
         public const String NOT_A_VALID_PKCS7_OBJECT_NOT_A_SEQUENCE = "Not a valid PKCS#7 object - not a sequence";
 
         public const String NOT_A_VALID_PKCS7_OBJECT_NOT_SIGNED_DATA = "Not a valid PKCS#7 object - not signed " +
              "data.";
 
         public const String NOT_ENOUGH_SPACE = "Not enough space.";
+
+        public const String PATH_IS_NOT_DIRECTORY = "Provided path: {0} is not a directory. " + "Please provide a directory path to store temporary pdf files which are required for signing.";
+
+        public const String PROVIDED_TSA_CLIENT_IS_NULL = "Provided TSA client is null. TSA client is required for timestamp signing.";
 
         public const String SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT = "Signature "
              + "with name {0} is not the last. It doesn't cover the whole document.";

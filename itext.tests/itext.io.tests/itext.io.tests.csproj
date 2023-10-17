@@ -40,6 +40,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\itext\itext.io\itext.io.csproj" />
     <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj" />
+    <ProjectReference Include="..\..\itext\itext.font-asian\itext.font-asian.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
     <PackageReference Include="Microsoft.NET.Test.Sdk">

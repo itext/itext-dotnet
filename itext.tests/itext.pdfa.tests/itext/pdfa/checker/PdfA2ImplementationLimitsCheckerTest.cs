@@ -31,10 +31,11 @@ using iText.Test;
 namespace iText.Pdfa.Checker {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfA2ImplementationLimitsCheckerTest : ExtendedITextTest {
-        private PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B);
+        private PdfA2Checker pdfA2Checker;
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
+            pdfA2Checker = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B);
             pdfA2Checker.SetFullCheckMode(true);
         }
 
@@ -48,7 +49,7 @@ namespace iText.Pdfa.Checker {
             // it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPdfObject
                 (longString));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -65,7 +66,7 @@ namespace iText.Pdfa.Checker {
             // is longer then it is allowed per specification
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckContentStream
                 (stream));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -97,14 +98,14 @@ namespace iText.Pdfa.Checker {
             // An exception is thrown as any number greater then 32767 is considered as Integer
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPdfObject
                 (largeNumber));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DeviceNColorspaceWithMoreThan32Components() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckColorspace(BuildDeviceNColorspace
                 (34)));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
                 , e.Message);
         }
 
@@ -120,7 +121,7 @@ namespace iText.Pdfa.Checker {
 
         private void CheckColorspace(PdfColorSpace colorSpace) {
             PdfDictionary currentColorSpaces = new PdfDictionary();
-            pdfA2Checker.CheckColorSpace(colorSpace, currentColorSpaces, true, false);
+            pdfA2Checker.CheckColorSpace(colorSpace, null, currentColorSpaces, true, false);
         }
 
         private PdfColorSpace BuildDeviceNColorspace(int numberOfComponents) {
@@ -137,6 +138,11 @@ namespace iText.Pdfa.Checker {
             PdfArray deviceNAsArray = ((PdfArray)(new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb(), function))
                 .GetPdfObject());
             PdfDictionary attributes = new PdfDictionary();
+            PdfDictionary colourants = new PdfDictionary();
+            String colourantName = "colourantTest";
+            colourants.Put(new PdfName(colourantName), new PdfSpecialCs.DeviceN(((PdfArray)(new PdfSpecialCs.DeviceN(tmpArray
+                , new PdfDeviceCs.Rgb(), function)).GetPdfObject())).GetPdfObject());
+            attributes.Put(PdfName.Colorants, colourants);
             deviceNAsArray.Add(attributes);
             return new PdfSpecialCs.DeviceN(deviceNAsArray);
         }

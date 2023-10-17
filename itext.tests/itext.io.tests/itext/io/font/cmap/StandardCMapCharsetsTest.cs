@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Exceptions;
+using iText.IO.Exceptions;
 using iText.IO.Source;
 using iText.Test;
 
@@ -64,7 +65,7 @@ namespace iText.IO.Font.Cmap {
             int cp = iText.IO.Util.TextUtil.ConvertToUtf32(str)[0];
             Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => encoder.EncodeUnicodeCodePoint(cp
                 ));
-            NUnit.Framework.Assert.AreEqual("This encoder only accepts BMP codepoints", e.Message);
+            NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.ONLY_BMP_ENCODING, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -105,7 +106,7 @@ namespace iText.IO.Font.Cmap {
             int codePoint = 66615;
             Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => encoder.EncodeUnicodeCodePoint(codePoint
                 ));
-            NUnit.Framework.Assert.AreEqual("This encoder only accepts BMP codepoints", e.Message);
+            NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.ONLY_BMP_ENCODING, e.Message);
         }
 
         [NUnit.Framework.Test]

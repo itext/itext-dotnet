@@ -72,7 +72,7 @@ namespace iText.Pdfa {
                     // this document contain a string which is longer than it is allowed
                     // per specification. That is why conformance exception should be thrown
                     Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => document.Close());
-                    NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
+                    NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PDF_STRING_IS_TOO_LONG, e.Message);
                 }
             }
         }

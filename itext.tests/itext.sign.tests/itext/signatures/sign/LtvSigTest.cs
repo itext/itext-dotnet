@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
@@ -45,14 +46,20 @@ namespace iText.Signatures.Sign {
              + "/test/itext/signatures/sign/LtvSigTest/";
 
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
+        private static bool runningInFipsMode;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
+            runningInFipsMode = "BCFIPS".Equals(BouncyCastleFactoryCreator.GetFactory().GetProviderName());
+    }
 
         [NUnit.Framework.Test]
         public virtual void LtvEnabledTest01() {
+            string compareFile = SOURCE_FOLDER + "cmp_ltvEnabledTsTest01.pdf";
+            if (runningInFipsMode) {
+                compareFile = SOURCE_FOLDER + "cmp_ltvEnabledTsTest01_FIPS.pdf";
+            }
             String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.pem";
             String caCertP12FileName = CERTS_SRC + "rootRsa.pem";
             String srcFileName = SOURCE_FOLDER + "signedDoc.pdf";
@@ -72,12 +79,16 @@ namespace iText.Signatures.Sign {
                 ), new StampingProperties().UseAppendMode());
             signer.Timestamp(testTsa, "timestampSig1");
             BasicCheckLtvDoc("ltvEnabledTsTest01.pdf", "timestampSig1");
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, SOURCE_FOLDER + "cmp_ltvEnabledTsTest01.pdf"
-                ));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, compareFile));
         }
 
         [NUnit.Framework.Test]
         public virtual void LtvEnabledSingleSignatureNoCrlDataTest() {
+            string compareFile = SOURCE_FOLDER + "cmp_ltvEnabledSingleSignatureNoCrlDataTest.pdf";
+            if (runningInFipsMode)
+            {
+                compareFile = SOURCE_FOLDER + "cmp_ltvEnabledSingleSignatureNoCrlDataTest_FIPS.pdf";
+            }
             String signCertP12FileName = CERTS_SRC + "signCertRsaWithChain.pem";
             String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.pem";
             String intermediateCertP12FileName = CERTS_SRC + "intermediateRsa.pem";
@@ -95,8 +106,7 @@ namespace iText.Signatures.Sign {
             signer.SetFieldName("Signature1");
             signer.SignDetached(pks, signChain, crlNotAvailableList, testOcspClient, testTsa, 0, PdfSigner.CryptoStandard
                 .CADES);
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvFileName, SOURCE_FOLDER + "cmp_ltvEnabledSingleSignatureNoCrlDataTest.pdf"
-                ));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvFileName, compareFile));
         }
 
         private sealed class _ICrlClient_129 : ICrlClient {
@@ -110,6 +120,11 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void LtvEnabledSingleSignatureNoOcspDataTest() {
+            string compareFile = SOURCE_FOLDER + "cmp_ltvEnabledSingleSignatureNoOcspDataTest.pdf";
+            if (runningInFipsMode)
+            {
+                compareFile = SOURCE_FOLDER + "cmp_ltvEnabledSingleSignatureNoOcspDataTest_FIPS.pdf";
+            }
             String signCertP12FileName = CERTS_SRC + "signCertRsaWithChain.pem";
             String tsaCertP12FileName = CERTS_SRC + "tsCertRsa.pem";
             String intermediateCertP12FileName = CERTS_SRC + "intermediateRsa.pem";
@@ -125,12 +140,16 @@ namespace iText.Signatures.Sign {
             signer.SetFieldName("Signature1");
             signer.SignDetached(pks, signChain, JavaCollectionsUtil.SingletonList<ICrlClient>(testCrlClient), null, testTsa
                 , 0, PdfSigner.CryptoStandard.CADES);
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvFileName, SOURCE_FOLDER + "cmp_ltvEnabledSingleSignatureNoOcspDataTest.pdf"
-                ));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvFileName, compareFile));
         }
 
         [NUnit.Framework.Test]
         public virtual void SecondLtvOriginalHasNoVri01() {
+            string compareFile = SOURCE_FOLDER + "cmp_secondLtvOriginalHasNoVriTs01.pdf";
+            if (runningInFipsMode)
+            {
+                compareFile = SOURCE_FOLDER + "cmp_secondLtvOriginalHasNoVriTs01_FIPS.pdf";
+            }
             String tsaCertFileName = CERTS_SRC + "tsCertRsa.pem";
             String caCertFileName = CERTS_SRC + "rootRsa.pem";
             String srcFileName = SOURCE_FOLDER + "ltvEnabledNoVriEntry.pdf";
@@ -150,8 +169,7 @@ namespace iText.Signatures.Sign {
                 ), new StampingProperties().UseAppendMode());
             signer.Timestamp(testTsa, "timestampSig2");
             BasicCheckLtvDoc("secondLtvOriginalHasNoVriTs01.pdf", "timestampSig2");
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, SOURCE_FOLDER + "cmp_secondLtvOriginalHasNoVriTs01.pdf"
-                ));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, compareFile));
         }
 
         private static IExternalSignature PrepareSignatureHandler(String signCertP12FileName) {

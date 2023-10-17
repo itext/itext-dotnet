@@ -118,6 +118,12 @@ namespace iText.Layout.Font {
                     bool isLastFontFamilyToBeProcessed = i == fontFamilies.Count - 1;
                     res = CharacteristicsSimilarity(fontFamily, fc, o2, isLastFontFamilyToBeProcessed) - CharacteristicsSimilarity
                         (fontFamily, fc, o1, isLastFontFamilyToBeProcessed);
+                    // This method is a fallback to compare family2 field if the main method wasn't able to prioritize
+                    // the fonts. We don't want to add this into scoring in the main method (characteristicsSimilarity)
+                    // not to break anything for existing solutions.
+                    if (res == 0) {
+                        res = Family2Similarity(fontFamily, fc, o2) - Family2Similarity(fontFamily, fc, o1);
+                    }
                 }
                 return res;
             }
@@ -233,6 +239,17 @@ namespace iText.Layout.Font {
                     }
                 }
                 return score;
+            }
+
+            /// <summary>This method is a fallback to compare family2 field if the main method wasn't able to prioritize the fonts.
+            ///     </summary>
+            private static int Family2Similarity(String fontFamily, FontCharacteristics fc, FontInfo fontInfo) {
+                FontProgramDescriptor fontDescriptor = fontInfo.GetDescriptor();
+                if (!fc.IsMonospace() && null == fontInfo.GetAlias() && null != fontDescriptor.GetFamilyName2LowerCase() &&
+                     fontDescriptor.GetFamilyName2LowerCase().Equals(fontFamily)) {
+                    return 1;
+                }
+                return 0;
             }
         }
     }

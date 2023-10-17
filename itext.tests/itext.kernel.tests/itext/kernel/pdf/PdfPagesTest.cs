@@ -54,6 +54,24 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void HugeNumberOfPagesWithOnePageTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hugeNumberOfPagesWithOnePage.pdf"), new 
+                PdfWriter(new MemoryStream()));
+            PdfPage page = new PdfPage(pdfDoc, pdfDoc.GetDefaultPageSize());
+            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.AddPage(1, page));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CountDontCorrespondToRealTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "countDontCorrespondToReal.pdf"), new PdfWriter
+                (new MemoryStream()));
+            PdfPage page = new PdfPage(pdfDoc, pdfDoc.GetDefaultPageSize());
+            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.AddPage(1, page));
+            // we don't expect that Count will be different from real number of pages
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => pdfDoc.Close());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SimplePagesTest() {
             String filename = "simplePagesTest.pdf";
             int pageCount = 111;

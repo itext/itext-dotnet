@@ -57,8 +57,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const String TITLE = "Empty iText Document";
 
-        private sealed class _ContentProvider_83 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_83() {
+        private sealed class _ContentProvider_74 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_74() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -68,7 +68,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_83();
+        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_74();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -231,12 +231,12 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void Create1000PagesDocumentWithText() {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithText.pdf";
-            CreateStandardDocument(new PdfWriter(filename), pageCount, new _ContentProvider_375());
+            CreateStandardDocument(new PdfWriter(filename), pageCount, new _ContentProvider_366());
             AssertStandardDocument(filename, pageCount);
         }
 
-        private sealed class _ContentProvider_375 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_375() {
+        private sealed class _ContentProvider_366 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_366() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -1102,6 +1102,26 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.Release();
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateSimpleCanvasWithPdfArrayText() {
+            String outPdf = DESTINATION_FOLDER + "createSimpleCanvasWithPdfArrayText.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_createSimpleCanvasWithPdfArrayText.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfPage page1 = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            PdfArray pdfArray = new PdfArray();
+            pdfArray.Add(new PdfString("ABC"));
+            pdfArray.Add(new PdfNumber(-250));
+            pdfArray.Add(new PdfString("DFG"));
+            //Initialize canvas and write text to it
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
+                ), 16).ShowText(pdfArray).EndText().RestoreState();
+            canvas.Release();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
         }
 
         private void CreateStandardDocument(PdfWriter writer, int pageCount, PdfCanvasTest.ContentProvider contentProvider

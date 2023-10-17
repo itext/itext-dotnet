@@ -230,7 +230,7 @@ namespace iText.Kernel.Crypto {
             XMPProperty creatorToolXmp = xmpMeta.GetProperty(XMPConst.NS_XMP, "CreatorTool");
             doc.Close();
             NUnit.Framework.Assert.IsNotNull(creatorToolXmp);
-            NUnit.Framework.Assert.AreEqual("iText 7", creatorToolXmp.GetValue());
+            NUnit.Framework.Assert.AreEqual("iText", creatorToolXmp.GetValue());
         }
 
         [NUnit.Framework.Test]
@@ -246,6 +246,10 @@ namespace iText.Kernel.Crypto {
             srcDoc.CopyPagesTo(1, 1, destDoc);
             PdfDictionary srcInfo = srcDoc.GetTrailer().GetAsDictionary(PdfName.Info);
             PdfDictionary destInfo = destDoc.GetTrailer().GetAsDictionary(PdfName.Info);
+            if (destInfo == null) {
+                destInfo = new PdfDictionary();
+                destDoc.GetTrailer().Put(PdfName.Info, destInfo);
+            }
             foreach (PdfName srcInfoKey in srcInfo.KeySet()) {
                 destInfo.Put((PdfName)srcInfoKey.CopyTo(destDoc), srcInfo.Get(srcInfoKey).CopyTo(destDoc));
             }

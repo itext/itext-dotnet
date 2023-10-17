@@ -40,8 +40,6 @@ using iText.Commons.Bouncycastle.Tsp;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Crypto.Parameters;
 
 namespace iText.Signatures {
     internal sealed class SignUtils {
@@ -144,10 +142,6 @@ namespace iText.Signatures {
 
         internal static IX500Name GetIssuerX500Principal(IAsn1Sequence issuerAndSerialNumber) {
             return FACTORY.CreateX500NameInstance(issuerAndSerialNumber.GetObjectAt(0));
-        }
-
-        internal static String DateToString(DateTime signDate) {
-            return signDate.ToLocalTime().ToString("yyyy.MM.dd HH:mm:ss zzz");
         }
 
         internal class TsaResponse {

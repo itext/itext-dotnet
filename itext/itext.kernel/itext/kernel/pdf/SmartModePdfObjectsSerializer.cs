@@ -122,7 +122,6 @@ namespace iText.Kernel.Pdf {
                     }
                     else {
                         if (obj.IsString()) {
-                            // TODO specify length for strings, streams, may be names?
                             bb.Append("$S").Append(obj.ToString());
                         }
                         else {
@@ -172,7 +171,6 @@ namespace iText.Kernel.Pdf {
         }
 
         private bool IsKeyRefersBack(PdfDictionary dic, PdfName key) {
-            // TODO review this method?
             // ignore recursive call
             return key.Equals(PdfName.P) && (dic.Get(key).IsIndirectReference() || dic.Get(key).IsDictionary()) || key
                 .Equals(PdfName.Parent);
