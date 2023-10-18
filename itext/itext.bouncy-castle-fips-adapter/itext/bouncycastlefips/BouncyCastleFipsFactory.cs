@@ -84,6 +84,7 @@ using Org.BouncyCastle.Crypto.Asymmetric;
 using Org.BouncyCastle.Crypto.Fips;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Operators;
+using Org.BouncyCastle.Operators.Utilities;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.IO;
@@ -118,6 +119,20 @@ namespace iText.Bouncycastlefips {
         
         /// <summary><inheritDoc/></summary>
         public virtual String GetAlgorithmOid(String name) {
+            return null;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual String GetDigestAlgorithmOid(String name) {
+            try {
+                DerObjectIdentifier algorithmIdentifier = 
+                    new DefaultDigestAlgorithmIdentifierFinder().Find(name).Algorithm;
+                if (algorithmIdentifier != null) {
+                    return algorithmIdentifier.Id;
+                }
+            } catch (KeyNotFoundException) {
+                // Do nothing.
+            }
             return null;
         }
 

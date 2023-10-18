@@ -119,6 +119,19 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual String GetDigestAlgorithmOid(String name) {
+            try {
+                DerObjectIdentifier algorithmIdentifier = DigestUtilities.GetObjectIdentifier(name);
+                if (algorithmIdentifier != null) {
+                    return algorithmIdentifier.Id;
+                }
+            } catch (ArgumentException) {
+                // Do nothing.
+            }
+            return null;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual String GetAlgorithmName(String oid) {
             try {
                 return SignerUtilities.GetEncodingName(new DerObjectIdentifier(oid));

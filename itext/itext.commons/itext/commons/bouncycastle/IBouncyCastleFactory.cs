@@ -64,6 +64,13 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="name">name of the algorithm</param>
         /// <returns>algorithm oid</returns>
         String GetAlgorithmOid(String name);
+        
+        /// <summary>
+        /// Get hash algorithm oid from its name.
+        /// </summary>
+        /// <param name="name">name of the algorithm</param>
+        /// <returns>algorithm oid</returns>
+        String GetDigestAlgorithmOid(String name);
 
         /// <summary>
         /// Get signing algorithm name from its oid.
