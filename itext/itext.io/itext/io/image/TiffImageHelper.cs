@@ -505,7 +505,6 @@ namespace iText.IO.Image {
                             }
                             byte[] tables = new byte[tablelength];
                             Array.Copy(temp, tableoffset, tables, 0, tablelength);
-                            // TODO insert after JFIF header, instead of at the start
                             byte[] jpegwithtables = new byte[jpeg.Length + tables.Length];
                             Array.Copy(jpeg, 0, jpegwithtables, 0, 2);
                             Array.Copy(tables, 0, jpegwithtables, 2, tables.Length);
