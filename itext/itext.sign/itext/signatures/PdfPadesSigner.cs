@@ -210,7 +210,8 @@ namespace iText.Signatures {
                 using (Stream inputStream = CreateInputStream()) {
                     using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(outputStream), 
                         new StampingProperties().UseAppendMode())) {
-                        PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()));
+                        PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()), LtvVerification.RevocationDataNecessity
+                            .REQUIRED_FOR_SIGNING_CERTIFICATE);
                     }
                 }
             }
@@ -275,7 +276,8 @@ namespace iText.Signatures {
                 using (Stream inputStream = CreateInputStream()) {
                     using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(CreateOutputStream
                         ()), new StampingProperties().UseAppendMode())) {
-                        PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()));
+                        PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()), LtvVerification.RevocationDataNecessity
+                            .REQUIRED_FOR_SIGNING_CERTIFICATE);
                         PerformTimestamping(pdfDocument, outputStream, tsaClient);
                     }
                 }
@@ -332,7 +334,7 @@ namespace iText.Signatures {
                     throw new PdfException(SignExceptionMessageConstant.NO_SIGNATURES_TO_PROLONG);
                 }
                 CreateRevocationClients(new IX509Certificate[0], false);
-                PerformLtvVerification(pdfDocument, signatureNames);
+                PerformLtvVerification(pdfDocument, signatureNames, LtvVerification.RevocationDataNecessity.OPTIONAL);
                 if (tsaClient != null) {
                     PerformTimestamping(pdfDocument, outputStream, tsaClient);
                 }
@@ -524,11 +526,13 @@ namespace iText.Signatures {
             return signer;
         }
 
-        private void PerformLtvVerification(PdfDocument pdfDocument, IList<String> signatureNames) {
+        private void PerformLtvVerification(PdfDocument pdfDocument, IList<String> signatureNames, LtvVerification.RevocationDataNecessity
+             revocationDataNecessity) {
             LtvVerification ltvVerification = new LtvVerification(pdfDocument);
             foreach (String signatureName in signatureNames) {
                 ltvVerification.AddVerification(signatureName, ocspClient, crlClient, LtvVerification.CertificateOption.WHOLE_CHAIN
-                    , LtvVerification.Level.OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.YES);
+                    , LtvVerification.Level.OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.YES, revocationDataNecessity
+                    );
             }
             ltvVerification.Merge();
         }

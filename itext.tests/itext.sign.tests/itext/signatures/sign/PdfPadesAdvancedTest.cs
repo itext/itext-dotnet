@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
@@ -29,9 +30,10 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms.Form.Element;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Signatures;
+using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
@@ -147,14 +149,28 @@ namespace iText.Signatures.Sign {
                 ());
             testCrlClient.AddBuilderForCertIssuer((IX509Certificate)signRsaChain[0], crlBuilderMainCert);
             testCrlClient.AddBuilderForCertIssuer((IX509Certificate)signRsaChain[1], crlBuilderRootCert);
-            SignerProperties signer = CreateSignerProperties();
-            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outFileName);
+            SignerProperties signerProperties = CreateSignerProperties();
+            Stream outputStream = FileUtil.GetFileOutputStream(outFileName);
+            PdfPadesSigner padesSigner = new PdfPadesSigner(new PdfReader(FileUtil.GetInputStreamForFile(srcFileName)), 
+                outputStream);
             padesSigner.SetOcspClient(testOcspClient);
             padesSigner.SetCrlClient(testCrlClient);
             IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
-            padesSigner.SignWithBaselineLTAProfile(signer, signRsaChain, pks, testTsa);
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
+            if (signCertFileName.Contains("NoOcspNoCrl") || (signCertFileName.Contains("OcspNoCrl") && (bool)isOcspRevoked)) {
+                try {
+                    Exception exception = NUnit.Framework.Assert.Throws<PdfException>(() =>
+                        padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, pks, testTsa));
+                    NUnit.Framework.Assert.AreEqual(
+                        SignExceptionMessageConstant.NO_REVOCATION_DATA_FOR_SIGNING_CERTIFICATE,
+                        exception.Message);
+                } finally {
+                    outputStream.Close();
+                }
+            } else {
+                padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, pks, testTsa);
+                PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
+            }
         }
         
         private SignerProperties CreateSignerProperties() {
@@ -166,11 +182,6 @@ namespace iText.Signatures.Sign {
                 .SetSignatureAppearance(appearance);
 
             return signerProperties;
-        }
-
-        private PdfPadesSigner CreatePdfPadesSigner(String srcFileName, String outFileName) {
-            return new PdfPadesSigner(new PdfReader(FileUtil.GetInputStreamForFile(srcFileName)),
-                FileUtil.GetFileOutputStream(outFileName));
         }
     }
 }

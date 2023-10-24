@@ -36,6 +36,7 @@ using iText.Forms;
 using iText.Forms.Fields;
 using iText.IO.Font;
 using iText.IO.Source;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
 
@@ -89,6 +90,14 @@ namespace iText.Signatures {
             NO
         }
 
+        /// <summary>Option to determine whether revocation information is required for the signing certificate.</summary>
+        public enum RevocationDataNecessity {
+            /// <summary>Require revocation information for the signing certificate.</summary>
+            REQUIRED_FOR_SIGNING_CERTIFICATE,
+            /// <summary>Revocation data for the signing certificate may be optional.</summary>
+            OPTIONAL
+        }
+
         /// <summary>The verification constructor.</summary>
         /// <remarks>
         /// The verification constructor. This class should only be created with
@@ -116,6 +125,23 @@ namespace iText.Signatures {
         /// <returns>true if a validation was generated, false otherwise</returns>
         public virtual bool AddVerification(String signatureName, IOcspClient ocsp, ICrlClient crl, LtvVerification.CertificateOption
              certOption, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude) {
+            return AddVerification(signatureName, ocsp, crl, certOption, level, certInclude, LtvVerification.RevocationDataNecessity
+                .OPTIONAL);
+        }
+
+        /// <summary>Add verification for a particular signature.</summary>
+        /// <param name="signatureName">the signature to validate (it may be a timestamp)</param>
+        /// <param name="ocsp">the interface to get the OCSP</param>
+        /// <param name="crl">the interface to get the CRL</param>
+        /// <param name="certOption">options as to how many certificates to include</param>
+        /// <param name="level">the validation options to include</param>
+        /// <param name="certInclude">certificate inclusion options</param>
+        /// <param name="isRevocationDataRequired">option to determine if revocation data is required for the signing certificate
+        ///     </param>
+        /// <returns>true if a validation was generated, false otherwise.</returns>
+        public virtual bool AddVerification(String signatureName, IOcspClient ocsp, ICrlClient crl, LtvVerification.CertificateOption
+             certOption, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude, LtvVerification.RevocationDataNecessity
+             isRevocationDataRequired) {
             if (used) {
                 throw new InvalidOperationException(SignExceptionMessageConstant.VERIFICATION_ALREADY_OUTPUT);
             }
@@ -129,14 +155,18 @@ namespace iText.Signatures {
                 cert = (IX509Certificate)certificate;
                 LOGGER.LogInformation(MessageFormatUtil.Format("Certificate: {0}", BOUNCY_CASTLE_FACTORY.CreateX500Name(cert
                     )));
-                if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert)) {
+                bool isSigningCertificate = cert.Equals(signingCert);
+                if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !isSigningCertificate) {
                     continue;
                 }
+                bool isRequiredRevocationDataAdded = LtvVerification.RevocationDataNecessity.REQUIRED_FOR_SIGNING_CERTIFICATE
+                     != isRevocationDataRequired;
                 byte[] ocspEnc = null;
                 if (ocsp != null && level != LtvVerification.Level.CRL) {
                     ocspEnc = ocsp.GetEncoded(cert, GetParent(cert, xc), null);
                     if (ocspEnc != null) {
                         vd.ocsps.Add(BuildOCSPResponse(ocspEnc));
+                        isRequiredRevocationDataAdded = true;
                         LOGGER.LogInformation("OCSP added");
                     }
                 }
@@ -154,6 +184,7 @@ namespace iText.Signatures {
                             }
                             if (!dup) {
                                 vd.crls.Add(cim);
+                                isRequiredRevocationDataAdded = true;
                                 LOGGER.LogInformation("CRL added");
                             }
                         }
@@ -161,6 +192,9 @@ namespace iText.Signatures {
                 }
                 if (certInclude == LtvVerification.CertificateInclusion.YES) {
                     vd.certs.Add(cert.GetEncoded());
+                }
+                if (isSigningCertificate && !isRequiredRevocationDataAdded) {
+                    throw new PdfException(SignExceptionMessageConstant.NO_REVOCATION_DATA_FOR_SIGNING_CERTIFICATE);
                 }
             }
             if (vd.crls.Count == 0 && vd.ocsps.Count == 0) {

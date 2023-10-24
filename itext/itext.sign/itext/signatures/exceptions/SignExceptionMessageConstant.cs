@@ -73,6 +73,9 @@ namespace iText.Signatures.Exceptions {
 
         public const String NO_CRYPTO_DICTIONARY_DEFINED = "No crypto dictionary defined.";
 
+        public const String NO_REVOCATION_DATA_FOR_SIGNING_CERTIFICATE = "Neither ocsp nor crl data available for "
+             + "the signing certificate or certificate is revoked.";
+
         public const String NO_SIGNATURES_TO_PROLONG = "Document doesn't contain any signatures to prolong.";
 
         public const String NOT_A_VALID_PKCS7_OBJECT_NOT_A_SEQUENCE = "Not a valid PKCS#7 object - not a sequence";
