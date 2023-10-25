@@ -28,6 +28,7 @@ using iText.IO.Font.Otf;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -44,12 +45,17 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SeveralUnicodesWithinOneGlyphTest() {
             // TODO DEVSIX-3634. In the output now we don't expect the \u2F46 unicode range.
             // TODO DEVSIX-3634. SUBSTITUTE "Assert.assertEquals("\u2F46"..." to "Assert.assertEquals("\u65E0"..." after the fix
             String outFileName = destinationFolder + "severalUnicodesWithinOneGlyphTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", PdfEncodings.IDENTITY_H);
             IList<Glyph> glyphs = JavaCollectionsUtil.SingletonList(font.GetGlyph((int)'\u65E0'));
             GlyphLine glyphLine = new GlyphLine(glyphs);
@@ -57,7 +63,7 @@ namespace iText.Kernel.Pdf {
             canvas2.SaveState().BeginText().MoveText(36, 800).SetFontAndSize(font, 12).ShowText(glyphLine).EndText().RestoreState
                 ();
             pdfDocument.Close();
-            PdfDocument resultantPdfAsFile = new PdfDocument(new PdfReader(outFileName));
+            PdfDocument resultantPdfAsFile = new PdfDocument(CompareTool.CreateOutputReader(outFileName));
             String actualUnicode = PdfTextExtractor.GetTextFromPage(resultantPdfAsFile.GetFirstPage());
             NUnit.Framework.Assert.AreEqual("\u2F46", actualUnicode);
         }

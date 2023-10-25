@@ -44,6 +44,11 @@ namespace iText.Kernel.Pdf.Layer {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void LayerDefaultIntents() {
             PdfLayer pdfLayer = PdfLayerTestUtils.PrepareNewLayer();
@@ -89,7 +94,7 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual void NestedLayers() {
             String outPdf = destinationFolder + "nestedLayers.pdf";
             String cmpPdf = sourceFolder + "cmp_nestedLayers.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont();
             PdfLayer nested = new PdfLayer("Parent layer", pdfDoc);
             PdfLayer nested_1 = new PdfLayer("Nested layer 1", pdfDoc);
@@ -109,7 +114,7 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual void LockedLayer() {
             String outPdf = destinationFolder + "lockedLayer.pdf";
             String cmpPdf = sourceFolder + "cmp_lockedLayer.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont();
             PdfLayer layer1 = new PdfLayer("Layer 1", pdfDoc);
             PdfLayer layer2 = new PdfLayer("Layer 2", pdfDoc);
@@ -126,7 +131,7 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual void LayerGroup() {
             String outPdf = destinationFolder + "layerGroup.pdf";
             String cmpPdf = sourceFolder + "cmp_layerGroup.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont();
             PdfLayer group = PdfLayer.CreateTitle("Grouped layers", pdfDoc);
             PdfLayer layer1 = new PdfLayer("Group: layer 1", pdfDoc);
@@ -145,7 +150,7 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual void LayersRadioGroup() {
             String outPdf = destinationFolder + "layersRadioGroup.pdf";
             String cmpPdf = sourceFolder + "cmp_layersRadioGroup.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont();
             PdfLayer radiogroup = PdfLayer.CreateTitle("Radio group", pdfDoc);
             PdfLayer radio1 = new PdfLayer("Radiogroup: layer 1", pdfDoc);
@@ -175,7 +180,7 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual void NotPrintNotOnPanel() {
             String outPdf = destinationFolder + "notPrintNotOnPanel.pdf";
             String cmpPdf = sourceFolder + "cmp_notPrintNotOnPanel.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont();
             PdfLayer notPrintedNotOnPanel = new PdfLayer("not printed", pdfDoc);
             notPrintedNotOnPanel.SetOnPanel(false);
@@ -197,7 +202,7 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual void ZoomNotOnPanel() {
             String outPdf = destinationFolder + "zoomNotOnPanel.pdf";
             String cmpPdf = sourceFolder + "cmp_zoomNotOnPanel.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont();
             PdfLayer zoom = new PdfLayer("Zoom 0.75-1.25", pdfDoc);
             zoom.SetOnPanel(false);
@@ -215,12 +220,12 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = sourceFolder + "ocpConfigs.pdf";
             String outPdf = destinationFolder + "ocConfigUniqueName.pdf";
             String cmpPdf = sourceFolder + "cmp_ocConfigUniqueName.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), CompareTool.CreateTestPdfWriter(outPdf));
             // init OCProperties to check how they are processed
             pdfDoc.GetCatalog().GetOCProperties(true);
             pdfDoc.Close();
             // start of test assertion logic
-            PdfDocument resPdf = new PdfDocument(new PdfReader(outPdf));
+            PdfDocument resPdf = new PdfDocument(CompareTool.CreateOutputReader(outPdf));
             PdfDictionary d = resPdf.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties).GetAsDictionary
                 (PdfName.D);
             NUnit.Framework.Assert.AreEqual(PdfOCProperties.OC_CONFIG_NAME_PATTERN + "2", d.GetAsString(PdfName.Name).
@@ -233,7 +238,7 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = sourceFolder + "titledHierarchies.pdf";
             String outPdf = destinationFolder + "processTitledHierarchies.pdf";
             String cmpPdf = sourceFolder + "cmp_processTitledHierarchies.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), CompareTool.CreateTestPdfWriter(outPdf));
             // init OCProperties to check how they are processed
             pdfDoc.GetCatalog().GetOCProperties(true);
             pdfDoc.Close();
@@ -244,7 +249,7 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual void SetCreatorInfoAndLanguage() {
             String outPdf = destinationFolder + "setCreatorInfoAndLanguage.pdf";
             String cmpPdf = sourceFolder + "cmp_setCreatorInfoAndLanguage.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont();
             PdfLayer layer = new PdfLayer("CreatorAndLanguageInfo", pdfDoc);
             layer.SetCreatorInfo("iText", "Technical");
@@ -261,7 +266,7 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual void SetUserAndPageElement() {
             String outPdf = destinationFolder + "setUserAndPageElement.pdf";
             String cmpPdf = sourceFolder + "cmp_setUserAndPageElement.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont();
             PdfLayer layer = new PdfLayer("UserAndPageElement", pdfDoc);
             layer.SetUser("Org", "iText");
@@ -277,7 +282,7 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual void SetExportViewIsTrue() {
             String outPdf = destinationFolder + "setExportViewIsTrue.pdf";
             String cmpPdf = sourceFolder + "cmp_setExportViewIsTrue.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             bool view = true;
             CreateCustomExportLayers(pdfDoc, view);
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
@@ -287,7 +292,7 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual void SetExportViewIsFalse() {
             String outPdf = destinationFolder + "setExportViewIsFalse.pdf";
             String cmpPdf = sourceFolder + "cmp_setExportViewIsFalse.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             bool view = false;
             CreateCustomExportLayers(pdfDoc, view);
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
@@ -321,8 +326,8 @@ namespace iText.Kernel.Pdf.Layer {
 
         [NUnit.Framework.Test]
         public virtual void TestInStamperMode1() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_layered.pdf"), new PdfWriter(destinationFolder
-                 + "output_copy_layered.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_layered.pdf"), CompareTool.CreateTestPdfWriter
+                (destinationFolder + "output_copy_layered.pdf"));
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "output_copy_layered.pdf"
                 , sourceFolder + "input_layered.pdf", destinationFolder, "diff"));
@@ -330,8 +335,8 @@ namespace iText.Kernel.Pdf.Layer {
 
         [NUnit.Framework.Test]
         public virtual void TestInStamperMode2() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_layered.pdf"), new PdfWriter(destinationFolder
-                 + "output_layered.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_layered.pdf"), CompareTool.CreateTestPdfWriter
+                (destinationFolder + "output_layered.pdf"));
             PdfCanvas canvas = new PdfCanvas(pdfDoc, 1);
             PdfLayer newLayer = new PdfLayer("appended", pdfDoc);
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);

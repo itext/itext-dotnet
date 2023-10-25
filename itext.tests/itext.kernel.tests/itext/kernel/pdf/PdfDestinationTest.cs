@@ -48,12 +48,17 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void DestTest01() {
             String srcFile = sourceFolder + "simpleNoLinks.pdf";
             String outFile = destinationFolder + "destTest01.pdf";
             String cmpFile = sourceFolder + "cmp_destTest01.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outFile));
+            PdfDocument document = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(outFile));
             PdfPage firstPage = document.GetPage(1);
             PdfLinkAnnotation linkExplicitDest = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
             linkExplicitDest.SetAction(PdfAction.CreateGoTo(PdfExplicitDestination.CreateFit(document.GetPage(2))));
@@ -75,7 +80,7 @@ namespace iText.Kernel.Pdf {
             String outFile = destinationFolder + "destCopyingTest01.pdf";
             String cmpFile = sourceFolder + "cmp_destCopyingTest01.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2, 3), destDoc);
             destDoc.Close();
             srcDoc.Close();
@@ -89,7 +94,7 @@ namespace iText.Kernel.Pdf {
             String outFile = destinationFolder + "destCopyingTest02.pdf";
             String cmpFile = sourceFolder + "cmp_destCopyingTest02.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1), destDoc);
             destDoc.Close();
             srcDoc.Close();
@@ -103,7 +108,7 @@ namespace iText.Kernel.Pdf {
             String outFile = destinationFolder + "destCopyingTest03.pdf";
             String cmpFile = sourceFolder + "cmp_destCopyingTest03.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2), destDoc);
             destDoc.Close();
             srcDoc.Close();
@@ -117,7 +122,7 @@ namespace iText.Kernel.Pdf {
             String outFile = destinationFolder + "destCopyingTest04.pdf";
             String cmpFile = sourceFolder + "cmp_destCopyingTest04.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 3), destDoc);
             destDoc.Close();
             srcDoc.Close();
@@ -131,7 +136,7 @@ namespace iText.Kernel.Pdf {
             String outFile = destinationFolder + "destCopyingTest05.pdf";
             String cmpFile = sourceFolder + "cmp_destCopyingTest05.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2, 3, 1), destDoc);
             destDoc.Close();
             srcDoc.Close();
@@ -145,7 +150,7 @@ namespace iText.Kernel.Pdf {
             String outFile = destinationFolder + "destCopyingTest06.pdf";
             String cmpFile = sourceFolder + "cmp_destCopyingTest06.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2, 1), destDoc);
             destDoc.Close();
             srcDoc.Close();
@@ -159,7 +164,7 @@ namespace iText.Kernel.Pdf {
             String outFile = destinationFolder + "destCopyingTest07.pdf";
             String cmpFile = sourceFolder + "cmp_destCopyingTest07.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1, 2, 1), destDoc);
             destDoc.Close();
             srcDoc.Close();
@@ -189,7 +194,7 @@ namespace iText.Kernel.Pdf {
             String srcFile = sourceFolder + "customRolesMappingPdf2.pdf";
             String outFile = destinationFolder + "structureDestination01Test.pdf";
             String cmpFile = sourceFolder + "cmp_structureDestination01Test.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outFile));
+            PdfDocument document = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(outFile));
             PdfStructElem imgElement = new PdfStructElem((PdfDictionary)document.GetPdfObject(13));
             PdfStructureDestination dest = PdfStructureDestination.CreateFit(imgElement);
             PdfPage secondPage = document.AddNewPage();
@@ -206,7 +211,7 @@ namespace iText.Kernel.Pdf {
             String srcFile = sourceFolder + "customRolesMappingPdf2.pdf";
             String outFile = destinationFolder + "structureDestination02Test.pdf";
             String cmpFile = sourceFolder + "cmp_structureDestination02Test.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outFile));
+            PdfDocument document = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(outFile));
             PdfStructElem imgElement = new PdfStructElem((PdfDictionary)document.GetPdfObject(13));
             PdfStructureDestination dest = PdfStructureDestination.CreateFit(imgElement);
             PdfPage secondPage = document.AddNewPage();
@@ -235,7 +240,7 @@ namespace iText.Kernel.Pdf {
         public virtual void RemoteGoToDestinationTest01() {
             String cmpFile = sourceFolder + "cmp_remoteGoToDestinationTest01.pdf";
             String outFile = destinationFolder + "remoteGoToDestinationTest01.pdf";
-            PdfDocument @out = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             @out.AddNewPage();
             IList<PdfDestination> destinations = new List<PdfDestination>(7);
             destinations.Add(PdfExplicitRemoteGoToDestination.CreateFit(1));
@@ -262,7 +267,7 @@ namespace iText.Kernel.Pdf {
         public virtual void RemoteGoToDestinationTest02() {
             String cmpFile = sourceFolder + "cmp_remoteGoToDestinationTest02.pdf";
             String outFile = destinationFolder + "remoteGoToDestinationTest02.pdf";
-            PdfDocument @out = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             @out.AddNewPage();
             @out.AddNewPage();
             PdfLinkAnnotation linkExplicitDest = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
@@ -278,7 +283,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void RemoteGoToRIllegalDestinationTest() {
             String outFile = destinationFolder + "remoteGoToDestinationTest01.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             document.AddNewPage();
             document.AddNewPage();
             try {
@@ -297,7 +302,7 @@ namespace iText.Kernel.Pdf {
         public virtual void RemoteGoToRByIntDestinationTest() {
             String cmpFile = sourceFolder + "cmp_remoteGoToRByIntDestinationTest.pdf";
             String outFile = destinationFolder + "remoteGoToRByIntDestinationTest.pdf";
-            PdfDocument @out = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             @out.AddNewPage();
             @out.AddNewPage();
             PdfLinkAnnotation linkExplicitDest = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
@@ -313,7 +318,7 @@ namespace iText.Kernel.Pdf {
         public virtual void RemoteGoToRByStringDestinationTest() {
             String cmpFile = sourceFolder + "cmp_remoteGoToRByStringDestinationTest.pdf";
             String outFile = destinationFolder + "remoteGoToRByStringDestinationTest.pdf";
-            PdfDocument @out = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             @out.AddNewPage();
             PdfLinkAnnotation linkExplicitDest = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
             PdfAction action = PdfAction.CreateGoToR("Some fake destination", "1");
@@ -329,7 +334,7 @@ namespace iText.Kernel.Pdf {
         public virtual void RemoteGoToNotValidExplicitDestinationTest() {
             String cmpFile = sourceFolder + "cmp_remoteGoToNotValidExplicitDestinationTest.pdf";
             String outFile = destinationFolder + "remoteGoToNotValidExplicitDestinationTest.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             document.AddNewPage();
             PdfLinkAnnotation linkExplicitDest = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
             linkExplicitDest.SetAction(PdfAction.CreateGoTo(PdfExplicitRemoteGoToDestination.CreateFit(1)));

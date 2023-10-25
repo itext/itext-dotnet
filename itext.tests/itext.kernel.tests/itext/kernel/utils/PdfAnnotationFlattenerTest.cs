@@ -53,6 +53,11 @@ namespace iText.Kernel.Utils {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void TestNullAnnotations() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
@@ -114,7 +119,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void DefaultAppearanceGetsRendered() {
             String resultFile = DESTINATION_FOLDER + "default_annotations_app.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(resultFile))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(resultFile))) {
                 PdfFormXObject formN = new PdfFormXObject(new Rectangle(179, 530, 122, 21));
                 PdfCanvas canvasN = new PdfCanvas(formN, pdfDoc);
                 PdfAnnotation annotation = new PdfLinkAnnotation(new Rectangle(100, 540, 300, 50)).SetAction(PdfAction.CreateURI
@@ -184,7 +189,7 @@ namespace iText.Kernel.Utils {
         public virtual void RemoveQuadPoints() {
             String fileToFlatten = DESTINATION_FOLDER + "file_to_quadpoints.pdf";
             String resultFile = DESTINATION_FOLDER + "flattened_quadpoints.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileToFlatten))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(fileToFlatten))) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 float x = 50;
@@ -195,7 +200,8 @@ namespace iText.Kernel.Utils {
                 annot.GetPdfObject().Remove(PdfName.QuadPoints);
                 page.AddAnnotation(annot);
             }
-            using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(fileToFlatten), new PdfWriter(resultFile))) {
+            using (PdfDocument pdfDoc_1 = new PdfDocument(CompareTool.CreateOutputReader(fileToFlatten), CompareTool.CreateTestPdfWriter
+                (resultFile))) {
                 new PdfAnnotationFlattener().Flatten(pdfDoc_1.GetFirstPage().GetAnnotations());
             }
             //it is expected that the line is the middle of the page because the annotation whole rectangle is the
@@ -208,7 +214,7 @@ namespace iText.Kernel.Utils {
         public virtual void InvalidQuadPoints() {
             String fileToFlatten = DESTINATION_FOLDER + "file_to_invalid_quadpoints.pdf";
             String resultFile = DESTINATION_FOLDER + "flattened_invalid_quadpoints.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileToFlatten))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(fileToFlatten))) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 float x = 50;
@@ -219,7 +225,8 @@ namespace iText.Kernel.Utils {
                 annot.GetPdfObject().Put(PdfName.QuadPoints, new PdfArray(new float[] { 0, 0, 0, 0, 0, 0 }));
                 page.AddAnnotation(annot);
             }
-            using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(fileToFlatten), new PdfWriter(resultFile))) {
+            using (PdfDocument pdfDoc_1 = new PdfDocument(CompareTool.CreateOutputReader(fileToFlatten), CompareTool.CreateTestPdfWriter
+                (resultFile))) {
                 new PdfAnnotationFlattener().Flatten(pdfDoc_1.GetFirstPage().GetAnnotations());
             }
             //it is expected that the line is the middle of the page because the annotation whole rectangle is the
@@ -263,8 +270,8 @@ namespace iText.Kernel.Utils {
         [LogMessage(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED)]
         public virtual void FlattenPdfLink() {
             String resultFile = DESTINATION_FOLDER + "flattened_pdf_link.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "simple_link_annotation.pdf"), new 
-                PdfWriter(resultFile))) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "simple_link_annotation.pdf"), CompareTool
+                .CreateTestPdfWriter(resultFile))) {
                 new PdfAnnotationFlattener().Flatten(pdfDoc);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_flattened_pdf_link.pdf"
@@ -274,8 +281,8 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void FlattenPdfLinkWithDefaultAppearance() {
             String resultFile = DESTINATION_FOLDER + "flattened_DA_pdf_link.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "simple_link_annotation.pdf"), new 
-                PdfWriter(resultFile))) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "simple_link_annotation.pdf"), CompareTool
+                .CreateTestPdfWriter(resultFile))) {
                 PdfAnnotation annot = pdfDoc.GetFirstPage().GetAnnotations()[0];
                 annot.SetNormalAppearance(new PdfDictionary());
                 PdfFormXObject formN = new PdfFormXObject(new Rectangle(179, 530, 122, 21));
@@ -293,7 +300,7 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenTextMarkupAnnotations() {
             String fileToFlatten = DESTINATION_FOLDER + "file_to_flatten_markup_text.pdf";
             String resultFile = DESTINATION_FOLDER + "flattened_markup_text.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileToFlatten))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(fileToFlatten))) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 float x = 50;
@@ -311,7 +318,8 @@ namespace iText.Kernel.Utils {
                 float[] points4 = new float[] { x, y + 15, x + textLength, y + 15, x, y - 4, x + textLength, y - 4 };
                 page.AddAnnotation(CreateTextAnnotation(canvas, x, y, points4, PdfName.Highlight, ColorConstants.YELLOW));
             }
-            using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(fileToFlatten), new PdfWriter(resultFile))) {
+            using (PdfDocument pdfDoc_1 = new PdfDocument(CompareTool.CreateOutputReader(fileToFlatten), CompareTool.CreateTestPdfWriter
+                (resultFile))) {
                 new PdfAnnotationFlattener().Flatten(pdfDoc_1.GetFirstPage().GetAnnotations());
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_text_markup_flatten.pdf"
@@ -323,7 +331,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenLinkAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenLinkAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenLinkAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(1, document.GetFirstPage().GetAnnotations().Count);
@@ -337,7 +346,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenWidgetAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenWidgetAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenWidgetAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 IList<PdfAnnotation> annot = flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(1, annot.Count);
@@ -351,7 +361,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenScreenAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenScreenAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenScreenAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -364,7 +375,8 @@ namespace iText.Kernel.Utils {
         public virtual void Flatten3DAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flatten3DAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flatten3DAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -377,7 +389,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenHighlightAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenHighlightAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenHighlightAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -390,7 +403,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenUnderlineAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenUnderlineAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenUnderlineAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -403,7 +417,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenSquigglyAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenSquigglyAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenSquigglyAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -416,7 +431,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenStrikeOutAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenStrikeOutAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenStrikeOutAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -429,7 +445,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenCaretAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenCaretAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenCaretAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -442,7 +459,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenTextAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenTextAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenTextAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -455,7 +473,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenSoundAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenSoundAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenSoundAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -468,7 +487,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenStampAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenStampAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenStampAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 NUnit.Framework.Assert.AreEqual(0, flattener.Flatten(document).Count);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -481,7 +501,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenFileAttachmentAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenFileAttachmentAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenFileAttachmentAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -494,7 +515,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenInkAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenInkAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenInkAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -507,7 +529,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenPrinterMarkAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenPrinterMarkAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenPrinterMarkAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -520,7 +543,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenTrapNetAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenTrapNetAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenTrapNetAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -573,7 +597,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenFreeTextAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenFreeTextAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenFreeTextAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -586,7 +611,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenSquareAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenSquareAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenSquareAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -599,7 +625,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenCircleAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenCircleAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenCircleAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -636,7 +663,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenLineAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenLineAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenLineAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -649,7 +677,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenPolygonAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenPolygonAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenPolygonAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -662,7 +691,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenPolyLineAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenPolyLineAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenPolyLineAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -675,7 +705,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenRedactAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenRedactAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenRedactAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -688,7 +719,8 @@ namespace iText.Kernel.Utils {
         public virtual void FlattenWatermarkAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenWatermarkAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenWatermarkAnnotationTest.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(resultFile))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
                 PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
                 flattener.Flatten(document);
                 NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
@@ -726,13 +758,13 @@ namespace iText.Kernel.Utils {
         internal class CustomPdfAnnotationFlattenFactory : PdfAnnotationFlattenFactory {
             public override IAnnotationFlattener GetAnnotationFlattenWorker(PdfName name) {
                 if (PdfName.Link.Equals(name)) {
-                    return new _IAnnotationFlattener_866();
+                    return new _IAnnotationFlattener_872();
                 }
                 return base.GetAnnotationFlattenWorker(name);
             }
 
-            private sealed class _IAnnotationFlattener_866 : IAnnotationFlattener {
-                public _IAnnotationFlattener_866() {
+            private sealed class _IAnnotationFlattener_872 : IAnnotationFlattener {
+                public _IAnnotationFlattener_872() {
                 }
 
                 public bool Flatten(PdfAnnotation annotation, PdfPage page) {

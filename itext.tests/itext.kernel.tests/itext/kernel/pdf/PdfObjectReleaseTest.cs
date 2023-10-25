@@ -42,6 +42,11 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET, Count = 108)]
         public virtual void ReleaseObjectsInDocWithStructTreeRootTest() {
@@ -68,7 +73,8 @@ namespace iText.Kernel.Pdf {
         public virtual void ReleaseCatalogTest() {
             String srcFile = SOURCE_FOLDER + "releaseObjectsInSimpleDoc.pdf";
             String release = DESTINATION_FOLDER + "outReleaseObjectsInSimpleDoc.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(release))) {
+            using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(release))
+                ) {
                 doc.GetCatalog().GetPdfObject().Release();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(release, srcFile, DESTINATION_FOLDER));
@@ -79,7 +85,8 @@ namespace iText.Kernel.Pdf {
         public virtual void ReleasePagesTest() {
             String srcFile = SOURCE_FOLDER + "releaseObjectsInSimpleDoc.pdf";
             String release = DESTINATION_FOLDER + "outReleaseObjectsInSimpleDoc.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(release))) {
+            using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(release))
+                ) {
                 doc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Pages).Release();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(release, srcFile, DESTINATION_FOLDER));
@@ -90,7 +97,8 @@ namespace iText.Kernel.Pdf {
         public virtual void ReleaseStructTreeRootTest() {
             String srcFile = SOURCE_FOLDER + "releaseObjectsInDocWithStructTreeRoot.pdf";
             String release = DESTINATION_FOLDER + "outReleaseObjectsInDocWithStructTreeRoot.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(release))) {
+            using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(release))
+                ) {
                 doc.GetStructTreeRoot().GetPdfObject().Release();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(release, srcFile, DESTINATION_FOLDER));
@@ -102,7 +110,8 @@ namespace iText.Kernel.Pdf {
             String srcFile = SOURCE_FOLDER + "releaseModifiedObject.pdf";
             String cmpFile = SOURCE_FOLDER + "cmp_releaseModifiedObject.pdf";
             String outFile = DESTINATION_FOLDER + "releaseModifiedObject.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outFile))) {
+            using (PdfDocument doc = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(outFile))
+                ) {
                 PdfAnnotation annots = doc.GetPage(1).GetAnnotations()[0];
                 annots.SetRectangle(new PdfArray(new Rectangle(100, 100, 80, 50)));
                 annots.GetPdfObject().Release();
@@ -113,8 +122,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AddingReleasedObjectToDocumentTest() {
             String srcFile = SOURCE_FOLDER + "releaseObjectsInSimpleDoc.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(DESTINATION_FOLDER + "addingReleasedObjectToDocument.pdf"
-                ));
+            PdfDocument doc = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER
+                 + "addingReleasedObjectToDocument.pdf"));
             try {
                 PdfObject releasedObj = doc.GetPdfObject(1);
                 releasedObj.Release();
@@ -132,10 +141,12 @@ namespace iText.Kernel.Pdf {
             String srcFile = SOURCE_FOLDER + inputFilename;
             String outPureStamping = DESTINATION_FOLDER + outStampingFilename;
             String outStampingRelease = DESTINATION_FOLDER + outStampingReleaseFilename;
-            PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outPureStamping));
+            PdfDocument doc = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(outPureStamping)
+                );
             // We open/close document to make sure that the results of release logic and simple overwriting coincide.
             doc.Close();
-            PdfDocument stamperRelease = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outStampingRelease));
+            PdfDocument stamperRelease = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(outStampingRelease
+                ));
             for (int i = 0; i < stamperRelease.GetNumberOfPdfObjects(); i++) {
                 PdfObject pdfObject = stamperRelease.GetPdfObject(i);
                 if (pdfObject != null) {

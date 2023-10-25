@@ -42,6 +42,11 @@ namespace iText.Kernel.Utils {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void MergeDocumentTest01() {
             String filename = sourceFolder + "courierTest.pdf";
@@ -51,8 +56,7 @@ namespace iText.Kernel.Utils {
             PdfReader reader = new PdfReader(filename);
             PdfReader reader1 = new PdfReader(filename1);
             PdfReader reader2 = new PdfReader(filename2);
-            FileStream fos1 = new FileStream(resultFile, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
+            PdfWriter writer1 = CompareTool.CreateTestPdfWriter(resultFile);
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfDocument pdfDoc1 = new PdfDocument(reader1);
             PdfDocument pdfDoc2 = new PdfDocument(reader2);
@@ -72,7 +76,7 @@ namespace iText.Kernel.Utils {
             String resultFile = destinationFolder + "mergeDocumentOutlinesWithNullDestinationTest01.pdf";
             String filename = sourceFolder + "null_dest_outline.pdf";
             PdfDocument sourceDocument = new PdfDocument(new PdfReader(filename));
-            PdfMerger resultDocument = new PdfMerger(new PdfDocument(new PdfWriter(resultFile)));
+            PdfMerger resultDocument = new PdfMerger(new PdfDocument(CompareTool.CreateTestPdfWriter(resultFile)));
             resultDocument.Merge(sourceDocument, 1, 1);
             resultDocument.Close();
             sourceDocument.Close();
@@ -86,8 +90,8 @@ namespace iText.Kernel.Utils {
             String filename2 = sourceFolder + "pdfWithCycleRefInAnnotationParent.pdf";
             String resultFile = destinationFolder + "resultFileWithoutStackOverflow.pdf";
             using (PdfDocument pdfDocument1 = new PdfDocument(new PdfReader(filename2))) {
-                using (PdfDocument pdfDocument2 = new PdfDocument(new PdfReader(filename1), new PdfWriter(resultFile).SetSmartMode
-                    (true))) {
+                using (PdfDocument pdfDocument2 = new PdfDocument(new PdfReader(filename1), CompareTool.CreateTestPdfWriter
+                    (resultFile).SetSmartMode(true))) {
                     PdfMerger merger = new PdfMerger(pdfDocument2);
                     merger.Merge(pdfDocument1, 1, pdfDocument1.GetNumberOfPages());
                 }
@@ -105,8 +109,7 @@ namespace iText.Kernel.Utils {
             PdfReader reader = new PdfReader(filename);
             PdfReader reader1 = new PdfReader(filename1);
             PdfReader reader2 = new PdfReader(filename2);
-            FileStream fos1 = new FileStream(resultFile, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
+            PdfWriter writer1 = CompareTool.CreateTestPdfWriter(resultFile);
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfDocument pdfDoc1 = new PdfDocument(reader1);
             PdfDocument pdfDoc2 = new PdfDocument(reader2);
@@ -125,8 +128,7 @@ namespace iText.Kernel.Utils {
             String resultFile = destinationFolder + "mergedResult03.pdf";
             PdfReader reader = new PdfReader(filename);
             PdfReader reader1 = new PdfReader(filename1);
-            FileStream fos1 = new FileStream(resultFile, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
+            PdfWriter writer1 = CompareTool.CreateTestPdfWriter(resultFile);
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfDocument pdfDoc1 = new PdfDocument(reader1);
             PdfDocument pdfDoc3 = new PdfDocument(writer1);
@@ -156,8 +158,7 @@ namespace iText.Kernel.Utils {
             String resultFile = destinationFolder + "mergedResult04.pdf";
             PdfReader reader = new PdfReader(filename);
             PdfReader reader1 = new PdfReader(filename1);
-            FileStream fos1 = new FileStream(resultFile, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
+            PdfWriter writer1 = CompareTool.CreateTestPdfWriter(resultFile);
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfDocument pdfDoc1 = new PdfDocument(reader1);
             PdfDocument pdfDoc3 = new PdfDocument(writer1);
@@ -227,7 +228,7 @@ namespace iText.Kernel.Utils {
             String resultFile = destinationFolder + "mergeOutlinesNamedDestinations.pdf";
             PdfReader reader = new PdfReader(filename);
             PdfDocument sourceDoc = new PdfDocument(reader);
-            PdfDocument output = new PdfDocument(new PdfWriter(resultFile));
+            PdfDocument output = new PdfDocument(CompareTool.CreateTestPdfWriter(resultFile));
             PdfMerger merger = new PdfMerger(output).SetCloseSourceDocuments(false);
             merger.Merge(sourceDoc, 2, 3);
             merger.Merge(sourceDoc, 2, 3);
@@ -296,7 +297,7 @@ namespace iText.Kernel.Utils {
             String pdfWithOCG2 = sourceFolder + "twoPagePdfWithComplexOCGTest.pdf";
             String outPdf = destinationFolder + "mergeTwoPagePdfWithComplexOCGTest.pdf";
             String cmpPdf = sourceFolder + "cmp_mergeTwoPagePdfWithComplexOCGTest.pdf";
-            PdfDocument mergedDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument mergedDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfMerger merger = new PdfMerger(mergedDoc);
             IList<FileInfo> sources = new List<FileInfo>();
             sources.Add(new FileInfo(pdfWithOCG1));
@@ -317,7 +318,7 @@ namespace iText.Kernel.Utils {
             String pdfWithOCG = sourceFolder + "pdfWithComplexOCG.pdf";
             String outPdf = destinationFolder + "mergePdfWithComplexOCGTwiceTest.pdf";
             String cmpPdf = sourceFolder + "cmp_mergePdfWithComplexOCGTwiceTest.pdf";
-            PdfDocument mergedDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument mergedDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfMerger merger = new PdfMerger(mergedDoc);
             PdfDocument sourcePdf = new PdfDocument(new PdfReader(new FileInfo(pdfWithOCG)));
             // The test verifies that identical layers from the same document are not copied
@@ -333,8 +334,8 @@ namespace iText.Kernel.Utils {
         public virtual void StackOverflowErrorCycleReferenceOcgMergeTest() {
             String outPdf = destinationFolder + "cycleReferenceMerged.pdf";
             String cmpPdf = sourceFolder + "cmp_stackOverflowErrorCycleReferenceOcrMerge.pdf";
-            PdfDocument pdfWithOCG = new PdfDocument(new PdfReader(sourceFolder + "sourceOCG1.pdf"), new PdfWriter(outPdf
-                ));
+            PdfDocument pdfWithOCG = new PdfDocument(new PdfReader(sourceFolder + "sourceOCG1.pdf"), CompareTool.CreateTestPdfWriter
+                (outPdf));
             PdfDocument pdfWithOCGToMerge = new PdfDocument(new PdfReader(sourceFolder + "stackOverflowErrorCycleReferenceOcgMerge.pdf"
                 ));
             // problem file
@@ -349,7 +350,7 @@ namespace iText.Kernel.Utils {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void MergeOutlinesWithWrongStructureTest() {
             PdfDocument inputDoc = new PdfDocument(new PdfReader(sourceFolder + "infiniteLoopInOutlineStructure.pdf"));
-            PdfDocument outputDoc = new PdfDocument(new PdfWriter(destinationFolder + "infiniteLoopInOutlineStructure.pdf"
+            PdfDocument outputDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "infiniteLoopInOutlineStructure.pdf"
                 ));
             PdfMerger merger = new PdfMerger(outputDoc, false, true);
             System.Console.Out.WriteLine("Doing merge");
@@ -366,7 +367,7 @@ namespace iText.Kernel.Utils {
             String cmp = sourceFolder + "cmp_" + testName;
             PdfReader reader = new PdfReader(src);
             PdfDocument sourceDoc = new PdfDocument(reader);
-            PdfDocument output = new PdfDocument(new PdfWriter(dest));
+            PdfDocument output = new PdfDocument(CompareTool.CreateTestPdfWriter(dest));
             output.SetTagged();
             PdfMerger merger = new PdfMerger(output).SetCloseSourceDocuments(true);
             merger.Merge(sourceDoc, fromPage, toPage);
@@ -383,7 +384,7 @@ namespace iText.Kernel.Utils {
             String secondDocument = sourceFolder + "SecondDocumentWithColorPropertyInOutline.pdf";
             String cmpDocument = sourceFolder + "cmp_mergeOutlinesWithColorProperty.pdf";
             String mergedPdf = destinationFolder + "mergeOutlinesWithColorProperty.pdf";
-            using (PdfDocument merged = new PdfDocument(new PdfWriter(mergedPdf))) {
+            using (PdfDocument merged = new PdfDocument(CompareTool.CreateTestPdfWriter(mergedPdf))) {
                 using (PdfDocument fileA = new PdfDocument(new PdfReader(firstDocument))) {
                     using (PdfDocument fileB = new PdfDocument(new PdfReader(secondDocument))) {
                         PdfMerger merger = new PdfMerger(merged, false, true);
@@ -405,7 +406,7 @@ namespace iText.Kernel.Utils {
             String mergedPdf = destinationFolder + "mergeOutlineWithStyleProperty.pdf";
             using (PdfDocument documentA = new PdfDocument(new PdfReader(firstDocument))) {
                 using (PdfDocument documentB = new PdfDocument(new PdfReader(secondDocument))) {
-                    using (PdfDocument merged = new PdfDocument(new PdfWriter(mergedPdf))) {
+                    using (PdfDocument merged = new PdfDocument(CompareTool.CreateTestPdfWriter(mergedPdf))) {
                         PdfMerger merger = new PdfMerger(merged, false, true);
                         merger.Merge(documentA, 1, documentA.GetNumberOfPages());
                         merger.Merge(documentB, 1, documentB.GetNumberOfPages());
@@ -424,7 +425,7 @@ namespace iText.Kernel.Utils {
             String mergedDocument = destinationFolder + "mergeDocumentsWithOutlines.pdf";
             using (PdfDocument documentA = new PdfDocument(new PdfReader(firstPdfDocument))) {
                 using (PdfDocument documentB = new PdfDocument(new PdfReader(secondPdfDocument))) {
-                    using (PdfDocument mergedPdf = new PdfDocument(new PdfWriter(mergedDocument))) {
+                    using (PdfDocument mergedPdf = new PdfDocument(CompareTool.CreateTestPdfWriter(mergedDocument))) {
                         PdfMerger merger = new PdfMerger(mergedPdf, false, true);
                         merger.Merge(documentA, 1, documentA.GetNumberOfPages());
                         merger.Merge(documentB, 1, documentB.GetNumberOfPages());
@@ -659,7 +660,7 @@ namespace iText.Kernel.Utils {
 
         private void MergePdfs(IList<FileInfo> sources, String destination, PdfMergerProperties properties, bool smartMode
             ) {
-            PdfDocument mergedDoc = new PdfDocument(new PdfWriter(destination));
+            PdfDocument mergedDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destination));
             mergedDoc.GetWriter().SetSmartMode(smartMode);
             PdfMerger merger = new PdfMerger(mergedDoc, properties);
             foreach (FileInfo source in sources) {

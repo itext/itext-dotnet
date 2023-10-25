@@ -47,11 +47,16 @@ namespace iText.Kernel.Pdf.Annot {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ScreenEmbeddedWavFromPathTest() {
             String filename = destinationFolder + "screenEmbeddedWavFromPathTest.pdf";
             String cmp = sourceFolder + "cmp_" + "screenEmbeddedWavFromPathTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                 PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.wav", null, "sample.wav"
                     , null, null);
                 AddPageWithScreenAnnotation(pdfDoc, spec);
@@ -67,7 +72,7 @@ namespace iText.Kernel.Pdf.Annot {
             String filename = destinationFolder + "screenEmbeddedWavFromStreamTest.pdf";
             String cmp = sourceFolder + "cmp_" + "screenEmbeddedWavFromStreamTest.pdf";
             using (FileStream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read)) {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                     PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, @is, null, "sample.wav", null, null);
                     AddPageWithScreenAnnotation(pdfDoc, spec);
                 }
@@ -82,7 +87,7 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual void ScreenEmbeddedWavFromBytesTest() {
             String filename = destinationFolder + "screenEmbeddedWavFromBytesTest.pdf";
             String cmp = sourceFolder + "cmp_" + "screenEmbeddedWavFromBytesTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                 byte[] fileStore = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder + "sample.wav"));
                 PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, fileStore, null, "sample.wav", null, null, null
                     );
@@ -98,7 +103,7 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual void ScreenExternalWavTest() {
             String filename = destinationFolder + "screenExternalWavTest.pdf";
             String cmp = sourceFolder + "cmp_" + "screenExternalWavTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                 FileUtil.Copy(sourceFolder + "sample.wav", destinationFolder + "sample.wav");
                 PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
                 AddPageWithScreenAnnotation(pdfDoc, spec);

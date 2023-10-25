@@ -21,10 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Copy {
@@ -57,18 +57,22 @@ namespace iText.Kernel.Pdf.Copy {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void LinkAnnotationExplicitDestinationMissingTest() {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_WITH_DESTINATION_EXPLICIT);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "LinkAnnotationExplicitDestinationMissing.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "LinkAnnotationExplicitDestinationMissing.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 2, targetDoc, 2);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 2 and verify the annotation is not copied
             PdfAnnotation annot = null;
@@ -86,13 +90,12 @@ namespace iText.Kernel.Pdf.Copy {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_WITH_DESTINATION_EXPLICIT);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "LinkAnnotationExplicitDestinationTargetBecomesPage5.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "LinkAnnotationExplicitDestinationTargetBecomesPage5.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 3, targetDoc, 3);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 3 and verify it points to page 5
             PdfAnnotation annot = null;
@@ -113,13 +116,12 @@ namespace iText.Kernel.Pdf.Copy {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_WITH_DESTINATION_NAMED);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "LinkAnnotationNamedDestinationMissing.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "LinkAnnotationNamedDestinationMissing.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 2, targetDoc, 2);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 2 and verify the annotation is not copied
             PdfAnnotation annot = null;
@@ -139,13 +141,12 @@ namespace iText.Kernel.Pdf.Copy {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_WITH_DESTINATION_NAMED);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "LinkAnnotationNamedDestinationTargetBecomesPage5.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "LinkAnnotationNamedDestinationTargetBecomesPage5.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 3, targetDoc, 3);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 3 and verify it points to page 5
             PdfAnnotation annot = null;
@@ -166,13 +167,12 @@ namespace iText.Kernel.Pdf.Copy {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_VIA_ACTION_WITH_DESTINATION_EXPLICIT);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "TestLinkAnnotationViaActionExplicitDestinationMissing.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "TestLinkAnnotationViaActionExplicitDestinationMissing.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 2, targetDoc, 2);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 2 and verify the annotation is not copied
             PdfAnnotation annot = null;
@@ -190,13 +190,12 @@ namespace iText.Kernel.Pdf.Copy {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_VIA_ACTION_WITH_DESTINATION_EXPLICIT);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "LinkAnnotationViaActionExplicitDestinationTargetBecomesPage5.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "LinkAnnotationViaActionExplicitDestinationTargetBecomesPage5.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 3, targetDoc, 3);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 3 and verify it points to page 5
             PdfAnnotation annot = null;
@@ -218,13 +217,12 @@ namespace iText.Kernel.Pdf.Copy {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_VIA_ACTION_WITH_DESTINATION_NAMED);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "LinkAnnotationViaActionNamedDestinationMissing.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "LinkAnnotationViaActionNamedDestinationMissing.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 2, targetDoc, 2);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 2 and verify the annotation is not copied
             PdfAnnotation annot = null;
@@ -244,13 +242,12 @@ namespace iText.Kernel.Pdf.Copy {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_VIA_ACTION_WITH_DESTINATION_NAMED);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "LinkAnnotationViaActionNamedDestinationTargetBecomesPage5.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "LinkAnnotationViaActionNamedDestinationTargetBecomesPage5.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 3, targetDoc, 3);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 3 and verify it points to page 5
             PdfAnnotation annot = null;
@@ -272,13 +269,12 @@ namespace iText.Kernel.Pdf.Copy {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_VIA_NEXT_ACTION_WITH_DESTINATION_EXPLICIT);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "TestLinkAnnotationViaNextActionExplicitDestinationMissing.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "TestLinkAnnotationViaNextActionExplicitDestinationMissing.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 2, targetDoc, 2);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 2 and verify the annotation is not copied
             PdfAnnotation annot = null;
@@ -297,13 +293,12 @@ namespace iText.Kernel.Pdf.Copy {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_VIA_NEXT_ACTION_WITH_DESTINATION_EXPLICIT);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "LinkAnnotationViaNextActionExplicitDestinationTargetBecomesPage5.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "LinkAnnotationViaNextActionExplicitDestinationTargetBecomesPage5.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 3, targetDoc, 3);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 3 and verify it points to page 5
             PdfAnnotation annot = null;
@@ -325,13 +320,12 @@ namespace iText.Kernel.Pdf.Copy {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_VIA_NEXT_ACTION_WITH_DESTINATION_NAMED);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "LinkAnnotationViaNextActionNamedDestinationMissing.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "LinkAnnotationViaNextActionNamedDestinationMissing.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 2, targetDoc, 2);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 2 and verify the annotation is not copied
             PdfAnnotation annot = null;
@@ -352,13 +346,12 @@ namespace iText.Kernel.Pdf.Copy {
             PdfReader sourceReader = new PdfReader(SOURCE_ANNOTATION_VIA_NEXT_ACTION_WITH_DESTINATION_NAMED);
             PdfDocument copySource = new PdfDocument(sourceReader);
             PdfReader targetReader = new PdfReader(TARGET_DOC);
-            String outputPath = System.IO.Path.Combine(DESTINATION_FOLDER, "LinkAnnotationViaNextActionNamedDestinationTargetBecomesPage5.pdf"
-                ).ToString();
-            PdfDocument targetDoc = new PdfDocument(targetReader, new PdfWriter(outputPath));
+            String outputPath = DESTINATION_FOLDER + "LinkAnnotationViaNextActionNamedDestinationTargetBecomesPage5.pdf";
+            PdfDocument targetDoc = new PdfDocument(targetReader, CompareTool.CreateTestPdfWriter(outputPath));
             copySource.CopyPagesTo(1, 3, targetDoc, 3);
             copySource.Close();
             targetDoc.Close();
-            PdfReader resultReader = new PdfReader(outputPath);
+            PdfReader resultReader = CompareTool.CreateOutputReader(outputPath);
             PdfDocument resultDoc = new PdfDocument(resultReader);
             // get annotation on page 3 and verify it points to page 5
             PdfAnnotation annot = null;

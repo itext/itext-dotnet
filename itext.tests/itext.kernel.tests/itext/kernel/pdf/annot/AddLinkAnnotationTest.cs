@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -48,9 +47,15 @@ namespace iText.Kernel.Pdf.Annot {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void AddLinkAnnotation01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "linkAnnotation01.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "linkAnnotation01.pdf"
+                ));
             PdfPage page1 = document.AddNewPage();
             PdfPage page2 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -80,7 +85,8 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void AddLinkAnnotation02() {
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "linkAnnotation02.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "linkAnnotation02.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
@@ -99,7 +105,8 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void AddAndGetLinkAnnotations() {
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "linkAnnotation03.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "linkAnnotation03.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
@@ -123,7 +130,7 @@ namespace iText.Kernel.Pdf.Annot {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotation03.pdf"
                 , sourceFolder + "cmp_linkAnnotation03.pdf", destinationFolder, "diff_"));
-            document = new PdfDocument(new PdfReader(destinationFolder + "linkAnnotation03.pdf"));
+            document = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + "linkAnnotation03.pdf"));
             page = document.GetPage(1);
             NUnit.Framework.Assert.AreEqual(3, page.GetAnnotsSize());
             IList<PdfAnnotation> annotations = page.GetAnnotations();
@@ -137,8 +144,7 @@ namespace iText.Kernel.Pdf.Annot {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET)]
         public virtual void LinkAnnotationActionDestinationTest() {
             String fileName = "linkAnnotationActionDestinationTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + fileName, FileMode.Create
-                )));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName));
             PdfArray array = new PdfArray();
             array.Add(pdfDocument.AddNewPage().GetPdfObject());
             array.Add(PdfName.XYZ);
@@ -160,7 +166,8 @@ namespace iText.Kernel.Pdf.Annot {
             String input = sourceFolder + "taggedLinkAnnotationAsLink.pdf";
             String output = destinationFolder + "removeLinkAnnotationTaggedAsLinkTest.pdf";
             String cmp = sourceFolder + "cmp_" + "removeLinkAnnotationTaggedAsLinkTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output))) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output))
+                ) {
                 PdfPage page = pdfDoc.GetPage(1);
                 page.RemoveAnnotation(page.GetAnnotations()[0]);
             }
@@ -172,7 +179,8 @@ namespace iText.Kernel.Pdf.Annot {
             String input = sourceFolder + "taggedLinkAnnotationAsAnnot.pdf";
             String output = destinationFolder + "removeLinkAnnotationTaggedAsAnnotTest.pdf";
             String cmp = sourceFolder + "cmp_" + "removeLinkAnnotationTaggedAsAnnotTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output))) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output))
+                ) {
                 PdfPage page = pdfDoc.GetPage(1);
                 page.RemoveAnnotation(page.GetAnnotations()[0]);
             }
@@ -184,7 +192,8 @@ namespace iText.Kernel.Pdf.Annot {
             String input = sourceFolder + "taggedLinkAnnotationTagWithContent.pdf";
             String output = destinationFolder + "removeLinkAnnotationTagWithContentTest.pdf";
             String cmp = sourceFolder + "cmp_" + "removeLinkAnnotationTagWithContentTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output))) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output))
+                ) {
                 PdfPage page = pdfDoc.GetPage(1);
                 page.RemoveAnnotation(page.GetAnnotations()[0]);
             }
@@ -196,7 +205,8 @@ namespace iText.Kernel.Pdf.Annot {
             String input = sourceFolder + "taggedInvalidNoLinkAnnotationTag.pdf";
             String output = destinationFolder + "removeLinkAnnotationWithNoTagTest.pdf";
             String cmp = sourceFolder + "cmp_" + "removeLinkAnnotationWithNoTagTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output))) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output))
+                ) {
                 PdfPage page = pdfDoc.GetPage(1);
                 page.RemoveAnnotation(page.GetAnnotations()[0]);
             }

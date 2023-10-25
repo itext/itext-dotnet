@@ -42,10 +42,15 @@ namespace iText.Barcodes {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "codabar.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

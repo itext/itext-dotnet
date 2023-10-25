@@ -125,6 +125,88 @@ namespace iText.Kernel.Utils {
         }
 
         /// <summary>
+        /// Create
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
+        /// optimized for tests.
+        /// </summary>
+        /// <param name="filename">File to write to when necessary.</param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
+        /// to be used in tests.
+        /// </returns>
+        public static PdfWriter CreateTestPdfWriter(String filename) {
+            return CreateTestPdfWriter(filename, new WriterProperties());
+        }
+
+        /// <summary>
+        /// Create
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
+        /// optimized for tests.
+        /// </summary>
+        /// <param name="filename">File to write to when necessary.</param>
+        /// <param name="properties">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.WriterProperties"/>
+        /// to use.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
+        /// to be used in tests.
+        /// </returns>
+        public static PdfWriter CreateTestPdfWriter(String filename, WriterProperties properties) {
+            return new MemoryFirstPdfWriter(filename, properties);
+        }
+
+        /// <summary>
+        /// Create
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// out of the data created recently or read from disk.
+        /// </summary>
+        /// <param name="filename">File to read the data from when necessary.</param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// to be used in tests.
+        /// </returns>
+        public static PdfReader CreateOutputReader(String filename) {
+            return iText.Kernel.Utils.CompareTool.CreateOutputReader(filename, new ReaderProperties());
+        }
+
+        /// <summary>
+        /// Create
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// out of the data created recently or read from disk.
+        /// </summary>
+        /// <param name="filename">File to read the data from when necessary.</param>
+        /// <param name="properties">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.ReaderProperties"/>
+        /// to use.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// to be used in tests.
+        /// </returns>
+        public static PdfReader CreateOutputReader(String filename, ReaderProperties properties) {
+            MemoryFirstPdfWriter outWriter = MemoryFirstPdfWriter.Get(filename);
+            if (outWriter != null) {
+                return new PdfReader(new MemoryStream(outWriter.GetBAOutputStream().ToArray()), properties);
+            }
+            else {
+                return new PdfReader(filename, properties);
+            }
+        }
+
+        /// <summary>Clean up memory occupied for the tests.</summary>
+        /// <param name="path">Path to clean up memory for.</param>
+        public static void Cleanup(String path) {
+            MemoryFirstPdfWriter.Cleanup(path);
+        }
+
+        /// <summary>
         /// Compares two PDF documents by content starting from Catalog dictionary and then recursively comparing
         /// corresponding objects which are referenced from it.
         /// </summary>
@@ -822,10 +904,10 @@ namespace iText.Kernel.Utils {
         public virtual String CompareXmp(String outPdf, String cmpPdf, bool ignoreDateAndProducerProperties) {
             Init(outPdf, cmpPdf);
             try {
-                using (PdfReader readerCmp = new PdfReader(this.cmpPdf)) {
+                using (PdfReader readerCmp = iText.Kernel.Utils.CompareTool.CreateOutputReader(this.cmpPdf)) {
                     using (PdfDocument cmpDocument = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo
                         (metaInfo))) {
-                        using (PdfReader readerOut = new PdfReader(this.outPdf)) {
+                        using (PdfReader readerOut = iText.Kernel.Utils.CompareTool.CreateOutputReader(this.outPdf)) {
                             using (PdfDocument outDocument = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo
                                 (metaInfo))) {
                                 byte[] cmpBytes = cmpDocument.GetXmpMetadata();
@@ -896,10 +978,12 @@ namespace iText.Kernel.Utils {
             System.Console.Out.Write("[itext] INFO  Comparing document info.......");
             String message = null;
             SetPassword(outPass, cmpPass);
-            using (PdfReader readerOut = new PdfReader(outPdf, GetOutReaderProperties())) {
+            using (PdfReader readerOut = iText.Kernel.Utils.CompareTool.CreateOutputReader(outPdf, GetOutReaderProperties
+                ())) {
                 using (PdfDocument outDocument = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo
                     (metaInfo))) {
-                    using (PdfReader readerCmp = new PdfReader(cmpPdf, GetCmpReaderProperties())) {
+                    using (PdfReader readerCmp = iText.Kernel.Utils.CompareTool.CreateOutputReader(cmpPdf, GetCmpReaderProperties
+                        ())) {
                         using (PdfDocument cmpDocument = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo
                             (metaInfo))) {
                             String[] cmpInfo = ConvertDocInfoToStrings(cmpDocument.GetDocumentInfo());
@@ -919,6 +1003,8 @@ namespace iText.Kernel.Utils {
                 System.Console.Out.WriteLine("OK");
             }
             else {
+                iText.Kernel.Utils.CompareTool.WriteOnDisk(outPdf);
+                iText.Kernel.Utils.CompareTool.WriteOnDiskIfNotExists(cmpPdf);
                 System.Console.Out.WriteLine("Fail");
             }
             System.Console.Out.Flush();
@@ -942,10 +1028,10 @@ namespace iText.Kernel.Utils {
         public virtual String CompareLinkAnnotations(String outPdf, String cmpPdf) {
             System.Console.Out.Write("[itext] INFO  Comparing link annotations....");
             String message = null;
-            using (PdfReader readerOut = new PdfReader(outPdf)) {
+            using (PdfReader readerOut = iText.Kernel.Utils.CompareTool.CreateOutputReader(outPdf)) {
                 using (PdfDocument outDocument = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo
                     (metaInfo))) {
-                    using (PdfReader readerCmp = new PdfReader(cmpPdf)) {
+                    using (PdfReader readerCmp = iText.Kernel.Utils.CompareTool.CreateOutputReader(cmpPdf)) {
                         using (PdfDocument cmpDocument = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo
                             (metaInfo))) {
                             for (int i = 0; i < outDocument.GetNumberOfPages() && i < cmpDocument.GetNumberOfPages(); i++) {
@@ -971,6 +1057,8 @@ namespace iText.Kernel.Utils {
                 System.Console.Out.WriteLine("OK");
             }
             else {
+                iText.Kernel.Utils.CompareTool.WriteOnDisk(outPdf);
+                iText.Kernel.Utils.CompareTool.WriteOnDiskIfNotExists(cmpPdf);
                 System.Console.Out.WriteLine("Fail");
             }
             System.Console.Out.Flush();
@@ -994,7 +1082,7 @@ namespace iText.Kernel.Utils {
             String outXmlPath = outPdf.Replace(".pdf", ".xml");
             String cmpXmlPath = outPdf.Replace(".pdf", ".cmp.xml");
             String message = null;
-            using (PdfReader readerOut = new PdfReader(outPdf)) {
+            using (PdfReader readerOut = iText.Kernel.Utils.CompareTool.CreateOutputReader(outPdf)) {
                 using (PdfDocument docOut = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
                     ))) {
                     using (FileStream xmlOut = new FileStream(outXmlPath, FileMode.Create)) {
@@ -1002,7 +1090,7 @@ namespace iText.Kernel.Utils {
                     }
                 }
             }
-            using (PdfReader readerCmp = new PdfReader(cmpPdf)) {
+            using (PdfReader readerCmp = iText.Kernel.Utils.CompareTool.CreateOutputReader(cmpPdf)) {
                 using (PdfDocument docCmp = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
                     ))) {
                     using (FileStream xmlCmp = new FileStream(cmpXmlPath, FileMode.Create)) {
@@ -1017,6 +1105,8 @@ namespace iText.Kernel.Utils {
                 System.Console.Out.WriteLine("OK");
             }
             else {
+                iText.Kernel.Utils.CompareTool.WriteOnDisk(outPdf);
+                iText.Kernel.Utils.CompareTool.WriteOnDiskIfNotExists(cmpPdf);
                 System.Console.Out.WriteLine("Fail");
             }
             System.Console.Out.Flush();
@@ -1213,10 +1303,10 @@ namespace iText.Kernel.Utils {
             StampingProperties properties = new StampingProperties();
             properties.SetEventCountingMetaInfo(metaInfo);
             using (PdfWriter outWriter = new PdfWriter(outPath + IGNORED_AREAS_PREFIX + outPdfName)) {
-                using (PdfReader readerOut = new PdfReader(outPdf)) {
+                using (PdfReader readerOut = iText.Kernel.Utils.CompareTool.CreateOutputReader(outPdf)) {
                     using (PdfDocument pdfOutDoc = new PdfDocument(readerOut, outWriter, properties)) {
                         using (PdfWriter cmpWriter = new PdfWriter(outPath + IGNORED_AREAS_PREFIX + cmpPdfName)) {
-                            using (PdfReader readerCmp = new PdfReader(cmpPdf)) {
+                            using (PdfReader readerCmp = iText.Kernel.Utils.CompareTool.CreateOutputReader(cmpPdf)) {
                                 using (PdfDocument pdfCmpDoc = new PdfDocument(readerCmp, cmpWriter, properties)) {
                                     foreach (KeyValuePair<int, IList<Rectangle>> entry in ignoredAreas) {
                                         int pageNumber = entry.Key;
@@ -1279,10 +1369,12 @@ namespace iText.Kernel.Utils {
             >> ignoredAreas) {
             PrintOutCmpDirectories();
             System.Console.Out.Write("Comparing by content..........");
-            using (PdfReader readerOut = new PdfReader(outPdf, GetOutReaderProperties())) {
+            using (PdfReader readerOut = iText.Kernel.Utils.CompareTool.CreateOutputReader(outPdf, GetOutReaderProperties
+                ())) {
                 using (PdfDocument outDocument = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo
                     (metaInfo))) {
-                    using (PdfReader readerCmp = new PdfReader(cmpPdf, GetCmpReaderProperties())) {
+                    using (PdfReader readerCmp = iText.Kernel.Utils.CompareTool.CreateOutputReader(cmpPdf, GetCmpReaderProperties
+                        ())) {
                         using (PdfDocument cmpDocument = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo
                             (metaInfo))) {
                             IList<PdfDictionary> outPages = new List<PdfDictionary>();
@@ -1332,12 +1424,27 @@ namespace iText.Kernel.Utils {
                                 return null;
                             }
                             else {
+                                iText.Kernel.Utils.CompareTool.WriteOnDisk(outPdf);
+                                iText.Kernel.Utils.CompareTool.WriteOnDiskIfNotExists(cmpPdf);
                                 return CompareVisuallyAndCombineReports(compareResult.GetReport(), outPath, differenceImagePrefix, ignoredAreas
                                     , equalPages);
                             }
                         }
                     }
                 }
+            }
+        }
+
+        private static void WriteOnDisk(String filename) {
+            MemoryFirstPdfWriter outWriter = MemoryFirstPdfWriter.Get(filename);
+            if (outWriter != null) {
+                outWriter.Dump();
+            }
+        }
+
+        private static void WriteOnDiskIfNotExists(String filename) {
+            if (!new FileInfo(filename).Exists) {
+                iText.Kernel.Utils.CompareTool.WriteOnDisk(filename);
             }
         }
 

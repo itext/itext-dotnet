@@ -97,6 +97,11 @@ namespace iText.Kernel.Crypto {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordStandard128() {
@@ -242,7 +247,7 @@ namespace iText.Kernel.Crypto {
             PdfDocument srcDoc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new 
                 ReaderProperties().SetPublicKeySecurityParams(GetPublicCertificate(CERT), GetPrivateKey())));
             String fileName = "copiedEncryptedDoc.pdf";
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destinationFolder + fileName));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName));
             srcDoc.CopyPagesTo(1, 1, destDoc);
             PdfDictionary srcInfo = srcDoc.GetTrailer().GetAsDictionary(PdfName.Info);
             PdfDictionary destInfo = destDoc.GetTrailer().GetAsDictionary(PdfName.Info);
@@ -273,7 +278,7 @@ namespace iText.Kernel.Crypto {
         public virtual void StampDocNoUserPassword() {
             String fileName = "stampedNoPassword.pdf";
             using (PdfReader reader = new PdfReader(sourceFolder + "noUserPassword.pdf")) {
-                using (PdfWriter writer = new PdfWriter(destinationFolder + fileName)) {
+                using (PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + fileName)) {
                     Exception e = NUnit.Framework.Assert.Catch(typeof(BadPasswordException), () => new PdfDocument(reader, writer
                         ));
                     NUnit.Framework.Assert.AreEqual(BadPasswordException.PdfReaderNotOpenedWithOwnerPassword, e.Message);
@@ -288,8 +293,8 @@ namespace iText.Kernel.Crypto {
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128 | EncryptionConstants.EMBEDDED_FILES_ONLY;
             String outFileName = destinationFolder + filename;
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
-            PdfWriter writer = new PdfWriter(outFileName, new WriterProperties().SetStandardEncryption(USER, OWNER, permissions
-                , encryptionType).AddXmpMetadata());
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties().SetStandardEncryption
+                (USER, OWNER, permissions, encryptionType).AddXmpMetadata());
             PdfDocument document = new PdfDocument(writer);
             document.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             PdfPage page = document.AddNewPage();
@@ -330,8 +335,8 @@ namespace iText.Kernel.Crypto {
             String filename = "encryptAes256EncryptedStampingPreserve.pdf";
             String src = sourceFolder + "encryptedWithPlainMetadata.pdf";
             String @out = destinationFolder + filename;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src, new ReaderProperties().SetPassword(OWNER)), new PdfWriter
-                (@out, new WriterProperties()), new StampingProperties().PreserveEncryption());
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src, new ReaderProperties().SetPassword(OWNER)), CompareTool
+                .CreateTestPdfWriter(@out, new WriterProperties()), new StampingProperties().PreserveEncryption());
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
             String compareResult = compareTool.CompareByContent(@out, sourceFolder + "cmp_" + filename, destinationFolder
@@ -347,9 +352,9 @@ namespace iText.Kernel.Crypto {
             String filename = "encryptAes256EncryptedStampingUpdate.pdf";
             String src = sourceFolder + "encryptedWithPlainMetadata.pdf";
             String @out = destinationFolder + filename;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src, new ReaderProperties().SetPassword(OWNER)), new PdfWriter
-                (@out, new WriterProperties().SetStandardEncryption(USER, OWNER, EncryptionConstants.ALLOW_PRINTING, EncryptionConstants
-                .STANDARD_ENCRYPTION_40)), new StampingProperties());
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src, new ReaderProperties().SetPassword(OWNER)), CompareTool
+                .CreateTestPdfWriter(@out, new WriterProperties().SetStandardEncryption(USER, OWNER, EncryptionConstants
+                .ALLOW_PRINTING, EncryptionConstants.STANDARD_ENCRYPTION_40)), new StampingProperties());
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
             String compareResult = compareTool.CompareByContent(@out, sourceFolder + "cmp_" + filename, destinationFolder
@@ -390,8 +395,9 @@ namespace iText.Kernel.Crypto {
         public virtual void StampAndUpdateVersionPreserveStandard40() {
             String filename = "stampAndUpdateVersionPreserveStandard40.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf", new 
-                ReaderProperties().SetPassword(OWNER)), new PdfWriter(destinationFolder + filename, new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0)), new StampingProperties().PreserveEncryption());
+                ReaderProperties().SetPassword(OWNER)), CompareTool.CreateTestPdfWriter(destinationFolder + filename, 
+                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)), new StampingProperties().PreserveEncryption
+                ());
             doc.Close();
             CompareEncryptedPdf(filename);
         }
@@ -402,8 +408,8 @@ namespace iText.Kernel.Crypto {
         public virtual void StampAndUpdateVersionPreserveAes256() {
             String filename = "stampAndUpdateVersionPreserveAes256.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordAes256.pdf", new ReaderProperties
-                ().SetPassword(OWNER)), new PdfWriter(destinationFolder + filename, new WriterProperties().SetPdfVersion
-                (PdfVersion.PDF_2_0)), new StampingProperties().PreserveEncryption());
+                ().SetPassword(OWNER)), CompareTool.CreateTestPdfWriter(destinationFolder + filename, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0)), new StampingProperties().PreserveEncryption());
             doc.Close();
             CompareEncryptedPdf(filename);
         }
@@ -413,8 +419,9 @@ namespace iText.Kernel.Crypto {
         public virtual void StampAndUpdateVersionNewAes256() {
             String filename = "stampAndUpdateVersionNewAes256.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordAes256.pdf", new ReaderProperties
-                ().SetPassword(OWNER)), new PdfWriter(destinationFolder + filename, new WriterProperties().SetPdfVersion
-                (PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, 0, EncryptionConstants.ENCRYPTION_AES_256)));
+                ().SetPassword(OWNER)), CompareTool.CreateTestPdfWriter(destinationFolder + filename, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, 0, EncryptionConstants.ENCRYPTION_AES_256
+                )));
             doc.Close();
             CompareEncryptedPdf(filename);
         }
@@ -425,9 +432,9 @@ namespace iText.Kernel.Crypto {
             String filename = "encryptAes256Pdf2Permissions.pdf";
             int permissions = EncryptionConstants.ALLOW_FILL_IN | EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants
                 .ALLOW_DEGRADED_PRINTING;
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties().SetPdfVersion
-                (PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants.ENCRYPTION_AES_256
-                )));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants
+                .ENCRYPTION_AES_256)));
             doc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             WriteTextBytesOnPageContent(doc.AddNewPage(), pageTextContent);
             doc.Close();
@@ -443,7 +450,7 @@ namespace iText.Kernel.Crypto {
                 .GetBytes(), EncryptionConstants.ALLOW_PRINTING, EncryptionConstants.ENCRYPTION_AES_128 | EncryptionConstants
                 .DO_NOT_ENCRYPT_METADATA);
             String outFilename = "encryptWithPasswordAes128NoMetadataCompression.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + outFilename, props);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + outFilename, props);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
@@ -499,7 +506,8 @@ namespace iText.Kernel.Crypto {
             if (isPdf2) {
                 writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
             }
-            PdfWriter writer = new PdfWriter(destinationFolder + filename, writerProperties.AddXmpMetadata());
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename, writerProperties.AddXmpMetadata
+                ());
             writer.SetCompressionLevel(compression);
             PdfDocument document = new PdfDocument(writer);
             document.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
@@ -516,8 +524,8 @@ namespace iText.Kernel.Crypto {
             ) {
             String outFileName = destinationFolder + filename;
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
-            PdfWriter writer = new PdfWriter(outFileName, new WriterProperties().SetStandardEncryption(USER, OWNER, permissions
-                , encryptionType).AddXmpMetadata().SetFullCompressionMode(fullCompression));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties().SetStandardEncryption
+                (USER, OWNER, permissions, encryptionType).AddXmpMetadata().SetFullCompressionMode(fullCompression));
             writer.SetCompressionLevel(compression);
             PdfDocument document = new PdfDocument(writer);
             document.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
@@ -549,7 +557,7 @@ namespace iText.Kernel.Crypto {
 
         private static void CheckDecryptedWithPasswordContent(String src, byte[] password, String pageContent, bool
              expectError) {
-            PdfReader reader = new PdfReader(src, new ReaderProperties().SetPassword(password));
+            PdfReader reader = CompareTool.CreateOutputReader(src, new ReaderProperties().SetPassword(password));
             PdfDocument document = new PdfDocument(reader);
             PdfPage page = document.GetPage(1);
             bool expectedContentFound = iText.Commons.Utils.JavaUtil.GetStringForBytes(page.GetStreamBytes(0)).Contains
@@ -571,8 +579,9 @@ namespace iText.Kernel.Crypto {
         public virtual void CheckEncryptedWithPasswordDocumentStamping(String filename, byte[] password) {
             String srcFileName = destinationFolder + filename;
             String outFileName = destinationFolder + "stamped_" + filename;
-            PdfReader reader = new PdfReader(srcFileName, new ReaderProperties().SetPassword(password));
-            PdfDocument document = new PdfDocument(reader, new PdfWriter(outFileName));
+            PdfReader reader = CompareTool.CreateOutputReader(srcFileName, new ReaderProperties().SetPassword(password
+                ));
+            PdfDocument document = new PdfDocument(reader, CompareTool.CreateTestPdfWriter(outFileName));
             document.Close();
             CompareTool compareTool = new CompareTool();
             String compareResult = compareTool.CompareByContent(outFileName, sourceFolder + "cmp_" + filename, destinationFolder
@@ -585,9 +594,10 @@ namespace iText.Kernel.Crypto {
         public virtual void CheckEncryptedWithPasswordDocumentAppending(String filename, byte[] password) {
             String srcFileName = destinationFolder + filename;
             String outFileName = destinationFolder + "appended_" + filename;
-            PdfReader reader = new PdfReader(srcFileName, new ReaderProperties().SetPassword(password));
-            PdfDocument document = new PdfDocument(reader, new PdfWriter(outFileName), new StampingProperties().UseAppendMode
-                ());
+            PdfReader reader = CompareTool.CreateOutputReader(srcFileName, new ReaderProperties().SetPassword(password
+                ));
+            PdfDocument document = new PdfDocument(reader, CompareTool.CreateTestPdfWriter(outFileName), new StampingProperties
+                ().UseAppendMode());
             PdfPage newPage = document.AddNewPage();
             newPage.Put(PdfName.Default, new PdfString("Hello world string"));
             WriteTextBytesOnPageContent(newPage, "Hello world page_2!");

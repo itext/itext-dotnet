@@ -26,6 +26,7 @@ using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -39,15 +40,21 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CreateEmptyDocument() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "emptyDocument.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "emptyDocument.pdf"
+                ));
             pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").SetTitle("Empty iText 6 Document"
                 );
             PdfPage page = pdfDoc.AddNewPage();
             page.Flush();
             pdfDoc.Close();
-            PdfReader reader = new PdfReader(destinationFolder + "emptyDocument.pdf");
+            PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "emptyDocument.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.IsNotNull(pdfDocument.GetPage(1));
@@ -61,7 +68,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes1() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes1.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "useObjectForMultipleTimes1.pdf"
+                ));
             PdfDictionary helloWorld = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             PdfPage page = pdfDoc.AddNewPage();
@@ -74,7 +82,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes2() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes2.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "useObjectForMultipleTimes2.pdf"
+                ));
             PdfDictionary helloWorld = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             helloWorld.Flush();
@@ -88,7 +97,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes3() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes3.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "useObjectForMultipleTimes3.pdf"
+                ));
             PdfDictionary helloWorld = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             PdfPage page = pdfDoc.AddNewPage();
@@ -102,7 +112,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes4() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes4.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "useObjectForMultipleTimes4.pdf"
+                ));
             PdfDictionary helloWorld = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             PdfPage page = pdfDoc.AddNewPage();
@@ -115,7 +126,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private void ValidateUseObjectForMultipleTimesTest(String filename) {
-            PdfReader reader = new PdfReader(filename);
+            PdfReader reader = CompareTool.CreateOutputReader(filename);
             PdfDocument pdfDoc = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             PdfDictionary page = pdfDoc.GetPage(1).GetPdfObject();
@@ -135,7 +146,8 @@ namespace iText.Kernel.Pdf {
         /// <remarks>Copying direct objects. Objects of all types are added into document catalog.</remarks>
         [NUnit.Framework.Test]
         public virtual void CopyObject1() {
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject1_1.pdf"));
+            PdfDocument pdfDoc1 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject1_1.pdf"
+                ));
             PdfPage page1 = pdfDoc1.AddNewPage();
             page1.Flush();
             PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
@@ -154,14 +166,15 @@ namespace iText.Kernel.Pdf {
             aDirect.Add(new PdfNumber(100));
             aDirect.Add(new PdfString("string"));
             catalog1.Put(new PdfName("aDirect"), aDirect);
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject1_2.pdf"));
+            PdfDocument pdfDoc2 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject1_2.pdf"
+                ));
             PdfPage page2 = pdfDoc2.AddNewPage();
             page2.Flush();
             PdfDictionary catalog2 = pdfDoc2.GetCatalog().GetPdfObject();
             catalog2.Put(new PdfName("aDirect"), aDirect.CopyTo(pdfDoc2));
             pdfDoc1.Close();
             pdfDoc2.Close();
-            PdfReader reader = new PdfReader(destinationFolder + "copyObject1_2.pdf");
+            PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "copyObject1_2.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
@@ -186,7 +199,8 @@ namespace iText.Kernel.Pdf {
         ///     </remarks>
         [NUnit.Framework.Test]
         public virtual void CopyObject2() {
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject2_1.pdf"));
+            PdfDocument pdfDoc1 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject2_1.pdf"
+                ));
             PdfPage page1 = pdfDoc1.AddNewPage();
             page1.Flush();
             PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
@@ -207,16 +221,18 @@ namespace iText.Kernel.Pdf {
             aDirect.Add(new PdfString("string"));
             catalog1.Put(aDirectName, aDirect);
             pdfDoc1.Close();
-            PdfDocument pdfDoc1R = new PdfDocument(new PdfReader(destinationFolder + "copyObject2_1.pdf"));
+            PdfDocument pdfDoc1R = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + "copyObject2_1.pdf"
+                ));
             aDirect = (PdfArray)pdfDoc1R.GetCatalog().GetPdfObject().Get(aDirectName);
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject2_2.pdf"));
+            PdfDocument pdfDoc2 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject2_2.pdf"
+                ));
             PdfPage page2 = pdfDoc2.AddNewPage();
             page2.Flush();
             PdfDictionary catalog2 = pdfDoc2.GetCatalog().GetPdfObject();
             catalog2.Put(aDirectName, aDirect.CopyTo(pdfDoc2));
             pdfDoc1R.Close();
             pdfDoc2.Close();
-            PdfReader reader = new PdfReader(destinationFolder + "copyObject2_2.pdf");
+            PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "copyObject2_2.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
@@ -239,7 +255,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CopyObject3() {
  {
-                PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject3_1.pdf"));
+                PdfDocument pdfDoc1 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject3_1.pdf"
+                    ));
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 page1.Flush();
                 PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
@@ -254,9 +271,11 @@ namespace iText.Kernel.Pdf {
                 dic2.Put(arr1Name, arr1);
                 catalog1.Put(arr1Name, arr1);
                 pdfDoc1.Close();
-                PdfDocument pdfDoc1R = new PdfDocument(new PdfReader(destinationFolder + "copyObject3_1.pdf"));
+                PdfDocument pdfDoc1R = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + "copyObject3_1.pdf"
+                    ));
                 arr1 = (PdfArray)pdfDoc1R.GetCatalog().GetPdfObject().Get(arr1Name);
-                PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject3_2.pdf"));
+                PdfDocument pdfDoc2 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject3_2.pdf"
+                    ));
                 PdfPage page2 = pdfDoc2.AddNewPage();
                 page2.Flush();
                 PdfDictionary catalog2 = pdfDoc2.GetCatalog().GetPdfObject();
@@ -265,7 +284,7 @@ namespace iText.Kernel.Pdf {
                 pdfDoc2.Close();
             }
  {
-                PdfReader reader = new PdfReader(destinationFolder + "copyObject3_2.pdf");
+                PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "copyObject3_2.pdf");
                 PdfDocument pdfDocument = new PdfDocument(reader);
                 NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
                 PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
@@ -281,7 +300,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>Copies stream.</summary>
         [NUnit.Framework.Test]
         public virtual void CopyObject4() {
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject4_1.pdf"));
+            PdfDocument pdfDoc1 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject4_1.pdf"
+                ));
             PdfPage page1 = pdfDoc1.AddNewPage();
             page1.Flush();
             PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
@@ -293,16 +313,18 @@ namespace iText.Kernel.Pdf {
             stream1.GetOutputStream().Write(new PdfArray(tmpArray));
             catalog1.Put(new PdfName("stream"), stream1);
             pdfDoc1.Close();
-            PdfDocument pdfDoc1R = new PdfDocument(new PdfReader(destinationFolder + "copyObject4_1.pdf"));
+            PdfDocument pdfDoc1R = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + "copyObject4_1.pdf"
+                ));
             stream1 = (PdfStream)pdfDoc1R.GetCatalog().GetPdfObject().Get(new PdfName("stream"));
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject4_2.pdf"));
+            PdfDocument pdfDoc2 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject4_2.pdf"
+                ));
             PdfPage page2 = pdfDoc2.AddNewPage();
             page2.Flush();
             PdfDictionary catalog2 = pdfDoc2.GetCatalog().GetPdfObject();
             catalog2.Put(new PdfName("stream"), stream1.CopyTo(pdfDoc2));
             pdfDoc1R.Close();
             pdfDoc2.Close();
-            PdfReader reader = new PdfReader(destinationFolder + "copyObject4_2.pdf");
+            PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "copyObject4_2.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
@@ -315,14 +337,17 @@ namespace iText.Kernel.Pdf {
         /// <summary>Copies page.</summary>
         [NUnit.Framework.Test]
         public virtual void CopyObject5() {
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject5_1.pdf"));
+            PdfDocument pdfDoc1 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject5_1.pdf"
+                ));
             PdfPage page1 = pdfDoc1.AddNewPage();
             page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%Page_1"));
             page1.Flush();
             pdfDoc1.Close();
-            PdfDocument pdfDoc1R = new PdfDocument(new PdfReader(destinationFolder + "copyObject5_1.pdf"));
+            PdfDocument pdfDoc1R = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + "copyObject5_1.pdf"
+                ));
             page1 = pdfDoc1R.GetPage(1);
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject5_2.pdf"));
+            PdfDocument pdfDoc2 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject5_2.pdf"
+                ));
             PdfPage page2 = page1.CopyTo(pdfDoc2);
             pdfDoc2.AddPage(page2);
             page2.Flush();
@@ -331,7 +356,7 @@ namespace iText.Kernel.Pdf {
             page2.Flush();
             pdfDoc1R.Close();
             pdfDoc2.Close();
-            PdfReader reader = new PdfReader(destinationFolder + "copyObject5_2.pdf");
+            PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "copyObject5_2.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(8, reader.trailer.GetAsNumber(PdfName.Size).IntValue());
@@ -347,15 +372,17 @@ namespace iText.Kernel.Pdf {
         /// <summary>Copies object with different method overloads.</summary>
         [NUnit.Framework.Test]
         public virtual void CopyObject6() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "copyObject6_1.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject6_1.pdf"
+                ));
             PdfDictionary helloWorld = (PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc);
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             PdfPage page = pdfDoc.AddNewPage();
             page.GetPdfObject().Put(new PdfName("HelloWorld"), helloWorld);
             pdfDoc.Close();
-            pdfDoc = new PdfDocument(new PdfReader(destinationFolder + "copyObject6_1.pdf"));
+            pdfDoc = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + "copyObject6_1.pdf"));
             helloWorld = (PdfDictionary)pdfDoc.GetPage(1).GetPdfObject().Get(new PdfName("HelloWorld"));
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject6_2.pdf"));
+            PdfDocument pdfDoc1 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject6_2.pdf"
+                ));
             PdfPage page1 = pdfDoc1.AddNewPage();
             page1.GetPdfObject().Put(new PdfName("HelloWorldCopy1"), helloWorld.CopyTo(pdfDoc1));
             page1.GetPdfObject().Put(new PdfName("HelloWorldCopy2"), helloWorld.CopyTo(pdfDoc1, true));
@@ -363,7 +390,7 @@ namespace iText.Kernel.Pdf {
             page1.Flush();
             pdfDoc.Close();
             pdfDoc1.Close();
-            PdfReader reader = new PdfReader(destinationFolder + "copyObject6_2.pdf");
+            PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "copyObject6_2.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             PdfObject obj1 = pdfDocument.GetPage(1).GetPdfObject().Get(new PdfName("HelloWorldCopy1"));
@@ -385,8 +412,10 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CopyObject7() {
             String exceptionMessage = null;
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject6_1.pdf"));
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject6_2.pdf"));
+            PdfDocument pdfDoc1 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject6_1.pdf"
+                ));
+            PdfDocument pdfDoc2 = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject6_2.pdf"
+                ));
             try {
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 PdfDictionary directDict = new PdfDictionary();
@@ -412,7 +441,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CopyObject8() {
             String exceptionMessage = null;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "copyObject6_1.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyObject6_1.pdf"
+                ));
             try {
                 PdfPage page1 = pdfDoc.AddNewPage();
                 PdfDictionary directDict = new PdfDictionary();
@@ -460,7 +490,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void DirectInIndirectChain() {
             String filename = destinationFolder + "directInIndirectChain.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfArray level1 = new PdfArray();
             level1.Add(new PdfNumber(1).MakeIndirect(pdfDoc));
             PdfDictionary level2 = new PdfDictionary();
@@ -476,7 +506,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page1 = pdfDoc.AddNewPage();
             page1.GetPdfObject().Put(new PdfName("test"), level1);
             pdfDoc.Close();
-            PdfReader reader = new PdfReader(filename);
+            PdfReader reader = CompareTool.CreateOutputReader(filename);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
@@ -488,7 +518,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreatePdfStreamByInputStream() {
             String filename = destinationFolder + "createPdfStreamByInputStream.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(filename));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             document.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").SetTitle("Empty iText 6 Document"
                 );
             PdfPage page = document.AddNewPage();
@@ -507,7 +537,7 @@ namespace iText.Kernel.Pdf {
             //        String message = "Unexpected creation date. Different from now is " + (float)diff/1000 + "s";
             //        Assert.assertTrue(message, diff < 5000);
             //        reader.close();
-            PdfReader reader6 = new PdfReader(filename);
+            PdfReader reader6 = CompareTool.CreateOutputReader(filename);
             document = new PdfDocument(reader6);
             NUnit.Framework.Assert.AreEqual(false, reader6.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader6.HasFixedXref(), "Fixed");

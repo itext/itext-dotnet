@@ -26,6 +26,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -52,6 +53,11 @@ namespace iText.Kernel.Crypto {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT)]
         public virtual void CheckMD5LogMessageWhileReadingPdfTest() {
@@ -65,9 +71,9 @@ namespace iText.Kernel.Crypto {
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT)]
         public virtual void CheckMD5LogMessageWhileCreatingPdfTest() {
             String fileName = "checkMD5LogMessageWhileCreatingPdf.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + fileName, new WriterProperties
-                ().SetStandardEncryption(USER, OWNER, EncryptionConstants.ALLOW_SCREENREADERS, EncryptionConstants.ENCRYPTION_AES_256
-                ).AddXmpMetadata()))) {
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName
+                , new WriterProperties().SetStandardEncryption(USER, OWNER, EncryptionConstants.ALLOW_SCREENREADERS, EncryptionConstants
+                .ENCRYPTION_AES_256).AddXmpMetadata()))) {
             }
         }
 
@@ -77,9 +83,9 @@ namespace iText.Kernel.Crypto {
         public virtual void CheckMD5LogMessageForEachPdfTest() {
             String fileName = "checkMD5LogMessageForEachPdf.pdf";
             for (int i = 0; i < 3; ++i) {
-                using (PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + fileName, new WriterProperties
-                    ().SetStandardEncryption(USER, OWNER, EncryptionConstants.ALLOW_SCREENREADERS, EncryptionConstants.ENCRYPTION_AES_256
-                    ).AddXmpMetadata()))) {
+                using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName
+                    , new WriterProperties().SetStandardEncryption(USER, OWNER, EncryptionConstants.ALLOW_SCREENREADERS, EncryptionConstants
+                    .ENCRYPTION_AES_256).AddXmpMetadata()))) {
                 }
             }
         }

@@ -42,13 +42,18 @@ namespace iText.Kernel.Utils {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3)]
         public virtual void SplitDocumentTest01() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
             IList<int> pageNumbers = JavaUtil.ArraysAsList(30, 100);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_65(inputPdfDoc).SplitByPageNumbers(pageNumbers);
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_72(inputPdfDoc).SplitByPageNumbers(pageNumbers);
             foreach (PdfDocument doc in splitDocuments) {
                 doc.Close();
             }
@@ -59,8 +64,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_65 : PdfSplitter {
-            public _PdfSplitter_65(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_72 : PdfSplitter {
+            public _PdfSplitter_72(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -69,8 +74,8 @@ namespace iText.Kernel.Utils {
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
-                    return new PdfWriter(PdfSplitterTest.destinationFolder + "splitDocument1_" + (this.partNumber++).ToString(
-                        ) + ".pdf");
+                    return CompareTool.CreateTestPdfWriter(PdfSplitterTest.destinationFolder + "splitDocument1_" + (this.partNumber
+                        ++).ToString() + ".pdf");
                 }
                 catch (FileNotFoundException) {
                     throw new Exception();
@@ -83,7 +88,8 @@ namespace iText.Kernel.Utils {
         public virtual void SplitDocumentTest02() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            new _PdfSplitter_95(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_106());
+            PdfSplitter splitter = new _PdfSplitter_102(inputPdfDoc);
+            splitter.SplitByPageCount(60, new _IDocumentReadyListener_115());
             for (int i = 1; i <= 3; i++) {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument2_" + i
                     .ToString() + ".pdf", sourceFolder + "cmp/" + "cmp_splitDocument2_" + i.ToString() + ".pdf", destinationFolder
@@ -91,8 +97,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_95 : PdfSplitter {
-            public _PdfSplitter_95(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_102 : PdfSplitter {
+            public _PdfSplitter_102(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -101,8 +107,9 @@ namespace iText.Kernel.Utils {
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
-                    return new PdfWriter(PdfSplitterTest.destinationFolder + "splitDocument2_" + (this.partNumber++).ToString(
-                        ) + ".pdf");
+                    PdfWriter writer = CompareTool.CreateTestPdfWriter(PdfSplitterTest.destinationFolder + "splitDocument2_" +
+                         (this.partNumber++).ToString() + ".pdf");
+                    return writer;
                 }
                 catch (FileNotFoundException) {
                     throw new Exception();
@@ -110,8 +117,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _IDocumentReadyListener_106 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_106() {
+        private sealed class _IDocumentReadyListener_115 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_115() {
             }
 
             public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange) {
@@ -129,7 +136,7 @@ namespace iText.Kernel.Utils {
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
             PageRange pageRange1 = new PageRange().AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence(1, 2);
             PageRange pageRange2 = new PageRange().AddSinglePage(99).AddSinglePage(98).AddPageSequence(70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_134(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_143(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
                 (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments) {
                 pdfDocument.Close();
@@ -141,8 +148,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_134 : PdfSplitter {
-            public _PdfSplitter_134(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_143 : PdfSplitter {
+            public _PdfSplitter_143(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -151,8 +158,8 @@ namespace iText.Kernel.Utils {
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
-                    return new PdfWriter(PdfSplitterTest.destinationFolder + "splitDocument3_" + (this.partNumber++).ToString(
-                        ) + ".pdf");
+                    return CompareTool.CreateTestPdfWriter(PdfSplitterTest.destinationFolder + "splitDocument3_" + (this.partNumber
+                        ++).ToString() + ".pdf");
                 }
                 catch (FileNotFoundException) {
                     throw new Exception();
@@ -168,7 +175,7 @@ namespace iText.Kernel.Utils {
             PageRange pageRange1 = new PageRange("even & 80-").AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence
                 (1, 2);
             PageRange pageRange2 = new PageRange("99,98").AddPageSequence(70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_168(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_177(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
                 (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments) {
                 pdfDocument.Close();
@@ -180,8 +187,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_168 : PdfSplitter {
-            public _PdfSplitter_168(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_177 : PdfSplitter {
+            public _PdfSplitter_177(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -190,8 +197,8 @@ namespace iText.Kernel.Utils {
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
-                    return new PdfWriter(PdfSplitterTest.destinationFolder + "splitDocument4_" + (this.partNumber++).ToString(
-                        ) + ".pdf");
+                    return CompareTool.CreateTestPdfWriter(PdfSplitterTest.destinationFolder + "splitDocument4_" + (this.partNumber
+                        ++).ToString() + ".pdf");
                 }
                 catch (FileNotFoundException) {
                     throw new Exception();
@@ -219,7 +226,7 @@ namespace iText.Kernel.Utils {
         public virtual void SplitDocumentBySize() {
             String inputFileName = sourceFolder + "splitBySize.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            PdfSplitter splitter = new _PdfSplitter_214(inputPdfDoc);
+            PdfSplitter splitter = new _PdfSplitter_223(inputPdfDoc);
             IList<PdfDocument> documents = splitter.SplitBySize(100000);
             foreach (PdfDocument doc in documents) {
                 doc.Close();
@@ -230,8 +237,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_214 : PdfSplitter {
-            public _PdfSplitter_214(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_223 : PdfSplitter {
+            public _PdfSplitter_223(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -240,8 +247,8 @@ namespace iText.Kernel.Utils {
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
-                    return new PdfWriter(PdfSplitterTest.destinationFolder + "splitBySize_part" + (this.partNumber++).ToString
-                        () + ".pdf");
+                    return CompareTool.CreateTestPdfWriter(PdfSplitterTest.destinationFolder + "splitBySize_part" + (this.partNumber
+                        ++).ToString() + ".pdf");
                 }
                 catch (FileNotFoundException) {
                     throw new Exception();

@@ -313,9 +313,9 @@ namespace iText.Kernel.Pdf {
         //        String newOriginalId;
         //        String appendModeNewOriginalId;
         //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        //        PdfWriter initialWriter = new PdfWriter(baos, new WriterProperties().setInitialDocumentId(originalId));
-        //        PdfWriter newWriter = new PdfWriter(baos, new WriterProperties().setInitialDocumentId(newOriginalId));
-        //        PdfWriter appendModeWriter = new PdfWriter(baos, new WriterProperties().setInitialDocumentId(appendModeNewOriginalId));
+        //        PdfWriter initialWriter = CompareTool.createTestPdfWriter(baos, new WriterProperties().setInitialDocumentId(originalId));
+        //        PdfWriter newWriter = CompareTool.createTestPdfWriter(baos, new WriterProperties().setInitialDocumentId(newOriginalId));
+        //        PdfWriter appendModeWriter = CompareTool.createTestPdfWriter(baos, new WriterProperties().setInitialDocumentId(appendModeNewOriginalId));
         //
         //
         //    }
@@ -324,7 +324,7 @@ namespace iText.Kernel.Pdf {
         //    public void encryptionAes128Test() {
         //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         //        PdfString originalId = new PdfString("Original ID 56789");
-        //        PdfWriter initialWriter = new PdfWriter(baos, new WriterProperties().setInitialDocumentId(originalId));
+        //        PdfWriter initialWriter = CompareTool.createTestPdfWriter(baos, new WriterProperties().setInitialDocumentId(originalId));
         //
         //        Assert.assertNotEquals();
         //        Assert.assertEquals();

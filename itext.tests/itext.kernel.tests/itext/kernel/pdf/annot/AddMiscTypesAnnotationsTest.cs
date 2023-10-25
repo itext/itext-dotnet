@@ -52,9 +52,15 @@ namespace iText.Kernel.Pdf.Annot {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void AddTextAnnotation01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "textAnnotation01.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "textAnnotation01.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfTextAnnotation textannot = new PdfTextAnnotation(new Rectangle(100, 600, 50, 40));
             textannot.SetText(new PdfString("Text Annotation 01")).SetContents(new PdfString("Some contents..."));
@@ -73,7 +79,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void CaretTest() {
             String filename = destinationFolder + "caretAnnotation.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
@@ -100,7 +106,8 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void AddFreeTextAnnotation01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "freeTextAnnotation01.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "freeTextAnnotation01.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             new PdfCanvas(page).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 24).MoveText
                 (100, 600).ShowText("Annotated text").EndText().Release();
@@ -122,7 +129,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void AddSquareAndCircleAnnotations01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "squareAndCircleAnnotations01.pdf"
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "squareAndCircleAnnotations01.pdf"
                 ));
             PdfPage page = document.AddNewPage();
             PdfSquareAnnotation square = new PdfSquareAnnotation(new Rectangle(100, 700, 100, 100));
@@ -142,7 +149,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void FileAttachmentTest() {
             String filename = destinationFolder + "fileAttachmentAnnotation.pdf";
-            PdfWriter writer = new PdfWriter(filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -164,7 +171,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void FileAttachmentTargetTest() {
             String filename = destinationFolder + "fileAttachmentTargetTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.pdf", null, "embedded_doc.pdf"
                 , null, null);
             PdfFileAttachmentAnnotation fileAttachmentAnnotation = new PdfFileAttachmentAnnotation(new Rectangle(300, 
@@ -202,7 +209,7 @@ namespace iText.Kernel.Pdf.Annot {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.EMBEDDED_GO_TO_DESTINATION_NOT_SPECIFIED)]
         public virtual void NoFileAttachmentTargetTest() {
             String fileName = "noFileAttachmentTargetTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + fileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName));
             pdfDoc.AddNewPage();
             PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(400, 500, 50, 50));
             linkAnnotation.SetAction(PdfAction.CreateGoToE(null, true, null));
@@ -227,8 +234,8 @@ namespace iText.Kernel.Pdf.Annot {
             canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                 ), 16).ShowText("This is a text").EndText().RestoreState();
             inputDoc.Close();
-            PdfDocument finalDoc = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), new PdfWriter(fileName
-                ), new StampingProperties().UseAppendMode());
+            PdfDocument finalDoc = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())), CompareTool.CreateTestPdfWriter
+                (fileName), new StampingProperties().UseAppendMode());
             PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(finalDoc, "Some test".GetBytes(), null, "test.txt", 
                 null);
             finalDoc.AddFileAttachment("some_test", spec);
@@ -240,7 +247,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void RubberStampTest() {
             String filename = destinationFolder + "rubberStampAnnotation01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
             stamp.SetStampName(PdfName.Approved);
@@ -297,7 +304,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void RubberStampWrongStampTest() {
             String filename = destinationFolder + "rubberStampAnnotation02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
             stamp.SetStampName(PdfName.StrikeOut);
@@ -315,7 +322,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void InkTest() {
             String filename = destinationFolder + "inkAnnotation01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             float[] array1 = new float[] { 100, 100, 100, 200, 200, 200, 300, 300 };
             PdfArray firstPoint = new PdfArray(array1);
@@ -343,7 +350,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void PrinterMarkText() {
             String filename = destinationFolder + "printerMarkAnnotation01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvasText = new PdfCanvas(page1);
             canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts
@@ -367,7 +374,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void TrapNetworkText() {
             String filename = destinationFolder + "trapNetworkAnnotation01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvasText = new PdfCanvas(page);
             canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts
@@ -392,7 +399,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void WaterMarkTest() {
             String filename = destinationFolder + "watermarkAnnotation01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfWatermarkAnnotation watermark = new PdfWatermarkAnnotation(new Rectangle(400, 400, 200, 200));
             float[] arr = new float[] { 1, 0, 0, 1, 0, 0 };
@@ -421,7 +428,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void RedactionTest() {
             String filename = destinationFolder + "redactionAnnotation01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             float[] rgb = new float[] { 0, 0, 0 };
             float[] rgb1 = new float[] { 1, 0, 0 };
@@ -464,7 +471,7 @@ namespace iText.Kernel.Pdf.Annot {
             String outPath = destinationFolder + name + ".pdf";
             String cmpPath = sourceFolder + "cmp_" + name + ".pdf";
             String diff = "diff_" + name + "_";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(inPath), new PdfWriter(outPath));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(inPath), CompareTool.CreateTestPdfWriter(outPath));
             PdfPage page = pdfDoc.GetPage(1);
             Rectangle rect = new Rectangle(20, 700, 250, 50);
             page.AddAnnotation(new PdfRedactAnnotation(rect).SetDefaultAppearance(new AnnotationDefaultAppearance().SetColor
@@ -506,7 +513,8 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void Add3dAnnotationTest() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "add3DAnnotation01.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "add3DAnnotation01.pdf"
+                ));
             Rectangle rect = new Rectangle(100, 400, 400, 400);
             PdfStream stream3D = new PdfStream(pdfDoc, new FileStream(sourceFolder + "teapot.u3d", FileMode.Open, FileAccess.Read
                 ));

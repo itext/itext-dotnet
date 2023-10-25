@@ -45,6 +45,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CheckBboxCalculationForType3FontsWithFontMatrix01() {
             String inputPdf = sourceFolder + "checkBboxCalculationForType3FontsWithFontMatrix01.pdf";
@@ -85,7 +90,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         public virtual void Type3FontsWithIdentityFontMatrixAndMultiplier() {
             String inputPdf = sourceFolder + "type3FontsWithIdentityFontMatrixAndMultiplier.pdf";
             String outputPdf = destinationFolder + "type3FontsWithIdentityFontMatrixAndMultiplier.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputPdf), new PdfWriter(outputPdf));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputPdf), CompareTool.CreateTestPdfWriter(outputPdf
+                ));
             GlyphBboxCalculationTest.CharacterPositionEventListener listener = new GlyphBboxCalculationTest.CharacterPositionEventListener
                 ();
             PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);

@@ -48,9 +48,14 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void StructElemTest01() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest01.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "structElemTest01.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
@@ -94,7 +99,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void StructElemTest02() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest02.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "structElemTest02.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
@@ -123,7 +128,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void StructElemTest03() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest03.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "structElemTest03.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
@@ -164,7 +169,7 @@ namespace iText.Kernel.Pdf {
             page1.Flush();
             page2.Flush();
             document.Close();
-            document = new PdfDocument(new PdfReader(destinationFolder + "structElemTest03.pdf"));
+            document = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + "structElemTest03.pdf"));
             NUnit.Framework.Assert.AreEqual(2, (int)document.GetNextStructParentIndex());
             PdfPage page = document.GetPage(1);
             NUnit.Framework.Assert.AreEqual(0, page.GetStructParentIndex());
@@ -201,7 +206,7 @@ namespace iText.Kernel.Pdf {
             document.Close();
             byte[] bytes = baos.ToArray();
             PdfReader reader = new PdfReader(new MemoryStream(bytes));
-            writer = new PdfWriter(destinationFolder + "structElemTest04.pdf");
+            writer = CompareTool.CreateTestPdfWriter(destinationFolder + "structElemTest04.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             document = new PdfDocument(reader, writer);
             page = document.GetPage(1);
@@ -229,7 +234,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void StructElemTest05() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest05.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "structElemTest05.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
@@ -265,7 +270,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void StructElemTest06() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest06.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "structElemTest06.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
@@ -291,7 +296,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Count = 5)]
         public virtual void StructElemTest07() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest07.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "structElemTest07.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
@@ -326,7 +331,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void StructElemTest08() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest08.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "structElemTest08.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
@@ -356,7 +361,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void StructElemTest09() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest09.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "structElemTest09.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "88th_Academy_Awards_mult_roots.pdf"), 
                 writer);
@@ -369,8 +374,8 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void StructTreeCopyingTest01() {
             PdfDocument source = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
-            PdfDocument destination = new PdfDocument(new PdfWriter(destinationFolder + "structTreeCopyingTest01.pdf")
-                );
+            PdfDocument destination = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "structTreeCopyingTest01.pdf"
+                ));
             destination.SetTagged();
             destination.InitializeOutlines();
             List<int> pagesToCopy = new List<int>();
@@ -389,8 +394,8 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void StructTreeCopyingTest02() {
             PdfDocument source = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
-            PdfDocument destination = new PdfDocument(new PdfWriter(destinationFolder + "structTreeCopyingTest02.pdf")
-                );
+            PdfDocument destination = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "structTreeCopyingTest02.pdf"
+                ));
             destination.SetTagged();
             destination.InitializeOutlines();
             source.CopyPagesTo(6, source.GetNumberOfPages(), destination);
@@ -404,8 +409,8 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void StructTreeCopyingTest03() {
             PdfDocument source = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
-            PdfDocument destination = new PdfDocument(new PdfWriter(destinationFolder + "structTreeCopyingTest03.pdf")
-                );
+            PdfDocument destination = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "structTreeCopyingTest03.pdf"
+                ));
             destination.InitializeOutlines();
             source.CopyPagesTo(6, source.GetNumberOfPages(), destination);
             source.CopyPagesTo(1, 5, destination);
@@ -420,8 +425,8 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void StructTreeCopyingTest04() {
             PdfDocument source = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
-            PdfDocument destination = new PdfDocument(new PdfWriter(destinationFolder + "structTreeCopyingTest04.pdf")
-                );
+            PdfDocument destination = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "structTreeCopyingTest04.pdf"
+                ));
             destination.SetTagged();
             destination.InitializeOutlines();
             for (int i = 1; i <= source.GetNumberOfPages(); i++) {
@@ -434,8 +439,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void StructTreeCopyingTest05() {
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"), new PdfWriter
-                (destinationFolder + "structTreeCopyingTest05.pdf"));
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"), CompareTool.
+                CreateTestPdfWriter(destinationFolder + "structTreeCopyingTest05.pdf"));
             PdfDocument document1 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox.pdf"));
             document1.CopyPagesTo(1, 1, document, 2);
             PdfDocument document2 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox-table.pdf"));
@@ -450,8 +455,8 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void StructTreeCopyingTest06() {
             PdfDocument source = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
-            PdfDocument destination = new PdfDocument(new PdfWriter(destinationFolder + "structTreeCopyingTest06.pdf")
-                );
+            PdfDocument destination = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "structTreeCopyingTest06.pdf"
+                ));
             destination.SetTagged();
             destination.InitializeOutlines();
             source.CopyPagesTo(1, source.GetNumberOfPages(), destination);
@@ -463,7 +468,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void StructTreeCopyingTest07() {
             PdfReader reader = new PdfReader(sourceFolder + "quick-brown-fox.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "structTreeCopyingTest07.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "structTreeCopyingTest07.pdf");
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
             PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
@@ -492,8 +497,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void StructTreeCopyingTest08() {
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox-table.pdf"), new PdfWriter
-                (destinationFolder + "structTreeCopyingTest08.pdf"));
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox-table.pdf"), CompareTool
+                .CreateTestPdfWriter(destinationFolder + "structTreeCopyingTest08.pdf"));
             PdfDocument document1 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox.pdf"));
             document1.InitializeOutlines();
             document1.CopyPagesTo(1, 1, document, 2);
@@ -504,8 +509,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void StructTreeCopyingTest09() {
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox-table.pdf"), new PdfWriter
-                (destinationFolder + "structTreeCopyingTest09.pdf"));
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox-table.pdf"), CompareTool
+                .CreateTestPdfWriter(destinationFolder + "structTreeCopyingTest09.pdf"));
             PdfDocument document1 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox.pdf"));
             document1.InitializeOutlines();
             document1.CopyPagesTo(1, 1, document, 2);
@@ -517,8 +522,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void StructTreeCopyingTest10() {
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "88th_Academy_Awards.pdf"), new PdfWriter
-                (destinationFolder + "structTreeCopyingTest10.pdf"));
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "88th_Academy_Awards.pdf"), CompareTool
+                .CreateTestPdfWriter(destinationFolder + "structTreeCopyingTest10.pdf"));
             PdfDocument document1 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox-table.pdf"));
             document1.InitializeOutlines();
             document1.CopyPagesTo(1, 3, document, 2);
@@ -534,8 +539,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_ALREADY_EXIST)]
         public virtual void StructTreeCopyingTest11() {
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "88th_Academy_Awards.pdf"), new PdfWriter
-                (destinationFolder + "structTreeCopyingTest11.pdf"));
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "88th_Academy_Awards.pdf"), CompareTool
+                .CreateTestPdfWriter(destinationFolder + "structTreeCopyingTest11.pdf"));
             PdfDocument document1 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox_mapping_mod.pdf"));
             document1.InitializeOutlines();
             document1.CopyPagesTo(1, 1, document, 2);
@@ -551,7 +556,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void StructTreeCopyingToPartiallyFlushedDocumentTest() {
             String outFile = "structTreeCopyingToPartiallyFlushedDocumentTest.pdf";
-            PdfDocument resultDoc = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            PdfDocument resultDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + outFile));
             resultDoc.SetTagged();
             PdfDocument document1 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox.pdf"));
             document1.CopyPagesTo(1, 1, resultDoc);

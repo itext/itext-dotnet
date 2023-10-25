@@ -136,6 +136,11 @@ namespace iText.Kernel.Crypto {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void Aes256EncryptedPdfWithUnicodeBasedPassword() {
@@ -157,7 +162,8 @@ namespace iText.Kernel.Crypto {
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
             WriterProperties writerProperties = new WriterProperties().SetStandardEncryption(PdfEncryptionTest.USER, ownerPassword
                 , permissions, EncryptionConstants.ENCRYPTION_AES_256).SetPdfVersion(PdfVersion.PDF_2_0);
-            PdfWriter writer = new PdfWriter(destinationFolder + filename, writerProperties.AddXmpMetadata());
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename, writerProperties.AddXmpMetadata
+                ());
             PdfDocument document = new PdfDocument(writer);
             document.GetDocumentInfo().SetMoreInfo(PdfEncryptionTest.customInfoEntryKey, PdfEncryptionTest.customInfoEntryValue
                 );

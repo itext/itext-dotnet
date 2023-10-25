@@ -60,8 +60,8 @@ namespace iText.Kernel.Pdf.Layer {
         internal static void CompareLayers(String outPdf, String cmpPdf) {
             ITextTest.PrintOutCmpPdfNameAndDir(outPdf, cmpPdf);
             System.Console.Out.WriteLine();
-            using (PdfDocument outDoc = new PdfDocument(new PdfReader(outPdf))) {
-                using (PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpPdf))) {
+            using (PdfDocument outDoc = new PdfDocument(CompareTool.CreateOutputReader(outPdf))) {
+                using (PdfDocument cmpDoc = new PdfDocument(CompareTool.CreateOutputReader(cmpPdf))) {
                     PdfDictionary outOCP = outDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties);
                     PdfDictionary cmpOCP = cmpDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties);
                     NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(outOCP, cmpOCP));

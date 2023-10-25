@@ -50,6 +50,11 @@ namespace iText.Kernel.Utils {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CompareToolErrorReportTest01() {
             CompareTool compareTool = new CompareTool();
@@ -192,7 +197,7 @@ namespace iText.Kernel.Utils {
         public virtual void CompareDiffFilesWithSameLinkAnnotationTest() {
             String firstPdf = destinationFolder + "firstPdf.pdf";
             String secondPdf = destinationFolder + "secondPdf.pdf";
-            PdfDocument firstDocument = new PdfDocument(new PdfWriter(firstPdf));
+            PdfDocument firstDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(firstPdf));
             PdfPage page1FirstDocument = firstDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1FirstDocument);
             canvas.BeginText();
@@ -207,7 +212,7 @@ namespace iText.Kernel.Utils {
                 .CreateFit(page1FirstDocument)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
             page1FirstDocument.Flush();
             firstDocument.Close();
-            PdfDocument secondDocument = new PdfDocument(new PdfWriter(secondPdf));
+            PdfDocument secondDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(secondPdf));
             PdfPage page1secondDocument = secondDocument.AddNewPage();
             canvas = new PdfCanvas(page1secondDocument);
             canvas.BeginText();
@@ -229,8 +234,8 @@ namespace iText.Kernel.Utils {
         public virtual void CompareFilesWithDiffLinkAnnotationTest() {
             String firstPdf = destinationFolder + "outPdf.pdf";
             String secondPdf = destinationFolder + "secondPdf.pdf";
-            PdfDocument firstDocument = new PdfDocument(new PdfWriter(firstPdf));
-            PdfDocument secondDocument = new PdfDocument(new PdfWriter(secondPdf));
+            PdfDocument firstDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(firstPdf));
+            PdfDocument secondDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(secondPdf));
             PdfPage page1FirstDocument = firstDocument.AddNewPage();
             page1FirstDocument.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 400, 50)).SetDestination(PdfExplicitDestination
                 .CreateFit(page1FirstDocument)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
@@ -247,7 +252,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _T1812480813(this);
+            CompareTool compareTool = new _T1233382286(this);
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -260,16 +265,69 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        internal class _T1812480813 : CompareTool {
+        internal class _T1233382286 : CompareTool {
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
                 return base.ConvertDocInfoToStrings(info);
             }
 
-            internal _T1812480813(CompareToolTest _enclosing) {
+            internal _T1233382286(CompareToolTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
             private readonly CompareToolTest _enclosing;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MemoryFirstWriterNoFileTest() {
+            String firstPdf = destinationFolder + "memoryFirstWriterNoFileTest.pdf";
+            String secondPdf = destinationFolder + "memoryFirstWriterNoFileTest2.pdf";
+            PdfDocument firstDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(firstPdf));
+            PdfDocument secondDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(secondPdf));
+            PdfPage page1FirstDocument = firstDocument.AddNewPage();
+            page1FirstDocument.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 400, 50)).SetDestination(PdfExplicitDestination
+                .CreateFit(page1FirstDocument)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
+            page1FirstDocument.Flush();
+            firstDocument.Close();
+            PdfPage page1SecondDocument = secondDocument.AddNewPage();
+            page1SecondDocument.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 400, 50)).SetDestination(PdfExplicitDestination
+                .CreateFit(page1SecondDocument)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
+            page1SecondDocument.Flush();
+            secondDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(firstPdf, secondPdf, destinationFolder));
+            NUnit.Framework.Assert.IsFalse(new FileInfo(firstPdf).Exists);
+            NUnit.Framework.Assert.IsFalse(new FileInfo(secondPdf).Exists);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DumpMemoryFirstWriterOnDiskTest() {
+            String firstPdf = destinationFolder + "dumpMemoryFirstWriterOnDiskTest.pdf";
+            String secondPdf = destinationFolder + "dumpMemoryFirstWriterOnDiskTest2.pdf";
+            PdfDocument firstDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(firstPdf));
+            PdfDocument secondDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(secondPdf));
+            PdfPage page1FirstDocument = firstDocument.AddNewPage();
+            page1FirstDocument.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 400, 50)).SetDestination(PdfExplicitDestination
+                .CreateFit(page1FirstDocument)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
+            page1FirstDocument.Flush();
+            firstDocument.Close();
+            PdfPage page1SecondDocument = secondDocument.AddNewPage();
+            page1SecondDocument.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 260, 25)).SetDestination(PdfExplicitDestination
+                .CreateFit(page1SecondDocument)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
+            page1SecondDocument.Flush();
+            secondDocument.Close();
+            NUnit.Framework.Assert.IsNotNull(new CompareTool().CompareByContent(firstPdf, secondPdf, destinationFolder
+                ));
+            NUnit.Framework.Assert.IsTrue(new FileInfo(firstPdf).Exists);
+            NUnit.Framework.Assert.IsTrue(new FileInfo(secondPdf).Exists);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CleanupTest() {
+            CompareTool.CreateTestPdfWriter(destinationFolder + "cleanupTest/cleanupTest.pdf");
+            NUnit.Framework.Assert.IsNotNull(MemoryFirstPdfWriter.Get(destinationFolder + "cleanupTest/cleanupTest.pdf"
+                ));
+            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => CompareTool.Cleanup(null));
+            CompareTool.Cleanup(destinationFolder + "cleanupTest");
+            NUnit.Framework.Assert.IsNull(MemoryFirstPdfWriter.Get(destinationFolder + "cleanupTest/cleanupTest.pdf"));
         }
     }
 }

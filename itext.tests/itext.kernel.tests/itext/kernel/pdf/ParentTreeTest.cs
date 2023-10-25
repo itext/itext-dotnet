@@ -44,11 +44,16 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void Test01() {
             String outFile = destinationFolder + "parentTreeTest01.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest01.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             document.SetTagged();
             PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
             PdfPage firstPage = document.AddNewPage();
@@ -76,7 +81,7 @@ namespace iText.Kernel.Pdf {
             String pdf = sourceFolder + "alreadyTaggedFormXObjectInnerContent.pdf";
             String outPdf = destinationFolder + "stampingFormXObjectInnerContentTaggedTest.pdf";
             String cmpPdf = sourceFolder + "cmp_stampingFormXObjectInnerContentTaggedTest.pdf";
-            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), CompareTool.CreateTestPdfWriter(outPdf));
             taggedPdf.SetTagged();
             taggedPdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
@@ -88,7 +93,7 @@ namespace iText.Kernel.Pdf {
             String pdf = sourceFolder + "severalXObjectsOnOnePageTest.pdf";
             String outPdf = destinationFolder + "severalXObjectsOnOnePageTest.pdf";
             String cmpPdf = sourceFolder + "cmp_severalXObjectsOnOnePageTest.pdf";
-            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), CompareTool.CreateTestPdfWriter(outPdf));
             taggedPdf.SetTagged();
             taggedPdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
@@ -100,7 +105,7 @@ namespace iText.Kernel.Pdf {
             String pdf = sourceFolder + "earlyFlushXObjectTaggedTest.pdf";
             String outPdf = destinationFolder + "earlyFlushXObjectTaggedTest.pdf";
             String cmpPdf = sourceFolder + "cmp_earlyFlushXObjectTaggedTest.pdf";
-            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), CompareTool.CreateTestPdfWriter(outPdf));
             PdfDictionary resource = taggedPdf.GetFirstPage().GetResources().GetResource(PdfName.XObject);
             resource.Get(new PdfName("Fm1")).Flush();
             taggedPdf.Close();
@@ -113,7 +118,7 @@ namespace iText.Kernel.Pdf {
             String pdf = sourceFolder + "identicalMcidIdInOneStreamTest.pdf";
             String outPdf = destinationFolder + "identicalMcidIdInOneStreamTest.pdf";
             String cmpPdf = sourceFolder + "cmp_identicalMcidIdInOneStreamTest.pdf";
-            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), CompareTool.CreateTestPdfWriter(outPdf));
             taggedPdf.SetTagged();
             taggedPdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
@@ -125,8 +130,8 @@ namespace iText.Kernel.Pdf {
             String cmpPdf = sourceFolder + "cmp_copyPageWithFormXobjectTaggedTest.pdf";
             String outDoc = destinationFolder + "copyPageWithFormXobjectTaggedTest.pdf";
             PdfDocument srcPdf = new PdfDocument(new PdfReader(sourceFolder + "copyFromFile.pdf"));
-            PdfDocument outPdf = new PdfDocument(new PdfReader(sourceFolder + "copyToFile.pdf"), new PdfWriter(outDoc)
-                );
+            PdfDocument outPdf = new PdfDocument(new PdfReader(sourceFolder + "copyToFile.pdf"), CompareTool.CreateTestPdfWriter
+                (outDoc));
             outPdf.SetTagged();
             srcPdf.CopyPagesTo(1, 1, outPdf);
             srcPdf.Close();
@@ -138,8 +143,8 @@ namespace iText.Kernel.Pdf {
         public virtual void RemovePageWithFormXObjectTaggedTest() {
             String cmpPdf = sourceFolder + "cmp_removePageWithFormXobjectTaggedTest.pdf";
             String outDoc = destinationFolder + "removePageWithFormXobjectTaggedTest.pdf";
-            PdfDocument outPdf = new PdfDocument(new PdfReader(sourceFolder + "forRemovePage.pdf"), new PdfWriter(outDoc
-                ));
+            PdfDocument outPdf = new PdfDocument(new PdfReader(sourceFolder + "forRemovePage.pdf"), CompareTool.CreateTestPdfWriter
+                (outDoc));
             outPdf.SetTagged();
             outPdf.RemovePage(1);
             outPdf.Close();
@@ -150,7 +155,7 @@ namespace iText.Kernel.Pdf {
         public virtual void Test02() {
             String outFile = destinationFolder + "parentTreeTest02.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest02.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             document.SetTagged();
             PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
             PdfPage firstPage = document.AddNewPage();
@@ -177,7 +182,7 @@ namespace iText.Kernel.Pdf {
         public virtual void Test03() {
             String outFile = destinationFolder + "parentTreeTest03.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest03.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             document.SetTagged();
             PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
             PdfPage firstPage = document.AddNewPage();
@@ -206,7 +211,7 @@ namespace iText.Kernel.Pdf {
         public virtual void Test04() {
             String outFile = destinationFolder + "parentTreeTest04.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest04.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             document.SetTagged();
             PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
             for (int i = 0; i < 51; i++) {
@@ -234,7 +239,7 @@ namespace iText.Kernel.Pdf {
         public virtual void Test05() {
             String outFile = destinationFolder + "parentTreeTest05.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest05.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             document.SetTagged();
             PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
             PdfPage page1 = document.AddNewPage();
@@ -276,7 +281,7 @@ namespace iText.Kernel.Pdf {
         public virtual void Test06() {
             String outFile = destinationFolder + "parentTreeTest06.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest06.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             document.SetTagged();
             PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
             PdfPage firstPage = document.AddNewPage();
@@ -302,9 +307,9 @@ namespace iText.Kernel.Pdf {
         }
 
         private bool CheckParentTree(String outFileName, String cmpFileName) {
-            PdfReader outReader = new PdfReader(outFileName);
+            PdfReader outReader = CompareTool.CreateOutputReader(outFileName);
             PdfDocument outDocument = new PdfDocument(outReader);
-            PdfReader cmpReader = new PdfReader(cmpFileName);
+            PdfReader cmpReader = CompareTool.CreateOutputReader(cmpFileName);
             PdfDocument cmpDocument = new PdfDocument(cmpReader);
             CompareTool.CompareResult result = new CompareTool().CompareByCatalog(outDocument, cmpDocument);
             if (!result.IsOk()) {

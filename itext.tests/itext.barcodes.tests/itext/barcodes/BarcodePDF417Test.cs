@@ -47,10 +47,15 @@ namespace iText.Barcodes {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "barcode417_01.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -67,7 +72,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
             String filename = "barcode417_02.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename);
             PdfReader reader = new PdfReader(SOURCE_FOLDER + "DocumentWithTrueTypeFont1.pdf");
             PdfDocument document = new PdfDocument(reader, writer);
             PdfCanvas canvas = new PdfCanvas(document.GetLastPage());
@@ -84,7 +89,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void MacroPDF417Test01() {
             String filename = "barcode417Macro_01.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument pdfDocument = new PdfDocument(writer);
             PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.AddNewPage());
             pdfCanvas.AddXObjectWithTransformationMatrix(CreateMacroBarcodePart(pdfDocument, "This is PDF417 segment 0"
@@ -135,7 +140,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode417XObjectTest() {
             String filename = "barcode417XObjectTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -171,7 +176,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode417CodeReuseTest() {
             String filename = "barcode417CodeReuseTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
             String text = "Call me Ishmael. Some years ago--never mind how long " + "precisely --having little or no money in my purse, and nothing "
@@ -192,7 +197,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode417NumbersTest() {
             String filename = "barcode417NumbersTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
             String numbers = "1234567890";
@@ -207,7 +212,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode417ByteLessThanSixSizeNumbersTest() {
             String filename = "barcode417ByteLessThanSixSizeNumbersTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
             byte[] numbers = new byte[] { 0, 10 };
@@ -222,7 +227,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode417ByteMoreThanSixSizeNumbersTest() {
             String filename = "barcode417ByteMoreThanSixSizeNumbersTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
             byte[] numbers = new byte[] { 0, 10, 11, 12, 13, 30, 50, 70 };
@@ -344,7 +349,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void CcittImageFromBarcodeTest() {
             String filename = "ccittImage01.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

@@ -43,13 +43,18 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void StreamAppendDataOnJustCopiedWithCompression() {
             String srcFile = sourceFolder + "pageWithContent.pdf";
             String cmpFile = sourceFolder + "cmp_streamAppendDataOnJustCopiedWithCompression.pdf";
             String destFile = destinationFolder + "streamAppendDataOnJustCopiedWithCompression.pdf";
             PdfDocument srcDocument = new PdfDocument(new PdfReader(srcFile));
-            PdfDocument document = new PdfDocument(new PdfWriter(destFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destFile));
             srcDocument.CopyPagesTo(1, 1, document);
             srcDocument.Close();
             String newContentString = "BT\n" + "/F1 36 Tf\n" + "50 700 Td\n" + "(new content here!) Tj\n" + "ET";
@@ -81,9 +86,9 @@ namespace iText.Kernel.Pdf {
             String inFile = sourceFolder + "indirectRefInFilterAndNoTaggedPdf.pdf";
             String outFile = destinationFolder + "destIndirectRefInFilterAndNoTaggedPdf.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(inFile));
-            PdfDocument outDoc = new PdfDocument(new PdfReader(inFile), new PdfWriter(outFile));
+            PdfDocument outDoc = new PdfDocument(new PdfReader(inFile), CompareTool.CreateTestPdfWriter(outFile));
             outDoc.Close();
-            PdfDocument doc = new PdfDocument(new PdfReader(outFile));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateOutputReader(outFile));
             PdfStream outStreamIm1 = doc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName
                 ("Im1"));
             PdfStream outStreamIm2 = doc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName
@@ -109,7 +114,7 @@ namespace iText.Kernel.Pdf {
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
             WriterProperties writerProperties = new WriterProperties().SetStandardEncryption("World".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ), "Hello".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1), permissions, encryptionType);
-            PdfWriter writer = new PdfWriter(destFile, writerProperties.AddXmpMetadata());
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destFile, writerProperties.AddXmpMetadata());
             PdfDocument doc = new PdfDocument(reader, writer);
             ((PdfStream)doc.GetPdfObject(5)).GetBytes();
             //Simulating that this flush happened automatically before normal stream flushing in close method
@@ -130,7 +135,7 @@ namespace iText.Kernel.Pdf {
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
             WriterProperties writerProperties = new WriterProperties().SetStandardEncryption("World".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 ), "Hello".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1), permissions, encryptionType);
-            PdfWriter writer = new PdfWriter(destFile, writerProperties.AddXmpMetadata());
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destFile, writerProperties.AddXmpMetadata());
             PdfDocument doc = new PdfDocument(reader, writer);
             //Simulating that this flush happened automatically before normal stream flushing in close method
             ((PdfStream)doc.GetPdfObject(5)).Get(PdfName.Filter).Flush();
@@ -152,7 +157,7 @@ namespace iText.Kernel.Pdf {
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
             WriterProperties writerProperties = new WriterProperties().SetStandardEncryption(user, owner, permissions, 
                 encryptionType);
-            PdfWriter writer = new PdfWriter(destFile, writerProperties.AddXmpMetadata());
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destFile, writerProperties.AddXmpMetadata());
             writer.SetCompressionLevel(-1);
             PdfDocument doc = new PdfDocument(reader, writer);
             PdfObject cryptFilter = ((PdfStream)doc.GetPdfObject(5)).Get(PdfName.Filter);
@@ -175,7 +180,7 @@ namespace iText.Kernel.Pdf {
             String file = sourceFolder + "indFilterInCatalog.pdf";
             String cmpFile = sourceFolder + "cmp_indFilterInCatalog.pdf";
             String destFile = destinationFolder + "indFilterInCatalog.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(file), new PdfWriter(destFile));
+            PdfDocument doc = new PdfDocument(new PdfReader(file), CompareTool.CreateTestPdfWriter(destFile));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder));
         }
@@ -187,7 +192,7 @@ namespace iText.Kernel.Pdf {
             String file = sourceFolder + "indFilterInCatalog.pdf";
             String cmpFile = sourceFolder + "cmp_indFilterInCatalog.pdf";
             String destFile = destinationFolder + "indFilterInCatalog.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(file), new PdfWriter(destFile));
+            PdfDocument doc = new PdfDocument(new PdfReader(file), CompareTool.CreateTestPdfWriter(destFile));
             PdfStream stream = (PdfStream)doc.GetPdfObject(5);
             stream.SetCompressionLevel(CompressionConstants.BEST_COMPRESSION);
             doc.Close();
@@ -201,7 +206,7 @@ namespace iText.Kernel.Pdf {
             String file = sourceFolder + "indFilterInCatalog.pdf";
             String cmpFile = sourceFolder + "cmp_indFilterInCatalog.pdf";
             String destFile = destinationFolder + "indFilterInCatalog.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(file), new PdfWriter(destFile));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(file), CompareTool.CreateTestPdfWriter(destFile));
             // Simulate the case in which filter is somehow already flushed before stream.
             // Either directly by user or because of any other reason.
             PdfObject filterObject = pdfDoc.GetPdfObject(6);
@@ -218,7 +223,7 @@ namespace iText.Kernel.Pdf {
             String file = sourceFolder + "indFilterInCatalog.pdf";
             String cmpFile = sourceFolder + "cmp_indFilterInCatalog.pdf";
             String destFile = destinationFolder + "indFilterInCatalog.pdf";
-            PdfWriter writer = new PdfWriter(destFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destFile);
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(file), writer);
             // Simulate the case when indirect filter object is marked to be flushed before the stream itself.
             PdfObject filterObject = pdfDoc.GetPdfObject(6);
@@ -239,7 +244,7 @@ namespace iText.Kernel.Pdf {
             String file = sourceFolder + "decodeParamsTest.pdf";
             String cmpFile = sourceFolder + "cmp_decodeParamsTest.pdf";
             String destFile = destinationFolder + "decodeParamsTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(file), new PdfWriter(destFile));
+            PdfDocument doc = new PdfDocument(new PdfReader(file), CompareTool.CreateTestPdfWriter(destFile));
             PdfStream stream = (PdfStream)doc.GetPdfObject(7);
             stream.SetCompressionLevel(CompressionConstants.BEST_COMPRESSION);
             //Simulating that this flush happened automatically before normal stream flushing in close method
@@ -255,7 +260,7 @@ namespace iText.Kernel.Pdf {
             String file = sourceFolder + "decodeParamsTest.pdf";
             String cmpFile = sourceFolder + "cmp_decodeParamsPredictorTest.pdf";
             String destFile = destinationFolder + "decodeParamsPredictorTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(file), new PdfWriter(destFile));
+            PdfDocument doc = new PdfDocument(new PdfReader(file), CompareTool.CreateTestPdfWriter(destFile));
             PdfStream stream = (PdfStream)doc.GetPdfObject(7);
             stream.SetCompressionLevel(CompressionConstants.BEST_COMPRESSION);
             //Simulating that this flush happened automatically before normal stream flushing in close method
@@ -272,7 +277,7 @@ namespace iText.Kernel.Pdf {
             String file = sourceFolder + "decodeParamsTest.pdf";
             String cmpFile = sourceFolder + "cmp_decodeParamsColumnsTest.pdf";
             String destFile = destinationFolder + "decodeParamsColumnsTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(file), new PdfWriter(destFile));
+            PdfDocument doc = new PdfDocument(new PdfReader(file), CompareTool.CreateTestPdfWriter(destFile));
             PdfStream stream = (PdfStream)doc.GetPdfObject(7);
             stream.SetCompressionLevel(CompressionConstants.BEST_COMPRESSION);
             //Simulating that this flush happened automatically before normal stream flushing in close method
@@ -289,7 +294,7 @@ namespace iText.Kernel.Pdf {
             String file = sourceFolder + "decodeParamsTest.pdf";
             String cmpFile = sourceFolder + "cmp_decodeParamsColorsTest.pdf";
             String destFile = destinationFolder + "decodeParamsColorsTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(file), new PdfWriter(destFile));
+            PdfDocument doc = new PdfDocument(new PdfReader(file), CompareTool.CreateTestPdfWriter(destFile));
             PdfStream stream = (PdfStream)doc.GetPdfObject(7);
             stream.SetCompressionLevel(CompressionConstants.BEST_COMPRESSION);
             //Simulating that this flush happened automatically before normal stream flushing in close method
@@ -306,7 +311,7 @@ namespace iText.Kernel.Pdf {
             String file = sourceFolder + "decodeParamsTest.pdf";
             String cmpFile = sourceFolder + "cmp_decodeParamsBitsPerComponentTest.pdf";
             String destFile = destinationFolder + "decodeParamsBitsPerComponentTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(file), new PdfWriter(destFile));
+            PdfDocument doc = new PdfDocument(new PdfReader(file), CompareTool.CreateTestPdfWriter(destFile));
             PdfStream stream = (PdfStream)doc.GetPdfObject(7);
             stream.SetCompressionLevel(CompressionConstants.BEST_COMPRESSION);
             //Simulating that this flush happened automatically before normal stream flushing in close method
@@ -323,7 +328,7 @@ namespace iText.Kernel.Pdf {
             String file = sourceFolder + "decodeParamsTest.pdf";
             String cmpFile = sourceFolder + "cmp_flateFilterFlushedWhileDecodeTest.pdf";
             String destFile = destinationFolder + "flateFilterFlushedWhileDecodeTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(file), new PdfWriter(destFile));
+            PdfDocument doc = new PdfDocument(new PdfReader(file), CompareTool.CreateTestPdfWriter(destFile));
             PdfStream stream = (PdfStream)doc.GetPdfObject(7);
             stream.SetCompressionLevel(CompressionConstants.BEST_COMPRESSION);
             stream.Remove(PdfName.Filter);
@@ -341,7 +346,7 @@ namespace iText.Kernel.Pdf {
             String file = sourceFolder + "decodeParamsTest.pdf";
             String cmpFile = sourceFolder + "cmp_arrayFlateFilterFlushedWhileDecodeTest.pdf";
             String destFile = destinationFolder + "arrayFlateFilterFlushedWhileDecodeTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(file), new PdfWriter(destFile));
+            PdfDocument doc = new PdfDocument(new PdfReader(file), CompareTool.CreateTestPdfWriter(destFile));
             PdfStream stream = (PdfStream)doc.GetPdfObject(7);
             stream.SetCompressionLevel(CompressionConstants.BEST_COMPRESSION);
             stream.Remove(PdfName.Filter);

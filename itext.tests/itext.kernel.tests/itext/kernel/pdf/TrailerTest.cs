@@ -54,8 +54,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TrailerFingerprintTest() {
-            FileStream fos = new FileStream(destinationFolder + "output.pdf", FileMode.Create);
-            PdfDocument pdf = new PdfDocument(new PdfWriter(fos));
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + "output.pdf"));
             pdf.RegisterProduct(this.productData);
             PdfPage page = pdf.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

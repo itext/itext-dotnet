@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Annot {
@@ -39,10 +40,15 @@ namespace iText.Kernel.Pdf.Annot {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CopyGoToRDestinationTest() {
             String outFile = DESTINATION_FOLDER + "CopiedGoToRAnnotation.pdf";
-            using (PdfDocument @out = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 using (PdfDocument input = new PdfDocument(new PdfReader(SOURCE_FOLDER + "GoToRAnnotation.pdf"))) {
                     input.CopyPagesTo(1, input.GetNumberOfPages(), @out);
                 }
@@ -54,7 +60,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void CopyMultipleGoToRDestinationTest() {
             String outFile = DESTINATION_FOLDER + "CopiedMultiGoToRAnnotation.pdf";
-            using (PdfDocument @out = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 using (PdfDocument input = new PdfDocument(new PdfReader(SOURCE_FOLDER + "MultiDestinations.pdf"))) {
                     input.CopyPagesTo(1, input.GetNumberOfPages(), @out);
                 }
@@ -66,7 +72,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void CopyGoToRWithoutTargetTest() {
             String outFile = DESTINATION_FOLDER + "CopiedGoToRNoTarget.pdf";
-            using (PdfDocument @out = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 using (PdfDocument input = new PdfDocument(new PdfReader(SOURCE_FOLDER + "namedDest.pdf"))) {
                     input.CopyPagesTo(2, 6, @out);
                 }
@@ -78,7 +84,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void CopyGoToRNamedDestinationTest() {
             String outFile = DESTINATION_FOLDER + "CopiedGoToRNamedDest.pdf";
-            using (PdfDocument @out = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 using (PdfDocument input = new PdfDocument(new PdfReader(SOURCE_FOLDER + "namedDest.pdf"))) {
                     input.CopyPagesTo(1, 6, @out);
                 }
@@ -92,7 +98,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void FileAttachmentTargetTest() {
             String outFile = DESTINATION_FOLDER + "CopiedFileAttachmentTarget.pdf";
-            using (PdfDocument @out = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 using (PdfDocument input = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fileAttachmentTargetTest.pdf"))) {
                     input.CopyPagesTo(1, input.GetNumberOfPages(), @out);
                 }
@@ -107,7 +113,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void CopyLinkWidgetTest() {
             String outFile = DESTINATION_FOLDER + "CopiedLinkWidget.pdf";
-            using (PdfDocument @out = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 using (PdfDocument input = new PdfDocument(new PdfReader(SOURCE_FOLDER + "LinkWidgetExplicitDestination.pdf"
                     ))) {
                     input.CopyPagesTo(1, input.GetNumberOfPages(), @out);
@@ -122,7 +128,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void NoPdfNameATest() {
             String outFile = DESTINATION_FOLDER + "CopiedNoPdfNameA.pdf";
-            using (PdfDocument @out = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 using (PdfDocument input = new PdfDocument(new PdfReader(SOURCE_FOLDER + "GoToRAnnotation.pdf"))) {
                     PdfAnnotation pdfAnnotation = input.GetPage(1).GetAnnotations()[0];
                     pdfAnnotation.GetPdfObject().Remove(PdfName.A);
@@ -136,7 +142,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void NoPdfNameDTest() {
             String outFile = DESTINATION_FOLDER + "CopiedNoPdfNameD.pdf";
-            using (PdfDocument @out = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 using (PdfDocument input = new PdfDocument(new PdfReader(SOURCE_FOLDER + "GoToRAnnotation.pdf"))) {
                     PdfAnnotation pdfAnnotation = input.GetPage(1).GetAnnotations()[0];
                     pdfAnnotation.GetPdfObject().GetAsDictionary(PdfName.A).Remove(PdfName.D);
@@ -150,7 +156,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void NoPdfNameSTest() {
             String outFile = DESTINATION_FOLDER + "CopiedNoPdfNameS.pdf";
-            using (PdfDocument @out = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 using (PdfDocument input = new PdfDocument(new PdfReader(SOURCE_FOLDER + "GoToRAnnotation.pdf"))) {
                     PdfAnnotation pdfAnnotation = input.GetPage(1).GetAnnotations()[0];
                     pdfAnnotation.GetPdfObject().GetAsDictionary(PdfName.A).Remove(PdfName.S);
@@ -164,7 +170,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void NoPdfNameDWithGoToRTest() {
             String outFile = DESTINATION_FOLDER + "CopiedNoPdfNameDGoToR.pdf";
-            using (PdfDocument @out = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 using (PdfDocument input = new PdfDocument(new PdfReader(SOURCE_FOLDER + "GoToRAnnotation.pdf"))) {
                     PdfAnnotation pdfAnnotation = input.GetPage(1).GetAnnotations()[0];
                     PdfDictionary aDictionary = pdfAnnotation.GetPdfObject().GetAsDictionary(PdfName.A);
@@ -181,7 +187,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void LinkInsideArray() {
             String outFile = DESTINATION_FOLDER + "CopiedLinkInArray.pdf";
-            using (PdfDocument @out = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 using (PdfDocument input = new PdfDocument(new PdfReader(SOURCE_FOLDER + "LinkInArray.pdf"))) {
                     input.CopyPagesTo(1, 1, @out);
                 }
@@ -192,7 +198,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         private IList<PdfAnnotation> GetAnnotationsFromPdf(String outFilePath, int pageNumber) {
             IList<PdfAnnotation> annotations;
-            using (PdfDocument result = new PdfDocument(new PdfReader(outFilePath))) {
+            using (PdfDocument result = new PdfDocument(CompareTool.CreateOutputReader(outFilePath))) {
                 annotations = result.GetPage(pageNumber).GetAnnotations();
             }
             return annotations;

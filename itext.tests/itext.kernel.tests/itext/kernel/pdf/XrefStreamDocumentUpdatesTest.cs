@@ -42,6 +42,11 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ReadFreeRefReusingInIncrementTest() {
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "readFreeRefReusingInIncrement.pdf"));
@@ -54,8 +59,8 @@ namespace iText.Kernel.Pdf {
         public virtual void NotReuseIndirectRefForObjectStreamTest() {
             String inputFile = sourceFolder + "notReuseIndirectRefForObjectStream.pdf";
             String outputFile = destinationFolder + "adjustingsInObjStm.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile).SetCompressionLevel
-                (CompressionConstants.NO_COMPRESSION));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFile), CompareTool.CreateTestPdfWriter(outputFile)
+                .SetCompressionLevel(CompressionConstants.NO_COMPRESSION));
             PdfArray media = pdfDoc.GetPage(1).GetPdfObject().GetAsArray(PdfName.MediaBox);
             media.Remove(2);
             media.Add(new PdfNumber(500));
@@ -74,8 +79,8 @@ namespace iText.Kernel.Pdf {
         public virtual void NotReuseIndRefForObjStreamInIncrementTest() {
             String inputFile = sourceFolder + "notReuseIndirectRefForObjectStream.pdf";
             String outputFile = destinationFolder + "adjustingsInObjStmInIncrement.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile).SetCompressionLevel
-                (CompressionConstants.NO_COMPRESSION), new StampingProperties().UseAppendMode());
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFile), CompareTool.CreateTestPdfWriter(outputFile)
+                .SetCompressionLevel(CompressionConstants.NO_COMPRESSION), new StampingProperties().UseAppendMode());
             PdfObject newObj = pdfDoc.GetPage(1).GetPdfObject();
             newObj.SetModified();
             pdfDoc.Close();
@@ -91,9 +96,9 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void FreeRefReuseWhenAddNewObjTest() {
             String filename = destinationFolder + "freeRefReuseWhenAddNewObj.pdf";
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(sourceFolder + "pdfWithRemovedObjInOldVer.pdf"), new PdfWriter
-                (filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION), new StampingProperties().UseAppendMode
-                ());
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(sourceFolder + "pdfWithRemovedObjInOldVer.pdf"), CompareTool
+                .CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION), new StampingProperties
+                ().UseAppendMode());
             pdfDoc1.GetCatalog().GetPdfObject().Put(new PdfName("CustomKey"), new PdfArray().MakeIndirect(pdfDoc1));
             PdfObject newObj = pdfDoc1.GetCatalog().GetPdfObject();
             newObj.SetModified();
@@ -114,8 +119,8 @@ namespace iText.Kernel.Pdf {
             String inFileName = sourceFolder + "encryptedDocWithXrefStm.pdf";
             String outFileName = destinationFolder + "checkEncryptionInXrefStmInIncrements.pdf";
             PdfReader pdfReader = new PdfReader(inFileName).SetUnethicalReading(true);
-            PdfDocument pdfDocument = new PdfDocument(pdfReader, new PdfWriter(outFileName), new StampingProperties().
-                UseAppendMode().PreserveEncryption());
+            PdfDocument pdfDocument = new PdfDocument(pdfReader, CompareTool.CreateTestPdfWriter(outFileName), new StampingProperties
+                ().UseAppendMode().PreserveEncryption());
             PdfDictionary xrefStm = (PdfDictionary)pdfDocument.GetPdfObject(6);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, inFileName, destinationFolder
@@ -128,8 +133,8 @@ namespace iText.Kernel.Pdf {
             String inFileName = sourceFolder + "hybridReferenceDocument.pdf";
             String outFileName = destinationFolder + "hybridReferenceInIncrements.pdf";
             PdfReader pdfReader = new PdfReader(inFileName);
-            PdfDocument pdfDocument = new PdfDocument(pdfReader, new PdfWriter(outFileName), new StampingProperties().
-                UseAppendMode());
+            PdfDocument pdfDocument = new PdfDocument(pdfReader, CompareTool.CreateTestPdfWriter(outFileName), new StampingProperties
+                ().UseAppendMode());
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, inFileName, destinationFolder
                 ));
@@ -138,15 +143,15 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void XrefStmInWriteModeTest() {
             String fileName = destinationFolder + "xrefStmInWriteMode.pdf";
-            PdfWriter writer = new PdfWriter(fileName, new WriterProperties().SetFullCompressionMode(true).SetCompressionLevel
-                (CompressionConstants.NO_COMPRESSION));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(fileName, new WriterProperties().SetFullCompressionMode
+                (true).SetCompressionLevel(CompressionConstants.NO_COMPRESSION));
             PdfDocument pdfDocument = new PdfDocument(writer);
             PdfPage page = pdfDocument.AddNewPage();
             PdfTextAnnotation textannot = new PdfTextAnnotation(new Rectangle(100, 600, 50, 40));
             textannot.SetText(new PdfString("Text Annotation 01")).SetContents(new PdfString("Some contents..."));
             page.AddAnnotation(textannot);
             pdfDocument.Close();
-            PdfDocument doc = new PdfDocument(new PdfReader(fileName));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateOutputReader(fileName));
             int xrefTableCounter = 0;
             for (int i = 1; i < doc.GetNumberOfPdfObjects(); i++) {
                 PdfObject obj = doc.GetPdfObject(i);
@@ -167,11 +172,11 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void XrefStmInAppendModeTest() {
             String fileName = destinationFolder + "xrefStmInAppendMode.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "xrefStmInWriteMode.pdf"), new PdfWriter
-                (fileName).SetCompressionLevel(CompressionConstants.NO_COMPRESSION), new StampingProperties().UseAppendMode
-                ());
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "xrefStmInWriteMode.pdf"), CompareTool
+                .CreateTestPdfWriter(fileName).SetCompressionLevel(CompressionConstants.NO_COMPRESSION), new StampingProperties
+                ().UseAppendMode());
             pdfDocument.Close();
-            PdfDocument doc = new PdfDocument(new PdfReader(fileName));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateOutputReader(fileName));
             int xrefTableCounter = 0;
             for (int i = 1; i < doc.GetNumberOfPdfObjects(); i++) {
                 PdfObject obj = doc.GetPdfObject(i);
@@ -192,14 +197,14 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CloseDocumentWithoutModificationsTest() {
             String fileName = destinationFolder + "xrefStmInAppendMode.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "xrefStmInWriteMode.pdf"), new PdfWriter
-                (fileName).SetCompressionLevel(CompressionConstants.NO_COMPRESSION), new StampingProperties().UseAppendMode
-                ());
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "xrefStmInWriteMode.pdf"), CompareTool
+                .CreateTestPdfWriter(fileName).SetCompressionLevel(CompressionConstants.NO_COMPRESSION), new StampingProperties
+                ().UseAppendMode());
             // Clear state for document info indirect reference so that there are no modified objects
             // in the document due to which, the document will have only one xref table.
             pdfDocument.GetDocumentInfo().GetPdfObject().GetIndirectReference().ClearState(PdfObject.MODIFIED);
             pdfDocument.Close();
-            PdfDocument doc = new PdfDocument(new PdfReader(fileName));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateOutputReader(fileName));
             int xrefTableCounter = 0;
             for (int i = 1; i < doc.GetNumberOfPdfObjects(); i++) {
                 PdfObject obj = doc.GetPdfObject(i);

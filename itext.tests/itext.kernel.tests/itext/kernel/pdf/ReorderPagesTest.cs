@@ -39,12 +39,17 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ReorderTaggedHasCommonStructElem01() {
             String inPath = sourceFolder + "taggedHasCommonStructElem.pdf";
             String outPath = destinationFolder + "reorderTaggedHasCommonStructElem01.pdf";
             String cmpPath = sourceFolder + "cmp_reorderTaggedHasCommonStructElem.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfReader(inPath), new PdfWriter(outPath));
+            PdfDocument pdf = new PdfDocument(new PdfReader(inPath), CompareTool.CreateTestPdfWriter(outPath));
             pdf.SetTagged();
             pdf.MovePage(2, 1);
             pdf.Close();
@@ -56,7 +61,7 @@ namespace iText.Kernel.Pdf {
             String inPath = sourceFolder + "taggedHasCommonStructElem.pdf";
             String outPath = destinationFolder + "reorderTaggedHasCommonStructElem02.pdf";
             String cmpPath = sourceFolder + "cmp_reorderTaggedHasCommonStructElem.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfReader(inPath), new PdfWriter(outPath));
+            PdfDocument pdf = new PdfDocument(new PdfReader(inPath), CompareTool.CreateTestPdfWriter(outPath));
             pdf.MovePage(1, 3);
             pdf.Close();
             Compare(outPath, cmpPath, destinationFolder, "diff_02");
@@ -67,7 +72,7 @@ namespace iText.Kernel.Pdf {
             String inPath = sourceFolder + "taggedHasCommonStructElemBigger.pdf";
             String outPath = destinationFolder + "reorderTaggedHasCommonStructElemBigger.pdf";
             String cmpPath = sourceFolder + "cmp_reorderTaggedHasCommonStructElemBigger.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfReader(inPath), new PdfWriter(outPath));
+            PdfDocument pdf = new PdfDocument(new PdfReader(inPath), CompareTool.CreateTestPdfWriter(outPath));
             pdf.MovePage(2, 5);
             pdf.Close();
             Compare(outPath, cmpPath, destinationFolder, "diff_03");
@@ -79,7 +84,7 @@ namespace iText.Kernel.Pdf {
             String outPath = destinationFolder + "copyReorderTaggedHasCommonStructElem.pdf";
             String cmpPath = sourceFolder + "cmp_copyReorderTaggedHasCommonStructElem.pdf";
             PdfDocument sourceDoc = new PdfDocument(new PdfReader(inPath));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPath));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPath));
             pdfDoc.SetTagged();
             sourceDoc.CopyPagesTo(JavaUtil.ArraysAsList(2, 1, 3), pdfDoc);
             sourceDoc.Close();

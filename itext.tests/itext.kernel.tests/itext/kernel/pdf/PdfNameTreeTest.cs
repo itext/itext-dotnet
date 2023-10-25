@@ -31,6 +31,7 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -45,6 +46,11 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
+        }
+
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -96,7 +102,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void AnnotationAppearanceTest() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "AnnotationAppearanceTest.pdf"
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "AnnotationAppearanceTest.pdf"
                 ));
             PdfPage page = pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

@@ -50,11 +50,15 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CreateDocumentFromImages1() {
             String destinationDocument = DESTINATION_FOLDER + "documentFromImages1.pdf";
-            FileStream fos = new FileStream(destinationDocument, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = new PdfWriter(destinationDocument);
             PdfDocument document = new PdfDocument(writer);
             PdfImageXObject[] images = new PdfImageXObject[4];
             for (int i = 0; i < 4; i++) {
@@ -88,8 +92,7 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
         public virtual void CreateDocumentFromImages2() {
             String destinationDocument = DESTINATION_FOLDER + "documentFromImages2.pdf";
-            FileStream fos = new FileStream(destinationDocument, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationDocument);
             PdfDocument document = new PdfDocument(writer);
             ImageData image = ImageDataFactory.Create(SOURCE_FOLDER + "itext.jpg");
             PdfPage page = document.AddNewPage();
@@ -106,8 +109,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithForms() {
             String destinationDocument = DESTINATION_FOLDER + "documentWithForms1.pdf";
-            FileStream fos = new FileStream(destinationDocument, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationDocument);
             PdfDocument document = new PdfDocument(writer);
             //Create form XObject and flush to document.
             PdfFormXObject form = new PdfFormXObject(new Rectangle(0, 0, 50, 50));
@@ -148,7 +150,7 @@ namespace iText.Kernel.Pdf {
             // Copying of such file even with smart mode is expected to be handled correctly.
             String src = SOURCE_FOLDER + "checkboxes_XObject_iterative_reference.pdf";
             String dest = DESTINATION_FOLDER + "checkboxes_XObject_iterative_reference_out.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(dest).SetSmartMode(true));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(dest).SetSmartMode(true));
             PdfReader pdfReader = new PdfReader(src);
             PdfDocument sourceDocumentPdf = new PdfDocument(pdfReader);
             sourceDocumentPdf.CopyPagesTo(1, sourceDocumentPdf.GetNumberOfPages(), pdf);
@@ -215,8 +217,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "calculateProportionallyFitRectangleWithWidthTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 0.57f, 0, 2, 20, 5 }));
@@ -249,8 +250,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "calculateProportionallyFitRectangleWithHeightTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 0.57f, 0, 2, 20, 5 }));

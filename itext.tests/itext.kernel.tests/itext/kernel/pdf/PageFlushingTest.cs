@@ -35,6 +35,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -49,6 +50,11 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
+        }
+
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -256,8 +262,8 @@ namespace iText.Kernel.Pdf {
         public virtual void ModifyAnnotationOnlyAppendMode() {
             String input = sourceFolder + "100pages.pdf";
             String output = destinationFolder + "modifyAnnotOnly.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output), new StampingProperties()
-                .UseAppendMode());
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output), new StampingProperties
+                ().UseAppendMode());
             PdfPage page = pdfDoc.GetPage(1);
             PdfIndirectReference pageIndRef = page.GetPdfObject().GetIndirectReference();
             PdfDictionary annotObj = page.GetAnnotations()[0].SetRectangle(new PdfArray(new Rectangle(0, 0, 300, 300))
@@ -278,8 +284,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SetLinkDestinationToPageAppendMode() {
             String input = sourceFolder + "100pages.pdf";
             String output = destinationFolder + "setLinkDestinationToPageAppendMode.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output), new StampingProperties()
-                .UseAppendMode());
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output), new StampingProperties
+                ().UseAppendMode());
             PdfPage page1 = pdfDoc.GetPage(1);
             PdfPage page2 = pdfDoc.GetPage(2);
             PdfIndirectReference page1IndRef = page1.GetPdfObject().GetIndirectReference();
@@ -329,7 +335,7 @@ namespace iText.Kernel.Pdf {
         public virtual void FlushingPageResourcesMadeIndependent() {
             String inputFile = sourceFolder + "100pagesSharedResDict.pdf";
             String outputFile = destinationFolder + "flushingPageResourcesMadeIndependent.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile));
+            PdfDocument pdf = new PdfDocument(new PdfReader(inputFile), CompareTool.CreateTestPdfWriter(outputFile));
             int numOfAddedXObjectsPerPage = 10;
             for (int i = 1; i <= pdf.GetNumberOfPages(); ++i) {
                 PdfPage sourcePage = pdf.GetPage(i);
@@ -354,7 +360,7 @@ namespace iText.Kernel.Pdf {
             VerifyFlushedObjectsNum(pdf, 1416, 1400, 0);
             pdf.Close();
             PrintOutputPdfNameAndDir(outputFile);
-            PdfDocument result = new PdfDocument(new PdfReader(outputFile));
+            PdfDocument result = new PdfDocument(CompareTool.CreateOutputReader(outputFile));
             PdfObject page15Res = result.GetPage(15).GetPdfObject().Get(PdfName.Resources, false);
             PdfObject page34Res = result.GetPage(34).GetPdfObject().Get(PdfName.Resources, false);
             NUnit.Framework.Assert.IsTrue(page15Res.IsDictionary());
@@ -372,7 +378,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc;
             switch (docMode) {
                 case PageFlushingTest.DocMode.WRITING: {
-                    pdfDoc = new PdfDocument(new PdfWriter(output));
+                    pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(output));
                     break;
                 }
 
@@ -382,13 +388,13 @@ namespace iText.Kernel.Pdf {
                 }
 
                 case PageFlushingTest.DocMode.STAMPING: {
-                    pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output));
+                    pdfDoc = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output));
                     break;
                 }
 
                 case PageFlushingTest.DocMode.APPEND: {
-                    pdfDoc = new PdfDocument(new PdfReader(input), new PdfWriter(output), new StampingProperties().UseAppendMode
-                        ());
+                    pdfDoc = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output), new StampingProperties
+                        ().UseAppendMode());
                     break;
                 }
 

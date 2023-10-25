@@ -46,9 +46,15 @@ namespace iText.Kernel.Pdf.Canvas {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ColorTest01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "colorTest01.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "colorTest01.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(ColorConstants.RED).Rectangle(50, 500, 50, 50).Fill();
@@ -67,7 +73,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void ColorTest02() {
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest02.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "colorTest02.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -97,7 +103,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void ColorTest03() {
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest03.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "colorTest03.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -147,7 +153,7 @@ namespace iText.Kernel.Pdf.Canvas {
             byte[] bytes = baos.ToArray();
             PdfReader reader = new PdfReader(new MemoryStream(bytes));
             document = new PdfDocument(reader);
-            writer = new PdfWriter(DESTINATION_FOLDER + "colorTest04.pdf");
+            writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "colorTest04.pdf");
             PdfDocument newDocument = new PdfDocument(writer);
             newDocument.AddPage(document.GetPage(1).CopyTo(newDocument));
             newDocument.Close();
@@ -158,7 +164,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void ColorTest05() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "colorTest05.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "colorTest05.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             FileStream streamGray = new FileStream(SOURCE_FOLDER + "BlackWhite.icc", FileMode.Open, FileAccess.Read);
             FileStream streamRgb = new FileStream(SOURCE_FOLDER + "CIERGB.icc", FileMode.Open, FileAccess.Read);
@@ -190,7 +197,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 bytes[k++] = (byte)i;
                 bytes[k++] = (byte)i;
             }
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest06.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "colorTest06.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -208,7 +215,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void ColorTest07Depr() {
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest07.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "colorTest07.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -227,7 +234,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void ColorTest07() {
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest07.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "colorTest07.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -247,7 +254,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void ColorTest08Depr() {
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest08.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "colorTest08.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -269,7 +276,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void ColorTest08() {
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest08.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "colorTest08.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -301,7 +308,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void MakePatternColorTest() {
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "makePatternColorTest.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "makePatternColorTest.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -321,7 +328,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void PatternColorColoredAxialPatternTest() {
             String name = "patternColorColoredAxialPatternTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -339,7 +346,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void PatternColorColoredRadialPatternTest() {
             String name = "patternColorColoredRadialPatternTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -357,7 +364,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void PatternColorUncoloredCircleRgbTest() {
             String name = "patternColorUncoloredCircleRgbTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -378,7 +385,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void PatternColorUncoloredLineGrayTest() {
             String name = "patternColorUncoloredLineGrayTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -396,7 +403,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void PatternColorColoredSetTwiceTest() {
             String name = "patternColorColoredSetTwiceTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -429,7 +436,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void PatternColorUncoloredSetTwiceTest() {
             String name = "patternColorUncoloredSetTwiceTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -487,7 +494,7 @@ namespace iText.Kernel.Pdf.Canvas {
         private void SetColorSameColorSpacesTest(String pdfName, bool pattern) {
             String cmpFile = SOURCE_FOLDER + "cmp_" + pdfName;
             String destFile = DESTINATION_FOLDER + pdfName;
-            PdfDocument document = new PdfDocument(new PdfWriter(destFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destFile));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             PdfColorSpace space = pattern ? new PdfSpecialCs.Pattern() : PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB

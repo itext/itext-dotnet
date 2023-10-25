@@ -35,8 +35,8 @@ namespace iText.Kernel.Utils {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/utils/TaggedPdfReaderToolTest/";
 
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 

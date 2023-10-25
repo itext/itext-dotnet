@@ -43,14 +43,18 @@ namespace iText.Kernel.Pdf.Canvas {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         // addXObjectAt(PdfXObject, float, float) test block
         [NUnit.Framework.Test]
         public virtual void AddFormXObjectXYWithoutMatrixTest() {
             String fileName = "addXObjectXYWithoutMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(10, 15, 10, 20));
             new PdfCanvas(formXObject, document).Rectangle(10, 10, 10, 20).Fill();
@@ -69,8 +73,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectXYWithMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(10, 10, 10, 20));
             formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 1, 0, 1.5f, 35, -10 }));
@@ -90,8 +93,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addImageXObjectAtTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "box.png"));
             PdfPage page = document.AddNewPage();
@@ -121,8 +123,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectXYWidthWithoutMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(10, 15, 10, 20));
             new PdfCanvas(formXObject, document).Rectangle(10, 10, 10, 20).Fill();
@@ -142,8 +143,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectXYWidthLargerOneWithoutMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(10, 15, 10, 20));
             new PdfCanvas(formXObject, document).Rectangle(10, 10, 10, 20).Fill();
@@ -163,8 +163,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectXYWidthLessOneWithMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(10, 15, 10, 20));
             formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 0, 0.57f, 1, 20, 5 }));
@@ -185,8 +184,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectXYWidthLargerOneWithMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(10, 15, 10, 20));
             formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 0.57f, 0.57f, 1, 20, 5 }));
@@ -208,8 +206,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectXYHeightLessOneWithoutMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             new PdfCanvas(formXObject, document).Circle(10, 15, 10).Fill();
@@ -229,8 +226,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectXYHeightLargerOneWithoutMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             new PdfCanvas(formXObject, document).Circle(10, 15, 10).Fill();
@@ -250,8 +246,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectXYHeightLessOneWithMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 2, 0.57f, 0.57f, 1, 20, 5 }));
@@ -272,8 +267,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectXYHeightLargerOneWithMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 3, 0.2f, 0, 1, 20, 5 }));
@@ -295,8 +289,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectRectangleLessWithoutMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             new PdfCanvas(formXObject, document).Circle(10, 15, 10).Fill();
@@ -315,8 +308,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectRectangleLargerWithoutMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             new PdfCanvas(formXObject, document).Circle(10, 15, 10).Fill();
@@ -335,8 +327,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectRectangleLessWithMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 0.57f, 0, 1, 20, 5 }));
@@ -356,8 +347,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectRectangleLargerWithMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 2, 0, 0.3f, 3, 20, 5 }));
@@ -389,8 +379,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectWithoutMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             new PdfCanvas(formXObject, document).Circle(10, 15, 10).Fill();
@@ -409,8 +398,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addXObjectWithMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 0.57f, 0, 2, 20, 5 }));
@@ -430,8 +418,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addImageXObjectTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "box.png"));
             PdfPage page = document.AddNewPage();
@@ -450,8 +437,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addFormXObjectWithTransformationMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
             new PdfCanvas(formXObject, document).Circle(10, 15, 10).Fill();
@@ -470,8 +456,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addImageXObjectWithTransformationMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "box.png"));
             PdfPage page = document.AddNewPage();
@@ -506,8 +491,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addFormXObjectWithUserIdentityMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(0, 0, 20, 20));
             new PdfCanvas(formXObject, document).Circle(10, 10, 10).Fill();
@@ -533,8 +517,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "addFormXObjectWithIdentityMatrixTest.pdf";
             String destPdf = DESTINATION_FOLDER + fileName;
             String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
-            FileStream fos = new FileStream(destPdf, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destPdf);
             PdfDocument document = new PdfDocument(writer);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(0, 0, 20, 20));
             new PdfCanvas(formXObject, document).Circle(10, 10, 10).Fill();

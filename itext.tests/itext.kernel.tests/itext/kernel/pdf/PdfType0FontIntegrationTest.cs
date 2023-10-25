@@ -48,11 +48,16 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void NotoSansJpFontTest() {
             String filename = DESTINATION_FOLDER + "notoSansJpFontTest.pdf";
             String cmpFilename = SOURCE_FOLDER + "cmp_notoSansJpFontTest.pdf";
-            PdfWriter writer = new PdfWriter(filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfFont jpFont = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSansJP-Regular.otf");
@@ -70,7 +75,7 @@ namespace iText.Kernel.Pdf {
         public virtual void NotoSansScFontTest() {
             String filename = DESTINATION_FOLDER + "notoSansScFontTest.pdf";
             String cmpFilename = SOURCE_FOLDER + "cmp_notoSansScFontTest.pdf";
-            PdfWriter writer = new PdfWriter(filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfFont jpFont = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSansSC-Regular.otf");
@@ -91,7 +96,7 @@ namespace iText.Kernel.Pdf {
         public virtual void NotoSansTcFontTest() {
             String filename = DESTINATION_FOLDER + "notoSansTcFontTest.pdf";
             String cmpFilename = SOURCE_FOLDER + "cmp_notoSansTcFontTest.pdf";
-            PdfWriter writer = new PdfWriter(filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfFont jpFont = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSansTC-Regular.otf");

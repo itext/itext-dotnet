@@ -43,10 +43,15 @@ namespace iText.Barcodes {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "barcodeQRCode01.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -62,7 +67,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
             String filename = "barcodeQRCode02.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -78,7 +83,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void BarcodeVersioningTest() {
             String filename = "barcodeQRCodeVersioning.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             for (int i = -9; i < 42; i += 10) {
                 PdfPage page1 = document.AddNewPage();

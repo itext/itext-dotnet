@@ -45,13 +45,18 @@ namespace iText.Kernel.Pdf.Annot {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SoundTestAif() {
             String filename = destinationFolder + "soundAnnotation02.pdf";
             String audioFile = sourceFolder + "sample.aif";
             String cmp = sourceFolder + "cmp_soundAnnotation02.pdf";
             using (Stream @is = PrepareAudioFileStream(audioFile)) {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                     PdfStream sound1 = new PdfStream(pdfDoc, @is);
                     sound1.Put(PdfName.R, new PdfNumber(32117));
                     sound1.Put(PdfName.E, PdfName.Signed);
@@ -72,7 +77,7 @@ namespace iText.Kernel.Pdf.Annot {
             String audioFile = sourceFolder + "sample.aiff";
             String cmpPdf = sourceFolder + "cmp_soundAnnotation03.pdf";
             using (Stream @is = PrepareAudioFileStream(audioFile)) {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                     PdfStream sound1 = new PdfStream(pdfDoc, @is);
                     sound1.Put(PdfName.R, new PdfNumber(44100));
                     sound1.Put(PdfName.E, PdfName.Signed);
@@ -93,7 +98,7 @@ namespace iText.Kernel.Pdf.Annot {
             String audioFile = sourceFolder + "sample.wav";
             String cmpPdf = sourceFolder + "cmp_soundAnnotation05.pdf";
             using (Stream @is = PrepareAudioFileStream(audioFile)) {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                     PdfStream soundStream = new PdfStream(pdfDoc, @is);
                     soundStream.Put(PdfName.R, new PdfNumber(48000));
                     soundStream.Put(PdfName.E, PdfName.Signed);
@@ -115,7 +120,7 @@ namespace iText.Kernel.Pdf.Annot {
             String audioFile = sourceFolder + "sample.snd";
             String cmpPdf = sourceFolder + "cmp_soundAnnotation04.pdf";
             using (Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read)) {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                     Rectangle rect = new Rectangle(100, 100, 100, 100);
                     PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc, rect, @is, 44100, PdfName.Signed, 2, 16);
                     pdfDoc.AddNewPage().AddAnnotation(sound);
@@ -133,7 +138,7 @@ namespace iText.Kernel.Pdf.Annot {
             String audioFile = sourceFolder + "sample.wav";
             String cmpPdf = sourceFolder + "cmp_soundAnnotation01.pdf";
             using (Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read)) {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename))) {
+                using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                     Rectangle rect = new Rectangle(100, 100, 100, 100);
                     PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc, rect, @is, 48000, PdfName.Signed, 2, 16);
                     pdfDoc.AddNewPage().AddAnnotation(sound);

@@ -42,13 +42,19 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SmartModeSameResourcesCopyingAndFlushing() {
             String outFile = destinationFolder + "smartModeSameResourcesCopyingAndFlushing.pdf";
             String cmpFile = sourceFolder + "cmp_smartModeSameResourcesCopyingAndFlushing.pdf";
             String[] srcFiles = new String[] { sourceFolder + "indirectResourcesStructure.pdf", sourceFolder + "indirectResourcesStructure2.pdf"
                  };
-            PdfDocument outputDoc = new PdfDocument(new PdfWriter(outFile, new WriterProperties().UseSmartMode()));
+            PdfDocument outputDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile, new WriterProperties().UseSmartMode
+                ()));
             foreach (String srcFile in srcFiles) {
                 PdfDocument sourceDoc = new PdfDocument(new PdfReader(srcFile));
                 sourceDoc.CopyPagesTo(1, sourceDoc.GetNumberOfPages(), outputDoc);
@@ -56,7 +62,7 @@ namespace iText.Kernel.Pdf {
                 outputDoc.FlushCopiedObjects(sourceDoc);
             }
             outputDoc.Close();
-            PdfDocument assertDoc = new PdfDocument(new PdfReader(outFile));
+            PdfDocument assertDoc = new PdfDocument(CompareTool.CreateOutputReader(outFile));
             PdfIndirectReference page1ResFontObj = assertDoc.GetPage(1).GetPdfObject().GetAsDictionary(PdfName.Resources
                 ).GetAsDictionary(PdfName.Font).GetIndirectReference();
             PdfIndirectReference page2ResFontObj = assertDoc.GetPage(2).GetPdfObject().GetAsDictionary(PdfName.Resources
@@ -75,7 +81,8 @@ namespace iText.Kernel.Pdf {
             String[] srcFiles = new String[] { sourceFolder + "indirectResourcesStructure.pdf", sourceFolder + "indirectResourcesStructure2.pdf"
                  };
             bool exceptionCaught = false;
-            PdfDocument outputDoc = new PdfDocument(new PdfWriter(outFile, new WriterProperties().UseSmartMode()));
+            PdfDocument outputDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile, new WriterProperties().UseSmartMode
+                ()));
             int lastPageNum = 1;
             PdfFont font = PdfFontFactory.CreateFont();
             foreach (String srcFile in srcFiles) {
@@ -114,7 +121,8 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_smartModeSameResourcesCopyingModifyingAndFlushing_ensureObjectFresh.pdf";
             String[] srcFiles = new String[] { sourceFolder + "indirectResourcesStructure.pdf", sourceFolder + "indirectResourcesStructure2.pdf"
                  };
-            PdfDocument outputDoc = new PdfDocument(new PdfWriter(outFile, new WriterProperties().UseSmartMode()));
+            PdfDocument outputDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile, new WriterProperties().UseSmartMode
+                ()));
             int lastPageNum = 1;
             PdfFont font = PdfFontFactory.CreateFont();
             foreach (String srcFile in srcFiles) {
@@ -148,7 +156,7 @@ namespace iText.Kernel.Pdf {
                 outputDoc.FlushCopiedObjects(sourceDoc);
             }
             outputDoc.Close();
-            PdfDocument assertDoc = new PdfDocument(new PdfReader(outFile));
+            PdfDocument assertDoc = new PdfDocument(CompareTool.CreateOutputReader(outFile));
             PdfIndirectReference page1ResFontObj = assertDoc.GetPage(1).GetPdfObject().GetAsDictionary(PdfName.Resources
                 ).GetAsDictionary(PdfName.Font).GetIndirectReference();
             PdfIndirectReference page2ResFontObj = assertDoc.GetPage(2).GetPdfObject().GetAsDictionary(PdfName.Resources
@@ -168,7 +176,7 @@ namespace iText.Kernel.Pdf {
             String srcFile = sourceFolder + "pageCopyAsFormXObjectWithInheritedResourcesTest.pdf";
             String destFile = destinationFolder + "pageCopyAsFormXObjectWithInheritedResourcesTest.pdf";
             PdfDocument origPdf = new PdfDocument(new PdfReader(srcFile));
-            PdfDocument copyPdfX = new PdfDocument(new PdfWriter(destFile).SetSmartMode(true));
+            PdfDocument copyPdfX = new PdfDocument(CompareTool.CreateTestPdfWriter(destFile).SetSmartMode(true));
             PdfDictionary pages = origPdf.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Pages);
             if (pages != null) {
                 for (int i = 1; i < origPdf.GetNumberOfPages() + 1; i++) {
@@ -190,7 +198,7 @@ namespace iText.Kernel.Pdf {
             String srcFile = sourceFolder + "sameImageResources.pdf";
             String outFile = destinationFolder + "smartModeSameImageResources.pdf";
             String cmpFile = sourceFolder + "cmp_smartModeSameImageResources.pdf";
-            using (PdfDocument newDoc = new PdfDocument(new PdfWriter(outFile).SetSmartMode(true))) {
+            using (PdfDocument newDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile).SetSmartMode(true))) {
                 using (PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile))) {
                     srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), newDoc);
                 }
@@ -208,7 +216,7 @@ namespace iText.Kernel.Pdf {
             String srcFile = sourceFolder + "colorSpaceResource.pdf";
             String outFile = destinationFolder + "smartModeSameColorSpaceResources.pdf";
             String cmpFile = sourceFolder + "cmp_smartModeSameColorSpaceResources.pdf";
-            using (PdfDocument newDoc = new PdfDocument(new PdfWriter(outFile).SetSmartMode(true))) {
+            using (PdfDocument newDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile).SetSmartMode(true))) {
                 for (int i = 0; i < 2; i++) {
                     using (PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile))) {
                         srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), newDoc);
@@ -235,7 +243,7 @@ namespace iText.Kernel.Pdf {
             String srcFile = sourceFolder + "extGStateResource.pdf";
             String outFile = destinationFolder + "smartModeSameExtGStateResources.pdf";
             String cmpFile = sourceFolder + "cmp_smartModeSameExtGStateResources.pdf";
-            using (PdfDocument newDoc = new PdfDocument(new PdfWriter(outFile).SetSmartMode(true))) {
+            using (PdfDocument newDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile).SetSmartMode(true))) {
                 for (int i = 0; i < 2; i++) {
                     using (PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile))) {
                         srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), newDoc);
@@ -255,8 +263,8 @@ namespace iText.Kernel.Pdf {
             String srcFile = sourceFolder + "simpleTaggedDocument.pdf";
             String dstFile = destinationFolder + "smartModeCopyingInTaggedPdf.pdf";
             String cmpFile = sourceFolder + "cmp_smartModeCopyingInTaggedPdf.pdf";
-            using (PdfDocument pdfDest = new PdfDocument(new PdfWriter(dstFile, new WriterProperties().UseSmartMode())
-                )) {
+            using (PdfDocument pdfDest = new PdfDocument(CompareTool.CreateTestPdfWriter(dstFile, new WriterProperties
+                ().UseSmartMode()))) {
                 pdfDest.SetTagged();
                 using (PdfDocument pdfSrc = new PdfDocument(new PdfReader(srcFile))) {
                     pdfSrc.CopyPagesTo(1, pdfSrc.GetNumberOfPages(), pdfDest);
@@ -271,8 +279,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SmartModeCopyingInPdfWithIdenticalPagesTaggedTest() {
             String srcFile = sourceFolder + "docWithAllPagesIdenticalTagged.pdf";
             String dstFile = destinationFolder + "smartModeCopyingInPdfWithIdenticalPagesTagged.pdf";
-            using (PdfDocument pdfDest = new PdfDocument(new PdfWriter(dstFile, new WriterProperties().UseSmartMode())
-                )) {
+            using (PdfDocument pdfDest = new PdfDocument(CompareTool.CreateTestPdfWriter(dstFile, new WriterProperties
+                ().UseSmartMode()))) {
                 pdfDest.SetTagged();
                 using (PdfDocument pdfSrc = new PdfDocument(new PdfReader(srcFile))) {
                     pdfSrc.CopyPagesTo(1, pdfSrc.GetNumberOfPages(), pdfDest);
@@ -294,8 +302,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SmartModeCopyingInPdfWithIdenticalPagesTest() {
             String srcFile = sourceFolder + "docWithAllPagesIdenticalNotTagged.pdf";
             String dstFile = destinationFolder + "smartModeCopyingInPdfWithIdenticalPagesNotTagged.pdf";
-            using (PdfDocument pdfDest = new PdfDocument(new PdfWriter(dstFile, new WriterProperties().UseSmartMode())
-                )) {
+            using (PdfDocument pdfDest = new PdfDocument(CompareTool.CreateTestPdfWriter(dstFile, new WriterProperties
+                ().UseSmartMode()))) {
                 using (PdfDocument pdfSrc = new PdfDocument(new PdfReader(srcFile))) {
                     pdfSrc.CopyPagesTo(1, pdfSrc.GetNumberOfPages(), pdfDest);
                 }
@@ -316,8 +324,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SmartModeCopyingInPdfSamePagesDifferentXObjectsTest() {
             String srcFile = sourceFolder + "identicalPagesDifferentXObjects.pdf";
             String dstFile = destinationFolder + "smartModeCopyingInPdfSamePagesDifferentXObjects.pdf";
-            using (PdfDocument pdfDest = new PdfDocument(new PdfWriter(dstFile, new WriterProperties().UseSmartMode())
-                )) {
+            using (PdfDocument pdfDest = new PdfDocument(CompareTool.CreateTestPdfWriter(dstFile, new WriterProperties
+                ().UseSmartMode()))) {
                 using (PdfDocument pdfSrc = new PdfDocument(new PdfReader(srcFile))) {
                     pdfSrc.CopyPagesTo(1, pdfSrc.GetNumberOfPages(), pdfDest);
                 }
@@ -335,8 +343,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SmartCopyingOfArrayWithStringsTest() {
             String srcFile = sourceFolder + "keyValueStructure.pdf";
             String dstFile = destinationFolder + "smartCopyingOfArrayWithStrings.pdf";
-            using (PdfDocument pdfDest = new PdfDocument(new PdfWriter(dstFile, new WriterProperties().UseSmartMode())
-                )) {
+            using (PdfDocument pdfDest = new PdfDocument(CompareTool.CreateTestPdfWriter(dstFile, new WriterProperties
+                ().UseSmartMode()))) {
                 using (PdfDocument pdfSrc = new PdfDocument(new PdfReader(srcFile))) {
                     pdfSrc.CopyPagesTo(1, pdfSrc.GetNumberOfPages(), pdfDest);
                 }
@@ -353,8 +361,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SmartCopyingOfNestedIndirectDictionariesTest() {
             String srcFile = sourceFolder + "nestedIndirectDictionaries.pdf";
             String dstFile = destinationFolder + "smartCopyingOfNestedIndirectDictionariesTest.pdf";
-            using (PdfDocument pdfDest = new PdfDocument(new PdfWriter(dstFile, new WriterProperties().UseSmartMode())
-                )) {
+            using (PdfDocument pdfDest = new PdfDocument(CompareTool.CreateTestPdfWriter(dstFile, new WriterProperties
+                ().UseSmartMode()))) {
                 using (PdfDocument pdfSrc = new PdfDocument(new PdfReader(srcFile))) {
                     pdfSrc.CopyPagesTo(1, pdfSrc.GetNumberOfPages(), pdfDest);
                 }
@@ -383,8 +391,8 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_smartModeSeparatedOutlinesCopying.pdf";
             String[] srcFiles = new String[] { sourceFolder + "separatedOutlinesCopying.pdf", sourceFolder + "separatedOutlinesCopying.pdf"
                  };
-            using (PdfDocument outputDoc = new PdfDocument(new PdfWriter(dstFile, new WriterProperties().UseSmartMode(
-                )))) {
+            using (PdfDocument outputDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(dstFile, new WriterProperties
+                ().UseSmartMode()))) {
                 outputDoc.InitializeOutlines();
                 foreach (String srcFile in srcFiles) {
                     PdfDocument sourceDoc = new PdfDocument(new PdfReader(srcFile));
@@ -399,8 +407,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SmartModeCopyingInPdfWithLinksOnOnePageTest() {
             String srcFile = sourceFolder + "identical100PagesDiffObjectsLinksOnOnePage.pdf";
             String dstFile = destinationFolder + "smartModeCopyingInPdfWithLinksOnOnePage.pdf";
-            using (PdfDocument pdfDest = new PdfDocument(new PdfWriter(dstFile, new WriterProperties().UseSmartMode())
-                )) {
+            using (PdfDocument pdfDest = new PdfDocument(CompareTool.CreateTestPdfWriter(dstFile, new WriterProperties
+                ().UseSmartMode()))) {
                 using (PdfDocument pdfSrc = new PdfDocument(new PdfReader(srcFile))) {
                     pdfSrc.CopyPagesTo(1, pdfSrc.GetNumberOfPages(), pdfDest);
                 }
@@ -418,8 +426,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SmartModeCopyingInPdfWithDiffImagesTest() {
             String srcFile = sourceFolder + "docWithDifferentImages.pdf";
             String dstFile = destinationFolder + "smartModeCopyingInPdfWithDiffImages.pdf";
-            using (PdfDocument pdfDest = new PdfDocument(new PdfWriter(dstFile, new WriterProperties().UseSmartMode())
-                )) {
+            using (PdfDocument pdfDest = new PdfDocument(CompareTool.CreateTestPdfWriter(dstFile, new WriterProperties
+                ().UseSmartMode()))) {
                 using (PdfDocument pdfSrc = new PdfDocument(new PdfReader(srcFile))) {
                     pdfSrc.CopyPagesTo(1, pdfSrc.GetNumberOfPages(), pdfDest);
                 }

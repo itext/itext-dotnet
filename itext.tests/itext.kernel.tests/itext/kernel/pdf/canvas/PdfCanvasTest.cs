@@ -57,8 +57,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const String TITLE = "Empty iText Document";
 
-        private sealed class _ContentProvider_74 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_74() {
+        private sealed class _ContentProvider_75 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_75() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -68,17 +68,22 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_74();
+        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_75();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvas() {
             String filename = DESTINATION_FOLDER + "simpleCanvas.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -93,7 +98,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String fileName = "canvasDrawArcsTest.pdf";
             String output = DESTINATION_FOLDER + fileName;
             String cmp = SOURCE_FOLDER + "cmp_" + fileName;
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(output))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(output))) {
                 PdfPage page = doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SetLineWidth(5);
@@ -118,7 +123,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithDrawing() {
             String fileName = DESTINATION_FOLDER + "simpleCanvasWithDrawing.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(fileName));
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -138,7 +143,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithText() {
             String fileName = DESTINATION_FOLDER + "simpleCanvasWithText.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(fileName));
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -163,7 +168,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithPageFlush() {
             String filename = DESTINATION_FOLDER + "simpleCanvasWithPageFlush.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -177,7 +182,8 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithFullCompression() {
             String filename = DESTINATION_FOLDER + "simpleCanvasWithFullCompression.pdf";
-            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename, new WriterProperties().SetFullCompressionMode
+                (true));
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -191,7 +197,8 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithPageFlushAndFullCompression() {
             String filename = DESTINATION_FOLDER + "simpleCanvasWithPageFlushAndFullCompression.pdf";
-            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename, new WriterProperties().SetFullCompressionMode
+                (true));
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -207,7 +214,8 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void Create1000PagesDocument() {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocument.pdf";
-            CreateStandardDocument(new PdfWriter(filename), pageCount, DEFAULT_CONTENT_PROVIDER);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
+            CreateStandardDocument(writer, pageCount, DEFAULT_CONTENT_PROVIDER);
             AssertStandardDocument(filename, pageCount);
         }
 
@@ -215,7 +223,8 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void Create100PagesDocument() {
             int pageCount = 100;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocument.pdf";
-            CreateStandardDocument(new PdfWriter(filename), pageCount, DEFAULT_CONTENT_PROVIDER);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
+            CreateStandardDocument(writer, pageCount, DEFAULT_CONTENT_PROVIDER);
             AssertStandardDocument(filename, pageCount);
         }
 
@@ -223,7 +232,8 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void Create10PagesDocument() {
             int pageCount = 10;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocument.pdf";
-            CreateStandardDocument(new PdfWriter(filename), pageCount, DEFAULT_CONTENT_PROVIDER);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
+            CreateStandardDocument(writer, pageCount, DEFAULT_CONTENT_PROVIDER);
             AssertStandardDocument(filename, pageCount);
         }
 
@@ -231,12 +241,13 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void Create1000PagesDocumentWithText() {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithText.pdf";
-            CreateStandardDocument(new PdfWriter(filename), pageCount, new _ContentProvider_366());
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
+            CreateStandardDocument(writer, pageCount, new _ContentProvider_376());
             AssertStandardDocument(filename, pageCount);
         }
 
-        private sealed class _ContentProvider_366 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_366() {
+        private sealed class _ContentProvider_376 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_376() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -250,7 +261,8 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void Create1000PagesDocumentWithFullCompression() {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithFullCompression.pdf";
-            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename, new WriterProperties().SetFullCompressionMode
+                (true));
             CreateStandardDocument(writer, pageCount, DEFAULT_CONTENT_PROVIDER);
             AssertStandardDocument(filename, pageCount);
         }
@@ -258,7 +270,8 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void SmallDocumentWithFullCompression() {
             String filename = DESTINATION_FOLDER + "smallDocumentWithFullCompression.pdf";
-            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename, new WriterProperties().SetFullCompressionMode
+                (true));
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
             PdfPage page = pdfDoc.AddNewPage();
@@ -274,7 +287,8 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void Create100PagesDocumentWithFullCompression() {
             int pageCount = 100;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocumentWithFullCompression.pdf";
-            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename, new WriterProperties().SetFullCompressionMode
+                (true));
             CreateStandardDocument(writer, pageCount, DEFAULT_CONTENT_PROVIDER);
             AssertStandardDocument(filename, pageCount);
         }
@@ -283,7 +297,8 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void Create197PagesDocumentWithFullCompression() {
             int pageCount = 197;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocumentWithFullCompression.pdf";
-            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename, new WriterProperties().SetFullCompressionMode
+                (true));
             CreateStandardDocument(writer, pageCount, DEFAULT_CONTENT_PROVIDER);
             AssertStandardDocument(filename, pageCount);
         }
@@ -292,7 +307,8 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void Create10PagesDocumentWithFullCompression() {
             int pageCount = 10;
             String filename = DESTINATION_FOLDER + pageCount + "PagesDocumentWithFullCompression.pdf";
-            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename, new WriterProperties().SetFullCompressionMode
+                (true));
             CreateStandardDocument(writer, pageCount, DEFAULT_CONTENT_PROVIDER);
             AssertStandardDocument(filename, pageCount);
         }
@@ -301,7 +317,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CopyPagesTest1() {
             String file1 = DESTINATION_FOLDER + "copyPages1_1.pdf";
             String file2 = DESTINATION_FOLDER + "copyPages1_2.pdf";
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(file1));
+            PdfDocument pdfDoc1 = new PdfDocument(CompareTool.CreateTestPdfWriter(file1));
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.Rectangle(100, 600, 100, 100);
@@ -314,14 +330,14 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.Release();
             page1.Flush();
             pdfDoc1.Close();
-            pdfDoc1 = new PdfDocument(new PdfReader(file1));
+            pdfDoc1 = new PdfDocument(CompareTool.CreateOutputReader(file1));
             page1 = pdfDoc1.GetPage(1);
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(file2));
+            PdfDocument pdfDoc2 = new PdfDocument(CompareTool.CreateTestPdfWriter(file2));
             PdfPage page2 = page1.CopyTo(pdfDoc2);
             pdfDoc2.AddPage(page2);
             page2.Flush();
             pdfDoc2.Close();
-            PdfReader reader = new PdfReader(file2);
+            PdfReader reader = CompareTool.CreateOutputReader(file2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             for (int i = 1; i <= pdfDocument.GetNumberOfPages(); i++) {
                 PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
@@ -340,7 +356,8 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CopyPagesTest2() {
             String file1 = DESTINATION_FOLDER + "copyPages2_1.pdf";
             String file2 = DESTINATION_FOLDER + "copyPages2_2.pdf";
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(file1));
+            PdfWriter writer1 = CompareTool.CreateTestPdfWriter(file1);
+            PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 0; i < 10; i++) {
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page1);
@@ -355,23 +372,24 @@ namespace iText.Kernel.Pdf.Canvas {
                 page1.Flush();
             }
             pdfDoc1.Close();
-            pdfDoc1 = new PdfDocument(new PdfReader(file1));
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(file2));
+            pdfDoc1 = new PdfDocument(CompareTool.CreateOutputReader(file1));
+            PdfWriter writer2 = CompareTool.CreateTestPdfWriter(file2);
+            PdfDocument pdfDoc2 = new PdfDocument(writer2);
             for (int i = 9; i >= 0; i--) {
                 PdfPage page2 = pdfDoc1.GetPage(i + 1).CopyTo(pdfDoc2);
                 pdfDoc2.AddPage(page2);
             }
             pdfDoc1.Close();
             pdfDoc2.Close();
-            PdfReader reader = new PdfReader(file2);
+            PdfReader reader = CompareTool.CreateOutputReader(file2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
             NUnit.Framework.Assert.IsNotNull(page.Get(PdfName.Parent));
             pdfDocument.Close();
             CompareTool cmpTool = new CompareTool();
-            PdfDocument doc1 = new PdfDocument(new PdfReader(file1));
-            PdfDocument doc2 = new PdfDocument(new PdfReader(file2));
+            PdfDocument doc1 = new PdfDocument(CompareTool.CreateOutputReader(file1));
+            PdfDocument doc2 = new PdfDocument(CompareTool.CreateOutputReader(file2));
             for (int i = 0; i < 10; i++) {
                 PdfDictionary page1 = doc1.GetPage(i + 1).GetPdfObject();
                 PdfDictionary page2 = doc2.GetPage(10 - i).GetPdfObject();
@@ -385,7 +403,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CopyPagesTest3() {
             String file1 = DESTINATION_FOLDER + "copyPages3_1.pdf";
             String file2 = DESTINATION_FOLDER + "copyPages3_2.pdf";
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(file1));
+            PdfDocument pdfDoc1 = new PdfDocument(CompareTool.CreateTestPdfWriter(file1));
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.Rectangle(100, 600, 100, 100);
@@ -398,9 +416,9 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.Release();
             page1.Flush();
             pdfDoc1.Close();
-            pdfDoc1 = new PdfDocument(new PdfReader(file1));
+            pdfDoc1 = new PdfDocument(CompareTool.CreateOutputReader(file1));
             page1 = pdfDoc1.GetPage(1);
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(file2));
+            PdfDocument pdfDoc2 = new PdfDocument(CompareTool.CreateTestPdfWriter(file2));
             for (int i = 0; i < 10; i++) {
                 PdfPage page2 = page1.CopyTo(pdfDoc2);
                 pdfDoc2.AddPage(page2);
@@ -411,11 +429,11 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDoc1.Close();
             pdfDoc2.Close();
             CompareTool cmpTool = new CompareTool();
-            PdfReader reader1 = new PdfReader(file1);
+            PdfReader reader1 = CompareTool.CreateOutputReader(file1);
             PdfDocument doc1 = new PdfDocument(reader1);
             NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
             PdfDictionary p1 = doc1.GetPage(1).GetPdfObject();
-            PdfReader reader2 = new PdfReader(file2);
+            PdfReader reader2 = CompareTool.CreateOutputReader(file2);
             PdfDocument doc2 = new PdfDocument(reader2);
             NUnit.Framework.Assert.AreEqual(false, reader2.HasRebuiltXref(), "Rebuilt");
             for (int i = 0; i < 10; i++) {
@@ -429,7 +447,8 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest4() {
             String file1 = DESTINATION_FOLDER + "copyPages4_1.pdf";
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(file1));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(file1);
+            PdfDocument pdfDoc1 = new PdfDocument(writer);
             for (int i = 0; i < 5; i++) {
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page1);
@@ -443,23 +462,23 @@ namespace iText.Kernel.Pdf.Canvas {
                 canvas.Release();
             }
             pdfDoc1.Close();
-            pdfDoc1 = new PdfDocument(new PdfReader(file1));
+            pdfDoc1 = new PdfDocument(CompareTool.CreateOutputReader(file1));
             for (int i = 0; i < 5; i++) {
-                PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + MessageFormatUtil.Format("copyPages4_{0}.pdf"
-                    , i + 2)));
+                PdfDocument pdfDoc2 = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + MessageFormatUtil
+                    .Format("copyPages4_{0}.pdf", i + 2)));
                 PdfPage page2 = pdfDoc1.GetPage(i + 1).CopyTo(pdfDoc2);
                 pdfDoc2.AddPage(page2);
                 pdfDoc2.Close();
             }
             pdfDoc1.Close();
             CompareTool cmpTool = new CompareTool();
-            PdfReader reader1 = new PdfReader(file1);
+            PdfReader reader1 = CompareTool.CreateOutputReader(file1);
             PdfDocument doc1 = new PdfDocument(reader1);
             NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
             for (int i = 0; i < 5; i++) {
                 PdfDictionary page1 = doc1.GetPage(i + 1).GetPdfObject();
-                PdfDocument doc2 = new PdfDocument(new PdfReader(DESTINATION_FOLDER + MessageFormatUtil.Format("copyPages4_{0}.pdf"
-                    , i + 2)));
+                PdfDocument doc2 = new PdfDocument(CompareTool.CreateOutputReader(DESTINATION_FOLDER + MessageFormatUtil.Format
+                    ("copyPages4_{0}.pdf", i + 2)));
                 PdfDictionary page = doc2.GetPage(1).GetPdfObject();
                 NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(page1, page));
                 doc2.Close();
@@ -471,8 +490,8 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CopyPagesTest5() {
             int documentCount = 3;
             for (int i = 0; i < documentCount; i++) {
-                PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + MessageFormatUtil.Format("copyPages5_{0}.pdf"
-                    , i + 1)));
+                PdfDocument pdfDoc1 = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + MessageFormatUtil
+                    .Format("copyPages5_{0}.pdf", i + 1)));
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page1);
                 canvas.Rectangle(100, 600, 100, 100);
@@ -487,11 +506,12 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             IList<PdfDocument> docs = new List<PdfDocument>();
             for (int i = 0; i < documentCount; i++) {
-                PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(DESTINATION_FOLDER + MessageFormatUtil.Format("copyPages5_{0}.pdf"
-                    , i + 1)));
+                PdfDocument pdfDoc1 = new PdfDocument(CompareTool.CreateOutputReader(DESTINATION_FOLDER + MessageFormatUtil
+                    .Format("copyPages5_{0}.pdf", i + 1)));
                 docs.Add(pdfDoc1);
             }
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "copyPages5_4.pdf"));
+            PdfDocument pdfDoc2 = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "copyPages5_4.pdf"
+                ));
             for (int i = 0; i < 3; i++) {
                 pdfDoc2.AddPage(docs[i].GetPage(1).CopyTo(pdfDoc2));
             }
@@ -501,11 +521,11 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             CompareTool cmpTool = new CompareTool();
             for (int i = 0; i < 3; i++) {
-                PdfReader reader1 = new PdfReader(DESTINATION_FOLDER + MessageFormatUtil.Format("copyPages5_{0}.pdf", i + 
-                    1));
+                PdfReader reader1 = CompareTool.CreateOutputReader(DESTINATION_FOLDER + MessageFormatUtil.Format("copyPages5_{0}.pdf"
+                    , i + 1));
                 PdfDocument doc1 = new PdfDocument(reader1);
                 NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
-                PdfReader reader2 = new PdfReader(DESTINATION_FOLDER + "copyPages5_4.pdf");
+                PdfReader reader2 = CompareTool.CreateOutputReader(DESTINATION_FOLDER + "copyPages5_4.pdf");
                 PdfDocument doc2 = new PdfDocument(reader2);
                 NUnit.Framework.Assert.AreEqual(false, reader2.HasRebuiltXref(), "Rebuilt");
                 PdfDictionary page1 = doc1.GetPage(1).GetPdfObject();
@@ -522,7 +542,8 @@ namespace iText.Kernel.Pdf.Canvas {
             String file2 = DESTINATION_FOLDER + "copyPages6_2.pdf";
             String file3 = DESTINATION_FOLDER + "copyPages6_3.pdf";
             String file1_upd = DESTINATION_FOLDER + "copyPages6_1_upd.pdf";
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(file1));
+            PdfWriter writer1 = CompareTool.CreateTestPdfWriter(file1);
+            PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.Rectangle(100, 600, 100, 100);
@@ -534,33 +555,36 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.EndText();
             canvas.Release();
             pdfDoc1.Close();
-            pdfDoc1 = new PdfDocument(new PdfReader(file1));
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(file2));
+            pdfDoc1 = new PdfDocument(CompareTool.CreateOutputReader(file1));
+            PdfWriter writer2 = CompareTool.CreateTestPdfWriter(file2);
+            PdfDocument pdfDoc2 = new PdfDocument(writer2);
             pdfDoc2.AddPage(pdfDoc1.GetPage(1).CopyTo(pdfDoc2));
             pdfDoc2.Close();
-            pdfDoc2 = new PdfDocument(new PdfReader(file2));
-            PdfDocument pdfDoc3 = new PdfDocument(new PdfWriter(file3));
+            pdfDoc2 = new PdfDocument(CompareTool.CreateOutputReader(file2));
+            PdfWriter writer3 = CompareTool.CreateTestPdfWriter(file3);
+            PdfDocument pdfDoc3 = new PdfDocument(writer3);
             pdfDoc3.AddPage(pdfDoc2.GetPage(1).CopyTo(pdfDoc3));
             pdfDoc3.Close();
-            pdfDoc3 = new PdfDocument(new PdfReader(file3));
+            pdfDoc3 = new PdfDocument(CompareTool.CreateOutputReader(file3));
             pdfDoc1.Close();
-            pdfDoc1 = new PdfDocument(new PdfReader(file1), new PdfWriter(file1_upd));
+            PdfWriter writer1_ipd = CompareTool.CreateTestPdfWriter(file1_upd);
+            pdfDoc1 = new PdfDocument(CompareTool.CreateOutputReader(file1), writer1_ipd);
             pdfDoc1.AddPage(pdfDoc3.GetPage(1).CopyTo(pdfDoc1));
             pdfDoc1.Close();
             pdfDoc2.Close();
             pdfDoc3.Close();
             CompareTool cmpTool = new CompareTool();
             for (int i = 0; i < 3; i++) {
-                PdfReader reader1 = new PdfReader(file1);
+                PdfReader reader1 = CompareTool.CreateOutputReader(file1);
                 PdfDocument doc1 = new PdfDocument(reader1);
                 NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
-                PdfReader reader2 = new PdfReader(file2);
+                PdfReader reader2 = CompareTool.CreateOutputReader(file2);
                 PdfDocument doc2 = new PdfDocument(reader2);
                 NUnit.Framework.Assert.AreEqual(false, reader2.HasRebuiltXref(), "Rebuilt");
-                PdfReader reader3 = new PdfReader(file3);
+                PdfReader reader3 = CompareTool.CreateOutputReader(file3);
                 PdfDocument doc3 = new PdfDocument(reader3);
                 NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-                PdfReader reader4 = new PdfReader(file1_upd);
+                PdfReader reader4 = CompareTool.CreateOutputReader(file1_upd);
                 PdfDocument doc4 = new PdfDocument(reader4);
                 NUnit.Framework.Assert.AreEqual(false, reader4.HasRebuiltXref(), "Rebuilt");
                 NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(doc1.GetPage(1).GetPdfObject(), doc4.GetPage(2).
@@ -598,7 +622,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void MarkedContentTest2() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "markedContentTest2.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "markedContentTest2.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
@@ -637,7 +662,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void WmfImageTest01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "wmfImageTest01.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "wmfImageTest01.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = new WmfImageData(SOURCE_FOLDER + "example.wmf");
@@ -649,7 +675,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void WmfImageTest02() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "wmfImageTest02.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "wmfImageTest02.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = new WmfImageData(SOURCE_FOLDER + "butterfly.wmf");
@@ -661,7 +688,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void WmfImageTest03() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "wmfImageTest03.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "wmfImageTest03.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = new WmfImageData(SOURCE_FOLDER + "type1.wmf");
@@ -673,7 +701,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void WmfImageTest04() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "wmfImageTest04.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "wmfImageTest04.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = new WmfImageData(SOURCE_FOLDER + "type0.wmf");
@@ -685,7 +714,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void WmfImageTest05() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "wmfImageTest05.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "wmfImageTest05.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             Stream stream = UrlUtil.OpenStream(UrlUtil.ToURL(SOURCE_FOLDER + "example2.wmf"));
@@ -700,7 +730,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void GifImageTest01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "gifImageTest01.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "gifImageTest01.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = ImageDataFactory.Create(SOURCE_FOLDER + "2-frames.gif");
@@ -712,7 +743,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void GifImageTest02() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "gifImageTest02.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "gifImageTest02.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             Stream @is = new FileStream(SOURCE_FOLDER + "2-frames.gif", FileMode.Open, FileAccess.Read);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -731,7 +763,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void GifImageTest03() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "gifImageTest03.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "gifImageTest03.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             Stream @is = new FileStream(SOURCE_FOLDER + "2-frames.gif", FileMode.Open, FileAccess.Read);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -750,7 +783,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void GifImageTest04() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "gifImageTest04.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "gifImageTest04.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             Stream @is = new FileStream(SOURCE_FOLDER + "2-frames.gif", FileMode.Open, FileAccess.Read);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -770,7 +804,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void GifImageTest05() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "gifImageTest05.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "gifImageTest05.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             Stream @is = new FileStream(SOURCE_FOLDER + "animated_fox_dog.gif", FileMode.Open, FileAccess.Read);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -798,7 +833,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String srcFile = SOURCE_FOLDER + "pageNoContents.pdf";
             String cmpFile = SOURCE_FOLDER + "cmp_pageNoContentsStamp.pdf";
             String destFile = DESTINATION_FOLDER + "pageNoContentsStamp.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(srcFile), new PdfWriter(destFile));
+            PdfDocument document = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(destFile));
             PdfCanvas canvas = new PdfCanvas(document.GetPage(1));
             canvas.SetLineWidth(5).Rectangle(50, 680, 300, 50).Stroke();
             canvas.Release();
@@ -812,7 +847,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String srcFile = SOURCE_FOLDER + "pageWithContent.pdf";
             String cmpFile = SOURCE_FOLDER + "cmp_stampingExistingStream.pdf";
             String destFile = DESTINATION_FOLDER + "stampingExistingStream.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(srcFile), new PdfWriter(destFile));
+            PdfDocument document = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(destFile));
             PdfPage page = document.GetPage(1);
             PdfCanvas canvas = new PdfCanvas(page.GetLastContentStream(), page.GetResources(), page.GetDocument());
             canvas.SetLineWidth(5).Rectangle(50, 680, 300, 50).Stroke();
@@ -828,7 +863,7 @@ namespace iText.Kernel.Pdf.Canvas {
             String cmpFile = SOURCE_FOLDER + "cmp_stampingJustCopiedStreamWithCompression.pdf";
             String destFile = DESTINATION_FOLDER + "stampingJustCopiedStreamWithCompression.pdf";
             PdfDocument srcDocument = new PdfDocument(new PdfReader(srcFile));
-            PdfDocument document = new PdfDocument(new PdfWriter(destFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destFile));
             srcDocument.CopyPagesTo(1, 1, document);
             srcDocument.Close();
             PdfPage page = document.GetPage(1);
@@ -844,7 +879,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CanvasSmallFontSize01() {
             String cmpFile = SOURCE_FOLDER + "cmp_canvasSmallFontSize01.pdf";
             String destFile = DESTINATION_FOLDER + "canvasSmallFontSize01.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destFile));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destFile));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(50, 750).SetFontAndSize(PdfFontFactory.CreateFont(), 0).ShowText("simple text"
@@ -865,7 +900,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void AddWmfImageTest() {
-            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "addWmfImage.pdf"));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "addWmfImage.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = new WmfImageData(SOURCE_FOLDER + "example2.wmf");
@@ -879,7 +915,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetLeadingPositiveTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setLeadingPositive.pdf";
             String outPdf = DESTINATION_FOLDER + "setLeadingPositive.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(50, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText(
@@ -897,7 +933,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetLeadingNegativeTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setLeadingNegative.pdf";
             String outPdf = DESTINATION_FOLDER + "setLeadingNegative.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(50, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText(
@@ -916,7 +952,7 @@ namespace iText.Kernel.Pdf.Canvas {
             //TODO DEVSIX-6486 Transformation matrix of wrong length are processed without any warning
             String cmpPdf = SOURCE_FOLDER + "cmp_wrongLengthOfTransMatrix.pdf";
             String outPdf = DESTINATION_FOLDER + "wrongLengthOfTransMatrix.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             PdfArray wrongNumberOfTransMatrix = new PdfArray(new int[] { 1, 0, 0, 1, 100 });
@@ -931,7 +967,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void ConcatMatrixPdfArrayTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_concatMatrixPdfArray.pdf";
             String outPdf = DESTINATION_FOLDER + "concatMatrixPdfArray.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             PdfArray arrayTransformationMatrix = new PdfArray(new int[] { 3, 1, 1, 3, 50, 700 });
@@ -946,7 +982,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetMoveTextWithLeadingTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setMoveTextWithLeading.pdf";
             String outPdf = DESTINATION_FOLDER + "setMoveTextWithLeading.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(50, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText(
@@ -964,7 +1000,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetNewLineTextTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setNewLineText.pdf";
             String outPdf = DESTINATION_FOLDER + "setNewLineText.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(50, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText(
@@ -980,7 +1016,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetPositiveTextRiseValueTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setPositiveTextRiseValue.pdf";
             String outPdf = DESTINATION_FOLDER + "setPositiveTextRiseValue.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(100, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText
@@ -996,7 +1032,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetNegativeTextRiseValueTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setNegativeTextRiseValue.pdf";
             String outPdf = DESTINATION_FOLDER + "setNegativeTextRiseValue.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(100, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText
@@ -1012,7 +1048,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetPositiveWordSpacingValueTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setPositiveWordSpacingValue.pdf";
             String outPdf = DESTINATION_FOLDER + "setPositiveWordSpacingValue.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(50, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText(
@@ -1028,7 +1064,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetNegativeWordSpacingValueTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setNegativeWordSpacingValue.pdf";
             String outPdf = DESTINATION_FOLDER + "setNegativeWordSpacingValue.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(50, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText(
@@ -1044,7 +1080,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetPositiveCharSpacingValueTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setPositiveCharSpacingValue.pdf";
             String outPdf = DESTINATION_FOLDER + "setPositiveCharSpacingValue.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(50, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText(
@@ -1060,7 +1096,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetNegativeCharSpacingValueTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setNegativeCharSpacingValue.pdf";
             String outPdf = DESTINATION_FOLDER + "setNegativeCharSpacingValue.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(50, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText(
@@ -1076,7 +1112,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetNegativeHorizontalScalingValueTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setNegativeHorizontalScalingValue.pdf";
             String outPdf = DESTINATION_FOLDER + "setNegativeHorizontalScalingValue.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(50, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText(
@@ -1092,7 +1128,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void SetPositiveHorizontalScalingValueTest() {
             String cmpPdf = SOURCE_FOLDER + "cmp_setPositiveHorizontalScalingValue.pdf";
             String outPdf = DESTINATION_FOLDER + "setPositiveHorizontalScalingValue.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage documentPage = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(documentPage);
             canvas.SaveState().BeginText().MoveText(50, 700).SetFontAndSize(PdfFontFactory.CreateFont(), 14).ShowText(
@@ -1108,7 +1144,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CreateSimpleCanvasWithPdfArrayText() {
             String outPdf = DESTINATION_FOLDER + "createSimpleCanvasWithPdfArrayText.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_createSimpleCanvasWithPdfArrayText.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             PdfArray pdfArray = new PdfArray();
@@ -1139,7 +1175,7 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         private void AssertStandardDocument(String filename, int pageCount) {
-            PdfReader reader = new PdfReader(filename);
+            PdfReader reader = CompareTool.CreateOutputReader(filename);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);

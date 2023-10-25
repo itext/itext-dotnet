@@ -45,9 +45,15 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ActionTest01() {
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + "actionTest01.pdf"), true);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "actionTest01.pdf"
+                ), true);
             document.GetCatalog().SetOpenAction(PdfAction.CreateURI("http://itextpdf.com/"));
             document.Close();
             System.Console.Out.WriteLine(MessageFormatUtil.Format("Please open document {0} and make sure that you're automatically redirected to {1} site."
@@ -56,7 +62,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ActionTest02() {
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + "actionTest02.pdf"), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "actionTest02.pdf"
+                ), false);
             document.GetPage(2).SetAdditionalAction(PdfName.O, PdfAction.CreateURI("http://itextpdf.com/"));
             document.Close();
             System.Console.Out.WriteLine(MessageFormatUtil.Format("Please open document {0} at page 2 and make sure that you're automatically redirected to {1} site."
@@ -66,7 +73,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SoundActionTest() {
             String fileName = "soundActionTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             Stream @is = new FileStream(sourceFolder + "sample.aif", FileMode.Open, FileAccess.Read);
             PdfStream sound1 = new PdfStream(document, @is);
             sound1.Put(PdfName.R, new PdfNumber(32117));
@@ -82,7 +90,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SoundActionWithRepeatFlagTest() {
             String fileName = "soundActionWithRepeatFlagTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             Stream @is = new FileStream(sourceFolder + "sample.aif", FileMode.Open, FileAccess.Read);
             PdfStream sound1 = new PdfStream(document, @is);
             sound1.Put(PdfName.R, new PdfNumber(32117));
@@ -150,7 +159,8 @@ namespace iText.Kernel.Pdf {
             IList<PdfActionOcgState> ocgStates = new List<PdfActionOcgState>();
             ocgStates.Add(new PdfActionOcgState(stateName, dicts));
             String fileName = "ocgStateTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             document.GetPage(1).SetAdditionalAction(PdfName.O, PdfAction.CreateSetOcgState(ocgStates));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
@@ -160,7 +170,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void LaunchActionTest() {
             String fileName = "launchActionTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             document.GetPage(1).SetAdditionalAction(PdfName.O, PdfAction.CreateLaunch(new PdfStringFS("launch.sh")));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
@@ -170,7 +181,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void LaunchActionOnNewWindowTest() {
             String fileName = "launchActionOnNewWindowTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             document.GetPage(1).SetAdditionalAction(PdfName.O, PdfAction.CreateLaunch(new PdfStringFS("launch.sh"), true
                 ));
             document.Close();
@@ -181,7 +193,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreateHiddenAnnotationTest() {
             String fileName = "createHiddenAnnotationTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             PdfAnnotation annotation = new PdfLineAnnotation(new Rectangle(10, 10, 200, 200), new float[] { 50, 750, 50
                 , 750 });
             document.GetPage(1).SetAdditionalAction(PdfName.O, PdfAction.CreateHide(annotation, true));
@@ -193,7 +206,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreateHiddenAnnotationsTest() {
             String fileName = "createHiddenAnnotationsTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             PdfAnnotation[] annotations = new PdfAnnotation[] { new PdfLineAnnotation(new Rectangle(10, 10, 200, 200), 
                 new float[] { 50, 750, 50, 750 }), new PdfLineAnnotation(new Rectangle(200, 200, 200, 200), new float[
                 ] { 50, 750, 50, 750 }) };
@@ -206,7 +220,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreateHiddenByFieldNameTest() {
             String fileName = "createHiddenByFieldNameTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             document.GetPage(1).SetAdditionalAction(PdfName.O, PdfAction.CreateHide("name", true));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
@@ -216,7 +231,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreateHiddenByFieldNamesTest() {
             String fileName = "createHiddenByFieldNamesTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             document.GetPage(1).SetAdditionalAction(PdfName.O, PdfAction.CreateHide(new String[] { "name1", "name2" }, 
                 true));
             document.Close();
@@ -227,7 +243,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreateNamedTest() {
             String fileName = "createNamedTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             document.GetPage(1).SetAdditionalAction(PdfName.O, PdfAction.CreateNamed(PdfName.LastPage));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
@@ -237,7 +254,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreateJavaScriptTest() {
             String fileName = "createJavaScriptTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             String javaScriptRotatePages = "this.setPageRotations(0,2,90)";
             document.GetPage(1).SetAdditionalAction(PdfName.O, PdfAction.CreateJavaScript(javaScriptRotatePages));
             document.Close();
@@ -248,7 +266,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SoundAndNextJavaScriptActionTest() {
             String fileName = "soundAndNextJavaScriptActionTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             Stream @is = new FileStream(sourceFolder + "sample.aif", FileMode.Open, FileAccess.Read);
             PdfStream sound1 = new PdfStream(document, @is);
             sound1.Put(PdfName.R, new PdfNumber(32117));
@@ -266,7 +285,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SoundAndTwoNextJavaScriptActionTest() {
             String fileName = "soundAndTwoNextJavaScriptActionTest.pdf";
-            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + fileName), false);
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
+                );
             Stream @is = new FileStream(sourceFolder + "sample.aif", FileMode.Open, FileAccess.Read);
             PdfStream sound1 = new PdfStream(document, @is);
             sound1.Put(PdfName.R, new PdfNumber(32117));

@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -37,16 +38,22 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void TestCreateAndUpdateXMP() {
             String created = destinationFolder + "testCreateAndUpdateXMP_create.pdf";
             String updated = destinationFolder + "testCreateAndUpdateXMP_update.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(created));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(created));
             pdfDocument.AddNewPage();
             // create XMP metadata
             pdfDocument.GetXmpMetadata(true);
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated));
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(created), CompareTool.CreateTestPdfWriter(updated
+                ));
             PdfXrefTable xref = pdfDocument.GetXref();
             PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
             ((PdfIndirectReference)catalog.Remove(PdfName.Metadata)).SetFree();
@@ -76,16 +83,18 @@ namespace iText.Kernel.Pdf {
             String created = destinationFolder + "testCreateAndUpdateTwiceXMP_create.pdf";
             String updated = destinationFolder + "testCreateAndUpdateTwiceXMP_update.pdf";
             String updatedAgain = destinationFolder + "testCreateAndUpdateTwiceXMP_updatedAgain.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(created));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(created));
             pdfDocument.AddNewPage();
             // create XMP metadata
             pdfDocument.GetXmpMetadata(true);
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated));
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(created), CompareTool.CreateTestPdfWriter(updated
+                ));
             PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
             ((PdfIndirectReference)catalog.Remove(PdfName.Metadata)).SetFree();
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(updated), new PdfWriter(updatedAgain));
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(updated), CompareTool.CreateTestPdfWriter(updatedAgain
+                ));
             catalog = pdfDocument.GetCatalog().GetPdfObject();
             ((PdfIndirectReference)catalog.Remove(PdfName.Metadata)).SetFree();
             PdfXrefTable xref = pdfDocument.GetXref();

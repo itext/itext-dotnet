@@ -46,13 +46,18 @@ namespace iText.Kernel.Pdf.Copy {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("Unignore when DEVSIX-3585 would be implemented")]
         public virtual void TestCopyingPageWithAnnotationContainingPopupKey() {
             String inFilePath = SOURCE_FOLDER + "annotation-with-popup.pdf";
             String outFilePath = DESTINATION_FOLDER + "copy-annotation-with-popup.pdf";
             PdfDocument originalDocument = new PdfDocument(new PdfReader(inFilePath));
-            PdfDocument outDocument = new PdfDocument(new PdfWriter(outFilePath));
+            PdfDocument outDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFilePath));
             originalDocument.CopyPagesTo(1, 1, outDocument);
             // During the second copy call we have to rebuild/preserve all the annotation relationship (Popup in this case),
             // so that we don't end up with annotation on one page referring to an annotation on another page as its popup
@@ -93,7 +98,7 @@ namespace iText.Kernel.Pdf.Copy {
             String inFilePath = SOURCE_FOLDER + "annotation-with-irt.pdf";
             String outFilePath = DESTINATION_FOLDER + "copy-annotation-with-irt.pdf";
             PdfDocument originalDocument = new PdfDocument(new PdfReader(inFilePath));
-            PdfDocument outDocument = new PdfDocument(new PdfWriter(outFilePath));
+            PdfDocument outDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFilePath));
             originalDocument.CopyPagesTo(1, 1, outDocument);
             // During the second copy call we have to rebuild/preserve all the annotation relationship (IRT in this case),
             // so that we don't end up with annotation on one page referring to an annotation on another page as its IRT
@@ -129,7 +134,8 @@ namespace iText.Kernel.Pdf.Copy {
         public virtual void CopySameLinksWithGoToSmartModeTest() {
             String cmpFilePath = SOURCE_FOLDER + "cmp_copySameLinksWithGoToSmartMode.pdf";
             String outFilePath = DESTINATION_FOLDER + "copySameLinksWithGoToSmartMode.pdf";
-            CopyLinksGoToActionTest(outFilePath, true, false);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFilePath).SetSmartMode(true);
+            CopyLinksGoToActionTest(writer, true, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, DESTINATION_FOLDER
                 ));
         }
@@ -138,7 +144,8 @@ namespace iText.Kernel.Pdf.Copy {
         public virtual void CopyDiffDestLinksWithGoToSmartModeTest() {
             String cmpFilePath = SOURCE_FOLDER + "cmp_copyDiffDestLinksWithGoToSmartMode.pdf";
             String outFilePath = DESTINATION_FOLDER + "copyDiffDestLinksWithGoToSmartMode.pdf";
-            CopyLinksGoToActionTest(outFilePath, false, false);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFilePath).SetSmartMode(true);
+            CopyLinksGoToActionTest(writer, false, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, DESTINATION_FOLDER
                 ));
         }
@@ -147,7 +154,8 @@ namespace iText.Kernel.Pdf.Copy {
         public virtual void CopyDiffDisplayLinksWithGoToSmartModeTest() {
             String cmpFilePath = SOURCE_FOLDER + "cmp_copyDiffDisplayLinksWithGoToSmartMode.pdf";
             String outFilePath = DESTINATION_FOLDER + "copyDiffDisplayLinksWithGoToSmartMode.pdf";
-            CopyLinksGoToActionTest(outFilePath, false, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFilePath).SetSmartMode(true);
+            CopyLinksGoToActionTest(writer, false, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFilePath, cmpFilePath, DESTINATION_FOLDER
                 ));
         }
@@ -178,8 +186,8 @@ namespace iText.Kernel.Pdf.Copy {
             CopyPages(srcFilePath, outFilePath, cmpFilePath);
         }
 
-        private void CopyLinksGoToActionTest(String dest, bool isTheSameLinks, bool diffDisplayOptions) {
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(dest).SetSmartMode(true));
+        private void CopyLinksGoToActionTest(PdfWriter writer, bool isTheSameLinks, bool diffDisplayOptions) {
+            PdfDocument destDoc = new PdfDocument(writer);
             MemoryStream sourceBaos1 = CreatePdfWithGoToAnnot(isTheSameLinks, diffDisplayOptions);
             PdfDocument sourceDoc1 = new PdfDocument(new PdfReader(new MemoryStream(sourceBaos1.ToArray())));
             sourceDoc1.CopyPagesTo(1, sourceDoc1.GetNumberOfPages(), destDoc);
@@ -188,14 +196,13 @@ namespace iText.Kernel.Pdf.Copy {
         }
 
         private void CopyPages(String sourceFile, String outFilePath, String cmpFilePath) {
-            using (PdfWriter writer = new PdfWriter(outFilePath)) {
-                using (PdfDocument pdfDoc = new PdfDocument(writer)) {
-                    pdfDoc.AddNewPage();
-                    pdfDoc.AddNewPage();
-                    using (PdfReader reader = new PdfReader(sourceFile)) {
-                        using (PdfDocument srcDoc = new PdfDocument(reader)) {
-                            srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), pdfDoc);
-                        }
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFilePath);
+            using (PdfDocument pdfDoc = new PdfDocument(writer)) {
+                pdfDoc.AddNewPage();
+                pdfDoc.AddNewPage();
+                using (PdfReader reader = new PdfReader(sourceFile)) {
+                    using (PdfDocument srcDoc = new PdfDocument(reader)) {
+                        srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), pdfDoc);
                     }
                 }
             }
