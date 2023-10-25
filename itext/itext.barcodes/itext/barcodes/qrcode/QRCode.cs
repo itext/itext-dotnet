@@ -24,6 +24,18 @@ using System;
 using System.Text;
 
 namespace iText.Barcodes.Qrcode {
+    /// <summary>
+    /// A QR code (short for "quick-response code") is a type of two-dimensional matrix barcode, invented in 1994, by
+    /// Japanese company Denso Wave for labelling automobile parts.[1][2] A barcode is a machine-readable optical image that
+    /// contains information specific to the labelled item.
+    /// </summary>
+    /// <remarks>
+    /// A QR code (short for "quick-response code") is a type of two-dimensional matrix barcode, invented in 1994, by
+    /// Japanese company Denso Wave for labelling automobile parts.[1][2] A barcode is a machine-readable optical image that
+    /// contains information specific to the labelled item. In practice, QR codes contain data for a locator, an identifier,
+    /// and web tracking. To efficiently store data, QR codes use four standardized modes of encoding (i) numeric, (ii)
+    /// alphanumeric, (iii) byte or binary, and (iv) kanji.[3]
+    /// </remarks>
     internal sealed class QRCode {
         public const int NUM_MASK_PATTERNS = 8;
 

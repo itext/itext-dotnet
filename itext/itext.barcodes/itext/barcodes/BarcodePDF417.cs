@@ -34,6 +34,16 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Barcodes {
+    /// <summary>
+    /// PDF417 is a stacked linear barcode format used in a variety of applications such as transport, identification cards,
+    /// and inventory management.
+    /// </summary>
+    /// <remarks>
+    /// PDF417 is a stacked linear barcode format used in a variety of applications such as transport, identification cards,
+    /// and inventory management. "PDF" stands for Portable Data File. The "417" signifies that each pattern in the code
+    /// consists of 4 bars and spaces in a pattern that is 17 units (modules) long.
+    /// It is defined in ISO 15438.
+    /// </remarks>
     public class BarcodePDF417 : Barcode2D {
         /// <summary>Auto-size is made based on <c>aspectRatio</c> and <c>yHeight</c>.</summary>
         public const int PDF417_USE_ASPECT_RATIO = 0;
@@ -521,15 +531,34 @@ namespace iText.Barcodes {
             aspectRatio = 0.5f;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override Rectangle GetBarcodeSize() {
             PaintCode();
             return new Rectangle(0, 0, bitColumns, codeRows);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground) {
             return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE, DEFAULT_MODULE_SIZE);
         }
 
+        /// <summary>
+        /// Places the barcode in a
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>.
+        /// </summary>
+        /// <param name="canvas">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// where the barcode will be placed
+        /// </param>
+        /// <param name="foreground">
+        /// the
+        /// <see cref="iText.Kernel.Colors.Color"/>
+        /// of the bars of the barcode
+        /// </param>
+        /// <param name="moduleWidth">the width of the thinnest bar</param>
+        /// <param name="moduleHeight">the height of the bars</param>
+        /// <returns>the dimensions the barcode occupies</returns>
         public virtual Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground, float moduleWidth, float moduleHeight
             ) {
             PaintCode();
@@ -900,6 +929,8 @@ namespace iText.Barcodes {
             this.yHeight = yHeight;
         }
 
+        /// <summary>Adds the code word to the correct code word to the 17th bit.</summary>
+        /// <param name="codeword">the code word</param>
         protected internal virtual void OutCodeword17(int codeword) {
             int bytePtr = bitPtr / 8;
             int bit = bitPtr - bytePtr * 8;
@@ -910,6 +941,8 @@ namespace iText.Barcodes {
             bitPtr += 17;
         }
 
+        /// <summary>Adds the code word to the correct code word to the 18th bit.</summary>
+        /// <param name="codeword">the code word</param>
         protected internal virtual void OutCodeword18(int codeword) {
             int bytePtr = bitPtr / 8;
             int bit = bitPtr - bytePtr * 8;
@@ -923,18 +956,23 @@ namespace iText.Barcodes {
             bitPtr += 18;
         }
 
+        /// <summary>Utility method that adds a codeword to the barcode.</summary>
+        /// <param name="codeword">the codeword to add</param>
         protected internal virtual void OutCodeword(int codeword) {
             OutCodeword17(codeword);
         }
 
+        /// <summary>Adds the stop pattern to the output.</summary>
         protected internal virtual void OutStopPattern() {
             OutCodeword18(STOP_PATTERN);
         }
 
+        /// <summary>Adds the start pattern to the output.</summary>
         protected internal virtual void OutStartPattern() {
             OutCodeword17(START_PATTERN);
         }
 
+        /// <summary>Adds the barcode to the output bits.</summary>
         protected internal virtual void OutPaintCode() {
             int codePtr = 0;
             bitColumns = START_CODE_SIZE * (codeColumns + 3) + STOP_SIZE;
@@ -992,6 +1030,8 @@ namespace iText.Barcodes {
             }
         }
 
+        /// <summary>Calculates the error correction codewords.</summary>
+        /// <param name="dest">length of the code words</param>
         protected internal virtual void CalculateErrorCorrection(int dest) {
             if (errorLevel < 0 || errorLevel > 8) {
                 errorLevel = 0;
@@ -1015,18 +1055,32 @@ namespace iText.Barcodes {
             }
         }
 
+        /// <summary>Compacts the codewords.</summary>
+        /// <param name="start">the start position</param>
+        /// <param name="length">the length</param>
         protected internal virtual void TextCompaction(int start, int length) {
             TextCompaction(code, start, length);
         }
 
+        /// <summary>Compacts the codewords.</summary>
+        /// <param name="start">the start position</param>
+        /// <param name="length">the length</param>
         protected internal virtual void BasicNumberCompaction(int start, int length) {
             BasicNumberCompaction(code, start, length);
         }
 
+        /// <summary>Gets the text type and value.</summary>
+        /// <param name="maxLength">the maximum length</param>
+        /// <param name="idx">the index</param>
+        /// <returns>the text type and value</returns>
         protected internal virtual int GetTextTypeAndValue(int maxLength, int idx) {
             return GetTextTypeAndValue(code, maxLength, idx);
         }
 
+        /// <summary>Checks whether the segment is of a certain type.</summary>
+        /// <param name="segment">the segment to check</param>
+        /// <param name="type">the type to check against</param>
+        /// <returns>true if the segment is of the specified type</returns>
         protected internal virtual bool CheckSegmentType(BarcodePDF417.Segment segment, char type) {
             if (segment == null) {
                 return false;
@@ -1034,6 +1088,9 @@ namespace iText.Barcodes {
             return segment.type == type;
         }
 
+        /// <summary>Calculates the length of the given segment</summary>
+        /// <param name="segment">the segment to check</param>
+        /// <returns>the length of the segment</returns>
         protected internal virtual int GetSegmentLength(BarcodePDF417.Segment segment) {
             if (segment == null) {
                 return 0;
@@ -1041,10 +1098,15 @@ namespace iText.Barcodes {
             return segment.end - segment.start;
         }
 
+        /// <summary>Compacts the code words.</summary>
+        /// <param name="start">the start position</param>
+        /// <param name="length">the length</param>
         protected internal virtual void NumberCompaction(int start, int length) {
             NumberCompaction(code, start, length);
         }
 
+        /// <summary>Compacts the code words</summary>
+        /// <param name="start">the start position</param>
         protected internal virtual void ByteCompaction6(int start) {
             int length = 6;
             int ret = cwPtr;
@@ -1071,6 +1133,7 @@ namespace iText.Barcodes {
             }
         }
 
+        /// <summary>Assembles the data of the code words.</summary>
         protected internal virtual void Assemble() {
             int k;
             if (segmentList.Size() == 0) {
@@ -1106,6 +1169,9 @@ namespace iText.Barcodes {
             }
         }
 
+        /// <summary>Calculates the highest error level that can be used for the remaining number of data codewords.</summary>
+        /// <param name="remain">the number of data codewords</param>
+        /// <returns>the highest error level that can be used</returns>
         protected internal static int MaxPossibleErrorLevel(int remain) {
             int level = 8;
             int size = 512;
@@ -1119,6 +1185,7 @@ namespace iText.Barcodes {
             return 0;
         }
 
+        /// <summary>Prints the segments to standard output.</summary>
         protected internal virtual void DumpList() {
             if (segmentList.Size() == 0) {
                 return;
@@ -1140,6 +1207,12 @@ namespace iText.Barcodes {
             }
         }
 
+        /// <summary>Calculates the max square that can contain the barcode.</summary>
+        /// <remarks>
+        /// Calculates the max square that can contain the barcode.
+        /// And sets the codeColumns and codeRows variables.
+        /// </remarks>
+        /// <returns>the max square that can contain the barcode</returns>
         protected internal virtual int GetMaxSquare() {
             if (codeColumns > 21) {
                 codeColumns = 29;
@@ -1576,6 +1649,7 @@ namespace iText.Barcodes {
             }
         }
 
+        /// <summary>A container that encapsulates all data needed for a segment.</summary>
         protected internal class Segment {
             public char type;
 
@@ -1583,6 +1657,14 @@ namespace iText.Barcodes {
 
             public int end;
 
+            /// <summary>
+            /// Creates a new
+            /// <see cref="Segment"/>
+            /// instance.
+            /// </summary>
+            /// <param name="type">the type of segment</param>
+            /// <param name="start">the start of the segment</param>
+            /// <param name="end">the end of the segment</param>
             public Segment(char type, int start, int end) {
                 this.type = type;
                 this.start = start;
@@ -1590,13 +1672,21 @@ namespace iText.Barcodes {
             }
         }
 
+        /// <summary>An utility class that encapsulates a list of segments.</summary>
         protected internal class SegmentList {
             protected internal IList<BarcodePDF417.Segment> list = new List<BarcodePDF417.Segment>();
 
+            /// <summary>Adds a new segment to the list</summary>
+            /// <param name="type">the type of the segment</param>
+            /// <param name="start">the start position</param>
+            /// <param name="end">the end position</param>
             public virtual void Add(char type, int start, int end) {
                 list.Add(new BarcodePDF417.Segment(type, start, end));
             }
 
+            /// <summary>Gets the segment at the specified index</summary>
+            /// <param name="idx">the index</param>
+            /// <returns>the segment at the specified index or null if the index is out of bounds</returns>
             public virtual BarcodePDF417.Segment Get(int idx) {
                 if (idx < 0 || idx >= list.Count) {
                     return null;
@@ -1604,6 +1694,8 @@ namespace iText.Barcodes {
                 return list[idx];
             }
 
+            /// <summary>Removes the segment at the specified index</summary>
+            /// <param name="idx">the index</param>
             public virtual void Remove(int idx) {
                 if (idx < 0 || idx >= list.Count) {
                     return;
@@ -1611,6 +1703,8 @@ namespace iText.Barcodes {
                 list.JRemoveAt(idx);
             }
 
+            /// <summary>Gets the number of segments in the list</summary>
+            /// <returns>the number of segments in the list</returns>
             public virtual int Size() {
                 return list.Count;
             }

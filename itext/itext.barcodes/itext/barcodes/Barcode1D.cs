@@ -30,11 +30,19 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Barcodes {
+    /// <summary>Base class for the barcode types that have 1D representation.</summary>
+    /// <remarks>
+    /// Base class for the barcode types that have 1D representation.
+    /// This means all data is encoded in the width of the bars. And the height of the bars is constant.
+    /// </remarks>
     public abstract class Barcode1D {
+        /// <summary>Constant that defines left alignment.</summary>
         public const int ALIGN_LEFT = 1;
 
+        /// <summary>Constant that defines right alignment.</summary>
         public const int ALIGN_RIGHT = 2;
 
+        /// <summary>Constant that defines center alignment.</summary>
         public const int ALIGN_CENTER = 3;
 
         // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
@@ -103,6 +111,12 @@ namespace iText.Barcodes {
         /// <summary>The alternate text to be used, if present.</summary>
         protected internal String altText;
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="Barcode1D"/>
+        /// instance.
+        /// </summary>
+        /// <param name="document">The document</param>
         protected internal Barcode1D(PdfDocument document) {
             this.document = document;
         }
@@ -144,6 +158,8 @@ namespace iText.Barcodes {
             this.font = font;
         }
 
+        /// <summary>Gets the size of the text.</summary>
+        /// <returns>the size</returns>
         public virtual float GetSize() {
             return size;
         }
@@ -411,6 +427,8 @@ namespace iText.Barcodes {
             SetX(x * width / GetBarcodeSize().GetWidth());
         }
 
+        /// <summary>Gets the descender value of the font.</summary>
+        /// <returns>the descender value of the font</returns>
         protected internal virtual float GetDescender() {
             float sizeCoefficient = FontProgram.ConvertTextSpaceToGlyphSpace(size);
             return font.GetFontProgram().GetFontMetrics().GetTypoDescender() * sizeCoefficient;

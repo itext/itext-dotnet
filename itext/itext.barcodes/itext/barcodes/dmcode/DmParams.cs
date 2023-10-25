@@ -21,6 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Barcodes.Dmcode {
+    /// <summary>Class that contains the parameters for a DM code.</summary>
+    /// <remarks>
+    /// Class that contains the parameters for a DM code.
+    /// It contains all the information needed to create one data matrix entry
+    /// </remarks>
     public class DmParams {
         /// <summary>Creates a DM code parameter block</summary>
         /// <param name="height">total height</param>
