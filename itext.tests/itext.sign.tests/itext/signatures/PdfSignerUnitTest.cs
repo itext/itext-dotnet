@@ -373,6 +373,46 @@ namespace iText.Signatures {
             reader.Close();
         }
 
+        [NUnit.Framework.Test]
+        public virtual void PrepareDocumentTestWithSHA256() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateSimpleDocument()));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
+            String fieldName = signer.fieldName;
+            int estimatedSize = 8079;
+            byte[] digest = signer.PrepareDocumentForSignature(DigestAlgorithms.SHA256, PdfName.Adobe_PPKLite, PdfName
+                .Adbe_pkcs7_detached, estimatedSize, false);
+            PdfReader resultReader = new PdfReader(new MemoryStream(outputStream.ToArray()));
+            PdfDocument resultDoc = new PdfDocument(resultReader);
+            SignatureUtil signatureUtil = new SignatureUtil(resultDoc);
+            PdfSignature signature = signatureUtil.GetSignature(fieldName);
+            NUnit.Framework.Assert.AreEqual(estimatedSize, signature.GetContents().GetValueBytes().Length);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddSignatureToPreparedDocumentTest() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateSimpleDocument()));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
+            String fieldName = signer.fieldName;
+            int estimatedSize = 8079;
+            byte[] digest = signer.PrepareDocumentForSignature(DigestAlgorithms.SHA256, PdfName.Adobe_PPKLite, PdfName
+                .Adbe_pkcs7_detached, estimatedSize, false);
+            PdfReader resultReader = new PdfReader(new MemoryStream(outputStream.ToArray()));
+            PdfDocument resultDoc = new PdfDocument(resultReader);
+            ByteArrayOutputStream completedOutputStream = new ByteArrayOutputStream();
+            byte[] testData = ByteUtils.GetIsoBytes("Some data to test the signature addition with");
+            PdfSigner.AddSignatureToPreparedDocument(resultDoc, fieldName, completedOutputStream, testData);
+            resultReader = new PdfReader(new MemoryStream(completedOutputStream.ToArray()));
+            resultDoc = new PdfDocument(resultReader);
+            SignatureUtil signatureUtil = new SignatureUtil(resultDoc);
+            PdfSignature signature = signatureUtil.GetSignature(fieldName);
+            byte[] content = signature.GetContents().GetValueBytes();
+            for (int i = 0; i < testData.Length; i++) {
+                NUnit.Framework.Assert.AreEqual(testData[i], content[i]);
+            }
+        }
+
         private static byte[] CreateDocumentWithEmptyField() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputStream));

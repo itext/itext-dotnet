@@ -638,13 +638,7 @@ namespace iText.Signatures {
             if (closed) {
                 throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
-            PdfSignature dic = new PdfSignature();
-            dic.SetReason(appearance.GetReason());
-            dic.SetLocation(appearance.GetLocation());
-            dic.SetSignatureCreator(GetSignatureCreator());
-            dic.SetContact(GetContact());
-            dic.SetDate(new PdfDate(GetSignDate()));
-            // time-stamp will over-rule this
+            PdfSignature dic = CreateSignatureDictionary(true);
             externalSignatureContainer.ModifySigningDictionary(dic.GetPdfObject());
             cryptoDictionary = dic;
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
@@ -720,6 +714,48 @@ namespace iText.Signatures {
             closed = true;
         }
 
+        /// <summary>Prepares document for signing, calculates the document digest to sign and closes the document.</summary>
+        /// <param name="digestAlgorithm">the algorithm to generate the digest with</param>
+        /// <param name="filter">PdfName of the signature handler to use when validating this signature</param>
+        /// <param name="subFilter">PdfName that describes the encoding of the signature</param>
+        /// <param name="estimatedSize">
+        /// the estimated size of the signature, this is the size of the space reserved for
+        /// the Cryptographic Message Container
+        /// </param>
+        /// <param name="includeDate">specifies if the signing date should be set to the signature dictionary</param>
+        /// <returns>the message digest of the prepared document.</returns>
+        public virtual byte[] PrepareDocumentForSignature(String digestAlgorithm, PdfName filter, PdfName subFilter
+            , int estimatedSize, bool includeDate) {
+            if (closed) {
+                throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
+            }
+            cryptoDictionary = CreateSignatureDictionary(includeDate);
+            cryptoDictionary.Put(PdfName.Filter, filter);
+            cryptoDictionary.Put(PdfName.SubFilter, subFilter);
+            IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
+            exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
+            PreClose(exc);
+            Stream data = GetRangeStream();
+            byte[] digest = DigestAlgorithms.Digest(data, SignUtils.GetMessageDigest(digestAlgorithm));
+            byte[] paddedSig = new byte[estimatedSize];
+            PdfDictionary dic2 = new PdfDictionary();
+            dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
+            Close(dic2);
+            closed = true;
+            return digest;
+        }
+
+        /// <summary>Adds an existing signature to a PDF where space was already reserved.</summary>
+        /// <param name="document">the original PDF</param>
+        /// <param name="fieldName">the field to sign. It must be the last field</param>
+        /// <param name="outs">the output PDF</param>
+        /// <param name="signedContent">the bytes for the signed data</param>
+        public static void AddSignatureToPreparedDocument(PdfDocument document, String fieldName, Stream outs, byte
+            [] signedContent) {
+            PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(document, fieldName, outs);
+            applier.Apply((a) => signedContent);
+        }
+
         /// <summary>Signs a PDF where space was already reserved.</summary>
         /// <param name="document">the original PDF</param>
         /// <param name="fieldName">the field to sign. It must be the last field</param>
@@ -730,44 +766,8 @@ namespace iText.Signatures {
         /// </param>
         public static void SignDeferred(PdfDocument document, String fieldName, Stream outs, IExternalSignatureContainer
              externalSignatureContainer) {
-            SignatureUtil signatureUtil = new SignatureUtil(document);
-            PdfSignature signature = signatureUtil.GetSignature(fieldName);
-            if (signature == null) {
-                throw new PdfException(SignExceptionMessageConstant.THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME).SetMessageParams
-                    (fieldName);
-            }
-            if (!signatureUtil.SignatureCoversWholeDocument(fieldName)) {
-                throw new PdfException(SignExceptionMessageConstant.SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT
-                    ).SetMessageParams(fieldName);
-            }
-            PdfArray b = signature.GetByteRange();
-            long[] gaps = b.ToLongArray();
-            if (b.Size() != 4 || gaps[0] != 0) {
-                throw new ArgumentException("Single exclusion space supported");
-            }
-            IRandomAccessSource readerSource = document.GetReader().GetSafeFile().CreateSourceView();
-            Stream rg = new RASInputStream(new RandomAccessSourceFactory().CreateRanged(readerSource, gaps));
-            byte[] signedContent = externalSignatureContainer.Sign(rg);
-            int spaceAvailable = (int)(gaps[2] - gaps[1]) - 2;
-            if ((spaceAvailable & 1) != 0) {
-                throw new ArgumentException("Gap is not a multiple of 2");
-            }
-            spaceAvailable /= 2;
-            if (spaceAvailable < signedContent.Length) {
-                throw new PdfException(SignExceptionMessageConstant.AVAILABLE_SPACE_IS_NOT_ENOUGH_FOR_SIGNATURE);
-            }
-            StreamUtil.CopyBytes(readerSource, 0, gaps[1] + 1, outs);
-            ByteBuffer bb = new ByteBuffer(spaceAvailable * 2);
-            foreach (byte bi in signedContent) {
-                bb.AppendHex(bi);
-            }
-            int remain = (spaceAvailable - signedContent.Length) * 2;
-            for (int k = 0; k < remain; ++k) {
-                bb.Append((byte)48);
-            }
-            byte[] bbArr = bb.ToByteArray();
-            outs.Write(bbArr);
-            StreamUtil.CopyBytes(readerSource, gaps[2] - 1, gaps[3] + 1, outs);
+            PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(document, fieldName, outs);
+            applier.Apply((a) => externalSignatureContainer.Sign(a.GetDataToSign()));
         }
 
         /// <summary>Processes a CRL list.</summary>
@@ -1230,11 +1230,87 @@ namespace iText.Signatures {
             return document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
         }
 
+        private PdfSignature CreateSignatureDictionary(bool includeDate) {
+            PdfSignature dic = new PdfSignature();
+            PdfSignatureAppearance appearance = GetSignatureAppearance();
+            dic.SetReason(appearance.GetReason());
+            dic.SetLocation(appearance.GetLocation());
+            dic.SetSignatureCreator(appearance.GetSignatureCreator());
+            dic.SetContact(appearance.GetContact());
+            if (includeDate) {
+                dic.SetDate(new PdfDate(GetSignDate()));
+            }
+            // time-stamp will over-rule this
+            return dic;
+        }
+
         /// <summary>An interface to retrieve the signature dictionary for modification.</summary>
         public interface ISignatureEvent {
             /// <summary>Allows modification of the signature dictionary.</summary>
             /// <param name="sig">The signature dictionary</param>
             void GetSignatureDictionary(PdfSignature sig);
         }
+
+        private class SignatureApplier {
+            private readonly PdfDocument document;
+
+            private readonly String fieldName;
+
+            private readonly Stream outs;
+
+            private IRandomAccessSource readerSource;
+
+            private long[] gaps;
+
+            public SignatureApplier(PdfDocument document, String fieldName, Stream outs) {
+                this.document = document;
+                this.fieldName = fieldName;
+                this.outs = outs;
+            }
+
+            public virtual void Apply(PdfSigner.ISignatureDataProvider signatureDataProvider) {
+                SignatureUtil signatureUtil = new SignatureUtil(document);
+                PdfSignature signature = signatureUtil.GetSignature(fieldName);
+                if (signature == null) {
+                    throw new PdfException(SignExceptionMessageConstant.THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME).SetMessageParams
+                        (fieldName);
+                }
+                if (!signatureUtil.SignatureCoversWholeDocument(fieldName)) {
+                    throw new PdfException(SignExceptionMessageConstant.SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT
+                        ).SetMessageParams(fieldName);
+                }
+                PdfArray b = signature.GetByteRange();
+                gaps = b.ToLongArray();
+                readerSource = document.GetReader().GetSafeFile().CreateSourceView();
+                int spaceAvailable = (int)(gaps[2] - gaps[1]) - 2;
+                if ((spaceAvailable & 1) != 0) {
+                    throw new ArgumentException("Gap is not a multiple of 2");
+                }
+                byte[] signedContent = signatureDataProvider(this);
+                spaceAvailable /= 2;
+                if (spaceAvailable < signedContent.Length) {
+                    throw new PdfException(SignExceptionMessageConstant.AVAILABLE_SPACE_IS_NOT_ENOUGH_FOR_SIGNATURE);
+                }
+                StreamUtil.CopyBytes(readerSource, 0, gaps[1] + 1, outs);
+                ByteBuffer bb = new ByteBuffer(spaceAvailable * 2);
+                foreach (byte bi in signedContent) {
+                    bb.AppendHex(bi);
+                }
+                int remain = (spaceAvailable - signedContent.Length) * 2;
+                for (int k = 0; k < remain; ++k) {
+                    bb.Append((byte)48);
+                }
+                byte[] bbArr = bb.ToByteArray();
+                outs.Write(bbArr);
+                StreamUtil.CopyBytes(readerSource, gaps[2] - 1, gaps[3] + 1, outs);
+                document.Close();
+            }
+
+            public virtual Stream GetDataToSign() {
+                return new RASInputStream(new RandomAccessSourceFactory().CreateRanged(readerSource, gaps));
+            }
+        }
+
+        private delegate byte[] ISignatureDataProvider(PdfSigner.SignatureApplier applier);
     }
 }
