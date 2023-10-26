@@ -256,7 +256,7 @@ namespace iText.Pdfa {
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
         /// </returns>
-        public virtual PdfAConformanceLevel GetConformanceLevel() {
+        public override PdfAConformanceLevel GetConformanceLevel() {
             if (isPdfADocument) {
                 return checker.GetConformanceLevel();
             }
