@@ -206,6 +206,23 @@ namespace iText.Forms.Form.Renderer {
             return actualHeight;
         }
 
+        /// <summary>Gets the conformance level.</summary>
+        /// <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
+        ///     </remarks>
+        /// <param name="document">the document</param>
+        /// <returns>the conformance level or null if the conformance level is not set.</returns>
+        protected internal virtual PdfAConformanceLevel GetConformanceLevel(PdfDocument document) {
+            PdfAConformanceLevel conformanceLevel = this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
+                );
+            if (conformanceLevel != null) {
+                return conformanceLevel;
+            }
+            if (document == null) {
+                return null;
+            }
+            return document.GetConformanceLevel();
+        }
+
         protected internal virtual IList<IRenderer> GetOptionsMarkedSelected(IRenderer optionsSubTree) {
             IList<IRenderer> selectedOptions = new List<IRenderer>();
             foreach (IRenderer option in optionsSubTree.GetChildRenderers()) {

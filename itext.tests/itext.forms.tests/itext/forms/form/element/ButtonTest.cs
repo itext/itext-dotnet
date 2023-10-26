@@ -27,9 +27,11 @@ using iText.Forms.Fields;
 using iText.Forms.Fields.Borders;
 using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
+using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -70,6 +72,54 @@ namespace iText.Forms.Form.Element {
                 Button flattenButton = new Button("flatten button");
                 flattenButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenButton.Add(new Paragraph("flatten button"));
+                flattenButton.Add(new Paragraph("paragraph with pink border inside button").SetBorder(new SolidBorder(ColorConstants
+                    .PINK, 1)));
+                document.Add(flattenButton);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicButtonTestWithFontDiffersOnParagraph() {
+            String outPdf = DESTINATION_FOLDER + "basicButtonWithFontDiffersOnParagraph.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_basicButtonWithFontDiffersOnParagraph.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                Button formButton = new Button("form button");
+                formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
+                formButton.SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD));
+                formButton.Add(new Paragraph("form button"));
+                formButton.Add(new Paragraph("paragraph with yellow border inside button").SetFont(PdfFontFactory.CreateFont
+                    (StandardFonts.COURIER)).SetBorder(new SolidBorder(ColorConstants.YELLOW, 1)));
+                document.Add(formButton);
+                document.Add(new Paragraph(""));
+                Button flattenButton = new Button("flatten button");
+                flattenButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
+                flattenButton.Add(new Paragraph("flatten button"));
+                flattenButton.SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD));
+                flattenButton.Add(new Paragraph("paragraph with pink border inside button").SetFont(PdfFontFactory.CreateFont
+                    (StandardFonts.COURIER)).SetBorder(new SolidBorder(ColorConstants.PINK, 1)));
+                document.Add(flattenButton);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicButtonTestWithFont() {
+            String outPdf = DESTINATION_FOLDER + "basicButtonWithFont.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_basicButtonWithFon.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                Button formButton = new Button("form button");
+                formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
+                formButton.SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD));
+                formButton.Add(new Paragraph("form button"));
+                formButton.Add(new Paragraph("paragraph with yellow border inside button").SetBorder(new SolidBorder(ColorConstants
+                    .YELLOW, 1)));
+                document.Add(formButton);
+                document.Add(new Paragraph(""));
+                Button flattenButton = new Button("flatten button");
+                flattenButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
+                flattenButton.Add(new Paragraph("flatten button"));
+                flattenButton.SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD));
                 flattenButton.Add(new Paragraph("paragraph with pink border inside button").SetBorder(new SolidBorder(ColorConstants
                     .PINK, 1)));
                 document.Add(flattenButton);

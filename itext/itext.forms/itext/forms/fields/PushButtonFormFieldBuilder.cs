@@ -75,19 +75,20 @@ namespace iText.Forms.Fields {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
             }
+            field.DisableFieldRegeneration();
             field.pdfAConformanceLevel = GetConformanceLevel();
             field.SetPushButton(true);
             field.SetFieldName(GetFormFieldName());
             field.text = caption;
             if (annotation != null) {
                 field.GetFirstFormAnnotation().backgroundColor = ColorConstants.LIGHT_GRAY;
-                field.GetFirstFormAnnotation().DrawPushButtonFieldAndSaveAppearance();
                 PdfDictionary mk = new PdfDictionary();
                 mk.Put(PdfName.CA, new PdfString(caption));
                 mk.Put(PdfName.BG, new PdfArray(field.GetFirstFormAnnotation().backgroundColor.GetColorValue()));
                 annotation.SetAppearanceCharacteristics(mk);
                 SetPageToField(field);
             }
+            field.EnableFieldRegeneration();
             return field;
         }
 

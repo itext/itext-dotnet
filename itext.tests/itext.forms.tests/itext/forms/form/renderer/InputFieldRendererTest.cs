@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
+using iText.IO.Source;
+using iText.Kernel.Pdf;
 using iText.Layout.Element;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -83,26 +85,48 @@ namespace iText.Forms.Form.Renderer {
         }
 
         [NUnit.Framework.Test]
+        public virtual void PdfAConformanceLevelTest() {
+            InputFieldRenderer inputFieldRenderer = new InputFieldRenderer(new InputField(""));
+            NUnit.Framework.Assert.IsNull(inputFieldRenderer.GetConformanceLevel(null));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfAConformanceLevelWithDocumentTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            InputFieldRenderer inputFieldRenderer = new InputFieldRenderer(new InputField(""));
+            NUnit.Framework.Assert.IsNull(inputFieldRenderer.GetConformanceLevel(pdfDocument));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfAConformanceLevelWithConformanceLevelTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            InputFieldRenderer inputFieldRenderer = new InputFieldRenderer(new InputField(""));
+            inputFieldRenderer.SetProperty(FormProperty.FORM_CONFORMANCE_LEVEL, PdfAConformanceLevel.PDF_A_1B);
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1B, inputFieldRenderer.GetConformanceLevel(pdfDocument
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CreateParagraphRendererTest() {
             InputFieldRenderer inputFieldRendererWithoutPlaceholder = new InputFieldRenderer(new InputField(""));
             IRenderer paragraphRender = inputFieldRendererWithoutPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is ParagraphRenderer);
             InputField inputFieldWithEmptyPlaceholder = new InputField("");
-            inputFieldWithEmptyPlaceholder.SetPlaceholder(new _Paragraph_104());
+            inputFieldWithEmptyPlaceholder.SetPlaceholder(new _Paragraph_130());
             InputFieldRenderer inputFieldRendererWithEmptyPlaceholder = new InputFieldRenderer(inputFieldWithEmptyPlaceholder
                 );
             paragraphRender = inputFieldRendererWithEmptyPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is ParagraphRenderer);
             NUnit.Framework.Assert.IsFalse(paragraphRender is InputFieldRendererTest.CustomParagraphRenderer);
             InputField inputFieldWithPlaceholder = new InputField("");
-            inputFieldWithPlaceholder.SetPlaceholder(new _Paragraph_117());
+            inputFieldWithPlaceholder.SetPlaceholder(new _Paragraph_143());
             InputFieldRenderer inputFieldRendererWithPlaceholder = new InputFieldRenderer(inputFieldWithPlaceholder);
             paragraphRender = inputFieldRendererWithPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is InputFieldRendererTest.CustomParagraphRenderer);
         }
 
-        private sealed class _Paragraph_104 : Paragraph {
-            public _Paragraph_104() {
+        private sealed class _Paragraph_130 : Paragraph {
+            public _Paragraph_130() {
             }
 
             public override IRenderer CreateRendererSubTree() {
@@ -110,8 +134,8 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
-        private sealed class _Paragraph_117 : Paragraph {
-            public _Paragraph_117() {
+        private sealed class _Paragraph_143 : Paragraph {
+            public _Paragraph_143() {
             }
 
             public override bool IsEmpty() {

@@ -213,8 +213,8 @@ namespace iText.Forms.Form.Renderer {
             modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<SignatureAppearanceRenderer.RenderingMode?
                 >(Property.RENDERING_MODE));
-            PdfSignatureFormField sigField = new SignatureFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateSignature
-                ();
+            PdfSignatureFormField sigField = new SignatureFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
+                (GetConformanceLevel(doc)).CreateSignature();
             sigField.DisableFieldRegeneration();
             sigField.SetFont(font).SetFontSize(fontSizeValue);
             sigField.GetFirstFormAnnotation().SetBackgroundColor(backgroundColor);

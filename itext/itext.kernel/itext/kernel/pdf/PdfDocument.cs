@@ -1016,6 +1016,19 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
+        /// Get the
+        /// <see cref="PdfAConformanceLevel"/>
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="PdfAConformanceLevel"/>
+        /// will be null if the document is not a PDF/A document
+        /// </returns>
+        public virtual PdfAConformanceLevel GetConformanceLevel() {
+            return null;
+        }
+
+        /// <summary>
         /// Copies a range of pages from current document to
         /// <paramref name="toDocument"/>.
         /// </summary>

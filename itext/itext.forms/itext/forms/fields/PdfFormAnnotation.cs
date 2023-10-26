@@ -826,7 +826,7 @@ namespace iText.Forms.Fields {
                 if (exportValue == null) {
                     continue;
                 }
-                bool selected = indices == null ? false : indices.Contains(new PdfNumber(index));
+                bool selected = indices != null && indices.Contains(new PdfNumber(index));
                 SelectFieldItem existingItem = ((ListBoxField)formFieldElement).GetOption(exportValue);
                 if (existingItem == null) {
                     existingItem = new SelectFieldItem(exportValue, displayValue);
@@ -1020,6 +1020,9 @@ namespace iText.Forms.Fields {
         }
 
         internal virtual bool RegenerateWidget() {
+            if (FontRequiredForRegeneration()) {
+                return false;
+            }
             if (!IsFieldRegenerationEnabled()) {
                 return false;
             }
@@ -1076,6 +1079,16 @@ namespace iText.Forms.Fields {
                 }
             }
             return false;
+        }
+
+        private bool FontRequiredForRegeneration() {
+            if (GetFont() != null) {
+                return false;
+            }
+            if (parent is PdfButtonFormField) {
+                return ((PdfButtonFormField)parent).IsPushButton();
+            }
+            return true;
         }
 
         internal virtual void CreateInputButton() {

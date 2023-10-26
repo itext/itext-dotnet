@@ -194,6 +194,7 @@ namespace iText.Forms.Fields {
             PutIfAbsent(expectedDictionary, PdfName.Opt, new PdfArray());
             PutIfAbsent(expectedDictionary, PdfName.T, new PdfString(DUMMY_NAME));
             PutIfAbsent(expectedDictionary, PdfName.V, new PdfArray());
+            PutIfAbsent(expectedDictionary, PdfName.DA, choiceFormField.GetPdfObject().Get(PdfName.DA));
             expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
             choiceFormField.MakeIndirect(DUMMY_DOCUMENT);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, choiceFormField

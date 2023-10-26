@@ -79,6 +79,7 @@ namespace iText.Forms.Fields {
                 }
                 check = PdfFormCreator.CreateButtonFormField(annotation, GetDocument());
             }
+            check.DisableFieldRegeneration();
             check.pdfAConformanceLevel = GetConformanceLevel();
             check.SetCheckType(checkType);
             check.SetFieldName(GetFormFieldName());
@@ -86,9 +87,9 @@ namespace iText.Forms.Fields {
             check.SetFontSize(0);
             check.Put(PdfName.V, new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
             if (GetWidgetRectangle() != null) {
-                check.GetFirstFormAnnotation().DrawCheckBoxAndSaveAppearance(PdfFormAnnotation.ON_STATE_VALUE);
                 SetPageToField(check);
             }
+            check.EnableFieldRegeneration();
             return check;
         }
 

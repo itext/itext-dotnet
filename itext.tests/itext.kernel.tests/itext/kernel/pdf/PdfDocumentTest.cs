@@ -522,6 +522,12 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(document.GetDiContainer());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void GetDefaultConformanceLevelTest() {
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.IsNull(document.GetConformanceLevel());
+        }
+
         private class IgnoreTagStructurePdfDocument : PdfDocument {
             internal IgnoreTagStructurePdfDocument(PdfReader reader)
                 : base(reader) {

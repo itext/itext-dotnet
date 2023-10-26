@@ -292,6 +292,13 @@ namespace iText.Layout {
 
         public override T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
+                case Property.FONT: {
+                    if (GetPdfDocument().GetConformanceLevel() != null) {
+                        return (T1)(Object)GetPdfDocument().GetDefaultFont();
+                    }
+                    return base.GetDefaultProperty<T1>(property);
+                }
+
                 case Property.MARGIN_BOTTOM:
                 case Property.MARGIN_LEFT:
                 case Property.MARGIN_RIGHT:

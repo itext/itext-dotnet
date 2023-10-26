@@ -45,9 +45,11 @@ namespace iText.Forms.Fields {
         /// </returns>
         public virtual PdfButtonFormField CreateRadioGroup() {
             PdfButtonFormField radioGroup = PdfFormCreator.CreateButtonFormField(GetDocument());
+            radioGroup.DisableFieldRegeneration();
             radioGroup.pdfAConformanceLevel = GetConformanceLevel();
             radioGroup.SetFieldName(GetFormFieldName());
             radioGroup.SetFieldFlags(PdfButtonFormField.FF_RADIO);
+            radioGroup.EnableFieldRegeneration();
             return radioGroup;
         }
 

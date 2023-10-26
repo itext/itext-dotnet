@@ -113,6 +113,15 @@ namespace iText.Pdfa {
             AddOutputIntent(outputIntent);
         }
 
+        /// <summary>No default font for PDF/A documents.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="null"/>.
+        /// </returns>
+        public override PdfFont GetDefaultFont() {
+            return null;
+        }
+
         /// <summary>Opens a PDF/A document in the stamping mode.</summary>
         /// <param name="reader">PDF reader.</param>
         /// <param name="writer">PDF writer.</param>
@@ -247,15 +256,7 @@ namespace iText.Pdfa {
             }
         }
 
-        /// <summary>
-        /// Gets the PdfAConformanceLevel set in the constructor or in the metadata
-        /// of the
-        /// <see cref="iText.Kernel.Pdf.PdfReader"/>.
-        /// </summary>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
-        /// </returns>
+        /// <summary><inheritDoc/></summary>
         public override PdfAConformanceLevel GetConformanceLevel() {
             if (isPdfADocument) {
                 return checker.GetConformanceLevel();

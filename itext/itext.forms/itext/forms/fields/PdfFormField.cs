@@ -1057,7 +1057,9 @@ namespace iText.Forms.Fields {
         /// </remarks>
         public virtual void UpdateDefaultAppearance() {
             if (HasDefaultAppearance()) {
-                System.Diagnostics.Debug.Assert(GetFont() != null);
+                if (GetFont() == null) {
+                    return;
+                }
                 PdfDictionary defaultResources = (PdfDictionary)GetAcroFormObject(PdfName.DR, PdfObject.DICTIONARY);
                 if (defaultResources == null) {
                     // Ensure that AcroForm dictionary exists
@@ -1352,6 +1354,9 @@ namespace iText.Forms.Fields {
         }
 
         internal static String OptionsArrayToString(PdfArray options) {
+            if (options == null || options.IsEmpty()) {
+                return "";
+            }
             StringBuilder sb = new StringBuilder();
             foreach (PdfObject obj in options) {
                 if (obj.IsString()) {

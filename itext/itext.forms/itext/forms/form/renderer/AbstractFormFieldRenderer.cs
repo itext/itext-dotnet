@@ -222,6 +222,23 @@ namespace iText.Forms.Form.Renderer {
             return this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
         }
 
+        /// <summary>Gets the conformance level.</summary>
+        /// <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
+        ///     </remarks>
+        /// <param name="document">the document</param>
+        /// <returns>the conformance level or null if the conformance level is not set.</returns>
+        protected internal virtual PdfAConformanceLevel GetConformanceLevel(PdfDocument document) {
+            PdfAConformanceLevel conformanceLevel = this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
+                );
+            if (conformanceLevel != null) {
+                return conformanceLevel;
+            }
+            if (document == null) {
+                return null;
+            }
+            return document.GetConformanceLevel();
+        }
+
         /// <summary>Determines, whether the layout is based in the renderer itself or flat renderer.</summary>
         /// <returns>
         /// 

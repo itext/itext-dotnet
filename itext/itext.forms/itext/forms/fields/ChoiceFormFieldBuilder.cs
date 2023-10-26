@@ -23,10 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Forms.Exceptions;
 using iText.IO.Font;
-using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
-using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Forms.Fields {
     /// <summary>Builder for choice form field.</summary>
@@ -127,6 +125,7 @@ namespace iText.Forms.Fields {
                 }
                 field = PdfFormCreator.CreateChoiceFormField(annotation, GetDocument());
             }
+            field.DisableFieldRegeneration();
             field.pdfAConformanceLevel = GetConformanceLevel();
             field.SetFieldFlags(flags);
             field.SetFieldName(GetFormFieldName());
@@ -137,19 +136,11 @@ namespace iText.Forms.Fields {
             else {
                 field.Put(PdfName.Opt, options);
                 field.SetListSelected(new String[0], false);
-                String optionsArrayString = "";
-                if ((flags & PdfChoiceFormField.FF_COMBO) == 0) {
-                    optionsArrayString = PdfFormField.OptionsArrayToString(options);
-                }
                 if (annotation != null) {
-                    PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, GetWidgetRectangle().GetWidth(), GetWidgetRectangle
-                        ().GetHeight()));
-                    TextAndChoiceLegacyDrawer.DrawChoiceAppearance(field.GetFirstFormAnnotation(), GetWidgetRectangle(), field
-                        .fontSize, optionsArrayString, xObject, 0);
-                    annotation.SetNormalAppearance(xObject.GetPdfObject());
                     SetPageToField(field);
                 }
             }
+            field.EnableFieldRegeneration();
             return field;
         }
 

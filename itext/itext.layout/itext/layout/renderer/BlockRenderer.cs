@@ -25,12 +25,14 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Logs;
 using iText.Layout.Margincollapse;
@@ -773,6 +775,45 @@ namespace iText.Layout.Renderer {
             if (angle != null && HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
                 canvas.RestoreState();
             }
+        }
+
+        /// <summary>
+        /// Get the font set in properties, if it is not set, then resolves the first
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// from
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
+        /// </summary>
+        /// <remarks>
+        /// Get the font set in properties, if it is not set, then resolves the first
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// from
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
+        /// If
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// is not set, then returns null.
+        /// </remarks>
+        /// <param name="pdfDocument">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to get default font from.
+        /// </param>
+        /// <returns>
+        /// the font or null if it is not set and
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// is not set.
+        /// </returns>
+        protected internal virtual PdfFont GetResolvedFont(PdfDocument pdfDocument) {
+            Object retrievedFont = this.GetProperty<Object>(Property.FONT);
+            if (retrievedFont is PdfFont) {
+                return (PdfFont)retrievedFont;
+            }
+            if (this.GetProperty<FontProvider>(Property.FONT_PROVIDER) != null && retrievedFont != null) {
+                return ResolveFirstPdfFont();
+            }
+            if (pdfDocument != null) {
+                return pdfDocument.GetDefaultFont();
+            }
+            return null;
         }
 
         internal virtual bool StopLayoutingChildrenIfChildResultNotFull(LayoutResult returnResult) {

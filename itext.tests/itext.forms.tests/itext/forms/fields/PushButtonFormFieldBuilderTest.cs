@@ -90,6 +90,7 @@ namespace iText.Forms.Fields {
             PutIfAbsent(expectedDictionary, PdfName.FT, PdfName.Btn);
             PutIfAbsent(expectedDictionary, PdfName.Ff, new PdfNumber(PdfButtonFormField.FF_PUSH_BUTTON));
             PutIfAbsent(expectedDictionary, PdfName.T, new PdfString(DUMMY_NAME));
+            PutIfAbsent(expectedDictionary, PdfName.DA, pushButtonFormField.GetPdfObject().Get(PdfName.DA));
             expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
             pushButtonFormField.MakeIndirect(DUMMY_DOCUMENT);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, pushButtonFormField
