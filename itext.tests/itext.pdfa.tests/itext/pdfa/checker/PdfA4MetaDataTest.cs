@@ -30,8 +30,10 @@ using iText.Kernel.XMP;
 using iText.Pdfa;
 using iText.Pdfa.Exceptions;
 using iText.Test;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa.Checker {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4MetaDataTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -114,6 +116,38 @@ namespace iText.Pdfa.Checker {
                 checker.CheckMetaData(catalog);
             }
             );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4DocumentMetaDataRevPropertyHasCorrectPrefix() {
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "xmp/xmpWithMultipleXmpHeaders.xmp"
+                ));
+            String xmpContent = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII).Replace
+                ("pdfaid:rev", "rev");
+            PdfA4Checker checker = new PdfA4Checker(PdfAConformanceLevel.PDF_A_4);
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.Metadata, new PdfStream(xmpContent.GetBytes(System.Text.Encoding.UTF8)));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                checker.CheckMetaData(catalog);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4DocumentMetaDataIdentificationSchemaUsesCorrectNamespaceURI() {
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "xmp/xmpWithMultipleXmpHeaders.xmp"
+                ));
+            String xmpContent = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII).Replace
+                ("http://www.aiim.org/pdfa/ns/id/", "no_link");
+            PdfA4Checker checker = new PdfA4Checker(PdfAConformanceLevel.PDF_A_4);
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.Metadata, new PdfStream(xmpContent.GetBytes(System.Text.Encoding.UTF8)));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
+                checker.CheckMetaData(catalog);
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                , "4"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -479,6 +513,75 @@ namespace iText.Pdfa.Checker {
                 , e_1.Message);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void TestDestOutputIntentProfileNotAllowedTest() {
+            PdfDictionary catalog = new PdfDictionary();
+            PdfArray array = new PdfArray();
+            PdfDictionary dictionary = new PdfDictionary();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc"));
+            byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
+                ).Replace("prtr", "not_def").GetBytes(System.Text.Encoding.ASCII);
+            dictionary.Put(PdfName.DestOutputProfile, new PdfStream(manipulatedBytes));
+            array.Add(dictionary);
+            catalog.Put(PdfName.OutputIntents, array);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => new PdfA4Checker(PdfAConformanceLevel
+                .PDF_A_4F).CheckOutputIntents(catalog));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PROFILE_STREAM_OF_OUTPUTINTENT_SHALL_BE_OUTPUT_PROFILE_PRTR_OR_MONITOR_PROFILE_MNTR
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestDestOutputIntentColorSpaceNotAllowedTest() {
+            PdfDictionary catalog = new PdfDictionary();
+            PdfArray array = new PdfArray();
+            PdfDictionary dictionary = new PdfDictionary();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc"));
+            byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
+                ).Replace("CMYK", "not_def").GetBytes(System.Text.Encoding.ASCII);
+            dictionary.Put(PdfName.DestOutputProfile, new PdfStream(manipulatedBytes));
+            array.Add(dictionary);
+            catalog.Put(PdfName.OutputIntents, array);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => new PdfA4Checker(PdfAConformanceLevel
+                .PDF_A_4F).CheckOutputIntents(catalog));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.OUTPUT_INTENT_COLOR_SPACE_SHALL_BE_EITHER_GRAY_RGB_OR_CMYK
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestDestOutputIntentRefNotAllowedTest() {
+            String outPdf = SOURCE_FOLDER + "PdfWithOutputIntentProfileRef.pdf";
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_4;
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfADocument = new PdfADocument(writer, conformanceLevel, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                )));
+            pdfADocument.AddNewPage();
+            PdfDictionary catalog = pdfADocument.GetCatalog().GetPdfObject();
+            PdfArray outputIntents = catalog.GetAsArray(PdfName.OutputIntents);
+            PdfDictionary outputIntent = outputIntents.GetAsDictionary(0);
+            outputIntent.Put(new PdfName("DestOutputProfileRef"), new PdfDictionary());
+            outputIntents.Add(outputIntent);
+            catalog.Put(PdfName.OutputIntents, outputIntents);
+            pdfADocument.Close();
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void PdfA4DocumentMetaDataIsNotUTF8Encoded() {
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "encodedXmp.xmp"));
+            String outPdf = DESTINATION_FOLDER + "metadataNotUTF8.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            doc.AddNewPage();
+            doc.GetPage(1).SetXmpMetadata(bytes);
+            doc.Close();
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         private void GeneratePdfADocument(PdfAConformanceLevel conformanceLevel, String outPdf, Action<PdfDocument
             > consumer) {
             if (outPdf == null) {

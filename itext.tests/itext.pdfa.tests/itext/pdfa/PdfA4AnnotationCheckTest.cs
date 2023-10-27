@@ -35,6 +35,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4AnnotationCheckTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -203,6 +204,35 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
+        public virtual void PdfA4fForbiddenAnnotations3Test() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream(), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
+            PdfPage page = doc.AddNewPage();
+            AddSimpleEmbeddedFile(doc);
+            PdfAnnotation annot = new PdfScreenAnnotation(new Rectangle(100, 100, 100, 100));
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ANNOTATION_TYPE_0_IS_NOT_PERMITTED
+                , PdfName.Screen.GetValue()), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4fForbiddenAnnotations4Test() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream(), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
+            PdfPage page = doc.AddNewPage();
+            AddSimpleEmbeddedFile(doc);
+            PdfAnnotation annot = new PdfTextAnnotation(new Rectangle(100, 100, 100, 100));
+            annot.GetPdfObject().Put(PdfName.Subtype, PdfName.RichMedia);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ANNOTATION_TYPE_0_IS_NOT_PERMITTED
+                , PdfName.RichMedia.GetValue()), e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void PdfA4fAllowedAnnotations1Test() {
             String outPdf = DESTINATION_FOLDER + "pdfA4fAllowedAnnotations1Test.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4fAllowedAnnotations1Test.pdf";
@@ -281,6 +311,57 @@ namespace iText.Pdfa {
                 page.AddAnnotation(annot);
             }
             CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4BtnAppearanceContainsNStreamWidgetAnnotationTest() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream(), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
+            PdfPage page = doc.AddNewPage();
+            AddSimpleEmbeddedFile(doc);
+            PdfAnnotation annot = new PdfWidgetAnnotation(new Rectangle(100, 100, 100, 100));
+            annot.SetFlag(PdfAnnotation.PRINT);
+            annot.SetAppearance(PdfName.N, new PdfStream());
+            annot.GetPdfObject().Put(PdfName.FT, PdfName.Btn);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.APPEARANCE_DICTIONARY_OF_WIDGET_SUBTYPE_AND_BTN_FIELD_TYPE_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_DICTIONARY_VALUE
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4AppearanceContainsNDictWidgetAnnotationTest() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream(), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
+            PdfPage page = doc.AddNewPage();
+            AddSimpleEmbeddedFile(doc);
+            PdfAnnotation annot = new PdfWidgetAnnotation(new Rectangle(100, 100, 100, 100));
+            annot.SetFlag(PdfAnnotation.PRINT);
+            annot.SetAppearance(PdfName.N, new PdfDictionary());
+            annot.GetPdfObject().Put(PdfName.FT, PdfName.Tx);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4AppearanceContainsOtherKeyWidgetAnnotationTest() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream(), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
+            PdfPage page = doc.AddNewPage();
+            AddSimpleEmbeddedFile(doc);
+            PdfAnnotation annot = new PdfWidgetAnnotation(new Rectangle(100, 100, 100, 100));
+            annot.SetFlag(PdfAnnotation.PRINT);
+            annot.SetAppearance(PdfName.A, new PdfStream());
+            annot.GetPdfObject().Put(PdfName.FT, PdfName.Btn);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.APPEARANCE_DICTIONARY_OF_WIDGET_SUBTYPE_AND_BTN_FIELD_TYPE_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_DICTIONARY_VALUE
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
