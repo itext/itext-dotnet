@@ -40,6 +40,8 @@ namespace iText.Kernel.Pdf {
 
         private const int AES_256 = 5;
 
+        private const int DEFAULT_KEY_LENGTH = 40;
+
         private static long seq = SystemUtil.GetTimeBasedSeed();
 
         private int cryptoMode;
@@ -514,8 +516,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private void SetKeyLength(int keyLength) {
-            // 40 - is default value;
-            if (keyLength != 40) {
+            if (keyLength != DEFAULT_KEY_LENGTH) {
                 GetPdfObject().Put(PdfName.Length, new PdfNumber(keyLength));
             }
         }
@@ -586,10 +587,7 @@ namespace iText.Kernel.Pdf {
 
                 case 3: {
                     PdfNumber lengthValue = encDict.GetAsNumber(PdfName.Length);
-                    if (lengthValue == null) {
-                        throw new PdfException(KernelExceptionMessageConstant.ILLEGAL_LENGTH_VALUE);
-                    }
-                    length = lengthValue.IntValue();
+                    length = lengthValue == null ? DEFAULT_KEY_LENGTH : lengthValue.IntValue();
                     if (length > 128 || length < 40 || length % 8 != 0) {
                         throw new PdfException(KernelExceptionMessageConstant.ILLEGAL_LENGTH_VALUE);
                     }
@@ -666,10 +664,7 @@ namespace iText.Kernel.Pdf {
 
                 case 2: {
                     PdfNumber lengthValue = encDict.GetAsNumber(PdfName.Length);
-                    if (lengthValue == null) {
-                        throw new PdfException(KernelExceptionMessageConstant.ILLEGAL_LENGTH_VALUE);
-                    }
-                    length = lengthValue.IntValue();
+                    length = lengthValue == null ? DEFAULT_KEY_LENGTH : lengthValue.IntValue();
                     if (length > 128 || length < 40 || length % 8 != 0) {
                         throw new PdfException(KernelExceptionMessageConstant.ILLEGAL_LENGTH_VALUE);
                     }

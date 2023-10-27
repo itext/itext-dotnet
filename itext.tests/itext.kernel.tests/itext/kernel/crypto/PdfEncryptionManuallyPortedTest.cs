@@ -251,6 +251,27 @@ namespace iText.Kernel.Crypto {
             }
         }
 
+        [Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void OpenEncryptedWithCertificateDocWithDefaultKeyLength() {
+            IX509Certificate cert = GetPublicCertificate(CERT);
+            using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateWithDefaultKeyLength.pdf",
+                       new ReaderProperties().SetPublicKeySecurityParams(cert, GetPrivateKey()))) {
+                if ("BCFIPS".Equals(FACTORY.GetProviderName())) {
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedEncryptionFeatureException),
+                        () => new PdfDocument(reader));
+                    NUnit.Framework.Assert.AreEqual(
+                        UnsupportedEncryptionFeatureException.ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS,
+                        e.Message);
+                } else {
+                    using (PdfDocument document = new PdfDocument(reader)) {
+                        NUnit.Framework.Assert.IsFalse(document.GetTrailer().GetAsDictionary(PdfName.Encrypt)
+                            .ContainsKey(PdfName.Length));
+                    }
+                }
+            }
+        }
+
         public virtual void EncryptWithCertificate(String filename, int encryptionType, int compression) {
             String outFileName = destinationFolder + filename;
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;

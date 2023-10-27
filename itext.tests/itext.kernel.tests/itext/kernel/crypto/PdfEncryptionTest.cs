@@ -494,6 +494,18 @@ namespace iText.Kernel.Crypto {
                 );
         }
 
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void OpenEncryptedWithPasswordDocWithDefaultKeyLength() {
+            using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPasswordWithDefaultKeyLength.pdf", new 
+                ReaderProperties().SetPassword("user".GetBytes(System.Text.Encoding.UTF8)))) {
+                using (PdfDocument document = new PdfDocument(reader)) {
+                    NUnit.Framework.Assert.IsFalse(document.GetTrailer().GetAsDictionary(PdfName.Encrypt).ContainsKey(PdfName.
+                        Length));
+                }
+            }
+        }
+
         public virtual void EncryptWithPassword2(String filename, int encryptionType, int compression) {
             EncryptWithPassword2(filename, encryptionType, compression, false);
         }

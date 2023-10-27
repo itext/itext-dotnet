@@ -43,6 +43,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         private const int SEED_LENGTH = 20;
 
+        private const int DEFAULT_KEY_LENGTH = 40;
+
         private IList<PublicKeyRecipient> recipients = null;
 
         private byte[] seed;
@@ -133,8 +135,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         protected internal virtual void InitKeyAndFillDictionary(PdfDictionary encryptionDictionary, IX509Certificate
             [] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly) {
             AddAllRecipients(certs, permissions);
-            int? keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
-            int keyLength = keyLen != null ? (int)keyLen : 40;
+            int keyLength = GetKeyLength(encryptionDictionary);
             String digestAlgorithm = GetDigestAlgorithm();
             byte[] digest = ComputeGlobalKey(digestAlgorithm, encryptMetadata);
             InitKey(digest, keyLength);
@@ -146,8 +147,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             String digestAlgorithm = GetDigestAlgorithm();
             byte[] encryptionKey = ComputeGlobalKeyOnReading(encryptionDictionary, (IPrivateKey)certificateKey, certificate
                 , encryptMetadata, digestAlgorithm);
-            int? keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
-            int keyLength = keyLen != null ? (int)keyLen : 40;
+            int keyLength = GetKeyLength(encryptionDictionary);
             InitKey(encryptionKey, keyLength);
         }
 
@@ -255,6 +255,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
             IDerOctetString derOctetString = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(cipheredBytes);
             IRecipientIdentifier recipId = BOUNCY_CASTLE_FACTORY.CreateRecipientIdentifier(issuerAndSerialNumber);
             return BOUNCY_CASTLE_FACTORY.CreateKeyTransRecipientInfo(recipId, algorithmIdentifier, derOctetString);
+        }
+
+        private int GetKeyLength(PdfDictionary encryptionDict) {
+            int? keyLength = encryptionDict.GetAsInt(PdfName.Length);
+            return keyLength != null ? (int)keyLength : DEFAULT_KEY_LENGTH;
         }
     }
 }
