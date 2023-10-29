@@ -419,6 +419,12 @@ namespace iText.Bouncycastle {
             Asn1ObjectBC primitiveBC = (Asn1ObjectBC)primitive;
             return new BasicOcspResponseBC(BasicOcspResponse.GetInstance(primitiveBC.GetPrimitive()));
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual IBasicOcspResponse CreateBasicOCSPResponse(byte[] bytes) {
+            return new BasicOcspResponseBC(BasicOcspResponse.GetInstance(
+                (Asn1Sequence)Asn1Sequence.FromByteArray(bytes)));
+        }
 
         /// <summary><inheritDoc/></summary>
         public IBasicOcspResponse CreateBasicOCSPResponse(object response) {

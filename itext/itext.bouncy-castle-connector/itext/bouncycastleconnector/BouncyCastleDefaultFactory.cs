@@ -248,6 +248,10 @@ namespace iText.Bouncycastleconnector {
         public IBasicOcspResponse CreateBasicOCSPResponse(IAsn1Object primitive) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
+        
+        public IBasicOcspResponse CreateBasicOCSPResponse(byte[] bytes) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
 
         public IBasicOcspResponse CreateBasicOCSPResponse(object response) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);

@@ -82,6 +82,7 @@ using Org.BouncyCastle.Cert;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Asymmetric;
 using Org.BouncyCastle.Crypto.Fips;
+using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Operators;
 using Org.BouncyCastle.Operators.Utilities;
@@ -427,6 +428,12 @@ namespace iText.Bouncycastlefips {
         public virtual IBasicOcspResponse CreateBasicOCSPResponse(IAsn1Object primitive) {
             Asn1ObjectBCFips primitiveBCFips = (Asn1ObjectBCFips)primitive;
             return new BasicOcspResponseBCFips(BasicOcspResponse.GetInstance(primitiveBCFips.GetPrimitive()));
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual IBasicOcspResponse CreateBasicOCSPResponse(byte[] bytes) {
+            return new BasicOcspResponseBCFips(BasicOcspResponse.GetInstance(
+                (Asn1Sequence)Asn1Sequence.FromByteArray(bytes)));
         }
 
         /// <summary><inheritDoc/></summary>

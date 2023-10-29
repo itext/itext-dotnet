@@ -466,6 +466,11 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="primitive">ASN1 Primitive wrapper to create basic OCSP response wrapper from</param>
         /// <returns>created basic OCSP response wrapper</returns>
         IBasicOcspResponse CreateBasicOCSPResponse(IAsn1Object primitive);
+        
+        /// <summary>Create basic OCSP Response wrapper from bytes array.</summary>
+        /// <param name="bytes">bytes array to create basic OCSP response wrapper from</param>
+        /// <returns>created basic OCSP response wrapper</returns>
+        IBasicOcspResponse CreateBasicOCSPResponse(byte[] bytes);
 
         /// <summary>
         /// Create basic OCSP Resp wrapper from

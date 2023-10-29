@@ -73,8 +73,8 @@ namespace iText.Signatures.Exceptions {
 
         public const String NO_CRYPTO_DICTIONARY_DEFINED = "No crypto dictionary defined.";
 
-        public const String NO_REVOCATION_DATA_FOR_SIGNING_CERTIFICATE = "Neither ocsp nor crl data available for "
-             + "the signing certificate or certificate is revoked.";
+        public const String NO_REVOCATION_DATA_FOR_SIGNING_CERTIFICATE = "Neither ocsp nor crl data are available "
+             + "for the signing certificate or certificate is revoked.";
 
         public const String NO_SIGNATURES_TO_PROLONG = "Document doesn't contain any signatures to prolong.";
 

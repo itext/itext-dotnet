@@ -530,7 +530,7 @@ namespace iText.Signatures {
              revocationDataNecessity) {
             LtvVerification ltvVerification = new LtvVerification(pdfDocument);
             foreach (String signatureName in signatureNames) {
-                ltvVerification.AddVerification(signatureName, ocspClient, crlClient, LtvVerification.CertificateOption.WHOLE_CHAIN
+                ltvVerification.AddVerification(signatureName, ocspClient, crlClient, LtvVerification.CertificateOption.CHAIN_AND_OCSP_RESPONSE_CERTIFICATES
                     , LtvVerification.Level.OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.YES, revocationDataNecessity
                     );
             }
