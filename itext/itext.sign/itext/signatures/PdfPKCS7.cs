@@ -887,13 +887,9 @@ namespace iText.Signatures {
             if (timeStampToken == null) {
                 return null;
             }
-            // @todo: move this together with the rest of the defintions
-            String ID_TIME_STAMP_TOKEN = "1.2.840.113549.1.9.16.2.14";
-            // RFC 3161 id-aa-timeStampToken
             IAsn1EncodableVector unauthAttributes = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
             IAsn1EncodableVector v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
-            v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(ID_TIME_STAMP_TOKEN));
-            // id-aa-timeStampToken
+            v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_AA_TIME_STAMP_TOKEN));
             using (IAsn1InputStream tempstream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(timeStampToken
                 ))) {
                 IAsn1Sequence seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tempstream.ReadObject());

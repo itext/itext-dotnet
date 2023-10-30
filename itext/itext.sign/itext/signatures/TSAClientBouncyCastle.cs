@@ -182,12 +182,9 @@ namespace iText.Signatures {
             IPkiFailureInfo failure = response.GetFailInfo();
             int value = failure.IsNull() ? 0 : failure.IntValue();
             if (value != 0) {
-                // @todo: Translate value of 15 error codes defined by PKIFailureInfo to string
-                throw new PdfException(SignExceptionMessageConstant.INVALID_TSA_RESPONSE).SetMessageParams(tsaURL, value.ToString
-                    ());
+                throw new PdfException(SignExceptionMessageConstant.INVALID_TSA_RESPONSE).SetMessageParams(tsaURL, value +
+                     ": " + response.GetStatusString());
             }
-            // @todo: validate the time stap certificate chain (if we want
-            //        assure we do not sign using an invalid timestamp).
             // extract just the time stamp token (removes communication status info)
             ITimeStampToken tsToken = response.GetTimeStampToken();
             if (tsToken == null) {

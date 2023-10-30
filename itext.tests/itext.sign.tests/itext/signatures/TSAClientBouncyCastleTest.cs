@@ -162,7 +162,7 @@ namespace iText.Signatures {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tsaClientBouncyCastle.GetTimeStampToken
                 (digest));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignExceptionMessageConstant.INVALID_TSA_RESPONSE
-                , url, "128"), e.Message);
+                , url, "128: request contains unknown algorithm"), e.Message);
         }
 
         private sealed class CustomTsaClientBouncyCastle : TSAClientBouncyCastle {

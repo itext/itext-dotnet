@@ -66,5 +66,7 @@ namespace iText.Signatures {
         public const String ID_AA_SIGNING_CERTIFICATE_V2 = "1.2.840.113549.1.9.16.2.47";
 
         public const String ID_MGF1 = "1.2.840.113549.1.1.8";
+
+        public const String ID_AA_TIME_STAMP_TOKEN = "1.2.840.113549.1.9.16.2.14";
     }
 }
