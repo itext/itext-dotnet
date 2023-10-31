@@ -33,6 +33,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(int.MaxValue / 100, handler.GetMaxSizeOfSingleDecompressedPdfStream());
             NUnit.Framework.Assert.AreEqual(int.MaxValue / 20, handler.GetMaxSizeOfDecompressedPdfStreamsSum());
             NUnit.Framework.Assert.AreEqual(50000000, handler.GetMaxNumberOfElementsInXrefStructure());
+            NUnit.Framework.Assert.AreEqual(1024L * 1024L * 1024L * 3L, handler.GetMaxXObjectsSizePerPage());
         }
 
         [NUnit.Framework.Test]
@@ -45,15 +46,15 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void OverridenMemoryHandler() {
             MemoryLimitsAwareHandler defaultHandler = new MemoryLimitsAwareHandler();
-            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_58();
+            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_59();
             PdfArray filters = new PdfArray();
             filters.Add(PdfName.FlateDecode);
             NUnit.Framework.Assert.IsFalse(defaultHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
             NUnit.Framework.Assert.IsTrue(customHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
         }
 
-        private sealed class _MemoryLimitsAwareHandler_58 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_58() {
+        private sealed class _MemoryLimitsAwareHandler_59 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_59() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
@@ -99,6 +100,15 @@ namespace iText.Kernel.Pdf {
                 );
             memoryLimitsAwareHandler.SetMaxNumberOfElementsInXrefStructure(20);
             NUnit.Framework.Assert.AreEqual(20, memoryLimitsAwareHandler.GetMaxNumberOfElementsInXrefStructure());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CustomMaxXObjectSizePerPageHandlerTest() {
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new MemoryLimitsAwareHandler();
+            NUnit.Framework.Assert.AreEqual(1024L * 1024L * 1024L * 3L, memoryLimitsAwareHandler.GetMaxXObjectsSizePerPage
+                ());
+            memoryLimitsAwareHandler.SetMaxXObjectsSizePerPage(1024L);
+            NUnit.Framework.Assert.AreEqual(1024L, memoryLimitsAwareHandler.GetMaxXObjectsSizePerPage());
         }
 
         [NUnit.Framework.Test]

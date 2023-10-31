@@ -52,11 +52,15 @@ namespace iText.Kernel.Pdf {
 
         private const long SUM_OF_DECOMPRESSED_PDF_STREAMS_MIN_SIZE = int.MaxValue / 20;
 
+        private const long MAX_X_OBJECTS_SIZE_PER_PAGE = 1024L * 1024L * 1024L * 3;
+
         private int maxSizeOfSingleDecompressedPdfStream;
 
         private long maxSizeOfDecompressedPdfStreamsSum;
 
         private int maxNumberOfElementsInXrefStructure;
+
+        private long maxXObjectsSizePerPage;
 
         private long allMemoryUsedForDecompression = 0;
 
@@ -77,7 +81,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         public MemoryLimitsAwareHandler()
             : this(SINGLE_DECOMPRESSED_PDF_STREAM_MIN_SIZE, SUM_OF_DECOMPRESSED_PDF_STREAMS_MIN_SIZE, MAX_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE
-                ) {
+                , MAX_X_OBJECTS_SIZE_PER_PAGE) {
         }
 
         /// <summary>
@@ -95,14 +99,15 @@ namespace iText.Kernel.Pdf {
         public MemoryLimitsAwareHandler(long documentSize)
             : this((int)CalculateDefaultParameter(documentSize, SINGLE_SCALE_COEFFICIENT, SINGLE_DECOMPRESSED_PDF_STREAM_MIN_SIZE
                 ), CalculateDefaultParameter(documentSize, SUM_SCALE_COEFFICIENT, SUM_OF_DECOMPRESSED_PDF_STREAMS_MIN_SIZE
-                ), MAX_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE) {
+                ), MAX_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE, MAX_X_OBJECTS_SIZE_PER_PAGE) {
         }
 
         private MemoryLimitsAwareHandler(int maxSizeOfSingleDecompressedPdfStream, long maxSizeOfDecompressedPdfStreamsSum
-            , int maxNumberOfElementsInXrefStructure) {
+            , int maxNumberOfElementsInXrefStructure, long maxXObjectsSizePerPage) {
             this.maxSizeOfSingleDecompressedPdfStream = maxSizeOfSingleDecompressedPdfStream;
             this.maxSizeOfDecompressedPdfStreamsSum = maxSizeOfDecompressedPdfStreamsSum;
             this.maxNumberOfElementsInXrefStructure = maxNumberOfElementsInXrefStructure;
+            this.maxXObjectsSizePerPage = maxXObjectsSizePerPage;
         }
 
         /// <summary>Gets the maximum allowed size which can be occupied by a single decompressed pdf stream.</summary>
@@ -193,6 +198,18 @@ namespace iText.Kernel.Pdf {
             return maxNumberOfElementsInXrefStructure;
         }
 
+        /// <summary>Gets maximum page size.</summary>
+        /// <returns>maximum page size.</returns>
+        public virtual long GetMaxXObjectsSizePerPage() {
+            return maxXObjectsSizePerPage;
+        }
+
+        /// <summary>Sets maximum page size.</summary>
+        /// <param name="maxPageSize">maximum page size.</param>
+        public virtual void SetMaxXObjectsSizePerPage(long maxPageSize) {
+            this.maxXObjectsSizePerPage = maxPageSize;
+        }
+
         /// <summary>Sets maximum number of elements in xref structure.</summary>
         /// <param name="maxNumberOfElementsInXrefStructure">maximum number of elements in xref structure.</param>
         public virtual void SetMaxNumberOfElementsInXrefStructure(int maxNumberOfElementsInXrefStructure) {
@@ -206,6 +223,13 @@ namespace iText.Kernel.Pdf {
             // amount of elements we need maxNumberOfElementsInXrefStructure + 1 capacity.
             if (requestedCapacity - 1 > maxNumberOfElementsInXrefStructure) {
                 throw new MemoryLimitsAwareException(KernelExceptionMessageConstant.XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT
+                    );
+            }
+        }
+
+        public virtual void CheckIfPageSizeExceedsTheLimit(long totalXObjectsSize) {
+            if (totalXObjectsSize > maxXObjectsSizePerPage) {
+                throw new MemoryLimitsAwareException(KernelExceptionMessageConstant.TOTAL_XOBJECT_SIZE_ONE_PAGE_EXCEEDED_THE_LIMIT
                     );
             }
         }

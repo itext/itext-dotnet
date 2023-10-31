@@ -357,6 +357,16 @@ namespace iText.Kernel.Pdf {
             return GetPage(GetNumberOfPages());
         }
 
+        /// <summary>Gets current memory limits handler</summary>
+        /// <returns>
+        /// 
+        /// <c>MemoryLimitsAwareHandler</c>
+        /// instance
+        /// </returns>
+        public virtual MemoryLimitsAwareHandler GetMemoryLimitsAwareHandler() {
+            return memoryLimitsAwareHandler;
+        }
+
         /// <summary>
         /// Marks
         /// <see cref="PdfStream"/>
