@@ -59,7 +59,7 @@ namespace iText.Signatures.Sign {
         [NUnit.Framework.Test]
         public virtual void PadesRsaSigTest01() {
             SignApproval(certsSrc + "signCertRsa01.pem", destinationFolder + "padesRsaSigTest01.pdf");
-            BasicCheckSignedDoc(destinationFolder + "padesRsaSigTest01.pdf", "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(destinationFolder + "padesRsaSigTest01.pdf", "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(destinationFolder + "padesRsaSigTest01.pdf"
                 , sourceFolder + "cmp_padesRsaSigTest01.pdf"));
         }
@@ -67,7 +67,7 @@ namespace iText.Signatures.Sign {
         [NUnit.Framework.Test]
         public virtual void PadesRsaSigTestWithChain01() {
             SignApproval(certsSrc + "signCertRsaWithChain.pem", destinationFolder + "padesRsaSigTestWithChain01.pdf");
-            BasicCheckSignedDoc(destinationFolder + "padesRsaSigTestWithChain01.pdf", "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(destinationFolder + "padesRsaSigTestWithChain01.pdf", "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(destinationFolder + "padesRsaSigTestWithChain01.pdf"
                 , sourceFolder + "cmp_padesRsaSigTestWithChain01.pdf"));
         }
@@ -82,7 +82,7 @@ namespace iText.Signatures.Sign {
         [NUnit.Framework.Test]
         public virtual void PadesEccSigTest01() {
             SignApproval(certsSrc + "signCertEcc01.pem", destinationFolder + "padesEccSigTest01.pdf");
-            BasicCheckSignedDoc(destinationFolder + "padesEccSigTest01.pdf", "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(destinationFolder + "padesEccSigTest01.pdf", "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(destinationFolder + "padesEccSigTest01.pdf"
                 , sourceFolder + "cmp_padesEccSigTest01.pdf"));
         }
@@ -103,7 +103,7 @@ namespace iText.Signatures.Sign {
                 );
             SignApproval(certsSrc + "signCertRsa01.pem", destinationFolder + "padesEpesProfileTest01.pdf", sigPolicyIdentifier
                 );
-            BasicCheckSignedDoc(destinationFolder + "padesEpesProfileTest01.pdf", "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(destinationFolder + "padesEpesProfileTest01.pdf", "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(destinationFolder + "padesEpesProfileTest01.pdf"
                 , sourceFolder + "cmp_padesEpesProfileTest01.pdf"));
         }
@@ -114,7 +114,7 @@ namespace iText.Signatures.Sign {
             SignaturePolicyInfo spi = new SignaturePolicyInfo("1.2.3.4.5.6.7.8.9.10", "aVRleHQ0TGlmZVJhbmRvbVRleHQ=", 
                 "SHA-1", "https://signature-policy.org/not-available");
             SignApproval(certsSrc + "signCertRsa01.pem", signedFileName, spi);
-            BasicCheckSignedDoc(signedFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(signedFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(signedFileName, sourceFolder + "cmp_signaturePolicyInfoUnavailableUrl_signed.pdf"
                 ));
         }
@@ -156,14 +156,6 @@ namespace iText.Signatures.Sign {
                     signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
                 }
             }
-        }
-
-        internal static void BasicCheckSignedDoc(String filePath, String signatureName) {
-            PdfDocument outDocument = new PdfDocument(new PdfReader(filePath));
-            SignatureUtil sigUtil = new SignatureUtil(outDocument);
-            PdfPKCS7 signatureData = sigUtil.ReadSignatureData(signatureName);
-            NUnit.Framework.Assert.IsTrue(signatureData.VerifySignatureIntegrityAndAuthenticity());
-            outDocument.Close();
         }
     }
 }

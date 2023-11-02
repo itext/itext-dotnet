@@ -109,7 +109,7 @@ namespace iText.Signatures.Sign {
             else {
                 padesSigner.SignWithBaselineBProfile(signerProperties, signRsaChain, signRsaPrivateKey);
             }
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
@@ -142,7 +142,7 @@ namespace iText.Signatures.Sign {
             else {
                 padesSigner.SignWithBaselineTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             }
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
@@ -181,7 +181,7 @@ namespace iText.Signatures.Sign {
             else {
                 padesSigner.SignWithBaselineLTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             }
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
@@ -220,7 +220,7 @@ namespace iText.Signatures.Sign {
             else {
                 padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             }
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
@@ -254,7 +254,7 @@ namespace iText.Signatures.Sign {
             else {
                 padesSigner.ProlongSignatures();
             }
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 

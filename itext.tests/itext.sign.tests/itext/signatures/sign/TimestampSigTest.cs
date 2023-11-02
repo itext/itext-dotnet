@@ -69,7 +69,7 @@ namespace iText.Signatures.Sign {
                 new StampingProperties());
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.Timestamp(testTsa, "timestampSig1");
-            PadesSigTest.BasicCheckSignedDoc(destinationFolder + "timestampTest01.pdf", "timestampSig1");
+            TestSignUtils.BasicCheckSignedDoc(destinationFolder + "timestampTest01.pdf", "timestampSig1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, compareFile));
         }
         //        TimeStampToken tsWrong = new TimeStampResponse(Files.readAllBytes(Paths.get("c:\\Users\\yulian\\Desktop\\myTs"))).getTimeStampToken();

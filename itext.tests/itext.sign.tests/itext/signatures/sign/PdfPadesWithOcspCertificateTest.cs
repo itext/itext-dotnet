@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
@@ -41,8 +42,6 @@ namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfPadesWithOcspCertificateTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
-        
-        private static readonly bool FIPS_MODE = "BCFIPS".Equals(FACTORY.GetProviderName());
 
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfPadesWithOcspCertificateTest/certs/";
@@ -62,44 +61,40 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void SignCertWithOcspTest() {
-            String fileName = "signCertWithOcspTest" + (FIPS_MODE ? "_FIPS.pdf" : ".pdf");
-            String outFileName = destinationFolder + fileName;
-            String cmpFileName = sourceFolder + "cmp_" + fileName;
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String signCertFileName = certsSrc + "signRsaWithOcsp.pem";
             String tsaCertFileName = certsSrc + "tsCertRsa.pem";
             String rootCertFileName = certsSrc + "rootRsa2.pem";
             String ocspCertFileName = certsSrc + "ocspCert.pem";
-            IX509Certificate signRsaCert = PemFileHelper.ReadFirstChain(signCertFileName)[0];
-            IX509Certificate rootCert = PemFileHelper.ReadFirstChain(rootCertFileName)[0];
-            IX509Certificate[] signRsaChain = new IX509Certificate[2];
-            signRsaChain[0] = signRsaCert;
-            signRsaChain[1] = rootCert;
+            IX509Certificate signRsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(signCertFileName)[0];
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PASSWORD);
             IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, PASSWORD);
-            IX509Certificate ocspCert = PemFileHelper.ReadFirstChain(ocspCertFileName)[0];
+            IX509Certificate ocspCert = (IX509Certificate)PemFileHelper.ReadFirstChain(ocspCertFileName)[0];
             IPrivateKey ocspPrivateKey = PemFileHelper.ReadFirstKey(ocspCertFileName, PASSWORD);
             SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient(null);
-            ocspClient.AddBuilderForCertIssuer((IX509Certificate)signRsaCert, (IX509Certificate)ocspCert, ocspPrivateKey
+            ocspClient.AddBuilderForCertIssuer(signRsaCert, ocspCert, ocspPrivateKey);
+            ocspClient.AddBuilderForCertIssuer(ocspCert, ocspCert, ocspPrivateKey);
+            MemoryStream outputStream = new MemoryStream();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outputStream);
+            padesSigner.SetOcspClient(ocspClient);
+            IX509Certificate[] signRsaChain = new IX509Certificate[] { signRsaCert, rootCert };
+            padesSigner.SignWithBaselineLTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
+            outputStream.Dispose();
+            TestSignUtils.BasicCheckSignedDoc(new MemoryStream(outputStream.ToArray()), "Signature1");
+            IDictionary<String, int?> expectedNumberOfCrls = new Dictionary<String, int?>();
+            IDictionary<String, int?> expectedNumberOfOcsps = new Dictionary<String, int?>();
+            // It is expected to have two OCSP responses, one for signing cert and another for OCSP response.
+            expectedNumberOfOcsps.Put(ocspCert.GetSubjectDN().ToString(), 2);
+            TestSignUtils.AssertDssDict(new MemoryStream(outputStream.ToArray()), expectedNumberOfCrls, expectedNumberOfOcsps
                 );
-            ocspClient.AddBuilderForCertIssuer((IX509Certificate)ocspCert, (IX509Certificate)ocspCert, ocspPrivateKey);
-            using (Stream outputStream = FileUtil.GetFileOutputStream(outFileName)) {
-                PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outputStream);
-                padesSigner.SetOcspClient(ocspClient);
-                // It is expected to have two OCSP responses, one for signing cert and another for OCSP response.
-                padesSigner.SignWithBaselineLTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
-                PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
-                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
-            }
         }
 
         [NUnit.Framework.Test]
         public virtual void SignCertWithoutOcspTest() {
-            String fileName = "signCertWithoutOcspTest.pdf";
-            String outFileName = destinationFolder + fileName;
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String signCertFileName = certsSrc + "signRsaWithoutOcsp.pem";
             String tsaCertFileName = certsSrc + "tsCertRsa.pem";
@@ -121,7 +116,7 @@ namespace iText.Signatures.Sign {
             ocspClient.AddBuilderForCertIssuer((IX509Certificate)signRsaCert, (IX509Certificate)ocspCert, ocspPrivateKey
                 );
             ocspClient.AddBuilderForCertIssuer((IX509Certificate)ocspCert, (IX509Certificate)ocspCert, ocspPrivateKey);
-            using (Stream outputStream = FileUtil.GetFileOutputStream(outFileName)) {
+            using (Stream outputStream = new MemoryStream()) {
                 PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outputStream);
                 padesSigner.SetOcspClient(ocspClient);
                 Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => padesSigner.SignWithBaselineLTProfile
@@ -133,34 +128,31 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void SignCertWithOcspOcspCertSameAsSignCertTest() {
-            String fileName = "signCertWithOcspOcspCertSameAsSignCertTest" + (FIPS_MODE ? "_FIPS.pdf" : ".pdf");
-            String outFileName = destinationFolder + fileName;
-            String cmpFileName = sourceFolder + "cmp_" + fileName;
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String signCertFileName = certsSrc + "signRsaWithOcsp.pem";
             String tsaCertFileName = certsSrc + "tsCertRsa.pem";
             String rootCertFileName = certsSrc + "rootRsa2.pem";
-            IX509Certificate signRsaCert = PemFileHelper.ReadFirstChain(signCertFileName)[0];
-            IX509Certificate rootCert = PemFileHelper.ReadFirstChain(rootCertFileName)[0];
-            IX509Certificate[] signRsaChain = new IX509Certificate[2];
-            signRsaChain[0] = signRsaCert;
-            signRsaChain[1] = rootCert;
+            IX509Certificate signRsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(signCertFileName)[0];
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PASSWORD);
             IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, PASSWORD);
             SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient(null);
-            ocspClient.AddBuilderForCertIssuer((IX509Certificate)signRsaCert, (IX509Certificate)signRsaCert, signRsaPrivateKey
+            ocspClient.AddBuilderForCertIssuer(signRsaCert, signRsaCert, signRsaPrivateKey);
+            MemoryStream outputStream = new MemoryStream();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outputStream);
+            padesSigner.SetOcspClient(ocspClient);
+            IX509Certificate[] signRsaChain = new IX509Certificate[] { signRsaCert, rootCert };
+            padesSigner.SignWithBaselineLTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
+            TestSignUtils.BasicCheckSignedDoc(new MemoryStream(outputStream.ToArray()), "Signature1");
+            IDictionary<String, int?> expectedNumberOfCrls = new Dictionary<String, int?>();
+            IDictionary<String, int?> expectedNumberOfOcsps = new Dictionary<String, int?>();
+            // It is expected to have one OCSP response, only for signing cert.
+            expectedNumberOfOcsps.Put(signRsaCert.GetSubjectDN().ToString(), 1);
+            TestSignUtils.AssertDssDict(new MemoryStream(outputStream.ToArray()), expectedNumberOfCrls, expectedNumberOfOcsps
                 );
-            using (Stream outputStream = FileUtil.GetFileOutputStream(outFileName)) {
-                PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outputStream);
-                padesSigner.SetOcspClient(ocspClient);
-                // It is expected to have one OCSP response, only for signing cert.
-                padesSigner.SignWithBaselineLTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
-                PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
-                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
-            }
         }
 
         private SignerProperties CreateSignerProperties() {

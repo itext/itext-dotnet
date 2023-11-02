@@ -65,7 +65,7 @@ namespace iText.Signatures.Sign {
             signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 350, 200, 100)).SetReason("Test").SetLocation
                 ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText.");
             signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
-            PadesSigTest.BasicCheckSignedDoc(outFileName, signatureName);
+            TestSignUtils.BasicCheckSignedDoc(outFileName, signatureName);
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
@@ -89,8 +89,8 @@ namespace iText.Signatures.Sign {
             signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 550, 200, 100)).SetReason("Test2").SetLocation
                 ("TestCity2").SetLayer2Text("Approval test signature #2.\nCreated by iText.");
             signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature2");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature2");
             using (PdfDocument twiceSigned = new PdfDocument(new PdfReader(outFileName))) {
                 using (PdfDocument resource = new PdfDocument(new PdfReader(srcFileName))) {
                     float resourceStrElemNumber = resource.GetStructTreeRoot().GetPdfObject().GetAsArray(PdfName.K).GetAsDictionary

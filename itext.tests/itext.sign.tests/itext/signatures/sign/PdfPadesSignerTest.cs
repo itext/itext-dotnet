@@ -153,7 +153,7 @@ namespace iText.Signatures.Sign {
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
             padesSigner.SetOcspClient(ocspClient).SetCrlClient(crlClient);
             padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, pks, testTsa);
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 

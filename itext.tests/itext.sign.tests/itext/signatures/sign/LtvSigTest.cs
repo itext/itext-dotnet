@@ -209,7 +209,7 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.IsNotNull(dssDict);
             NUnit.Framework.Assert.AreEqual(4, dssDict.Size());
             outDocument.Close();
-            PadesSigTest.BasicCheckSignedDoc(DESTINATION_FOLDER + outFileName, tsSigName);
+            TestSignUtils.BasicCheckSignedDoc(DESTINATION_FOLDER + outFileName, tsSigName);
         }
     }
 }
