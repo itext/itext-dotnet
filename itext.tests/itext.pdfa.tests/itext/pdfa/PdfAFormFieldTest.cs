@@ -535,6 +535,34 @@ namespace iText.Pdfa {
             ));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void TestCopyPagesDoesntEmbedHelveticaFont() {
+            String simplePdf = DESTINATION_FOLDER + "simplePdfAWithFormfield.pdf";
+            String outPdf = DESTINATION_FOLDER + "testCopyPagesDoesntEmbedHelveticaFont.pdf";
+            String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_testCopyPagesDoesntEmbedHelveticaFont.pdf";
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
+            PdfWriter writer = new PdfWriter(simplePdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4E, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            Document document = new Document(doc);
+            document.Add(new InputField("inputfield1").SetFont(font).SetInteractive(true).SetValue("Hello there"));
+            document.Add(new Paragraph("Hello there paragraph").SetFont(font));
+            doc.Close();
+            PdfWriter writer2 = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument doc2 = new PdfADocument(writer2, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", 
+                "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            PdfDocument docToCopy = new PdfDocument(new PdfReader(simplePdf));
+            docToCopy.CopyPagesTo(1, 1, doc2, new PdfPageFormCopier());
+            docToCopy.Close();
+            doc2.Close();
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmp, DESTINATION_FOLDER, "diff_")
+                );
+        }
+
         private void MakePdfDocument(String outPdf, String cmp, Action<Document> consumer) {
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4E, new PdfOutputIntent("Custom", ""
