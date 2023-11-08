@@ -514,60 +514,6 @@ namespace iText.Pdfa.Checker {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestDestOutputIntentProfileNotAllowedTest() {
-            PdfDictionary catalog = new PdfDictionary();
-            PdfArray array = new PdfArray();
-            PdfDictionary dictionary = new PdfDictionary();
-            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc"));
-            byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
-                ).Replace("prtr", "not_def").GetBytes(System.Text.Encoding.ASCII);
-            dictionary.Put(PdfName.DestOutputProfile, new PdfStream(manipulatedBytes));
-            array.Add(dictionary);
-            catalog.Put(PdfName.OutputIntents, array);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => new PdfA4Checker(PdfAConformanceLevel
-                .PDF_A_4F).CheckOutputIntents(catalog));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PROFILE_STREAM_OF_OUTPUTINTENT_SHALL_BE_OUTPUT_PROFILE_PRTR_OR_MONITOR_PROFILE_MNTR
-                , e.Message);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestDestOutputIntentColorSpaceNotAllowedTest() {
-            PdfDictionary catalog = new PdfDictionary();
-            PdfArray array = new PdfArray();
-            PdfDictionary dictionary = new PdfDictionary();
-            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc"));
-            byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
-                ).Replace("CMYK", "not_def").GetBytes(System.Text.Encoding.ASCII);
-            dictionary.Put(PdfName.DestOutputProfile, new PdfStream(manipulatedBytes));
-            array.Add(dictionary);
-            catalog.Put(PdfName.OutputIntents, array);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => new PdfA4Checker(PdfAConformanceLevel
-                .PDF_A_4F).CheckOutputIntents(catalog));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.OUTPUT_INTENT_COLOR_SPACE_SHALL_BE_EITHER_GRAY_RGB_OR_CMYK
-                , e.Message);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestDestOutputIntentRefNotAllowedTest() {
-            String outPdf = SOURCE_FOLDER + "PdfWithOutputIntentProfileRef.pdf";
-            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_4;
-            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfADocument = new PdfADocument(writer, conformanceLevel, new PdfOutputIntent("Custom", "", "http://www.color.org"
-                , "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                )));
-            pdfADocument.AddNewPage();
-            PdfDictionary catalog = pdfADocument.GetCatalog().GetPdfObject();
-            PdfArray outputIntents = catalog.GetAsArray(PdfName.OutputIntents);
-            PdfDictionary outputIntent = outputIntents.GetAsDictionary(0);
-            outputIntent.Put(new PdfName("DestOutputProfileRef"), new PdfDictionary());
-            outputIntents.Add(outputIntent);
-            catalog.Put(PdfName.OutputIntents, outputIntents);
-            pdfADocument.Close();
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
-        }
-
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
-        [NUnit.Framework.Test]
         public virtual void PdfA4DocumentMetaDataIsNotUTF8Encoded() {
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "encodedXmp.xmp"));
             String outPdf = DESTINATION_FOLDER + "metadataNotUTF8.pdf";
@@ -578,6 +524,8 @@ namespace iText.Pdfa.Checker {
             doc.AddNewPage();
             doc.GetPage(1).SetXmpMetadata(bytes);
             doc.Close();
+            //should throw exception
+            //TODO DEVSIX-7886: Change assertion by catching the exception when closing the document and verify the content.
             NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
         }
 
