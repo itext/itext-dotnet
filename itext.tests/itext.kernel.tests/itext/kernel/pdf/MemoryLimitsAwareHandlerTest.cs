@@ -112,6 +112,19 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MinSizeBasedXrefCapacityHandlerTest() {
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new MemoryLimitsAwareHandler(1024 * 1024);
+            NUnit.Framework.Assert.AreEqual(500000, memoryLimitsAwareHandler.GetMaxNumberOfElementsInXrefStructure());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SizeBasedXrefCapacityHandlerTest() {
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new MemoryLimitsAwareHandler(1024 * 1024 * 80);
+            NUnit.Framework.Assert.AreEqual(40000000, memoryLimitsAwareHandler.GetMaxNumberOfElementsInXrefStructure()
+                );
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CheckCapacityExceedsLimitTest() {
             MemoryLimitsAwareHandler memoryLimitsAwareHandler = new MemoryLimitsAwareHandler();
             // There we add 2 instead of 1 since xref structures used 1-based indexes, so we decrement the capacity

@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.Kernel.Exceptions;
 
@@ -47,6 +48,8 @@ namespace iText.Kernel.Pdf {
         private const int SUM_SCALE_COEFFICIENT = 500;
 
         private const int MAX_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE = 50000000;
+
+        private const int MIN_LIMIT_FOR_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE = 500000;
 
         private const int SINGLE_DECOMPRESSED_PDF_STREAM_MIN_SIZE = int.MaxValue / 100;
 
@@ -99,7 +102,7 @@ namespace iText.Kernel.Pdf {
         public MemoryLimitsAwareHandler(long documentSize)
             : this((int)CalculateDefaultParameter(documentSize, SINGLE_SCALE_COEFFICIENT, SINGLE_DECOMPRESSED_PDF_STREAM_MIN_SIZE
                 ), CalculateDefaultParameter(documentSize, SUM_SCALE_COEFFICIENT, SUM_OF_DECOMPRESSED_PDF_STREAMS_MIN_SIZE
-                ), MAX_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE, MAX_X_OBJECTS_SIZE_PER_PAGE) {
+                ), CalculateMaxElementsInXref(documentSize), MAX_X_OBJECTS_SIZE_PER_PAGE) {
         }
 
         private MemoryLimitsAwareHandler(int maxSizeOfSingleDecompressedPdfStream, long maxSizeOfDecompressedPdfStreamsSum
@@ -232,6 +235,17 @@ namespace iText.Kernel.Pdf {
                 throw new MemoryLimitsAwareException(KernelExceptionMessageConstant.TOTAL_XOBJECT_SIZE_ONE_PAGE_EXCEEDED_THE_LIMIT
                     );
             }
+        }
+
+        /// <summary>Calculate max number of elements allowed in xref table based on the size of the document, achieving max limit at 100MB.
+        ///     </summary>
+        /// <param name="documentSizeInBytes">document size in bytes.</param>
+        /// <returns>calculated limit.</returns>
+        protected internal static int CalculateMaxElementsInXref(long documentSizeInBytes) {
+            int maxDocSizeForMaxLimit = MAX_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE / MIN_LIMIT_FOR_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE;
+            int documentSizeInMb = Math.Max(1, Math.Min((int)documentSizeInBytes / (1024 * 1024), maxDocSizeForMaxLimit
+                ));
+            return documentSizeInMb * MIN_LIMIT_FOR_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE;
         }
 
         /// <summary>Considers the number of bytes which are occupied by the decompressed pdf stream.</summary>
