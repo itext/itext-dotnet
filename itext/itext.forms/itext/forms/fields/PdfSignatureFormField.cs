@@ -37,14 +37,48 @@ namespace iText.Forms.Fields {
         /// <summary>Signature appearance layer that contains information about the signature.</summary>
         private PdfFormXObject n2;
 
+        /// <summary>
+        /// Creates a minimal
+        /// <see cref="PdfSignatureFormField"/>.
+        /// </summary>
+        /// <param name="pdfDocument">
+        /// The
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance.
+        /// </param>
         protected internal PdfSignatureFormField(PdfDocument pdfDocument)
             : base(pdfDocument) {
         }
 
+        /// <summary>
+        /// Creates a signature form field as a parent of a
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>.
+        /// </summary>
+        /// <param name="widget">
+        /// The widget which will be a kid of the
+        /// <see cref="PdfSignatureFormField"/>.
+        /// </param>
+        /// <param name="pdfDocument">
+        /// The
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance.
+        /// </param>
         protected internal PdfSignatureFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument)
             : base(widget, pdfDocument) {
         }
 
+        /// <summary>
+        /// Creates a signature form field as a wrapper object around a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// </summary>
+        /// <remarks>
+        /// Creates a signature form field as a wrapper object around a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// This
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// must be an indirect object.
+        /// </remarks>
+        /// <param name="pdfObject">the dictionary to be wrapped, must have an indirect reference.</param>
         protected internal PdfSignatureFormField(PdfDictionary pdfObject)
             : base(pdfObject) {
         }

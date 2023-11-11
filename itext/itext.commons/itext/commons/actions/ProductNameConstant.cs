@@ -25,15 +25,21 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 
 namespace iText.Commons.Actions {
+    /// <summary>Class which contains open source product name constants.</summary>
     public sealed class ProductNameConstant {
+        /// <summary>itext-core constant.</summary>
         public const String ITEXT_CORE = "itext-core";
 
+        /// <summary>pdfhtml constant.</summary>
         public const String PDF_HTML = "pdfHtml";
 
+        /// <summary>pdfsweep constant.</summary>
         public const String PDF_SWEEP = "pdfSweep";
 
+        /// <summary>pdfocr-tesseract4 constant.</summary>
         public const String PDF_OCR_TESSERACT4 = "pdfOcr-tesseract4";
 
+        /// <summary>set of product names.</summary>
         public static readonly ICollection<String> PRODUCT_NAMES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
             <String>(JavaUtil.ArraysAsList(iText.Commons.Actions.ProductNameConstant.ITEXT_CORE, iText.Commons.Actions.ProductNameConstant
             .PDF_HTML, iText.Commons.Actions.ProductNameConstant.PDF_SWEEP, iText.Commons.Actions.ProductNameConstant
