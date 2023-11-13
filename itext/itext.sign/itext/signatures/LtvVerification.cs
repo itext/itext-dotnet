@@ -32,8 +32,6 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
-using iText.Forms;
-using iText.Forms.Fields;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
@@ -46,16 +44,15 @@ namespace iText.Signatures {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
-        private ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.LtvVerification));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.LtvVerification
+            ));
 
-        private PdfDocument document;
+        private readonly PdfDocument document;
 
-        private SignatureUtil sgnUtil;
+        private readonly SignatureUtil sgnUtil;
 
-        private PdfAcroForm acroForm;
-
-        private IDictionary<PdfName, LtvVerification.ValidationData> validated = new Dictionary<PdfName, LtvVerification.ValidationData
-            >();
+        private readonly IDictionary<PdfName, LtvVerification.ValidationData> validated = new Dictionary<PdfName, 
+            LtvVerification.ValidationData>();
 
         private bool used = false;
 
@@ -81,7 +78,12 @@ namespace iText.Signatures {
             /// Include verification for the whole chain of certificates
             /// and certificates used to create OCSP revocation data responses.
             /// </summary>
-            CHAIN_AND_OCSP_RESPONSE_CERTIFICATES
+            CHAIN_AND_OCSP_RESPONSE_CERTIFICATES,
+            /// <summary>
+            /// Include verification for the whole certificates chain, certificates used to create OCSP responses
+            /// and timestamp certificates included in the signatures.
+            /// </summary>
+            CHAIN_OCSP_AND_TIMESTAMP_CERTIFICATES
         }
 
         /// <summary>
@@ -116,7 +118,6 @@ namespace iText.Signatures {
         /// </param>
         public LtvVerification(PdfDocument document) {
             this.document = document;
-            this.acroForm = PdfFormCreator.GetAcroForm(document, true);
             this.sgnUtil = new SignatureUtil(document);
         }
 
@@ -157,6 +158,11 @@ namespace iText.Signatures {
             ICollection<IX509Certificate> processedCerts = new HashSet<IX509Certificate>();
             AddRevocationDataForChain(signingCert, certificateChain, ocsp, crl, level, certInclude, certOption, revocationDataNecessity
                 , validationData, processedCerts);
+            if (certOption == LtvVerification.CertificateOption.CHAIN_OCSP_AND_TIMESTAMP_CERTIFICATES) {
+                IX509Certificate[] timestampCertsChain = pk.GetTimestampCertificates();
+                AddRevocationDataForChain(signingCert, timestampCertsChain, ocsp, crl, level, certInclude, certOption, revocationDataNecessity
+                    , validationData, processedCerts);
+            }
             if (validationData.crls.Count == 0 && validationData.ocsps.Count == 0) {
                 return false;
             }
@@ -270,7 +276,8 @@ namespace iText.Signatures {
                     validationData.ocsps.Add(BuildOCSPResponse(ocspEnc));
                     revocationDataAdded = true;
                     LOGGER.LogInformation("OCSP added");
-                    if (certOption == LtvVerification.CertificateOption.CHAIN_AND_OCSP_RESPONSE_CERTIFICATES) {
+                    if (certOption == LtvVerification.CertificateOption.CHAIN_AND_OCSP_RESPONSE_CERTIFICATES || certOption == 
+                        LtvVerification.CertificateOption.CHAIN_OCSP_AND_TIMESTAMP_CERTIFICATES) {
                         IEnumerable<IX509Certificate> certs = SignUtils.GetCertsFromOcspResponse(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse
                             (ocspEnc));
                         IList<IX509Certificate> certsList = IterableToList(certs);

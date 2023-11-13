@@ -332,6 +332,7 @@ namespace iText.Signatures {
                             IAsn1Set attributeValues = ts.GetAttrValues();
                             IAsn1Sequence tokenSequence = BOUNCY_CASTLE_FACTORY.CreateASN1SequenceInstance(attributeValues.GetObjectAt
                                 (0));
+                            this.timestampCerts = SignUtils.ReadAllCerts(tokenSequence.GetEncoded());
                             IContentInfo contentInfo = BOUNCY_CASTLE_FACTORY.CreateContentInfo(tokenSequence);
                             this.timeStampTokenInfo = BOUNCY_CASTLE_FACTORY.CreateTSTInfo(contentInfo);
                         }
@@ -340,6 +341,7 @@ namespace iText.Signatures {
                 if (isTsp) {
                     IContentInfo contentInfoTsp = BOUNCY_CASTLE_FACTORY.CreateContentInfo(signedData);
                     this.timeStampTokenInfo = BOUNCY_CASTLE_FACTORY.CreateTSTInfo(contentInfoTsp);
+                    this.timestampCerts = this.certs;
                     String algOID = timeStampTokenInfo.GetMessageImprint().GetHashAlgorithm().GetAlgorithm().GetId();
                     messageDigest = DigestAlgorithms.GetMessageDigestFromOid(algOID);
                 }
@@ -1149,6 +1151,8 @@ namespace iText.Signatures {
         /// <summary>All the X.509 certificates in no particular order.</summary>
         private ICollection<IX509Certificate> certs;
 
+        private ICollection<IX509Certificate> timestampCerts;
+
         /// <summary>All the X.509 certificates used for the main signature.</summary>
         internal ICollection<IX509Certificate> signCerts;
 
@@ -1163,6 +1167,16 @@ namespace iText.Signatures {
         /// <returns>the X.509 certificates associated with this PKCS#7 object</returns>
         public virtual IX509Certificate[] GetCertificates() {
             return certs.ToArray(new IX509Certificate[certs.Count]);
+        }
+
+        /// <summary>Get all X.509 certificates associated with this PKCS#7 object timestamp in no particular order.</summary>
+        /// <returns>
+        /// 
+        /// <see>Certificate[]</see>
+        /// array
+        /// </returns>
+        public virtual IX509Certificate[] GetTimestampCertificates() {
+            return timestampCerts.ToArray(new IX509Certificate[0]);
         }
 
         /// <summary>Get the X.509 sign certificate chain associated with this PKCS#7 object.</summary>
