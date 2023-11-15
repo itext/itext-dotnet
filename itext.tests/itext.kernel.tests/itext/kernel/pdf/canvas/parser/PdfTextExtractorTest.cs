@@ -79,6 +79,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SimpleFontWithPartialToUnicodeTest() {
+            String inFile = sourceFolder + "simpleFontWithPartialToUnicode.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual("Registered", PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Type0FontToUnicodeTest() {
             String inFile = sourceFolder + "type0FontToUnicode.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {

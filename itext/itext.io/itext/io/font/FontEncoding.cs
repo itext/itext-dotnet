@@ -95,12 +95,26 @@ namespace iText.IO.Font {
         public static iText.IO.Font.FontEncoding CreateFontSpecificEncoding() {
             iText.IO.Font.FontEncoding encoding = new iText.IO.Font.FontEncoding();
             encoding.fontSpecific = true;
+            iText.IO.Font.FontEncoding.FillFontEncoding(encoding);
+            return encoding;
+        }
+
+        /// <summary>
+        /// Fill
+        /// <see cref="FontEncoding"/>
+        /// object with default data.
+        /// </summary>
+        /// <param name="encoding">
+        /// 
+        /// <see cref="FontEncoding"/>
+        /// to fill.
+        /// </param>
+        public static void FillFontEncoding(iText.IO.Font.FontEncoding encoding) {
             for (int ch = 0; ch < 256; ch++) {
                 encoding.unicodeToCode.Put(ch, ch);
                 encoding.codeToUnicode[ch] = ch;
                 encoding.unicodeDifferences.Put(ch, ch);
             }
-            return encoding;
         }
 
         public virtual String GetBaseEncoding() {

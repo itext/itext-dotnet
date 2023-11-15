@@ -68,5 +68,11 @@ namespace iText.IO.Font {
             encoding.SetDifference(0, "a");
             NUnit.Framework.Assert.AreEqual("a", encoding.GetDifference(0));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void FontSpecificEncodingTest() {
+            FontEncoding encoding = FontEncoding.CreateFontSpecificEncoding();
+            NUnit.Framework.Assert.IsTrue(encoding.IsFontSpecific());
+        }
     }
 }
