@@ -1099,12 +1099,11 @@ namespace iText.Pdfa {
             outputIntent.Put(new PdfName("DestOutputProfileRef"), new PdfDictionary());
             outputIntents.Add(outputIntent);
             catalog.Put(PdfName.OutputIntents, outputIntents);
-            pdfADocument.Close();
-            //TODO DEVSIX-7885: Change assertion by catching the exception when closing the document and verify the content.
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            Exception exc = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfADocument.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.OUTPUTINTENT_SHALL_NOT_CONTAIN_DESTOUTPUTPROFILEREF_KEY
+                , exc.Message);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         private void TestWithColourant(PdfName color) {
             PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
                 ));

@@ -379,6 +379,22 @@ namespace iText.Pdfa.Checker {
         }
 
         /// <summary><inheritDoc/></summary>
+        protected internal override void CheckOutputIntents(PdfDictionary catalog) {
+            base.CheckOutputIntents(catalog);
+            PdfArray outputIntents = catalog.GetAsArray(PdfName.OutputIntents);
+            if (outputIntents == null) {
+                return;
+            }
+            for (int i = 0; i < outputIntents.Size(); ++i) {
+                PdfDictionary outputIntent = outputIntents.GetAsDictionary(i);
+                if (outputIntent.ContainsKey(new PdfName("DestOutputProfileRef"))) {
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.OUTPUTINTENT_SHALL_NOT_CONTAIN_DESTOUTPUTPROFILEREF_KEY
+                        );
+                }
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
         protected internal override void CheckAnnotationAgainstActions(PdfDictionary annotDic) {
             if (PdfName.Widget.Equals(annotDic.GetAsName(PdfName.Subtype)) && annotDic.ContainsKey(PdfName.A)) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.WIDGET_ANNOTATION_DICTIONARY_OR_FIELD_DICTIONARY_SHALL_NOT_INCLUDE_A_ENTRY
