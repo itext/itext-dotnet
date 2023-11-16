@@ -1038,13 +1038,11 @@ namespace iText.Pdfa {
                 (isoFilePath, FileMode.Open, FileAccess.Read));
             pdfOutputIntent.GetPdfObject().Put(PdfName.DestOutputProfile, new PdfStream(manipulatedBytes));
             page.AddOutputIntent(pdfOutputIntent);
-            //TODO DEVSIX-7884: Change assertion by catching the exception when closing the document and verify the content.
-            pdfDoc.Close();
-            //should throw exception
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PROFILE_STREAM_OF_OUTPUTINTENT_SHALL_BE_OUTPUT_PROFILE_PRTR_OR_MONITOR_PROFILE_MNTR
+                , e.Message);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void DestOutputIntentColorSpaceNotAllowedTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentProfileNotAllowed.pdf";
@@ -1077,13 +1075,11 @@ namespace iText.Pdfa {
                 (isoFilePath, FileMode.Open, FileAccess.Read));
             pdfOutputIntent.GetPdfObject().Put(PdfName.DestOutputProfile, new PdfStream(manipulatedBytes));
             page.AddOutputIntent(pdfOutputIntent);
-            //TODO DEVSIX-7884: Change assertion by catching the exception when closing the document and verify the content.
-            pdfDoc.Close();
-            //should throw exception
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.OUTPUT_INTENT_COLOR_SPACE_SHALL_BE_EITHER_GRAY_RGB_OR_CMYK
+                , e.Message);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void DestOutputIntentRefNotAllowedTest() {
             String outPdf = DESTINATION_FOLDER + "PdfWithOutputIntentProfileRef.pdf";

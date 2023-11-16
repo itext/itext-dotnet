@@ -628,12 +628,12 @@ namespace iText.Pdfa.Checker {
         protected internal abstract void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont);
 
         /// <summary>Verify the conformity of the output intents array in the catalog dictionary.</summary>
-        /// <param name="catalog">
+        /// <param name="catalogOrPageDict">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// to check
+        /// of a catalog or page to check
         /// </param>
-        protected internal abstract void CheckOutputIntents(PdfDictionary catalog);
+        protected internal abstract void CheckOutputIntents(PdfDictionary catalogOrPageDict);
 
         /// <summary>Verify the conformity of the page dictionary.</summary>
         /// <param name="page">
@@ -948,6 +948,9 @@ namespace iText.Pdfa.Checker {
             CheckPageSize(pageDict);
             CheckPageTransparency(pageDict, page.GetResources().GetPdfObject());
             CheckPageColorsUsages(pageDict, page.GetResources().GetPdfObject());
+            //This check is valid for pdf/a-4 only, but it's not a problem
+            //to add additional restrictions on earlier versions
+            CheckOutputIntents(pageDict);
             int contentStreamCount = page.GetContentStreamCount();
             for (int j = 0; j < contentStreamCount; ++j) {
                 PdfStream contentStream = page.GetContentStream(j);
