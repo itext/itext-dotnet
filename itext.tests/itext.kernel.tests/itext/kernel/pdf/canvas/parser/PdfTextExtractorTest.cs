@@ -114,5 +114,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 NUnit.Framework.Assert.AreEqual(expected, PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ShortOctalDataAsTextTest() {
+            String inFile = sourceFolder + "shortOctalDataAsText.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual("EC", PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
+        }
     }
 }
