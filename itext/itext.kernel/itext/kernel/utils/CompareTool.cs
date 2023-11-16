@@ -1384,6 +1384,8 @@ namespace iText.Kernel.Utils {
                             cmpPagesRef = new List<PdfIndirectReference>();
                             LoadPagesFromReader(cmpDocument, cmpPages, cmpPagesRef);
                             if (outPages.Count != cmpPages.Count) {
+                                iText.Kernel.Utils.CompareTool.WriteOnDisk(outPdf);
+                                iText.Kernel.Utils.CompareTool.WriteOnDiskIfNotExists(cmpPdf);
                                 return CompareVisuallyAndCombineReports("Documents have different numbers of pages.", outPath, differenceImagePrefix
                                     , ignoredAreas, null);
                             }
